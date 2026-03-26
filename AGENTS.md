@@ -7,7 +7,7 @@ Root coordination notes for coding agents working in `/home/manh/stocks`.
 Read these first:
 
 - `README.md`
-- `alpha-signals/alpha-research-lab/README.md`
+- `alpha-research-lab/README.md`
 - `VN-stock-RL/README.md`
 - `VN-stock-RL/AGENTS.md` when changing RL runtime code
 
@@ -18,15 +18,15 @@ This workspace is an ecosystem, not a set of truly standalone repos.
 Current responsibilities:
 
 - `data/` is the canonical shared data root for the entire workspace
-- `alpha-signals/alpha-research-lab/` owns research pipelines and research outputs
-- `alpha-signals/manual-label-factory/` owns the manual buy-zone labelling UI
+- `alpha-research-lab/` owns research pipelines and research outputs
+- `manual-label-factory/` owns the manual buy-zone labelling UI
 - `VN-stock-RL/` owns RL runtime logic and consumes artifacts from root `data/`
 
 ## Important Paths
 
 - Shared raw + published data: `/home/manh/stocks/data`
-- Research lab: `/home/manh/stocks/alpha-signals/alpha-research-lab`
-- Manual label factory: `/home/manh/stocks/alpha-signals/manual-label-factory`
+- Research lab: `/home/manh/stocks/alpha-research-lab`
+- Manual label factory: `/home/manh/stocks/manual-label-factory`
 - RL runtime: `/home/manh/stocks/VN-stock-RL`
 
 ## Default Assumptions
@@ -40,12 +40,12 @@ Current responsibilities:
 
 If changing research data production:
 
-- work in `alpha-signals/alpha-research-lab/`
+- work in `alpha-research-lab/`
 - update research docs there
 
 If changing manual labelling:
 
-- work in `alpha-signals/manual-label-factory/`
+- work in `manual-label-factory/`
 
 If changing RL feature consumption, defaults, or merge behavior:
 

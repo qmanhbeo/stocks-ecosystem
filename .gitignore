@@ -1,0 +1,34 @@
+# Python caches
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Test / lint caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+
+# Packaging / environments
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+.env
+
+# Notebook noise
+.ipynb_checkpoints/
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Large restorable archive data
+data/news/
