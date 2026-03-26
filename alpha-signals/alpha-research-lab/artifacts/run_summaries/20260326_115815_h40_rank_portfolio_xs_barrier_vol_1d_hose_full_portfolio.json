@@ -1,0 +1,24 @@
+{
+  "artifacts": {
+    "probas": "data/features/xs_barrier_vol_1d_hose_full.parquet"
+  },
+  "metadata": {
+    "min_proba": 0.55,
+    "min_proba_col": "xs_proba",
+    "rank_col": "xs_proba",
+    "top_n": 5,
+    "vix_max": 30.0,
+    "vix_min": 15.0
+  },
+  "mode": "portfolio",
+  "name": "h40_rank_portfolio_xs_barrier_vol_1d_hose_full",
+  "summary": {
+    "avg_dyn_edge": 0.256,
+    "avg_ic": 0.1491,
+    "avg_q5_q1_spread": 0.2085,
+    "best_n_by_sharpe": 1,
+    "best_sharpe": 9.8347,
+    "dyn_sharpe": 5.2678
+  },
+  "ts": "20260326_115815"
+}

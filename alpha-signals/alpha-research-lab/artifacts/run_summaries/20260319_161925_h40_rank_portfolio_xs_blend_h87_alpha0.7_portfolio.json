@@ -1,0 +1,24 @@
+{
+  "artifacts": {
+    "probas": "data\\features\\xs_blend_h87_alpha0.7.parquet"
+  },
+  "metadata": {
+    "min_proba": 0.55,
+    "min_proba_col": "xs_proba",
+    "rank_col": "blend_score",
+    "top_n": 5,
+    "vix_max": 999.0,
+    "vix_min": 0.0
+  },
+  "mode": "portfolio",
+  "name": "h40_rank_portfolio_xs_blend_h87_alpha0.7",
+  "summary": {
+    "avg_dyn_edge": 0.2503,
+    "avg_ic": 0.1424,
+    "avg_q5_q1_spread": 0.1995,
+    "best_n_by_sharpe": 5,
+    "best_sharpe": 10.25,
+    "dyn_sharpe": 10.25
+  },
+  "ts": "20260319_161925"
+}

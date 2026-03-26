@@ -1,0 +1,24 @@
+{
+  "artifacts": {
+    "probas": "data/features/xs_barrier_vol_1d_h105_disp_earn_hose_full.parquet"
+  },
+  "metadata": {
+    "min_proba": 0.55,
+    "min_proba_col": "xs_proba",
+    "rank_col": "xs_proba",
+    "top_n": 5,
+    "vix_max": 999.0,
+    "vix_min": 0.0
+  },
+  "mode": "portfolio",
+  "name": "h40_rank_portfolio_xs_barrier_vol_1d_h105_disp_earn_hose_full",
+  "summary": {
+    "avg_dyn_edge": 0.2416,
+    "avg_ic": 0.1466,
+    "avg_q5_q1_spread": 0.2046,
+    "best_n_by_sharpe": 15,
+    "best_sharpe": 15.2878,
+    "dyn_sharpe": 11.9592
+  },
+  "ts": "20260326_155653"
+}

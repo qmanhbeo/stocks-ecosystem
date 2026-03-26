@@ -1,0 +1,24 @@
+{
+  "artifacts": {
+    "probas": "data/features/xs_barrier_vol_1d_h103_ret_skew_hose_full.parquet"
+  },
+  "metadata": {
+    "min_proba": 0.55,
+    "min_proba_col": "xs_proba",
+    "rank_col": "xs_proba",
+    "top_n": 5,
+    "vix_max": 999.0,
+    "vix_min": 0.0
+  },
+  "mode": "portfolio",
+  "name": "h40_rank_portfolio_xs_barrier_vol_1d_h103_ret_skew_hose_full",
+  "summary": {
+    "avg_dyn_edge": 0.2419,
+    "avg_ic": 0.1489,
+    "avg_q5_q1_spread": 0.2079,
+    "best_n_by_sharpe": 15,
+    "best_sharpe": 13.3457,
+    "dyn_sharpe": 10.6325
+  },
+  "ts": "20260326_154427"
+}

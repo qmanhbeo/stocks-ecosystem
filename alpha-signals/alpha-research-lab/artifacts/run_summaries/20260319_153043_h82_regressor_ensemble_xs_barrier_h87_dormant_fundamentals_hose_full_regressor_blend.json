@@ -1,0 +1,75 @@
+{
+  "artifacts": {
+    "classifier_probas": "data\\features\\xs_barrier_h87_dormant_fundamentals_hose_full.parquet",
+    "regressor_scores": "data\\features\\xs_regressor_scores_hose_full.parquet"
+  },
+  "metadata": {
+    "alpha_metrics": {
+      "0.0": {
+        "avg_edge": 0.2218575126184303,
+        "avg_trade_days": 144.1818181818182,
+        "positive_years": 11,
+        "sharpe": 10.674910021190552,
+        "std_edge": 0.020783080342412757,
+        "total_years": 11
+      },
+      "0.3": {
+        "avg_edge": 0.2451919524133108,
+        "avg_trade_days": 229.0909090909091,
+        "positive_years": 11,
+        "sharpe": 9.616415903749918,
+        "std_edge": 0.025497228371507755,
+        "total_years": 11
+      },
+      "0.5": {
+        "avg_edge": 0.2494314802444043,
+        "avg_trade_days": 237.36363636363637,
+        "positive_years": 11,
+        "sharpe": 9.936885542951437,
+        "std_edge": 0.02510157525376091,
+        "total_years": 11
+      },
+      "0.7": {
+        "avg_edge": 0.25027741769839956,
+        "avg_trade_days": 240.1818181818182,
+        "positive_years": 11,
+        "sharpe": 10.250041844815238,
+        "std_edge": 0.024417209362418067,
+        "total_years": 11
+      },
+      "1.0": {
+        "avg_edge": 0.24730339530654843,
+        "avg_trade_days": 244.1818181818182,
+        "positive_years": 11,
+        "sharpe": 9.394070915847998,
+        "std_edge": 0.026325476731215894,
+        "total_years": 11
+      }
+    },
+    "min_proba": 0.55,
+    "top_n": 5
+  },
+  "mode": "regressor_blend",
+  "name": "h82_regressor_ensemble_xs_barrier_h87_dormant_fundamentals_hose_full",
+  "summary": {
+    "alpha_0_5": {
+      "avg_edge": 0.2494314802444043,
+      "avg_trade_days": 237.36363636363637,
+      "positive_years": 11,
+      "sharpe": 9.936885542951437,
+      "std_edge": 0.02510157525376091,
+      "total_years": 11
+    },
+    "baseline_alpha_1_0": {
+      "avg_edge": 0.24730339530654843,
+      "avg_trade_days": 244.1818181818182,
+      "positive_years": 11,
+      "sharpe": 9.394070915847998,
+      "std_edge": 0.026325476731215894,
+      "total_years": 11
+    },
+    "best_alpha_by_edge": 0.7,
+    "best_avg_edge": 0.2503
+  },
+  "ts": "20260319_153043"
+}

@@ -1,0 +1,35 @@
+{
+  "artifacts": {
+    "details_json": "/home/manh/alpha-research-lab/artifacts/run_summaries/20260326_150012_c2_insider_standalone_details.json",
+    "insider_features": "/home/manh/alpha-research-lab/data/features/xs_insider_features.parquet"
+  },
+  "metadata": {
+    "signal_col": "insider_net_plan_5d",
+    "target_col": "future_rel_return_5d",
+    "topn": [
+      1,
+      3,
+      5
+    ]
+  },
+  "mode": "standalone_signal",
+  "name": "c2_insider_standalone",
+  "summary": {
+    "avg_ic_signal_rows": 0.025587905309144354,
+    "coverage_pct": 3.5713,
+    "days_signal": 2742,
+    "days_signal_pct": 99.7817,
+    "days_total": 2748,
+    "ic_pos_years": 9,
+    "ic_years": 11,
+    "rows_signal": 29513,
+    "rows_total": 826402,
+    "top1_avg_edge": -0.0030397313908664893,
+    "top3_avg_edge": 0.0004936012472247695,
+    "top5_avg_edge": 0.0009045045805537218,
+    "top5_pos_years": 5,
+    "top5_sharpe_proxy": 0.5055682158646193,
+    "top5_years": 11
+  },
+  "ts": "20260326_150012"
+}

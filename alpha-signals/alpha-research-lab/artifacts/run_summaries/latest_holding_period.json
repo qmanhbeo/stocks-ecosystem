@@ -1,0 +1,67 @@
+{
+  "artifacts": {
+    "probas": "data\\features\\xs_barrier_all_probas_hose_full.parquet"
+  },
+  "metadata": {
+    "entry_delay": 1,
+    "min_proba": 0.55,
+    "price_basis": "open",
+    "top_n": 5,
+    "vix_max": 999.0,
+    "vix_min": 0.0
+  },
+  "mode": "holding_period",
+  "name": "h78_hold_grid_e1_xs_barrier_all_probas_hose_full",
+  "summary": {
+    "best_net_yr_at_0_30": 0.6632,
+    "best_variant_by_net_0_30": "h1_std",
+    "variants": {
+      "h1_std": {
+        "avg_gross_day": 0.005417,
+        "avg_gross_yr": 1.337,
+        "avg_trades_yr": 2246.0,
+        "avg_turnover": 181.9963,
+        "n_years": 11,
+        "net_yr_at_0_20": 0.8878,
+        "net_yr_at_0_30": 0.6632
+      },
+      "h2_std": {
+        "avg_gross_day": 0.003482,
+        "avg_gross_yr": 0.8638,
+        "avg_trades_yr": 1180.0,
+        "avg_turnover": 95.1264,
+        "n_years": 11,
+        "net_yr_at_0_20": 0.6278,
+        "net_yr_at_0_30": 0.5098
+      },
+      "h3_kband": {
+        "avg_gross_day": 0.005405,
+        "avg_gross_yr": 1.334,
+        "avg_trades_yr": 2245.64,
+        "avg_turnover": 181.9669,
+        "n_years": 11,
+        "net_yr_at_0_20": 0.8849,
+        "net_yr_at_0_30": 0.6603
+      },
+      "h3_std": {
+        "avg_gross_day": 0.002157,
+        "avg_gross_yr": 0.5371,
+        "avg_trades_yr": 796.45,
+        "avg_turnover": 63.9723,
+        "n_years": 11,
+        "net_yr_at_0_20": 0.3779,
+        "net_yr_at_0_30": 0.2982
+      },
+      "h5_std": {
+        "avg_gross_day": 0.001509,
+        "avg_gross_yr": 0.3753,
+        "avg_trades_yr": 475.36,
+        "avg_turnover": 38.2237,
+        "n_years": 11,
+        "net_yr_at_0_20": 0.2803,
+        "net_yr_at_0_30": 0.2327
+      }
+    }
+  },
+  "ts": "20260319_155704"
+}

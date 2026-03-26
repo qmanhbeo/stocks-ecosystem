@@ -1,0 +1,33 @@
+
+======================================================================
+CROSS-SECTIONAL WALK-FORWARD VALIDATION
+Features: E8-style (rel lags + tech) | Target: future_rel_dir_5d
+Min train years: 3 | Start: 2012-01-01 | Model: xgboost
+H17 Triple barrier: Â±1.5% relative threshold â†’ future_rel_barrier_5d
+X2 Confidence threshold: |prob-0.5| > 0.05 (min conf: 0.55)
+======================================================================
+Loaded 394 stocks, 974,333 total rows
+Features (35): ['ma_dist_5', 'ma_dist_10', 'ma_dist_20', 'ma_dist_50', 'rsi_14', 'macd_line', 'macd_signal_line', 'macd_hist', 'bb_width', 'bb_pct', 'atr_14', 'candle_body', 'upper_wick', 'lower_wick', 'gap', 'stoch_k', 'stoch_d', 'adx', 'di_diff', 'hist_vol_5', 'hist_vol_10', 'hist_vol_20', 'intraday_range', 'rel_ret_1d', 'rel_ret_2d', 'rel_ret_3d', 'rel_ret_5d', 'rel_ret_10d', 'rel_ret_20d', 'idx_ret_1d', 'idx_ret_2d', 'idx_ret_3d', 'idx_ret_5d', 'idx_ret_10d', 'idx_ret_20d']
+
+   year    n_test   all_acc       fpt_acc   fpt_edge   fpt_pval [threshold=0.05]
+  ------------------------------------------------------------------------
+   2015    51,795    57.46%  63.4%(n=161)    +7.71%   0.0566  [87 abstain]
+   2016    57,866    56.51%  42.6%(n=141)    -6.85%   0.1098  [110 abstain]
+   2017    64,216    57.11%   59.8%(n=97)    +4.59%   0.4143  [153 abstain]
+   2018    69,379    56.03%  57.6%(n=144)   +10.86%   0.0095* [104 abstain]
+   2019    72,968    56.68%   60.9%(n=92)    +1.67%   0.8321  [158 abstain]
+   2020    78,516    54.07%  50.9%(n=114)    +0.08%   1.0000  [138 abstain]
+   2021    85,763    55.72%   65.6%(n=90)   +15.16%   0.0043* [160 abstain]
+   2022    87,526    53.28%  43.0%(n=135)   -20.09%   0.0000* [114 abstain]
+   2023    84,938    55.14%   47.4%(n=78)    -5.98%   0.3083  [171 abstain]
+   2024    86,320    56.03%   56.8%(n=74)    +0.36%   1.0000  [176 abstain]
+   2025    87,115    56.87%  59.3%(n=108)   +26.19%   0.0000* [140 abstain]
+
+  SUMMARY (Cross-Sectional)
+  Avg overall acc : 55.90%
+  FPT avg edge    : +3.06%  (std: 11.68%)
+  FPT sig years   : 4/11 (p<0.05)
+
+  Results appended to xs_wf_results.jsonl
+  H23: All-ticker probabilities saved to data/features/xs_barrier_1.5pct_hose_full.parquet (826,402 rows, 394 tickers)
+

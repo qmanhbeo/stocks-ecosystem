@@ -1,0 +1,58 @@
+{
+    "experiment_name": "E6_rel_plus_ohlcv_lags",
+    "note": "Test: do absolute FPT lags ADD to relative lags? Isolates which signal source drives the E3 improvement over E5.",
+    "data": {
+        "file_path": "data/stock/gia_lich_su_FPT_1D.parquet",
+        "target_col": "future_rel_dir_5d",
+        "test_size": 0.15,
+        "val_size": 0.15,
+        "start_date": "2016-01-01"
+    },
+    "features": {
+        "base_cols": [],
+        "use_lags": true,
+        "lag_days": [
+            1,
+            2,
+            3,
+            5,
+            10,
+            20
+        ],
+        "use_ma": false,
+        "use_ma_dist": false,
+        "use_rsi": false,
+        "use_macd": false,
+        "use_bb": false,
+        "use_atr": false,
+        "use_volume_signals": false,
+        "use_candle": false,
+        "use_stoch": false,
+        "use_willr": false,
+        "use_adx": false,
+        "use_hist_vol": false,
+        "use_cci": false,
+        "use_market_relative": true,
+        "index_file": "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+        "rel_lag_days": [
+            1,
+            2,
+            3,
+            5,
+            10,
+            20
+        ],
+        "use_macro": false
+    },
+    "model": {
+        "type": "xgboost_classifier",
+        "params": {
+            "n_estimators": 500,
+            "max_depth": 3,
+            "learning_rate": 0.05,
+            "subsample": 0.8,
+            "colsample_bytree": 0.8,
+            "early_stopping_rounds": 30
+        }
+    }
+}

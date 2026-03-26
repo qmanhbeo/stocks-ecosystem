@@ -1,0 +1,9 @@
+raw_data_dir: data/stock
+timeframe: 1D
+split_mode: ticker
+train_ratio: 0.70
+val_ratio: 0.15
+test_ratio: 0.15
+chunk_length_min: 64
+chunk_length_max: 128
+lookback_window: 32

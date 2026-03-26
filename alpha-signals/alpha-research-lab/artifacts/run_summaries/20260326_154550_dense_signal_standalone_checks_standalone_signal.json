@@ -1,0 +1,28 @@
+{
+  "artifacts": {
+    "details_json": "/home/manh/alpha-research-lab/artifacts/run_summaries/20260326_154550_dense_signal_standalone_checks_details.json"
+  },
+  "metadata": {},
+  "mode": "standalone_signal",
+  "name": "dense_signal_standalone_checks",
+  "summary": {
+    "dispersion_context_vs_s1_top5_edge": {
+      "n_days": 2748,
+      "p_value": 0.13020294192520482,
+      "spearman": -0.028875156335675573
+    },
+    "oc_asym_5d": {
+      "avg_ic": 0.027296582573516616,
+      "corr_with_s1": 0.14744650956951888,
+      "pos_years": 10,
+      "years": 11
+    },
+    "ret_skew_z20": {
+      "avg_ic": 0.0019024707043658223,
+      "corr_with_s1": -0.003533045469506108,
+      "pos_years": 6,
+      "years": 11
+    }
+  },
+  "ts": "20260326_154550"
+}

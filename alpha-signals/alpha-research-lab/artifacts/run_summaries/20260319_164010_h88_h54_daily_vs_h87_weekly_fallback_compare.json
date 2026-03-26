@@ -1,0 +1,50 @@
+{
+  "artifacts": {
+    "h54_cost_summary": "artifacts\\run_summaries\\20260319_160504_h63_cost_stress_xs_barrier_all_probas_hose_full_cost_stress.json",
+    "h87_cost_summary": "artifacts\\run_summaries\\20260319_162004_h63_cost_stress_xs_blend_h87_alpha0.7_cost_stress.json"
+  },
+  "metadata": {
+    "cost_points": [
+      0.003,
+      0.005,
+      0.007
+    ]
+  },
+  "mode": "fallback_compare",
+  "name": "h88_h54_daily_vs_h87_weekly",
+  "summary": {
+    "comparison_rows": [
+      {
+        "h54_daily_ann_net": 0.59014,
+        "h87_weekly_ann_net": 0.21705,
+        "rt_cost": 0.003,
+        "winner": "H54_daily"
+      },
+      {
+        "h54_daily_ann_net": 0.0965,
+        "h87_weekly_ann_net": 0.11795,
+        "rt_cost": 0.005,
+        "winner": "H87_weekly"
+      },
+      {
+        "h54_daily_ann_net": -0.39714,
+        "h87_weekly_ann_net": 0.01885,
+        "rt_cost": 0.007,
+        "winner": "H87_weekly"
+      }
+    ],
+    "crossover_rt": 0.004891,
+    "h54_daily": {
+      "avg_gross_annual": 1.3306,
+      "avg_trades_yr": 246.82,
+      "exact_breakeven_rt": 0.005391
+    },
+    "h87_weekly": {
+      "avg_gross_annual": 0.3657,
+      "avg_trades_yr": 49.55,
+      "exact_breakeven_rt": 0.007381
+    },
+    "recommendation": "H54_daily_below_crossover_H87_weekly_above"
+  },
+  "ts": "20260319_164010"
+}

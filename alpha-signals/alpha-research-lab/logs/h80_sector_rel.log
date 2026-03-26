@@ -1,0 +1,35 @@
+
+======================================================================
+CROSS-SECTIONAL WALK-FORWARD VALIDATION
+Features: E8-style (rel lags + tech) | Target: future_rel_dir_5d
+Min train years: 3 | Start: 2012-01-01 | Model: xgboost
+H17 Triple barrier: Â±1.0% relative threshold â†’ future_rel_barrier_5d
+X2 Confidence threshold: |prob-0.5| > 0.05 (min conf: 0.55)
+H80 Sector-relative features: sector_rel_1d, sector_rel_5d, sector_rel_20d
+======================================================================
+Loaded 394 stocks, 974,333 total rows
+  Sector-relative features added: ['sector_rel_1d', 'sector_rel_5d', 'sector_rel_20d']
+Features (38): ['ma_dist_5', 'ma_dist_10', 'ma_dist_20', 'ma_dist_50', 'rsi_14', 'macd_line', 'macd_signal_line', 'macd_hist', 'bb_width', 'bb_pct', 'atr_14', 'candle_body', 'upper_wick', 'lower_wick', 'gap', 'stoch_k', 'stoch_d', 'adx', 'di_diff', 'hist_vol_5', 'hist_vol_10', 'hist_vol_20', 'intraday_range', 'rel_ret_1d', 'rel_ret_2d', 'rel_ret_3d', 'rel_ret_5d', 'rel_ret_10d', 'rel_ret_20d', 'idx_ret_1d', 'idx_ret_2d', 'idx_ret_3d', 'idx_ret_5d', 'idx_ret_10d', 'idx_ret_20d', 'sector_rel_1d', 'sector_rel_5d', 'sector_rel_20d']
+
+   year    n_test   all_acc       fpt_acc   fpt_edge   fpt_pval [threshold=0.05]
+  ------------------------------------------------------------------------
+   2015    51,795    57.99%  61.4%(n=166)    +6.61%   0.1012  [82 abstain]
+   2016    57,866    56.73%  44.6%(n=139)    -4.00%   0.3521  [112 abstain]
+   2017    64,216    58.09%  51.5%(n=101)    -1.71%   0.7653  [149 abstain]
+   2018    69,379    56.66%  53.9%(n=154)    +3.90%   0.3755  [94 abstain]
+   2019    72,968    57.06%  63.2%(n=106)    +6.41%   0.2027  [144 abstain]
+   2020    78,516    54.61%  46.2%(n=143)    -4.24%   0.3169  [109 abstain]
+   2021    85,763    56.49%  65.3%(n=121)   +14.49%   0.0014* [129 abstain]
+   2022    87,526    54.12%  47.1%(n=140)   -11.09%   0.0099* [109 abstain]
+   2023    84,938    55.87%   52.1%(n=94)    -0.08%   1.0000  [155 abstain]
+   2024    86,320    56.80%  55.9%(n=102)    +1.08%   0.8430  [148 abstain]
+   2025    87,115    57.62%  60.3%(n=121)   +24.04%   0.0000* [127 abstain]
+
+  SUMMARY (Cross-Sectional)
+  Avg overall acc : 56.55%
+  FPT avg edge    : +3.22%  (std: 9.22%)
+  FPT sig years   : 3/11 (p<0.05)
+
+  Results appended to xs_wf_results.jsonl
+  H23: All-ticker probabilities saved to data/features/xs_barrier_sector_rel_hose_full.parquet (826,402 rows, 394 tickers)
+

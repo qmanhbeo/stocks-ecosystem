@@ -1,0 +1,37 @@
+{
+    "experiment_name": "baseline_linear",
+    "data": {
+        "file_path": "gia_lich_su_FPT_1D.parquet",
+        "target_col": "future_return_5d",
+        "test_size": 0.15,
+        "val_size": 0.15,
+        "start_date": "2016-01-01"
+    },
+    "features": {
+        "use_lags": true,
+        "lag_days": [
+            1,
+            2,
+            3,
+            5,
+            10
+        ],
+        "use_ma": true,
+        "ma_windows": [
+            5,
+            10,
+            20
+        ],
+        "base_cols": [
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume"
+        ]
+    },
+    "model": {
+        "type": "linear_regression",
+        "params": {}
+    }
+}

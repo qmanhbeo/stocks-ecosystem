@@ -1,0 +1,19 @@
+{
+  "oc_asym_5d": {
+    "avg_ic": 0.027296582573516616,
+    "pos_years": 10,
+    "years": 11,
+    "corr_with_s1": 0.14744650956951888
+  },
+  "ret_skew_z20": {
+    "avg_ic": 0.0019024707043658223,
+    "pos_years": 6,
+    "years": 11,
+    "corr_with_s1": -0.003533045469506108
+  },
+  "dispersion_context_vs_s1_top5_edge": {
+    "spearman": -0.028875156335675573,
+    "p_value": 0.13020294192520482,
+    "n_days": 2748
+  }
+}

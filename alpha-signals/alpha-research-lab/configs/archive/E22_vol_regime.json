@@ -1,0 +1,39 @@
+{
+    "experiment_name": "E22_vol_regime",
+    "note": "V1: E8 + VNINDEX volatility regime features. Hypothesis: signal fires in high-vol years (2020 COVID, 2025 bear) but misbehaves in low-vol 2022.",
+    "data": {
+        "file_path": "data/stock/gia_lich_su_FPT_1D.parquet",
+        "target_col": "future_rel_dir_5d",
+        "test_size": 0.15, "val_size": 0.15, "start_date": "2016-01-01"
+    },
+    "features": {
+        "base_cols": [],
+        "use_lags": false,
+        "use_ma": false, "use_ma_dist": true, "ma_windows": [5, 10, 20, 50],
+        "use_rsi": true,
+        "use_macd": true,
+        "use_bb": true,
+        "use_atr": true,
+        "use_candle": true,
+        "use_stoch": true,
+        "use_willr": false, "use_adx": true,
+        "use_hist_vol": true, "hist_vol_windows": [5, 10, 20],
+        "use_cci": false,
+        "use_volume_signals": false,
+        "use_market_relative": true,
+        "index_file": "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+        "rel_lag_days": [1, 2, 3, 5, 10, 20],
+        "use_macro": false,
+        "use_vol_regime": true,
+        "vol_regime_window": 20,
+        "vol_pct_window": 252,
+        "vol_regime_threshold": 0.70
+    },
+    "model": {
+        "type": "xgboost_classifier",
+        "params": {
+            "n_estimators": 500, "max_depth": 3, "learning_rate": 0.05,
+            "subsample": 0.8, "colsample_bytree": 0.8, "early_stopping_rounds": 30
+        }
+    }
+}

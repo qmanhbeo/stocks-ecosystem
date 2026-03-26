@@ -1,0 +1,97 @@
+﻿# VN Stock RL
+
+Consumer-only RL runtime for Vietnamese equity experiments.
+
+This repo no longer owns data fetching, news feature generation, manual labelling, or supervised signal production. Those producer pipelines now live in `alpha-signals/alpha-research-lab` and `alpha-signals/manual-label-factory`.
+
+The RL runtime reads shared research exports from `/home/manh/stocks/data` by default.
+
+## Quick start
+
+```bash
+conda create -n stocks python=3.10
+conda activate stocks
+git clone https://github.com/qmanhbeo/VN-stock-RL
+cd VN-stock-RL
+pip install -e ".[dev]"
+```
+
+## Run test suite first to make sure everything is ok
+
+```bash
+python -m pytest
+```
+
+## Inspect shared research data
+
+```bash
+python -m vn_stock_rl.data_tools.inspect_research_exports
+python -m vn_stock_rl.data_tools.inspect_research_exports --require-news --require-signal
+```
+
+## Build research-side features outside this repo
+
+```bash
+cd ../alpha-signals/alpha-research-lab
+python -m research_pipelines.news_features
+python -m research_pipelines.signal_labelling.auto_label
+python -m research_pipelines.supervised_label.core.rebuild_bar_labels
+python -m research_pipelines.supervised_label.core.export_supervised_dataset
+python -m research_pipelines.supervised_label.models.train_signal_model
+python -m research_pipelines.supervised_label.models.generate_signal_probs
+```
+
+For manual buy-zone labelling:
+
+```bash
+cd ../alpha-signals/manual-label-factory
+python -m manual_label_factory.manual_label
+```
+
+RL defaults to shared `data/features/news/predictions/` and `data/features/signals/predictions/auto/` when `--news-prediction-dir` / `--signal-prediction-dir` are omitted.
+
+## Train and evaluate RL
+
+```bash
+# Cut off from 2016 bcuz CafeF starts in 2016ish
+# With news
+vn-stock-train --stock FPT --policy cnn --help-tickers VNINDEX VN30 --help-assets fx_vnd_usd gold --news-columns tabular --signal-columns default --start-date 2016-01-01 --timesteps 1000000 --ent-coef-start 0.08 --ent-coef-end 0.005 --ent-coef-schedule linear --train-episode-sampling --train-episode-min-fraction 0.05 --train-episode-max-fraction 0.25 --benchmark-relative-reward --reward-benchmark self_buy_hold --benchmark-weight 1.0 --eval-freq 25000 --n-eval-episodes 1 --n-envs 16 --seed 1208 --name cnn_fpt_news_tabular_2016on
+
+
+vn-stock-evaluate --model artifacts/trained_models/cnn_fpt_news_tabular_2016on/model_best.zip --stock FPT --mode val
+```
+
+## Hyperparameters & Trading Env configs
+
+vn_stock_rl/config/defaults.py: default RL settings and policy defaults. If you want to change default hyperparameters, start here.
+
+vn_stock_rl/config/types.py: trading environment configs.
+
+## Docs
+
+- [docs/data.md](docs/data.md)
+- [docs/training.md](docs/training.md)
+- [docs/evaluation.md](docs/evaluation.md)
+- [docs/architectures.md](docs/architectures.md)
+- [docs/testing.md](docs/testing.md)
+- [docs/repo_map.md](docs/repo_map.md)
+- [docs/pipeline_contracts.md](docs/pipeline_contracts.md)
+
+The canonical runtime surface is:
+- `vn-stock-train`
+- `vn-stock-evaluate`
+- `vn-stock-count-params`
+
+## Project Flow
+
+```mermaid
+flowchart TD
+    A[Set up env and install deps] --> B[Run test suite<br/>python -m pytest]
+    B --> C[Inspect shared research exports<br/>python -m vn_stock_rl.data_tools.inspect_research_exports]
+    C --> D[/home/manh/stocks/data]
+    D --> E[Trading environment<br/>vn_stock_rl/env]
+    E --> F[Train RL policy<br/>vn-stock-train]
+    F --> G[Run artifacts<br/>artifacts/trained_models/<run_name>/]
+    G --> H[Evaluate agent<br/>vn-stock-evaluate]
+    H --> I[Metrics, plots, and outputs<br/>artifacts/evaluation_results/]
+```

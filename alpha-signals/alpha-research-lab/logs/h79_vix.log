@@ -1,0 +1,35 @@
+
+======================================================================
+CROSS-SECTIONAL WALK-FORWARD VALIDATION
+Features: E8-style (rel lags + tech) | Target: future_rel_dir_5d
+Min train years: 3 | Start: 2012-01-01 | Model: xgboost
+H17 Triple barrier: Â±1.0% relative threshold â†’ future_rel_barrier_5d
+X2 Confidence threshold: |prob-0.5| > 0.05 (min conf: 0.55)
+H50 VIX-as-feature: vix_level, vix_mom_5d, vix_mom_20d (no external VIX filter)
+======================================================================
+Loaded 394 stocks, 974,333 total rows
+  Merged VIX features: ['vix_level', 'vix_mom_5d', 'vix_mom_20d']
+Features (38): ['ma_dist_5', 'ma_dist_10', 'ma_dist_20', 'ma_dist_50', 'rsi_14', 'macd_line', 'macd_signal_line', 'macd_hist', 'bb_width', 'bb_pct', 'atr_14', 'candle_body', 'upper_wick', 'lower_wick', 'gap', 'stoch_k', 'stoch_d', 'adx', 'di_diff', 'hist_vol_5', 'hist_vol_10', 'hist_vol_20', 'intraday_range', 'rel_ret_1d', 'rel_ret_2d', 'rel_ret_3d', 'rel_ret_5d', 'rel_ret_10d', 'rel_ret_20d', 'idx_ret_1d', 'idx_ret_2d', 'idx_ret_3d', 'idx_ret_5d', 'idx_ret_10d', 'idx_ret_20d', 'vix_level', 'vix_mom_5d', 'vix_mom_20d']
+
+   year    n_test   all_acc       fpt_acc   fpt_edge   fpt_pval [threshold=0.05]
+  ------------------------------------------------------------------------
+   2015    51,795    56.50%  62.2%(n=156)    +7.34%   0.0764  [92 abstain]
+   2016    57,866    56.66%  44.3%(n=140)    -4.32%   0.3118  [111 abstain]
+   2017    64,216    58.19%  53.3%(n=122)    +0.08%   1.0000  [128 abstain]
+   2018    69,379    56.27%  51.6%(n=153)    +1.63%   0.7465  [95 abstain]
+   2019    72,968    57.03%  67.6%(n=102)   +10.85%   0.0279* [148 abstain]
+   2020    78,516    52.74%  43.6%(n=156)    -6.81%   0.0930  [96 abstain]
+   2021    85,763    56.39%  61.2%(n=116)   +10.41%   0.0259* [134 abstain]
+   2022    87,526    54.20%  43.2%(n=146)   -15.08%   0.0003* [103 abstain]
+   2023    84,938    55.68%   53.8%(n=93)    +1.55%   0.8357  [156 abstain]
+   2024    86,320    56.77%   53.8%(n=91)    -0.95%   0.9162  [159 abstain]
+   2025    87,115    56.86%  51.7%(n=116)   +15.43%   0.0007* [132 abstain]
+
+  SUMMARY (Cross-Sectional)
+  Avg overall acc : 56.12%
+  FPT avg edge    : +1.83%  (std: 8.42%)
+  FPT sig years   : 4/11 (p<0.05)
+
+  Results appended to xs_wf_results.jsonl
+  H23: All-ticker probabilities saved to data/features/xs_barrier_vix_feature_hose_full.parquet (826,402 rows, 394 tickers)
+

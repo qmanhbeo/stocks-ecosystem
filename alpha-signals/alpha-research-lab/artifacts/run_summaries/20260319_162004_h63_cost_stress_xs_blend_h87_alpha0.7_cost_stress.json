@@ -1,0 +1,258 @@
+{
+  "artifacts": {
+    "probas": "data\\features\\xs_blend_h87_alpha0.7.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "min_proba": 0.55,
+    "min_proba_col": "xs_proba",
+    "rank_col": "blend_score",
+    "start_year": 2015,
+    "top_n": 5,
+    "vix_max": 999.0,
+    "vix_min": 0.0
+  },
+  "mode": "cost_stress",
+  "name": "h63_cost_stress_xs_blend_h87_alpha0.7",
+  "summary": {
+    "daily_h1": {
+      "avg_gross_annual": 1.3124,
+      "avg_gross_trade": 0.005464,
+      "avg_trades_yr": 240.18,
+      "exact_breakeven_rt": 0.005464,
+      "first_negative_rt_on_grid": 0.007,
+      "rows": [
+        {
+          "avg_ann_net": 1.3124022062614642,
+          "avg_gross_trade": 0.005464202978378541,
+          "avg_trades_yr": 240.1818181818182,
+          "net_trade": 0.005464202978378541,
+          "positive_years": 11,
+          "rt_cost": 0.0,
+          "sharpe_ann": 3.8350558794403424,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 1.072220388079646,
+          "avg_gross_trade": 0.005464202978378541,
+          "avg_trades_yr": 240.1818181818182,
+          "net_trade": 0.004464202978378541,
+          "positive_years": 11,
+          "rt_cost": 0.001,
+          "sharpe_ann": 3.1702623142412594,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.9521294789887367,
+          "avg_gross_trade": 0.005464202978378541,
+          "avg_trades_yr": 240.1818181818182,
+          "net_trade": 0.003964202978378541,
+          "positive_years": 11,
+          "rt_cost": 0.0015,
+          "sharpe_ann": 2.831426553299532,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.8320385698978278,
+          "avg_gross_trade": 0.005464202978378541,
+          "avg_trades_yr": 240.1818181818182,
+          "net_trade": 0.003464202978378541,
+          "positive_years": 11,
+          "rt_cost": 0.002,
+          "sharpe_ann": 2.4883531680569884,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.5918567517160095,
+          "avg_gross_trade": 0.005464202978378541,
+          "avg_trades_yr": 240.1818181818182,
+          "net_trade": 0.002464202978378541,
+          "positive_years": 11,
+          "rt_cost": 0.003,
+          "sharpe_ann": 1.7897006326863671,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.3516749335341914,
+          "avg_gross_trade": 0.005464202978378541,
+          "avg_trades_yr": 240.1818181818182,
+          "net_trade": 0.001464202978378541,
+          "positive_years": 10,
+          "rt_cost": 0.004,
+          "sharpe_ann": 1.0747926956154328,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.11149311535237315,
+          "avg_gross_trade": 0.005464202978378541,
+          "avg_trades_yr": 240.1818181818182,
+          "net_trade": 0.0004642029783785409,
+          "positive_years": 6,
+          "rt_cost": 0.005,
+          "sharpe_ann": 0.3442400529058251,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": -0.3688705210112632,
+          "avg_gross_trade": 0.005464202978378541,
+          "avg_trades_yr": 240.1818181818182,
+          "net_trade": -0.0015357970216214592,
+          "positive_years": 2,
+          "rt_cost": 0.007,
+          "sharpe_ann": -1.1607097760190814,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": -1.0894159755567177,
+          "avg_gross_trade": 0.005464202978378541,
+          "avg_trades_yr": 240.1818181818182,
+          "net_trade": -0.004535797021621459,
+          "positive_years": 0,
+          "rt_cost": 0.01,
+          "sharpe_ann": -3.5126330291706664,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": -2.2903250664658086,
+          "avg_gross_trade": 0.005464202978378541,
+          "avg_trades_yr": 240.1818181818182,
+          "net_trade": -0.009535797021621458,
+          "positive_years": 0,
+          "rt_cost": 0.015,
+          "sharpe_ann": -7.593383078373331,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": -3.4912341573748993,
+          "avg_gross_trade": 0.005464202978378541,
+          "avg_trades_yr": 240.1818181818182,
+          "net_trade": -0.01453579702162146,
+          "positive_years": 0,
+          "rt_cost": 0.02,
+          "sharpe_ann": -11.685536209476751,
+          "total_years": 11
+        }
+      ]
+    },
+    "weekly_h5": {
+      "avg_gross_annual": 0.3657,
+      "avg_gross_trade": 0.007381,
+      "avg_trades_yr": 49.55,
+      "exact_breakeven_rt": 0.007381,
+      "first_negative_rt_on_grid": 0.01,
+      "rows": [
+        {
+          "avg_ann_net": 0.36570808451950365,
+          "avg_gross_trade": 0.007381264091219343,
+          "avg_trades_yr": 49.54545454545455,
+          "net_trade": 0.007381264091219343,
+          "positive_years": 10,
+          "rt_cost": 0.0,
+          "sharpe_ann": 1.1483613134128836,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.3161626299740492,
+          "avg_gross_trade": 0.007381264091219343,
+          "avg_trades_yr": 49.54545454545455,
+          "net_trade": 0.006381264091219343,
+          "positive_years": 9,
+          "rt_cost": 0.001,
+          "sharpe_ann": 0.9924509964075199,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.2913899027013219,
+          "avg_gross_trade": 0.007381264091219343,
+          "avg_trades_yr": 49.54545454545455,
+          "net_trade": 0.0058812640912193435,
+          "positive_years": 9,
+          "rt_cost": 0.0015,
+          "sharpe_ann": 0.9145335750370883,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.2666171754285947,
+          "avg_gross_trade": 0.007381264091219343,
+          "avg_trades_yr": 49.54545454545455,
+          "net_trade": 0.005381264091219343,
+          "positive_years": 8,
+          "rt_cost": 0.002,
+          "sharpe_ann": 0.8366416164399249,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.2170717208831401,
+          "avg_gross_trade": 0.007381264091219343,
+          "avg_trades_yr": 49.54545454545455,
+          "net_trade": 0.004381264091219343,
+          "positive_years": 7,
+          "rt_cost": 0.003,
+          "sharpe_ann": 0.6809349987858159,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.16752626633768558,
+          "avg_gross_trade": 0.007381264091219343,
+          "avg_trades_yr": 49.54545454545455,
+          "net_trade": 0.003381264091219343,
+          "positive_years": 6,
+          "rt_cost": 0.004,
+          "sharpe_ann": 0.5253329611146755,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.11798081179223105,
+          "avg_gross_trade": 0.007381264091219343,
+          "avg_trades_yr": 49.54545454545455,
+          "net_trade": 0.002381264091219343,
+          "positive_years": 6,
+          "rt_cost": 0.005,
+          "sharpe_ann": 0.3698373133973282,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": 0.01888990270132197,
+          "avg_gross_trade": 0.007381264091219343,
+          "avg_trades_yr": 49.54545454545455,
+          "net_trade": 0.0003812640912193429,
+          "positive_years": 6,
+          "rt_cost": 0.007,
+          "sharpe_ann": 0.0591723886673536,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": -0.1297464609350417,
+          "avg_gross_trade": 0.007381264091219343,
+          "avg_trades_yr": 49.54545454545455,
+          "net_trade": -0.002618735908780657,
+          "positive_years": 5,
+          "rt_cost": 0.01,
+          "sharpe_ann": -0.4059822772181167,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": -0.37747373366231435,
+          "avg_gross_trade": 0.007381264091219343,
+          "avg_trades_yr": 49.54545454545455,
+          "net_trade": -0.007618735908780656,
+          "positive_years": 1,
+          "rt_cost": 0.015,
+          "sharpe_ann": -1.1788752066324937,
+          "total_years": 11
+        },
+        {
+          "avg_ann_net": -0.6252010063895871,
+          "avg_gross_trade": 0.007381264091219343,
+          "avg_trades_yr": 49.54545454545455,
+          "net_trade": -0.012618735908780657,
+          "positive_years": 0,
+          "rt_cost": 0.02,
+          "sharpe_ann": -1.9486244161728643,
+          "total_years": 11
+        }
+      ]
+    }
+  },
+  "ts": "20260319_162004"
+}

@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+*.egg-info/
+tests/.tmp/
+.vscode
+
+# Experiment outputs
+artifacts/
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+*.parquet
+data/
+data/news/

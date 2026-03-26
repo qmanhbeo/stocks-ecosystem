@@ -1,0 +1,7 @@
+cafef:
+  base_url: "https://cafef.vn"
+  sitemap_index_url: "https://cafef.vn/sitemap.xml"
+  category_url: "https://cafef.vn/thi-truong-chung-khoan.chn"
+  rss_url: "https://cafef.vn/thi-truong-chung-khoan.rss"
+  ticker_listing_url_template: "https://cafef.vn/{ticker_lower}/trang-{page}.html"
+  user_agent: "Mozilla/5.0 (compatible; VN-Stock-RL-NewsFetcher/1.0)"

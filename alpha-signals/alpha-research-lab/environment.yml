@@ -1,0 +1,27 @@
+name: stocks
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.10
+  - hmmlearn          # HMM macro regime detection
+  - ipykernel         # Jupyter notebook support
+  - pip
+  - pip:
+    - xgboost
+    - lightgbm
+    - scikit-learn
+    - pandas
+    - numpy
+    - scipy
+    - pyarrow          # parquet file I/O
+    - vnstock          # Vietnamese stock data (HOSE)
+    - yfinance         # global market data (VIX, indices, FX)
+    - gdown            # Google Drive download for setup_data.py
+    - matplotlib
+    - seaborn
+    - plotly
+    - beautifulsoup4   # news crawler (data_tools/fetch_news.py)
+    - requests
+    - tqdm
+    - openpyxl

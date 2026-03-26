@@ -1,0 +1,116 @@
+{
+  "artifacts": {
+    "probas_2026": "data\\features\\xs_live_validation_h54_2026.parquet"
+  },
+  "metadata": {
+    "cost_rt": 0.003,
+    "min_proba": 0.55,
+    "prior_ic_rows": [
+      {
+        "avg_ic": 0.190811,
+        "n_days": 248,
+        "n_tickers": 268,
+        "year": 2015
+      },
+      {
+        "avg_ic": 0.172651,
+        "n_days": 251,
+        "n_tickers": 283,
+        "year": 2016
+      },
+      {
+        "avg_ic": 0.168558,
+        "n_days": 250,
+        "n_tickers": 318,
+        "year": 2017
+      },
+      {
+        "avg_ic": 0.159409,
+        "n_days": 250,
+        "n_tickers": 349,
+        "year": 2018
+      },
+      {
+        "avg_ic": 0.168749,
+        "n_days": 250,
+        "n_tickers": 361,
+        "year": 2019
+      },
+      {
+        "avg_ic": 0.146394,
+        "n_days": 252,
+        "n_tickers": 370,
+        "year": 2020
+      },
+      {
+        "avg_ic": 0.135549,
+        "n_days": 250,
+        "n_tickers": 382,
+        "year": 2021
+      },
+      {
+        "avg_ic": 0.09783,
+        "n_days": 249,
+        "n_tickers": 386,
+        "year": 2022
+      },
+      {
+        "avg_ic": 0.154324,
+        "n_days": 249,
+        "n_tickers": 387,
+        "year": 2023
+      },
+      {
+        "avg_ic": 0.151951,
+        "n_days": 250,
+        "n_tickers": 392,
+        "year": 2024
+      },
+      {
+        "avg_ic": 0.120124,
+        "n_days": 249,
+        "n_tickers": 393,
+        "year": 2025
+      }
+    ],
+    "prior_probas_path": "data\\features\\xs_barrier_all_probas_hose_full.parquet",
+    "top_n": 5,
+    "use_vix_filter": false,
+    "vix_max": 999.0,
+    "vix_min": 0.0
+  },
+  "mode": "live_validation",
+  "name": "h75_2026_holdout_h54",
+  "summary": {
+    "date_max": "2026-03-11",
+    "date_min": "2026-01-05",
+    "ic_2026": 0.132316,
+    "n_days": 43,
+    "n_ic_days": 43,
+    "n_tickers": 389,
+    "portfolio": {
+      "days_skipped_confidence": 1,
+      "days_skipped_vix": 0,
+      "days_total": 43,
+      "equal_weight": {
+        "gross_per_trade": 0.001554,
+        "label": "equal_weight",
+        "net_per_trade": -0.001446,
+        "positive_trade_rate": 0.547619,
+        "trade_std": 0.022693,
+        "trades": 42
+      },
+      "square_weight": {
+        "gross_per_trade": 0.00198,
+        "label": "square_weight",
+        "net_per_trade": -0.00102,
+        "positive_trade_rate": 0.571429,
+        "trade_std": 0.022775,
+        "trades": 42
+      }
+    },
+    "test_year": 2026,
+    "verdict": "pass"
+  },
+  "ts": "20260319_163950"
+}

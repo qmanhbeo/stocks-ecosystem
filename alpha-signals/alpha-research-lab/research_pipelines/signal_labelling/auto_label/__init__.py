@@ -1,0 +1,2 @@
+"""Automatic signal-labelling entrypoints."""
+

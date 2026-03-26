@@ -1,0 +1,24 @@
+rolling_windows:
+  - 3
+  - 5
+sentiment:
+  positive_keywords:
+    - "tang truong"
+    - "tăng trưởng"
+    - "loi nhuan"
+    - "lợi nhuận"
+    - "but pha"
+    - "bứt phá"
+    - "tich cuc"
+    - "tích cực"
+  negative_keywords:
+    - "thua lo"
+    - "thua lỗ"
+    - "suy giam"
+    - "suy giảm"
+    - "rui ro"
+    - "rủi ro"
+    - "ap luc"
+    - "áp lực"
+    - "tieu cuc"
+    - "tiêu cực"

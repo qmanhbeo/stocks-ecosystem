@@ -1,0 +1,84 @@
+{
+    "experiment_name": "E17_regression_combined",
+    "note": "Regression on relative return (like E4) with all validated signal sources: rel lags + tech + macro + xs rank. Regression consistently outperforms classifier (E4 > E3).",
+    "data": {
+        "file_path": "data/stock/gia_lich_su_FPT_1D.parquet",
+        "target_col": "future_rel_return_5d",
+        "test_size": 0.15,
+        "val_size": 0.15,
+        "start_date": "2016-01-01"
+    },
+    "features": {
+        "base_cols": [],
+        "use_lags": false,
+        "use_ma": false,
+        "use_ma_dist": true,
+        "ma_windows": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "use_rsi": true,
+        "use_macd": true,
+        "use_bb": true,
+        "use_atr": true,
+        "use_candle": true,
+        "use_stoch": true,
+        "use_willr": false,
+        "use_adx": true,
+        "use_hist_vol": true,
+        "hist_vol_windows": [
+            5,
+            10,
+            20
+        ],
+        "use_cci": false,
+        "use_volume_signals": false,
+        "use_market_relative": true,
+        "index_file": "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+        "rel_lag_days": [
+            1,
+            2,
+            3,
+            5,
+            10,
+            20
+        ],
+        "use_macro": true,
+        "macro_files": [
+            {
+                "path": "data/fx-commodities/fx_commodities_fx_vnd_usd_1D.parquet",
+                "alias": "usd"
+            },
+            {
+                "path": "data/fx-commodities/fx_commodities_gold_1D.parquet",
+                "alias": "gold"
+            },
+            {
+                "path": "data/fx-commodities/fx_commodities_oil_1D.parquet",
+                "alias": "oil"
+            }
+        ],
+        "macro_lag_days": [
+            1,
+            5
+        ],
+        "use_cross_sectional": true,
+        "xs_file": "data/features/xs_features_daily.parquet",
+        "xs_ticker": "FPT",
+        "use_news": false,
+        "use_intraday": false
+    },
+    "model": {
+        "type": "xgboost",
+        "params": {
+            "n_estimators": 500,
+            "max_depth": 4,
+            "learning_rate": 0.05,
+            "subsample": 0.8,
+            "colsample_bytree": 0.8,
+            "early_stopping_rounds": 30
+        }
+    }
+}

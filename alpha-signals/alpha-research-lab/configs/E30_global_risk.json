@@ -1,0 +1,49 @@
+{
+    "experiment_name": "E30_global_risk",
+    "note": "Session 6: E8 features + expanded global macro/risk features. New: VIX, US10Y yield, Shanghai, HSI, Nikkei, copper, CNY/USD, VNM ETF. Hypothesis: global risk-off (high VIX, falling Asian markets, rising USD) predicts FPT underperformance vs VNINDEX.",
+    "data": {
+        "file_path": "data/stock/gia_lich_su_FPT_1D.parquet",
+        "target_col": "future_rel_dir_5d",
+        "test_size": 0.15, "val_size": 0.15, "start_date": "2016-01-01"
+    },
+    "features": {
+        "base_cols": [],
+        "use_lags": false,
+        "use_ma": false, "use_ma_dist": true, "ma_windows": [5, 10, 20, 50],
+        "use_rsi": true,
+        "use_macd": true,
+        "use_bb": true,
+        "use_atr": true,
+        "use_candle": true,
+        "use_stoch": true,
+        "use_willr": false, "use_adx": true,
+        "use_hist_vol": true, "hist_vol_windows": [5, 10, 20],
+        "use_cci": false,
+        "use_volume_signals": false,
+        "use_market_relative": true,
+        "index_file": "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+        "rel_lag_days": [1, 2, 3, 5, 10, 20],
+        "use_macro": true,
+        "macro_lag_days": [1, 5],
+        "macro_files": [
+            {"path": "data/fx-commodities/fx_commodities_gold_1D.parquet",      "alias": "gold"},
+            {"path": "data/fx-commodities/fx_commodities_oil_1D.parquet",        "alias": "oil"},
+            {"path": "data/fx-commodities/fx_commodities_fx_vnd_usd_1D.parquet","alias": "vnd"},
+            {"path": "data/fx-commodities/fx_commodities_vix_1D.parquet",        "alias": "vix"},
+            {"path": "data/fx-commodities/fx_commodities_us10y_1D.parquet",      "alias": "us10y"},
+            {"path": "data/fx-commodities/fx_commodities_shanghai_1D.parquet",   "alias": "shanghai"},
+            {"path": "data/fx-commodities/fx_commodities_hsi_1D.parquet",        "alias": "hsi"},
+            {"path": "data/fx-commodities/fx_commodities_nikkei_1D.parquet",     "alias": "nikkei"},
+            {"path": "data/fx-commodities/fx_commodities_hg_f_1D.parquet",       "alias": "copper"},
+            {"path": "data/fx-commodities/fx_commodities_cny_x_1D.parquet",      "alias": "cny"},
+            {"path": "data/fx-commodities/fx_commodities_vnm_etf_1D.parquet",    "alias": "vnm_etf"}
+        ]
+    },
+    "model": {
+        "type": "xgboost_classifier",
+        "params": {
+            "n_estimators": 500, "max_depth": 3, "learning_rate": 0.05,
+            "subsample": 0.8, "colsample_bytree": 0.8, "early_stopping_rounds": 30
+        }
+    }
+}

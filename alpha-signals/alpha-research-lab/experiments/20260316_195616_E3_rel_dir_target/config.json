@@ -1,0 +1,70 @@
+{
+    "experiment_name": "E3_rel_dir_target",
+    "note": "Predict whether FPT OUTPERFORMS VN-Index over 5 days (binary). Removes absolute drift bias entirely.",
+    "data": {
+        "file_path": "data/stock/gia_lich_su_FPT_1D.parquet",
+        "target_col": "future_rel_dir_5d",
+        "test_size": 0.15,
+        "val_size": 0.15,
+        "start_date": "2016-01-01"
+    },
+    "features": {
+        "base_cols": [],
+        "use_lags": true,
+        "lag_days": [
+            1,
+            2,
+            3,
+            5,
+            10,
+            20
+        ],
+        "use_ma_dist": true,
+        "ma_windows": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "use_rsi": true,
+        "use_macd": true,
+        "use_bb": true,
+        "use_atr": true,
+        "use_candle": true,
+        "use_stoch": true,
+        "use_adx": true,
+        "use_hist_vol": true,
+        "hist_vol_windows": [
+            5,
+            10,
+            20
+        ],
+        "use_market_relative": true,
+        "index_file": "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+        "rel_lag_days": [
+            1,
+            2,
+            3,
+            5,
+            10,
+            20
+        ],
+        "use_macro": false,
+        "use_ma": false,
+        "use_volume_signals": false,
+        "use_willr": false,
+        "use_cci": false
+    },
+    "model": {
+        "type": "xgboost_classifier",
+        "params": {
+            "n_estimators": 500,
+            "max_depth": 4,
+            "learning_rate": 0.05,
+            "subsample": 0.8,
+            "colsample_bytree": 0.8,
+            "scale_pos_weight": 1.0,
+            "early_stopping_rounds": 30
+        }
+    }
+}

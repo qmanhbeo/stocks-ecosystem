@@ -1,0 +1,9 @@
+version: 1
+timeframe: 1D
+default_label: 0
+selected_label: 1
+allow_multiple_ranges: true
+selected_ranges:
+  - start_ts: ISO-8601 date
+    end_ts: ISO-8601 date
+    label: 1

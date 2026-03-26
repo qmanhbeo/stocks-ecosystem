@@ -1,0 +1,121 @@
+"""Join tabular and embedding features into RL-ready daily exports."""
+
+from __future__ import annotations
+
+import argparse
+from time import perf_counter
+from typing import Optional
+
+import pandas as pd
+
+from research_pipelines.news_features.config import NewsFeaturesConfig, get_default_config
+from research_pipelines.news_features.io_utils import update_manifest
+
+
+def aggregate_daily_feature_dataframe(
+    tabular_df: pd.DataFrame,
+    embedding_df: pd.DataFrame,
+    config: Optional[NewsFeaturesConfig] = None,
+    log_progress: bool = False,
+) -> pd.DataFrame:
+    config = config or get_default_config()
+    if tabular_df.empty and embedding_df.empty:
+        if log_progress:
+            print("Aggregate build skipped because both tabular and embedding datasets are empty", flush=True)
+        return pd.DataFrame(columns=["ticker", "date", *config.default_merge_columns()])
+
+    if tabular_df.empty:
+        if log_progress:
+            print(f"Aggregate stage 1/2: using embedding-only input with {len(embedding_df)} rows", flush=True)
+        combined = embedding_df.copy()
+    elif embedding_df.empty:
+        if log_progress:
+            print(f"Aggregate stage 1/2: using tabular-only input with {len(tabular_df)} rows", flush=True)
+        combined = tabular_df.copy()
+    else:
+        if log_progress:
+            print(
+                f"Aggregate stage 1/2: merging tabular_rows={len(tabular_df)} with embedding_rows={len(embedding_df)}",
+                flush=True,
+            )
+        if tabular_df.duplicated(subset=["ticker", "date"]).any():
+            raise ValueError("Duplicate ticker/date rows found in tabular news features")
+        if embedding_df.duplicated(subset=["ticker", "date"]).any():
+            raise ValueError("Duplicate ticker/date rows found in embedding news features")
+        combined = tabular_df.merge(embedding_df, on=["ticker", "date"], how="outer", validate="one_to_one")
+
+    combined = combined.sort_values(["ticker", "date"]).reset_index(drop=True)
+    if log_progress:
+        print(
+            f"Aggregate stage 1/2 complete: combined_rows={len(combined)}, unique_tickers={combined['ticker'].nunique()}",
+            flush=True,
+        )
+        print("Aggregate stage 2/2: coercing numeric columns and filling missing values", flush=True)
+    numeric_columns = [column for column in combined.columns if column not in {"ticker", "date"}]
+    for column in numeric_columns:
+        combined[column] = pd.to_numeric(combined[column], errors="coerce").fillna(config.missing_fill_value)
+    if log_progress:
+        date_min = str(combined["date"].min()) if not combined.empty else None
+        date_max = str(combined["date"].max()) if not combined.empty else None
+        print(
+            f"Aggregate summary: rows={len(combined)}, unique_tickers={combined['ticker'].nunique()}, "
+            f"numeric_columns={len(numeric_columns)}, date_range={date_min} -> {date_max}",
+            flush=True,
+        )
+    return combined
+
+
+def aggregate_daily_feature_exports(config: Optional[NewsFeaturesConfig] = None) -> pd.DataFrame:
+    config = config or get_default_config()
+    overall_start = perf_counter()
+    load_start = perf_counter()
+    tabular = pd.read_parquet(config.tabular_dataset_path()) if config.tabular_dataset_path().exists() else pd.DataFrame()
+    embedding = pd.read_parquet(config.embedding_dataset_path()) if config.embedding_dataset_path().exists() else pd.DataFrame()
+    load_elapsed = perf_counter() - load_start
+    print(
+        f"Loaded tabular_rows={len(tabular)} and embedding_rows={len(embedding)} in {load_elapsed:.1f}s",
+        flush=True,
+    )
+    aggregate_start = perf_counter()
+    combined = aggregate_daily_feature_dataframe(tabular, embedding, config=config, log_progress=True)
+    aggregate_elapsed = perf_counter() - aggregate_start
+    print(f"Aggregate build completed in {aggregate_elapsed:.1f}s. Writing outputs...", flush=True)
+    write_start = perf_counter()
+    combined.to_parquet(config.combined_dataset_path(), index=False)
+    ticker_groups = list(combined.groupby("ticker", sort=True))
+    total_tickers = len(ticker_groups)
+    progress_interval = 1 if total_tickers <= 10 else 10
+    for ticker_index, (ticker, group) in enumerate(ticker_groups, start=1):
+        group.to_parquet(config.per_ticker_feature_path(str(ticker)), index=False)
+        if ticker_index == 1 or ticker_index % progress_interval == 0 or ticker_index == total_tickers:
+            print(
+                f"Wrote per-ticker aggregate file {ticker_index}/{total_tickers}: {ticker}",
+                flush=True,
+            )
+    write_elapsed = perf_counter() - write_start
+    update_manifest(
+        config=config,
+        combined_feature_rows=int(len(combined)),
+        combined_dataset_path=str(config.combined_dataset_path().relative_to(config.repo_root)),
+    )
+    overall_elapsed = perf_counter() - overall_start
+    print(
+        f"Timing summary: load={load_elapsed:.1f}s, aggregate={aggregate_elapsed:.1f}s, "
+        f"write={write_elapsed:.1f}s, total={overall_elapsed:.1f}s",
+        flush=True,
+    )
+    print(f"Aggregated {len(combined)} combined news feature rows -> {config.combined_dataset_path()}")
+    return combined
+
+
+def build_arg_parser() -> argparse.ArgumentParser:
+    return argparse.ArgumentParser(description="Aggregate daily news features for RL consumption.")
+
+
+def main() -> None:
+    build_arg_parser().parse_args()
+    aggregate_daily_feature_exports()
+
+
+if __name__ == "__main__":
+    main()

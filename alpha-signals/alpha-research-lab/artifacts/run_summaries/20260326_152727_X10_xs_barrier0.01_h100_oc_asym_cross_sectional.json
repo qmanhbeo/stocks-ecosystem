@@ -1,0 +1,23 @@
+{
+  "artifacts": {
+    "all_ticker_probas": "data/features/xs_barrier_vol_1d_h100_oc_asym_hose_full.parquet",
+    "xs_wf_log": "xs_wf_results.jsonl"
+  },
+  "metadata": {
+    "barrier_pct": 0.01,
+    "model": "xgboost_classifier",
+    "n_features": 51,
+    "target": "future_rel_barrier_1d",
+    "threshold": 0.0
+  },
+  "mode": "cross_sectional",
+  "name": "X10_xs_barrier0.01_h100_oc_asym",
+  "summary": {
+    "avg_overall_acc": 0.5651,
+    "fpt_avg_edge": 0.0779,
+    "fpt_n_sig_years": 5,
+    "fpt_std_edge": 0.0561,
+    "total_years": 11
+  },
+  "ts": "20260326_152727"
+}

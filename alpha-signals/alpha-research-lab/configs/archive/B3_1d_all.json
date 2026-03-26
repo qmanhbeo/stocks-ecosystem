@@ -1,0 +1,42 @@
+{
+    "experiment_name": "B3_1d_all",
+    "data": {
+        "file_path": "gia_lich_su_FPT_1D.parquet",
+        "target_col": "future_return_1d",
+        "test_size": 0.15,
+        "val_size": 0.15,
+        "start_date": "2016-01-01"
+    },
+    "features": {
+        "base_cols": [],
+        "use_lags": true,
+        "lag_days": [1, 2, 3, 5, 10, 20, 60],
+        "use_ma": false,
+        "use_ma_dist": true,
+        "ma_windows": [5, 10, 20, 50, 100],
+        "use_rsi": true,
+        "rsi_period": 14,
+        "use_macd": true,
+        "macd_fast": 12,
+        "macd_slow": 26,
+        "macd_signal": 9,
+        "use_bb": true,
+        "bb_period": 20,
+        "bb_std": 2,
+        "use_atr": true,
+        "atr_period": 14,
+        "use_volume_signals": true,
+        "vol_ma_period": 20
+    },
+    "model": {
+        "type": "xgboost",
+        "params": {
+            "n_estimators": 500,
+            "max_depth": 4,
+            "learning_rate": 0.05,
+            "subsample": 0.8,
+            "colsample_bytree": 0.8,
+            "early_stopping_rounds": 30
+        }
+    }
+}

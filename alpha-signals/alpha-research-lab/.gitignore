@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+venv/
+env/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# data/news/ is excluded — 3.6 GB (3,734 JSONL files), too large for git.
+# Everything else in data/ IS tracked (parquet, csv, JSON features).
+# Restore news: python data_tools/fetch_news_archive.py
+# See notes/data_sources.md for full data inventory.
+data/news/
+
+# Temporary download archives
+*.zip
+
+# Model weights (always regenerable)
+*.pkl
+*.joblib
+
+# Experiment artifacts — config.json and metrics.json are kept via git
+# but model weights inside experiments/ are excluded above
+# If you want to purge experiments entirely: uncomment next line
+# experiments/
+
+# Auto-generated logs — these ARE tracked (they record experiment history)
+# results_summary.jsonl   <- TRACKED
+# wf_results.jsonl        <- TRACKED
+# xs_wf_results.jsonl     <- TRACKED
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo

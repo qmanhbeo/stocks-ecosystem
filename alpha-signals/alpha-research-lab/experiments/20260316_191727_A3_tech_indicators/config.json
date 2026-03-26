@@ -1,0 +1,39 @@
+{
+    "experiment_name": "A3_tech_indicators",
+    "data": {
+        "file_path": "gia_lich_su_FPT_1D.parquet",
+        "target_col": "future_return_5d",
+        "test_size": 0.15,
+        "val_size": 0.15,
+        "start_date": "2016-01-01"
+    },
+    "features": {
+        "base_cols": [],
+        "use_lags": false,
+        "use_ma": false,
+        "use_ma_dist": false,
+        "use_rsi": true,
+        "rsi_period": 14,
+        "use_macd": true,
+        "macd_fast": 12,
+        "macd_slow": 26,
+        "macd_signal": 9,
+        "use_bb": true,
+        "bb_period": 20,
+        "bb_std": 2,
+        "use_atr": true,
+        "atr_period": 14,
+        "use_volume_signals": false
+    },
+    "model": {
+        "type": "xgboost",
+        "params": {
+            "n_estimators": 500,
+            "max_depth": 4,
+            "learning_rate": 0.05,
+            "subsample": 0.8,
+            "colsample_bytree": 0.8,
+            "early_stopping_rounds": 30
+        }
+    }
+}
