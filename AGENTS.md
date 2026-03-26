@@ -21,6 +21,7 @@ Current responsibilities:
 - `alpha-research-lab/` owns research pipelines and research outputs
 - `manual-label-factory/` owns the manual buy-zone labelling UI
 - `RL-trading-agent/` owns RL runtime logic and consumes artifacts from root `data/`
+- `alpha-research-lab/data` is a symlink to root `data/` so research scripts can be run from inside the lab without duplicating data
 
 ## Important Paths
 
@@ -32,6 +33,7 @@ Current responsibilities:
 ## Default Assumptions
 
 - Prefer root `data/` over repo-local `data/` paths
+- Inside `alpha-research-lab/`, `data/` resolves to the shared root via symlink
 - Do not reintroduce duplicate data stores inside child repos unless explicitly requested
 - Treat cross-project path contracts as ecosystem-level contracts
 - When changing producer/consumer boundaries, update docs in both the producer and consumer project

@@ -10,6 +10,10 @@ a file is missing.
 
 ## TL;DR for Agents
 
+All paths below are written as `data/...` because this repo is meant to be run from
+inside `alpha-research-lab/`, where `data/` is a symlink to the shared workspace root
+`/home/manh/stocks/data`.
+
 | Data | In git? | How to restore if missing |
 |------|---------|---------------------------|
 | `data/features/*.parquet` | YES | Already in repo; regenerate with scripts below if corrupted |
@@ -23,7 +27,8 @@ a file is missing.
 
 ## What Is Tracked in Git
 
-Everything in `data/` **except** `data/news/` is committed directly to the repository.
+In the workspace root repo, everything in shared `data/` **except** `data/news/` is committed
+to git. Inside `alpha-research-lab/`, `data/` is only a symlink to that shared location.
 
 ### Pre-Generated Feature Files (active)
 

@@ -16,6 +16,7 @@ This is no longer a set of fully self-contained repos. The projects below now op
 - Research producer code lives under `alpha-research-lab/`
 - Manual label UI code lives under `manual-label-factory/`
 - RL consumer/runtime code lives under `RL-trading-agent/`
+- `alpha-research-lab/data` is a symlink back to root `data/` so lab scripts can be run from inside the lab without duplicating files
 
 ## Data Layout
 

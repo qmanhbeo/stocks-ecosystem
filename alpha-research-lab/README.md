@@ -37,6 +37,13 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 
 `README.md` is an overview. The live source of truth is `notes/next_steps.md`.
 
+## Data Contract
+
+- Run research scripts from inside `alpha-research-lab/`
+- Canonical data lives in the workspace root at `../data/`
+- The repo-local `data/` path is a symlink to that shared root so existing lab scripts can keep using `data/...`
+- No research data is duplicated inside `alpha-research-lab/`
+
 ## Current Best RL Signal
 
 **H93 — Volume + 1-day label cross-sectional model**
@@ -69,6 +76,8 @@ conda env create -f environment.yml
 conda activate stocks
 python setup_data.py
 ```
+
+All commands above are intended to be run from `alpha-research-lab/`.
 
 ## Main Experiment Modes
 
