@@ -1,8 +1,8 @@
-﻿# VN Stock RL
+﻿# RL Trading Agent
 
 Consumer-only RL runtime for Vietnamese equity experiments.
 
-This repo no longer owns data fetching, news feature generation, manual labelling, or supervised signal production. Those producer pipelines now live in `alpha-signals/alpha-research-lab` and `alpha-signals/manual-label-factory`.
+This repo no longer owns data fetching, news feature generation, manual labelling, or supervised signal production. Those producer pipelines now live in `../alpha-research-lab` and `../manual-label-factory`.
 
 The RL runtime reads shared research exports from `/home/manh/stocks/data` by default.
 
@@ -11,8 +11,8 @@ The RL runtime reads shared research exports from `/home/manh/stocks/data` by de
 ```bash
 conda create -n stocks python=3.10
 conda activate stocks
-git clone https://github.com/qmanhbeo/VN-stock-RL
-cd VN-stock-RL
+git clone https://github.com/qmanhbeo/RL-trading-agent
+cd RL-trading-agent
 pip install -e ".[dev]"
 ```
 
@@ -32,7 +32,7 @@ python -m vn_stock_rl.data_tools.inspect_research_exports --require-news --requi
 ## Build research-side features outside this repo
 
 ```bash
-cd ../alpha-signals/alpha-research-lab
+cd ../alpha-research-lab
 python -m research_pipelines.news_features
 python -m research_pipelines.signal_labelling.auto_label
 python -m research_pipelines.supervised_label.core.rebuild_bar_labels
@@ -44,7 +44,7 @@ python -m research_pipelines.supervised_label.models.generate_signal_probs
 For manual buy-zone labelling:
 
 ```bash
-cd ../alpha-signals/manual-label-factory
+cd ../manual-label-factory
 python -m manual_label_factory.manual_label
 ```
 

@@ -2,7 +2,7 @@
 
 `research_pipelines/supervised_label/` is the canonical downstream supervised signal pipeline. It rebuilds favorable buy/hold regions into per-bar targets, trains a lightweight supervised model, exports per-bar probabilities, and publishes RL-ready signal parquet files into shared `stocks/data`.
 
-Manual buy-zone labeling lives in `alpha-signals/manual-label-factory`. Heuristic auto-labeling lives under `research_pipelines/signal_labelling/auto_label/`.
+Manual buy-zone labeling lives in `manual-label-factory`. Heuristic auto-labeling lives under `research_pipelines/signal_labelling/auto_label/`.
 
 ## Label Semantics
 

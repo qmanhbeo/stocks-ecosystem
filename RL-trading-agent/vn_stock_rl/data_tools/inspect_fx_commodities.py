@@ -1,20 +1,21 @@
 """
-Inspect parquet stock data files.
+Inspect parquet FX/commodities data files.
 
 Usage:
-    python -m vn_stock_rl.data_tools.inspect_stock --ticker ACB --interval 1D
-    python -m vn_stock_rl.data_tools.inspect_stock --ticker VNM
-    python -m vn_stock_rl.data_tools.inspect_stock  # defaults to ACB 1D
+    python -m vn_stock_rl.data_tools.inspect_fx_commodities --ticker VND=X --interval 1d
+    python -m vn_stock_rl.data_tools.inspect_fx_commodities --ticker GC=F
+    python -m vn_stock_rl.data_tools.inspect_fx_commodities  # defaults to VND=X 1d
 """
 
 import pandas as pd
 import argparse
 from pathlib import Path
+import re
 
-from vn_stock_rl.external_features import default_stock_data_dir
+from vn_stock_rl.external_features import default_help_assets_dir
 
 
-DEFAULT_DATA_DIR = default_stock_data_dir()
+DEFAULT_DATA_DIR = default_help_assets_dir()
 
 
 def inspect_file(file_path: str):
@@ -24,7 +25,7 @@ def inspect_file(file_path: str):
     except FileNotFoundError:
         print(f"\n❌ File not found: {file_path}")
         print("   Make sure the file exists in shared research data.")
-        print("   Producer-side fetch/build now lives in alpha-signals/alpha-research-lab.")
+        print("   Producer-side fetch/build now lives in alpha-research-lab.")
         return False
     except Exception as e:
         print(f"\n❌ Error reading file: {e}")
@@ -36,7 +37,7 @@ def inspect_file(file_path: str):
 
     # Basic info
     print(f"Shape: {df.shape} (rows, columns)")
-    
+
     # Date range - handle both index and column
     if isinstance(df.index, pd.DatetimeIndex):
         start_date = df.index[0]
@@ -47,9 +48,9 @@ def inspect_file(file_path: str):
     else:
         start_date = df.iloc[0, 0]
         end_date = df.iloc[-1, 0]
-    
+
     print(f"Date range: {start_date} to {end_date}")
-    print(f"Total days: {len(df)}")
+    print(f"Total rows: {len(df)}")
     print(f"\nColumns: {list(df.columns)}")
     print(f"\nData types:\n{df.dtypes}")
 
@@ -81,7 +82,7 @@ def inspect_file(file_path: str):
     else:
         print(missing)
         print(f"\nTotal missing values: {missing.sum()}")
-    
+
     # Check for duplicates
     duplicates = df.duplicated().sum()
     print(f"\n{'='*60}")
@@ -91,20 +92,20 @@ def inspect_file(file_path: str):
         print("✓ No duplicate rows found!")
     else:
         print(f"⚠️  Found {duplicates} duplicate rows")
-    
+
     # Data quality checks
     print(f"\n{'='*60}")
     print("DATA QUALITY CHECKS:")
     print(f"{'='*60}")
-    
-    # Check for zeros in OHLCV
+
+    # Check for zeros in close
     if 'close' in df.columns:
         zero_close = (df['close'] == 0).sum()
         if zero_close > 0:
             print(f"⚠️  {zero_close} rows with close price = 0")
         else:
             print("✓ No zero close prices")
-    
+
     # Check for negative values
     numeric_cols = df.select_dtypes(include=['float64', 'int64']).columns
     for col in numeric_cols:
@@ -112,48 +113,39 @@ def inspect_file(file_path: str):
             negative = (df[col] < 0).sum()
             if negative > 0:
                 print(f"⚠️  {negative} negative values in {col}")
-    
-    # Check for extreme outliers (beyond 3 std)
-    if 'close' in df.columns:
-        mean = df['close'].mean()
-        std = df['close'].std()
-        outliers = ((df['close'] < mean - 3*std) | (df['close'] > mean + 3*std)).sum()
-        if outliers > 0:
-            print(f"ℹ️  {outliers} potential outliers in close price (>3 std)")
-        else:
-            print("✓ No extreme outliers in close price")
-    
+
     print(f"\n{'='*60}\n")
     return True
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Inspect stock data parquet files",
+        description="Inspect FX/commodities data parquet files",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python -m vn_stock_rl.data_tools.inspect_stock                          # Inspect ACB 1D (default)
-  python -m vn_stock_rl.data_tools.inspect_stock --ticker VNM             # Inspect VNM 1D
-  python -m vn_stock_rl.data_tools.inspect_stock --ticker HPG --interval 1D
-  python -m vn_stock_rl.data_tools.inspect_stock --file data/stock/custom.parquet
+  python -m vn_stock_rl.data_tools.inspect_fx_commodities
+  python -m vn_stock_rl.data_tools.inspect_fx_commodities --ticker GC=F
+  python -m vn_stock_rl.data_tools.inspect_fx_commodities --ticker fx_vnd_usd
+  python -m vn_stock_rl.data_tools.inspect_fx_commodities --ticker CL=F --interval 1d
+  python -m vn_stock_rl.data_tools.inspect_fx_commodities --file data/fx-commodities/custom.parquet
         """
     )
-    
+
     parser.add_argument(
         "--ticker",
         type=str,
-        default="ACB",
-        help="Stock ticker (default: ACB)"
+        default="VND=X",
+        help="Ticker (default: VND=X)"
     )
-    
+
     parser.add_argument(
         "--interval",
         type=str,
-        default="1D",
-        help="Time interval (default: 1D)"
+        default="1d",
+        help="Time interval (default: 1d)"
     )
-    
+
     parser.add_argument(
         "--data-dir",
         type=str,
@@ -162,34 +154,66 @@ Examples:
     )
     
     parser.add_argument(
+        "--aliases",
+        type=str,
+        default=None,
+        help="Optional alias overrides: TICKER=alias,TICKER2=alias2"
+    )
+
+    parser.add_argument(
         "--file",
         type=str,
         default=None,
         help="Direct file path (overrides --ticker and --interval)"
     )
-    
+
     args = parser.parse_args()
-    
+
+    def _sanitize_ticker(ticker: str) -> str:
+        return re.sub(r"[^A-Za-z0-9]+", "_", ticker).strip("_").lower()
+
+    default_aliases = {
+        "VND=X": "fx_vnd_usd",
+        "GC=F": "gold",
+        "CL=F": "oil",
+    }
+    if args.aliases:
+        for pair in args.aliases.split(","):
+            if "=" not in pair:
+                continue
+            k, v = pair.split("=", 1)
+            k = k.strip().upper()
+            v = v.strip().lower()
+            if k and v:
+                default_aliases[k] = v
+
     # Determine file path
     if args.file:
         file_path = args.file
     else:
-        ticker = args.ticker.upper()
-        file_path = f"{args.data_dir}gia_lich_su_{ticker}_{args.interval}.parquet"
-    
+        ticker = args.ticker
+        ticker_upper = ticker.upper()
+        if ticker_upper in default_aliases:
+            alias = default_aliases[ticker_upper]
+        elif ticker.lower() in default_aliases.values():
+            alias = ticker.lower()
+        else:
+            alias = _sanitize_ticker(ticker)
+        file_path = f"{args.data_dir}fx_commodities_{alias}_{args.interval}.parquet"
+
     print("\n" + "="*60)
-    print("Stock Data Inspector")
+    print("FX/Commodities Data Inspector")
     print("="*60)
-    
+
     # Inspect the file
     success = inspect_file(file_path)
-    
+
     if success:
         print("✓ Inspection complete!")
     else:
         print("❌ Inspection failed")
         return 1
-    
+
     return 0
 
 

@@ -55,7 +55,7 @@ To change canonical data/artifact paths:
 ## Important Defaults
 
 - RL defaults to shared `data/features/news/predictions/` and `data/features/signals/predictions/auto/`.
-- Producer pipelines now live outside this repo in `alpha-signals/alpha-research-lab` and `alpha-signals/manual-label-factory`.
+- Producer pipelines now live outside this repo in `alpha-research-lab` and `manual-label-factory`.
 
 ## Keep In Mind
 

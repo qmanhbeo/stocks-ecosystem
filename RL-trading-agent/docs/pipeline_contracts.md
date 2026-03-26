@@ -11,12 +11,12 @@ This file is a compact input/output map for the main pipelines.
 
 ## Research-Owned Producers
 
-These workflows moved out of `VN-stock-RL`:
+These workflows moved out of `RL-trading-agent`:
 
-- stock/news/helper-data fetch and feature generation -> `alpha-signals/alpha-research-lab`
-- heuristic auto labelling -> `alpha-signals/alpha-research-lab`
-- supervised signal dataset/model/probability generation -> `alpha-signals/alpha-research-lab`
-- manual buy-zone labelling -> `alpha-signals/manual-label-factory`
+- stock/news/helper-data fetch and feature generation -> `alpha-research-lab`
+- heuristic auto labelling -> `alpha-research-lab`
+- supervised signal dataset/model/probability generation -> `alpha-research-lab`
+- manual buy-zone labelling -> `manual-label-factory`
 
 The RL repo now consumes their published outputs from shared data paths.
 

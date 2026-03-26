@@ -7,7 +7,7 @@ This is no longer a set of fully self-contained repos. The projects below now op
 - `data/`: canonical shared data root
 - `alpha-research-lab/`: alpha research, feature generation, auto-labelling, supervised signal pipeline
 - `manual-label-factory/`: manual buy-zone labelling UI
-- `VN-stock-RL/`: RL training, evaluation, and feature consumption
+- `RL-trading-agent/`: RL training, evaluation, and feature consumption
 - `media-output/signal-xs-momentum/`: older signal-specific project kept alongside the ecosystem
 
 ## Canonical Ownership
@@ -15,7 +15,7 @@ This is no longer a set of fully self-contained repos. The projects below now op
 - Raw and published research data live under `data/`
 - Research producer code lives under `alpha-research-lab/`
 - Manual label UI code lives under `manual-label-factory/`
-- RL consumer/runtime code lives under `VN-stock-RL/`
+- RL consumer/runtime code lives under `RL-trading-agent/`
 
 ## Data Layout
 
@@ -38,12 +38,12 @@ This means the root data directory is the canonical dataset surface for the whol
 1. Research and feature generation happen in `alpha-research-lab/`
 2. Manual buy-zone annotation happens in `manual-label-factory/`
 3. Published artifacts are written into root `data/`
-4. RL training/evaluation in `VN-stock-RL/` reads from root `data/`
+4. RL training/evaluation in `RL-trading-agent/` reads from root `data/`
 
 ## Current Reality
 
 - `alpha-research-lab/data/` has been fully moved into root `data/`
-- `VN-stock-RL` has already been cleaned up toward a consumer-only role
+- `RL-trading-agent` has already been cleaned up toward a consumer-only role
 - The workspace behaves like one ecosystem even though code is still split across multiple git repos
 
 ## Recommended Next Step

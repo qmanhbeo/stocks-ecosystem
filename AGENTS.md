@@ -8,8 +8,8 @@ Read these first:
 
 - `README.md`
 - `alpha-research-lab/README.md`
-- `VN-stock-RL/README.md`
-- `VN-stock-RL/AGENTS.md` when changing RL runtime code
+- `RL-trading-agent/README.md`
+- `RL-trading-agent/AGENTS.md` when changing RL runtime code
 
 ## Workspace Model
 
@@ -20,14 +20,14 @@ Current responsibilities:
 - `data/` is the canonical shared data root for the entire workspace
 - `alpha-research-lab/` owns research pipelines and research outputs
 - `manual-label-factory/` owns the manual buy-zone labelling UI
-- `VN-stock-RL/` owns RL runtime logic and consumes artifacts from root `data/`
+- `RL-trading-agent/` owns RL runtime logic and consumes artifacts from root `data/`
 
 ## Important Paths
 
 - Shared raw + published data: `/home/manh/stocks/data`
 - Research lab: `/home/manh/stocks/alpha-research-lab`
 - Manual label factory: `/home/manh/stocks/manual-label-factory`
-- RL runtime: `/home/manh/stocks/VN-stock-RL`
+- RL runtime: `/home/manh/stocks/RL-trading-agent`
 
 ## Default Assumptions
 
@@ -49,8 +49,8 @@ If changing manual labelling:
 
 If changing RL feature consumption, defaults, or merge behavior:
 
-- work in `VN-stock-RL/vn_stock_rl/`
-- also read `VN-stock-RL/AGENTS.md`
+- work in `RL-trading-agent/vn_stock_rl/`
+- also read `RL-trading-agent/AGENTS.md`
 
 If changing shared dataset conventions:
 
