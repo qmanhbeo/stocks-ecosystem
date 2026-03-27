@@ -1,28 +1,131 @@
 {
   "artifacts": {
-    "details_json": "/home/manh/alpha-research-lab/artifacts/run_summaries/20260326_154550_dense_signal_standalone_checks_details.json"
+    "details_json": "/home/manh/stocks/alpha-research-lab/artifacts/run_summaries/20260327_102101_c3_dispersion_regime_ic_details.json"
   },
-  "metadata": {},
+  "metadata": {
+    "session": 37,
+    "signal": "C3"
+  },
   "mode": "standalone_signal",
-  "name": "dense_signal_standalone_checks",
+  "name": "c3_dispersion_regime_ic",
   "summary": {
-    "dispersion_context_vs_s1_top5_edge": {
-      "n_days": 2748,
-      "p_value": 0.13020294192520482,
-      "spearman": -0.028875156335675573
+    "features": {
+      "xs_breadth_up_1d": {
+        "daily_spearman_vs_top5": {
+          "n_days": 2748,
+          "p_value": 0.006115843882574422,
+          "spearman": 0.052285485364079495
+        },
+        "regime_conditional_ic": {
+          "ic_relative_spread_pct": -3.8849025601139404,
+          "ic_spread_high_minus_low": -0.004892806641184244,
+          "terciles": {
+            "high": {
+              "ic": 0.12105132105505179,
+              "n": 289739,
+              "p_value": 0.0
+            },
+            "low": {
+              "ic": 0.12594412769623603,
+              "n": 269175,
+              "p_value": 0.0
+            },
+            "mid": {
+              "ic": 0.13863124926119832,
+              "n": 267490,
+              "p_value": 0.0
+            }
+          }
+        }
+      },
+      "xs_dispersion_z20": {
+        "daily_spearman_vs_top5": {
+          "n_days": 2748,
+          "p_value": 0.12367264671395099,
+          "spearman": -0.029375574990935866
+        },
+        "regime_conditional_ic": {
+          "ic_relative_spread_pct": 2.101483706937361,
+          "ic_spread_high_minus_low": 0.002598204183350647,
+          "terciles": {
+            "high": {
+              "ic": 0.12623486026464814,
+              "n": 279283,
+              "p_value": 0.0
+            },
+            "low": {
+              "ic": 0.1236366560812975,
+              "n": 276713,
+              "p_value": 0.0
+            },
+            "mid": {
+              "ic": 0.13254596428565774,
+              "n": 270408,
+              "p_value": 0.0
+            }
+          }
+        }
+      },
+      "xs_ret_std_1d": {
+        "daily_spearman_vs_top5": {
+          "n_days": 2748,
+          "p_value": 0.13483738442965423,
+          "spearman": -0.028531711905960072
+        },
+        "regime_conditional_ic": {
+          "ic_relative_spread_pct": 1.216842003872478,
+          "ic_spread_high_minus_low": 0.0014701704286472217,
+          "terciles": {
+            "high": {
+              "ic": 0.12228868457991346,
+              "n": 270912,
+              "p_value": 0.0
+            },
+            "low": {
+              "ic": 0.12081851415126624,
+              "n": 297098,
+              "p_value": 0.0
+            },
+            "mid": {
+              "ic": 0.14065487838250723,
+              "n": 258394,
+              "p_value": 0.0
+            }
+          }
+        }
+      },
+      "xs_tail_spread_1d": {
+        "daily_spearman_vs_top5": {
+          "n_days": 2748,
+          "p_value": 0.067872956401854,
+          "spearman": -0.034835527306580995
+        },
+        "regime_conditional_ic": {
+          "ic_relative_spread_pct": -3.0979358670385406,
+          "ic_spread_high_minus_low": -0.0038136782841526468,
+          "terciles": {
+            "high": {
+              "ic": 0.11929017046654203,
+              "n": 273907,
+              "p_value": 0.0
+            },
+            "low": {
+              "ic": 0.12310384875069467,
+              "n": 293228,
+              "p_value": 0.0
+            },
+            "mid": {
+              "ic": 0.1418587401882154,
+              "n": 259269,
+              "p_value": 0.0
+            }
+          }
+        }
+      }
     },
-    "oc_asym_5d": {
-      "avg_ic": 0.027296582573516616,
-      "corr_with_s1": 0.14744650956951888,
-      "pos_years": 10,
-      "years": 11
-    },
-    "ret_skew_z20": {
-      "avg_ic": 0.0019024707043658223,
-      "corr_with_s1": -0.003533045469506108,
-      "pos_years": 6,
-      "years": 11
-    }
+    "primary_feature": "xs_dispersion_z20",
+    "reason": "Regime IC spread 2.1% <= 10% and day-level p=0.124 >= 0.10 \u2014 C3 does not pass standalone RL gate",
+    "verdict": "FAIL"
   },
-  "ts": "20260326_154550"
+  "ts": "20260327_102101"
 }

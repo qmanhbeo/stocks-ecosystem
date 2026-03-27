@@ -1992,3 +1992,26 @@ Interpretation:
 - When injected into supervised ranking, they add noise/variance and reduce Sharpe.
 
 **Verdict:** FAIL. Earnings-calendar branch should not be continued in current form.
+
+---
+
+## F67: C3 Dispersion Regime Fails Standalone RL Gate (confirmed 2026-03-27)
+
+Regime-conditional IC analysis for C3/H101 (cross-sectional return dispersion features).
+
+Test: split days into terciles by each dispersion feature, compute S1 (H93) Spearman IC per tercile.
+
+| Feature | IC (low) | IC (mid) | IC (high) | Rel. spread |
+|---|---|---|---|---|
+| `xs_dispersion_z20` | 0.1236 | 0.1325 | 0.1262 | +2.1% |
+| `xs_ret_std_1d` | 0.1208 | 0.1407 | 0.1223 | +1.2% |
+| `xs_breadth_up_1d` | 0.1259 | 0.1386 | 0.1211 | −3.9% |
+| `xs_tail_spread_1d` | 0.1231 | 0.1419 | 0.1193 | −3.1% |
+
+**Key observations:**
+- IC spread across terciles ≤ 2% relative for all features (threshold: >10%).
+- IC is consistently highest in the mid-tercile, not at extreme dispersion levels — no monotone relationship.
+- `xs_breadth_up_1d` day-level Spearman vs top-5 accuracy is significant (p=0.006) but is a market-direction artifact (broad up-days trivially raise accuracy), not a ranking quality improvement.
+- The H101 Sharpe improvement (+0.26 vs H93, from Session 34) is marginal noise in the supervised model.
+
+**Verdict:** C3 REJECTED. Dispersion regime does not condition H93 signal quality. The dense OHLCV-derived signal search is complete with current data.

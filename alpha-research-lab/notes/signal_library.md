@@ -47,22 +47,16 @@ PYTHONIOENCODING=utf-8 /c/Users/manhn/miniconda3/envs/stocks/python.exe cross_se
 
 ## 🔶 Candidate Signals (weak, needs improvement)
 
-### C3 — Cross-Sectional Dispersion Regime (H101)
-**Status: CANDIDATE/PASS (risk-adjusted), dense**
+### ~~C3 — Cross-Sectional Dispersion Regime (H101)~~ REJECTED (Session 37)
 
-- **WF integration test:** H93 + dispersion features
-- **IC (factor test):** +0.1474 (vs H93 +0.1491; small decrease)
-- **Top-5 avg edge:** +23.83% (vs H93 +24.15%; small decrease)
-- **Top-5 Sharpe:** **15.34** (vs H93 15.08; +0.26)
-- **Edge std:** **1.55%** (vs H93 1.60%; improved stability)
-- **Coverage:** 100% date-level (dense, non-sparse)
+**Status: REJECTED — regime-conditional IC analysis decisive (2026-03-27)**
 
-**What it captures:** Market-wide cross-sectional return spread and breadth regime
-(dispersion std/iqr/tail spread, breadth up/down, rolling z-score). This acts as a
-context signal that stabilizes ranking behavior across regimes.
+- **WF integration test (Session 34):** Sharpe 15.34 (+0.26 vs H93) — marginal noise, not genuine
+- **Standalone gate (Session 37, H106):** IC spread across dispersion terciles ≤ 2% relative
+  (threshold: >10%). No monotone relationship between dispersion level and signal quality.
+- **Day-level Spearman** vs S1 top-5 accuracy: p=0.124 for primary feature (xs_dispersion_z20)
 
-**Why it matters for RL:** Dense regime context is suitable for policy conditioning and
-appears to slightly improve risk-adjusted performance.
+See `notes/findings.md` F67 for full analysis.
 
 ### C1 — Keyword News Sentiment (H89)
 **Status: CANDIDATE — orthogonal but inconsistent**
@@ -147,6 +141,7 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Open/close asymmetry dense features (H100/H102) | edge up, Sharpe down sharply | Variance inflation dominates |
 | Return skewness dense features (H103) | IC −0.0002 vs H93, Sharpe −4.45 | Standalone IC too weak (+0.0019) |
 | Earnings calendar dense features (H104/H105) | IC flat/slightly down, Sharpe −3.3 to −3.4 | Standalone IC weak (~0.001 to 0.006) |
+| Dispersion regime (C3/H101/H106) | Regime IC spread ≤ 2%, p=0.124 | No regime effect on H93 IC; H101 Sharpe gain (+0.26) is noise |
 
 ---
 

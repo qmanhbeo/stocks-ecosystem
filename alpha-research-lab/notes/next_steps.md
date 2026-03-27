@@ -7,7 +7,7 @@ Use `notes/session_26_log.md` for the latest full session detail.
 
 ## Current State
 
-**Session status:** Session 36 complete (H104/H105 earnings calendar FAIL; standalone gate enforced, 2026-03-26)
+**Session status:** Session 37 complete (H106 C3 dispersion regime REJECTED; dense signal search closed, 2026-03-27)
 
 ### Current production system
 
@@ -87,6 +87,7 @@ Use `notes/session_26_log.md` for the latest full session detail.
 | 34 | 2026-03-26 | **H98 PARKED**; H100/H101/H102 dense sweeps run — H101 PASS (Sharpe 15.34), H100/H102 FAIL (variance blow-up) | H93/H101 tie-class |
 | 35 | 2026-03-26 | Standalone gate enforced; H103 return skewness FAIL; dense standalone checks logged (H100 standalone +, H101 context weak, H103 standalone weak) | H93/H101 tie-class |
 | 36 | 2026-03-26 | H104 earnings calendar dense features built; H104 and H105 both FAIL (Sharpe collapse), standalone IC weak | H93/H101 tie-class |
+| 37 | 2026-03-27 | H106 C3 regime-conditional IC: dispersion spread ≤2%, p=0.124 — C3 REJECTED; dense search closed | H93 only |
 
 \* Contaminated: stock selection was post-hoc.
 
@@ -240,18 +241,23 @@ See `notes/session_36_log.md`.
 
 ---
 
-## Active Priority: Session 37
+## Active Priority: Session 38
 
-### H98 — LLM Sentiment
-- **Status: PARKED (do not run now).**
-- Re-open only when runtime throughput is solved (stable local inference or alternate infra).
+### Dense Signal Search: CLOSED
+All OHLCV-derived dense candidates have been tested and rejected (H100–H106). No further
+candidates in queue. H93 (S1) is the only confirmed RL signal.
 
-### New Direction: Non-Sparse Signals
-Both C1 (news) and C2 (insider) fail in XS WF due to sparsity. Next candidates should be dense:
-- **Earnings/reporting calendar** — tested in H104/H105, weak standalone + hurts Sharpe
-- **Open/close asymmetry** — tested in H100/H102, not robust (high variance)
-- **Cross-sectional dispersion regime** — tested in H101, promising (Sharpe +0.26 vs H93)
-- **Return skewness features** — tested in H103, not robust in current form
+### Remaining blocked paths
+- **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)
+- **H95 Foreign flow** — BLOCKED (historical daily data not available via vnstock)
+- **Order book imbalance** — BLOCKED (intraday data not available historically)
+
+### Options for next phase
+1. Declare signal search Phase 1 complete; shift to RL agent development using S1 alone.
+2. Wait for H98 LLM to become operational.
+3. Identify a new data source (foreign flow, intraday, order book provider).
+4. Explore fundamentals-based cross-sectional signals (P/E, P/B rank) — data exists in
+   `data/fundamentals_cache/` but not yet tested as a standalone cross-sectional signal.
 
 ---
 
