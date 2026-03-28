@@ -85,7 +85,7 @@ def regime_ic(df: pd.DataFrame, feature: str) -> dict:
     low_ic = rows["low"]["ic"] if rows["low"]["ic"] is not None else float("nan")
     high_ic = rows["high"]["ic"] if rows["high"]["ic"] is not None else float("nan")
     spread = high_ic - low_ic
-    relative_spread = (spread / abs(low_ic)) if (low_ic and abs(low_ic) > 1e-6) else float("nan")
+    relative_spread = (spread / abs(low_ic)) if abs(low_ic) > 1e-6 else float("nan")
 
     return {
         "terciles": rows,
@@ -104,9 +104,14 @@ def daily_spearman_vs_top5(top5: pd.DataFrame, disp: pd.DataFrame, feature: str)
 
 
 def main():
-    s1 = pd.read_parquet(S1_PATH)
+    s1 = pd.read_parquet(S1_PATH, columns=["time", "xs_proba", "actual"])
     s1["time"] = pd.to_datetime(s1["time"])
-    disp = pd.read_parquet(DISP_PATH)
+
+    disp_cols = ["time"] + DISP_FEATURES
+    try:
+        disp = pd.read_parquet(DISP_PATH, columns=disp_cols)
+    except Exception:
+        disp = pd.read_parquet(DISP_PATH)
     disp["time"] = pd.to_datetime(disp["time"])
 
     # Restrict to in-sample years (exclude 2026 per working rules)
@@ -114,12 +119,12 @@ def main():
 
     top5 = compute_daily_top5_accuracy(s1)
 
+    avail_feats = [f for f in DISP_FEATURES if f in disp.columns]
+    merged_s1 = s1.merge(disp[["time"] + avail_feats], on="time", how="inner")
+
     results = {}
 
-    for feat in DISP_FEATURES:
-        if feat not in disp.columns:
-            continue
-        merged_s1 = s1.merge(disp[["time", feat]], on="time", how="inner")
+    for feat in avail_feats:
         results[feat] = {
             "regime_conditional_ic": regime_ic(merged_s1, feat),
             "daily_spearman_vs_top5": daily_spearman_vs_top5(top5, disp, feat),
