@@ -280,6 +280,40 @@ existing candidate set.
 
 ---
 
+### C12 — Gap Absorption with Intraday Confirmation (H130)
+**Status: CANDIDATE — strong microstructure state signal, orthogonal to current library**
+
+- **Standalone IC:** +0.0284 (11/11 years positive)
+- **Correlation with S1:** +0.131 (independent enough to qualify)
+- **Consistency:** 11/11 years IC positive
+- **Coverage:** 100% (dense signal — computed for all 394 tickers, all dates)
+
+**What it captures:** `xs_gap_absorb_3 = rank(gap × 1[intraday > 0] × clv)`, where:
+- `gap = open / close[t-1] - 1`
+- `clv = (close - low) / (high - low)`
+
+The signal fires when a stock gaps up and the market CONFIRMS that overnight information by
+closing well and finishing the session green from the open. This is not just "gap momentum";
+it is gap acceptance.
+
+**Economic mechanism:** In Vietnam's T+2, retail-heavy market, overnight information often shows
+up first in the opening auction. The key question is whether intraday trading absorbs that gap
+or rejects it. When the stock gaps and still closes strong, demand was not just auction noise —
+it persisted through the session and tends to carry into the next day.
+
+**H130 full results (Session 43):**
+- `xs_gap_absorb_1 = rank(gap × clv)`: IC = +0.0117, 11/11 years, corr S1 = +0.022, corr C4 = +0.298 → PASS but weaker
+- `xs_gap_absorb_2 = rank(gap − intraday)`: IC = +0.0334, 10/11 years, corr S1 = +0.151, corr C4 = +0.453 → REJECTED AS REDUNDANT
+- `xs_gap_absorb_3 = rank(gap × 1[intraday > 0] × clv)`: IC = +0.0284, 11/11 years, corr S1 = +0.131, corr C4 = +0.202 → PRIMARY
+- `xs_gap_reject_1`: IC = +0.0073, 8/11 years → fail
+
+**Preferred feature:** `xs_gap_absorb_3` over `xs_gap_absorb_1` because it is much stronger
+while staying comfortably below the redundancy threshold.
+
+**Artifact:** Computed on the fly from OHLCV; no persistent file.
+
+---
+
 ### ~~C3 — Cross-Sectional Dispersion Regime (H101)~~ REJECTED (Session 37)
 
 **Status: REJECTED — regime-conditional IC analysis decisive (2026-03-27)**
@@ -388,6 +422,11 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Bid-ask spread proxy (H122) | xs_spread_level_rank IC −0.0097; xs_spread_spike_rank IC −0.0301; xs_spread_change_5d IC −0.0035 | Corwin-Schultz H/L spread estimate is anti-predictive / noisy in this market |
 | Earnings quality 394 tickers (H113) | best IC +0.006 (eps_yoy_rank); all others < 0.005 | Daily time-series application of quarterly data too coarse; all five features fail IC > 0.01 gate at full universe |
 | Beta regime (H124) | `xs_low_beta_60d` passes standalone IC +0.013, but corr with C10 = +0.552 | Low-beta names are not orthogonal; beta collapses onto the illiquidity axis |
+| Beta residual (H125) | `xs_low_beta_resid_60d` IC +0.0019, 6/11 years | Once beta is residualized vs illiquidity/volume, the signal disappears |
+| Close-location persistence (H127) | `xs_clv_volconf_5d_rank` IC +0.0149, but corr with C8 = +0.903 | Strong standalone, but it is effectively the same axis as abnormal volume activity |
+| Compression breakout continuation (H128) | best IC −0.035 (xs_compress_breakout_2) | Breakout-follow-through thesis is wrong in this market; the tested orientation is strongly anti-predictive |
+| Sector breadth shock (H131) | best IC −0.003 (xs_breadth_shock_laggard) | Breadth changes add no standalone value beyond existing sector structures |
+| Conditional liquidity release (H132) | best IC +0.007 (xs_liq_release_1) | Conditioning illiquidity changes on return/close state still does not clear the 0.01 gate |
 
 ---
 
@@ -397,9 +436,12 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 |--------|-----------|----------------|---------|
 | H98: LLM news sentiment | Higher quality than keyword approach | **PARKED** (runtime/throughput bottleneck) | Parked |
 | H95: Foreign investor flow | Retail-dominated market: foreign = informed | NOT AVAILABLE historically (F59) | Blocked |
+| H126: Longer-horizon continuation | Extend C11 to 90d/120d and test sector-neutralized continuation | Ready to test | High |
+| H133: Compression blow-off reversal | H128 continuation failed hard; test the sign-flipped exhaustion interpretation | Ready to test | High |
+| H134: Close-location residual vs C8 | Residualize `clv × volume` state against C8 to isolate non-volume close strength | Ready to test | Medium |
 | Order book imbalance | Bid/ask pressure predicts short-term price | Not available historically | Blocked |
 
-H123 and H124 are now closed and documented in the candidate/rejected sections above.
+H123, H124, H125, H127, H128, H130, H131, and H132 are now closed and documented above.
 Track new OHLCV-only search ideas in `notes/next_steps.md`.
 
 **Session 33 update (2026-03-26):**

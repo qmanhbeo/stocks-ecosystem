@@ -72,7 +72,7 @@ Coverage:
 - `c10_illiq_level_rank`: 823,048 / 826,404 rows
 - `c11_ret_60d_lag_rank`: 823,990 / 826,404 rows
 
-`C12` was not kept in the matrix because it overlaps too strongly with `C10`.
+The H124 low-beta signal was not kept in the matrix because it overlaps too strongly with `C10`.
 
 ## Pairwise Check
 

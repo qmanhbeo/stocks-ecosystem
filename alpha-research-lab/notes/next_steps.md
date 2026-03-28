@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_42_log.md` for the latest full session detail.
+Use `notes/session_43_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 42 complete (H123 continuation PASS; H124 beta regime rejected as redundant vs C10, 2026-03-28)
+**Session status:** Session 43 complete (H130 gap absorption PASS; C12 added to RL matrix, 2026-03-28)
 
 ### Current production system
 
@@ -92,7 +92,8 @@ Use `notes/session_42_log.md` for the latest full session detail.
 | 39 | 2026-03-28 | H112 PASS (C6 contrarian_intra); H113 PENDING; H114 FAIL (VN30); H115 PASS (C7 ceiling); H116 PASS (C8 vol_zscore); H117 PASS (C9 reversal); H118-H120 FAIL; RL matrix built | H93 + C4-C9 |
 | 40 | 2026-03-28 | H121 PASS (C10 illiq_level IC +0.021, corr +0.008); H113 fetch failed at 302/394; H122 written not run | H93 + C4-C10 |
 | 41 | 2026-03-28 | H122 FAIL (spread proxy); C10 added to RL matrix; C10 pairwise corr vs C4-C9 all low | H93 + C4-C10 |
-| 42 | 2026-03-28 | H123 PASS (C11 continuation); H124 standalone PASS but rejected on independence; C11 added to RL matrix, C12 excluded | H93 + C4-C11 |
+| 42 | 2026-03-28 | H123 PASS (C11 continuation); H124 standalone PASS but rejected on independence; C11 added to RL matrix, low-beta signal excluded | H93 + C4-C11 |
+| 43 | 2026-03-28 | H125/H131/H132 FAIL; H127 standalone PASS but redundant with C8; H128 anti-predictive; H130 PASS (C12 gap absorption) | H93 + C4-C12 |
 
 \* Contaminated: stock selection was post-hoc.
 
@@ -276,9 +277,9 @@ New artifacts:
 - `data/features/xs_earnings_quality_daily.parquet` — 52-ticker earnings quality
 - `data/features/xs_foreign_demand_daily.parquet` — VNM ETF features (not predictive)
 
-## Active Priority: Session 41
+## Active Priority: Session 44
 
-### Signal library status after Session 42
+### Signal library status after Session 43
 | Signal | IC | Corr w/ S1 | Coverage | Status |
 |--------|----|------------|----------|--------|
 | S1/H93 | +0.149 | N/A | 100% | CONFIRMED |
@@ -290,11 +291,43 @@ New artifacts:
 | C9 xs_reversal_1d | +0.028 | +0.161 | 100% | Candidate (S39) |
 | C10 xs_illiq_level_rank | +0.021 | +0.008 | 100% | **NEW S40** |
 | C11 xs_ret_60d_lag_rank | +0.010 | +0.008 | 100% | **NEW S42** |
+| C12 xs_gap_absorb_3 | +0.028 | +0.131 | 100% | **NEW S43** |
 | C1 keyword news | +0.043 | +0.009 | 0.8% | Candidate (inconsistent) |
 
-Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+C4+C5+C6+C7+C8+C9+C10+C11, 826k rows × 13 cols). C12 was tested but excluded because it overlaps too strongly with C10.
+Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+C4+C5+C6+C7+C8+C9+C10+C11+C12, 826k rows × 14 cols).
 
-### Session 40-42 experiment results (2026-03-28)
+### Session 43 experiment results (2026-03-28)
+- **H125 FAIL** — residualized beta has no surviving edge
+  - `xs_beta_resid_60d_rank`: IC -0.0019
+  - `xs_low_beta_resid_60d`: IC +0.0019
+- **H127 MIXED** — close-location with volume confirmation passes standalone but is a duplicate of C8
+  - `xs_clv_volconf_5d_rank`: IC +0.0149, 11/11 years, corr S1 = +0.105
+  - pairwise corr vs C8 = +0.903 → rejected as redundant
+  - plain close-location ranks are anti-predictive
+- **H128 FAIL** — compression breakout continuation is strongly wrong-way
+  - best feature `xs_compress_breakout_2`: IC -0.0351
+  - the tested breakout-follow-through thesis is anti-predictive
+- **H130 PASS** — confirmed gap absorption adds a new microstructure axis
+  - `xs_gap_absorb_1`: IC +0.0117, 11/11 years, corr C4 = +0.298 → passes but weaker
+  - `xs_gap_absorb_2`: IC +0.0334, 10/11 years, corr C4 = +0.453 → redundant with C4
+  - `xs_gap_absorb_3`: IC +0.0284, 11/11 years, corr S1 = +0.131, corr C4 = +0.202 → **C12 candidate**
+- **H131 FAIL** — sector breadth shock has no standalone value
+  - best feature `xs_breadth_shock_laggard`: IC -0.0034
+- **H132 FAIL** — conditional liquidity release remains below threshold
+  - best feature `xs_liq_release_1`: IC +0.0067
+- **C12 MATRIX UPDATE** — `data_tools/build_rl_signal_matrix.py` now exports `c12_gap_absorb_3`
+  - resulting matrix: `data/features/xs_rl_signal_matrix.parquet` (826,404 rows x 14 cols)
+- **PAIRWISE CHECK** — C12 remains orthogonal to the current promoted set
+  - corr vs C4: +0.202
+  - corr vs C5: +0.005
+  - corr vs C6: -0.032
+  - corr vs C7: +0.037
+  - corr vs C8: +0.027
+  - corr vs C9: -0.004
+  - corr vs C10: -0.146
+  - corr vs C11: -0.017
+
+### Session 40-43 experiment results (2026-03-28)
 - **H121 PASS** — xs_illiq_level_rank IC +0.021 (10/11 years), corr S1=+0.008 → **C10 candidate**
   - Script: `analysis/h121_amihud_illiquidity_standalone.py`
   - Artifact: `artifacts/run_summaries/20260328_113807_h121_amihud_illiquidity_standalone_signal.json`
@@ -321,16 +354,16 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - corr vs C8: +0.0184
   - corr vs C9: +0.0012
   - corr vs C11: -0.0686
-- **PAIRWISE CHECK** — C12 does not qualify as an RL candidate
+- **PAIRWISE CHECK** — H124 low-beta signal does not qualify as an RL candidate
   - corr vs C10: +0.5524
   - corr vs S1: -0.0051
   - Low-beta is mostly the same axis as illiquidity/size, so it stays out of the matrix
 
-### Session 42 next queue (in order)
+### Session 44 next queue (in order)
 
-1. **H125** — Orthogonal beta test: residualize 60d beta against C10/C8 or liquidity proxies, then retest whether a distinct beta factor survives.
-2. **H126** — Longer-horizon continuation: extend the 60d continuation axis to 90d/120d and check whether C11 strengthens or decays after sector-neutralization.
-3. **Any OHLCV-derived signal** — still preferred over new data fetches if it adds a genuinely new axis.
+1. **H133** — Compression blow-off reversal: flip H128 and test whether post-compression expansion is actually an exhaustion state rather than a breakout state.
+2. **H134** — Close-location residual: residualize `xs_clv_volconf_5d_rank` against C8 to see whether any non-volume close-strength alpha survives.
+3. **H126** — Longer-horizon continuation: extend C11 to 90d/120d and test sector-neutralized continuation to avoid simple beta/sector contamination.
 
 ### Remaining blocked paths
 - **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)

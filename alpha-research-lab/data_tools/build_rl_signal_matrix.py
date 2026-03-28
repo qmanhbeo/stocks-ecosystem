@@ -1,7 +1,7 @@
 """
 Build combined RL signal state matrix from all confirmed/candidate signals.
 
-Assembles S1 + all passing candidate signals (C4-C9) into a single feature
+Assembles S1 + all promoted candidate signals (C4-C12) into a single feature
 parquet for use by the RL trading agent. Handles different time columns
 (time vs trading_day) and signal sparsity (C5 insider = 3.4% coverage).
 
@@ -17,6 +17,7 @@ Output: data/features/xs_rl_signal_matrix.parquet
     c9_reversal_1d            — C9: 1-day return reversal (1 - xs_ret_1d_lag_rank)
     c10_illiq_level_rank      — C10: Amihud illiquidity level
     c11_ret_60d_lag_rank      — C11: 3-month continuation / medium-term trend
+    c12_gap_absorb_3          — C12: gap acceptance with intraday confirmation
     c5_signal_present         — indicator: 1 if C5 fired on this (time, ticker)
 
 Signal properties (all 2015–2025):
@@ -29,6 +30,7 @@ Signal properties (all 2015–2025):
   C9:  IC +0.028, 11/11 yrs, corr +0.161, coverage 100%
   C10: IC +0.021, 10/11 yrs, corr +0.008, coverage 100%
   C11: IC +0.010, 9/11 yrs, corr +0.008, coverage 100%
+  C12: IC +0.028, 11/11 yrs, corr +0.131, coverage 100%
 
 Usage:
     conda run -n stocks python data_tools/build_rl_signal_matrix.py
@@ -58,8 +60,6 @@ ILLIQ_WINDOW = 20
 ILLIQ_MIN_DAYS = 10
 VALUE_SCALE = 1e9
 LOOKBACK_DAYS = 60
-BETA_WINDOW = 60
-BETA_MIN_DAYS = 40
 EXCLUDE = {"VNINDEX", "VN30"}
 
 
@@ -135,6 +135,46 @@ def build_3m_continuation_features() -> pd.DataFrame:
     )
 
 
+def build_gap_absorption_features() -> pd.DataFrame:
+    """Compute C12 directly from OHLCV using confirmed-gap acceptance."""
+    parts = []
+    for f in sorted(STOCK_DIR.glob("gia_lich_su_*_1D.parquet")):
+        ticker = f.stem.replace("gia_lich_su_", "").replace("_1D", "")
+        if ticker in EXCLUDE:
+            continue
+        try:
+            df = pd.read_parquet(f, columns=["time", "open", "high", "low", "close"])
+        except Exception:
+            continue
+        df["time"] = pd.to_datetime(df["time"])
+        df = df.sort_values("time")
+        if len(df) < 50:
+            continue
+        df["ticker"] = ticker
+        parts.append(df[["time", "ticker", "open", "high", "low", "close"]])
+
+    long = pd.concat(parts, ignore_index=True)
+    wide_open = long.pivot_table(index="time", columns="ticker", values="open").sort_index()
+    wide_high = long.pivot_table(index="time", columns="ticker", values="high").sort_index()
+    wide_low = long.pivot_table(index="time", columns="ticker", values="low").sort_index()
+    wide_close = long.pivot_table(index="time", columns="ticker", values="close").sort_index()
+
+    gap = wide_open.div(wide_close.shift(1)) - 1.0
+    intraday = wide_close.div(wide_open.replace(0, np.nan)) - 1.0
+    intraday_positive = (intraday > 0).astype(float)
+    denom = wide_high - wide_low
+    clv = (wide_close - wide_low).div(denom.replace(0, np.nan)).mask(denom == 0, 0.5)
+
+    xs_gap_absorb_3 = (gap * intraday_positive * clv).rank(
+        axis=1, method="average", ascending=True, pct=True
+    )
+    return (
+        xs_gap_absorb_3.reset_index()
+        .melt(id_vars="time", var_name="ticker", value_name="c12_gap_absorb_3")
+        .dropna(subset=["c12_gap_absorb_3"])
+    )
+
+
 def main():
     print("Building RL signal matrix...")
 
@@ -185,6 +225,10 @@ def main():
     c11 = build_3m_continuation_features()
     c11["time"] = pd.to_datetime(c11["time"])
 
+    # C12 — confirmed gap absorption
+    c12 = build_gap_absorption_features()
+    c12["time"] = pd.to_datetime(c12["time"])
+
     # Merge everything on (time, ticker) — left join to S1 spine
     result = s1.copy()
     for name, df in [
@@ -196,6 +240,7 @@ def main():
         ("C9", c9),
         ("C10", c10),
         ("C11", c11),
+        ("C12", c12),
     ]:
         result = result.merge(df, on=["time", "ticker"], how="left")
         print(f"  After {name}: {result.shape}")
@@ -205,7 +250,8 @@ def main():
 
     signal_cols = ["s1_proba", "c4_oc_asym_5d", "c5_ins_relative_size_5d", "c5_signal_present",
                    "c6_contrarian_intra_5d", "c7_ceiling_count_5d", "c8_vol_zscore_5d",
-                   "c9_reversal_1d", "c10_illiq_level_rank", "c11_ret_60d_lag_rank"]
+                   "c9_reversal_1d", "c10_illiq_level_rank", "c11_ret_60d_lag_rank",
+                   "c12_gap_absorb_3"]
 
     print("\nCoverage summary:")
     for col in signal_cols:

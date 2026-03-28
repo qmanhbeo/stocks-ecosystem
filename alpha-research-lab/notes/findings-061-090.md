@@ -669,3 +669,25 @@ standalone, but the axis is not independent enough to join the RL library.
 **Key finding:** beta is mostly acting as a liquidity/size proxy in this market. Once C10
 (Amihud illiquidity level) is in the library, H124 does not add a distinct axis. The beta regime
 signal is therefore rejected for RL promotion despite its standalone IC clearing 0.01.
+
+---
+## F87: Gap Acceptance, Not Gap Size Alone, Predicts Continuation (2026-03-28, Session 43)
+
+H130 tested whether the market's intraday handling of an overnight gap is more informative than
+the gap itself. The strongest formulation was the one that required both a positive overnight gap
+and intraday confirmation.
+
+**Results:**
+| Feature | IC | Pos Years | Corr S1 | Pairwise Check | Gate |
+|---------|-----|-----------|---------|----------------|------|
+| xs_gap_absorb_1 | +0.0117 | 11/11 | +0.022 | corr C4 = +0.298 | PASS (weaker) |
+| xs_gap_absorb_2 | +0.0334 | 10/11 | +0.151 | corr C4 = +0.453 | redundant |
+| xs_gap_absorb_3 | +0.0284 | 11/11 | +0.131 | max corr = +0.202 | PASS |
+| xs_gap_reject_1 | +0.0073 | 8/11 | +0.062 | — | fail |
+
+**Key finding:** Vietnam rewards GAP ACCEPTANCE, not just gaps. The best signal is
+`xs_gap_absorb_3 = rank(gap × 1[intraday > 0] × clv)`. When a stock gaps up and still closes
+strong after trading through the full session, the opening information has been validated by
+follow-through demand rather than faded by intraday sellers.
+
+**Promotion:** xs_gap_absorb_3 → **C12 candidate** (IC +0.0284, 11/11 years, corr S1 +0.131)
