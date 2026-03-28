@@ -1,16 +1,17 @@
 # Lab Signal Matrix Pilot
 
-This is the first controlled RL experiment for the research lab's consolidated signal matrix.
+This is the first controlled portfolio-choice RL experiment for the research lab's consolidated signal matrix.
 
 ## Goal
 
-Test whether the lab signal stack improves RL behavior beyond the base environment features.
+Test whether the lab signal stack improves portfolio-choice RL behavior beyond a simpler `S1`-only setup.
 
-Use the same stock, seed, reward setup, and train window across three runs:
+Use the same universe, seed, reward setup, and train window across the first two RL runs:
 
-1. no external signal features
-2. `S1` only
-3. full lab matrix (`S1 + C4-C14`)
+1. `S1` only
+2. full lab matrix (`S1 + C4-C14`)
+
+Keep the equal-weight universe benchmark from evaluation as the non-RL reference point until a dedicated deterministic top-`K` rank baseline is added.
 
 ## Step 1: Export the lab matrix into RL's per-ticker contract
 
@@ -24,12 +25,12 @@ Export destination:
 
 - `/home/manh/stocks/data/features/signals/predictions/rl_lab_matrix/`
 
-## Step 2: Smoke-test the RL runtime with adapted lab signals
+## Step 2: Smoke-test portfolio mode with adapted lab signals
 
 ```bash
 cd /home/manh/stocks/RL-trading-agent
 conda run -n stocks python -m vn_stock_rl.training.cli \
-  --stock FPT \
+  --portfolio-choice \
   --policy mlp \
   --start-date 2016-01-01 \
   --timesteps 1024 \
@@ -37,16 +38,16 @@ conda run -n stocks python -m vn_stock_rl.training.cli \
   --n-eval-episodes 1 \
   --n-envs 1 \
   --seed 1208 \
+  --portfolio-universe-size 20 \
+  --portfolio-top-k 3 \
   --signal-columns s1_proba c4_oc_asym_5d c5_ins_relative_size_5d c5_signal_present c6_contrarian_intra_5d c7_ceiling_count_5d c8_vol_zscore_5d c9_reversal_1d c10_illiq_level_rank c11_ret_60d_lag_rank c12_gap_absorb_3 c13_compress_blowoff_2 c14_clv_volconf_resid_rank \
-  --signal-prediction-dir /home/manh/stocks/data/features/signals/predictions/rl_lab_matrix \
-  --name smoke_fpt_labmatrix
+  --name smoke_portfolio_labmatrix
 ```
 
 ## Step 3: Run the controlled pilot ladder
 
 Shared settings:
 
-- stock: `FPT`
 - policy: `mlp`
 - start date: `2016-01-01`
 - timesteps: `100000`
@@ -54,28 +55,14 @@ Shared settings:
 - eval episodes: `1`
 - envs: `4`
 - seed: `1208`
-
-Baseline, no signal features:
-
-```bash
-conda run -n stocks python -m vn_stock_rl.training.cli \
-  --stock FPT \
-  --policy mlp \
-  --start-date 2016-01-01 \
-  --timesteps 100000 \
-  --eval-freq 10000 \
-  --n-eval-episodes 1 \
-  --n-envs 4 \
-  --seed 1208 \
-  --signal-columns none \
-  --name pilot_fpt_nosignal_seed1208
-```
+- universe size: `20`
+- top-k: `3`
 
 `S1` only:
 
 ```bash
 conda run -n stocks python -m vn_stock_rl.training.cli \
-  --stock FPT \
+  --portfolio-choice \
   --policy mlp \
   --start-date 2016-01-01 \
   --timesteps 100000 \
@@ -83,16 +70,17 @@ conda run -n stocks python -m vn_stock_rl.training.cli \
   --n-eval-episodes 1 \
   --n-envs 4 \
   --seed 1208 \
+  --portfolio-universe-size 20 \
+  --portfolio-top-k 3 \
   --signal-columns s1_proba \
-  --signal-prediction-dir /home/manh/stocks/data/features/signals/predictions/rl_lab_matrix \
-  --name pilot_fpt_s1_seed1208
+  --name pilot_portfolio_s1_seed1208
 ```
 
 Full lab matrix:
 
 ```bash
 conda run -n stocks python -m vn_stock_rl.training.cli \
-  --stock FPT \
+  --portfolio-choice \
   --policy mlp \
   --start-date 2016-01-01 \
   --timesteps 100000 \
@@ -100,17 +88,17 @@ conda run -n stocks python -m vn_stock_rl.training.cli \
   --n-eval-episodes 1 \
   --n-envs 4 \
   --seed 1208 \
+  --portfolio-universe-size 20 \
+  --portfolio-top-k 3 \
   --signal-columns s1_proba c4_oc_asym_5d c5_ins_relative_size_5d c5_signal_present c6_contrarian_intra_5d c7_ceiling_count_5d c8_vol_zscore_5d c9_reversal_1d c10_illiq_level_rank c11_ret_60d_lag_rank c12_gap_absorb_3 c13_compress_blowoff_2 c14_clv_volconf_resid_rank \
-  --signal-prediction-dir /home/manh/stocks/data/features/signals/predictions/rl_lab_matrix \
-  --name pilot_fpt_labmatrix_seed1208
+  --name pilot_portfolio_labmatrix_seed1208
 ```
 
-## Step 4: Evaluate all three runs
+## Step 4: Evaluate both runs
 
 ```bash
-conda run -n stocks python -m vn_stock_rl.evaluation.cli --model artifacts/trained_models/pilot_fpt_nosignal_seed1208/model_best.zip --stock FPT --mode test
-conda run -n stocks python -m vn_stock_rl.evaluation.cli --model artifacts/trained_models/pilot_fpt_s1_seed1208/model_best.zip --stock FPT --mode test --signal-columns s1_proba --signal-prediction-dir /home/manh/stocks/data/features/signals/predictions/rl_lab_matrix
-conda run -n stocks python -m vn_stock_rl.evaluation.cli --model artifacts/trained_models/pilot_fpt_labmatrix_seed1208/model_best.zip --stock FPT --mode test --signal-columns s1_proba c4_oc_asym_5d c5_ins_relative_size_5d c5_signal_present c6_contrarian_intra_5d c7_ceiling_count_5d c8_vol_zscore_5d c9_reversal_1d c10_illiq_level_rank c11_ret_60d_lag_rank c12_gap_absorb_3 c13_compress_blowoff_2 c14_clv_volconf_resid_rank --signal-prediction-dir /home/manh/stocks/data/features/signals/predictions/rl_lab_matrix
+conda run -n stocks python -m vn_stock_rl.evaluation.cli --model artifacts/trained_models/pilot_portfolio_s1_seed1208/model_best.zip --portfolio-choice --mode test
+conda run -n stocks python -m vn_stock_rl.evaluation.cli --model artifacts/trained_models/pilot_portfolio_labmatrix_seed1208/model_best.zip --portfolio-choice --mode test
 ```
 
 ## What to compare
@@ -118,7 +106,7 @@ conda run -n stocks python -m vn_stock_rl.evaluation.cli --model artifacts/train
 - total return
 - Sharpe
 - max drawdown
-- trade count / turnover
+- rebalance count / average cash weight
 - sensitivity to rerunning with new seeds
 
-Do not interpret a single seed as conclusive. This pilot is a go/no-go integration test.
+Do not interpret a single seed as conclusive. This pilot is a go/no-go integration test for portfolio-choice RL on the lab matrix.

@@ -25,8 +25,34 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Evaluate trained RL trading agent")
     parser.add_argument("--model", type=str, default="artifacts/trained_models/ppo_trading/model_final.zip",
                         help="Path to trained model")
-    parser.add_argument("--stock", type=str, required=True,
-                        help="Stock ticker (e.g., ACB)")
+    parser.add_argument("--stock", type=str, default=None,
+                        help="Stock ticker (e.g., ACB). Optional in portfolio mode.")
+    portfolio_group = parser.add_mutually_exclusive_group()
+    portfolio_group.add_argument(
+        "--portfolio-choice",
+        dest="portfolio_choice",
+        action="store_true",
+        help="Evaluate a portfolio-choice model",
+    )
+    portfolio_group.add_argument(
+        "--no-portfolio-choice",
+        dest="portfolio_choice",
+        action="store_false",
+        help="Force single-stock evaluation even if metadata indicates portfolio mode",
+    )
+    parser.set_defaults(portfolio_choice=None)
+    parser.add_argument(
+        "--portfolio-universe-size",
+        type=int,
+        default=None,
+        help="Override portfolio universe size (default: use metadata if available)",
+    )
+    parser.add_argument(
+        "--portfolio-top-k",
+        type=int,
+        default=None,
+        help="Override portfolio top-k selection count (default: use metadata if available)",
+    )
     parser.add_argument("--data-dir", type=str, default=str(default_stock_data_dir()),
                         help="Directory containing parquet files")
     parser.add_argument("--help-tickers", type=str, nargs='+', default=None,
@@ -206,6 +232,9 @@ def namespace_to_evaluate_kwargs(args: argparse.Namespace) -> dict:
     return {
         "model_path": args.model,
         "stock": args.stock,
+        "portfolio_choice": args.portfolio_choice,
+        "portfolio_universe_size": args.portfolio_universe_size,
+        "portfolio_top_k": args.portfolio_top_k,
         "data_dir": args.data_dir,
         "help_tickers": args.help_tickers,
         "market_data_dir": args.market_data_dir,

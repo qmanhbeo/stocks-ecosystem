@@ -1,0 +1,26 @@
+# Root bootstrap requirements for the shared stocks workspace.
+#
+# Usage:
+#   cd /home/manh/stocks
+#   pip install -r requirements.txt
+#
+# This installs the RL runtime in editable mode so the CLI entrypoints
+# (`vn-stock-train`, `vn-stock-evaluate`, `vn-stock-count-params`) are
+# available from one root-level install, then layers the extra research/UI
+# packages used by the lab and manual-label tools.
+
+-e ./RL-trading-agent
+
+# RL dev/test tooling not pulled in by the base editable install.
+pytest>=8.0.0
+ruff>=0.9.0
+
+# Research-lab extras not declared by the RL package.
+hmmlearn
+xgboost
+lightgbm
+gdown
+scipy
+seaborn
+tqdm
+openpyxl

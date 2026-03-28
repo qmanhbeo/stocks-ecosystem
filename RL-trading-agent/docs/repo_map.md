@@ -61,4 +61,6 @@ Use these entrypoints first:
 
 RL uses shared `data/features/signals/predictions/auto/` by default when signal features are enabled and `--signal-prediction-dir` is omitted.
 
+Portfolio-choice mode defaults to `data/features/signals/predictions/rl_lab_matrix/` instead, because it is designed for the cross-sectional lab signal panel.
+
 The consolidated lab matrix at `data/features/xs_rl_signal_matrix.parquet` is adapted into that per-ticker contract through `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`.

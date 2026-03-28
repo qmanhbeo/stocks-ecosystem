@@ -77,6 +77,7 @@ def _merge_env_overrides(
                 input_calendar = meta_input_features.get("calendar")
                 input_news = meta_input_features.get("news_features")
                 input_signal = meta_input_features.get("signal_features")
+                input_portfolio = meta_input_features.get("portfolio_features")
                 input_sample_start = meta_input_features.get("sample_start_date")
                 input_sample_end = meta_input_features.get("sample_end_date")
                 input_start_episode_position = meta_input_features.get("start_episode_position")
@@ -107,6 +108,15 @@ def _merge_env_overrides(
                         env_kwargs["signal_feature_columns"] = input_signal.get("columns")
                     if input_signal.get("prediction_dir") is not None:
                         env_kwargs["signal_prediction_dir"] = input_signal.get("prediction_dir")
+                if isinstance(input_portfolio, dict):
+                    if input_portfolio.get("mode") is not None:
+                        env_kwargs["portfolio_choice"] = input_portfolio.get("mode")
+                    if input_portfolio.get("universe_size") is not None:
+                        env_kwargs["portfolio_universe_size"] = input_portfolio.get("universe_size")
+                    if input_portfolio.get("top_k") is not None:
+                        env_kwargs["portfolio_top_k"] = input_portfolio.get("top_k")
+                    if input_portfolio.get("universe_tickers") is not None:
+                        env_kwargs["portfolio_universe_tickers"] = input_portfolio.get("universe_tickers")
                 if input_sample_start is not None:
                     env_kwargs["start_date"] = input_sample_start
                 if input_sample_end is not None:
@@ -198,6 +208,10 @@ def _merge_env_overrides(
                 "news_prediction_dir",
                 "signal_feature_columns",
                 "signal_prediction_dir",
+                "portfolio_choice",
+                "portfolio_universe_size",
+                "portfolio_top_k",
+                "portfolio_universe_tickers",
                 "start_date",
                 "end_date",
                 "train_episode_sampling_enabled",

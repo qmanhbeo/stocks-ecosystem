@@ -42,6 +42,18 @@ This means the root data directory is the canonical dataset surface for the whol
 4. The lab publishes a consolidated RL signal matrix at `data/features/xs_rl_signal_matrix.parquet`
 5. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 
+## Bootstrap
+
+From the workspace root, install the current shared Python stack with:
+
+```bash
+conda create -n stocks python=3.10
+conda activate stocks
+pip install -r requirements.txt
+```
+
+This installs `RL-trading-agent` in editable mode and adds the extra research/UI packages used by `alpha-research-lab` and `manual-label-factory`.
+
 ## Current Reality
 
 - `alpha-research-lab/data/` has been fully moved into root `data/`

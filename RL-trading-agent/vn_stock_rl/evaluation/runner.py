@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 from pathlib import Path
@@ -7,7 +8,7 @@ from typing import Any, Dict, Optional, Tuple
 
 import numpy as np
 import pandas as pd
-from vn_stock_rl.env import TradingEnv
+from vn_stock_rl.env import PortfolioChoiceEnv, TradingEnv
 from vn_stock_rl.config import EVAL_DEFAULTS
 from vn_stock_rl.config.cli_shared import (
     parse_engineered_feature_families,
@@ -53,7 +54,7 @@ def _sanitize_path_token(value: str) -> str:
 def _resolve_output_dir(
     output_dir: str,
     model_path: str,
-    stock: str,
+    stock: Optional[str],
     mode: str,
     meta: Optional[Dict[str, Any]],
 ) -> str:
@@ -81,9 +82,36 @@ def _resolve_output_dir(
         run_name = model_parent or Path(model_path).stem
 
     run_token = _sanitize_path_token(run_name)
-    stock_token = _sanitize_path_token(stock.upper())
+    portfolio_mode = False
+    if isinstance(meta, dict):
+        portfolio_mode = bool(meta.get("portfolio_choice"))
+        if not portfolio_mode:
+            env_cfg = meta.get("environment_config")
+            if isinstance(env_cfg, dict):
+                portfolio_mode = bool(env_cfg.get("portfolio_choice"))
+    stock_label = "PORTFOLIO" if portfolio_mode and not stock else str(stock or "UNKNOWN").upper()
+    stock_token = _sanitize_path_token(stock_label)
     mode_token = _sanitize_path_token(mode.lower())
     return str(default_root / f"{run_token}__{stock_token}__{mode_token}")
+
+
+def _meta_indicates_portfolio(meta: Optional[Dict[str, Any]]) -> bool:
+    if not isinstance(meta, dict):
+        return False
+    if meta.get("portfolio_choice") is not None:
+        return bool(meta.get("portfolio_choice"))
+    env_cfg = meta.get("environment_config")
+    if not isinstance(env_cfg, dict):
+        return False
+    if env_cfg.get("portfolio_choice") is not None:
+        return bool(env_cfg.get("portfolio_choice"))
+    input_features = env_cfg.get("input_features")
+    if not isinstance(input_features, dict):
+        return False
+    portfolio_features = input_features.get("portfolio_features")
+    if not isinstance(portfolio_features, dict):
+        return False
+    return bool(portfolio_features.get("mode"))
 
 def _load_model(model_path: str) -> Tuple[Any, str, bool]:
     """
@@ -231,7 +259,7 @@ def _resolve_include_can_exit(
     )
 
 def _run_evaluation_episode(
-    env: TradingEnv,
+    env,
     model: Any,
     is_recurrent: bool,
     deterministic: bool,
@@ -241,6 +269,7 @@ def _run_evaluation_episode(
     obs, _info = env.reset()
     lstm_states = None
     episode_start = np.ones((1,), dtype=bool)
+    portfolio_mode = bool(getattr(env, "portfolio_choice", False))
     history = {
         'step': [],
         'date': [],
@@ -254,8 +283,13 @@ def _run_evaluation_episode(
         'benchmark_return': [],
         'excess_return': [],
         'drawdown_penalty': [],
-        'portfolio_value': []
+        'portfolio_value': [],
+        'benchmark_portfolio_value': [],
     }
+    if portfolio_mode:
+        history['num_holdings'] = []
+        history['cash_weight'] = []
+        history['selected_tickers'] = []
     history_step = history['step']
     history_date = history['date']
     history_open = history['open']
@@ -269,6 +303,10 @@ def _run_evaluation_episode(
     history_excess_return = history['excess_return']
     history_drawdown_penalty = history['drawdown_penalty']
     history_portfolio_value = history['portfolio_value']
+    history_benchmark_portfolio_value = history['benchmark_portfolio_value']
+    history_num_holdings = history.get('num_holdings')
+    history_cash_weight = history.get('cash_weight')
+    history_selected_tickers = history.get('selected_tickers')
     time_values = env.df['time'].to_numpy()
     open_values = env.df['open'].to_numpy()
     close_values = env.df['close'].to_numpy()
@@ -277,9 +315,22 @@ def _run_evaluation_episode(
     portfolio_value = 1.0
     while not done:
         if forced_policy == "flat":
-            action_value = 0
+            if portfolio_mode:
+                action_value = np.full(
+                    env.portfolio_top_k,
+                    env.portfolio_universe_size,
+                    dtype=np.int64,
+                )
+            else:
+                action_value = 0
         elif forced_policy == "buy_hold":
-            action_value = 1
+            if portfolio_mode:
+                picks = list(range(min(env.portfolio_top_k, env.portfolio_universe_size)))
+                while len(picks) < env.portfolio_top_k:
+                    picks.append(env.portfolio_universe_size)
+                action_value = np.asarray(picks, dtype=np.int64)
+            else:
+                action_value = 1
         else:
             if is_recurrent:
                 action, lstm_states = model.predict(
@@ -291,7 +342,10 @@ def _run_evaluation_episode(
                 episode_start[0] = False
             else:
                 action, _states = model.predict(obs, deterministic=deterministic)
-            action_value = int(np.asarray(action).squeeze())
+            if portfolio_mode:
+                action_value = np.asarray(action, dtype=np.int64).reshape(-1)
+            else:
+                action_value = int(np.asarray(action).squeeze())
 
         current_step = env.current_step
         history_step.append(current_step)
@@ -300,7 +354,10 @@ def _run_evaluation_episode(
         history_close.append(close_values[current_step])
         history_position.append(env.position)
         history_hold_count.append(env.hold_count)
-        history_action.append(action_value)
+        if portfolio_mode:
+            history_action.append(json.dumps(np.asarray(action_value, dtype=np.int64).reshape(-1).tolist()))
+        else:
+            history_action.append(action_value)
 
         obs, reward, terminated, truncated, info = env.step(action_value)
         raw_return = float(info.get('raw_return', reward))
@@ -314,6 +371,11 @@ def _run_evaluation_episode(
         history_excess_return.append(excess_return)
         history_drawdown_penalty.append(drawdown_penalty)
         history_portfolio_value.append(portfolio_value)
+        history_benchmark_portfolio_value.append(float(info.get('benchmark_portfolio_value', 1.0)))
+        if portfolio_mode:
+            history_num_holdings.append(int(info.get('num_holdings', env.hold_count)))
+            history_cash_weight.append(float(info.get('cash_weight', 0.0)))
+            history_selected_tickers.append(json.dumps(info.get('selected_tickers', [])))
         if render:
             env.render()
         done = terminated or truncated
@@ -322,45 +384,28 @@ def _run_evaluation_episode(
 
 def _compute_eval_metrics(
     df_history: pd.DataFrame,
-    env: TradingEnv,
+    env,
     stats: Dict[str, Any],
     model_type: str,
     mode: str,
     include_can_exit: bool,
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-    steps = df_history['step'].values
-    open_exec = env.df['open'].values[steps + 1]
-    naive_buy_hold_return = (open_exec[-1] / open_exec[0]) - 1
-
-    entry_exec_idx = env.episode_start_idx + 2
-    aligned_buy_hold_series = None
-    aligned_buy_hold_return = None
-    if entry_exec_idx < len(env.df):
-        entry_exec_price = env.df.iloc[entry_exec_idx]['open']
-        aligned_buy_hold_series = np.where(
-            (steps + 1) < entry_exec_idx,
-            1.0,
-            (1 - env.buy_fee_rate) * (open_exec / entry_exec_price)
-        )
-        aligned_buy_hold_return = aligned_buy_hold_series[-1] - 1
-
-    rl_agent_return = df_history['portfolio_value'].iloc[-1] - 1
-    time_in_market = (df_history['position'] == 1).sum() / len(df_history)
-    daily_returns = df_history['raw_return'].values
-    sharpe = np.mean(daily_returns) / np.std(daily_returns) if np.std(daily_returns) > 0 else 0
-    sharpe_annualized = sharpe * np.sqrt(252)
-    portfolio_values = df_history['portfolio_value'].values
+    portfolio_mode = bool(getattr(env, "portfolio_choice", False))
+    rl_agent_return = float(df_history['portfolio_value'].iloc[-1] - 1.0)
+    daily_returns = df_history['raw_return'].to_numpy(dtype=np.float64)
+    sharpe = np.mean(daily_returns) / np.std(daily_returns) if np.std(daily_returns) > 0 else 0.0
+    sharpe_annualized = float(sharpe * np.sqrt(252))
+    portfolio_values = df_history['portfolio_value'].to_numpy(dtype=np.float64)
     running_max = np.maximum.accumulate(portfolio_values)
     drawdown = (portfolio_values - running_max) / running_max
-    max_drawdown = np.min(drawdown)
+    max_drawdown = float(np.min(drawdown))
 
     metrics = {
         "model_type": model_type,
         "mode": mode,
+        "portfolio_choice": bool(portfolio_mode),
         "total_return_additive": stats["total_return"],
         "rl_return_geometric": rl_agent_return,
-        "buy_hold_naive": float(naive_buy_hold_return),
-        "buy_hold_aligned": float(aligned_buy_hold_return) if aligned_buy_hold_return is not None else None,
         "num_trade_executions": stats["num_trades"],
         "num_winning_trades": stats["num_winning_trades"],
         "win_rate": float(stats["win_rate"]),
@@ -369,33 +414,84 @@ def _compute_eval_metrics(
         "reward_mode": stats.get("reward_mode"),
         "reward_benchmark": stats.get("reward_benchmark"),
         "benchmark_weight": float(stats.get("benchmark_weight", 1.0)),
-        "time_in_market": float(time_in_market),
-        "sharpe_annualized": float(sharpe_annualized),
-        "max_drawdown": float(max_drawdown),
-        "env_lookback_window": int(env.lookback_window),
-        "env_min_hold_days": int(env.min_hold_days),
+        "sharpe_annualized": sharpe_annualized,
+        "max_drawdown": max_drawdown,
+        "env_lookback_window": int(getattr(env, "lookback_window", 0)),
+        "env_min_hold_days": int(getattr(env, "min_hold_days", 0)),
         "env_buy_fee_rate": float(env.buy_fee_rate),
         "env_sell_fee_rate": float(env.sell_fee_rate),
         "env_capital_gains_tax_rate": float(env.capital_gains_tax_rate),
-        "env_stop_loss": (float(env.stop_loss) if env.stop_loss is not None else None),
+        "env_stop_loss": (
+            float(env.stop_loss)
+            if getattr(env, "stop_loss", None) is not None
+            else None
+        ),
         "env_source_mode": str(getattr(env, "source_mode", "return")),
         "env_ohlcv": list(getattr(env, "ohlcv_fields", [])),
         "env_calendar_features": list(getattr(env, "calendar_features", [])),
-        "env_normalize": bool(env.normalize),
+        "env_normalize": bool(getattr(env, "normalize", False)),
         "env_include_can_exit": bool(include_can_exit),
     }
-    df_trades = _extract_trades(
-        df_history,
-        buy_fee_rate=float(env.buy_fee_rate),
-        sell_fee_rate=float(env.sell_fee_rate),
-        capital_gains_tax_rate=float(env.capital_gains_tax_rate),
-    )
-    if not df_trades.empty:
-        metrics["total_trades_completed"] = int(len(df_trades))
-        metrics["avg_hold_days"] = float(df_trades["hold_days"].mean())
+
+    if portfolio_mode:
+        benchmark_series = df_history["benchmark_portfolio_value"].to_numpy(dtype=np.float64)
+        naive_buy_hold_return = float(benchmark_series[-1] - 1.0)
+        aligned_buy_hold_return = naive_buy_hold_return
+        aligned_buy_hold_series = benchmark_series
+        time_in_market = float((df_history["num_holdings"].to_numpy(dtype=np.float64) > 0).mean())
+        metrics.update(
+            {
+                "buy_hold_naive": naive_buy_hold_return,
+                "buy_hold_aligned": aligned_buy_hold_return,
+                "time_in_market": time_in_market,
+                "avg_num_holdings": float(df_history["num_holdings"].mean()),
+                "avg_cash_weight": float(df_history["cash_weight"].mean()),
+                "env_portfolio_universe_size": int(getattr(env, "portfolio_universe_size", 0)),
+                "env_portfolio_top_k": int(getattr(env, "portfolio_top_k", 0)),
+                "env_portfolio_universe_tickers": list(getattr(env, "universe_tickers", [])),
+                "total_trades_completed": int(stats["num_trades"]),
+                "avg_hold_days": None,
+            }
+        )
     else:
-        metrics["total_trades_completed"] = 0
-        metrics["avg_hold_days"] = None
+        steps = df_history['step'].values
+        open_exec = env.df['open'].values[steps + 1]
+        naive_buy_hold_return = float((open_exec[-1] / open_exec[0]) - 1.0)
+
+        entry_exec_idx = env.episode_start_idx + 2
+        aligned_buy_hold_series = None
+        aligned_buy_hold_return = None
+        if entry_exec_idx < len(env.df):
+            entry_exec_price = env.df.iloc[entry_exec_idx]['open']
+            aligned_buy_hold_series = np.where(
+                (steps + 1) < entry_exec_idx,
+                1.0,
+                (1 - env.buy_fee_rate) * (open_exec / entry_exec_price)
+            )
+            aligned_buy_hold_return = float(aligned_buy_hold_series[-1] - 1.0)
+
+        time_in_market = float((df_history['position'] == 1).sum() / len(df_history))
+        metrics.update(
+            {
+                "buy_hold_naive": naive_buy_hold_return,
+                "buy_hold_aligned": (
+                    float(aligned_buy_hold_return) if aligned_buy_hold_return is not None else None
+                ),
+                "time_in_market": time_in_market,
+            }
+        )
+        df_trades = _extract_trades(
+            df_history,
+            buy_fee_rate=float(env.buy_fee_rate),
+            sell_fee_rate=float(env.sell_fee_rate),
+            capital_gains_tax_rate=float(env.capital_gains_tax_rate),
+        )
+        if not df_trades.empty:
+            metrics["total_trades_completed"] = int(len(df_trades))
+            metrics["avg_hold_days"] = float(df_trades["hold_days"].mean())
+        else:
+            metrics["total_trades_completed"] = 0
+            metrics["avg_hold_days"] = None
 
     summary = {
         "naive_buy_hold_return": float(naive_buy_hold_return),
@@ -403,16 +499,19 @@ def _compute_eval_metrics(
             float(aligned_buy_hold_return) if aligned_buy_hold_return is not None else None
         ),
         "aligned_buy_hold_series": aligned_buy_hold_series,
-        "rl_agent_return": float(rl_agent_return),
+        "rl_agent_return": rl_agent_return,
         "time_in_market": float(time_in_market),
-        "sharpe_annualized": float(sharpe_annualized),
-        "max_drawdown": float(max_drawdown),
+        "sharpe_annualized": sharpe_annualized,
+        "max_drawdown": max_drawdown,
     }
     return metrics, summary
 
 def evaluate_model(
     model_path: str,
-    stock: str,
+    stock: Optional[str],
+    portfolio_choice: Optional[bool] = None,
+    portfolio_universe_size: Optional[int] = None,
+    portfolio_top_k: Optional[int] = None,
     data_dir: str = "data/stock/",
     help_tickers: Optional[list] = None,
     market_data_dir: str = "data/stock/",
@@ -467,7 +566,10 @@ def evaluate_model(
     
     Args:
         model_path: Path to saved model (.zip file)
-        stock: Stock ticker (e.g., 'ACB')
+        stock: Stock ticker (e.g., 'ACB'). Optional in portfolio mode.
+        portfolio_choice: Override metadata and evaluate as portfolio-choice env
+        portfolio_universe_size: Optional portfolio universe-size override
+        portfolio_top_k: Optional portfolio top-k override
         data_dir: Directory containing parquet files
         help_tickers: Optional list of helper tickers to append as features
         market_data_dir: Directory containing market parquet files
@@ -523,6 +625,15 @@ def evaluate_model(
         )
 
     meta = _load_eval_meta(model_path)
+    if portfolio_universe_size is not None and int(portfolio_universe_size) < 1:
+        raise ValueError(f"--portfolio-universe-size must be >= 1, got {portfolio_universe_size}")
+    if portfolio_top_k is not None and int(portfolio_top_k) < 1:
+        raise ValueError(f"--portfolio-top-k must be >= 1, got {portfolio_top_k}")
+    resolved_portfolio_choice = (
+        _meta_indicates_portfolio(meta) if portfolio_choice is None else bool(portfolio_choice)
+    )
+    if not resolved_portfolio_choice and not stock:
+        raise ValueError("Single-stock evaluation requires --stock")
     help_tickers, market_data_dir, help_assets, help_assets_dir = _resolve_helper_inputs_from_meta(
         meta,
         help_tickers,
@@ -531,20 +642,29 @@ def evaluate_model(
         help_assets_dir,
     )
 
-    output_dir = _resolve_output_dir(output_dir, model_path, stock, mode, meta)
+    stock_label = stock or ("PORTFOLIO" if resolved_portfolio_choice else None)
+    output_dir = _resolve_output_dir(output_dir, model_path, stock_label, mode, meta)
     os.makedirs(output_dir, exist_ok=True)
-    data_path = os.path.join(data_dir, f"gia_lich_su_{stock}_1D.parquet")
+    data_path = (
+        None
+        if resolved_portfolio_choice
+        else os.path.join(data_dir, f"gia_lich_su_{stock}_1D.parquet")
+    )
 
     print("="*60)
     print("Model Evaluation")
     print("="*60)
     print(f"Model: {model_path}")
-    print(f"Stock: {stock}")
-    print(f"Data: {data_path}")
-    if help_tickers:
+    if resolved_portfolio_choice:
+        print("Mode: Portfolio-Choice")
+        print(f"Data directory: {data_dir}")
+    else:
+        print(f"Stock: {stock}")
+        print(f"Data: {data_path}")
+    if help_tickers and not resolved_portfolio_choice:
         print(f"Help Tickers: {', '.join(help_tickers)}")
         print(f"Market Data Dir: {market_data_dir}")
-    if help_assets:
+    if help_assets and not resolved_portfolio_choice:
         print(f"Help Assets: {', '.join(help_assets)}")
         print(f"Help Assets Dir: {help_assets_dir}")
     print(f"Mode: {mode}")
@@ -591,6 +711,9 @@ def evaluate_model(
             print("[OK] Loaded PPO (MLP) model")
 
     explicit_env_overrides = {
+        "portfolio_choice": resolved_portfolio_choice,
+        "portfolio_universe_size": portfolio_universe_size,
+        "portfolio_top_k": portfolio_top_k,
         "lookback_window": lookback_window,
         "drawdown_penalty_enabled": drawdown_penalty_enabled,
         "drawdown_penalty_lambda": drawdown_penalty_lambda,
@@ -633,12 +756,21 @@ def evaluate_model(
         "stop_loss": stop_loss,
     }
     env_kwargs = _merge_env_overrides(meta, explicit_env_overrides, forced_policy)
-    # Evaluation must be deterministic/comparable: disable randomized start-in-position.
-    env_kwargs["start_episode_position"] = 0.0
-    # Evaluation should not use randomized train sub-episode sampling.
+    portfolio_env_keys = {
+        "portfolio_choice",
+        "portfolio_universe_size",
+        "portfolio_top_k",
+        "portfolio_universe_tickers",
+    }
+    if not resolved_portfolio_choice:
+        for key in portfolio_env_keys:
+            env_kwargs.pop(key, None)
     env_kwargs["train_episode_sampling_enabled"] = False
+    if not resolved_portfolio_choice:
+        # Evaluation must be deterministic/comparable: disable randomized start-in-position.
+        env_kwargs["start_episode_position"] = 0.0
 
-    if help_tickers:
+    if help_tickers and not resolved_portfolio_choice:
         help_tickers = [t.upper() for t in help_tickers if t.upper() != stock.upper()]
         if not help_tickers:
             help_tickers = None
@@ -646,30 +778,71 @@ def evaluate_model(
         env_desc = ", ".join(f"{k}={env_kwargs[k]}" for k in sorted(env_kwargs.keys()))
         print(f"Environment settings: {env_desc}")
 
-    include_can_exit = _resolve_include_can_exit(
-        forced_policy=forced_policy,
-        expected_obs_dim=expected_obs_dim,
-        data_path=data_path,
-        mode=mode,
-        help_tickers=help_tickers,
-        market_data_dir=market_data_dir,
-        help_assets=help_assets,
-        help_assets_dir=help_assets_dir,
-        env_kwargs=env_kwargs,
-    )
+    if resolved_portfolio_choice:
+        portfolio_env_kwargs = {
+            key: value
+            for key, value in env_kwargs.items()
+            if key in {
+                "train_split",
+                "val_split",
+                "buy_fee_rate",
+                "sell_fee_rate",
+                "capital_gains_tax_rate",
+                "drawdown_penalty_enabled",
+                "drawdown_penalty_lambda",
+                "drawdown_penalty_train_only",
+                "reward_benchmark",
+                "benchmark_weight",
+                "benchmark_relative_reward",
+                "train_episode_sampling_enabled",
+                "train_episode_min_fraction",
+                "train_episode_max_fraction",
+                "start_date",
+                "end_date",
+                "signal_feature_columns",
+                "signal_prediction_dir",
+                "portfolio_universe_size",
+                "portfolio_top_k",
+                "portfolio_universe_tickers",
+            }
+        }
+        include_can_exit = False
+        env = PortfolioChoiceEnv(
+            data_dir=data_dir,
+            mode=mode,
+            **portfolio_env_kwargs,
+        )
+    else:
+        include_can_exit = _resolve_include_can_exit(
+            forced_policy=forced_policy,
+            expected_obs_dim=expected_obs_dim,
+            data_path=data_path,
+            mode=mode,
+            help_tickers=help_tickers,
+            market_data_dir=market_data_dir,
+            help_assets=help_assets,
+            help_assets_dir=help_assets_dir,
+            env_kwargs=env_kwargs,
+        )
 
-    env = TradingEnv(
-        data_path=data_path,
-        mode=mode,
-        include_can_exit=include_can_exit,
-        help_tickers=help_tickers,
-        market_data_dir=market_data_dir,
-        help_assets=help_assets,
-        help_assets_dir=help_assets_dir,
-        **env_kwargs
-    )
+        env = TradingEnv(
+            data_path=data_path,
+            mode=mode,
+            include_can_exit=include_can_exit,
+            help_tickers=help_tickers,
+            market_data_dir=market_data_dir,
+            help_assets=help_assets,
+            help_assets_dir=help_assets_dir,
+            **env_kwargs
+        )
     print(f"Model type: {model_type}")
-    print(f"Observation compatibility: include_can_exit={include_can_exit}")
+    if resolved_portfolio_choice:
+        print(
+            f"Resolved universe ({len(getattr(env, 'universe_tickers', []))}): "
+            + ", ".join(getattr(env, "universe_tickers", []))
+        )
+    else:
+        print(f"Observation compatibility: include_can_exit={include_can_exit}")
     print(f"\nEvaluation period:")
     if mode == 'train':
         print(f"  {env.train_start_date} to {env.train_end_date}")
@@ -703,7 +876,8 @@ def evaluate_model(
     print(f"Model Type: {model_type}")
     reward_label = "Total Reward" if stats.get("reward_mode") != "raw_return" else "Total Return"
     print(f"{reward_label}: {stats['total_return']:.4f} ({stats['total_return']*100:.2f}%)")
-    print(f"Trade Executions (buy & sell): {stats['num_trades']}")
+    trade_label = "Rebalance Executions" if resolved_portfolio_choice else "Trade Executions (buy & sell)"
+    print(f"{trade_label}: {stats['num_trades']}")
     print(f"Winning Trades: {stats['num_winning_trades']}")
     print(f"Win Rate: {stats['win_rate']:.2%}")
     print(f"Average Trade Return: {stats['avg_trade_return']:.4f}")
@@ -728,13 +902,14 @@ def evaluate_model(
 
     print("\nAdditional Metrics:")
     print("-"*60)
-    print(f"Buy & Hold Return (naive): {naive_buy_hold_return:.4f} ({naive_buy_hold_return*100:.2f}%)")
-    if aligned_buy_hold_return is not None:
+    benchmark_label = "Equal-Weight Universe Benchmark" if resolved_portfolio_choice else "Buy & Hold Return"
+    print(f"{benchmark_label} (naive): {naive_buy_hold_return:.4f} ({naive_buy_hold_return*100:.2f}%)")
+    if aligned_buy_hold_return is not None and not resolved_portfolio_choice:
         print(
             f"Buy & Hold Return (execution-aligned, buy fee): "
             f"{aligned_buy_hold_return:.4f} ({aligned_buy_hold_return*100:.2f}%)"
         )
-    else:
+    elif not resolved_portfolio_choice:
         print("Buy & Hold Return (execution-aligned): N/A (episode too short)")
     print(f"RL Agent Return: {rl_agent_return:.4f} ({rl_agent_return*100:.2f}%)")
     if aligned_buy_hold_return is not None:
@@ -754,7 +929,7 @@ def evaluate_model(
         df_history=df_history,
         stats=stats,
         model_type=model_type,
-        stock=stock,
+        stock=(stock or "PORTFOLIO"),
         mode=mode,
         aligned_buy_hold_series=aligned_buy_hold_series,
         metrics=metrics,

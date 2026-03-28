@@ -111,14 +111,26 @@ def create_plots(df_history, stats, output_dir, model_type, stock, mode, buy_hol
         fontweight='bold'
     )
     
-    # Plot 1: Price and positions
+    portfolio_mode = "num_holdings" in df_history.columns or bool(stats.get("portfolio_mode"))
+
+    # Plot 1: Price proxy and exposure
     ax1 = axes[0]
     ax1.plot(df_history['step'], df_history['close'], label='Close Price', color='black', alpha=0.7)
-    
-    # Highlight long positions
-    long_mask = df_history['position'] == 1
-    ax1.fill_between(df_history['step'], df_history['close'].min(), df_history['close'].max(),
-                      where=long_mask, alpha=0.2, color='green', label='Long Position')
+    if portfolio_mode:
+        invested_mask = df_history.get('num_holdings', pd.Series(0, index=df_history.index)).to_numpy() > 0
+        fill_label = 'Invested'
+    else:
+        invested_mask = df_history['position'].to_numpy() == 1
+        fill_label = 'Long Position'
+    ax1.fill_between(
+        df_history['step'],
+        df_history['close'].min(),
+        df_history['close'].max(),
+        where=invested_mask,
+        alpha=0.2,
+        color='green',
+        label=fill_label,
+    )
     
     ax1.set_xlabel('Step')
     ax1.set_ylabel('Price')
@@ -167,17 +179,33 @@ def create_plots(df_history, stats, output_dir, model_type, stock, mode, buy_hol
     ax3.set_title(daily_title)
     ax3.grid(True, alpha=0.3)
     
-    # Plot 4: Position and hold count
+    # Plot 4: Position/holdings and hold count/cash
     ax4 = axes[3]
     ax4_twin = ax4.twinx()
-    
-    ax4.plot(df_history['step'], df_history['position'], label='Position', color='blue', linewidth=2)
-    ax4_twin.plot(df_history['step'], df_history['hold_count'], label='Hold Count', color='red', linewidth=1, alpha=0.7)
-    
+
+    if portfolio_mode:
+        holdings = df_history.get('num_holdings', pd.Series(0, index=df_history.index))
+        cash_weight = df_history.get('cash_weight', pd.Series(0.0, index=df_history.index))
+        ax4.plot(df_history['step'], holdings, label='Num Holdings', color='blue', linewidth=2)
+        ax4_twin.plot(
+            df_history['step'],
+            cash_weight,
+            label='Cash Weight',
+            color='red',
+            linewidth=1,
+            alpha=0.7,
+        )
+        ax4.set_ylabel('Num Holdings', color='blue')
+        ax4_twin.set_ylabel('Cash Weight', color='red')
+        ax4.set_title('Portfolio Holdings and Cash Weight')
+    else:
+        ax4.plot(df_history['step'], df_history['position'], label='Position', color='blue', linewidth=2)
+        ax4_twin.plot(df_history['step'], df_history['hold_count'], label='Hold Count', color='red', linewidth=1, alpha=0.7)
+        ax4.set_ylabel('Position', color='blue')
+        ax4_twin.set_ylabel('Hold Count', color='red')
+        ax4.set_title('Position and Hold Count Over Time')
+
     ax4.set_xlabel('Step')
-    ax4.set_ylabel('Position', color='blue')
-    ax4_twin.set_ylabel('Hold Count', color='red')
-    ax4.set_title('Position and Hold Count Over Time')
     ax4.tick_params(axis='y', labelcolor='blue')
     ax4_twin.tick_params(axis='y', labelcolor='red')
     ax4.grid(True, alpha=0.3)

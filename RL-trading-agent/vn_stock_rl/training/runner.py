@@ -56,7 +56,7 @@ from vn_stock_rl.training.reporting import (
     print_training_complete,
     print_training_start,
 )
-from vn_stock_rl.external_features import default_signal_prediction_dir
+from vn_stock_rl.external_features import default_lab_signal_prediction_dir, default_signal_prediction_dir
 
 ENGINEERED_FEATURE_FAMILIES = (
     "volatility",
@@ -89,6 +89,9 @@ def _build_env(
     stock: str,
     stocks: list,
     all_stocks: bool,
+    portfolio_choice: bool,
+    portfolio_universe_size: int,
+    portfolio_top_k: int,
     data_dir: str,
     drawdown_penalty_enabled: Optional[bool],
     drawdown_penalty_lambda: Optional[float],
@@ -123,6 +126,7 @@ def _build_env(
     market_data_dir: str,
     help_assets: list,
     help_assets_dir: str,
+    portfolio_universe_tickers: Optional[list] = None,
     monitor_path_or_none: Optional[str] = None,
 ):
     return build_training_env(
@@ -130,6 +134,9 @@ def _build_env(
         stock=stock,
         stocks=stocks,
         all_stocks=all_stocks,
+        portfolio_choice=portfolio_choice,
+        portfolio_universe_size=portfolio_universe_size,
+        portfolio_top_k=portfolio_top_k,
         data_dir=data_dir,
         drawdown_penalty_enabled=drawdown_penalty_enabled,
         drawdown_penalty_lambda=drawdown_penalty_lambda,
@@ -164,6 +171,7 @@ def _build_env(
         market_data_dir=market_data_dir,
         help_assets=help_assets,
         help_assets_dir=help_assets_dir,
+        portfolio_universe_tickers=portfolio_universe_tickers,
         monitor_path_or_none=monitor_path_or_none,
     )
 
@@ -336,6 +344,9 @@ def train(
     stock: str = None,
     stocks: list = None,
     all_stocks: bool = False,
+    portfolio_choice: bool = False,
+    portfolio_universe_size: int = 20,
+    portfolio_top_k: int = 3,
     data_dir: str = TRAIN_DEFAULTS["data_dir"],
     drawdown_penalty_enabled: Optional[bool] = None,
     drawdown_penalty_lambda: Optional[float] = None,
@@ -391,6 +402,9 @@ def train(
         stock: Stock ticker (e.g., 'ACB') - for single stock mode
         stocks: List of stock tickers (e.g., ['ACB', 'VNM', 'HPG']) - for multi-stock mode
         all_stocks: Train on all stocks in data directory
+        portfolio_choice: Train a cross-sectional top-K portfolio agent
+        portfolio_universe_size: Size of the fixed liquid universe for portfolio mode
+        portfolio_top_k: Number of portfolio slots the agent can choose each rebalance
         data_dir: Directory containing parquet files
         drawdown_penalty_enabled: Override drawdown penalty on/off
         drawdown_penalty_lambda: Override drawdown penalty lambda (>=0)
@@ -443,11 +457,13 @@ def train(
     """
     
     # Validate arguments
-    num_modes = sum([stock is not None, stocks is not None, all_stocks])
+    num_modes = sum([stock is not None, stocks is not None, all_stocks, bool(portfolio_choice)])
     if num_modes == 0:
-        raise ValueError("Must specify either --stock, --stocks, or --all-stocks")
+        raise ValueError("Must specify exactly one of --stock, --stocks, --all-stocks, or --portfolio-choice")
     if num_modes > 1:
-        raise ValueError("Cannot specify more than one of --stock, --stocks, or --all-stocks")
+        raise ValueError(
+            "Cannot combine --portfolio-choice with --stock/--stocks/--all-stocks"
+        )
     
     policy = _normalize_policy(policy)
     if policy not in [
@@ -471,6 +487,12 @@ def train(
             "'cnn-window-attention', 'cnn-window-attention-lstm', 'multi-cnn', "
             "'multi-cnn-lstm', 'transformer', or 'transformer-lstm'."
         )
+    if portfolio_choice and policy != "mlp":
+        raise ValueError("Portfolio mode currently supports only --policy mlp")
+    if portfolio_universe_size < 1:
+        raise ValueError(f"--portfolio-universe-size must be >= 1, got {portfolio_universe_size}")
+    if portfolio_top_k < 1:
+        raise ValueError(f"--portfolio-top-k must be >= 1, got {portfolio_top_k}")
     if ent_coef_schedule not in ["constant", "linear", "cosine"]:
         raise ValueError(f"Invalid ent_coef_schedule: {ent_coef_schedule}. Must be 'constant', 'linear', or 'cosine'")
     if n_envs < 1:
@@ -524,13 +546,52 @@ def train(
         window_policy = str(window_policy).strip().lower()
         if window_policy not in {"explicit", "logspace"}:
             raise ValueError(f"--window-policy must be 'explicit' or 'logspace', got {window_policy}")
+    if portfolio_choice:
+        if not signal_feature_columns:
+            raise ValueError("Portfolio mode requires explicit --signal-columns")
+        if signal_prediction_dir is None:
+            signal_prediction_dir = str(default_lab_signal_prediction_dir())
+        ignored_flags = []
+        if news_feature_columns not in (None, []):
+            ignored_flags.append("--news-columns")
+        if news_prediction_dir is not None:
+            ignored_flags.append("--news-prediction-dir")
+        if help_tickers:
+            ignored_flags.append("--help-tickers")
+        if help_assets:
+            ignored_flags.append("--help-assets")
+        if ignored_flags:
+            print(
+                "WARN: Portfolio mode ignores "
+                + ", ".join(ignored_flags)
+                + " in v1."
+            )
+        news_feature_columns = None
+        news_prediction_dir = None
+        help_tickers = None
+        help_assets = None
+        source_mode = None
+        ma_windows = None
+        helpers_ma_windows = None
+        returns_windows = None
+        helpers_returns_windows = None
+        engineered_features = None
+        window_policy = None
+        feature_windows = None
+        logspace_min = None
+        logspace_max = None
+        logspace_count = None
+        rs_market_proxies = None
+        rs_include_long = None
+        calendar_features = None
 
     policy_display = _policy_display_name(policy)
 
     if isinstance(model_name, str):
         model_name = model_name.strip()
     if not model_name:
-        model_name = _auto_model_name(policy_display, stock, stocks, all_stocks, total_timesteps)
+        auto_name_stock = "PORTFOLIO" if portfolio_choice else stock
+        model_name = _auto_model_name(policy_display, auto_name_stock, stocks, all_stocks, total_timesteps)
 
     save_root_dir = save_dir
     log_root_dir = log_dir
@@ -597,7 +658,12 @@ def train(
     print("Dataset Configuration")
     print("="*60)
     
-    if all_stocks:
+    if portfolio_choice:
+        print("Mode: Portfolio-Choice")
+        print(f"Data directory: {data_dir}")
+        print(f"Portfolio universe size: {portfolio_universe_size}")
+        print(f"Portfolio top-k: {portfolio_top_k}")
+    elif all_stocks:
         print(f"Mode: Multi-Stock (All stocks)")
         print(f"Data directory: {data_dir}")
     elif stocks:
@@ -683,7 +749,15 @@ def train(
         )
         if signal_feature_columns:
             print(
-                f"Signal predictions dir: {signal_prediction_dir or str(default_signal_prediction_dir())}"
+                "Signal predictions dir: "
+                + (
+                    signal_prediction_dir
+                    or str(
+                        default_lab_signal_prediction_dir()
+                        if portfolio_choice
+                        else default_signal_prediction_dir()
+                    )
+                )
             )
     if help_tickers:
         print(f"Help tickers: {', '.join(help_tickers)}")
@@ -740,6 +814,9 @@ def train(
                 stock=stock,
                 stocks=stocks,
                 all_stocks=all_stocks,
+                portfolio_choice=portfolio_choice,
+                portfolio_universe_size=portfolio_universe_size,
+                portfolio_top_k=portfolio_top_k,
                 data_dir=data_dir,
                 drawdown_penalty_enabled=drawdown_penalty_enabled,
                 drawdown_penalty_lambda=drawdown_penalty_lambda,
@@ -791,6 +868,9 @@ def train(
             stock=stock,
             stocks=stocks,
             all_stocks=all_stocks,
+            portfolio_choice=portfolio_choice,
+            portfolio_universe_size=portfolio_universe_size,
+            portfolio_top_k=portfolio_top_k,
             data_dir=data_dir,
             drawdown_penalty_enabled=drawdown_penalty_enabled,
             drawdown_penalty_lambda=drawdown_penalty_lambda,
@@ -836,11 +916,18 @@ def train(
     print(f"\nEnvironment info:")
     print(f"  Observation space: {train_env.observation_space}")
     print(f"  Action space: {train_env.action_space}")
+    if portfolio_choice:
+        resolved_universe = _get_env_attr(train_env, "universe_tickers", default=[]) or []
+        print(f"  Resolved universe ({len(resolved_universe)}): {', '.join(resolved_universe)}")
 
     # Snapshot resolved environment config early (before learning), so metadata remains valid
     # even if learning is interrupted and vec env wrappers are partially torn down.
     env_input_features_snapshot = _get_env_attr(train_env, "input_features", default=None)
     env_config_snapshot = {
+        "portfolio_choice": bool(_get_env_attr(train_env, "portfolio_choice", default=False)),
+        "portfolio_universe_size": _get_env_attr(train_env, "portfolio_universe_size", default=None),
+        "portfolio_top_k": _get_env_attr(train_env, "portfolio_top_k", default=None),
+        "portfolio_universe_tickers": _get_env_attr(train_env, "universe_tickers", default=[]),
         "lookback_window": _get_env_attr(train_env, "lookback_window"),
         "source_mode": _get_env_attr(train_env, "source_mode", default=None),
         "ohlcv": _get_env_attr(train_env, "ohlcv_fields", default=None),
@@ -932,7 +1019,9 @@ def train(
         "stop_loss": _get_env_attr(train_env, "stop_loss"),
         "include_can_exit": bool(_get_env_attr(train_env, "include_can_exit", default=True)),
     }
-    if all_stocks or stocks:
+    if portfolio_choice:
+        resolved_stocks_snapshot = _get_env_attr(train_env, "universe_tickers", default=[]) or []
+    elif all_stocks or stocks:
         resolved_stocks_snapshot = _get_env_attr(train_env, "stock_names", default=[]) or []
         if not resolved_stocks_snapshot and stocks:
             resolved_stocks_snapshot = list(stocks)
@@ -962,6 +1051,9 @@ def train(
             stock=stock,
             stocks=stocks,
             all_stocks=all_stocks,
+            portfolio_choice=portfolio_choice,
+            portfolio_universe_size=portfolio_universe_size,
+            portfolio_top_k=portfolio_top_k,
             data_dir=data_dir,
             drawdown_penalty_enabled=drawdown_penalty_enabled,
             drawdown_penalty_lambda=drawdown_penalty_lambda,
@@ -1385,11 +1477,20 @@ def train(
             os.remove(best_meta_path)
     
     # Save metadata for training context/configuration used by evaluation.
-    run_mode = "all_stocks" if all_stocks else ("selected_stocks" if stocks else "single_stock")
+    run_mode = (
+        "portfolio_choice"
+        if portfolio_choice
+        else ("all_stocks" if all_stocks else ("selected_stocks" if stocks else "single_stock"))
+    )
     resolved_stocks = resolved_stocks_snapshot
     git_commit, git_is_dirty = _get_git_commit_info()
     env_config = env_config_snapshot
-    observation_extra_state_dim = 3 if env_config["include_can_exit"] else 2
+    env_n_features = _get_env_attr(train_env, "n_features", default=None)
+    env_obs_space = _get_env_attr(train_env, "observation_space", default=None)
+    if env_n_features is not None and env_obs_space is not None and getattr(env_obs_space, "shape", None):
+        observation_extra_state_dim = int(env_obs_space.shape[0]) - int(env_n_features)
+    else:
+        observation_extra_state_dim = 3 if env_config["include_can_exit"] else 2
 
     meta_base = {
         "metadata_version": 2,
@@ -1407,9 +1508,12 @@ def train(
             else None
         ),
         "run_mode": run_mode,
-        "stock": stock,
+        "stock": (None if portfolio_choice else stock),
         "stocks": stocks or [],
         "all_stocks": all_stocks,
+        "portfolio_choice": bool(portfolio_choice),
+        "portfolio_universe_size": int(portfolio_universe_size),
+        "portfolio_top_k": int(portfolio_top_k),
         "resolved_stocks": resolved_stocks or [],
         "policy": policy_display,
         "timesteps_requested": int(total_timesteps),

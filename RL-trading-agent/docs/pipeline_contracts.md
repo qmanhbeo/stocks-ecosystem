@@ -48,6 +48,7 @@ Outputs:
 
 Signal default:
 - if signal features are enabled and no explicit directory is passed, RL uses `data/features/signals/predictions/auto/`
+- in `--portfolio-choice` mode, RL defaults to `data/features/signals/predictions/rl_lab_matrix/`
 - if the consolidated lab matrix should be used, first run `python -m vn_stock_rl.data_tools.export_lab_signal_matrix` and then pass `--signal-prediction-dir data/features/signals/predictions/rl_lab_matrix/`
 
 ## What To Change Together

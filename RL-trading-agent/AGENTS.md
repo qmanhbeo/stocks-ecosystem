@@ -26,6 +26,7 @@ To change env feature merging or observation composition:
 - `vn_stock_rl/env/base.py`
 - `vn_stock_rl/env/single_stock.py`
 - `vn_stock_rl/env/multi_stock.py`
+- `vn_stock_rl/env/portfolio_choice.py`
 
 To change policy/extractor wiring:
 - `vn_stock_rl/policies/registry.py`

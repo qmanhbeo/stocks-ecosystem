@@ -12,7 +12,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     args = parse_args(argv)
     df_history, stats = evaluate_model(**namespace_to_evaluate_kwargs(args))
 
-    if not args.metrics_only:
+    if not args.metrics_only and not stats.get("portfolio_mode"):
         analyze_trades(
             df_history,
             args.output,
@@ -20,6 +20,8 @@ def main(argv: Optional[list[str]] = None) -> int:
             sell_fee_rate=float(stats.get("sell_fee_rate", 0.0)),
             capital_gains_tax_rate=float(stats.get("capital_gains_tax_rate", 0.0)),
         )
+    elif not args.metrics_only:
+        print("Skipping single-stock trade analysis in portfolio mode.")
 
     print("\n" + "=" * 60)
     print("Evaluation complete!")

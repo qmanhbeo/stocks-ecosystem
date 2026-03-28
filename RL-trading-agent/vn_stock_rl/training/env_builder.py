@@ -8,7 +8,7 @@ from typing import Optional
 
 from stable_baselines3.common.monitor import Monitor
 
-from vn_stock_rl.env import MultiStockEnv, TradingEnv
+from vn_stock_rl.env import MultiStockEnv, PortfolioChoiceEnv, TradingEnv
 
 
 def filter_help_tickers(help_list, primary_stock, primary_stocks, use_all):
@@ -30,6 +30,9 @@ def build_env_from_args(args: Namespace):
         stock=args.stock,
         stocks=args.stocks,
         all_stocks=args.all_stocks,
+        portfolio_choice=getattr(args, "portfolio_choice", False),
+        portfolio_universe_size=getattr(args, "portfolio_universe_size", 20),
+        portfolio_top_k=getattr(args, "portfolio_top_k", 3),
         data_dir=args.data_dir,
         drawdown_penalty_enabled=getattr(args, "drawdown_penalty_enabled", None),
         drawdown_penalty_lambda=getattr(args, "drawdown_penalty_lambda", None),
@@ -73,6 +76,9 @@ def build_training_env(
     stock: str,
     stocks: list,
     all_stocks: bool,
+    portfolio_choice: bool,
+    portfolio_universe_size: int,
+    portfolio_top_k: int,
     data_dir: str,
     drawdown_penalty_enabled: Optional[bool],
     drawdown_penalty_lambda: Optional[float],
@@ -107,9 +113,31 @@ def build_training_env(
     market_data_dir: str,
     help_assets: list,
     help_assets_dir: str,
+    portfolio_universe_tickers: Optional[list] = None,
     monitor_path_or_none: Optional[str] = None,
 ):
-    if all_stocks or stocks:
+    if portfolio_choice:
+        env = PortfolioChoiceEnv(
+            data_dir=data_dir,
+            mode=mode,
+            drawdown_penalty_enabled=drawdown_penalty_enabled,
+            drawdown_penalty_lambda=drawdown_penalty_lambda,
+            drawdown_penalty_train_only=drawdown_penalty_train_only,
+            reward_benchmark=reward_benchmark,
+            benchmark_weight=benchmark_weight,
+            benchmark_relative_reward=benchmark_relative_reward,
+            train_episode_sampling_enabled=train_episode_sampling_enabled,
+            train_episode_min_fraction=train_episode_min_fraction,
+            train_episode_max_fraction=train_episode_max_fraction,
+            start_date=start_date,
+            end_date=end_date,
+            signal_feature_columns=signal_feature_columns,
+            signal_prediction_dir=signal_prediction_dir,
+            portfolio_universe_size=portfolio_universe_size,
+            portfolio_top_k=portfolio_top_k,
+            portfolio_universe_tickers=portfolio_universe_tickers,
+        )
+    elif all_stocks or stocks:
         env = MultiStockEnv(
             data_dir=data_dir,
             mode=mode,

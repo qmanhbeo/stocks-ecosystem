@@ -63,6 +63,7 @@ conda run -n stocks python -m vn_stock_rl.data_tools.inspect_research_exports --
 
 This writes per-ticker files to `../data/features/signals/predictions/rl_lab_matrix/`.
 Then point training/evaluation at that directory with `--signal-prediction-dir` and pass the desired lab columns via `--signal-columns`.
+In `--portfolio-choice` mode, RL defaults to that lab-adapter directory automatically when `--signal-prediction-dir` is omitted.
 
 ## Train and evaluate RL
 
@@ -75,13 +76,13 @@ vn-stock-train --stock FPT --policy cnn --help-tickers VNINDEX VN30 --help-asset
 vn-stock-evaluate --model artifacts/trained_models/cnn_fpt_news_tabular_2016on/model_best.zip --stock FPT --mode val
 ```
 
-First controlled pilot with the lab matrix:
+First portfolio-choice pilot with the lab matrix:
 
 ```bash
-vn-stock-train --stock FPT --policy mlp --start-date 2016-01-01 --timesteps 100000 --eval-freq 10000 --n-eval-episodes 1 --n-envs 4 --seed 1208 --signal-columns s1_proba c4_oc_asym_5d c5_ins_relative_size_5d c5_signal_present c6_contrarian_intra_5d c7_ceiling_count_5d c8_vol_zscore_5d c9_reversal_1d c10_illiq_level_rank c11_ret_60d_lag_rank c12_gap_absorb_3 c13_compress_blowoff_2 c14_clv_volconf_resid_rank --signal-prediction-dir ../data/features/signals/predictions/rl_lab_matrix --name pilot_fpt_labmatrix_seed1208
+vn-stock-train --portfolio-choice --policy mlp --start-date 2016-01-01 --timesteps 100000 --eval-freq 10000 --n-eval-episodes 1 --n-envs 4 --seed 1208 --portfolio-universe-size 20 --portfolio-top-k 3 --signal-columns s1_proba c4_oc_asym_5d c5_ins_relative_size_5d c5_signal_present c6_contrarian_intra_5d c7_ceiling_count_5d c8_vol_zscore_5d c9_reversal_1d c10_illiq_level_rank c11_ret_60d_lag_rank c12_gap_absorb_3 c13_compress_blowoff_2 c14_clv_volconf_resid_rank --name pilot_portfolio_labmatrix_seed1208
 ```
 
-See [docs/lab_signal_matrix_pilot.md](docs/lab_signal_matrix_pilot.md) for the baseline vs `S1` vs full-matrix run ladder.
+See [docs/lab_signal_matrix_pilot.md](docs/lab_signal_matrix_pilot.md) for the portfolio-mode smoke test and `S1` vs full-matrix run ladder.
 
 ## Hyperparameters & Trading Env configs
 

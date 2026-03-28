@@ -31,6 +31,23 @@ def build_parser() -> argparse.ArgumentParser:
                         help="List of stock tickers (e.g., ACB VNM HPG) for multi-stock training")
     parser.add_argument("--all-stocks", action="store_true",
                         help="Train on all stocks in data directory")
+    parser.add_argument(
+        "--portfolio-choice",
+        action="store_true",
+        help="Train a portfolio-choice agent over a fixed cross-sectional universe",
+    )
+    parser.add_argument(
+        "--portfolio-universe-size",
+        type=int,
+        default=20,
+        help="Number of liquid stocks in the fixed portfolio universe (default: 20)",
+    )
+    parser.add_argument(
+        "--portfolio-top-k",
+        type=int,
+        default=3,
+        help="Number of stock slots the policy can select each rebalance (default: 3)",
+    )
     parser.add_argument("--data-dir", type=str, default=str(default_stock_data_dir()),
                         help="Directory containing parquet files")
     drawdown_group = parser.add_mutually_exclusive_group()
@@ -255,6 +272,9 @@ def namespace_to_train_kwargs(args: argparse.Namespace) -> dict:
         "stock": args.stock,
         "stocks": stocks_list,
         "all_stocks": args.all_stocks,
+        "portfolio_choice": args.portfolio_choice,
+        "portfolio_universe_size": args.portfolio_universe_size,
+        "portfolio_top_k": args.portfolio_top_k,
         "data_dir": args.data_dir,
         "drawdown_penalty_enabled": args.drawdown_penalty_enabled,
         "drawdown_penalty_lambda": args.drawdown_penalty_lambda,
