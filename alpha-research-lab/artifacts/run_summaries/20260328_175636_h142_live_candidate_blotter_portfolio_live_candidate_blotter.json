@@ -1,0 +1,87 @@
+{
+  "artifacts": {
+    "daily": "artifacts/portfolio_baselines/20260328_175636_h142_live_candidate_blotter_daily.parquet",
+    "detail": "artifacts/portfolio_baselines/20260328_175636_h142_live_candidate_blotter_detail.parquet"
+  },
+  "metadata": {
+    "benchmark": "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+    "matrix": "data/features/xs_rl_signal_matrix.parquet",
+    "stock_dir": "data/stock",
+    "tradability": "data/features/execution/tradability_daily.parquet"
+  },
+  "mode": "portfolio_live_candidate_blotter",
+  "name": "h142_live_candidate_blotter",
+  "summary": {
+    "candidate": {
+      "max_adv_participation": 0.02,
+      "max_names_if_liquidity_thin": null,
+      "max_position_vnd": 0.0,
+      "min_adv20_value_vnd": 1000000000.0,
+      "min_score": null,
+      "portfolio_notional_vnd": 20000000.0,
+      "rebalance_every": 10,
+      "round_trip_cost": 0.003,
+      "top_k": 5,
+      "weighting": "equal"
+    },
+    "detail_rows": 10,
+    "latest_day": {
+      "avg_holding_age": 5.0,
+      "avg_target_pct_adv20": 0.0187117198,
+      "benchmark_return": 0.001342091,
+      "benchmark_value_vnd": 38965025.06113137,
+      "blocked_buy_count": 0,
+      "blocked_buy_tickers": [],
+      "blocked_sell_count": 0,
+      "blocked_sell_tickers": [],
+      "buy_tickers": [],
+      "buy_turnover": 0.0,
+      "candidate_min_score": null,
+      "candidate_rebalance_every": 10,
+      "candidate_top_k": 5,
+      "candidate_weighting": "equal",
+      "capacity_clipped_count": 0,
+      "cash_weight": 0.1205959695,
+      "eligible_universe_size": 2,
+      "execution_date": "2025-12-31T00:00:00.000",
+      "held_after_tickers": [
+        "SHB"
+      ],
+      "held_tickers": [
+        "SHB"
+      ],
+      "max_adv_participation": 0.02,
+      "max_names_if_liquidity_thin": null,
+      "max_position_vnd": 0.0,
+      "max_single_target_notional_vnd": 19698074.994047225,
+      "max_target_pct_adv20": 0.0187117198,
+      "min_adv20_value_vnd": 1000000000.0,
+      "num_holdings": 1,
+      "portfolio_notional_vnd": 20000000.0,
+      "portfolio_return": 0.0108742123,
+      "portfolio_value_vnd": 22399345.818029862,
+      "relative_return": 0.0095321213,
+      "requested_tickers": [],
+      "round_trip_cost": 0.003,
+      "selected_count": 1,
+      "sell_tickers": [],
+      "sell_turnover": 0.0,
+      "signal_date": "2025-12-30T00:00:00",
+      "strategy": "full_library",
+      "target_tickers": [],
+      "turnover": 0.0,
+      "weighting_rule": "equal"
+    },
+    "latest_execution_days": 10,
+    "required_holding_age": 3,
+    "strategy": "full_library",
+    "window_days": 10,
+    "window_end_execution_date": "2025-12-31T00:00:00",
+    "window_start_execution_date": "2025-12-18T00:00:00",
+    "year_range": [
+      2019,
+      2025
+    ]
+  },
+  "ts": "20260328_175636"
+}

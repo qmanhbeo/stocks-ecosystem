@@ -1,15 +1,26 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_48_log.md` for the latest full session detail.
+Use `notes/session_49_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 48 complete (H138 fixed-menu PASS; H139 capacity stress MIXED; focus shifts to deployability, 2026-03-28)
+**Session status:** Session 49 complete (signal-date liquidity fix applied; H138/H139 rerun; H140 FAIL; H141 STOP; H142 diagnostic only, 2026-03-28)
 
-### New reality check after Session 48
+### New reality check after Session 49
+
+**Execution alignment correction (Session 49)**
+- The deterministic portfolio engine had a one-day liquidity timing bug:
+  - tradability flags and `ADV20` were read from the execution-date row (`T+1`)
+  - the shared contract defines them on the signal-date row (`T`), because they govern the **next** open
+- Fixed behavior:
+  - `can_buy_next_open`, `can_sell_next_open`, and `ADV20` now come from the signal-date row
+  - the engine still executes at `T+1` open and enforces `T+2.5` sellability
+- Implication:
+  - Session 48 H138/H139 figures are superseded by Session 49 reruns
+  - the qualitative conclusion stays the same on capacity, but the uncapped baseline is materially stronger
 
 **H135 - Signal Library Portfolio Baseline (corrected)**
 - Session 46 found a scoring bug in the original H135 blend:
@@ -74,38 +85,92 @@ Use `notes/session_48_log.md` for the latest full session detail.
   - simple nested config selection does **not** yet justify “ML for construction”
   - the next honest path is smaller, simpler, and more regime-aware, or else move to hedged constructions
 
-**H138 - Fixed-Menu Honest Validation**
-- Removed yearly re-selection entirely and tested a tiny fixed menu on the honest holdout `2019-2025`:
+**H138 - Fixed-Menu Honest Validation (rerun after signal-date liquidity fix)**
+- Reran the fixed menu on the honest `2019-2025` holdout under the corrected engine:
   - `k3_r5_eq` = top-3, 5-day cadence, equal weight
   - `k5_r5_eq` = top-5, 5-day cadence, equal weight
   - `k5_r10_eq` = top-5, 10-day cadence, equal weight
-- Result: **all three simple fixed rules beat VNINDEX on the holdout**
-  - `k3_r5_eq`: `+303.01%` total, `+22.25%` annualized, `+106.86%` relative, IR `0.43`, `5/7` positive years
-  - `k5_r5_eq`: `+271.38%` total, `+20.82%` annualized, `+90.62%` relative, IR `0.42`, `6/7` positive years
-  - `k5_r10_eq`: `+241.90%` total, `+19.39%` annualized, `+75.49%` relative, IR `0.38`, `4/7` positive years
+- Result: **all three simple fixed rules still beat VNINDEX, and by more than Session 48 suggested**
+  - `k5_r5_eq`: `+769.49%` total, `+36.59%` annualized, `+346.29%` relative, IR `0.81`, `7/7` positive years
+  - `k3_r5_eq`: `+748.57%` total, `+36.11%` annualized, `+335.55%` relative, IR `0.70`, `6/7` positive years
+  - `k5_r10_eq`: `+573.69%` total, `+31.65%` annualized, `+245.79%` relative, IR `0.67`, `4/7` positive years
 - Implication:
-  - H137’s yearly selector was the problem, not the entire long-only premise
-  - simple fixed rules are currently stronger than ML-style config re-selection
+  - H137’s yearly selector was even worse than previously thought
+  - the corrected uncapped long-only baseline is strong enough to matter
+  - but deployability still has to survive explicit capacity rules
 
-**H139 - Capacity / Fee Stress**
-- Stress-tested the H138 fixed-menu candidates on the same `2019-2025` holdout across:
+**H139 - Capacity / Fee Stress (rerun after signal-date liquidity fix)**
+- Reran the H138 fixed-menu stress on `2019-2025` across:
   - notionals `50m, 100m, 250m, 500m, 1B VND`
   - ADV participation caps `0.0%, 0.5%, 1.0%, 2.0%`
   - round-trip costs `0.30%, 0.50%`
-- Key result:
-  - **uncapped** scenarios remain economically strong
-  - at `0.50%` RT and no cap, all three candidates still stay positive benchmark-relative
-  - but **every capped scenario fails**
+- Corrected result:
+  - **uncapped** scenarios are very strong
+  - at `0.30%` RT and no cap, `k5_r5_eq` now reaches `+769.49%` total and `+346.29%` relative vs VNINDEX
+  - at `0.50%` RT and no cap, all three candidates remain positive benchmark-relative
+  - but **every capped scenario still fails**
 - Critical deployability finding:
   - with any positive ADV cap in the tested grid, positive relative return count = `0`
-  - even the best capped scenarios stay mostly in cash:
-    - min average cash weight at `0.5%` cap: `99.32%`
-    - min average cash weight at `1.0%` cap: `98.64%`
-    - min average cash weight at `2.0%` cap: `97.34%`
+  - best relative return by cap:
+    - `0.0%`: `+346.29%`
+    - `0.5%`: `-47.52%`
+    - `1.0%`: `-46.36%`
+    - `2.0%`: `-43.24%`
+  - minimum average cash weight by cap:
+    - `0.5%`: `99.40%`
+    - `1.0%`: `98.81%`
+    - `2.0%`: `97.74%`
 - Implication:
-  - the edge is economically real in uncapped backtests
-  - but deployability is still the main unsolved problem
-  - the next frontier is capacity-aware construction or accepting trivial capital size
+  - the corrected engine strengthens the uncapped economics
+  - it does **not** rescue deployability under explicit participation caps
+
+**H140 - Retail Capacity-Aware Validation**
+- Tested the actual retail-sized long-only question on the honest `2019-2025` holdout:
+  - notionals `20m, 50m, 100m, 200m VND`
+  - ADV caps `2%, 5%, 10%`
+  - ADV20 floors `250m, 500m, 1B, 2B, 5B VND`
+  - round-trip costs `0.30%, 0.50%`
+  - candidate menu = the corrected H138 fixed rules
+- Result: **no retail-viable scenario**
+  - viability gate = `relative_total_return > 0`, `avg_cash_weight < 25%`, `positive_years >= 5/7`
+  - count meeting that gate: `0`
+  - best scenario:
+    - `k5_r10_eq`
+    - `20m` notional
+    - `2%` ADV cap
+    - `1B` ADV20 floor
+    - `0.30%` RT cost
+    - `+12.00%` total, but `-42.51%` relative, `87.13%` average cash, only `2/7` positive years
+- Implication:
+  - even retail-sized long-only deployability still collapses once actual liquidity rules are imposed
+  - the next move is **not** more long-only tuning or RL
+
+**H141 - Capacity-Aware Construction Sweep**
+- Designed to search a tiny long-only menu only inside H140-viable liquidity regions.
+- Actual result:
+  - H140 produced `0` viable liquidity settings
+  - H141 therefore stopped immediately and wrote a formal empty-result summary
+- Implication:
+  - there is no honest long-only retail region to optimize inside at the moment
+
+**H142 - Live Candidate Blotter (diagnostic only)**
+- Implemented the daily blotter exporter for future live/paper-trade validation.
+- Because H141 had no winner, the script was run manually on the top H140 scenario only as a diagnostic:
+  - `top_k=5`, rebalance every `10` days, equal weight
+  - `20m` notional, `2%` ADV cap, `1B` ADV20 floor, `0.30%` RT
+- Latest diagnostic snapshot (`2025-12-31` execution):
+  - held only `SHB`
+  - target notional about `19.70m VND`
+  - target usage about `1.87%` of ADV20
+  - cash still `12.06%`
+- Implication:
+  - the tooling is ready
+  - the long-only candidate itself is not strong enough to justify live promotion
+
+**Next frontier**
+- benchmark-relative or hedged constructions using the same signal library
+- if staying long-only, make it an explicitly tiny-capital illiquidity-harvesting strategy instead of a pseudo-scalable one
+- keep RL deferred until a deterministic deployable baseline exists
 
 ### Current production system
 
@@ -197,6 +262,7 @@ Use `notes/session_48_log.md` for the latest full session detail.
 | 46 | 2026-03-28 | H135 corrected: full_library baseline turns positive; H136 sweep finds top-5 equal-weight, 5d cadence, +1105.71% total and +25.66% annualized | H93 + C4-C14 |
 | 47 | 2026-03-28 | H137 nested walk-forward selection: +21.38% total OOS but -42.46% vs VNINDEX; simple config selection overfits and does not validate ML construction yet | H93 + C4-C14 |
 | 48 | 2026-03-28 | H138 fixed simple rules beat VNINDEX on holdout; H139 shows uncapped economics survive but any tested ADV cap collapses deployability | H93 + C4-C14 |
+| 49 | 2026-03-28 | Signal-date liquidity fix applied; corrected H138/H139 reruns strengthen uncapped long-only economics, but H140 finds zero retail-viable scenarios and H141 stops | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 

@@ -16,13 +16,15 @@ def _market_inputs(
     *,
     can_buy: np.ndarray | None = None,
     can_sell: np.ndarray | None = None,
+    adv20: np.ndarray | None = None,
+    availability: np.ndarray | None = None,
 ) -> MarketInputs:
     dates = pd.date_range("2024-01-01", periods=score_matrix.shape[0], freq="D").to_numpy()
     tickers = tuple(f"T{i:03d}" for i in range(score_matrix.shape[1]))
     open_matrix = np.full(score_matrix.shape, 100.0, dtype=np.float64)
-    adv20_matrix = np.full(score_matrix.shape, 1e12, dtype=np.float64)
+    adv20_matrix = np.full(score_matrix.shape, 1e12, dtype=np.float64) if adv20 is None else adv20
     benchmark_open = np.full(score_matrix.shape[0], 100.0, dtype=np.float64)
-    availability = np.ones(score_matrix.shape, dtype=bool)
+    availability_matrix = np.ones(score_matrix.shape, dtype=bool) if availability is None else availability
     return MarketInputs(
         dates=dates,
         tickers=tickers,
@@ -31,7 +33,7 @@ def _market_inputs(
         adv20_matrix=adv20_matrix,
         can_buy_matrix=np.ones(score_matrix.shape, dtype=bool) if can_buy is None else can_buy,
         can_sell_matrix=np.ones(score_matrix.shape, dtype=bool) if can_sell is None else can_sell,
-        availability_matrix=availability,
+        availability_matrix=availability_matrix,
         score_matrices={"test": score_matrix.astype(np.float64)},
         tradability_source="test",
     )
@@ -85,7 +87,7 @@ def test_simulate_strategy_blocks_unbuyable_stock_and_keeps_cash():
         dtype=np.float64,
     )
     can_buy = np.ones_like(scores, dtype=bool)
-    can_buy[1, 0] = False  # First execution day buy for AAA is blocked.
+    can_buy[0, 0] = False  # Signal-date flag blocks the next open buy for AAA.
 
     result = simulate_strategy(
         strategy_name="test",
@@ -106,6 +108,154 @@ def test_simulate_strategy_blocks_unbuyable_stock_and_keeps_cash():
     assert first_day["num_holdings"] == 0
     assert first_day["cash_weight"] == 1.0
     assert first_day["blocked_buy_count"] == 1
+
+
+def test_simulate_strategy_uses_signal_date_adv_for_capacity():
+    scores = np.array(
+        [
+            [0.9],
+            [0.9],
+            [0.9],
+        ],
+        dtype=np.float64,
+    )
+    adv20 = np.array(
+        [
+            [0.2],
+            [1_000.0],
+            [1_000.0],
+        ],
+        dtype=np.float64,
+    )
+
+    result = simulate_strategy(
+        strategy_name="test",
+        signal_columns=["mock_signal"],
+        market_inputs=_market_inputs(scores, adv20=adv20),
+        top_k=1,
+        rebalance_every=1,
+        weighting="equal",
+        initial_notional_vnd=1.0,
+        max_adv_participation=0.5,
+        required_holding_age=3,
+        buy_fee_rate=0.0,
+        sell_fee_rate=0.0,
+        capital_gains_tax_rate=0.0,
+    )
+
+    first_day = result.daily.iloc[0]
+    assert first_day["cash_weight"] == 0.9
+    assert first_day["capacity_clipped_count"] == 1
+
+
+def test_simulate_strategy_applies_min_adv20_floor():
+    scores = np.array(
+        [
+            [0.9],
+            [0.9],
+            [0.9],
+        ],
+        dtype=np.float64,
+    )
+    adv20 = np.array(
+        [
+            [0.4],
+            [1_000.0],
+            [1_000.0],
+        ],
+        dtype=np.float64,
+    )
+
+    result = simulate_strategy(
+        strategy_name="test",
+        signal_columns=["mock_signal"],
+        market_inputs=_market_inputs(scores, adv20=adv20),
+        top_k=1,
+        rebalance_every=1,
+        weighting="equal",
+        initial_notional_vnd=1.0,
+        max_adv_participation=1.0,
+        required_holding_age=3,
+        buy_fee_rate=0.0,
+        sell_fee_rate=0.0,
+        capital_gains_tax_rate=0.0,
+        min_adv20_value_vnd=0.5,
+    )
+
+    first_day = result.daily.iloc[0]
+    assert first_day["eligible_universe_size"] == 0
+    assert first_day["num_holdings"] == 0
+    assert first_day["cash_weight"] == 1.0
+
+
+def test_simulate_strategy_applies_absolute_position_cap():
+    scores = np.array(
+        [
+            [0.9],
+            [0.9],
+            [0.9],
+        ],
+        dtype=np.float64,
+    )
+
+    result = simulate_strategy(
+        strategy_name="test",
+        signal_columns=["mock_signal"],
+        market_inputs=_market_inputs(scores),
+        top_k=1,
+        rebalance_every=1,
+        weighting="equal",
+        initial_notional_vnd=1.0,
+        max_adv_participation=1.0,
+        required_holding_age=3,
+        buy_fee_rate=0.0,
+        sell_fee_rate=0.0,
+        capital_gains_tax_rate=0.0,
+        max_position_vnd=0.25,
+    )
+
+    first_day = result.daily.iloc[0]
+    assert first_day["cash_weight"] == 0.75
+    assert first_day["capacity_clipped_count"] == 1
+
+
+def test_simulate_strategy_capture_blotter_emits_per_ticker_rows():
+    scores = np.array(
+        [
+            [0.9, 0.1],
+            [0.9, 0.1],
+            [0.9, 0.1],
+        ],
+        dtype=np.float64,
+    )
+    adv20 = np.array(
+        [
+            [10.0, 10.0],
+            [10.0, 10.0],
+            [10.0, 10.0],
+        ],
+        dtype=np.float64,
+    )
+
+    result = simulate_strategy(
+        strategy_name="test",
+        signal_columns=["mock_signal"],
+        market_inputs=_market_inputs(scores, adv20=adv20),
+        top_k=1,
+        rebalance_every=1,
+        weighting="equal",
+        initial_notional_vnd=1.0,
+        max_adv_participation=1.0,
+        required_holding_age=3,
+        buy_fee_rate=0.0,
+        sell_fee_rate=0.0,
+        capital_gains_tax_rate=0.0,
+        capture_blotter=True,
+    )
+
+    assert result.blotter is not None
+    assert not result.blotter.empty
+    assert {"ticker", "target_notional_vnd", "target_pct_adv20", "buy_blocked"}.issubset(result.blotter.columns)
 
 
 def test_compute_selected_target_weights_respects_weighting_scheme():

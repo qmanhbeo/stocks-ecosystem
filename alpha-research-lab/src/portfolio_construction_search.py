@@ -60,6 +60,52 @@ def sort_candidate_results(results: pd.DataFrame) -> pd.DataFrame:
     )
 
 
+def sort_retail_results(results: pd.DataFrame) -> pd.DataFrame:
+    sort_columns = [
+        "relative_total_return",
+        "portfolio_total_return",
+        "information_ratio_annualized",
+        "avg_cash_weight",
+        "avg_daily_turnover",
+    ]
+    if "top_k" in results.columns:
+        sort_columns.append("top_k")
+    if "rebalance_every" in results.columns:
+        sort_columns.append("rebalance_every")
+    if "weighting" in results.columns:
+        sort_columns.append("weighting")
+    if "min_score" in results.columns:
+        sort_columns.append("min_score")
+    if "portfolio_notional_vnd" in results.columns:
+        sort_columns.append("portfolio_notional_vnd")
+    if "max_adv_participation" in results.columns:
+        sort_columns.append("max_adv_participation")
+    if "min_adv20_value_vnd" in results.columns:
+        sort_columns.append("min_adv20_value_vnd")
+
+    ascending = [False, False, False, True, True] + [True] * (len(sort_columns) - 5)
+    return results.sort_values(
+        by=sort_columns,
+        ascending=ascending,
+        key=lambda col: col.map(sortable_min_score) if col.name == "min_score" else col,
+        ignore_index=True,
+    )
+
+
+def retail_viable_mask(
+    results: pd.DataFrame,
+    *,
+    min_relative_total_return: float = 0.0,
+    max_avg_cash_weight: float = 0.25,
+    min_positive_years: int = 5,
+) -> pd.Series:
+    return (
+        (pd.to_numeric(results["relative_total_return"], errors="coerce") > float(min_relative_total_return))
+        & (pd.to_numeric(results["avg_cash_weight"], errors="coerce") < float(max_avg_cash_weight))
+        & (pd.to_numeric(results["positive_years"], errors="coerce") >= int(min_positive_years))
+    )
+
+
 def enumerate_config_grid(
     *,
     top_k_grid: Iterable[int],

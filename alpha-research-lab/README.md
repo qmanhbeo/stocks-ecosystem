@@ -96,6 +96,9 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h137_nested_portfolio_selection.py`: honest walk-forward selector over the H136 construction menu
 - `analysis/h138_fixed_menu_validation.py`: honest holdout validation for a tiny fixed menu of simple constructions
 - `analysis/h139_fixed_menu_capacity_fee_stress.py`: capacity and fee stress for the fixed-menu long-only candidates
+- `analysis/h140_retail_capacity_aware_validation.py`: retail-sized deployability grid over the fixed-menu candidates
+- `analysis/h141_capacity_aware_construction_sweep.py`: tiny construction sweep inside any H140-viable liquidity region
+- `analysis/h142_live_candidate_blotter.py`: execution-facing blotter export for the current capacity-aware candidate
 
 ## Saved Result Artifacts
 
@@ -111,6 +114,9 @@ Main experiment runners write compact JSON summaries to `artifacts/run_summaries
 - Portfolio nested selection: `latest_portfolio_nested_selection.json`
 - Portfolio fixed-menu validation: `latest_portfolio_fixed_menu_validation.json`
 - Portfolio capacity / fee stress: `latest_portfolio_capacity_fee_stress.json`
+- Portfolio retail validation: `latest_portfolio_retail_validation.json`
+- Portfolio capacity-aware sweep: `latest_portfolio_capacity_aware_sweep.json`
+- Portfolio live candidate blotter: `latest_portfolio_live_candidate_blotter.json`
 
 Large daily portfolio baseline outputs are written under `artifacts/portfolio_baselines/`.
 

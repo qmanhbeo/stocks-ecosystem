@@ -1,0 +1,21 @@
+{
+  "artifacts": {},
+  "metadata": {
+    "h140_results": "artifacts/portfolio_baselines/20260328_175527_h140_retail_capacity_aware_validation_results.parquet"
+  },
+  "mode": "portfolio_capacity_aware_sweep",
+  "name": "h141_capacity_aware_construction_sweep",
+  "summary": {
+    "h140_results": "artifacts/portfolio_baselines/20260328_175527_h140_retail_capacity_aware_validation_results.parquet",
+    "liquidity_setting_count": 0,
+    "num_scenarios": 0,
+    "retail_acceptable_count": 0,
+    "strategy": "full_library",
+    "winner": null,
+    "year_range": [
+      2019,
+      2025
+    ]
+  },
+  "ts": "20260328_175539"
+}

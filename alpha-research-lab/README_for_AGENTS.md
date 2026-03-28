@@ -106,6 +106,9 @@ Read these first when you want the minimal result.
 - Portfolio nested selection: `artifacts/run_summaries/latest_portfolio_nested_selection.json`
 - Portfolio fixed-menu validation: `artifacts/run_summaries/latest_portfolio_fixed_menu_validation.json`
 - Portfolio capacity / fee stress: `artifacts/run_summaries/latest_portfolio_capacity_fee_stress.json`
+- Portfolio retail validation: `artifacts/run_summaries/latest_portfolio_retail_validation.json`
+- Portfolio capacity-aware sweep: `artifacts/run_summaries/latest_portfolio_capacity_aware_sweep.json`
+- Portfolio live candidate blotter: `artifacts/run_summaries/latest_portfolio_live_candidate_blotter.json`
 
 Execution/tradability producer:
 
@@ -129,6 +132,9 @@ Mode-specific durable outputs:
 - `analysis/h137_nested_portfolio_selection.py`: `artifacts/run_summaries/latest_portfolio_nested_selection.json` plus selected-config, train-candidate, and stitched OOS outputs under `artifacts/portfolio_baselines/`
 - `analysis/h138_fixed_menu_validation.py`: `artifacts/run_summaries/latest_portfolio_fixed_menu_validation.json` plus fixed-menu results and OOS daily outputs under `artifacts/portfolio_baselines/`
 - `analysis/h139_fixed_menu_capacity_fee_stress.py`: `artifacts/run_summaries/latest_portfolio_capacity_fee_stress.json` plus stress-grid outputs under `artifacts/portfolio_baselines/`
+- `analysis/h140_retail_capacity_aware_validation.py`: `artifacts/run_summaries/latest_portfolio_retail_validation.json` plus retail-grid outputs under `artifacts/portfolio_baselines/`
+- `analysis/h141_capacity_aware_construction_sweep.py`: `artifacts/run_summaries/latest_portfolio_capacity_aware_sweep.json` plus constrained-sweep outputs under `artifacts/portfolio_baselines/`
+- `analysis/h142_live_candidate_blotter.py`: `artifacts/run_summaries/latest_portfolio_live_candidate_blotter.json` plus detailed and daily blotter outputs under `artifacts/portfolio_baselines/`
 
 For any new analysis script, keep the large output wherever it naturally belongs, but also write
 one compact summary JSON under `artifacts/run_summaries/`.

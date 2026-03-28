@@ -44,6 +44,7 @@ class StrategyRunResult:
     signal_columns: tuple[str, ...]
     daily: pd.DataFrame
     summary: dict[str, object]
+    blotter: pd.DataFrame | None = None
 
 
 @dataclass(frozen=True)
@@ -362,6 +363,33 @@ def _annualized_return(final_value: float, initial_value: float, periods: int) -
     return float((final_value / initial_value) ** (252.0 / periods) - 1.0)
 
 
+def compute_capacity_weight_limits(
+    *,
+    adv20_value_vnd: np.ndarray,
+    portfolio_value_vnd: float,
+    max_adv_participation: float,
+    max_position_vnd: float,
+) -> np.ndarray:
+    adv = np.asarray(adv20_value_vnd, dtype=np.float64)
+    safe_value = max(float(portfolio_value_vnd), 1e-12)
+    limits = np.ones_like(adv, dtype=np.float64)
+
+    if max_adv_participation > 0.0:
+        adv_limits = np.nan_to_num(
+            adv * float(max_adv_participation) / safe_value,
+            nan=0.0,
+            posinf=1.0,
+            neginf=0.0,
+        )
+        limits = np.minimum(limits, adv_limits)
+
+    if max_position_vnd > 0.0:
+        absolute_limit = np.full_like(limits, float(max_position_vnd) / safe_value, dtype=np.float64)
+        limits = np.minimum(limits, absolute_limit)
+
+    return np.clip(limits, 0.0, 1.0)
+
+
 def compute_selected_target_weights(
     scores: np.ndarray,
     selected_indices: list[int] | tuple[int, ...],
@@ -392,6 +420,109 @@ def compute_selected_target_weights(
 
     target[selected] = raw / raw_sum
     return target
+
+
+def _build_blotter_rows(
+    *,
+    strategy_name: str,
+    tickers: tuple[str, ...],
+    signal_date: pd.Timestamp,
+    execution_date: pd.Timestamp,
+    scores: np.ndarray,
+    adv20_value_vnd: np.ndarray,
+    current_weights: np.ndarray,
+    desired_weights: np.ndarray,
+    executed_weights: np.ndarray,
+    selected_indices: list[int],
+    blocked_buy_indices: tuple[int, ...],
+    blocked_sell_indices: tuple[int, ...],
+    capacity_clipped_indices: tuple[int, ...],
+    can_buy_next_open: np.ndarray,
+    can_sell_next_open: np.ndarray,
+    holding_ages: np.ndarray,
+    portfolio_value_before_rebalance_vnd: float,
+    capacity_weight_limits: np.ndarray,
+    weighting: str,
+) -> list[dict[str, object]]:
+    detail_indices = sorted(
+        set(selected_indices)
+        | set(np.flatnonzero(current_weights > 1e-12).tolist())
+        | set(np.flatnonzero(desired_weights > 1e-12).tolist())
+        | set(np.flatnonzero(executed_weights > 1e-12).tolist())
+        | set(blocked_buy_indices)
+        | set(blocked_sell_indices)
+        | set(capacity_clipped_indices)
+    )
+    if not detail_indices:
+        return []
+
+    blocked_buy = set(blocked_buy_indices)
+    blocked_sell = set(blocked_sell_indices)
+    capacity_clipped = set(capacity_clipped_indices)
+    rows: list[dict[str, object]] = []
+    safe_value = max(float(portfolio_value_before_rebalance_vnd), 1e-12)
+
+    for idx in detail_indices:
+        adv_value = float(adv20_value_vnd[idx]) if np.isfinite(adv20_value_vnd[idx]) else float("nan")
+        current_weight = float(current_weights[idx])
+        desired_weight = float(desired_weights[idx])
+        executed_weight = float(executed_weights[idx])
+        current_notional = current_weight * safe_value
+        desired_notional = desired_weight * safe_value
+        executed_notional = executed_weight * safe_value
+        denom = adv_value if np.isfinite(adv_value) and adv_value > 0.0 else np.nan
+
+        if desired_weight > current_weight + 1e-12:
+            requested_action = "buy"
+        elif desired_weight < current_weight - 1e-12:
+            requested_action = "sell"
+        else:
+            requested_action = "hold"
+
+        if executed_weight > current_weight + 1e-12:
+            executed_action = "buy"
+        elif executed_weight < current_weight - 1e-12:
+            executed_action = "sell"
+        else:
+            executed_action = "hold"
+
+        rows.append(
+            {
+                "strategy": strategy_name,
+                "signal_date": signal_date.isoformat(),
+                "execution_date": execution_date.isoformat(),
+                "ticker": tickers[idx],
+                "weighting_rule": weighting,
+                "signal_score": float(scores[idx]) if np.isfinite(scores[idx]) else None,
+                "selected": bool(idx in selected_indices),
+                "holding_age_before": int(holding_ages[idx]),
+                "held_before": bool(current_weight > 1e-12),
+                "held_after": bool(executed_weight > 1e-12),
+                "requested_action": requested_action,
+                "executed_action": executed_action,
+                "can_buy_next_open": bool(can_buy_next_open[idx]),
+                "can_sell_next_open": bool(can_sell_next_open[idx]),
+                "buy_blocked": bool(idx in blocked_buy),
+                "sell_blocked": bool(idx in blocked_sell),
+                "capacity_clipped": bool(idx in capacity_clipped),
+                "current_weight": current_weight,
+                "desired_weight": desired_weight,
+                "executed_weight": executed_weight,
+                "current_notional_vnd": current_notional,
+                "target_notional_vnd": desired_notional,
+                "executed_notional_vnd": executed_notional,
+                "turnover_weight": float(abs(executed_weight - current_weight)),
+                "turnover_vnd": float(abs(executed_notional - current_notional)),
+                "adv20_value_vnd": adv_value if np.isfinite(adv_value) else None,
+                "capacity_weight_limit": float(capacity_weight_limits[idx]),
+                "capacity_limit_notional_vnd": float(capacity_weight_limits[idx] * safe_value),
+                "current_pct_adv20": float(current_notional / denom) if np.isfinite(denom) else None,
+                "target_pct_adv20": float(desired_notional / denom) if np.isfinite(denom) else None,
+                "executed_pct_adv20": float(executed_notional / denom) if np.isfinite(denom) else None,
+            }
+        )
+
+    return rows
 
 
 def summarize_daily_results(
@@ -529,6 +660,10 @@ def simulate_strategy(
     sell_fee_rate: float,
     capital_gains_tax_rate: float,
     min_score: float | None = None,
+    min_adv20_value_vnd: float = 0.0,
+    max_position_vnd: float = 0.0,
+    max_names_if_liquidity_thin: int | None = None,
+    capture_blotter: bool = False,
 ) -> StrategyRunResult:
     if top_k <= 0:
         raise ValueError("top_k must be > 0")
@@ -560,6 +695,7 @@ def simulate_strategy(
     last_rebalance_step = -rebalance_every
 
     records: list[dict[str, object]] = []
+    blotter_records: list[dict[str, object]] = []
     for step in range(n_dates - 1):
         open_t = open_matrix[step]
         open_t1 = open_matrix[step + 1]
@@ -582,6 +718,9 @@ def simulate_strategy(
         eligible = availability_matrix[step].copy()
         if min_score is not None:
             eligible &= scores >= float(min_score)
+        adv20_for_execution = adv20_matrix[step]
+        if min_adv20_value_vnd > 0.0:
+            eligible &= np.isfinite(adv20_for_execution) & (adv20_for_execution >= float(min_adv20_value_vnd))
 
         selected_indices: list[int] = []
         desired_weights = drifted_weights.copy() if not do_rebalance else np.zeros(n_tickers, dtype=np.float64)
@@ -589,7 +728,10 @@ def simulate_strategy(
             ranked_pool = np.flatnonzero(eligible)
             ranked_scores = scores[ranked_pool]
             order = np.lexsort((ranked_pool, -ranked_scores))
-            selected_indices = ranked_pool[order[: min(top_k, len(order))]].tolist()
+            selection_cap = int(top_k)
+            if max_names_if_liquidity_thin is not None and len(ranked_pool) < top_k:
+                selection_cap = min(selection_cap, int(max_names_if_liquidity_thin))
+            selected_indices = ranked_pool[order[: min(selection_cap, len(order))]].tolist()
             if selected_indices:
                 desired_weights = compute_selected_target_weights(
                     scores,
@@ -598,23 +740,21 @@ def simulate_strategy(
                 )
                 last_rebalance_step = step
 
-        if max_adv_participation > 0.0:
-            capacity_weights = np.nan_to_num(
-                adv20_matrix[step + 1] * float(max_adv_participation) / max(value_before_rebalance, 1e-12),
-                nan=0.0,
-                posinf=1.0,
-                neginf=0.0,
-            )
-            capacity_weights = np.clip(capacity_weights, 0.0, 1.0)
-        else:
-            capacity_weights = np.ones(n_tickers, dtype=np.float64)
+        capacity_weights = compute_capacity_weight_limits(
+            adv20_value_vnd=adv20_for_execution,
+            portfolio_value_vnd=value_before_rebalance,
+            max_adv_participation=max_adv_participation,
+            max_position_vnd=max_position_vnd,
+        )
+        can_buy_next_open = can_buy_matrix[step] & np.isfinite(open_t1) & (open_t1 > 0.0)
+        can_sell_next_open = can_sell_matrix[step] & np.isfinite(open_t1) & (open_t1 > 0.0)
 
         execution_result = apply_execution_constraints(
             current_weights=drifted_weights,
             desired_weights=desired_weights,
             holding_ages=holding_ages,
-            can_buy_next_open=can_buy_matrix[step + 1] & np.isfinite(open_t1) & (open_t1 > 0.0),
-            can_sell_next_open=can_sell_matrix[step + 1] & np.isfinite(open_t1) & (open_t1 > 0.0),
+            can_buy_next_open=can_buy_next_open,
+            can_sell_next_open=can_sell_next_open,
             required_holding_age=required_holding_age,
             max_weight_per_name=capacity_weights,
         )
@@ -623,6 +763,30 @@ def simulate_strategy(
             execution_result.buy_turnover * float(buy_fee_rate)
             + execution_result.sell_turnover * (float(sell_fee_rate) + float(capital_gains_tax_rate))
         )
+        if capture_blotter:
+            blotter_records.extend(
+                _build_blotter_rows(
+                    strategy_name=strategy_name,
+                    tickers=tickers,
+                    signal_date=dates[step],
+                    execution_date=dates[step + 1],
+                    scores=scores,
+                    adv20_value_vnd=adv20_for_execution,
+                    current_weights=drifted_weights,
+                    desired_weights=desired_weights,
+                    executed_weights=execution_result.executed_weights,
+                    selected_indices=selected_indices,
+                    blocked_buy_indices=execution_result.blocked_buy_indices,
+                    blocked_sell_indices=execution_result.blocked_sell_indices,
+                    capacity_clipped_indices=execution_result.capacity_clipped_indices,
+                    can_buy_next_open=can_buy_next_open,
+                    can_sell_next_open=can_sell_next_open,
+                    holding_ages=holding_ages,
+                    portfolio_value_before_rebalance_vnd=value_before_rebalance,
+                    capacity_weight_limits=capacity_weights,
+                    weighting=weighting,
+                )
+            )
         value_after_rebalance = value_before_rebalance * max(1.0 - transaction_cost, 0.0)
         weights = execution_result.executed_weights
         holding_ages = _update_holding_ages(
@@ -669,9 +833,11 @@ def simulate_strategy(
         initial_notional_vnd=initial_notional_vnd,
         top_k=top_k,
     )
+    blotter = pd.DataFrame.from_records(blotter_records) if capture_blotter else None
     return StrategyRunResult(
         strategy_name=strategy_name,
         signal_columns=tuple(signal_columns),
         daily=daily,
         summary=summary,
+        blotter=blotter,
     )

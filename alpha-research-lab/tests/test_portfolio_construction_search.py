@@ -7,7 +7,9 @@ from src.portfolio_construction_search import (
     enumerate_config_grid,
     parse_fixed_menu_candidates,
     parse_min_score_grid,
+    retail_viable_mask,
     sort_candidate_results,
+    sort_retail_results,
 )
 
 
@@ -90,3 +92,46 @@ def test_parse_fixed_menu_candidates_defaults_and_custom_specs():
             "min_score": None,
         }
     ]
+
+
+def test_retail_viable_mask_requires_relative_return_cash_and_positive_years():
+    frame = pd.DataFrame(
+        [
+            {"relative_total_return": 0.10, "avg_cash_weight": 0.20, "positive_years": 5},
+            {"relative_total_return": -0.01, "avg_cash_weight": 0.10, "positive_years": 7},
+            {"relative_total_return": 0.05, "avg_cash_weight": 0.30, "positive_years": 6},
+        ]
+    )
+    mask = retail_viable_mask(frame)
+    assert mask.tolist() == [True, False, False]
+
+
+def test_sort_retail_results_prefers_relative_then_cash_then_turnover():
+    frame = pd.DataFrame(
+        [
+            {
+                "relative_total_return": 0.20,
+                "portfolio_total_return": 0.30,
+                "information_ratio_annualized": 0.20,
+                "avg_cash_weight": 0.15,
+                "avg_daily_turnover": 0.12,
+                "top_k": 5,
+                "rebalance_every": 5,
+                "weighting": "equal",
+                "min_score": None,
+            },
+            {
+                "relative_total_return": 0.20,
+                "portfolio_total_return": 0.30,
+                "information_ratio_annualized": 0.20,
+                "avg_cash_weight": 0.10,
+                "avg_daily_turnover": 0.20,
+                "top_k": 3,
+                "rebalance_every": 5,
+                "weighting": "equal",
+                "min_score": None,
+            },
+        ]
+    )
+    ranked = sort_retail_results(frame)
+    assert ranked.loc[0, "avg_cash_weight"] == 0.10

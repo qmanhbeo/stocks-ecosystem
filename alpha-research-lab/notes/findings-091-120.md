@@ -235,3 +235,134 @@ long-only constructions are only attractive in effectively uncapped backtests.
 **Implication:** the next bottleneck is not more ML. It is finding a **capacity-aware construction**
 that preserves enough of the edge to stay benchmark-competitive under explicit deployability
 constraints.
+
+---
+## F98: Signal-Date Liquidity Alignment Is a Hard Market-Rule Invariant, Not an Implementation Detail (2026-03-28, Session 49)
+
+Session 49 found a one-day timing bug in the deterministic portfolio engine:
+
+- `can_buy_next_open`, `can_sell_next_open`, and `ADV20` were being read from the
+  **execution-date** row (`T+1`)
+- but the shared execution contract defines those quantities on the **signal-date** row (`T`),
+  because they govern the next open after that date
+
+That meant the engine was leaking one day of liquidity/tradability information into:
+- buy/sell blocking
+- ADV participation caps
+- the retail deployability experiments built on top of those controls
+
+The fix was to align all of those liquidity/tradability inputs to the signal-date row while
+keeping the portfolio timing contract unchanged:
+- signal at `T` close
+- buy at `T+1` open
+- earliest sell decision at `T+3` close
+- earliest sell fill at `T+4` open
+
+**Key finding:** once market rules become part of the scientific claim, a one-day indexing mistake
+is not a minor bug. It changes the economic meaning of the result. Session 48 H138/H139 figures
+should therefore be treated as superseded by the Session 49 reruns.
+
+**Implication:** tradability and capacity inputs must always be indexed by the information set
+available at decision time, not by the later execution row.
+
+---
+## F99: After Correcting Liquidity Timing, Simple Fixed Long-Only Constructions Are Stronger Than Session 48 Suggested, but Only in Uncapped Form (2026-03-28, Session 49)
+
+Session 49 reran H138 and H139 under the corrected signal-date liquidity alignment.
+
+Corrected H138 holdout results (`2019-2025`):
+
+| Rule | Total Return | Annualized | Relative vs VNINDEX | Information Ratio | Positive Years |
+|---|---:|---:|---:|---:|---:|
+| `k5_r5_eq` | **+769.49%** | **+36.59%** | **+346.29%** | **0.81** | **7/7** |
+| `k3_r5_eq` | +748.57% | +36.11% | +335.55% | 0.70 | 6/7 |
+| `k5_r10_eq` | +573.69% | +31.65% | +245.79% | 0.67 | 4/7 |
+
+Corrected H139 fee/capacity stress preserved the same qualitative split:
+- with **no ADV cap**, the fixed rules remain economically strong
+- at `0.50%` round-trip cost and **no cap**, all three candidates stay positive benchmark-relative
+- with **any positive ADV cap** in the tested `0.5% / 1.0% / 2.0%` grid, positive benchmark-relative
+  scenario count remains **0**
+
+Best relative return by ADV cap in corrected H139:
+- `0.0%`: **+346.29%**
+- `0.5%`: **-47.52%**
+- `1.0%`: **-46.36%**
+- `2.0%`: **-43.24%**
+
+Minimum average cash weight by ADV cap:
+- `0.5%`: **99.40%**
+- `1.0%`: **98.81%**
+- `2.0%`: **97.74%**
+
+**Key finding:** the corrected engine makes the uncapped long-only opportunity look better, not
+worse. But it does **not** change the deployability conclusion: the edge is still highly dependent
+on effectively uncapped position sizing.
+
+**Implication:** do not confuse “stronger honest uncapped baseline” with “retail-capacity solved.”
+Those are different questions.
+
+---
+## F100: Retail-Sized Long-Only Deployability Still Fails Under Explicit ADV Floors and Participation Caps (2026-03-28, Session 49)
+
+H140 tested the actual retail question directly on the honest `2019-2025` holdout:
+- notionals `20m, 50m, 100m, 200m VND`
+- ADV caps `2%, 5%, 10%`
+- ADV20 floors `250m, 500m, 1B, 2B, 5B VND`
+- round-trip costs `0.30%, 0.50%`
+- candidate menu = the corrected H138 fixed rules
+
+Retail-viability gate:
+- `relative_total_return > 0`
+- `avg_cash_weight < 25%`
+- `positive_years >= 5/7`
+
+**Result:** viable scenario count = **0**.
+
+Best H140 scenario:
+- `k5_r10_eq`
+- `20m` portfolio notional
+- `2%` ADV cap
+- `1B` ADV20 floor
+- `0.30%` round-trip cost
+
+Even that “best” case only produced:
+- total return **+12.00%**
+- relative vs VNINDEX **-42.51%**
+- average cash weight **87.13%**
+- positive years **2/7**
+
+**Key finding:** once explicit retail-sized liquidity rules are imposed, the current long-only
+portfolio library does not have a deployable region. The failure is not just a scaling-to-1B
+problem. It persists even when the notional is pushed down to `20m-200m VND`.
+
+**Implication:** the next honest move is **not** more long-only tuning or RL. It is either:
+- hedged / benchmark-relative constructions, or
+- an explicitly tiny-capital illiquidity-harvesting path with no scalability pretense
+
+---
+## F101: Without a Viable Retail Region, H141 and H142 Become a Stop Signal, Not a Promotion Path (2026-03-28, Session 49)
+
+H141 was designed to re-open a tiny long-only construction sweep **only** inside the viable retail
+region discovered by H140.
+
+Because H140 found **zero** viable liquidity settings:
+- H141 stopped immediately and wrote an empty-result summary
+- there was no honest long-only region left to optimize
+
+H142, the new live/paper-trade blotter exporter, was still implemented and then run manually on
+the top H140 scenario as a diagnostic only.
+
+Latest diagnostic snapshot (`2025-12-31` execution date):
+- portfolio held only `SHB`
+- target notional about `19.70m VND`
+- target usage about `1.87%` of ADV20
+- cash still **12.06%**
+
+**Key finding:** the new blotter tooling is ready, but the candidate itself is not worthy of live
+promotion. When the “best” capacity-aware long-only setup often degenerates into a one-name book
+with large cash drag, that is a sign to change research direction rather than keep polishing the
+same construction class.
+
+**Implication:** treat H141/H142 as the end of the current long-only retail deployability branch.
+The next branch should be hedged construction research, not RL overlays on a non-deployable book.
