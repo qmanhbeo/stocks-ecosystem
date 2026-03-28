@@ -128,6 +128,17 @@ A signal qualifies for promotion when:
 - IC: +0.1491, Sharpe: 15.08, positive in 11/11 years
 - Output: `data/features/xs_barrier_vol_1d_hose_full.parquet`
 
+### Candidate Signals (Session 38, for RL state library)
+
+| ID | Feature | IC | Corr w/ S1 | Coverage |
+|----|---------|-----|------------|---------|
+| C1 | `sentiment_cs_z` (news) | +0.043 | +0.009 | 0.8% |
+| C4 | `oc_asym_5d` (open/close asymmetry) | +0.023 | +0.147 | 100% |
+| C5 | `xs_ins_relative_size_5d` (insider conviction) | +0.037 | −0.008 | 3.4% |
+| — | `xs_sector_breadth_5d` (sector participation) | +0.014 | −0.004 | 100% |
+
+Artifacts: `xs_open_close_asymmetry.parquet`, `xs_insider_quality_features.parquet`, `xs_sector_rotation_daily.parquet`
+
 ## Environment Setup
 
 Both `alpha-research-lab` and `RL-trading-agent` use the same conda environment (`stocks`, Python 3.10). The RL agent requires `pip install -e ".[dev]"` from the `RL-trading-agent/` directory.

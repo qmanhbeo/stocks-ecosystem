@@ -38,11 +38,16 @@ a combined XGBoost model. XGBoost can't use sparse signals effectively; an RL ag
 
 See `notes/signal_library.md` for the full registry. Summary:
 
-| ID | Signal | Standalone IC | Corr w/ S1 | Status |
-|----|--------|--------------|------------|--------|
-| S1 | XS relative momentum (H93) | +0.149 | 1.00 | ✅ CONFIRMED |
-| C1 | Keyword news sentiment (H89) | +0.043 | 0.009 | 🔶 CANDIDATE |
-| C2 | Insider net buy (H97) | +0.025 | −0.027 | 🔶 CANDIDATE |
+| ID | Signal | Feature | Standalone IC | Corr w/ S1 | Coverage | Status |
+|----|--------|---------|--------------|------------|----------|--------|
+| S1 | XS relative momentum (H93) | `xs_proba` | +0.149 | 1.00 | 100% | ✅ CONFIRMED |
+| C1 | Keyword news sentiment (H89) | `sentiment_cs_z` | +0.043 | +0.009 | 0.8% | 🔶 CANDIDATE |
+| C4 | Open/close asymmetry (H107) | `oc_asym_5d` | +0.023 | +0.147 | 100% | 🔶 CANDIDATE |
+| C5 | Insider relative size (H108) | `xs_ins_relative_size_5d` | +0.037 | −0.008 | 3.4% | 🔶 CANDIDATE |
+| — | Sector breadth (H111) | `xs_sector_breadth_5d` | +0.014 | −0.004 | 100% | 🔶 CANDIDATE |
+
+**C2 (raw insider net buy) superseded by C5.** C5 uses position-size-normalized conviction
+(net_plan_vol / VolumeBeforeTransaction), IC +46% over raw C2.
 
 ---
 
@@ -341,14 +346,15 @@ conda run -n stocks python data_tools/fetch_refresh_all.py
 | File | Content | Used by |
 |------|---------|---------|
 | `data/features/xs_barrier_vol_1d_hose_full.parquet` | H93 — primary RL signal probas, 394 tickers | S1 (signal library) |
-| `data/features/xs_barrier_all_probas_hose_full.parquet` | H54 probas, 393 tickers, all years | H54 (parked strategy) |
-| `data/features/xs_barrier_vol_hose_full.parquet` | H90 — volume features, 5-day label | reference |
-| `data/features/xs_barrier_1d_hose_full.parquet` | H91 — 1-day label, no volume | reference |
+| `data/features/xs_open_close_asymmetry.parquet` | H100/H107 — oc_asym_5d, overnight/intraday, 826k rows | C4 (candidate signal) |
+| `data/features/xs_insider_quality_features.parquet` | H108 — xs_ins_relative_size_5d + quality features | C5 (candidate signal, supersedes C2) |
+| `data/features/xs_sector_rotation_daily.parquet` | H111 — sector breadth, sector momentum, intra-sector rank | xs_sector_breadth_5d candidate |
 | `data/features/xs_news_sentiment_daily.parquet` | H89 — keyword sentiment, 340 tickers | C1 (candidate signal) |
+| `data/features/xs_insider_features.parquet` | H97 — raw insider net buy/sell rolling windows | C2 (superseded by C5) |
+| `data/features/xs_earnings_quality_daily.parquet` | H109 — EPS accel, ROE delta, margin trend (52 tickers) | H113 pending full-universe re-test |
+| `data/features/xs_foreign_demand_daily.parquet` | H110 — VNM ETF affinity (not predictive, archive only) | rejected |
+| `data/features/xs_barrier_all_probas_hose_full.parquet` | H54 probas, 393 tickers, all years | H54 (parked strategy) |
 | `data/features/sector_classification.parquet` | ICB sector codes for 398 HOSE tickers | H92, sector filter |
-| `data/features/xs_barrier_all_probas.parquet` | XS barrier probas, 52 tickers, all years | H43 |
-| `data/features/xs_barrier_fpt_proba.csv` | XS barrier probas, FPT only | H38, H22 |
-| `data/features/ss_fpt_proba_e32.csv` | E32 single-stock probas, FPT | H38, H22 |
 | `data/features/macro_regime_daily.parquet` | 31 macro regime indicators | H26, H27 |
 
 ---
