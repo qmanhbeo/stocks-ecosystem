@@ -672,3 +672,29 @@ live scoring stack becomes invalid.
 - restore full-history `data/stock/` continuity first
 - verify lookback sufficiency explicitly
 - only then rerun live `S1` and rebuild the latest `full_library` inputs
+
+---
+## F112: The Actual Live-Scoring Failure Mode Was Benchmark Truncation, and a Local Full-History VNINDEX Backup Can Recover the Path Temporarily (2026-03-28, Session 52)
+
+The Session 52 live-paper-trade recovery showed that the decisive operational break was not the
+individual stock parquet refresh itself. It was the fact that `VNINDEX` in root `data/stock/`
+had been reduced to a recent slice.
+
+Why that mattered:
+- the live `S1` feature pipeline depends on long benchmark history for market-relative features
+- with only a short `VNINDEX` window, per-ticker 2026 feature frames collapsed to a tiny recent tail
+- training rows for the live scorer effectively disappeared, which is why `analysis/h75_2026_holdout.py`
+  failed with `No objects to concatenate`
+
+The session recovered live scoring by:
+- merging the truncated root `VNINDEX` file with a local full-history backup at
+  `../media-output/signal-xs-momentum/data/stock/gia_lich_su_VNINDEX_1D.parquet`
+- then rebuilding live `S1` and the 2026 stock-derived `full_library` inputs on the fly
+
+**Key finding:** if root `VNINDEX` is truncated, the live stack breaks even when most stock files
+look fresh. Benchmark continuity is a first-class dependency for live scoring.
+
+**Implication:** future live recovery should:
+- check `VNINDEX` history first
+- use the local media-output backup only as a temporary recovery path
+- restore the canonical root benchmark file before treating the live pipeline as healthy

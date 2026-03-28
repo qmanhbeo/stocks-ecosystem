@@ -7,11 +7,25 @@ Use `notes/session_52_log.md` for the latest full session detail.
 
 ## Current State
 
-**Session status:** Session 52 wrap-up complete (live paper-trade attempt blocked by mixed stock-history state after refresh; docs updated; 2026-03-28)
+**Session status:** Session 52 wrap-up complete (ad hoc live paper-trade state recorded off the 2026-03-27 close; official live pipeline still not fully restored; docs updated; 2026-03-28)
+
+### Start next session here
+
+1. Record the next market-session outcome against the current paper-trade book:
+   - `ANV`
+   - `PTB`
+   - `PTL`
+   - `VSI`
+   - cash `19.57%`
+2. If a new live recommendation is needed, restore canonical full-history continuity in root `data/stock/` first, especially `VNINDEX`.
+3. Rerun the official live `S1` scorer only after lookback sufficiency is verified.
+4. Resume research only after the live operational path is stable:
+   - `H151`: narrow tradability-conditioned composite
+   - `H152`: tradability-conditioned alpha search
 
 ### New reality check after Session 51
 
-**Session 52 operational blocker — live full_library paper trade not ready**
+**Session 52 operational blocker and workaround**
 - Goal was to fetch fresh stock data and emit a live `full_library` paper-trade recommendation.
 - The raw stock universe now mostly reaches **Friday, 2026-03-27**, but the local state is mixed:
   - many tickers now have long history through `2026-03-27`
@@ -20,13 +34,36 @@ Use `notes/session_52_log.md` for the latest full session detail.
 - The current live `S1` artifact remains stale at `2026-03-11`:
   - `data/features/xs_live_validation_h54_2026.parquet`
 - Attempting to rerun `analysis/h75_2026_holdout.py` failed because the live scorer needs long price history to build features, and the current refreshed stock set is not historically consistent enough.
+- Workaround used:
+  - merged the truncated root `VNINDEX` file with the local full-history backup at `../media-output/signal-xs-momentum/data/stock/gia_lich_su_VNINDEX_1D.parquet`
+  - rebuilt live `S1` for the full 2026 slice on the fly
+  - rebuilt the stock-derived `full_library` inputs for 2026 on the fly
 - Practical consequence:
-  - a **strictly honest live `full_library` recommendation for Saturday, 2026-03-28 / latest trading date Friday, 2026-03-27 was not generated**
-  - this is currently an **operational data-integrity blocker**, not a signal verdict
+  - the **official** live pipeline is still not restored end-to-end
+  - but an **ad hoc honest paper-trade state for the 2026-03-27 close was produced**
 - Date clarification:
   - `2026-03-28` is a Saturday
   - the latest actionable market close in the refreshed data is `2026-03-27`
-  - if the live stack is restored, the action would be for the next session after that close
+  - the paper-trade action below is for the next trading session after that close
+
+**Session 52 live paper-trade checkpoint — 2026-03-27 close**
+- Strategy: `full_library + k5_r5_eq`
+- Historical cadence result on the latest signal date:
+  - **no rebalance** on `2026-03-27`
+- Running paper-trade book after the `2026-03-27` execution:
+  - `ANV`
+  - `PTB`
+  - `PTL`
+  - `VSI`
+  - cash: `19.57%`
+- Fresh-entry top-5 snapshot from the same close, if starting from cash:
+  - `PTB`
+  - `PAC`
+  - `VNG`
+  - `APG`
+  - `DTL`
+- Important caveat:
+  - this state came from a one-off live assembly workflow, not from a persisted repo script or refreshed official artifact
 
 **Execution alignment correction (Session 49)**
 - The deterministic portfolio engine had a one-day liquidity timing bug:
@@ -390,12 +427,12 @@ Use `notes/session_52_log.md` for the latest full session detail.
 - long-only execution and blotter validation only after a candidate becomes benchmark-positive under the retail gate
 - keep RL deferred until a deterministic long-only deployable baseline exists
 
-**Immediate operational next steps before any live paper trade**
-1. Restore historical continuity in `data/stock/` for the full active universe and `VNINDEX`
-2. Verify that active tickers have sufficient lookback for feature generation; do not assume a recent-window refresh is safe
-3. Rerun `analysis/h75_2026_holdout.py` to extend live `S1` from `2026-03-11` to the latest trading date
-4. Rebuild or ad hoc compute the stock-data-derived `full_library` signals for the latest signal date
-5. Only then emit a live paper-trade recommendation
+**Immediate operational next steps around the live paper trade**
+1. Record the next market-session outcome against the current paper-trade book: `ANV`, `PTB`, `PTL`, `VSI`, cash `19.57%`
+2. Persist the ad hoc live-assembly workflow into a real repo script if repeated live paper trades are expected
+3. Restore canonical full-history continuity in root `data/stock/`, especially `VNINDEX`, so the official live scorer works again without the media-output fallback
+4. Rerun `analysis/h75_2026_holdout.py` against the restored canonical benchmark and refresh the official live `S1` artifact
+5. Rebuild or publish the latest stock-derived `full_library` features in a repeatable way before the next rebalance date
 
 ### Current production system
 
@@ -490,7 +527,7 @@ Use `notes/session_52_log.md` for the latest full session detail.
 | 49 | 2026-03-28 | Signal-date liquidity fix applied; corrected H138/H139 reruns strengthen uncapped long-only economics, but H140 finds zero retail-viable scenarios and H141 stops | H93 + C4-C14 |
 | 50 | 2026-03-28 | H143-H146: liquidity-aware scoring, entry slicing, volume-confirmed gating, and variable breadth all fail the retail gate; H145 is the closest near-miss | H93 + C4-C14 |
 | 51 | 2026-03-28 | H147-H150: H145 near-miss is sparse-state driven; local refinement and soft activation fail; H150 identifies a tradability-conditioned sub-core | H93 + C4-C14 |
-| 52 | 2026-03-28 | Live paper-trade attempt blocked by mixed stock-history state after refresh; H75 rerun fails; no honest live full_library recommendation produced | H93 + C4-C14 |
+| 52 | 2026-03-28 | Official live pipeline blocked by truncated benchmark history, but an honest ad hoc live full_library paper-trade state was recovered for the 2026-03-27 close | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 

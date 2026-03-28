@@ -411,6 +411,7 @@ Critical warning:
 - `fetch_refresh_all.py --start <recent-date>` rewrites every stock parquet with only that requested window
 - downstream live scorers and many feature builders require long lookback history, not just “latest date present”
 - recent-window refreshes can therefore leave `data/stock/` in a mixed or truncated state and silently break live scoring
+- check `data/stock/gia_lich_su_VNINDEX_1D.parquet` explicitly after any refresh; benchmark truncation is enough to break live `S1` even when most stock files look fresh
 
 Safe default for full-history restoration:
 
@@ -422,6 +423,10 @@ Before any live paper-trade attempt:
 1. verify long-history continuity for the active universe and `VNINDEX`
 2. rerun live `S1`
 3. rebuild or ad hoc compute the latest stock-derived `full_library` features
+
+Emergency recovery note:
+- a local full-history `VNINDEX` backup currently exists at `../media-output/signal-xs-momentum/data/stock/gia_lich_su_VNINDEX_1D.parquet`
+- this is a temporary fallback for recovery, not the canonical data source
 
 ### Pre-Generated Files (do not delete)
 

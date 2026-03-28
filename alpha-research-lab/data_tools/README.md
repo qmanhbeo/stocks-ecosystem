@@ -31,6 +31,8 @@ The stock refresh scripts rewrite local parquet files with the requested date wi
 Operational rule:
 - do **not** use a recent `--start` window on stock refresh scripts if the next step depends on historical feature generation
 - if history has been truncated, restore it with a full-range refresh before trying to score live data again
+- check `data/stock/gia_lich_su_VNINDEX_1D.parquet` explicitly after any refresh; a truncated benchmark file alone is enough to break live `S1`
+- Session 52 fallback note: a local full-history benchmark backup currently exists at `../media-output/signal-xs-momentum/data/stock/gia_lich_su_VNINDEX_1D.parquet`, but that is emergency recovery only, not the canonical data source
 
 ---
 

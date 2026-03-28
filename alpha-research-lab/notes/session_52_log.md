@@ -56,13 +56,47 @@ Interpretation:
 - the current refreshed stock set is not historically consistent enough for the live scorer to build its required feature frames
 - this is an operational data-integrity blocker, not a model-quality verdict
 
-## Conclusion
-No strictly honest live `full_library` recommendation was produced this session.
+### Ad hoc live recovery
+After the official live scorer failed, the session recovered a workable live path by:
 
-Reason:
-- the live stack is currently blocked by mixed stock-history state after refresh
-- live `S1` is stale
-- core `full_library` feature dependencies are not all extended to the latest trading date
+- locating a local full-history `VNINDEX` backup at:
+  - `../media-output/signal-xs-momentum/data/stock/gia_lich_su_VNINDEX_1D.parquet`
+- merging that backup with the refreshed root `VNINDEX` slice to restore benchmark continuity through `2026-03-27`
+- rebuilding live `S1` for the full 2026 slice on the fly
+  - result: `19,242` scored 2026 rows across `55` dates through `2026-03-27`
+- rebuilding the 2026 slices of `C4-C14` on the fly from raw stock / insider / sector / price-limit / volume data
+- scoring the latest close under `full_library + k5_r5_eq`
+
+### Live paper-trade state produced
+Latest signal date:
+- `2026-03-27`
+
+Historical cadence interpretation:
+- `k5_r5_eq` did **not** rebalance on that signal date
+
+Running book after the `2026-03-27` execution:
+- `ANV`
+- `PTB`
+- `PTL`
+- `VSI`
+- cash: `19.57%`
+
+Fresh-entry top-5 snapshot from the same close:
+- `PTB`
+- `PAC`
+- `VNG`
+- `APG`
+- `DTL`
+
+This was an honest live paper-trade answer, but it was produced through a one-off local recovery path rather than the official repo pipeline.
+
+## Conclusion
+The official live pipeline is still operationally incomplete, but the session did end with a valid ad hoc paper-trade state for the `2026-03-27` close.
+
+Current reality:
+- the canonical root `VNINDEX` parquet is still not a proper full-history file
+- the official live `S1` artifact is still stale until the canonical pipeline is rerun
+- the live recommendation itself is now known and documented
 
 Date clarification:
 - `2026-03-28` is a Saturday
@@ -72,12 +106,18 @@ Date clarification:
 ## Durable takeaway
 Recent-window refreshes are not operationally safe for live scoring when downstream models need long lookback history. Refreshing raw stock files without preserving historical continuity can silently invalidate live feature generation and block paper-trade deployment.
 
+A second practical takeaway from this session:
+- if the root `VNINDEX` file is truncated, the workspace currently has a local fallback copy under `../media-output/signal-xs-momentum/`
+- that fallback is useful for emergency recovery, but it should not replace restoring the canonical root data surface properly
+
 ## Next steps
-1. Restore full historical continuity in `data/stock/` for the active universe and `VNINDEX`
-2. Verify lookback sufficiency before rerunning any live scorer
-3. Rerun `analysis/h75_2026_holdout.py` to extend live `S1`
-4. Rebuild or ad hoc compute the latest stock-derived `full_library` features
-5. Only then emit a live paper-trade recommendation
-6. After the operational blocker is closed, resume the research queue with:
+Start the next session in this order:
+
+1. Record the next market-session result against the paper-trade book: `ANV`, `PTB`, `PTL`, `VSI`, cash `19.57%`
+2. Restore full historical continuity in root `data/stock/`, especially `VNINDEX`
+3. Verify lookback sufficiency before rerunning any live scorer
+4. Rerun `analysis/h75_2026_holdout.py` against the restored canonical benchmark and refresh the official live `S1` artifact
+5. Persist the ad hoc live-assembly workflow into a real repo script if live paper trades are going to continue
+6. After the operational path is stable, resume the research queue with:
    - `H151`: narrow tradability-conditioned composite centered on `s1_proba`, `c7`, `c12`, `c13`, `c10`, with `c8` optional
    - `H152`: new long-only alpha search explicitly defined inside tradable / liquidity-opening states
