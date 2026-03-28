@@ -1,15 +1,32 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_51_log.md` for the latest full session detail.
+Use `notes/session_52_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 51 complete (H147-H150 follow-up wave complete; H147 AUDIT; H148 FAIL; H149 FAIL; H150 DECOMPOSITION PASS, 2026-03-28)
+**Session status:** Session 52 wrap-up complete (live paper-trade attempt blocked by mixed stock-history state after refresh; docs updated; 2026-03-28)
 
 ### New reality check after Session 51
+
+**Session 52 operational blocker — live full_library paper trade not ready**
+- Goal was to fetch fresh stock data and emit a live `full_library` paper-trade recommendation.
+- The raw stock universe now mostly reaches **Friday, 2026-03-27**, but the local state is mixed:
+  - many tickers now have long history through `2026-03-27`
+  - some tickers are still stale or truncated (example observed: `BCG` ends `2025-10-08`)
+  - `VNINDEX` currently holds only a recent slice (`2025-12-22` to `2026-03-27`)
+- The current live `S1` artifact remains stale at `2026-03-11`:
+  - `data/features/xs_live_validation_h54_2026.parquet`
+- Attempting to rerun `analysis/h75_2026_holdout.py` failed because the live scorer needs long price history to build features, and the current refreshed stock set is not historically consistent enough.
+- Practical consequence:
+  - a **strictly honest live `full_library` recommendation for Saturday, 2026-03-28 / latest trading date Friday, 2026-03-27 was not generated**
+  - this is currently an **operational data-integrity blocker**, not a signal verdict
+- Date clarification:
+  - `2026-03-28` is a Saturday
+  - the latest actionable market close in the refreshed data is `2026-03-27`
+  - if the live stack is restored, the action would be for the next session after that close
 
 **Execution alignment correction (Session 49)**
 - The deterministic portfolio engine had a one-day liquidity timing bug:
@@ -373,6 +390,13 @@ Use `notes/session_51_log.md` for the latest full session detail.
 - long-only execution and blotter validation only after a candidate becomes benchmark-positive under the retail gate
 - keep RL deferred until a deterministic long-only deployable baseline exists
 
+**Immediate operational next steps before any live paper trade**
+1. Restore historical continuity in `data/stock/` for the full active universe and `VNINDEX`
+2. Verify that active tickers have sufficient lookback for feature generation; do not assume a recent-window refresh is safe
+3. Rerun `analysis/h75_2026_holdout.py` to extend live `S1` from `2026-03-11` to the latest trading date
+4. Rebuild or ad hoc compute the stock-data-derived `full_library` signals for the latest signal date
+5. Only then emit a live paper-trade recommendation
+
 ### Current production system
 
 **H54 - Full HOSE Rank Portfolio**
@@ -464,6 +488,9 @@ Use `notes/session_51_log.md` for the latest full session detail.
 | 47 | 2026-03-28 | H137 nested walk-forward selection: +21.38% total OOS but -42.46% vs VNINDEX; simple config selection overfits and does not validate ML construction yet | H93 + C4-C14 |
 | 48 | 2026-03-28 | H138 fixed simple rules beat VNINDEX on holdout; H139 shows uncapped economics survive but any tested ADV cap collapses deployability | H93 + C4-C14 |
 | 49 | 2026-03-28 | Signal-date liquidity fix applied; corrected H138/H139 reruns strengthen uncapped long-only economics, but H140 finds zero retail-viable scenarios and H141 stops | H93 + C4-C14 |
+| 50 | 2026-03-28 | H143-H146: liquidity-aware scoring, entry slicing, volume-confirmed gating, and variable breadth all fail the retail gate; H145 is the closest near-miss | H93 + C4-C14 |
+| 51 | 2026-03-28 | H147-H150: H145 near-miss is sparse-state driven; local refinement and soft activation fail; H150 identifies a tradability-conditioned sub-core | H93 + C4-C14 |
+| 52 | 2026-03-28 | Live paper-trade attempt blocked by mixed stock-history state after refresh; H75 rerun fails; no honest live full_library recommendation produced | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 
@@ -647,7 +674,7 @@ New artifacts:
 - `data/features/xs_earnings_quality_daily.parquet` — 52-ticker earnings quality
 - `data/features/xs_foreign_demand_daily.parquet` — VNM ETF features (not predictive)
 
-## Active Priority: Session 49
+## Historical Snapshot: Session 49
 
 ### Signal library status after Session 44
 | Signal | IC | Corr w/ S1 | Coverage | Status |
@@ -825,7 +852,7 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - but deployability is still unresolved
   - do not add more ML or RL complexity until capacity is addressed honestly
 
-### Session 51 next queue (in order)
+### Next queue after Session 52 (in order)
 
 1. **H151: narrow tradability-conditioned composite**
    - build a long-only composite centered on:

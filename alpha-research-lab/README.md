@@ -9,8 +9,10 @@ The **primary goal** is to build a library of learnable, orthogonal alpha signal
 serve as state features for RL trading agents. Each signal should be independently predictive
 and ideally uncorrelated with existing signals.
 
-A secondary goal is tracking which signals combine into tradeable strategies. H54 (+25.52%
-edge, Sharpe 9.17) is the current best strategy, but it is **parked** — not yet deployable.
+A secondary goal is tracking which signals combine into tradeable strategies. The strongest
+uncapped long-only construction currently is the corrected `full_library + k5_r5_eq` branch from
+H138/H139, but it is **not yet proven deployable under explicit retail liquidity constraints**.
+H54 remains the parked historical execution benchmark.
 
 **This is not a race to beat H54. New signals are evaluated on their own merit as independent
 information sources, not on whether they improve a combined model.**
@@ -67,20 +69,23 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - Lowest year-to-year variance of any system tested
 - Artifact: `data/features/xs_barrier_vol_1d_hose_full.parquet`
 
-## Current Best Trading Strategy (Parked)
+## Current Best Uncapped Long-Only Construction
+
+**`full_library + k5_r5_eq` (H138/H139 corrected engine, no ADV cap)**
+
+- top-5 equal-weight
+- rebalance every 5 signal days
+- `+769.49%` total on the honest `2019-2025` holdout
+- `+346.29%` relative vs VNINDEX
+- not yet retail-deployable under the explicit capacity/tradability gate
+
+## Parked Historical Execution Benchmark
 
 **H54 — Full HOSE Rank Portfolio**
 
 - +25.52% avg edge, Sharpe 9.17, 11/11 positive years
-- Parked: deployment gap (real fills unverified, net P&L borderline at 0.30% RT)
-- Artifact: `data/features/xs_barrier_all_probas_hose_full.parquet`
-
-Run it with:
-```bash
-PYTHONIOENCODING=utf-8 conda run -n stocks python analysis/h40_rank_portfolio.py \
-    --probas data/features/xs_barrier_all_probas_hose_full.parquet \
-    --no-vix-filter
-```
+- parked: deployment gap (real fills unverified, net P&L borderline at 0.30% RT)
+- artifact: `data/features/xs_barrier_all_probas_hose_full.parquet`
 
 See `notes/next_steps.md` for the live champion, honest benchmark, and next priorities.
 
@@ -118,6 +123,14 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h148_local_liquidity_gate_refinement.py`: narrow H145-neighborhood gate refinement only
 - `analysis/h149_soft_activation_score.py`: softer liquidity-opening activation scores on top of the H145 score family
 - `analysis/h150_conditional_alpha_decomposition.py`: per-signal conditional IC decomposition inside tradable states
+
+## Live Paper-Trade Prerequisite
+
+Live `full_library` paper trades require intact long-history raw stock files.
+
+- recent-window refreshes can overwrite local parquet files with only the requested date window
+- that can leave `data/stock/` historically inconsistent and break live feature generation
+- before any live recommendation, verify long-history continuity across the active universe and `VNINDEX`
 
 ## Saved Result Artifacts
 
@@ -173,6 +186,7 @@ Permanent logs remain:
 │   ├── findings-001-030.md    ← chunked durable conclusions
 │   ├── findings-031-060.md    ← chunked durable conclusions
 │   ├── findings-061-090.md    ← chunked durable conclusions
+│   ├── findings-091-120.md    ← chunked durable conclusions
 │   ├── next_steps.md          ← live state & queue
 │   └── session_NN_log.md      ← per-session records
 ├── experiments/

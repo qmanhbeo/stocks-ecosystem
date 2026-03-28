@@ -53,18 +53,17 @@ a combined XGBoost model. XGBoost can't use sparse signals effectively; an RL ag
 
 ### Current Signal Library
 
-See `notes/signal_library.md` for the full registry. Summary:
+See `notes/signal_library.md` for the full registry. Current promoted RL surface is:
 
-| ID | Signal | Feature | Standalone IC | Corr w/ S1 | Coverage | Status |
-|----|--------|---------|--------------|------------|----------|--------|
-| S1 | XS relative momentum (H93) | `xs_proba` | +0.149 | 1.00 | 100% | ✅ CONFIRMED |
-| C1 | Keyword news sentiment (H89) | `sentiment_cs_z` | +0.043 | +0.009 | 0.8% | 🔶 CANDIDATE |
-| C4 | Open/close asymmetry (H107) | `oc_asym_5d` | +0.023 | +0.147 | 100% | 🔶 CANDIDATE |
-| C5 | Insider relative size (H108) | `xs_ins_relative_size_5d` | +0.037 | −0.008 | 3.4% | 🔶 CANDIDATE |
-| — | Sector breadth (H111) | `xs_sector_breadth_5d` | +0.014 | −0.004 | 100% | 🔶 CANDIDATE |
+- `S1`
+- `C4-C14`
 
-**C2 (raw insider net buy) superseded by C5.** C5 uses position-size-normalized conviction
-(net_plan_vol / VolumeBeforeTransaction), IC +46% over raw C2.
+Operationally important summary:
+- `S1` remains the strongest standalone signal
+- `C7`, `C12`, `C13`, `C10`, and `C8` show the strongest conditional uplift inside liquidity-opening states
+- `C1` remains sparse and is not part of the promoted dense RL matrix
+
+Do not maintain a partial summary table here unless you update it together with `notes/signal_library.md`.
 
 ---
 
@@ -291,7 +290,20 @@ PYTHONIOENCODING=utf-8 /c/Users/manhn/miniconda3/envs/stocks/python.exe cross_se
     --save-all-probas data/features/xs_barrier_vol_1d_hose_full.parquet
 ```
 
-### Current Best Trading Strategy: H54 (PARKED)
+### Current Best Uncapped Long-Only Construction
+
+```bash
+# H138/H139 corrected engine winner, no ADV cap:
+# full_library + k5_r5_eq
+# +769.49% total on 2019-2025 holdout, +346.29% vs VNINDEX
+# NOT retail-deployable under explicit capacity/tradability gates
+conda run -n stocks python analysis/h138_fixed_menu_validation.py
+
+# Fetch any new HOSE stocks
+PYTHONIOENCODING=utf-8 conda run -n stocks python data_tools/fetch_hose_universe.py --delay 0.3
+```
+
+### Parked Historical Execution Benchmark: H54
 
 ```bash
 # H54 - 393 HOSE stocks, no VIX filter, N=5, min_proba=0.55
@@ -300,9 +312,6 @@ PYTHONIOENCODING=utf-8 /c/Users/manhn/miniconda3/envs/stocks/python.exe cross_se
 PYTHONIOENCODING=utf-8 conda run -n stocks python analysis/h40_rank_portfolio.py \
     --probas data/features/xs_barrier_all_probas_hose_full.parquet \
     --no-vix-filter
-
-# Fetch any new HOSE stocks
-PYTHONIOENCODING=utf-8 conda run -n stocks python data_tools/fetch_hose_universe.py --delay 0.3
 ```
 
 ### Honest Benchmarks
@@ -397,6 +406,23 @@ conda run -n stocks python data_tools/fetch_hose_universe.py --delay 0.3
 conda run -n stocks python data_tools/fetch_refresh_all.py
 ```
 
+Critical warning:
+- `fetch_stock.py --overwrite` deletes the existing target parquet first, then rewrites it with exactly the requested date window
+- `fetch_refresh_all.py --start <recent-date>` rewrites every stock parquet with only that requested window
+- downstream live scorers and many feature builders require long lookback history, not just “latest date present”
+- recent-window refreshes can therefore leave `data/stock/` in a mixed or truncated state and silently break live scoring
+
+Safe default for full-history restoration:
+
+```bash
+conda run -n stocks python data_tools/fetch_refresh_all.py --start 2000-01-01 --end 2026-12-31
+```
+
+Before any live paper-trade attempt:
+1. verify long-history continuity for the active universe and `VNINDEX`
+2. rerun live `S1`
+3. rebuild or ad hoc compute the latest stock-derived `full_library` features
+
 ### Pre-Generated Files (do not delete)
 
 | File | Content | Used by |
@@ -489,7 +515,7 @@ and any execution-cost adjustments.
 - Location: `data/stock/gia_lich_su_<TICKER>_1D.parquet`
 - Schema: `time, open, high, low, close, volume` plus ticker metadata in some files
 - Source: `data_tools/fetch_stock.py`
-- FPT date range noted in the repo: 2006-12-13 to 2026-02-24
+- Date ranges must be verified locally from the parquet files; do not assume an old repo note is still true after any refresh
 
 Key symbols:
 

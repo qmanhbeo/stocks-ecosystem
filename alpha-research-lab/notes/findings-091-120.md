@@ -645,3 +645,30 @@ construction layer does not monetize that sub-core yet.
 **Implication:** the next honest step is not another broad construction tweak. It is either:
 - a narrow tradability-conditioned composite built from the surviving signals, or
 - new long-only alpha search explicitly defined inside tradable states.
+
+---
+## F111: Recent-Window Stock Refreshes Can Silently Break Live Scoring by Truncating Historical Continuity (2026-03-28, Session 52)
+
+Session 52 tried to close the loop from research to a real long-only paper-trade recommendation.
+The blocker was not signal quality. It was data integrity.
+
+Observed during the live-paper-trade attempt:
+- many stock files were refreshed through **2026-03-27**
+- some tickers remained stale or truncated
+- `VNINDEX` ended up as a recent slice instead of a full-history file
+- the live `S1` artifact still stopped at **2026-03-11**
+- rerunning `analysis/h75_2026_holdout.py` failed with `ValueError: No objects to concatenate`
+
+The common failure mode was operational:
+- recent-window refreshes wrote new raw parquet files without guaranteeing full historical continuity
+- downstream live scorers need long lookback windows, not just “latest date present”
+- mixed raw-history state can therefore block live feature generation entirely
+
+**Key finding:** “latest stock data fetched” is not enough for a live paper trade. The raw stock
+surface must remain historically continuous across the active universe and benchmark files, or the
+live scoring stack becomes invalid.
+
+**Implication:** before any future live recommendation attempt:
+- restore full-history `data/stock/` continuity first
+- verify lookback sufficiency explicitly
+- only then rerun live `S1` and rebuild the latest `full_library` inputs

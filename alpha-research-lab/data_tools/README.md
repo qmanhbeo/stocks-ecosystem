@@ -20,6 +20,18 @@ state of each data source. Read this before running experiments or wondering why
 | Historical foreign investor flow | ✗ Not available | — | F59 in findings.md — vnstock only has current-day |
 | Intraday tick data | ✗ Not available | — | vnstock doesn't provide historical intraday |
 
+## Critical Refresh Warning
+
+The stock refresh scripts rewrite local parquet files with the requested date window.
+
+- `fetch_stock.py --overwrite` removes the existing file first, then writes only the requested range
+- `fetch_refresh_all.py --start <recent-date>` rewrites every existing stock parquet to only that recent window
+- many downstream features and live scorers need long lookback history, not just a fresh latest date
+
+Operational rule:
+- do **not** use a recent `--start` window on stock refresh scripts if the next step depends on historical feature generation
+- if history has been truncated, restore it with a full-range refresh before trying to score live data again
+
 ---
 
 ## Fetch Scripts
@@ -28,6 +40,7 @@ state of each data source. Read this before running experiments or wondering why
 Fetch daily OHLCV for one or more HOSE tickers from VCI via vnstock.
 - **Output:** `data/stock/gia_lich_su_<TICKER>_1D.parquet`
 - **Usage:** `python data_tools/fetch_stock.py --ticker FPT`
+- **Warning:** with `--overwrite`, the old file is deleted first and the replacement file contains only the requested `--start/--end` window
 
 ### `fetch_hose_universe.py`
 Fetch all HOSE-listed stocks not yet in `data/stock/`. Used to expand the universe.
@@ -38,6 +51,8 @@ Fetch all HOSE-listed stocks not yet in `data/stock/`. Used to expand the univer
 Re-fetch all existing tickers to bring data up to the current date.
 - **Usage:** `python data_tools/fetch_refresh_all.py`
 - Run this at the start of a new session to update `data/stock/`.
+- **Warning:** this rewrites each parquet with the exact requested `--start/--end` window; using a recent `--start` is unsafe for long-lookback feature pipelines
+- **Safe restore pattern:** `python data_tools/fetch_refresh_all.py --start 2000-01-01 --end 2026-12-31`
 
 ### `fetch_fx_commodities.py`
 Fetch FX rates, commodity prices, and global indices via yfinance.
