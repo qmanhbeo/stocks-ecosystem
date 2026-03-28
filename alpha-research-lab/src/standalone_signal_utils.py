@@ -11,6 +11,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 S1_PATH = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
 STOCK_DIR = REPO_ROOT / "data" / "stock"
 RL_MATRIX_PATH = REPO_ROOT / "data" / "features" / "xs_rl_signal_matrix.parquet"
+SECTOR_CLASS_PATH = REPO_ROOT / "data" / "features" / "sector_classification.parquet"
 
 EXCLUDE = {"VNINDEX", "VN30"}
 PASS_IC = 0.01
@@ -62,6 +63,13 @@ def load_vni_close() -> pd.Series:
     return vni["close"]
 
 
+def load_sector_labels(level: str = "icb_name3") -> pd.DataFrame:
+    sector = pd.read_parquet(SECTOR_CLASS_PATH)
+    sector = sector.rename(columns={"symbol": "ticker"})
+    sector["sector_label"] = sector[level].fillna("Other")
+    return sector[["ticker", "sector_label"]].drop_duplicates()
+
+
 def to_long(wide_df: pd.DataFrame, col_name: str) -> pd.DataFrame:
     return wide_df.reset_index().melt(id_vars="time", var_name="ticker", value_name=col_name)
 
@@ -98,6 +106,25 @@ def compute_beta(close: pd.DataFrame, benchmark_close: pd.Series, window: int, m
     return (stock_xy_mean - stock_mean.mul(bench_mean, axis=0)).div(
         bench_var.replace(0, np.nan), axis=0
     )
+
+
+def cross_sectional_residual(target: pd.DataFrame, *controls: pd.DataFrame, min_obs: int = 20) -> pd.DataFrame:
+    residual = pd.DataFrame(index=target.index, columns=target.columns, dtype=float)
+    for date in target.index:
+        pieces = [target.loc[date].rename("target")]
+        for idx, control in enumerate(controls):
+            pieces.append(control.loc[date].rename(f"control_{idx}"))
+        frame = pd.concat(pieces, axis=1).dropna()
+        if len(frame) < min_obs:
+            continue
+        x = np.ones((len(frame), 1), dtype=float)
+        for idx in range(len(controls)):
+            x = np.column_stack([x, frame[f"control_{idx}"].to_numpy(dtype=float)])
+        y = frame["target"].to_numpy(dtype=float)
+        beta = np.linalg.lstsq(x, y, rcond=None)[0]
+        resid = y - x @ beta
+        residual.loc[date, frame.index] = resid
+    return residual
 
 
 def compute_illiq(close: pd.DataFrame, volume: pd.DataFrame) -> pd.DataFrame:

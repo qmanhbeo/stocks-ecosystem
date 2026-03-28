@@ -19,4 +19,4 @@ Current chunks:
 ## How To Read
 
 Start here, then open the chunk file that contains the finding you need.
-For recent work, `findings-061-090.md` is usually the active chunk.
+`findings-061-090.md` is now full. The next new finding should start `findings-091-120.md`.

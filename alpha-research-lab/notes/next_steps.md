@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_43_log.md` for the latest full session detail.
+Use `notes/session_44_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 43 complete (H130 gap absorption PASS; C12 added to RL matrix, 2026-03-28)
+**Session status:** Session 44 complete (H133 and H134 PASS; C13 and C14 added to RL matrix, 2026-03-28)
 
 ### Current production system
 
@@ -94,6 +94,7 @@ Use `notes/session_43_log.md` for the latest full session detail.
 | 41 | 2026-03-28 | H122 FAIL (spread proxy); C10 added to RL matrix; C10 pairwise corr vs C4-C9 all low | H93 + C4-C10 |
 | 42 | 2026-03-28 | H123 PASS (C11 continuation); H124 standalone PASS but rejected on independence; C11 added to RL matrix, low-beta signal excluded | H93 + C4-C11 |
 | 43 | 2026-03-28 | H125/H131/H132 FAIL; H127 standalone PASS but redundant with C8; H128 anti-predictive; H130 PASS (C12 gap absorption) | H93 + C4-C12 |
+| 44 | 2026-03-28 | H133 PASS (C13 compression blow-off); H134 PASS (C14 residual close-strength); H126 standalone PASS but redundant with C11 | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 
@@ -277,9 +278,9 @@ New artifacts:
 - `data/features/xs_earnings_quality_daily.parquet` — 52-ticker earnings quality
 - `data/features/xs_foreign_demand_daily.parquet` — VNM ETF features (not predictive)
 
-## Active Priority: Session 44
+## Active Priority: Session 45
 
-### Signal library status after Session 43
+### Signal library status after Session 44
 | Signal | IC | Corr w/ S1 | Coverage | Status |
 |--------|----|------------|----------|--------|
 | S1/H93 | +0.149 | N/A | 100% | CONFIRMED |
@@ -292,9 +293,32 @@ New artifacts:
 | C10 xs_illiq_level_rank | +0.021 | +0.008 | 100% | **NEW S40** |
 | C11 xs_ret_60d_lag_rank | +0.010 | +0.008 | 100% | **NEW S42** |
 | C12 xs_gap_absorb_3 | +0.028 | +0.131 | 100% | **NEW S43** |
+| C13 xs_compress_blowoff_2 | +0.035 | +0.191 | 100% | **NEW S44** |
+| C14 xs_clv_volconf_resid_rank | +0.013 | +0.102 | 100% | **NEW S44** |
 | C1 keyword news | +0.043 | +0.009 | 0.8% | Candidate (inconsistent) |
 
-Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+C4+C5+C6+C7+C8+C9+C10+C11+C12, 826k rows × 14 cols).
+Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+C4+C5+C6+C7+C8+C9+C10+C11+C12+C13+C14, 826k rows × 16 cols).
+
+### Session 44 experiment results (2026-03-28)
+- **H133 PASS** — compression blow-off reversal survives as a new reversal state
+  - `xs_compress_blowoff_2`: IC +0.0351, 10/11 years, corr S1 = +0.191, max candidate corr = +0.154 → **C13 candidate**
+  - `xs_compress_blowoff_1` and `xs_compress_blowoff_3` are stronger on IC but fail S1 overlap (`+0.321`, `+0.340`)
+- **H134 PASS** — residual close-location survives explicit de-duplication vs C8
+  - `xs_clv_volconf_resid_rank`: IC +0.0131, 11/11 years, corr S1 = +0.102, max candidate corr = +0.099 → **C14 candidate**
+  - H127's core intuition was partly real; it just needed residualization against C8
+- **H126 MIXED** — 90d/120d continuation is real but redundant
+  - `xs_ret_90d_lag_rank`: IC +0.0108, 11/11 years, corr C11 = +0.775
+  - `xs_ret_120d_lag_rank`: IC +0.0109, 10/11 years, corr C11 = +0.664
+  - sector-neutral variants fall below the 0.01 gate
+  - Verdict: reject as a restatement of C11
+- **C13/C14 MATRIX UPDATE** — `data_tools/build_rl_signal_matrix.py` now exports `c13_compress_blowoff_2` and `c14_clv_volconf_resid_rank`
+  - resulting matrix: `data/features/xs_rl_signal_matrix.parquet` (826,404 rows x 16 cols)
+- **PAIRWISE CHECK** — C13 remains orthogonal to the current promoted set
+  - max corr vs existing candidates: +0.154
+  - corr vs C12: +0.006
+- **PAIRWISE CHECK** — C14 remains orthogonal to the current promoted set
+  - max corr vs existing candidates: +0.099
+  - corr vs C13: -0.002
 
 ### Session 43 experiment results (2026-03-28)
 - **H125 FAIL** — residualized beta has no surviving edge
@@ -359,11 +383,11 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - corr vs S1: -0.0051
   - Low-beta is mostly the same axis as illiquidity/size, so it stays out of the matrix
 
-### Session 44 next queue (in order)
+### Session 45 next queue (in order)
 
-1. **H133** — Compression blow-off reversal: flip H128 and test whether post-compression expansion is actually an exhaustion state rather than a breakout state.
-2. **H134** — Close-location residual: residualize `xs_clv_volconf_5d_rank` against C8 to see whether any non-volume close-strength alpha survives.
-3. **H126** — Longer-horizon continuation: extend C11 to 90d/120d and test sector-neutralized continuation to avoid simple beta/sector contamination.
+1. **H135** — Gap-failure exhaustion: combine H130 and H133 logic. Test whether compression expansion that also fails to hold an opening gap is an even stronger reversal state.
+2. **H136** — Sector-conditioned blow-off reversal: test whether C13 sharpens inside hot sectors, recent ceiling clusters, or high-breadth regimes.
+3. **H137** — Residual long-horizon reversal: remove C11 from 90d/120d ranks directly, then test the sign-flipped residual as a distinct long-horizon reversal axis.
 
 ### Remaining blocked paths
 - **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)

@@ -49,6 +49,7 @@ Use these entrypoints first:
 - `vn-stock-evaluate`
 - `vn-stock-count-params`
 - `python -m vn_stock_rl.data_tools.inspect_research_exports`
+- `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 
 ## Storage Rules
 
@@ -59,3 +60,5 @@ Use these entrypoints first:
 ## Current Signal Default
 
 RL uses shared `data/features/signals/predictions/auto/` by default when signal features are enabled and `--signal-prediction-dir` is omitted.
+
+The consolidated lab matrix at `data/features/xs_rl_signal_matrix.parquet` is adapted into that per-ticker contract through `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`.

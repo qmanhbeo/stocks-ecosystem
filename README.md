@@ -39,7 +39,8 @@ This means the root data directory is the canonical dataset surface for the whol
 1. Research and feature generation happen in `alpha-research-lab/`
 2. Manual buy-zone annotation happens in `manual-label-factory/`
 3. Published artifacts are written into root `data/`
-4. RL training/evaluation in `RL-trading-agent/` reads from root `data/`
+4. The lab publishes a consolidated RL signal matrix at `data/features/xs_rl_signal_matrix.parquet`
+5. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 
 ## Current Reality
 

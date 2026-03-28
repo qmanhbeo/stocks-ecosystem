@@ -43,6 +43,14 @@ def default_signal_prediction_dir() -> Path:
     return shared_data_root() / "features" / "signals" / "predictions" / "auto"
 
 
+def default_lab_signal_matrix_path() -> Path:
+    return shared_data_root() / "features" / "xs_rl_signal_matrix.parquet"
+
+
+def default_lab_signal_prediction_dir() -> Path:
+    return shared_data_root() / "features" / "signals" / "predictions" / "rl_lab_matrix"
+
+
 def default_news_feature_columns() -> List[str]:
     columns = [
         "news_article_count_1d",

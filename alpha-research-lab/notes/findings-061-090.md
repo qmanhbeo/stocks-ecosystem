@@ -691,3 +691,40 @@ strong after trading through the full session, the opening information has been 
 follow-through demand rather than faded by intraday sellers.
 
 **Promotion:** xs_gap_absorb_3 → **C12 candidate** (IC +0.0284, 11/11 years, corr S1 +0.131)
+
+---
+## F88: Compression Breakouts Are Actually Blow-Off Reversals (2026-03-28, Session 44)
+
+H133 flipped H128's failed continuation thesis. The sign-flipped orientation worked immediately.
+
+**Results:**
+| Feature | IC | Pos Years | Corr S1 | Max Candidate Corr | Gate |
+|---------|-----|-----------|---------|--------------------|------|
+| xs_compress_blowoff_1 | +0.0541 | 11/11 | +0.321 | — | fail (S1 overlap) |
+| xs_compress_blowoff_2 | +0.0351 | 10/11 | +0.191 | +0.154 | PASS |
+| xs_compress_blowoff_3 | +0.0540 | 11/11 | +0.340 | — | fail (S1 overlap) |
+
+**Key finding:** In Vietnam, a stock emerging from a compressed range on a large, high-volume,
+strong-closing bar is often not beginning a new trend. It is exhausting one. The validated signal
+is the weaker but more independent formulation:
+`xs_compress_blowoff_2 = 1 - rank(compress_10_rank × expansion_rank × close_rank × vol_rank)`.
+
+**Promotion:** xs_compress_blowoff_2 → **C13 candidate** (IC +0.0351, 10/11 years, corr S1 +0.191)
+
+---
+## F89: H127 Becomes Real Only After Residualizing Out C8 (2026-03-28, Session 44)
+
+H134 revisited the H127 close-location idea after explicitly removing the C8 volume axis.
+
+**Results:**
+| Feature | IC | Pos Years | Corr S1 | Max Candidate Corr | Gate |
+|---------|-----|-----------|---------|--------------------|------|
+| xs_clv_volconf_resid_rank | +0.0131 | 11/11 | +0.102 | +0.099 | PASS |
+| xs_clv_volconf_resid_inverted | -0.0131 | 0/11 | -0.102 | — | fail |
+
+**Key finding:** H127 was not fully redundant noise. The original signal was mostly C8
+(corr = +0.903), but after residualizing against `xs_vol_zscore_5d`, a smaller and cleaner
+close-strength effect remains. This isolates intraday control / close-quality from raw volume
+attention.
+
+**Promotion:** xs_clv_volconf_resid_rank → **C14 candidate** (IC +0.0131, 11/11 years, corr S1 +0.102)

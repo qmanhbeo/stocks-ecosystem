@@ -314,6 +314,57 @@ while staying comfortably below the redundancy threshold.
 
 ---
 
+### C13 — Compression Blow-Off Reversal (H133)
+**Status: CANDIDATE — strong reversal state, distinct from current library**
+
+- **Standalone IC:** +0.0351 (10/11 years positive)
+- **Correlation with S1:** +0.191 (passes independence gate)
+- **Consistency:** 10/11 years IC positive
+- **Coverage:** 100% (dense signal — computed for all 394 tickers, all dates)
+
+**What it captures:** `xs_compress_blowoff_2 = 1 - rank(compress_10_rank × expansion_rank × close_rank × vol_rank)`.
+This is the exact sign-flipped interpretation of H128's failed breakout continuation setup.
+
+**Economic mechanism:** In Vietnam, a stock that emerges from a compressed range with a large,
+high-volume expansion bar is often not beginning a new trend; it is exhausting one. The combination
+of prior compression, fresh range expansion, strong close, and high volume behaves like a blow-off
+state that mean-reverts the next day.
+
+**H133 full results (Session 44):**
+- `xs_compress_blowoff_1`: IC = +0.0541, 11/11 years, corr S1 = +0.321 → fail on S1 overlap
+- `xs_compress_blowoff_2`: IC = +0.0351, 10/11 years, corr S1 = +0.191, max candidate corr = +0.154 → PRIMARY
+- `xs_compress_blowoff_3`: IC = +0.0540, 11/11 years, corr S1 = +0.340 → fail on S1 overlap
+
+**Preferred feature:** `xs_compress_blowoff_2`. The higher-IC alternatives are too correlated with S1.
+
+**Artifact:** Computed on the fly from OHLCV; no persistent file.
+
+---
+
+### C14 — Residual Close-Location Strength After Removing C8 (H134)
+**Status: CANDIDATE — H127 survives after explicit de-duplication vs volume**
+
+- **Standalone IC:** +0.0131 (11/11 years positive)
+- **Correlation with S1:** +0.102
+- **Consistency:** 11/11 years IC positive
+- **Coverage:** 100% (dense signal — computed for all 394 tickers, all dates)
+
+**What it captures:** `xs_clv_volconf_resid_rank` is the cross-sectional residual of the H127
+volume-confirmed close-location signal after regressing it on `C8` (`xs_vol_zscore_5d`) each day.
+
+**Economic mechanism:** H127 showed that "close near high + volume" is real, but most of that effect
+was just C8. H134 isolates what remains after removing the explicit volume-activity axis. The residual
+still predicts returns, which implies there is a genuine close-strength / intraday-control component
+that volume alone does not explain.
+
+**H134 full results (Session 44):**
+- `xs_clv_volconf_resid_rank`: IC = +0.0131, 11/11 years, corr S1 = +0.102, max candidate corr = +0.099 → PASS
+- inverted orientation: IC = −0.0131, 0/11 years → fail
+
+**Artifact:** Computed on the fly from OHLCV plus the existing C8 series; no persistent file.
+
+---
+
 ### ~~C3 — Cross-Sectional Dispersion Regime (H101)~~ REJECTED (Session 37)
 
 **Status: REJECTED — regime-conditional IC analysis decisive (2026-03-27)**
@@ -427,6 +478,7 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Compression breakout continuation (H128) | best IC −0.035 (xs_compress_breakout_2) | Breakout-follow-through thesis is wrong in this market; the tested orientation is strongly anti-predictive |
 | Sector breadth shock (H131) | best IC −0.003 (xs_breadth_shock_laggard) | Breadth changes add no standalone value beyond existing sector structures |
 | Conditional liquidity release (H132) | best IC +0.007 (xs_liq_release_1) | Conditioning illiquidity changes on return/close state still does not clear the 0.01 gate |
+| Longer-horizon continuation (H126) | 90d/120d ranks IC +0.011 but corr with C11 = +0.775 / +0.664 | Real signal, but it is just a longer-horizon restatement of the existing continuation axis |
 
 ---
 
@@ -436,12 +488,12 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 |--------|-----------|----------------|---------|
 | H98: LLM news sentiment | Higher quality than keyword approach | **PARKED** (runtime/throughput bottleneck) | Parked |
 | H95: Foreign investor flow | Retail-dominated market: foreign = informed | NOT AVAILABLE historically (F59) | Blocked |
-| H126: Longer-horizon continuation | Extend C11 to 90d/120d and test sector-neutralized continuation | Ready to test | High |
-| H133: Compression blow-off reversal | H128 continuation failed hard; test the sign-flipped exhaustion interpretation | Ready to test | High |
-| H134: Close-location residual vs C8 | Residualize `clv × volume` state against C8 to isolate non-volume close strength | Ready to test | Medium |
+| H135: Gap-failure exhaustion | Combine H130 and H133 logic: failed gap acceptance after compression may be the strongest reversal state | Ready to test | High |
+| H136: Sector-conditioned blow-off reversal | Test whether H133 strengthens inside hot sectors or recent ceiling clusters | Ready to test | High |
+| H137: Residual long-horizon reversal | H126 continuation is redundant; test the sign-flipped 90d/120d residual after removing C11 | Ready to test | Medium |
 | Order book imbalance | Bid/ask pressure predicts short-term price | Not available historically | Blocked |
 
-H123, H124, H125, H127, H128, H130, H131, and H132 are now closed and documented above.
+H123, H124, H125, H126, H127, H128, H130, H131, H132, H133, and H134 are now closed and documented above.
 Track new OHLCV-only search ideas in `notes/next_steps.md`.
 
 **Session 33 update (2026-03-26):**

@@ -26,6 +26,8 @@ Key exported inputs:
 - helper assets: `data/fx-commodities/*.parquet`
 - news features: `data/features/news/predictions/*_news_features.parquet`
 - signal features: `data/features/signals/predictions/auto/*_signal_predictions.parquet`
+- consolidated lab RL matrix: `data/features/xs_rl_signal_matrix.parquet`
+- adapted lab signal features: `data/features/signals/predictions/rl_lab_matrix/*_signal_predictions.parquet`
 
 ## RL Training / Evaluation
 
@@ -38,6 +40,7 @@ Inputs:
 - optional helper market files in `data/stock/` and `data/fx-commodities/`
 - optional news features in `data/features/news/predictions/`
 - optional signal features in `data/features/signals/predictions/auto/` by default
+- optional adapted lab signal features in `data/features/signals/predictions/rl_lab_matrix/` when exported and selected explicitly
 
 Outputs:
 - trained runs: `artifacts/trained_models/<run_name>/`
@@ -45,6 +48,7 @@ Outputs:
 
 Signal default:
 - if signal features are enabled and no explicit directory is passed, RL uses `data/features/signals/predictions/auto/`
+- if the consolidated lab matrix should be used, first run `python -m vn_stock_rl.data_tools.export_lab_signal_matrix` and then pass `--signal-prediction-dir data/features/signals/predictions/rl_lab_matrix/`
 
 ## What To Change Together
 
@@ -55,8 +59,14 @@ If a file path convention changes:
 
 If a new signal column is added:
 - update the producing research pipeline
-- update `vn_stock_rl/config/cli_shared.py`
-- update `vn_stock_rl/env/base.py`
+- if it lands in the consolidated lab matrix, rerun `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
+- update `vn_stock_rl/config/cli_shared.py` only if CLI shortcuts/default bundles should change
+- update `vn_stock_rl/env/base.py` only if merge semantics or fill behavior should change
+
+If the consolidated lab matrix contract changes:
+- update the research producer docs
+- update `vn_stock_rl/data_tools/export_lab_signal_matrix.py`
+- update this file and `README.md`
 
 If a new external feature family is added:
 - update the producing pipeline

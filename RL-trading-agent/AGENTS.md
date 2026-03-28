@@ -51,10 +51,13 @@ To change canonical data/artifact paths:
   - `vn-stock-count-params`
 - Canonical research-export inspection command is:
   - `python -m vn_stock_rl.data_tools.inspect_research_exports`
+- Canonical lab-matrix adapter command is:
+  - `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 
 ## Important Defaults
 
 - RL defaults to shared `data/features/news/predictions/` and `data/features/signals/predictions/auto/`.
+- The consolidated lab matrix lives at `data/features/xs_rl_signal_matrix.parquet` and can be adapted into per-ticker RL inputs with `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`.
 - Producer pipelines now live outside this repo in `alpha-research-lab` and `manual-label-factory`.
 
 ## Keep In Mind

@@ -170,7 +170,7 @@ def build_parser() -> argparse.ArgumentParser:
         nargs='+',
         default=None,
         help=(
-            "Supervised signal feature columns to merge by date. Use 'default' for the "
+            "Signal feature columns to merge by date. Use 'default' for the standard "
             "probability columns, 'all' for every exported signal column, or list explicit names."
         ),
     )
@@ -178,7 +178,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--signal-prediction-dir",
         type=str,
         default=None,
-        help="Directory containing per-ticker supervised signal exports (defaults to data/features/signals/predictions/auto)",
+        help="Directory containing per-ticker signal exports (defaults to data/features/signals/predictions/auto)",
     )
     parser.add_argument("--help-tickers", type=str, nargs='+', default=None,
                         help="Helper tickers to append as features (e.g., VNINDEX VN30)")

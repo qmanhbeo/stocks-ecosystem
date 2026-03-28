@@ -417,7 +417,7 @@ def train(
         calendar_features: Optional calendar features (any of: dow month dom)
         news_feature_columns: Optional daily news feature columns to merge by date
         news_prediction_dir: Optional directory containing per-ticker news parquet exports
-        signal_feature_columns: Optional supervised signal feature columns to merge by date
+        signal_feature_columns: Optional signal feature columns to merge by date
         signal_prediction_dir: Optional directory containing per-ticker signal parquet exports
         help_tickers: Optional list of helper tickers to append as features
         market_data_dir: Directory containing market parquet files

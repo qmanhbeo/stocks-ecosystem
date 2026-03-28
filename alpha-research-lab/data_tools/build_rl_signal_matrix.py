@@ -1,7 +1,7 @@
 """
 Build combined RL signal state matrix from all confirmed/candidate signals.
 
-Assembles S1 + all promoted candidate signals (C4-C12) into a single feature
+Assembles S1 + all promoted candidate signals (C4-C14) into a single feature
 parquet for use by the RL trading agent. Handles different time columns
 (time vs trading_day) and signal sparsity (C5 insider = 3.4% coverage).
 
@@ -18,6 +18,8 @@ Output: data/features/xs_rl_signal_matrix.parquet
     c10_illiq_level_rank      — C10: Amihud illiquidity level
     c11_ret_60d_lag_rank      — C11: 3-month continuation / medium-term trend
     c12_gap_absorb_3          — C12: gap acceptance with intraday confirmation
+    c13_compress_blowoff_2    — C13: post-compression expansion exhaustion
+    c14_clv_volconf_resid_rank — C14: close-strength residual after removing C8
     c5_signal_present         — indicator: 1 if C5 fired on this (time, ticker)
 
 Signal properties (all 2015–2025):
@@ -31,6 +33,8 @@ Signal properties (all 2015–2025):
   C10: IC +0.021, 10/11 yrs, corr +0.008, coverage 100%
   C11: IC +0.010, 9/11 yrs, corr +0.008, coverage 100%
   C12: IC +0.028, 11/11 yrs, corr +0.131, coverage 100%
+  C13: IC +0.035, 10/11 yrs, corr +0.191, coverage 100%
+  C14: IC +0.013, 11/11 yrs, corr +0.102, coverage 100%
 
 Usage:
     conda run -n stocks python data_tools/build_rl_signal_matrix.py
@@ -175,6 +179,119 @@ def build_gap_absorption_features() -> pd.DataFrame:
     )
 
 
+def build_compress_blowoff_features() -> pd.DataFrame:
+    """Compute C13 directly from OHLCV using the validated H133 formulation."""
+    parts = []
+    for f in sorted(STOCK_DIR.glob("gia_lich_su_*_1D.parquet")):
+        ticker = f.stem.replace("gia_lich_su_", "").replace("_1D", "")
+        if ticker in EXCLUDE:
+            continue
+        try:
+            df = pd.read_parquet(f, columns=["time", "high", "low", "close", "volume"])
+        except Exception:
+            continue
+        df["time"] = pd.to_datetime(df["time"])
+        df = df.sort_values("time")
+        if len(df) < 80:
+            continue
+        df["ticker"] = ticker
+        parts.append(df[["time", "ticker", "high", "low", "close", "volume"]])
+
+    long = pd.concat(parts, ignore_index=True)
+    wide_high = long.pivot_table(index="time", columns="ticker", values="high").sort_index()
+    wide_low = long.pivot_table(index="time", columns="ticker", values="low").sort_index()
+    wide_close = long.pivot_table(index="time", columns="ticker", values="close").sort_index()
+    wide_volume = long.pivot_table(index="time", columns="ticker", values="volume").sort_index()
+
+    range_pct = (wide_high - wide_low).div(wide_close.shift(1))
+    compress_10 = range_pct.rolling(10, min_periods=5).mean()
+    range_expansion = range_pct.div(range_pct.rolling(10, min_periods=5).mean())
+    denom = wide_high - wide_low
+    close_strength = (wide_close - wide_low).div(denom.replace(0, np.nan)).mask(denom == 0, 0.5)
+    vol_confirmation = wide_volume.div(wide_volume.rolling(20, min_periods=10).mean())
+
+    compress_10_rank = 1.0 - compress_10.rank(axis=1, method="average", ascending=True, pct=True)
+    expansion_rank = range_expansion.rank(axis=1, method="average", ascending=True, pct=True)
+    close_rank = close_strength.rank(axis=1, method="average", ascending=True, pct=True)
+    vol_rank = vol_confirmation.rank(axis=1, method="average", ascending=True, pct=True)
+
+    breakout_2 = (compress_10_rank * expansion_rank * close_rank * vol_rank).rank(
+        axis=1, method="average", ascending=True, pct=True
+    )
+    blowoff_2 = 1.0 - breakout_2
+    return (
+        blowoff_2.reset_index()
+        .melt(id_vars="time", var_name="ticker", value_name="c13_compress_blowoff_2")
+        .dropna(subset=["c13_compress_blowoff_2"])
+    )
+
+
+def build_clv_resid_features(c8: pd.DataFrame) -> pd.DataFrame:
+    """Compute C14 directly from OHLCV after residualizing against C8."""
+    parts = []
+    for f in sorted(STOCK_DIR.glob("gia_lich_su_*_1D.parquet")):
+        ticker = f.stem.replace("gia_lich_su_", "").replace("_1D", "")
+        if ticker in EXCLUDE:
+            continue
+        try:
+            df = pd.read_parquet(f, columns=["time", "high", "low", "close", "volume"])
+        except Exception:
+            continue
+        df["time"] = pd.to_datetime(df["time"])
+        df = df.sort_values("time")
+        if len(df) < 80:
+            continue
+        df["ticker"] = ticker
+        parts.append(df[["time", "ticker", "high", "low", "close", "volume"]])
+
+    long = pd.concat(parts, ignore_index=True)
+    wide_high = long.pivot_table(index="time", columns="ticker", values="high").sort_index()
+    wide_low = long.pivot_table(index="time", columns="ticker", values="low").sort_index()
+    wide_close = long.pivot_table(index="time", columns="ticker", values="close").sort_index()
+    wide_volume = long.pivot_table(index="time", columns="ticker", values="volume").sort_index()
+
+    denom = wide_high - wide_low
+    clv = (wide_close - wide_low).div(denom.replace(0, np.nan)).mask(denom == 0, 0.5)
+    vol_mean = wide_volume.rolling(60, min_periods=20).mean()
+    vol_std = wide_volume.rolling(60, min_periods=20).std(ddof=0)
+    vol_zscore_1d = (wide_volume - vol_mean).div(vol_std.replace(0, np.nan))
+    clv_volconf_5d = (clv * vol_zscore_1d).rolling(5, min_periods=3).mean().rank(
+        axis=1, method="average", ascending=True, pct=True
+    )
+
+    c8_wide = (
+        c8.rename(columns={"c8_vol_zscore_5d": "xs_vol_zscore_5d"})
+        .pivot_table(index="time", columns="ticker", values="xs_vol_zscore_5d")
+        .sort_index()
+    )
+    common_index = clv_volconf_5d.index.intersection(c8_wide.index)
+    clv_volconf_5d = clv_volconf_5d.reindex(common_index)
+    c8_wide = c8_wide.reindex(common_index)
+
+    resid = pd.DataFrame(index=common_index, columns=clv_volconf_5d.columns, dtype=float)
+    for date in common_index:
+        frame = pd.concat(
+            [
+                clv_volconf_5d.loc[date].rename("target"),
+                c8_wide.loc[date].rename("control"),
+            ],
+            axis=1,
+        ).dropna()
+        if len(frame) < 20:
+            continue
+        x = np.column_stack([np.ones(len(frame), dtype=float), frame["control"].to_numpy(dtype=float)])
+        y = frame["target"].to_numpy(dtype=float)
+        beta = np.linalg.lstsq(x, y, rcond=None)[0]
+        resid.loc[date, frame.index] = y - x @ beta
+
+    resid_rank = resid.rank(axis=1, method="average", ascending=True, pct=True)
+    return (
+        resid_rank.reset_index()
+        .melt(id_vars="time", var_name="ticker", value_name="c14_clv_volconf_resid_rank")
+        .dropna(subset=["c14_clv_volconf_resid_rank"])
+    )
+
+
 def main():
     print("Building RL signal matrix...")
 
@@ -229,6 +346,14 @@ def main():
     c12 = build_gap_absorption_features()
     c12["time"] = pd.to_datetime(c12["time"])
 
+    # C13 — compression blow-off reversal
+    c13 = build_compress_blowoff_features()
+    c13["time"] = pd.to_datetime(c13["time"])
+
+    # C14 — close-location residual after removing C8
+    c14 = build_clv_resid_features(c8)
+    c14["time"] = pd.to_datetime(c14["time"])
+
     # Merge everything on (time, ticker) — left join to S1 spine
     result = s1.copy()
     for name, df in [
@@ -241,6 +366,8 @@ def main():
         ("C10", c10),
         ("C11", c11),
         ("C12", c12),
+        ("C13", c13),
+        ("C14", c14),
     ]:
         result = result.merge(df, on=["time", "ticker"], how="left")
         print(f"  After {name}: {result.shape}")
@@ -251,7 +378,7 @@ def main():
     signal_cols = ["s1_proba", "c4_oc_asym_5d", "c5_ins_relative_size_5d", "c5_signal_present",
                    "c6_contrarian_intra_5d", "c7_ceiling_count_5d", "c8_vol_zscore_5d",
                    "c9_reversal_1d", "c10_illiq_level_rank", "c11_ret_60d_lag_rank",
-                   "c12_gap_absorb_3"]
+                   "c12_gap_absorb_3", "c13_compress_blowoff_2", "c14_clv_volconf_resid_rank"]
 
     print("\nCoverage summary:")
     for col in signal_cols:

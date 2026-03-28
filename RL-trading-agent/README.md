@@ -50,6 +50,20 @@ python -m manual_label_factory.manual_label
 
 RL defaults to shared `data/features/news/predictions/` and `data/features/signals/predictions/auto/` when `--news-prediction-dir` / `--signal-prediction-dir` are omitted.
 
+## Consume the lab RL signal matrix
+
+The research lab publishes a consolidated matrix at `../data/features/xs_rl_signal_matrix.parquet`.
+RL does not read that file directly. Adapt it into the existing per-ticker signal contract first:
+
+```bash
+cd /home/manh/stocks/RL-trading-agent
+conda run -n stocks python -m vn_stock_rl.data_tools.export_lab_signal_matrix
+conda run -n stocks python -m vn_stock_rl.data_tools.inspect_research_exports --require-lab-matrix --require-lab-adapter
+```
+
+This writes per-ticker files to `../data/features/signals/predictions/rl_lab_matrix/`.
+Then point training/evaluation at that directory with `--signal-prediction-dir` and pass the desired lab columns via `--signal-columns`.
+
 ## Train and evaluate RL
 
 ```bash
@@ -60,6 +74,14 @@ vn-stock-train --stock FPT --policy cnn --help-tickers VNINDEX VN30 --help-asset
 
 vn-stock-evaluate --model artifacts/trained_models/cnn_fpt_news_tabular_2016on/model_best.zip --stock FPT --mode val
 ```
+
+First controlled pilot with the lab matrix:
+
+```bash
+vn-stock-train --stock FPT --policy mlp --start-date 2016-01-01 --timesteps 100000 --eval-freq 10000 --n-eval-episodes 1 --n-envs 4 --seed 1208 --signal-columns s1_proba c4_oc_asym_5d c5_ins_relative_size_5d c5_signal_present c6_contrarian_intra_5d c7_ceiling_count_5d c8_vol_zscore_5d c9_reversal_1d c10_illiq_level_rank c11_ret_60d_lag_rank c12_gap_absorb_3 c13_compress_blowoff_2 c14_clv_volconf_resid_rank --signal-prediction-dir ../data/features/signals/predictions/rl_lab_matrix --name pilot_fpt_labmatrix_seed1208
+```
+
+See [docs/lab_signal_matrix_pilot.md](docs/lab_signal_matrix_pilot.md) for the baseline vs `S1` vs full-matrix run ladder.
 
 ## Hyperparameters & Trading Env configs
 

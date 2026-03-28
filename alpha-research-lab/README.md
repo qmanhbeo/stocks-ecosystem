@@ -43,6 +43,8 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - Canonical data lives in the workspace root at `../data/`
 - The repo-local `data/` path is a symlink to that shared root so existing lab scripts can keep using `data/...`
 - No research data is duplicated inside `alpha-research-lab/`
+- The lab publishes the consolidated RL feature surface at `data/features/xs_rl_signal_matrix.parquet`
+- RL consumes that matrix through `../RL-trading-agent` via `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 
 ## Current Best RL Signal
 

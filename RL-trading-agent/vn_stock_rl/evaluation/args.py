@@ -171,15 +171,15 @@ def build_parser() -> argparse.ArgumentParser:
         nargs='+',
         default=None,
         help=(
-            "Override supervised signal feature columns. Use 'default' for the exported "
-            "probability columns, 'all' for every signal column, or list explicit names."
+            "Override signal feature columns. Use 'default' for the standard probability "
+            "columns, 'all' for every signal column, or list explicit names."
         ),
     )
     parser.add_argument(
         "--signal-prediction-dir",
         type=str,
         default=None,
-        help="Override directory containing per-ticker supervised signal exports (default: data/features/signals/predictions/auto)",
+        help="Override directory containing per-ticker signal exports (default: data/features/signals/predictions/auto)",
     )
     parser.add_argument("--train-split", type=float, default=None,
                         help="Override train split ratio (default: use metadata if available)")
