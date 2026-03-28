@@ -10,6 +10,12 @@ This repo is designed to support one repeatable loop:
 6. Promote durable conclusions into the chunked permanent findings files.
 7. Update `notes/signal_library.md` if the signal is confirmed or promoted.
 
+Execution reality is shared at the workspace level:
+
+- canonical spec: `../docs/execution_reality.md`
+- shared rule code: `../shared-market-rules/shared_market_rules/`
+- produced tradability artifact: `data/features/execution/tradability_daily.parquet`
+
 `notes/next_steps.md` is the live small-brain state source. This file is the working manual.
 
 ---
@@ -95,6 +101,10 @@ Read these first when you want the minimal result.
 - Cross-sectional: `artifacts/run_summaries/latest_cross_sectional.json`
 - Ensemble: `artifacts/run_summaries/latest_ensemble.json`
 - Portfolio: `artifacts/run_summaries/latest_portfolio.json`
+
+Execution/tradability producer:
+
+- `data_tools/build_tradability_flags.py` -> `data/features/execution/tradability_daily.parquet`
 
 Permanent logs remain:
 

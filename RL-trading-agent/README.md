@@ -9,12 +9,13 @@ The RL runtime reads shared research exports from `/home/manh/stocks/data` by de
 ## Quick start
 
 ```bash
+cd /home/manh/stocks
 conda create -n stocks python=3.10
 conda activate stocks
-git clone https://github.com/qmanhbeo/RL-trading-agent
-cd RL-trading-agent
-pip install -e ".[dev]"
+pip install -r requirements.txt
 ```
+
+The RL runtime now depends on the workspace-shared `shared-market-rules` package.
 
 ## Run test suite first to make sure everything is ok
 
@@ -64,6 +65,13 @@ conda run -n stocks python -m vn_stock_rl.data_tools.inspect_research_exports --
 This writes per-ticker files to `../data/features/signals/predictions/rl_lab_matrix/`.
 Then point training/evaluation at that directory with `--signal-prediction-dir` and pass the desired lab columns via `--signal-columns`.
 In `--portfolio-choice` mode, RL defaults to that lab-adapter directory automatically when `--signal-prediction-dir` is omitted.
+
+Execution realism is shared with the research lab:
+
+- canonical spec: `../docs/execution_reality.md`
+- shared rule code: `../shared-market-rules/shared_market_rules/`
+- producer artifact: `../data/features/execution/tradability_daily.parquet`
+- strict core: T+1 entry, earliest sell at T+3 open, zero-volume blocks both sides, ceiling blocks buys, floor blocks sells
 
 ## Train and evaluate RL
 

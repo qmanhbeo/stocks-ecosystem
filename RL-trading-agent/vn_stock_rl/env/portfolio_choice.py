@@ -11,6 +11,11 @@ import pandas as pd
 from gymnasium import spaces
 
 from vn_stock_rl.config import DEFAULT_CONFIG
+from vn_stock_rl.env.execution_model import (
+    apply_portfolio_execution_constraints,
+    update_holding_ages,
+)
+from vn_stock_rl.env.market_rules import build_tradability_cache, resolve_required_holding_age
 from vn_stock_rl.external_features import (
     default_lab_signal_prediction_dir,
     signal_fill_value_for_column,
@@ -170,7 +175,8 @@ class PortfolioChoiceEnv(gym.Env):
         )
 
         self.lookback_window = 0
-        self.min_hold_days = 0
+        self.min_hold_days = resolve_required_holding_age()
+        self.required_holding_age = int(self.min_hold_days)
         self.normalize = False
         self.include_can_exit = False
         self.stop_loss = None
@@ -203,6 +209,8 @@ class PortfolioChoiceEnv(gym.Env):
         }
         self.position = 0
         self.hold_count = 0
+        self.num_holdings = 0
+        self.avg_holding_age = 0.0
 
         self._setup_panel()
 
@@ -417,6 +425,7 @@ class PortfolioChoiceEnv(gym.Env):
         }
 
         aligned_frames: list[pd.DataFrame] = []
+        aligned_tradability: list[dict[str, np.ndarray]] = []
         for ticker in self.universe_tickers:
             aligned = (
                 merged_frames[ticker]
@@ -427,6 +436,7 @@ class PortfolioChoiceEnv(gym.Env):
             if aligned[["open", "close"]].isna().any().any():
                 raise ValueError(f"NaN open/close values remain after panel alignment for {ticker}")
             aligned_frames.append(aligned)
+            aligned_tradability.append(build_tradability_cache(aligned))
 
         self.dates = np.asarray(common_dates_list, dtype="datetime64[ns]")
         self.open_matrix = np.stack(
@@ -437,11 +447,35 @@ class PortfolioChoiceEnv(gym.Env):
             [frame["close"].to_numpy(dtype=np.float64) for frame in aligned_frames],
             axis=1,
         )
+        self.volume_matrix = np.stack(
+            [frame["volume"].to_numpy(dtype=np.float64) for frame in aligned_frames],
+            axis=1,
+        )
         self.signal_tensor = np.stack(
             [
                 frame[self.signal_feature_names].to_numpy(dtype=np.float64)
                 for frame in aligned_frames
             ],
+            axis=1,
+        )
+        self.can_buy_matrix = np.stack(
+            [cache["can_buy_next_open"] for cache in aligned_tradability],
+            axis=1,
+        )
+        self.can_sell_matrix = np.stack(
+            [cache["can_sell_next_open"] for cache in aligned_tradability],
+            axis=1,
+        )
+        self.has_volume_matrix = np.stack(
+            [cache["has_volume"] for cache in aligned_tradability],
+            axis=1,
+        )
+        self.is_ceiling_matrix = np.stack(
+            [cache["is_ceiling"] for cache in aligned_tradability],
+            axis=1,
+        )
+        self.is_floor_matrix = np.stack(
+            [cache["is_floor"] for cache in aligned_tradability],
             axis=1,
         )
         self.df = pd.DataFrame(
@@ -507,8 +541,15 @@ class PortfolioChoiceEnv(gym.Env):
         return obs.astype(np.float32, copy=False)
 
     def _set_position_state(self) -> None:
-        self.position = int(np.any(self.current_weights > 0.0))
-        self.hold_count = int(np.count_nonzero(self.current_weights > 0.0))
+        active_mask = self.current_weights > 1e-12
+        self.position = int(np.any(active_mask))
+        self.num_holdings = int(np.count_nonzero(active_mask))
+        self.avg_holding_age = (
+            float(np.mean(self.holding_ages[active_mask]))
+            if self.num_holdings > 0
+            else 0.0
+        )
+        self.hold_count = 0
 
     def reset(self, *, seed: Optional[int] = None, options: Optional[dict] = None):
         super().reset(seed=seed)
@@ -526,7 +567,7 @@ class PortfolioChoiceEnv(gym.Env):
 
         self.current_step = int(self.episode_start_idx)
         self.current_weights = np.zeros(self.portfolio_universe_size, dtype=np.float64)
-        self.pending_target_weights = np.zeros(self.portfolio_universe_size, dtype=np.float64)
+        self.holding_ages = np.zeros(self.portfolio_universe_size, dtype=np.int64)
         self.cash_weight = 1.0
         self.portfolio_value = 1.0
         self.benchmark_portfolio_value = 1.0
@@ -539,6 +580,8 @@ class PortfolioChoiceEnv(gym.Env):
         self.last_turnover = 0.0
         self.last_selected_indices: list[int] = []
         self.last_selected_tickers: list[str] = []
+        self.last_blocked_buy_indices: tuple[int, ...] = tuple()
+        self.last_blocked_sell_indices: tuple[int, ...] = tuple()
         self.cumulative_return = 0.0
         self.episode_rewards: list[float] = []
         self.episode_trades: list[dict] = []
@@ -567,10 +610,23 @@ class PortfolioChoiceEnv(gym.Env):
         gross_multiplier = 1.0 + float(np.dot(self.current_weights, open_returns))
         value_before_rebalance = value_t * gross_multiplier
 
-        target_weights = self.pending_target_weights.copy()
-        buy_turnover = float(np.clip(target_weights - self.current_weights, 0.0, None).sum())
-        sell_turnover = float(np.clip(self.current_weights - target_weights, 0.0, None).sum())
-        total_turnover = buy_turnover + sell_turnover
+        previous_weights = self.current_weights.copy()
+        previous_holding_ages = self.holding_ages.copy()
+        desired_weights, next_indices, next_tickers = self._decode_action(action)
+        self.last_selected_indices = next_indices
+        self.last_selected_tickers = next_tickers
+        execution_result = apply_portfolio_execution_constraints(
+            current_weights=previous_weights,
+            desired_weights=desired_weights,
+            holding_ages=previous_holding_ages,
+            can_buy_next_open=self.can_buy_matrix[next_step],
+            can_sell_next_open=self.can_sell_matrix[next_step],
+            min_hold_days=self.min_hold_days,
+        )
+        executed_weights = execution_result.executed_weights
+        buy_turnover = execution_result.buy_turnover
+        sell_turnover = execution_result.sell_turnover
+        total_turnover = execution_result.total_turnover
         transaction_cost = (
             buy_turnover * self.buy_fee_rate
             + sell_turnover * (self.sell_fee_rate + self.capital_gains_tax_rate)
@@ -581,7 +637,12 @@ class PortfolioChoiceEnv(gym.Env):
         self.benchmark_portfolio_value *= (1.0 + benchmark_return)
 
         self.current_step = next_step
-        self.current_weights = target_weights
+        self.current_weights = executed_weights
+        self.holding_ages = update_holding_ages(
+            previous_weights=previous_weights,
+            executed_weights=executed_weights,
+            previous_holding_ages=previous_holding_ages,
+        )
         self.cash_weight = float(max(1.0 - float(self.current_weights.sum()), 0.0))
         self.portfolio_value = float(value_after_rebalance)
         raw_return = (self.portfolio_value / value_t) - 1.0
@@ -609,6 +670,8 @@ class PortfolioChoiceEnv(gym.Env):
         self.last_drawdown = float(drawdown)
         self.last_drawdown_penalty = float(drawdown_penalty)
         self.last_turnover = float(total_turnover)
+        self.last_blocked_buy_indices = execution_result.blocked_buy_indices
+        self.last_blocked_sell_indices = execution_result.blocked_sell_indices
         self.cumulative_return += float(reward)
         self.episode_rewards.append(float(reward))
         self._set_position_state()
@@ -620,15 +683,11 @@ class PortfolioChoiceEnv(gym.Env):
                     "date": pd.Timestamp(self.dates[self.current_step]).isoformat(),
                     "turnover": float(total_turnover),
                     "raw_return": float(raw_return),
-                    "num_holdings": int(self.hold_count),
+                    "num_holdings": int(self.num_holdings),
+                    "avg_holding_age": float(self.avg_holding_age),
                     "tickers": list(self.last_selected_tickers),
                 }
             )
-
-        next_target_weights, next_indices, next_tickers = self._decode_action(action)
-        self.pending_target_weights = next_target_weights
-        self.last_selected_indices = next_indices
-        self.last_selected_tickers = next_tickers
 
         terminated = bool(self.current_step >= self.episode_end_idx)
         observation = self._get_observation()
@@ -639,7 +698,6 @@ class PortfolioChoiceEnv(gym.Env):
         return {
             "step": int(self.current_step),
             "position": int(self.position),
-            "hold_count": int(self.hold_count),
             "reward": float(reward),
             "reward_shaped": float(reward),
             "raw_return": float(self.last_raw_return),
@@ -654,8 +712,11 @@ class PortfolioChoiceEnv(gym.Env):
             "benchmark_portfolio_value": float(self.benchmark_portfolio_value),
             "cash_weight": float(self.cash_weight),
             "turnover": float(self.last_turnover),
-            "num_holdings": int(self.hold_count),
+            "num_holdings": int(self.num_holdings),
+            "avg_holding_age": float(self.avg_holding_age),
             "selected_tickers": list(self.last_selected_tickers),
+            "blocked_buy_tickers": [self.universe_tickers[idx] for idx in self.last_blocked_buy_indices],
+            "blocked_sell_tickers": [self.universe_tickers[idx] for idx in self.last_blocked_sell_indices],
         }
 
     def get_episode_stats(self):
@@ -693,13 +754,14 @@ class PortfolioChoiceEnv(gym.Env):
             "portfolio_top_k": int(self.portfolio_top_k),
             "benchmark_final_return": float(self.benchmark_portfolio_value - 1.0),
             "final_portfolio_value": float(self.portfolio_value),
+            "avg_holding_age": float(self.avg_holding_age),
         }
 
     def render(self):
         current_date = pd.Timestamp(self.dates[self.current_step]).strftime("%Y-%m-%d")
         print(
             f"[PORTFOLIO] step={self.current_step} date={current_date} "
-            f"value={self.portfolio_value:.4f} holdings={self.hold_count} "
+            f"value={self.portfolio_value:.4f} holdings={self.num_holdings} "
             f"cash_weight={self.cash_weight:.2%}"
         )
 

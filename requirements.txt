@@ -9,6 +9,7 @@
 # available from one root-level install, then layers the extra research/UI
 # packages used by the lab and manual-label tools.
 
+-e ./shared-market-rules
 -e ./RL-trading-agent
 
 # RL dev/test tooling not pulled in by the base editable install.

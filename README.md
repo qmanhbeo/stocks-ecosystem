@@ -40,7 +40,8 @@ This means the root data directory is the canonical dataset surface for the whol
 2. Manual buy-zone annotation happens in `manual-label-factory/`
 3. Published artifacts are written into root `data/`
 4. The lab publishes a consolidated RL signal matrix at `data/features/xs_rl_signal_matrix.parquet`
-5. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
+5. The lab publishes shared execution tradability flags at `data/features/execution/tradability_daily.parquet`
+6. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 
 ## Bootstrap
 
@@ -52,7 +53,34 @@ conda activate stocks
 pip install -r requirements.txt
 ```
 
-This installs `RL-trading-agent` in editable mode and adds the extra research/UI packages used by `alpha-research-lab` and `manual-label-factory`.
+This installs the shared `shared-market-rules` package, `RL-trading-agent` in editable mode, and the extra research/UI packages used by `alpha-research-lab` and `manual-label-factory`.
+
+For a stricter pinned install focused on reproducibility, use:
+
+```bash
+conda create -n stocks python=3.10
+conda activate stocks
+pip install -r requirements.lock.txt
+```
+
+Use `requirements.txt` for a live editable dev setup. Use `requirements.lock.txt` when you want the workspace dependency surface to stay fixed.
+The lock file is intentionally Python-3.10-focused and pins the direct dependency surface only; it is not a full transitive hash lock.
+
+## Shared Market Rules
+
+Execution reality is an ecosystem-level contract, not a repo-local detail.
+
+- Canonical spec: `docs/execution_reality.md`
+- Shared rule code: `shared-market-rules/shared_market_rules/`
+- Producer artifact: `data/features/execution/tradability_daily.parquet`
+
+Current strict-core defaults:
+- signal at `T` close
+- fill at `T+1` open
+- earliest sell after a buy at `T+1` open is `T+3` open
+- zero-volume blocks both sides
+- ceiling blocks buys
+- floor blocks sells
 
 ## Current Reality
 

@@ -28,6 +28,7 @@ Key exported inputs:
 - signal features: `data/features/signals/predictions/auto/*_signal_predictions.parquet`
 - consolidated lab RL matrix: `data/features/xs_rl_signal_matrix.parquet`
 - adapted lab signal features: `data/features/signals/predictions/rl_lab_matrix/*_signal_predictions.parquet`
+- execution tradability flags: `data/features/execution/tradability_daily.parquet`
 
 ## RL Training / Evaluation
 
@@ -68,6 +69,12 @@ If the consolidated lab matrix contract changes:
 - update the research producer docs
 - update `vn_stock_rl/data_tools/export_lab_signal_matrix.py`
 - update this file and `README.md`
+
+If execution/tradability rules change:
+- update `../docs/execution_reality.md`
+- update `../shared-market-rules/`
+- update the lab producer `data_tools/build_tradability_flags.py`
+- update RL env rule consumers
 
 If a new external feature family is added:
 - update the producing pipeline

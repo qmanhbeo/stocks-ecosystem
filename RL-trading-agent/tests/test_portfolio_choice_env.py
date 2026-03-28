@@ -88,7 +88,8 @@ def test_portfolio_choice_env_delays_execution_and_deduplicates_actions(tmp_path
     _obs_1, _reward_1, terminated_1, truncated_1, info_1 = env.step(action)
     assert not terminated_1
     assert not truncated_1
-    assert info_1["num_holdings"] == 0
+    assert info_1["num_holdings"] == 2
+    assert info_1["avg_holding_age"] == 1.0
     assert info_1["selected_tickers"] == ["ACB", "FPT"]
 
     _obs_2, _reward_2, terminated_2, truncated_2, info_2 = env.step(action)
@@ -97,4 +98,37 @@ def test_portfolio_choice_env_delays_execution_and_deduplicates_actions(tmp_path
     assert info_2["num_holdings"] == 2
     assert info_2["cash_weight"] == 0.0
     np.testing.assert_allclose(env.current_weights, np.array([0.5, 0.5]))
+    env.close()
+
+
+def test_portfolio_choice_env_blocks_early_sell_until_settlement(tmp_path):
+    length = 400
+    _write_ticker_bundle(tmp_path, "ACB", _make_price_df(length, 100.0, 2_000_000.0), _make_signal_df(length, 0.00))
+    _write_ticker_bundle(tmp_path, "FPT", _make_price_df(length, 90.0, 1_500_000.0), _make_signal_df(length, 0.05))
+
+    env = PortfolioChoiceEnv(
+        data_dir=str(tmp_path),
+        mode="train",
+        train_episode_sampling_enabled=False,
+        signal_feature_columns=["s1_proba"],
+        signal_prediction_dir=str(tmp_path / "signals"),
+        portfolio_universe_size=2,
+        portfolio_top_k=1,
+    )
+
+    buy_acb = np.array([0], dtype=np.int64)
+    all_cash = np.array([env.portfolio_universe_size], dtype=np.int64)
+
+    env.reset(seed=7)
+    _obs_1, _reward_1, _terminated_1, _truncated_1, info_1 = env.step(buy_acb)
+    assert info_1["num_holdings"] == 1
+    assert info_1["avg_holding_age"] == 1.0
+
+    _obs_2, _reward_2, _terminated_2, _truncated_2, info_2 = env.step(all_cash)
+    assert info_2["num_holdings"] == 1
+    assert info_2["blocked_sell_tickers"] == ["ACB"]
+
+    _obs_3, _reward_3, _terminated_3, _truncated_3, info_3 = env.step(all_cash)
+    assert info_3["num_holdings"] == 0
+    assert info_3["cash_weight"] == 1.0
     env.close()

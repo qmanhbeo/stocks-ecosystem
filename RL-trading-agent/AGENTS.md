@@ -45,6 +45,7 @@ To change canonical data/artifact paths:
 ## Repo Conventions
 
 - Shared data lives in `/home/manh/stocks/data` by default.
+- Shared execution rules live in `/home/manh/stocks/shared-market-rules`.
 - `artifacts/` is for trained models, logs, evaluation outputs, and labeling sessions.
 - Canonical RL runtime surface is:
   - `vn-stock-train`
@@ -59,6 +60,8 @@ To change canonical data/artifact paths:
 
 - RL defaults to shared `data/features/news/predictions/` and `data/features/signals/predictions/auto/`.
 - The consolidated lab matrix lives at `data/features/xs_rl_signal_matrix.parquet` and can be adapted into per-ticker RL inputs with `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`.
+- Shared execution/tradability spec lives at `../docs/execution_reality.md`.
+- Producer-side tradability artifact lives at `data/features/execution/tradability_daily.parquet`.
 - Producer pipelines now live outside this repo in `alpha-research-lab` and `manual-label-factory`.
 
 ## Keep In Mind

@@ -288,6 +288,7 @@ def _run_evaluation_episode(
     }
     if portfolio_mode:
         history['num_holdings'] = []
+        history['avg_holding_age'] = []
         history['cash_weight'] = []
         history['selected_tickers'] = []
     history_step = history['step']
@@ -305,6 +306,7 @@ def _run_evaluation_episode(
     history_portfolio_value = history['portfolio_value']
     history_benchmark_portfolio_value = history['benchmark_portfolio_value']
     history_num_holdings = history.get('num_holdings')
+    history_avg_holding_age = history.get('avg_holding_age')
     history_cash_weight = history.get('cash_weight')
     history_selected_tickers = history.get('selected_tickers')
     time_values = env.df['time'].to_numpy()
@@ -353,7 +355,7 @@ def _run_evaluation_episode(
         history_open.append(open_values[current_step])
         history_close.append(close_values[current_step])
         history_position.append(env.position)
-        history_hold_count.append(env.hold_count)
+        history_hold_count.append(np.nan if portfolio_mode else env.hold_count)
         if portfolio_mode:
             history_action.append(json.dumps(np.asarray(action_value, dtype=np.int64).reshape(-1).tolist()))
         else:
@@ -373,7 +375,8 @@ def _run_evaluation_episode(
         history_portfolio_value.append(portfolio_value)
         history_benchmark_portfolio_value.append(float(info.get('benchmark_portfolio_value', 1.0)))
         if portfolio_mode:
-            history_num_holdings.append(int(info.get('num_holdings', env.hold_count)))
+            history_num_holdings.append(int(info.get('num_holdings', getattr(env, 'num_holdings', 0))))
+            history_avg_holding_age.append(float(info.get('avg_holding_age', getattr(env, 'avg_holding_age', 0.0))))
             history_cash_weight.append(float(info.get('cash_weight', 0.0)))
             history_selected_tickers.append(json.dumps(info.get('selected_tickers', [])))
         if render:
@@ -445,6 +448,7 @@ def _compute_eval_metrics(
                 "buy_hold_aligned": aligned_buy_hold_return,
                 "time_in_market": time_in_market,
                 "avg_num_holdings": float(df_history["num_holdings"].mean()),
+                "avg_holding_age": float(df_history["avg_holding_age"].mean()),
                 "avg_cash_weight": float(df_history["cash_weight"].mean()),
                 "env_portfolio_universe_size": int(getattr(env, "portfolio_universe_size", 0)),
                 "env_portfolio_top_k": int(getattr(env, "portfolio_top_k", 0)),

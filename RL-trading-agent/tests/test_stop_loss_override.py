@@ -42,8 +42,8 @@ def test_stop_loss_overrides_min_hold():
     
     print(f"Open prices:  {opens}")
     print(f"Close prices: {closes}")
-    print("  - Entry executes at open[4] = 100")
-    print("  - Close[4] = 90 triggers stop-loss (-10%)")
+    print("  - Entry executes at next open = 100")
+    print("  - The first 10% down close after entry triggers stop-loss")
     
     # =======================================================================
     # ENV SETUP
@@ -75,20 +75,21 @@ def test_stop_loss_overrides_min_hold():
     
     env.reset()
     
-    # Step 0: schedule buy (executes at open[4])
+    # Step 0: buy executes at next open
     env.step(1)
     print(f"Step 0: position={env.position}, pending={env.pending_action}")
-    assert env.position == 0, "Buy should not execute immediately (pending action model)"
-    
-    # Step 1: buy executes at open[4], stop-loss should trigger for close[4]
+    assert env.position == 1, "Buy should execute at the next open"
+    assert env.hold_count == 1, "Hold count should be 1 right after entry"
+
+    # Step 1: the position is still open; the first stop-loss-eligible close arrives after this step
     env.step(1)
     print(f"Step 1: position={env.position}, hold={env.hold_count}, pending={env.pending_action}")
-    assert env.position == 1, "Position should be long after buy execution"
-    assert env.hold_count == 1, "Hold count should be 1 right after entry"
+    assert env.position == 1, "Position should remain long until the stop-loss exit executes"
+    assert env.hold_count == 2, "Hold count should increase while the position remains open"
     assert env.hold_count < env.min_hold_days, "Hold count should be below min_hold_days"
-    assert env.pending_action == 0, "Stop-loss should schedule an exit"
-    
-    # Step 2: stop-loss exit executes
+    assert env.pending_action == 1, "Stop-loss should not trigger before the down close is observed"
+
+    # Step 2: the down close is now observed and the stop-loss exit executes at the next open
     env.step(1)
     print(f"Step 2: position={env.position}, hold={env.hold_count}, pending={env.pending_action}")
     assert env.position == 0, "Stop-loss should force exit despite min_hold_days"

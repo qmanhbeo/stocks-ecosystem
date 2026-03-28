@@ -35,15 +35,12 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from shared_market_rules import compute_price_limit_flags
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 STOCK_DIR = REPO_ROOT / "data" / "stock"
 OUT_PATH = REPO_ROOT / "data" / "features" / "xs_price_limit_daily.parquet"
 EXCLUDE = {"VNINDEX", "VN30"}
-
-# HOSE standard price limit
-LIMIT_PCT = 0.07
-TOLERANCE = 0.001  # rounding tolerance
 
 
 def load_limit_touches() -> pd.DataFrame:
@@ -58,10 +55,9 @@ def load_limit_touches() -> pd.DataFrame:
         df = df.sort_values("time")
         if len(df) < 30:
             continue
-        df["prev_close"] = df["close"].shift(1)
-        df["ret"] = df["close"] / df["prev_close"] - 1
-        df["ceiling"] = (df["ret"] >= LIMIT_PCT - TOLERANCE).astype(int)
-        df["floor"] = (df["ret"] <= -(LIMIT_PCT - TOLERANCE)).astype(int)
+        price_flags = compute_price_limit_flags(df[["close"]].copy())
+        df["ceiling"] = price_flags["is_ceiling"].astype(int)
+        df["floor"] = price_flags["is_floor"].astype(int)
         df["ticker"] = ticker
         parts.append(df[["time", "ticker", "ceiling", "floor"]].dropna())
 

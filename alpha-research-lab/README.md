@@ -44,7 +44,9 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - The repo-local `data/` path is a symlink to that shared root so existing lab scripts can keep using `data/...`
 - No research data is duplicated inside `alpha-research-lab/`
 - The lab publishes the consolidated RL feature surface at `data/features/xs_rl_signal_matrix.parquet`
+- The lab publishes the shared execution tradability artifact at `data/features/execution/tradability_daily.parquet`
 - RL consumes that matrix through `../RL-trading-agent` via `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
+- Execution reality is shared with RL via `../docs/execution_reality.md` and `../shared-market-rules/`
 
 ## Current Best RL Signal
 
@@ -80,6 +82,7 @@ python setup_data.py
 ```
 
 All commands above are intended to be run from `alpha-research-lab/`.
+The environment also installs the workspace-shared `shared-market-rules` package.
 
 ## Main Experiment Modes
 

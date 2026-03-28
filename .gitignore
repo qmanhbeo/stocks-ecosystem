@@ -35,4 +35,4 @@ Thumbs.db
 *.swo
 
 # Large restorable archive data
-data/news/
+# data/news/

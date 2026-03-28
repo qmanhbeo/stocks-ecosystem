@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shared-market-rules"
+version = "0.1.0"
+description = "Shared execution reality and tradability rules for the stocks workspace."
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["shared_market_rules*"]

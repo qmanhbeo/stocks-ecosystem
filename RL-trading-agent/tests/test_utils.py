@@ -26,6 +26,14 @@ class TestEnv(BaseTradingEnv):
         self._start_idx = start_idx
         self._end_idx = end_idx
         kwargs.setdefault("drawdown_penalty_enabled", False)
+        kwargs.setdefault("calendar_features", [])
+        kwargs.setdefault("ma_windows", [])
+        kwargs.setdefault("helpers_ma_windows", [])
+        kwargs.setdefault("returns_windows", [])
+        kwargs.setdefault("helpers_returns_windows", [])
+        kwargs.setdefault("engineered_features", [])
+        kwargs.setdefault("news_feature_columns", [])
+        kwargs.setdefault("signal_feature_columns", [])
         super().__init__(**kwargs)
 
     def _setup_data(self):
