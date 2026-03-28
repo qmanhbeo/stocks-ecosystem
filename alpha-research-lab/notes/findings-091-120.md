@@ -175,3 +175,63 @@ production edge.
 - reduce to a tiny fixed menu of simple constructions
 - test those honestly
 - if long-only still fails benchmark-relative, move to hedged constructions before RL
+
+---
+## F96: Fixed Simple Constructions Beat the Benchmark Out of Sample Better Than the ML-Style Selector (2026-03-28, Session 48)
+
+H138 removed yearly re-selection entirely and tested a tiny fixed menu on the honest holdout
+`2019-2025`:
+
+- `k3_r5_eq` = top-3, rebalance every 5 signal days, equal weight
+- `k5_r5_eq` = top-5, rebalance every 5 signal days, equal weight
+- `k5_r10_eq` = top-5, rebalance every 10 signal days, equal weight
+
+All three fixed rules beat VNINDEX on the holdout:
+
+| Rule | Total Return | Annualized | Relative vs VNINDEX | Information Ratio | Positive Years |
+|---|---:|---:|---:|---:|---:|
+| `k3_r5_eq` | **+303.01%** | **+22.25%** | **+106.86%** | **0.43** | 5/7 |
+| `k5_r5_eq` | +271.38% | +20.82% | +90.62% | 0.42 | **6/7** |
+| `k5_r10_eq` | +241.90% | +19.39% | +75.49% | 0.38 | 4/7 |
+
+For comparison, H137’s nested selector only achieved:
+- `+21.38%` total
+- `-42.46%` relative vs VNINDEX
+
+**Key finding:** the yearly ML-style selector was worse than a few simple fixed rules. The problem
+was not “the long-only construction idea is dead”; the problem was overfitting through re-selection.
+
+**Implication:** before any more ML selection or RL overlays, the lab should treat a tiny menu of
+simple deterministic constructions as the real baseline class.
+
+---
+## F97: The Long-Only Edge Survives Fee Stress but Collapses Under Any Tested ADV Participation Cap (2026-03-28, Session 48)
+
+H139 stress-tested the H138 fixed-rule candidates on the same `2019-2025` holdout across:
+- notionals `50m, 100m, 250m, 500m, 1B VND`
+- ADV participation caps `0.0%, 0.5%, 1.0%, 2.0%`
+- round-trip costs `0.30%, 0.50%`
+
+Uncapped results remain economically strong:
+- at `0.50%` RT and **no ADV cap**, all three candidates still stay positive benchmark-relative
+- best uncapped stressed rule:
+  - `k5_r10_eq`: `+154.31%` total, `+30.53%` relative vs VNINDEX
+
+But capacity destroys deployability:
+- number of scenarios with `relative_total_return > 0` and `max_adv_participation > 0`: **0**
+- best relative return by ADV cap:
+  - `0.0%`: **+106.86%**
+  - `0.5%`: **-48.66%**
+  - `1.0%`: **-48.64%**
+  - `2.0%`: **-48.45%**
+- minimum average cash weight by ADV cap:
+  - `0.5%`: **99.32%**
+  - `1.0%`: **98.64%**
+  - `2.0%`: **97.34%**
+
+**Key finding:** the edge is not killed first by fees; it is killed first by capacity. The current
+long-only constructions are only attractive in effectively uncapped backtests.
+
+**Implication:** the next bottleneck is not more ML. It is finding a **capacity-aware construction**
+that preserves enough of the edge to stay benchmark-competitive under explicit deployability
+constraints.

@@ -5,6 +5,7 @@ import pandas as pd
 from src.portfolio_construction_search import (
     build_year_splits,
     enumerate_config_grid,
+    parse_fixed_menu_candidates,
     parse_min_score_grid,
     sort_candidate_results,
 )
@@ -73,3 +74,19 @@ def test_enumerate_config_grid_deduplicates_inputs():
         min_score_grid=[None, 0.5],
     )
     assert len(grid) == 2 * 2 * 2
+
+
+def test_parse_fixed_menu_candidates_defaults_and_custom_specs():
+    defaults = parse_fixed_menu_candidates(None)
+    assert [row["name"] for row in defaults] == ["k5_r10_eq", "k5_r5_eq", "k3_r5_eq"]
+
+    parsed = parse_fixed_menu_candidates(["custom:7:9:equal:none"])
+    assert parsed == [
+        {
+            "name": "custom",
+            "top_k": 7,
+            "rebalance_every": 9,
+            "weighting": "equal",
+            "min_score": None,
+        }
+    ]

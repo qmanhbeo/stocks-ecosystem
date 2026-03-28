@@ -115,3 +115,35 @@ def build_year_splits(
     if not splits:
         raise ValueError("No valid year splits produced")
     return splits
+
+
+def parse_fixed_menu_candidates(raw_specs: list[str] | None) -> list[dict[str, object]]:
+    if not raw_specs:
+        return [
+            {"name": "k5_r10_eq", "top_k": 5, "rebalance_every": 10, "weighting": "equal", "min_score": None},
+            {"name": "k5_r5_eq", "top_k": 5, "rebalance_every": 5, "weighting": "equal", "min_score": None},
+            {"name": "k3_r5_eq", "top_k": 3, "rebalance_every": 5, "weighting": "equal", "min_score": None},
+        ]
+
+    candidates: list[dict[str, object]] = []
+    for spec in raw_specs:
+        parts = [part.strip() for part in str(spec).split(":")]
+        if len(parts) != 5:
+            raise ValueError(
+                f"Candidate spec {spec!r} must have 5 colon-separated fields: "
+                "name:top_k:rebalance_every:weighting:min_score"
+            )
+        name, top_k, rebalance_every, weighting, min_score = parts
+        if weighting not in WEIGHTING_RULES:
+            raise ValueError(f"Unknown weighting {weighting!r}; expected one of {WEIGHTING_RULES}")
+        min_score_value = None if min_score.lower() in {"none", "null", "na"} else float(min_score)
+        candidates.append(
+            {
+                "name": name,
+                "top_k": int(top_k),
+                "rebalance_every": int(rebalance_every),
+                "weighting": weighting,
+                "min_score": min_score_value,
+            }
+        )
+    return candidates

@@ -1,15 +1,15 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_47_log.md` for the latest full session detail.
+Use `notes/session_48_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 47 complete (H137 nested selection FAIL; focus shifts to simpler honest validation / hedging, 2026-03-28)
+**Session status:** Session 48 complete (H138 fixed-menu PASS; H139 capacity stress MIXED; focus shifts to deployability, 2026-03-28)
 
-### New reality check after Session 47
+### New reality check after Session 48
 
 **H135 - Signal Library Portfolio Baseline (corrected)**
 - Session 46 found a scoring bug in the original H135 blend:
@@ -73,6 +73,39 @@ Use `notes/session_47_log.md` for the latest full session detail.
   - the H136 full-sample winner is not reliable enough to trust directly
   - simple nested config selection does **not** yet justify “ML for construction”
   - the next honest path is smaller, simpler, and more regime-aware, or else move to hedged constructions
+
+**H138 - Fixed-Menu Honest Validation**
+- Removed yearly re-selection entirely and tested a tiny fixed menu on the honest holdout `2019-2025`:
+  - `k3_r5_eq` = top-3, 5-day cadence, equal weight
+  - `k5_r5_eq` = top-5, 5-day cadence, equal weight
+  - `k5_r10_eq` = top-5, 10-day cadence, equal weight
+- Result: **all three simple fixed rules beat VNINDEX on the holdout**
+  - `k3_r5_eq`: `+303.01%` total, `+22.25%` annualized, `+106.86%` relative, IR `0.43`, `5/7` positive years
+  - `k5_r5_eq`: `+271.38%` total, `+20.82%` annualized, `+90.62%` relative, IR `0.42`, `6/7` positive years
+  - `k5_r10_eq`: `+241.90%` total, `+19.39%` annualized, `+75.49%` relative, IR `0.38`, `4/7` positive years
+- Implication:
+  - H137’s yearly selector was the problem, not the entire long-only premise
+  - simple fixed rules are currently stronger than ML-style config re-selection
+
+**H139 - Capacity / Fee Stress**
+- Stress-tested the H138 fixed-menu candidates on the same `2019-2025` holdout across:
+  - notionals `50m, 100m, 250m, 500m, 1B VND`
+  - ADV participation caps `0.0%, 0.5%, 1.0%, 2.0%`
+  - round-trip costs `0.30%, 0.50%`
+- Key result:
+  - **uncapped** scenarios remain economically strong
+  - at `0.50%` RT and no cap, all three candidates still stay positive benchmark-relative
+  - but **every capped scenario fails**
+- Critical deployability finding:
+  - with any positive ADV cap in the tested grid, positive relative return count = `0`
+  - even the best capped scenarios stay mostly in cash:
+    - min average cash weight at `0.5%` cap: `99.32%`
+    - min average cash weight at `1.0%` cap: `98.64%`
+    - min average cash weight at `2.0%` cap: `97.34%`
+- Implication:
+  - the edge is economically real in uncapped backtests
+  - but deployability is still the main unsolved problem
+  - the next frontier is capacity-aware construction or accepting trivial capital size
 
 ### Current production system
 
@@ -163,6 +196,7 @@ Use `notes/session_47_log.md` for the latest full session detail.
 | 45 | 2026-03-28 | H135 initial realistic portfolio baseline logged as FAIL; later corrected in Session 46 after signal-scale bug fix | H93 + C4-C14 |
 | 46 | 2026-03-28 | H135 corrected: full_library baseline turns positive; H136 sweep finds top-5 equal-weight, 5d cadence, +1105.71% total and +25.66% annualized | H93 + C4-C14 |
 | 47 | 2026-03-28 | H137 nested walk-forward selection: +21.38% total OOS but -42.46% vs VNINDEX; simple config selection overfits and does not validate ML construction yet | H93 + C4-C14 |
+| 48 | 2026-03-28 | H138 fixed simple rules beat VNINDEX on holdout; H139 shows uncapped economics survive but any tested ADV cap collapses deployability | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 
@@ -346,7 +380,7 @@ New artifacts:
 - `data/features/xs_earnings_quality_daily.parquet` — 52-ticker earnings quality
 - `data/features/xs_foreign_demand_daily.parquet` — VNM ETF features (not predictive)
 
-## Active Priority: Session 48
+## Active Priority: Session 49
 
 ### Signal library status after Session 44
 | Signal | IC | Corr w/ S1 | Coverage | Status |
@@ -506,23 +540,39 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - full-sample H136 winner is too optimistic
   - next work should either simplify further or move toward hedged constructions instead of adding more ML complexity
 
-### Session 48 next queue (in order)
+### Session 48 experiment results (2026-03-28)
+- **H138 PASS** — simple fixed long-only rules beat benchmark on the honest holdout
+  - script: `analysis/h138_fixed_menu_validation.py`
+  - holdout: `2019-2025`
+  - `k3_r5_eq`: `+303.01%` total, `+106.86%` relative vs VNINDEX
+  - `k5_r5_eq`: `+271.38%` total, `+90.62%` relative vs VNINDEX
+  - `k5_r10_eq`: `+241.90%` total, `+75.49%` relative vs VNINDEX
+  - fixed rules outperform the H137 selector
+- **H139 MIXED** — the edge survives fees but not capacity
+  - script: `analysis/h139_fixed_menu_capacity_fee_stress.py`
+  - at `0.50%` RT and no ADV cap, all three candidates remain positive benchmark-relative
+  - with any tested ADV cap (`0.5%`, `1%`, `2%`), positive relative-return scenarios drop to `0`
+  - capped scenarios stay mostly in cash (`97%+`)
+- **STRATEGIC VERDICT**
+  - long-only is not dead
+  - but deployability is still unresolved
+  - do not add more ML or RL complexity until capacity is addressed honestly
 
-1. **Honest fixed-rule validation on the reduced menu**
-   - compare a tiny candidate set only:
-     - `top_k=5`, `cadence=10`, `equal`
-     - `top_k=5`, `cadence=5`, `equal`
-     - `top_k=3`, `cadence=5`, `equal`
-   - test whether one simple rule is robust enough without yearly re-selection
-2. **If long-only still cannot beat benchmark honestly**
+### Session 49 next queue (in order)
+
+1. **Capacity-aware long-only construction**
+   - test liquidity-aware universe / score gating / capacity-aware position sizing
+   - objective: find any region with positive benchmark-relative return under explicit ADV caps
+2. **If capacity-aware long-only still fails**
    - move to hedged constructions
    - benchmark-hedged / long-short lite
    - sector-neutral variants
-3. **Capacity and fee stress**
-   - only on the reduced-menu candidates that survive honest validation
+3. **Execution realism expansion**
+   - only after a capped region exists
+   - test stronger slippage / fee bands on the surviving constructions
 4. **Do not expand ML complexity yet**
    - no larger selector model
-   - no portfolio RL overlay until a deterministic honest baseline is competitive
+   - no portfolio RL overlay until a deployable deterministic baseline exists
 
 ### Remaining blocked paths
 - **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)

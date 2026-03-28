@@ -104,6 +104,8 @@ Read these first when you want the minimal result.
 - Portfolio baseline: `artifacts/run_summaries/latest_portfolio_baseline.json`
 - Portfolio construction sweep: `artifacts/run_summaries/latest_portfolio_construction_sweep.json`
 - Portfolio nested selection: `artifacts/run_summaries/latest_portfolio_nested_selection.json`
+- Portfolio fixed-menu validation: `artifacts/run_summaries/latest_portfolio_fixed_menu_validation.json`
+- Portfolio capacity / fee stress: `artifacts/run_summaries/latest_portfolio_capacity_fee_stress.json`
 
 Execution/tradability producer:
 
@@ -125,6 +127,8 @@ Mode-specific durable outputs:
 - `analysis/h135_signal_library_portfolio_baseline.py`: `artifacts/run_summaries/latest_portfolio_baseline.json` plus daily curves under `artifacts/portfolio_baselines/`
 - `analysis/h136_portfolio_construction_sweep.py`: `artifacts/run_summaries/latest_portfolio_construction_sweep.json` plus sweep outputs under `artifacts/portfolio_baselines/`
 - `analysis/h137_nested_portfolio_selection.py`: `artifacts/run_summaries/latest_portfolio_nested_selection.json` plus selected-config, train-candidate, and stitched OOS outputs under `artifacts/portfolio_baselines/`
+- `analysis/h138_fixed_menu_validation.py`: `artifacts/run_summaries/latest_portfolio_fixed_menu_validation.json` plus fixed-menu results and OOS daily outputs under `artifacts/portfolio_baselines/`
+- `analysis/h139_fixed_menu_capacity_fee_stress.py`: `artifacts/run_summaries/latest_portfolio_capacity_fee_stress.json` plus stress-grid outputs under `artifacts/portfolio_baselines/`
 
 For any new analysis script, keep the large output wherever it naturally belongs, but also write
 one compact summary JSON under `artifacts/run_summaries/`.

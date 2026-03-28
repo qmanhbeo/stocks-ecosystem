@@ -94,6 +94,8 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h135_signal_library_portfolio_baseline.py`: realistic deterministic portfolio baseline for `S1`, `recent_core`, and `full_library`
 - `analysis/h136_portfolio_construction_sweep.py`: realistic construction sweep for the corrected `full_library` blend
 - `analysis/h137_nested_portfolio_selection.py`: honest walk-forward selector over the H136 construction menu
+- `analysis/h138_fixed_menu_validation.py`: honest holdout validation for a tiny fixed menu of simple constructions
+- `analysis/h139_fixed_menu_capacity_fee_stress.py`: capacity and fee stress for the fixed-menu long-only candidates
 
 ## Saved Result Artifacts
 
@@ -107,6 +109,8 @@ Main experiment runners write compact JSON summaries to `artifacts/run_summaries
 - Portfolio baseline: `latest_portfolio_baseline.json`
 - Portfolio construction sweep: `latest_portfolio_construction_sweep.json`
 - Portfolio nested selection: `latest_portfolio_nested_selection.json`
+- Portfolio fixed-menu validation: `latest_portfolio_fixed_menu_validation.json`
+- Portfolio capacity / fee stress: `latest_portfolio_capacity_fee_stress.json`
 
 Large daily portfolio baseline outputs are written under `artifacts/portfolio_baselines/`.
 
