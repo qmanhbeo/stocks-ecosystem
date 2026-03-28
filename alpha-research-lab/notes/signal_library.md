@@ -104,6 +104,182 @@ insider signal going forward.
 
 ---
 
+### C6 — Contrarian Intra-Sector Signal (H112)
+**Status: CANDIDATE — passes standalone gate, 11/11 years positive**
+
+- **Standalone IC:** +0.0299 (11/11 years positive) — highest consistency of all candidates
+- **Correlation with S1:** +0.142 (< 0.30 threshold — qualifies)
+- **Consistency:** 11/11 years IC positive (perfectly consistent)
+- **Coverage:** 100% (dense signal — computed for all 394 tickers, all dates)
+
+**What it captures:** `contrarian_intra_5d = xs_sector_mom_5d_rank × (1 − xs_intra_sector_rank)`.
+Buys the LAGGARD within a HOT sector. When a sector is outperforming (high sector_mom_rank),
+the stock within that sector that has underperformed its peers over 5d tends to outperform
+next day. Intra-sector mean reversion dominates sector herding in Vietnamese equities.
+
+**Economic mechanism:** T+2 settlement + ±7% price limits. Sector rotation flows force some
+holdings into initial sector leaders, creating short-term dislocations for sector laggards.
+The next day, pent-up capital rotates into the remaining laggards.
+
+**H112 full results (Session 39):**
+- `contrarian_intra_5d`: IC = +0.0299, 11/11 years, corr = +0.142 → PRIMARY
+- `contrarian_intra_20d`: IC = +0.0345, 11/11 years, corr = +0.171 → slightly better IC
+- `reverse_intra = 1 − xs_intra_sector_rank`: IC = +0.0466, 11/11 years, corr = +0.256 → highest IC but less independent
+
+**Correlation note:** C6 and xs_sector_breadth_5d are correlated at +0.303 (at threshold). For RL state, use
+either C6 or breadth but not both. C6 is strictly preferred (IC +0.030 vs +0.014, 11/11 vs 8/11).
+
+**Artifact:** Computed on the fly from `data/features/xs_sector_rotation_daily.parquet`
+(formula: `xs_sector_mom_5d_rank × (1 − xs_intra_sector_rank)`)
+
+---
+
+### C7 — Price Limit Momentum Signal (H115)
+**Status: CANDIDATE — ceiling count passes, floor reversal borderline**
+
+- **Standalone IC:** xs_ceiling_count_5d = +0.0121 (8/11 years positive)
+- **Correlation with S1:** +0.064 (very low — highly independent)
+- **Consistency:** 8/11 years IC positive
+- **Coverage:** 100% (dense — all tickers, all dates, mostly zero count)
+
+**What it captures:** `xs_ceiling_count_5d` = cross-sectional rank of how many times a
+stock hit the +7% daily price ceiling in the past 5 days. Stocks hitting the ceiling
+have pent-up demand that couldn't be satisfied (price was truncated at the limit). The next
+day, buyers who couldn't fill at the ceiling return, creating continuation.
+
+**Also passes:** `xs_floor_count_20d` (IC = +0.0104, 8/11 years, corr = +0.034) — floor
+reversal signal over 20-day window.
+
+**Economic mechanism:** Vietnamese ±7% limits create two effects: (1) Ceiling: forced queue
+of buyers waiting for next day's open; (2) Floor: oversold bounce after forced selling exhausts.
+
+**H115 full results (Session 39):**
+| Feature | IC | Pos Years | Corr S1 | Gate |
+|---------|-----|-----------|---------|------|
+| xs_ceiling_count_5d | +0.0121 | 8/11 | +0.064 | PASS |
+| xs_floor_count_20d | +0.0104 | 8/11 | +0.034 | PASS |
+| xs_floor_count_5d | +0.0029 | 7/11 | +0.010 | fail |
+| xs_limit_net_5d | +0.0070 | 7/11 | +0.026 | fail |
+
+**Artifact:** `data/features/xs_price_limit_daily.parquet`
+(columns: time, ticker, xs_ceiling_count_5d, xs_floor_count_5d, xs_ceiling_count_20d, xs_floor_count_20d, xs_limit_net_5d)
+
+---
+
+### C8 — Volume Activity Signal (H116)
+**Status: CANDIDATE — multiple features pass, highly independent from S1**
+
+- **Standalone IC:** xs_vol_zscore_5d = +0.0110 (10/11 years positive)
+- **Correlation with S1:** +0.068 (very low — the S1 model's internal volume features are different)
+- **Consistency:** 10/11 years IC positive
+- **Coverage:** 100% (dense — computed for all tickers, all dates)
+
+**What it captures:** `xs_vol_zscore_5d` = cross-sectional rank of how far above (or below)
+a stock's 5-day average volume is relative to its own 60-day baseline. Stocks with
+unusually high volume relative to their own history are being actively rotated into —
+"discovered" capital allocation that carries into the next day.
+
+**Note on S1 overlap:** S1 (xs_proba) uses volume features internally (H90 confirmed volume
+improves the combined WF model). The very low corr = +0.068 confirms that the simple volume
+zscore captures a DIFFERENT dimension of the volume signal than the XGBoost model's learned
+volume encoding.
+
+**H116 full results (Session 39):**
+| Feature | IC | Pos Years | Corr S1 | Gate |
+|---------|-----|-----------|---------|------|
+| xs_vol_zscore_1d | +0.0353 | 11/11 | +0.192 | PASS (use with caution) |
+| xs_vol_zscore_5d | +0.0110 | 10/11 | +0.068 | PASS |
+| xs_value_zscore_5d | +0.0120 | 10/11 | +0.065 | PASS |
+| xs_vol_surge_5d | +0.0074 | 9/11 | +0.055 | fail |
+
+**Preferred feature:** `xs_vol_zscore_5d` (IC +0.011, corr +0.068) over `xs_vol_zscore_1d`
+(IC +0.035, corr +0.192) — smoother signal with better independence from S1.
+
+**Artifact:** `data/features/xs_volume_zscore_daily.parquet`
+(columns: time, ticker, xs_vol_zscore_1d, xs_vol_zscore_5d, xs_value_zscore_5d, xs_vol_surge_5d)
+
+---
+
+### C9 — Short-Term 1-Day Return Reversal (H117)
+**Status: CANDIDATE — strong reversal effect, 0/11 years of 1d momentum**
+
+- **Standalone IC (negated):** +0.0284 (11/11 years IC positive after negation)
+- **Correlation with S1:** −0.161 (negative — independent and complementary to 5d momentum)
+- **Consistency:** 0/11 years for raw 1d lag rank → 11/11 after negation → perfectly consistent
+- **Coverage:** 100% (dense — computed for all 394 tickers, all dates)
+
+**What it captures:** `xs_reversal_1d = 1 − rank(1d excess return lagged 1 day)`. Buys
+yesterday's underperformers relative to the cross-section. Vietnamese market shows systematic
+1-day mean reversion — stocks that outperformed peers on day T tend to underperform on day T+1.
+
+**Economic mechanism:** T+2 settlement + retail profit-taking. When a stock outperforms peers
+on day T, retail traders who bought intraday sell to book profits on T+1 (limit orders refresh
+at the open). This creates systematic short-term over-reaction at the daily horizon.
+
+**Dual momentum structure confirmed:**
+- 5-day momentum (S1): IC = +0.15 → medium-term continuation
+- 1-day reversal (C9): IC = −0.028 (raw) → daily mean reversion
+The RL agent can learn to balance both: prefer stocks with strong 5d momentum AND recent 1d
+underperformance (the "reversal + momentum" sweet spot).
+
+**Partial overlap with C6:** corr(C9, C6) = +0.199. Both are reversal signals, but C6 is
+sector-conditioned (only fires in hot sectors) while C9 is unconditional. Use both.
+
+**Artifact:** `data/features/xs_shortterm_reversal.parquet`
+(columns: time, ticker, xs_reversal_1d, xs_reversal_2d, xs_ret_1d_abs_rank)
+
+---
+
+### C10 — Amihud Illiquidity Level (H121)
+**Status: CANDIDATE — passes standalone gate, near-zero S1 correlation**
+
+- **Standalone IC:** +0.0206 (10/11 years positive)
+- **Correlation with S1:** +0.008 (near-zero → highly independent)
+- **Consistency:** 10/11 years IC positive
+- **Coverage:** 100% (dense — computed for all tickers, all dates)
+
+**What it captures:** `xs_illiq_level_rank` = cross-sectional rank of 20d rolling average Amihud ILLIQ
+= |daily_return| / (daily_trading_value in VND billions). Stocks with higher illiquidity (more price
+impact per unit of capital) are under-followed and slower to incorporate information; when they begin
+moving, continuation persists because the follow-on capital queue is long relative to float.
+
+**Economic mechanism:** Classic Amihud (2002) illiquidity premium. In Vietnam's retail market,
+small/illiquid stocks are not actively followed by institutions — price discovery is slower and
+informed capital flows take multiple days to be absorbed.
+
+**Spike and change signals fail:** Only the structural level (20d avg) is predictive. Today's
+illiquidity spike vs own baseline (xs_illiq_spike_rank, IC=−0.001) and 5d rank change
+(xs_illiq_change_5d, IC=−0.003) both fail the gate.
+
+**Artifact:** Computed on the fly from OHLCV:
+`illiq_raw = |pct_change(close, 1)| / (close × volume / 1e9)`, then 20d rolling mean + xs-rank.
+No persistent file — build inline from `data/stock/gia_lich_su_*_1D.parquet`.
+
+---
+
+### C11 — 3-Month Continuation / Medium-Term Trend (H123)
+**Status: CANDIDATE — passes standalone gate, orthogonal to S1**
+
+- **Standalone IC:** +0.0101 (9/11 years positive)
+- **Correlation with S1:** +0.008 (near-zero → highly independent)
+- **Consistency:** 9/11 years IC positive
+- **Coverage:** 100% (dense signal — computed for all 394 tickers, all dates)
+
+**What it captures:** `xs_ret_60d_lag_rank` = cross-sectional rank of 60d excess return vs VNINDEX,
+lagged by 1 day. H123 was framed as a reversal test, but the sign that survives is continuation,
+not reversal.
+
+**Economic mechanism:** 60d relative strength persists after the short-term reversal window has
+faded. This is a slower, cleaner momentum axis than S1 and remains essentially independent of the
+existing candidate set.
+
+**Rejected orientation:** `xs_reversal_60d = 1 - xs_ret_60d_lag_rank` fails the gate
+(IC = -0.0101, 2/11 years positive).
+
+**Artifact:** Computed on the fly from OHLCV; no persistent file.
+
+---
+
 ### ~~C3 — Cross-Sectional Dispersion Regime (H101)~~ REJECTED (Session 37)
 
 **Status: REJECTED — regime-conditional IC analysis decisive (2026-03-27)**
@@ -113,7 +289,7 @@ insider signal going forward.
   (threshold: >10%). No monotone relationship between dispersion level and signal quality.
 - **Day-level Spearman** vs S1 top-5 accuracy: p=0.124 for primary feature (xs_dispersion_z20)
 
-See `notes/findings.md` F67 for full analysis.
+See `notes/findings-061-090.md` (F67) for full analysis.
 
 ### C1 — Keyword News Sentiment (H89)
 **Status: CANDIDATE — orthogonal but inconsistent**
@@ -204,6 +380,14 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Sector rotation composite (H111) | xs_sector_rotation_signal IC −0.038 | Intra-sector rank is anti-predictive (laggards beat leaders) |
 | VNM ETF foreign affinity (H110) | xs_fa_signal IC −0.001 | ETF premium is market-direction signal only; no cross-sectional differentiation |
 | Earnings quality 52 tickers (H109) | best IC +0.005 (roe_delta) | Insufficient universe; re-test at 394 tickers pending |
+| VN30 rebalancing proximity (H114) | xs_vn30_rank_change_5d IC +0.0075 (10/11) | Rank level anti-predictive; change directionally consistent but below 0.01 gate |
+| 52-week high proximity (H118) | xs_52w_high_prox IC +0.0065 (9/11) | Directionally correct but below IC > 0.01 gate |
+| Low volatility anomaly (H119) | xs_low_vol_20d IC −0.011 (1/11) | Anti-predictive: Vietnam is HIGH-beta market (opposite of global anomaly) |
+| Intraday reversal (H120) | xs_intraday_reversal IC +0.041 | IC strong but corr with C4 (oc_asym_5d) = +0.394 — captured by C4 already |
+| Illiquidity spike/change (H121 sub-features) | xs_illiq_spike_rank IC −0.001; xs_illiq_change_5d IC −0.003 | Only structural level (20d avg) is predictive; intraday shocks and trend changes are noise |
+| Bid-ask spread proxy (H122) | xs_spread_level_rank IC −0.0097; xs_spread_spike_rank IC −0.0301; xs_spread_change_5d IC −0.0035 | Corwin-Schultz H/L spread estimate is anti-predictive / noisy in this market |
+| Earnings quality 394 tickers (H113) | best IC +0.006 (eps_yoy_rank); all others < 0.005 | Daily time-series application of quarterly data too coarse; all five features fail IC > 0.01 gate at full universe |
+| Beta regime (H124) | `xs_low_beta_60d` passes standalone IC +0.013, but corr with C10 = +0.552 | Low-beta names are not orthogonal; beta collapses onto the illiquidity axis |
 
 ---
 
@@ -213,8 +397,10 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 |--------|-----------|----------------|---------|
 | H98: LLM news sentiment | Higher quality than keyword approach | **PARKED** (runtime/throughput bottleneck) | Parked |
 | H95: Foreign investor flow | Retail-dominated market: foreign = informed | NOT AVAILABLE historically (F59) | Blocked |
-| Earnings calendar events | Price behavior around reporting dates | Build from public HOSE calendar | Medium |
 | Order book imbalance | Bid/ask pressure predicts short-term price | Not available historically | Blocked |
+
+H123 and H124 are now closed and documented in the candidate/rejected sections above.
+Track new OHLCV-only search ideas in `notes/next_steps.md`.
 
 **Session 33 update (2026-03-26):**
 - H98 infrastructure is implemented:

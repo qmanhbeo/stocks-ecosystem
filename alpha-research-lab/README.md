@@ -33,7 +33,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - `notes/next_steps.md`: live system state, current priorities, session history
 - `notes/signal_library.md`: **the registry of confirmed and candidate signals**
 - `README_for_AGENTS.md`: exact agent loop, commands, result artifacts, data, note conventions
-- `notes/findings.md`: durable scientific conclusions
+- `notes/findings.md`: index for the chunked durable findings files
 
 `README.md` is an overview. The live source of truth is `notes/next_steps.md`.
 
@@ -119,7 +119,10 @@ Permanent logs remain:
 ├── data_tools/
 ├── notes/
 │   ├── signal_library.md      ← signal registry (primary output)
-│   ├── findings.md            ← durable scientific truth
+│   ├── findings.md            ← index for chunked scientific truth
+│   ├── findings-001-030.md    ← chunked durable conclusions
+│   ├── findings-031-060.md    ← chunked durable conclusions
+│   ├── findings-061-090.md    ← chunked durable conclusions
 │   ├── next_steps.md          ← live state & queue
 │   └── session_NN_log.md      ← per-session records
 ├── experiments/
@@ -134,7 +137,8 @@ Permanent logs remain:
 The repo treats `notes/` as a permanent scientific record:
 
 - Session logs are the detailed record
-- `findings.md` is the durable truth layer
+- `findings.md` is the index for the durable truth layer
+- `findings-*.md` are the chunked durable truth files
 - `signal_library.md` is the signal registry — the primary deliverable
 - `next_steps.md` is the active queue
 - Failed ideas stay documented instead of being erased

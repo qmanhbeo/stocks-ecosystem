@@ -7,7 +7,7 @@ This repo is designed to support one repeatable loop:
 3. Run it.
 4. Read the saved summary artifact instead of re-parsing terminal output.
 5. Write session-level conclusions.
-6. Promote durable conclusions into the permanent findings.
+6. Promote durable conclusions into the chunked permanent findings files.
 7. Update `notes/signal_library.md` if the signal is confirmed or promoted.
 
 `notes/next_steps.md` is the live small-brain state source. This file is the working manual.
@@ -58,7 +58,7 @@ Read in this order:
 1. `README.md`
 2. `notes/next_steps.md`
 3. `notes/signal_library.md`
-4. `notes/findings.md`
+4. `notes/findings.md` index plus the relevant `notes/findings-*.md` chunk
 5. `notes/session_NN_log.md` only when you need a detailed traceback
 
 Use this file for:
@@ -75,7 +75,8 @@ Use this file for:
 
 - `notes/next_steps.md`: live champion, current priorities, session status
 - `notes/signal_library.md`: **signal registry — primary deliverable**
-- `notes/findings.md`: durable scientific truth
+- `notes/findings.md`: index for durable scientific truth
+- `notes/findings-*.md`: chunked durable scientific truth, padded to 30-block filename ranges
 - `notes/data_sources.md`: **data inventory — what's in git, what's not, how to restore**
 - `notes/session_NN_log.md`: full per-session record
 - `notes/experiments_log.md`: legacy historical detail for earlier sessions
@@ -119,7 +120,7 @@ one compact summary JSON under `artifacts/run_summaries/`.
 - The experiment has a compact saved summary artifact.
 - The permanent output path is recorded.
 - The session log states the hypothesis, result, and verdict.
-- Durable conclusions are promoted to `notes/findings.md`.
+- Durable conclusions are promoted to the current `notes/findings-*.md` chunk.
 - `notes/next_steps.md` is updated if the champion system or next priority changed.
 - `notes/signal_library.md` is updated if a signal was confirmed, promoted, or newly rejected.
 
@@ -502,18 +503,19 @@ See `notes/signal_library.md` for evaluation criteria.
 ### File Roles
 
 - `notes/signal_library.md`: **signal registry — primary output, update after every signal experiment**
-- `notes/findings.md`: durable scientific conclusions
+- `notes/findings.md`: index for durable scientific conclusions
+- `notes/findings-*.md`: durable scientific conclusions, chunked by 30 findings
 - `notes/next_steps.md`: current queue plus session history
 - `notes/session_NN_log.md`: detailed session record
 - `notes/experiments_log.md`: legacy historical record
 
 ### Session Workflow
 
-1. Start by reading `README.md`, `notes/next_steps.md`, `notes/signal_library.md`, this file, and `notes/findings.md`.
+1. Start by reading `README.md`, `notes/next_steps.md`, `notes/signal_library.md`, this file, and `notes/findings.md` plus the relevant `notes/findings-*.md` chunk.
 2. Run the smallest valid experiment.
 3. Make sure the run leaves behind a compact summary artifact.
 4. Record the experiment in the session log after the result is known.
-5. Promote durable conclusions into `notes/findings.md`.
+5. Promote durable conclusions into the current `notes/findings-*.md` chunk and update `notes/findings.md` if a new chunk is created.
 6. Update `notes/next_steps.md` when the live state changes.
 7. Update `notes/signal_library.md` if the experiment concerned a signal (confirmed, promoted, or rejected).
 

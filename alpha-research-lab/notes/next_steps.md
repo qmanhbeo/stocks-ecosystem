@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_26_log.md` for the latest full session detail.
+Use `notes/session_42_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 37 complete (H106 C3 dispersion regime REJECTED; dense signal search closed, 2026-03-27)
+**Session status:** Session 42 complete (H123 continuation PASS; H124 beta regime rejected as redundant vs C10, 2026-03-28)
 
 ### Current production system
 
@@ -89,6 +89,10 @@ Use `notes/session_26_log.md` for the latest full session detail.
 | 36 | 2026-03-26 | H104 earnings calendar dense features built; H104 and H105 both FAIL (Sharpe collapse), standalone IC weak | H93/H101 tie-class |
 | 37 | 2026-03-27 | H106 C3 regime-conditional IC: dispersion spread ≤2%, p=0.124 — C3 REJECTED; dense search closed | H93 only |
 | 38 | 2026-03-28 | H107 FAIL (overnight decomp); H108 PASS (C5 xs_ins_relative_size IC +0.037); H109 FAIL (52-ticker); H110 FAIL (VNM ETF cross-sectional); H111 PARTIAL (breadth PASS, rotation FAIL) | H93 + C4 + C5 |
+| 39 | 2026-03-28 | H112 PASS (C6 contrarian_intra); H113 PENDING; H114 FAIL (VN30); H115 PASS (C7 ceiling); H116 PASS (C8 vol_zscore); H117 PASS (C9 reversal); H118-H120 FAIL; RL matrix built | H93 + C4-C9 |
+| 40 | 2026-03-28 | H121 PASS (C10 illiq_level IC +0.021, corr +0.008); H113 fetch failed at 302/394; H122 written not run | H93 + C4-C10 |
+| 41 | 2026-03-28 | H122 FAIL (spread proxy); C10 added to RL matrix; C10 pairwise corr vs C4-C9 all low | H93 + C4-C10 |
+| 42 | 2026-03-28 | H123 PASS (C11 continuation); H124 standalone PASS but rejected on independence; C11 added to RL matrix, C12 excluded | H93 + C4-C11 |
 
 \* Contaminated: stock selection was post-hoc.
 
@@ -115,7 +119,7 @@ The cross-sectional momentum signal (H54) is **parked — not production-ready**
 
 **Conditions to unpark:** real fill data + net P&L confirmed positive over full year + execution infra.
 
-See `notes/session_27_log.md` and `notes/findings.md` F53 for full rationale.
+See `notes/session_27_log.md` and `notes/findings-031-060.md` (F53) for full rationale.
 
 ---
 
@@ -126,7 +130,7 @@ See `notes/session_27_log.md` and `notes/findings.md` F53 for full rationale.
 - **H93 PASS:** Volume + 1-day combined → IC +0.1491, edge std **1.60%**, Sharpe **15.08**. **Best RL signal.** `xs_barrier_vol_1d_hose_full.parquet`
 - **H94 NEUTRAL:** Sector-relative features on H93 → Sharpe 14.21 (regression). H93 stands.
 
-See `notes/session_28_log.md` and findings F54–F57.
+See `notes/session_28_log.md` and `notes/findings-031-060.md` (F54–F57).
 
 ---
 
@@ -139,7 +143,7 @@ See `notes/session_28_log.md` and findings F54–F57.
 
 Infrastructure built: `data_tools/fetch_insider_deals.py`, `data_tools/build_insider_features.py`, `--use-insider` flag in WF.
 
-See `notes/session_31_log.md` and findings F66.
+See `notes/session_31_log.md` and `notes/findings-061-090.md` (F66).
 
 **H93 remains best RL signal (Sharpe 15.08, IC +0.1491, edge std 1.60%).**
 
@@ -181,7 +185,7 @@ See `notes/session_30_log.md` for full details.
 - **H95 DEFERRED:** Historical daily foreign flow not available via vnstock (F59).
 - **Infrastructure built:** `data_tools/fetch_sector_classification.py`, `data_tools/extract_news_sentiment.py`, `--sector` filter in WF (diacritic-normalized), `data/features/sector_classification.parquet` (398 tickers, ICB classification).
 
-See `notes/session_29_log.md` and findings F58–F61.
+See `notes/session_29_log.md` and `notes/findings-061-090.md` (F58–F61).
 
 **H93 remains best RL signal (Sharpe 15.08, IC +0.1491, edge std 1.60%).**
 
@@ -272,23 +276,61 @@ New artifacts:
 - `data/features/xs_earnings_quality_daily.parquet` — 52-ticker earnings quality
 - `data/features/xs_foreign_demand_daily.parquet` — VNM ETF features (not predictive)
 
-## Active Priority: Session 39
+## Active Priority: Session 41
 
-### Signal library status
+### Signal library status after Session 42
 | Signal | IC | Corr w/ S1 | Coverage | Status |
 |--------|----|------------|----------|--------|
 | S1/H93 | +0.149 | N/A | 100% | CONFIRMED |
-| C1 keyword news | +0.043 | +0.009 | 0.8% | Candidate (inconsistent) |
-| C2 raw insider | +0.026 | −0.027 | 3.6% | Superseded by C5 |
 | C4 oc_asym_5d | +0.023 | +0.147 | 100% | Candidate |
 | C5 ins_relative_size | +0.037 | −0.008 | 3.4% | Candidate |
-| xs_sector_breadth_5d | +0.014 | −0.004 | 100% | Candidate (S38 new) |
+| C6 contrarian_intra_5d | +0.030 | +0.142 | 100% | Candidate (S39) |
+| C7 xs_ceiling_count_5d | +0.012 | +0.064 | 100% | Candidate (S39) |
+| C8 xs_vol_zscore_5d | +0.011 | +0.068 | 100% | Candidate (S39) |
+| C9 xs_reversal_1d | +0.028 | +0.161 | 100% | Candidate (S39) |
+| C10 xs_illiq_level_rank | +0.021 | +0.008 | 100% | **NEW S40** |
+| C11 xs_ret_60d_lag_rank | +0.010 | +0.008 | 100% | **NEW S42** |
+| C1 keyword news | +0.043 | +0.009 | 0.8% | Candidate (inconsistent) |
 
-### Queued hypotheses
-- **H112** — Contrarian intra-sector: sector_mom_rank × (1 − intra_sector_rank). Predicts: IC > 0 (laggards catch up in hot sectors). Data: `xs_sector_rotation_daily.parquet` (built).
-- **H113** — Earnings quality at 394 tickers. Run `build_earnings_quality_features.py` (full fetch ~5 min). Promising: xs_roe_delta_rank 8/11 years positive at 52 tickers.
-- **H114** — VN30 index rebalancing pressure. Derivable from existing daily value traded data. Stocks approaching top-30 boundary face ETF AUM inflow.
-- **H115** — Google Trends retail attention ("cổ phiếu"). Need Google Trends API. Retail-specific effect.
+Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+C4+C5+C6+C7+C8+C9+C10+C11, 826k rows × 13 cols). C12 was tested but excluded because it overlaps too strongly with C10.
+
+### Session 40-42 experiment results (2026-03-28)
+- **H121 PASS** — xs_illiq_level_rank IC +0.021 (10/11 years), corr S1=+0.008 → **C10 candidate**
+  - Script: `analysis/h121_amihud_illiquidity_standalone.py`
+  - Artifact: `artifacts/run_summaries/20260328_113807_h121_amihud_illiquidity_standalone_signal.json`
+- **H113 FAIL** — Earnings quality 394T: best IC=+0.006 (xs_eps_yoy_rank), all below 0.01 gate. Path closed.
+- **H122 FAIL** — Bid-ask spread (Corwin-Schultz) tested and rejected
+  - Script: `analysis/h122_bid_ask_spread_standalone.py`
+  - Artifact: `artifacts/run_summaries/20260328_120457_h122_bid_ask_spread_standalone_signal.json`
+- **H123 PASS** — 60d excess-return rank passed with IC +0.0101 (9/11 years), corr S1=+0.008. The reversal orientation failed, so the promoted signal is medium-term continuation.
+  - Script: `analysis/h123_3m_reversal_standalone.py`
+  - Artifact: `artifacts/run_summaries/20260328_121637_h123_3m_reversal_standalone_signal.json`
+  - Promoted to **C11**
+- **H124 MIXED** — low-beta orientation passed standalone (IC +0.0131, 7/11 years) but beta regime is redundant with C10.
+  - Script: `analysis/h124_beta_regime_standalone.py`
+  - Artifact: `artifacts/run_summaries/20260328_121804_h124_beta_regime_standalone_signal.json`
+  - Pairwise corr vs C10: +0.5524
+  - **Rejected** for RL state
+- **C10/C11 MATRIX UPDATE** — `data_tools/build_rl_signal_matrix.py` now exports `c10_illiq_level_rank` and `c11_ret_60d_lag_rank`
+  - Resulting matrix: `data/features/xs_rl_signal_matrix.parquet` (826,404 rows x 13 cols)
+- **PAIRWISE CHECK** — C10 remains orthogonal to the other candidates
+  - corr vs C4: -0.1224
+  - corr vs C5: +0.0313
+  - corr vs C6: +0.0150
+  - corr vs C7: +0.0044
+  - corr vs C8: +0.0184
+  - corr vs C9: +0.0012
+  - corr vs C11: -0.0686
+- **PAIRWISE CHECK** — C12 does not qualify as an RL candidate
+  - corr vs C10: +0.5524
+  - corr vs S1: -0.0051
+  - Low-beta is mostly the same axis as illiquidity/size, so it stays out of the matrix
+
+### Session 42 next queue (in order)
+
+1. **H125** — Orthogonal beta test: residualize 60d beta against C10/C8 or liquidity proxies, then retest whether a distinct beta factor survives.
+2. **H126** — Longer-horizon continuation: extend the 60d continuation axis to 90d/120d and check whether C11 strengthens or decays after sector-neutralization.
+3. **Any OHLCV-derived signal** — still preferred over new data fetches if it adds a genuinely new axis.
 
 ### Remaining blocked paths
 - **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)

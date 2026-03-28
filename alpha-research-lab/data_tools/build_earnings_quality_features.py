@@ -201,8 +201,8 @@ def main():
                 ok += 1
             else:
                 err += 1
-            time.sleep(0.3)
-            if (i + 1) % 50 == 0:
+            time.sleep(3.5)
+            if (i + 1) % 20 == 0:
                 print(f"  {i+1}/{len(missing)} fetched ({ok} ok, {err} err)")
         print(f"Fetch complete: {ok} ok, {err} errors")
 

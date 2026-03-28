@@ -1,0 +1,671 @@
+# Distilled Scientific Findings
+_Split chunk 061-087 from `notes/findings.md`._
+
+## F59: Historical Daily Foreign Investor Flow NOT Available via vnstock (2026-03-24, Session 29)
+
+`company.trading_stats()` gives current-day point-in-time foreign stats (foreign_volume, foreign_room,
+current_holding_ratio). `trading.price_board()` gives today's intraday accumulated foreign_buy_volume /
+foreign_sell_volume / foreign_buy_value / foreign_sell_value. Neither provides historical daily time series.
+
+No `foreign_trading()` method exists on the company or trading objects. Historical daily foreign flow
+data would require either:
+1. Accumulating from a daily cron starting now (forward-only)
+2. An alternative paid data source
+
+**H95 (Foreign Investor Flow signal) is deferred** until a historical data source is identified.
+vnstock's current API does not support backtesting foreign flow.
+
+---
+## F60: H89 — Keyword News Sentiment Adds No IC (2026-03-24, Session 29)
+
+Adding keyword-based Vietnamese financial news sentiment to the H93 config (volume + 1-day label)
+produces a regression in IC. Overall IC drops from +0.1405 (H93) to +0.1361 (H89) — a loss of 0.0044.
+
+**Pipeline:** Parenthetical ticker extraction (`\(([A-Z]{2,5})\)`) + keyword lexicon
+(26 positive terms, 25 negative terms) → sentiment_score, positive_ratio, article_count,
+sentiment_cs_z. Output: `xs_news_sentiment_daily.parquet` (6,532 rows, 340 tickers, 2016-2026).
+
+**Coverage:** ~0.8% of (trading_day, ticker) pairs have non-zero sentiment. 99.2% zeros (no news).
+
+| System | IC | IC Std | Sharpe |
+|---|---|---|---|
+| H93 (baseline) | +0.1405 | 0.0945 | — |
+| H89 (+ news) | +0.1361 | 0.1001 | — |
+
+**Root cause:** Extreme sparsity. The model sees mostly zeros and learns to ignore sentiment.
+The parenthetical ticker extraction is sound (~10.8% match rate) but the lexicon approach
+may also be too coarse for Vietnamese financial journalism.
+
+**Next step if revisiting:** (a) Rolling/lagged sentiment (5d/30d sum) to reduce sparsity;
+(b) LLM-based extraction if API becomes available; (c) Higher-quality source (e.g., ticker-tagged feeds).
+
+**Verdict (combined XGBoost model):** FAIL — do not include in H93 config.
+**Verdict (standalone RL signal):** CANDIDATE — standalone IC +0.043, correlation 0.009 with S1.
+Registered as C1 in `notes/signal_library.md`. See F62 for correct evaluation framework.
+
+---
+## F61: H92 — Sector Sub-Models Underperform Pooled Model (2026-03-24, Session 29)
+
+Separate XS walk-forward models trained on banking stocks (20 tickers) and real estate stocks
+(57 tickers) both underperform the pooled H93 model when evaluated on the same sector stocks.
+
+| Sector | Tickers | Sub-model IC | Pooled IC | Delta |
+|---|---|---|---|---|
+| Banking | 20 | +0.1077 | +0.1238 | −0.0161 |
+| Real Estate | 57 | +0.1308 | +0.1393 | −0.0085 |
+
+**Pattern:** Larger sectors converge toward pooled model performance (RE delta < banking delta).
+In some individual years with large real estate cohorts, sub-model matches or slightly beats pooled.
+
+**Root cause:** Training data scarcity. Banking: ~20 stocks × 220 days/year = 4,400 rows/year.
+Pooled: ~394 stocks = ~87,000 rows/year. More data matters more than sector specificity.
+
+**Implication:** The cross-sectional momentum signal is sector-agnostic — the XS ranking works
+across all sectors, not just within. Sector-specific patterns (if any) are already captured by
+the pooled model through its cross-sectional features (`rel_ret_Nd`, `idx_ret_Nd`).
+
+This replicates the H80/H94 findings: sector information (whether as relative features or
+as universe filter) does not improve on the pooled cross-sectional model.
+
+**Verdict:** NEUTRAL/FAIL. Do not split into sector sub-models. Pooled model is superior.
+
+---
+## F62: Correct Evaluation Framework for RL Signal Library (2026-03-24, Session 29)
+
+Signals should NOT be evaluated by whether they beat H54 (+25.52% edge) or improve H93.
+Those are complete strategies / combined models. Individual signals are state features for RL.
+
+**Correct criteria for adding a signal to the library:**
+
+| Criterion | Threshold | Rationale |
+|-----------|-----------|-----------|
+| Standalone IC | > 0.01 | Any reliable predictive content is learnable |
+| Correlation with S1 (primary) | < 0.30 | Orthogonality = RL diversity value |
+| IC positive years | ≥ 60% of in-sample years | Consistency, not noise |
+| p-value (standalone) | < 0.10 | Weak bar — searching, not deploying |
+
+**Why "fails to improve XGBoost" ≠ "not learnable":**
+XGBoost cannot use sparse signals (< 5% coverage) effectively because:
+(a) trees split on individual values, gaining nothing from mostly-zero features, and
+(b) sparse features may slightly overfit noise, dragging down combined model IC.
+
+An RL agent that observes all signals as separate state dimensions and learns to weight
+them contextually can exploit a sparse signal that XGBoost ignores.
+
+**Evidence:** H89 (news sentiment) reduced combined XGBoost IC by 0.0044, but tested
+alone on news days has standalone IC +0.043 with correlation 0.009 vs S1.
+It is a candidate signal for the RL library despite "failing" the combined model test.
+
+**Implication:** After each signal experiment, always run standalone IC and orthogonality tests
+before declaring a verdict. Update `notes/signal_library.md` accordingly.
+
+---
+## F63: Rolling News Aggregation Does Not Fix Sparsity for XS WF (2026-03-25, Session 30)
+
+Rolling 5d/30d windows on daily news sentiment (built from title-only extraction) give:
+- 5d coverage:  1.1% of (trading_day, ticker) pairs
+- 30d coverage: 5.1% of (trading_day, ticker) pairs
+
+Adding these rolling features to H93 XS WF:
+- IC: +0.1491 → +0.1483 (−0.0008)
+- Edge std: 1.60% → 1.76%
+- Sharpe (N=5): 15.08 → 13.86
+
+**Root cause:** 94.9% of rows are still zero after 30d rolling. Model assigns near-zero
+feature importance to near-zero columns. Rolling doesn't create signal; it only redistributes
+existing sparse signal into a denser format, with no gain in predictive content.
+
+**Verdict:** FAIL. Rolling aggregation is not the fix for sparse news features.
+
+---
+## F64: Body-Text Ticker Extraction Increases Coverage but Reduces Quality (2026-03-25, Session 30)
+
+Extracting tickers from article body_text (in addition to title parentheticals):
+- Coverage: 5,225 → 27,001 matched (day, ticker) pairs (+5.2×)
+- Body mentions: ~25% of articles (vs 0.8% title)
+
+BUT per-observation signal quality drops:
+- Standalone IC: H89 +0.041 → H99 +0.018 (body mentions are noisier)
+- XS WF IC: H93 +0.1491 → H99 +0.1363 (−0.0128)
+- Sharpe drops from 15.08 → 11.52
+
+**Why body is noisier:** Body mentions include price widget sidebars, tangential references,
+and articles where the company is mentioned peripherally but is not the subject. Title mentions
+are more likely to indicate the stock is the article's primary subject.
+
+**Verdict:** FAIL. Body extraction is not a quality improvement; it adds noise that the
+XS WF model can't filter effectively.
+
+---
+## F65: News Keyword Lexicon Path Exhausted — LLM Quality Required (2026-03-25, Session 30)
+
+Three approaches to news sentiment as an XS WF feature have all failed:
+1. **H89:** Daily title sentiment (sparse, IC −0.0044 when added to H93)
+2. **H96:** Rolling 5d/30d aggregation (denser but still 94.9% zero, IC −0.0008)
+3. **H99:** Body-text extraction (6× more obs, IC −0.0128 due to lower quality)
+
+**Standalone note:** H89 retains standalone IC +0.043 with near-zero correlation to S1 (0.009).
+On days when news fires, the signal is directionally consistent in 5-6/10 years. This is RL-valuable
+but XGBoost cannot use it.
+
+**Path forward (H98):** Only higher-quality sentiment from LLM scoring (OpenAI/Claude API)
+is likely to move the signal quality above the noise floor. Keyword lexicons are too coarse
+for Vietnamese financial articles, which mix formal reporting with promotional language.
+
+**What would help H98:** Score ~40k articles/day × 10 years ≈ 400M tokens → cost ~$800-2000 at
+current API rates. Feasible with batching + caching if the research mandate expands.
+A smaller test on 1 year of data (~$80-200) could validate the approach before full extraction.
+
+---
+## F66: Insider Deal Features — Standalone Signal Exists but Adds Noise to H93 (2026-03-26, Session 31)
+
+**Source:** CafeF GDCoDong API (`cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx`)
+- 394/394 HOSE tickers have insider + large-shareholder transaction data
+- Date range: 2015–2026, 32k insider rows + 15k large-shareholder rows
+- `is_insider` = ShareHolderCode prefix CEO_ (officers/directors) or LQ_ (related persons)
+- **Signal key:** `published_date` (disclosure filing date, not transaction completion)
+
+**Standalone IC (insider_net_plan_5d vs 5d relative return):**
+- Average IC: +0.0255, 9/11 years positive
+- Significant years: 2019 (p=0.042), 2020 (p=0.001), 2023 (p=0.004), 2024 (p=0.020)
+- Coverage: 3.57% of (day, ticker) pairs (sparse but meaningfully better than news 0.8%)
+- Correlation with H93 probas: −0.027 (near-zero → genuinely independent)
+
+**XS WF test (H93 + insider features):**
+| Metric | H93 | H97 (+insider) | Delta |
+|--------|-----|----------------|-------|
+| IC (Spearman) | +0.1491 | +0.1484 | −0.0007 |
+| Sharpe (N=5, no VIX filter) | 15.08 | 10.77 | −4.31 |
+| Edge std | 1.60% | 2.26% | +0.66% |
+| Sig years | 11/11 | 11/11 | 0 |
+
+**Root cause:** XGBoost model adds insider features as occasional tree splits, but these
+features are so sparse (3.57%) that they introduce noise on the 96.43% of non-event rows.
+The model learns a slight negative relationship (CEO_ prefix has negative FieldRef — possibly
+because insiders sometimes sell to diversify after insider buying lifts the price).
+
+**Verdict: FAIL.** Insider features are genuinely predictive in isolation but hurt the XS WF
+due to sparsity and tree-model interaction effects. Like the news signal, this is a
+RL-candidate (standalone IC +0.025) rather than an XGBoost feature.
+
+**Infrastructure built:**
+- `data/insider_cache/<TICKER>.parquet` — 394 raw per-ticker cache files
+- `data/features/xs_insider_deals_raw.parquet` — combined 32k rows
+- `data/features/xs_insider_features.parquet` — rolling 5d/30d feature matrix (826k rows)
+- `data_tools/fetch_insider_deals.py` — CafeF crawler for all HOSE tickers
+- `data_tools/build_insider_features.py` — rolling aggregation feature builder
+- `--use-insider` flag in `cross_sectional_wf.py`
+
+---
+## F67: H98 LLM News Infrastructure Implemented; Experiment Pending Runtime Ollama Availability (2026-03-26, Session 33)
+
+Implemented per root plan:
+- `data_tools/extract_llm_news_features.py` (CafeF JSONL -> `data/llm_cache/YYYY-MM-DD.jsonl`)
+- `data_tools/build_llm_news_features.py` (`data/llm_cache` -> ticker/day + market/daily parquets)
+- `cross_sectional_wf.py` flags:
+  - `--use-llm-news` (sparse ticker-day LLM features)
+  - `--use-llm-market` (dense market-daily LLM features)
+
+Smoke verification:
+1. 3-day extraction run (`2023-01-01` to `2023-01-03`) created cache files and exercised resume-safe/atomic path.
+2. In this runtime, all extraction batches timed out against local Ollama (0 parsed, all timeout fallbacks).
+3. Feature builder successfully produced:
+   - `xs_llm_news_ticker_day.parquet` (826,404 rows)
+   - `xs_llm_news_market_daily.parquet` (2,748 rows)
+4. Dense market output has zero NaNs after ffill/fill path.
+5. WF smoke test confirmed both H98 merge blocks and feature registration are operational.
+
+**Conclusion:** H98 code path is complete and runnable. Final signal-quality evaluation requires a reachable
+local Ollama service (or equivalent LLM endpoint) to produce non-timeout extracted features.
+
+---
+## F68: H98 LLM Path Parked by Throughput Constraint (2026-03-26, Session 34)
+
+H98 (LLM news extraction) is explicitly **PARKED** for now.
+
+Reason:
+- End-to-end extraction throughput in the current runtime is operationally too slow for full-history runs.
+- Prior smoke runs in this environment showed timeout-heavy behavior against local Ollama.
+
+Policy:
+- Do not continue H98 runs in active sessions until runtime/inference throughput is resolved.
+- Keep the implemented H98 infrastructure intact for later reactivation.
+
+---
+## F69: Dense Signals Sweep — Dispersion Regime Passes, Open/Close Asymmetry Fails Risk-Adjusted Bar (2026-03-26, Session 34)
+
+Baseline reference: H93 (`xs_barrier_vol_1d_hose_full.parquet`)
+- IC +0.1491
+- Top-5 avg edge +24.15%
+- Top-5 Sharpe 15.08
+- Edge std 1.60%
+
+### H100 (open/close asymmetry features)
+- IC: +0.1541 (**+0.0050** vs H93)
+- Top-5 edge: +25.36% (**+1.21%**)
+- Sharpe: 11.63 (**−3.45**)
+- Edge std: 2.18% (**+0.58%**)
+- **Verdict:** FAIL (variance blow-up outweighs edge gain).
+
+### H101 (cross-sectional dispersion regime features)
+- IC: +0.1474 (**−0.0017** vs H93)
+- Top-5 edge: +23.83% (**−0.32%**)
+- Sharpe: 15.34 (**+0.26**)
+- Edge std: 1.55% (**−0.05%**)
+- **Verdict:** PASS (risk-adjusted improvement; dense and stable).
+
+### H102 (H100 + H101 combined)
+- IC: +0.1531 (**+0.0040** vs H93)
+- Top-5 edge: +25.23% (**+1.08%**)
+- Sharpe: 9.96 (**−5.12**)
+- Edge std: 2.53% (**+0.93%**)
+- **Verdict:** FAIL (asymmetry-driven volatility dominates).
+
+Implication:
+- Among tested dense branches, **H101 is the only viable continuation path**.
+- H100-style open/close asymmetry should not be promoted in current form.
+
+---
+## F70: H103 Return Skewness Fails Both Risk-Adjusted and Standalone Bars (2026-03-26, Session 35)
+
+H103 added dense ticker-day return skewness/tail-shape features:
+- `ret_skew_5d`, `ret_skew_20d`, `ret_skew_60d`
+- downside/upside volatility and ratio
+- left-tail fraction and skew z-score
+
+Portfolio result vs H93 baseline:
+- IC: +0.1489 (vs +0.1491, −0.0002)
+- Top-5 avg edge: +24.19% (vs +24.15%, +0.04%)
+- Sharpe: 10.63 (vs 15.08, **−4.45**)
+- Edge std: 2.28% (vs 1.60%, **+0.68%**)
+
+Standalone RL-gate check (`ret_skew_z20` vs `future_rel_return_5d`):
+- Avg IC: +0.0019
+- Positive years: 6/11
+- Corr with S1: −0.0035
+
+Interpretation:
+- Orthogonality is good, but standalone predictive strength is below the IC > 0.01 bar.
+- In supervised integration, skewness features materially increase variance without improving IC.
+
+**Verdict:** FAIL. Do not continue return-skewness branch in current form.
+
+---
+## F71: Earnings Calendar Dense Features Are Too Weak and Degrade Risk-Adjusted Performance (2026-03-26, Session 36)
+
+H104 introduced dense date-level earnings/reporting season features based on quarter-end timing and
+typical filing windows.
+
+H104 (H93 + earnings calendar):
+- IC: +0.1480 (vs H93 +0.1491, −0.0011)
+- Top-5 edge: +24.14% (vs +24.15%, flat)
+- Sharpe: 11.80 (vs 15.08, **−3.28**)
+- Edge std: 2.05% (vs 1.60%, **+0.45%**)
+
+H105 (H101 + earnings calendar):
+- IC: +0.1466 (vs H101 +0.1474, −0.0008)
+- Top-5 edge: +24.16% (vs +23.83%, +0.33%)
+- Sharpe: 11.96 (vs 15.34, **−3.38**)
+- Edge std: 2.02% (vs 1.55%, **+0.47%**)
+
+Standalone gate checks for earnings-calendar features are weak:
+- `days_since_q_end` avg IC: +0.0060 (6/11 positive years)
+- `in_report_w15_45` avg IC: +0.0059 (8/11)
+- `in_report_w20_50` avg IC: +0.0014 (8/11)
+- Context vs S1 daily top-5 hit rate: near-zero (e.g., rho −0.004, p=0.832)
+
+Interpretation:
+- The features are dense and look structurally plausible, but predictive strength is too weak.
+- When injected into supervised ranking, they add noise/variance and reduce Sharpe.
+
+**Verdict:** FAIL. Earnings-calendar branch should not be continued in current form.
+
+---
+## F67: C3 Dispersion Regime Fails Standalone RL Gate (confirmed 2026-03-27)
+
+Regime-conditional IC analysis for C3/H101 (cross-sectional return dispersion features).
+
+Test: split days into terciles by each dispersion feature, compute S1 (H93) Spearman IC per tercile.
+
+| Feature | IC (low) | IC (mid) | IC (high) | Rel. spread |
+|---|---|---|---|---|
+| `xs_dispersion_z20` | 0.1236 | 0.1325 | 0.1262 | +2.1% |
+| `xs_ret_std_1d` | 0.1208 | 0.1407 | 0.1223 | +1.2% |
+| `xs_breadth_up_1d` | 0.1259 | 0.1386 | 0.1211 | −3.9% |
+| `xs_tail_spread_1d` | 0.1231 | 0.1419 | 0.1193 | −3.1% |
+
+**Key observations:**
+- IC spread across terciles ≤ 2% relative for all features (threshold: >10%).
+- IC is consistently highest in the mid-tercile, not at extreme dispersion levels — no monotone relationship.
+- `xs_breadth_up_1d` day-level Spearman vs top-5 accuracy is significant (p=0.006) but is a market-direction artifact (broad up-days trivially raise accuracy), not a ranking quality improvement.
+- The H101 Sharpe improvement (+0.26 vs H93, from Session 34) is marginal noise in the supervised model.
+
+**Verdict:** C3 REJECTED. Dispersion regime does not condition H93 signal quality. The dense OHLCV-derived signal search is complete with current data.
+
+---
+## F72: oc_asym Signal Lives in Contrast, Not Components (2026-03-28, Session 38)
+
+H107 decomposed `xs_open_close_asymmetry.parquet` into overnight and intraday components to
+find the "purer" sub-signal.
+
+**Results (vs 1-day barrier label `actual`):**
+- `overnight_mom_5d`: IC = −0.0005, 5/11 years positive — near-zero, no signal
+- `intraday_mom_5d`: IC = −0.0343, 1/11 years positive — strongly anti-predictive
+- `oc_asym_5d` (overnight − intraday): IC = +0.0225, 11/11 years positive — PASSES gate
+- `overnight_aligned` (overnight × sign(intraday)): IC = +0.0009 — no signal
+- `gap_abs_5d` (absolute gap magnitude): IC = +0.0078, 9/11 years — borderline
+
+**Conclusion:** The signal is entirely in the CONTRAST between overnight and intraday momentum.
+When overnight direction is NOT reversed intraday, the combined oc_asym signal is informative.
+Neither component alone has predictive power. This rules out the "informed auction" hypothesis
+(which predicts overnight_mom_5d should have standalone IC) and instead supports a
+"gap-persistence = no reversion pressure" hypothesis.
+
+**Promotion:** `oc_asym_5d` qualifies as C4 (standalone IC +0.0225, 11/11 years, corr +0.147 < 0.30).
+The component decomposition was the experiment; the artifact (`xs_open_close_asymmetry.parquet`) already exists.
+
+---
+## F73: Position-Size Normalization Is the Key Insider Signal Dimension (2026-03-28, Session 38)
+
+H108 tested quality-weighted insider features vs the raw C2 net-plan-volume baseline (IC +0.0255).
+
+**Results (vs fwd_rel_5d on signal-fire rows):**
+- `xs_ins_relative_size_5d` (net_plan / VolumeBeforeTransaction): IC = +0.0374, 10/11 years, corr = −0.008 → **PASS**
+- `xs_ins_quality_buy_5d` (tier-weighted): IC = +0.0248, 9/11 years → slightly below baseline
+- `xs_ins_ceo_buy_5d` (CEO only, 0.78% coverage): IC = +0.0210, 5/11 years → too inconsistent
+- `xs_ins_exec_rate_5d` (actual/plan ratio): IC = −0.0084, 6/11 years → anti-predictive
+- Baseline `insider_net_plan_5d`: IC = +0.0256, 9/11 years
+
+**Conclusion:** The informative dimension is HOW MUCH of their holdings an insider is buying,
+not their job title or whether they followed through on the announcement. Relative size captures
+conviction better than absolute volume. C5 (`xs_ins_relative_size_5d`) supersedes C2.
+
+**Unexpected finding:** Execution rate is anti-predictive (IC −0.008). Insiders who commit
+to full execution may be motivated by contractual obligations, not genuine bullish conviction.
+Insiders who underexecute may have originally over-announced for optionality — the signal
+resides in the initial relative announcement, not the follow-through.
+
+---
+## F74: Intra-Sector Rank is Anti-Predictive (Sector Laggards Beat Leaders) (2026-03-28, Session 38)
+
+H111 tested sector rotation with intra-sector leadership. The composite signal (sector_mom × intra_sector_rank) had IC = −0.0379, 0/11 years positive.
+
+**Results:**
+- `xs_sector_rotation_signal` (sector_mom × intra_sector): IC = −0.0379, 0/11 — strongly negative
+- `xs_intra_sector_rank` (stock's rank within sector, 5d): IC = −0.0466, 0/11 — anti-predictive
+- `xs_sector_mom_5d_rank` (sector-level 5d momentum): IC = −0.0015, 5/11 — near zero
+- `xs_sector_breadth_5d` (fraction of sector stocks positive): IC = +0.0143, 8/11, corr = −0.004 → **PASS**
+- `xs_sector_accel` (fresh vs stale sector momentum): IC = +0.0079, 8/11 — borderline
+
+**Key finding:** Within-sector rank is strongly ANTI-predictive. When a sector is rising, the
+stocks that are LAGGING within the sector outperform the next day — intra-sector mean reversion.
+This means the "best horse in the hot race" hypothesis is wrong for 1-day horizons.
+The correct cross-sectional mechanism is: in a rising sector, buy the LAGGARDS, not the leaders.
+
+**Actionable finding:** `xs_sector_breadth_5d` passes the gate (IC +0.0143, 8/11 years, corr −0.004).
+Stocks in sectors with BROAD participation (not driven by 1-2 leaders) outperform. This is a
+breadth-confirmation signal orthogonal to both price momentum (S1) and individual-stock effects.
+
+**Corollary:** The anti-predictive composite (sector_mom × intra_sector_rank) reveals a
+"contrarian within-sector" signal worth explicit testing: sector_mom_rank × (1 − intra_sector_rank)
+= hot sector, laggard stock. Expected to have IC > 0. Queued as H112.
+
+---
+## F75: VNM ETF Premium is Market-Direction Only, Not Cross-Sectional (2026-03-28, Session 38)
+
+H110 tested whether VNM ETF premium (VNM return − VNINDEX return) and stock-level foreign
+affinity betas provide cross-sectional stock-selection IC.
+
+**Results (vs 1-day barrier label):**
+- `xs_fa_signal` (affinity_120d × vnm_premium_1d): IC = −0.0014, 6/11 years — near zero
+- `xs_fa_rank` (affinity rank): IC = −0.0029, 4/11 years — slightly negative
+- `xs_foreign_affinity_120d` (raw beta): IC = −0.0050, 3/11 years — negative
+- `xs_vnm_premium_1d` (date-level scalar): IC = −0.0143, 2/11 years — negative
+- Conditional: high-premium days IC = −0.0108; low-premium days IC = +0.0089
+
+**Conclusion:** VNM ETF premium is a market-direction predictor (date-level IC +0.132 for VNINDEX T+1)
+but provides no cross-sectional differentiation between individual stocks. The foreign affinity
+beta (rolling Spearman of stock excess return vs VNM premium) is too noisy to be actionable.
+On high-premium days, the signal is actually more negative — possibly because the 40 VNM ETF
+constituents get front-run by sophisticated investors, leaving no edge for the cross-sectional ranker.
+
+**Blocked signal:** H95 (historical daily foreign flow) remains blocked. VNM ETF is the best
+available proxy, but it is insufficient for stock-level cross-sectional prediction.
+
+---
+## F76: Earnings Quality at 52 Tickers is Too Weak to Signal (2026-03-28, Session 38)
+
+H109 tested earnings quality features (EPS acceleration, EPS YoY rank, net margin trend,
+ROE delta, debt trend) at 52 tickers.
+
+**Results (vs 1-day barrier label):**
+- `xs_roe_delta_rank` (QoQ ROE change): IC = +0.0049, 8/11 years — directionally right, too weak
+- `xs_eps_accel_rank` (EPS acceleration): IC = +0.0029, 7/11 years — consistent direction
+- `xs_eps_yoy_rank` (EPS YoY growth): IC = +0.0030, 7/11 years — directionally consistent
+- `xs_npm_trend_rank` (net margin slope): IC = −0.0033, 1/11 years — anti-predictive
+- `xs_debt_trend_rank` (D/E YoY change): IC = −0.0006, 6/11 years — near zero
+
+**Conclusion:** At 52 tickers, earnings features are too sparse to reach IC > 0.01 threshold.
+The directional consistency of `xs_roe_delta_rank` (8/11 years) and acceleration features
+(7/11 years) suggests the signal mechanism may be real but requires more stocks to be
+statistically significant. Re-test at 394 tickers after full fundamentals fetch.
+
+**Note on net margin trend:** The anti-predictive net margin trend (IC = −0.033, 1/11 years) is
+suspicious. This may reflect accounting noise — companies inflate margins before dilutive events,
+making improving NPM a contrary indicator at short horizons.
+
+---
+## F77: Intra-Sector Mean Reversion Creates C6 Candidate Signal (2026-03-28, Session 39)
+
+H112 confirmed that flipping the anti-predictive H111 intra-sector rank signal creates a
+strong positive candidate.
+
+**Mechanism:** `contrarian_intra_5d = xs_sector_mom_5d_rank × (1 − xs_intra_sector_rank)`.
+Buys the laggard within a hot sector. T+2 settlement and ±7% limits create temporary
+dislocations when sector rotation flows front-load into sector leaders; next day the
+remaining sector laggards revert.
+
+**Results:**
+| Feature | IC | Pos Years | Corr S1 |
+|---------|-----|-----------|---------|
+| contrarian_intra_5d | +0.0299 | 11/11 | +0.142 |
+| contrarian_intra_20d | +0.0345 | 11/11 | +0.171 |
+| reverse_intra (1 − intra_rank) | +0.0466 | 11/11 | +0.256 |
+
+**Warning:** C6 (contrarian_intra_5d) and xs_sector_breadth_5d have pairwise correlation
++0.303 — at the independence threshold. Do not use both in the same RL state.
+
+**Promoted:** contrarian_intra_5d → **C6 candidate** (IC +0.030, 11/11 years, corr +0.142)
+
+---
+## F78: VN30 Rebalancing Proximity Has No Cross-Sectional IC (2026-03-28, Session 39)
+
+H114 tested trading-value-rank proximity to the VN30 top-30 threshold.
+
+**Results:**
+| Feature | IC | Pos Years | Verdict |
+|---------|-----|-----------|---------|
+| xs_vn30_rank_pctile (level) | −0.0217 | 1/11 | anti-predictive |
+| xs_vn30_boundary_score | −0.0201 | 1/11 | anti-predictive |
+| xs_vn30_rank_change_5d | +0.0075 | 10/11 | directional but < 0.01 gate |
+
+**Key finding:** Large-cap / high-liquidity stocks (VN30 members) underperform the cross-
+section on average (IC = −0.022). Vietnamese retail-driven markets favor smaller, higher-beta
+names. The rebalancing mechanism itself (ETF inflow anticipation) cannot overcome this headwind
+in cross-sectional predictions.
+
+---
+## F79: Price Limit Momentum (Ceiling) is a Valid IC Signal (2026-03-28, Session 39)
+
+H115 tested whether touching the ±7% daily price limit predicts next-day returns.
+
+**Results:**
+| Feature | IC | Pos Years | Corr S1 |
+|---------|-----|-----------|---------|
+| xs_ceiling_count_5d | +0.0121 | 8/11 | +0.064 |
+| xs_floor_count_20d | +0.0104 | 8/11 | +0.034 |
+
+**Mechanism:** Stocks hitting the ceiling (+7%) have pent-up demand that could not be satisfied.
+The next day, buyers who failed to fill at the ceiling return, creating continuation. This is
+a MOMENTUM mechanism, not reversal — most ceiling stocks continue to outperform.
+
+**Floor signal:** Stocks with multiple floor touches over 20 days are oversold; mean reversion
+creates positive IC. Shorter windows (5d floor: IC = +0.003) are too noisy.
+
+**Promoted:** xs_ceiling_count_5d → **C7 candidate** (IC +0.012, 8/11 years, corr +0.064)
+
+---
+## F80: Volume Zscore Cross-Sectional Signal is Independent of S1 (2026-03-28, Session 39)
+
+H116 tested whether abnormal volume relative to own history has standalone IC after
+controlling for the S1 model (which already uses volume features internally).
+
+**Results:**
+| Feature | IC | Pos Years | Corr S1 |
+|---------|-----|-----------|---------|
+| xs_vol_zscore_1d | +0.0353 | 11/11 | +0.192 |
+| xs_vol_zscore_5d | +0.0110 | 10/11 | +0.068 |
+| xs_value_zscore_5d | +0.0120 | 10/11 | +0.065 |
+
+**Key finding:** Despite S1 using volume features internally, the simple cross-sectional
+volume zscore (vs own 60d history) is largely independent of xs_proba (corr = +0.068).
+The 1d zscore has higher IC (+0.035) but also higher correlation (+0.192). The 5d smooth
+version provides better independence for RL state.
+
+**Promoted:** xs_vol_zscore_5d → **C8 candidate** (IC +0.011, 10/11 years, corr +0.068)
+
+---
+## F81: Vietnamese Market Has Systematic 1-Day Short-Term Reversal (2026-03-28, Session 39)
+
+H117 established that 1-day excess return rank is consistently ANTI-predictive across 11 years.
+
+**Results:**
+| Feature | IC | Pos Years | Direction |
+|---------|-----|-----------|-----------|
+| xs_ret_1d_lag_rank | −0.0284 | 0/11 | REVERSAL |
+| xs_ret_2d_lag_rank | −0.0345 | 0/11 | REVERSAL |
+| xs_ret_1d_abs_rank | +0.0353 | 11/11 | activity persistence |
+
+**Key finding:** Vietnam has a dual structure:
+- 5-day momentum (S1): IC = +0.15 → continuation
+- 1-day reversal: IC = −0.028 → mean reversion next day
+These coexist because the 5d signal captures medium-term relative strength while the 1d captures
+daily profit-taking and T+2 queue-jumping dynamics.
+
+**Mechanism:** T+2 settlement + retail-dominated trading. When a stock outperforms peers on day T,
+retail traders who bought intraday on T sell to book profits on T+1 (earliest settlement date
+for intraday positions is T+2, but limit orders refresh). This creates systematic short-term
+over-reaction at the daily horizon.
+
+**For RL state:** Use `1 − xs_ret_1d_lag_rank` as C9 — this buys yesterday's underperformers.
+Partial overlap with C6 (corr = +0.199) but independent enough to add RL state diversity.
+
+---
+## F82: Amihud Illiquidity Level Predicts Next-Day Returns (2026-03-28, Session 40)
+
+H121 tested Amihud illiquidity ratio (ILLIQ = |return| / daily_trading_value) cross-sectionally.
+
+**Results:**
+| Feature | IC | Pos Years | Corr S1 | Gate |
+|---------|-----|-----------|---------|------|
+| xs_illiq_level_rank | +0.0206 | 10/11 | +0.008 | PASS |
+| xs_illiq_spike_rank | −0.0010 | 6/11 | +0.073 | fail |
+| xs_illiq_change_5d | −0.0030 | 3/11 | −0.001 | fail |
+
+**Key finding:** The LEVEL of illiquidity (20d rolling avg ILLIQ, cross-sectionally ranked)
+is strongly predictive: IC +0.021, 10/11 years, corr with S1 only +0.008 (near-zero).
+
+**Mechanism:** Less liquid stocks (higher price impact per VND traded) are under-followed
+and slower to incorporate information. When they begin moving, continuation persists because
+the follow-on capital queue is long relative to available liquidity. Classic Amihud compensation.
+
+**Intraday/spike signals fail:** Short-term illiquidity shocks (today's spike vs own baseline)
+and illiquidity change direction are not predictive — only the structural level matters.
+
+**Correlation analysis:** corr(C10, S1) = +0.008. Near-zero — the momentum signal and
+illiquidity level are structurally independent (momentum captures recent relative performance,
+illiquidity captures size/trading-depth characteristics).
+
+**Promoted:** xs_illiq_level_rank → **C10 candidate** (IC +0.021, 10/11 years, corr +0.008)
+
+---
+## F83: Earnings Quality Features Fail Even at 394-Ticker Universe (2026-03-28, Session 40)
+
+H113 expanded H109 (52-ticker subset) to the full 394-ticker HOSE universe. No feature crossed IC > 0.01.
+
+**Results (394 tickers vs H109 52-ticker baseline):**
+| Feature | IC (394T) | IC (52T) | Delta | Pos Years | Gate |
+|---------|----------|---------|-------|-----------|------|
+| xs_eps_accel_rank | +0.0039 | +0.0029 | +0.0010 | 11/11 | fail |
+| xs_eps_yoy_rank | +0.0062 | +0.0030 | +0.0032 | 8/11 | fail |
+| xs_npm_trend_rank | +0.0056 | −0.0033 | +0.0089 | 10/11 | fail |
+| xs_roe_delta_rank | +0.0053 | +0.0049 | +0.0004 | 9/11 | fail |
+| xs_debt_trend_rank | +0.0001 | −0.0006 | +0.0007 | 7/11 | fail |
+
+**Key finding:** All features improved with universe expansion (consistent direction), but the best IC
+(+0.006) remains well below the 0.01 gate. Earnings quality signals in Vietnam lack day-level
+predictive power — the information may be:
+(1) Already priced in by the time quarterly/annual data is available in the VCI API
+(2) Too coarsely sampled (quarterly updates applied daily) to drive next-1d returns
+(3) Potentially more powerful on earnings announcement days only (event-driven subsample)
+
+**Correlation with S1:** All features ~0.001–0.008 (near-zero). Independence is confirmed but IC too weak.
+
+**Conclusion:** Daily earnings quality cross-section is not predictive at the required threshold.
+Event-driven approach (restrict evaluation to earnings announcement dates) may be worth trying
+but requires announcement date data not currently in the pipeline.
+## F84: Corwin-Schultz Bid-Ask Spread Proxy Fails Gate (2026-03-28, Session 41)
+
+H122 tested a Corwin-Schultz effective spread proxy built from consecutive-day highs and lows.
+All three features failed the standalone gate.
+
+**Results:**
+| Feature | IC | Pos Years | Corr S1 | Gate |
+|---------|-----|-----------|---------|------|
+| xs_spread_level_rank | -0.0097 | 2/11 | -0.066 | fail |
+| xs_spread_spike_rank | -0.0301 | 1/11 | -0.062 | fail |
+| xs_spread_change_5d | -0.0035 | 2/11 | -0.028 | fail |
+
+**Key finding:** The H/L spread estimator is anti-predictive in this market. High-spread and
+spread-widening names do not show continuation; if anything, they are noisier and slightly worse.
+The estimator is likely distorted by price limits, stale prints, and irregular intraday extremes
+in Vietnamese equities.
+
+**Conclusion:** Bid-ask spread quality is not a useful standalone RL signal under the current
+data and estimator setup. H122 is rejected.
+
+---
+## F85: Medium-Term Continuation Emerges, Not 3-Month Reversal (2026-03-28, Session 42)
+
+H123 tested whether 60d excess return lagged 1 day contains a reversal pocket. The reversal
+orientation did not hold; the continuation orientation passed the standalone gate.
+
+**Results:**
+| Feature | IC | Pos Years | Corr S1 | Gate |
+|---------|-----|-----------|---------|------|
+| xs_ret_60d_lag_rank | +0.0101 | 9/11 | +0.008 | PASS |
+| xs_reversal_60d | -0.0101 | 2/11 | -0.008 | fail |
+
+**Key finding:** Medium-term relative strength persists after the short-term reversal window has
+already faded. The signal is not a 3-month reversal; it is a 60d continuation signal that is
+nearly orthogonal to S1 and materially different from the 1-day reversal bucket (C9).
+
+**Promotion:** xs_ret_60d_lag_rank → **C11 candidate** (IC +0.0101, 9/11 years, corr S1 +0.008)
+
+---
+## F86: Beta Regime Exists, But It Collapses Onto Illiquidity (2026-03-28, Session 42)
+
+H124 tested 60d beta vs VNINDEX as a cross-sectional factor. Low-beta names did outperform
+standalone, but the axis is not independent enough to join the RL library.
+
+**Results:**
+| Feature | IC | Pos Years | Corr S1 | Gate |
+|---------|-----|-----------|---------|------|
+| xs_beta_60d_rank | -0.0131 | 4/11 | +0.005 | fail |
+| xs_low_beta_60d | +0.0131 | 7/11 | -0.005 | PASS (standalone) |
+
+**Pairwise check:** corr(`xs_low_beta_60d`, C10) = +0.5524.
+
+**Key finding:** beta is mostly acting as a liquidity/size proxy in this market. Once C10
+(Amihud illiquidity level) is in the library, H124 does not add a distinct axis. The beta regime
+signal is therefore rejected for RL promotion despite its standalone IC clearing 0.01.

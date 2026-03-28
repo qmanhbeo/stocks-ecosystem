@@ -1,0 +1,258 @@
+{
+  "artifacts": {
+    "details_json": "/home/manh/stocks/alpha-research-lab/artifacts/run_summaries/20260328_111601_h117_shortterm_reversal_details.json"
+  },
+  "metadata": {
+    "session": 39,
+    "signal": "H117"
+  },
+  "mode": "standalone_signal",
+  "name": "h117_shortterm_reversal",
+  "summary": {
+    "features": {
+      "xs_ret_1d_abs_rank": {
+        "avg_ic": 0.035286791442311255,
+        "corr_with_s1": 0.21553275267158062,
+        "direction": "CONTINUATION",
+        "gate_pass": true,
+        "negated_gate_pass": false,
+        "pct_years_positive": 1.0,
+        "pos_years": 11,
+        "yearly": [
+          {
+            "ic": 0.03229394996252085,
+            "n": 51793,
+            "p_value": 1.9640383431481594e-13,
+            "year": 2015
+          },
+          {
+            "ic": 0.048162123247329554,
+            "n": 57859,
+            "p_value": 4.559218400084829e-31,
+            "year": 2016
+          },
+          {
+            "ic": 0.057432459129761165,
+            "n": 64210,
+            "p_value": 4.693469910444555e-48,
+            "year": 2017
+          },
+          {
+            "ic": 0.03952998085786943,
+            "n": 69369,
+            "p_value": 2.111584773825996e-25,
+            "year": 2018
+          },
+          {
+            "ic": 0.04485602226070754,
+            "n": 72959,
+            "p_value": 8.084326656443465e-34,
+            "year": 2019
+          },
+          {
+            "ic": 0.048079936826883156,
+            "n": 78508,
+            "p_value": 2.0725184973829006e-41,
+            "year": 2020
+          },
+          {
+            "ic": 0.04937572141147503,
+            "n": 85740,
+            "p_value": 1.9722306120899753e-47,
+            "year": 2021
+          },
+          {
+            "ic": 0.008341464260889539,
+            "n": 87520,
+            "p_value": 0.013597357344585365,
+            "year": 2022
+          },
+          {
+            "ic": 0.020797817939159167,
+            "n": 84935,
+            "p_value": 1.346054263803687e-09,
+            "year": 2023
+          },
+          {
+            "ic": 0.013035469617180002,
+            "n": 86115,
+            "p_value": 0.00013055349320874608,
+            "year": 2024
+          },
+          {
+            "ic": 0.02624976035164826,
+            "n": 86437,
+            "p_value": 1.175290691284743e-14,
+            "year": 2025
+          }
+        ],
+        "years": 11
+      },
+      "xs_ret_1d_lag_rank": {
+        "avg_ic": -0.028391213281689708,
+        "corr_with_s1": -0.1605799783682828,
+        "direction": "REVERSAL",
+        "gate_pass": false,
+        "negated_gate_pass": true,
+        "pct_years_positive": 0.0,
+        "pos_years": 0,
+        "yearly": [
+          {
+            "ic": -0.026271373658039086,
+            "n": 51793,
+            "p_value": 2.2348480290358785e-09,
+            "year": 2015
+          },
+          {
+            "ic": -0.029817360343888006,
+            "n": 57859,
+            "p_value": 7.300957278036028e-13,
+            "year": 2016
+          },
+          {
+            "ic": -0.025149757329522474,
+            "n": 64210,
+            "p_value": 1.8445507804998166e-10,
+            "year": 2017
+          },
+          {
+            "ic": -0.01784897273345648,
+            "n": 69369,
+            "p_value": 2.5844533482138082e-06,
+            "year": 2018
+          },
+          {
+            "ic": -0.03323474896927925,
+            "n": 72959,
+            "p_value": 2.723977323044872e-19,
+            "year": 2019
+          },
+          {
+            "ic": -0.02642071231286311,
+            "n": 78508,
+            "p_value": 1.3207511369910988e-13,
+            "year": 2020
+          },
+          {
+            "ic": -0.03897060893604466,
+            "n": 85740,
+            "p_value": 3.506635715833712e-30,
+            "year": 2021
+          },
+          {
+            "ic": -0.01750973910832993,
+            "n": 87520,
+            "p_value": 2.214513229427106e-07,
+            "year": 2022
+          },
+          {
+            "ic": -0.036548360701935026,
+            "n": 84935,
+            "p_value": 1.6539662460194535e-26,
+            "year": 2023
+          },
+          {
+            "ic": -0.027084759671928853,
+            "n": 86115,
+            "p_value": 1.873226783218892e-15,
+            "year": 2024
+          },
+          {
+            "ic": -0.03344695233329991,
+            "n": 86437,
+            "p_value": 7.872586940333612e-23,
+            "year": 2025
+          }
+        ],
+        "years": 11
+      },
+      "xs_ret_2d_lag_rank": {
+        "avg_ic": -0.03446834247876259,
+        "corr_with_s1": -0.19599482915839422,
+        "direction": "REVERSAL",
+        "gate_pass": false,
+        "negated_gate_pass": true,
+        "pct_years_positive": 0.0,
+        "pos_years": 0,
+        "yearly": [
+          {
+            "ic": -0.03380004535944937,
+            "n": 51793,
+            "p_value": 1.423237658743816e-14,
+            "year": 2015
+          },
+          {
+            "ic": -0.031541452593304396,
+            "n": 57859,
+            "p_value": 3.2319865257895455e-14,
+            "year": 2016
+          },
+          {
+            "ic": -0.03520002423432754,
+            "n": 64210,
+            "p_value": 4.572442674383288e-19,
+            "year": 2017
+          },
+          {
+            "ic": -0.028748198768480514,
+            "n": 69369,
+            "p_value": 3.6434321830904346e-14,
+            "year": 2018
+          },
+          {
+            "ic": -0.03689466541604054,
+            "n": 72959,
+            "p_value": 2.08708216697978e-23,
+            "year": 2019
+          },
+          {
+            "ic": -0.037863328559911154,
+            "n": 78508,
+            "p_value": 2.602106859689835e-26,
+            "year": 2020
+          },
+          {
+            "ic": -0.04515510159617842,
+            "n": 85740,
+            "p_value": 5.999652477430485e-40,
+            "year": 2021
+          },
+          {
+            "ic": -0.018811969723700635,
+            "n": 87520,
+            "p_value": 2.6109524450977372e-08,
+            "year": 2022
+          },
+          {
+            "ic": -0.043780705281791794,
+            "n": 84935,
+            "p_value": 2.564562558289801e-37,
+            "year": 2023
+          },
+          {
+            "ic": -0.03516316129154694,
+            "n": 86115,
+            "p_value": 5.616185473443097e-25,
+            "year": 2024
+          },
+          {
+            "ic": -0.03219311444165716,
+            "n": 86437,
+            "p_value": 2.8759065502426943e-21,
+            "year": 2025
+          }
+        ],
+        "years": 11
+      }
+    },
+    "note": "xs_ret_1d_lag_rank has negative IC (reversal). For RL state, compute 1 - xs_ret_1d_lag_rank (buy yesterday's underperformers). xs_ret_1d_abs_rank (high volatility persistence) also passes.",
+    "passing_features": [
+      "xs_ret_1d_lag_rank",
+      "xs_ret_2d_lag_rank",
+      "xs_ret_1d_abs_rank"
+    ],
+    "reason": "1d excess return rank: IC=-0.0284 (reversal \u2014 negate to get C9 candidate). |1d return| rank: IC=+0.0353 (activity persistence). Vietnam shows systematic 1-day mean reversion independent of 5d momentum.",
+    "verdict": "PASS"
+  },
+  "ts": "20260328_111601"
+}

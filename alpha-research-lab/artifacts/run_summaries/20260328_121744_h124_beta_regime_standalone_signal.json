@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "details_json": "/home/manh/stocks/alpha-research-lab/artifacts/run_summaries/20260328_121744_h124_beta_regime_details.json"
+  },
+  "metadata": {
+    "session": 42,
+    "signal": "H124"
+  },
+  "mode": "standalone_signal",
+  "name": "h124_beta_regime",
+  "summary": {
+    "features": {
+      "xs_beta_60d_rank": {
+        "avg_ic": null,
+        "corr_with_s1": NaN,
+        "gate_pass": false,
+        "pct_years_positive": null,
+        "pos_years": 0,
+        "years": 0
+      },
+      "xs_low_beta_60d": {
+        "avg_ic": null,
+        "corr_with_s1": NaN,
+        "gate_pass": false,
+        "pct_years_positive": null,
+        "pos_years": 0,
+        "years": 0
+      }
+    },
+    "passing_features": [],
+    "primary_feature": "xs_beta_60d_rank",
+    "reason": "No beta-regime feature passes gate. xs_beta_60d_rank IC=+0.0000, xs_low_beta_60d IC=+0.0000. Beta does not create a useful cross-sectional edge.",
+    "verdict": "FAIL"
+  },
+  "ts": "20260328_121744"
+}

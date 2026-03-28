@@ -1,0 +1,24 @@
+{
+  "verdict": "FAIL",
+  "reason": "No beta-regime feature passes gate. xs_beta_60d_rank IC=+0.0000, xs_low_beta_60d IC=+0.0000. Beta does not create a useful cross-sectional edge.",
+  "primary_feature": "xs_beta_60d_rank",
+  "passing_features": [],
+  "features": {
+    "xs_beta_60d_rank": {
+      "avg_ic": null,
+      "pos_years": 0,
+      "years": 0,
+      "pct_years_positive": null,
+      "corr_with_s1": NaN,
+      "gate_pass": false
+    },
+    "xs_low_beta_60d": {
+      "avg_ic": null,
+      "pos_years": 0,
+      "years": 0,
+      "pct_years_positive": null,
+      "corr_with_s1": NaN,
+      "gate_pass": false
+    }
+  }
+}

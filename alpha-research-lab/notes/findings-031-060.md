@@ -1,0 +1,835 @@
+# Distilled Scientific Findings
+_Split chunk 031-060 from `notes/findings.md`._
+
+## F29: Turnover Reduction Methods Are Counterproductive (2026-03-17, Session 15)
+
+Three mechanisms tested to reduce H43's 69% daily turnover:
+
+| Method | Result | Data years | Verdict |
+|--------|--------|-----------|---------|
+| H46: K=2 persistence filter | Only 2 qualifying years | 2/11 | **KILLED** |
+| H47: 3-day smoothed ranking | 7 years, 22 days/yr (vs 45) | 7/11 | Marginal |
+| H49: Patient exit (top-M) | Edge 10-12% vs 13.75%, Sharpe 4.7 | 11/11 | Not better than H43 |
+
+**Persistence filter (K=2):** Signal is too transient. Stocks rarely stay top-5 for 2+ consecutive days.
+K=2 reduces trading opportunities to near-zero.
+
+**Proba smoothing:** When applied to the min_proba filter, smoothing is very strict — rolling averages
+rarely sustain 0.55 for multiple days. Results in 22 vs 45 trading days/year, fewer years of data.
+
+**Patient rebalancing (H49):** Holding through low-confidence periods (182 vs 45 days invested)
+produces lower quality (11.96% vs 13.75% accuracy edge). H43's strict quality filter is better.
+
+**Conclusion:** H43 as-is is the optimal strategy. The 69% daily turnover is the cost of staying
+fresh. Daily rebalancing into the model's latest rankings is worth the cost.
+
+---
+## F30: Parameter Contamination Is Real but Modest — Signal Survives Decontamination (2026-03-18, Session 16)
+
+H43's three strategy parameters (VIX_MAX=30, MIN_PROBA=0.55, TOP_N=5) were chosen by observing
+2015-2025 results. Session 16 tested three approaches to eliminate this contamination.
+
+**H51 (soft parameterless portfolio):** Replacing TOP_N + MIN_PROBA + VIX filter with softmax
+weights over all 52 stocks gives +0.20% edge at T=1.0, +2.18% at T=0.1 (most concentrated).
+Conclusion: the parameters do real work. They select the ~45 highest-confidence days per year
+from 250 available, concentrating signal 5-10x vs always-invested approach.
+
+**H52 (nested walk-forward, fully honest):** For each test year, grid-search parameters on the
+3 prior years. Result: +11.64% avg edge, Sharpe 1.83, 8/9 years positive.
+
+| Year | Params chosen | Test Edge |
+|------|--------------|-----------|
+| 2017 | N=5,p=0.52,V=25 | +9.67%* |
+| 2018 | N=5,p=0.52,V=25 | **-0.15%** |
+| 2019 | N=5,p=0.55,V=35 | +14.22%* |
+| 2020 | N=5,p=0.55,V=35 | +23.11%* |
+| 2021 | N=3,p=0.58,V=25 | +6.73%* |
+| 2022 | N=5,p=0.55,V=30 | +13.58%* |
+| 2023 | N=7,p=0.52,V=35 | +10.63%* |
+| 2024 | N=5,p=0.55,V=25 | +8.65%* |
+| 2025 | N=3,p=0.55,V=32 | +18.28%* |
+
+**Key numbers:** H43 contaminated +13.75% Sharpe 4.58 | H52 honest +11.64% Sharpe 1.83
+Contamination adds ~2% to edge and inflates Sharpe substantially (partly due to missing 2015-2016).
+
+**H43's parameter choices are sensible priors, not data-mined extremes:**
+- TOP_N=5 selected in 5/9 honest years (most common choice)
+- MIN_PROBA=0.55 selected in 5/9 honest years (most common choice)
+- VIX_MAX=30 selected for 2022 (the most important test, H43's hardest year)
+
+---
+## F31: VIX Inside the Model Preserves Signal Without External VIX Filter (2026-03-18, Session 16)
+
+H50: added VIX (level, 5d/20d momentum) as training features in cross_sectional_wf.py.
+New probas: `data/features/xs_barrier_vix_feature_all_probas.parquet`
+
+**Result with no external VIX filter:**
+- Dynamic top-5 portfolio: +11.85% avg edge, Sharpe 3.10, **11/11 years positive**, ~56 trades/yr
+- Quintile IC: +0.0879 avg, all 11 years statistically significant
+
+The model learned to lower probabilities during extreme VIX regimes internally.
+Adding the external VIX filter ON TOP of VIX-feature probas does NOT improve performance
+(+10.72% Sharpe 3.17) — double-counting the VIX signal reduces trades without improving quality.
+
+**Implication:** For a publication-clean system, H50a (VIX-feature probas, no external VIX filter)
+eliminates the VIX_MAX parameter entirely. MIN_PROBA and TOP_N remain as the two residual
+contaminated parameters — addressable via H52 nested walk-forward on the H50 probas.
+
+---
+
+## Dead Ends — Exhausted Hypothesis Directions
+
+_Do not revisit these without a strong new reason. Each entry includes the session that closed it and why it failed._
+
+### Signal Sources (features / targets)
+
+| Direction | Tried | Why it failed | Closed |
+|-----------|-------|---------------|--------|
+| Standard OHLCV technicals (MA, RSI, MACD, BB, ATR, volume) | E1-E7, all combinations | FPT is weak-form efficient on raw OHLCV; 0 significant years in 7-year walk-forward | Session 2 (F2) |
+| Lag returns (1-60d) on FPT alone | E2, E3 | Collapses to drift; 0 significant years | Session 2 (F2) |
+| FPT-only fundamentals (EPS, P/E, ROE) | E29 | No improvement over E8 baseline; too few quarterly data points | Session 4 (F9) |
+| Market breadth indicators | E-series | No edge; 250 rows/year is too few for additional single-stock features | Session 4 (F8) |
+| Tet calendar / seasonality | Session 5 | Overfits; not consistent across years | Session 5 (F10a) |
+| Earnings cycle effects | Session 5 | No consistent pattern | Session 5 (F10a) |
+| Risk-adjusted momentum | Session 5, H36 | No improvement; H36 FAILED | Sessions 5, 12 |
+| XS cross-sectional fundamentals (all 52 stocks) | H29 | No improvement over price-only XS model | Session 11 |
+| 10-day prediction horizon | Session 7 (F15) | Too much variance — 2020: -31%*, 2021: +34%* | Session 7 (F15) |
+
+### Model Architecture
+
+| Direction | Tried | Why it failed | Closed |
+|-----------|-------|---------------|--------|
+| LightGBM (vs XGBoost) | H24 | Similar or worse; not worth maintaining separate code path | Session 9 |
+| Random Forest | H33 | Worse than XGBoost at same depth | Session 12 |
+| ExtraTrees | H33b | Worse than XGBoost | Session 12 |
+| MLP classifier | H37 | Worst of all; poor on tabular financial data | Session 12 |
+| XGBoost depth=5 (vs depth=3) | H34 | Marginal gain, likely overfit | Session 12 |
+| Linear regression (regression target) | Early sessions | No edge; doesn't benefit from the relative momentum structure | Sessions 1-3 |
+
+### Strategy / Portfolio Design
+
+| Direction | Tried | Why it failed | Closed |
+|-----------|-------|---------------|--------|
+| K=2 persistence filter (must rank top-N for 2 consecutive days) | H46 | Signal fires in 1-day bursts; K=2 reduces to 2/11 qualifying years | Session 15 (F29) |
+| Proba smoothing (rolling N-day average before ranking) | H47 | Smoothed proba rarely sustains 0.55 threshold; drops to 7 qualifying years | Session 15 (F29) |
+| Patient rebalancing (hold until rank drops below M) | H49 | Holding through low-confidence periods produces lower quality; H43 strict filter is better | Session 15 (F29) |
+| Any hold period > 1 day (E=0 terms) | H44, H48, H78 | Daily wins at all cost levels in E=0 — gross decay outpaces cost savings | Sessions 15, 24 (F28, F37) |
+| Proba momentum ranking (Zaremba 2020) | H84 | IC and edge degrade monotonically with alpha; no lag structure in daily proba signal | Session 24 (F36) |
+| Macro regime filters as external filters (GDP, CPI, credit) | H26, H27 | Modest gains contaminated by filter selection | Session 10 |
+| TAIEX / KOSPI correlation features | Session 11 | No durable improvement over core XS model | Session 11 |
+
+### Barrier Parameters
+
+| Direction | Tried | Why it failed | Closed |
+|-----------|-------|---------------|--------|
+| 0.5% barrier | H21a | Worse than 1.0% — too many timeout samples | Session 8 |
+| 1.5% barrier | H21b, E31 | Worse than 1.0% — too few samples hit the barrier | Sessions 7-8 |
+| 2.0% barrier | E33 | Worse than 1.0% | Session 7 |
+| 10d / 20d training label horizon | H85 | IC identical (+0.152), Sharpe lower (8.46–8.86 vs 9.17); 5d label optimal | Session 24 (F38) |
+
+---
+## F32: Universe Expansion — 393 HOSE Stocks Dramatically Improves Cross-Sectional Signal (2026-03-18, Session 17)
+
+**H54:** Expanded universe from 52 → 393 stocks (all 3-letter HOSE listings with ≥300 rows of data).
+
+**IC nearly doubled:**
+- H43 (52 stocks): IC = +0.088
+- H54 (393 stocks): IC = +0.1515
+
+This is not cherry-picking — IC measures rank correlation across ALL 393 stocks per day, not just the top-N. More stocks give the model more cross-sectional variation to learn from, resulting in better relative ranking of the whole universe.
+
+**Portfolio performance (N=5, no VIX filter):**
+- H43 baseline: +13.75% edge, Sharpe 4.58
+- H54 full HOSE: **+25.52% edge, Sharpe 9.17, 11/11 years positive**
+
+**VIX filter is obsolete with large universe:**
+- With VIX filter: +26.17%, Sharpe 7.61
+- Without VIX filter: +25.52%, Sharpe 9.17 (HIGHER Sharpe)
+With 393 stocks, qualifying candidates exist on every trading day regardless of VIX regime. The VIX filter was a patch for the 52-stock model's low candidate count on quiet days.
+
+**TOP-N sweep (no VIX filter):**
+| N | Edge | Sharpe |
+|---|------|--------|
+| 1 | +30.30% | 11.04 |
+| 2 | +28.27% | 8.88 |
+| 3 | +27.23% | 9.96 |
+| 5 | +25.52% | 9.17 |
+| 7 | +23.99% | 8.76 |
+
+N=3 (Sharpe 9.96) and N=1 (Sharpe 11.04) are the sweet spots. N=1 concentrates exposure in the model's single highest-confidence pick each day.
+
+**Survivorship bias caveat:** The 393 stocks are all currently listed on HOSE. Stocks delisted before 2025 are absent. This creates upward bias (excluded stocks may have performed worse). However:
+1. H43's 52 stocks have the same bias
+2. Walk-forward training (train on past years only) prevents look-ahead
+3. The bias likely explains some — but not all — of the improvement over H43
+
+**Probas file:** `data/features/xs_barrier_all_probas_hose_full.parquet` (824,704 rows, 393 tickers)
+
+---
+## F33: H55 Dollar Returns — Execution Timing Matters (2026-03-18, Session 18, REVISED)
+
+H55 (rewritten) measured actual forward relative returns for H54's top-5 picks with three entry timings:
+
+**E=0 (enter T close — NOT EXECUTABLE):** Signal computed from T close data; can't execute at T close.
+- Full 393: +1.754%/trade gross | Liquid 210: +1.037%/trade gross
+
+**E=1 (enter T+1 open — CORRECT standard execution):**
+- Full 393: **+0.539%/trade gross, +0.239% net** at 0.3% RT, all 11 years positive
+- Liquid 210: **+0.279%/trade gross, -0.021% net** at 0.3% RT (barely negative)
+
+**E=3 (enter T+3 open — delayed):** Signal largely gone; +0.131% full, +0.074% liquid
+
+The inflated E=0 numbers reflect the T close → T+1 open overnight gap which is already
+realized before the trader can enter. The real executable edge (E=1) is much smaller.
+
+**Practical takeaway:**
+- Full universe: net positive after costs — signal survives correct execution
+- Liquid stocks only: breaks even / slightly negative at 0.3% RT
+- The gap between E=0 and E=1 = "overnight gap effect" not capturable by standard next-open entry
+- Compare H43 (5d hold, original E=0 method): +0.409%/trade — also overstated by same timing bias
+
+---
+## F34: H56 — Honest Nested WF on Full Universe: Sharpe 7.35 (vs 1.83 for 52 stocks) (2026-03-18, Session 18)
+
+H56 (nested walk-forward, no parameter contamination, 393 stocks):
+- **+25.98% avg edge, Sharpe 7.35, 9/9 years positive**
+- Compare H52 (52 stocks, honest): +11.64% Sharpe 1.83
+
+The 2018 failure in H52 (-0.15%) is completely resolved (+26.69% in 2018 for H56). With 393
+stocks, the pathological near-zero-variance Sharpe from sparse trading (VIX_MAX=25 giving <5
+trades/year) is gone — every parameter combo has enough trades to compute a valid meta-Sharpe.
+
+Contamination inflation for H54: contaminated Sharpe 9.17 vs honest Sharpe 7.35 — modest (~20%).
+The honest benchmark is strong on its own.
+
+---
+## F35: Survivorship Bias Audit — Old Stocks Drive the Signal (2026-03-18, Session 18)
+
+H57 compared performance by stock cohort (based on first year appearing in walk-forward probas):
+
+| Cohort | Tickers | Edge | Sharpe |
+|--------|---------|------|--------|
+| All 393 | 393 | +25.59% | 8.52 |
+| Old (≥2012 stocks, ≤2015 debut) | 268 | +24.58% | 6.67 |
+| Mid (2013-2015 listed) | 82 | +12.09% | 2.13 |
+| New (2016+ listed) | 43 | +10.98% | 1.55 |
+
+**Key finding:** New stocks perform WORSE than old stocks. Survivorship bias is NOT inflating
+the new stocks. The improvement from H43 (+13.75%, 52 stocks) to H54 (+25.52%, 393 stocks)
+is driven by pool size: 268 old stocks (same survivorship profile as H43's 52) already give
++24.58% Sharpe 6.67.
+
+Mechanism: more candidates → more selective top-N → better top-5 picks given the same IC.
+
+---
+## F37: Holding Period Grid — H=1 Wins in E=0, H=2 Likely Better in E=1 (2026-03-19, Session 24)
+
+**Status note (2026-03-19, Session 26):** The E=1 inference below was later tested directly and overturned by F48. H=1 remains best in the dedicated executable T+1-open simulation.
+
+**H78** simulated fixed-hold portfolios (H=1/2/3/5) on H54 probas (393 stocks, 2015–2025).
+
+**Key observation — turnover:** The top-5 is ~91% reshuffled every trading day (182% portfolio
+turnover). Only ~0.45 stocks persist from one day to the next. The H54 signal is extremely
+transient — consistent with F28's finding that edge decays to near-zero by day 5.
+
+**H78 simulation (E=0 — closing prices, same methodology as H54):**
+
+| Hold | gross/day | trades/yr | cost/yr @0.30% | net/yr |
+|------|-----------|-----------|----------------|--------|
+| H=1 | +1.752% | 2246 | 67.4% | +365% |
+| H=2 | +1.102% | 1180 | 35.4% | +238% |
+| H=3 | +0.766% | 796 | 23.9% | +167% |
+| H=5 | +0.485% | 475 | 14.3% | +106% |
+
+**In E=0 terms:** H=1 unambiguously best — gross decay from holding longer (1.752% → 0.485%/day)
+far exceeds cost savings (67.4% → 14.3%/yr). Confirms F28/F29.
+
+**E=1 adjustment (inferred from F33):**
+Each portfolio entry incurs a ~1.215% overnight gap cost (the T-close→T+1-open gap that is
+unrealizable at T+1 open entry). H=2 avoids re-entering ~123 positions/yr vs H=1.
+Estimated E=1 net/day at 0.30% RT: H=1 ≈ +0.261%, H=2 ≈ +0.350%, H=3 ≈ +0.266%, H=5 ≈ +0.185%.
+**H=2 is likely best in the executeable (E=1) framework.** Would require a dedicated T+1-open
+simulation to confirm. (Not tested in H78 — H78 uses E=0 closing prices throughout.)
+
+**K-band variant (K=15):** Identical to H=1. With 393 stocks the top-5 from yesterday almost
+always has one stock that falls below rank 15 by tomorrow → K-band triggers every day.
+Meaningful K-band would require K≥50+ for 393-stock universe.
+
+**Verdict:**
+1. E=0: H=1 (daily) confirmed optimal — consistent with F28/F29.
+2. E=1: H=2 estimated best — overnight gap avoidance saves more than alpha decay costs.
+3. A dedicated H=2 E=1 simulation (using T+1 open prices) is warranted if targeting lower-cost execution.
+
+---
+## F36: Proba Momentum Ranking Does Not Transfer to VN Stocks (2026-03-19, Session 24)
+
+**H84** tested Zaremba 2020 "Opposites Attract" concept: augmenting daily ranking with short-term
+proba momentum (`rank_score = xs_proba + alpha * (proba_ma5 - proba_ma20)`).
+
+**Results (393 stocks, no VIX filter, alpha sweep {0.0, 0.3, 0.5, 0.7, 1.0}):**
+
+| alpha | avg_edge | Sharpe | vs H54 |
+|-------|----------|--------|--------|
+| 0.0 (H54 baseline) | +25.52% | 9.17 | — |
+| 0.3 | +25.11% | 9.74 | −0.40% |
+| 0.5 | +24.66% | 8.94 | −0.86% |
+| 0.7 | +24.78% | 8.43 | −0.74% |
+| 1.0 | +24.15% | 7.86 | −1.37% |
+
+**Han 2021 stability filter (proba_std5 ≤ 0.15):** Reduces baseline from +25.52% to +22.63%
+— high-variance proba stocks are *high-signal*, not crash risk in VN context.
+
+**IC degrades monotonically:** +0.1515 (alpha=0) → +0.1496 (alpha=0.5) → +0.1443 (alpha=1.0).
+
+**Why it fails:** Zaremba's mechanism operates at monthly rebalancing over countries/industries.
+H54's signal decays to near-zero by day 10–15 (F28). At daily rebalancing, the 5d/20d MA of
+probas mostly captures stale information already incorporated by the current-day model. There
+is no exploitable lag structure in model confidence at the daily horizon.
+
+**Verdict:** CLOSED. Raw `xs_proba` is already the optimal ranking signal at daily frequency.
+Do not add lag-based momentum components to the ranking score.
+
+---
+## F38: Training Label Horizon — 5d Barrier Is Already Optimal (2026-03-19, Session 24)
+
+**H85** tested whether longer training label horizons (10d, 20d) improve the H54 signal.
+Blitz et al. 2023 found monthly-rebalancing ML strategies trained with 3-month/12-month labels
+survive transaction costs better than 1-month-label models. H85 tested this for VN stocks.
+
+**Results (393–394 stocks, no VIX filter, 2015–2025):**
+
+| Label horizon | IC (Spearman) | avg_edge | Sharpe | year_std |
+|---|---|---|---|---|
+| H54: 5d (baseline) | +0.1515 | +25.52% | **9.17** | 2.78% |
+| H85: 10d | +0.1521 | +25.46% | 8.46 | 3.01% |
+| H85: 20d | +0.1520 | +25.36% | 8.86 | 2.86% |
+
+**IC is nearly identical** across all three (within 0.0006). The model learns essentially the
+same cross-sectional ranking patterns regardless of whether the label is "outperforms VNINDEX
+by 1% within 5 days" vs "within 10/20 days."
+
+**Why Blitz's mechanism doesn't transfer:**
+1. VN market signal decays to near-zero by day 10 (F28). A 20d label assigns credit to stocks
+   that will outperform VNINDEX eventually but not necessarily in the near term — introducing
+   noise into the signal that H54's 5d label avoids.
+2. H85 doesn't actually reduce turnover (portfolio still rebalances daily using the new probas).
+   Blitz's saving comes from *holding longer*, not just *training on longer labels*. H78 shows
+   the correct lever for turnover reduction.
+3. The 10d label has *higher* year-to-year variance (Sharpe 8.46 vs 9.17) — the opposite of
+   Blitz's prediction of more stable signals with longer labels.
+
+**Verdict:** CLOSED. 5d barrier label is optimal for VN cross-sectional momentum. Adding label
+horizon as a second dimension to barrier amplitude (H83 2D grid) is not warranted.
+Also closes the "barrier horizon" axis: the only remaining barrier parameter to test is
+amplitude (H83: 0.5%, 1.5% vs current 1.0%).
+
+---
+## F39: Barrier Amplitude 1% Is Optimal — 0.5% and 1.5% Both Degrade (2026-03-19, Session 25)
+
+**H83** tested whether the triple barrier amplitude should be tightened (0.5%) or widened (1.5%)
+relative to the current 1.0% used by H54.
+
+**Results (394 stocks, no VIX filter, 2015-2025):**
+
+| Barrier | IC (Spearman) | avg_edge | Sharpe | year_std |
+|---|---|---|---|---|
+| H83a: 0.5% | +0.1519 | +25.15% | 8.80 | 2.86% |
+| **H54: 1.0% (baseline)** | **+0.1515** | **+25.52%** | **9.17** | **2.78%** |
+| H83b: 1.5% | +0.1460 | +24.17% | 7.18 | 3.36% |
+
+Pattern: 0.5% creates more noise labels (too many neutral outcomes at boundary), 1.5% creates
+too many neutral/tie outcomes for 5d window — model cannot distinguish stocks outperforming by
+1.5%+ reliably. 1% sits at the sweet spot.
+
+**Verdict:** CLOSED. 1.0% is the optimal barrier amplitude. Closes the barrier amplitude search axis.
+
+---
+## F40: VIX as Training Feature Does Not Improve H54 (2026-03-19, Session 25)
+
+**H79** tested adding VIX level + 5d/20d momentum as explicit training features at 393-stock scale.
+
+**Results (394 stocks, no VIX filter, 2015-2025):**
+
+| System | avg_edge | Sharpe | IC |
+|---|---|---|---|
+| H54 baseline | +25.52% | 9.17 | +0.1515 |
+| H79 (VIX feature) | +24.99% | 8.90 | +0.1516 |
+
+IC is essentially identical. With 393 stocks, diversification across regimes is already handled
+implicitly by cross-sectional momentum. Contrast: at 52-stock scale (H50a, Session 16), VIX
+feature gave significant improvement (+11.85% Sharpe 3.10). Effect disappears at scale.
+
+**Verdict:** FAIL. VIX as training feature adds no value at 393-stock scale.
+
+---
+## F41: Dormant Features (Vol Regime, Calendar, CCI, WillR) — Slightly Better Sharpe (2026-03-19, Session 25)
+
+**H77** enabled vol_regime, calendar, CCI, Williams %R on the 393-stock cross-sectional WF.
+
+**Results (394 stocks, no VIX filter, 2015-2025):**
+
+| System | avg_edge | Sharpe | IC | n_features |
+|---|---|---|---|---|
+| H54 baseline | +25.52% | 9.17 | +0.1515 | 35 |
+| H77 (dormant) | +25.19% | **9.68** | +0.1505 | 44 |
+
+Adding 9 features (willr, cci, vnindex_vol_20d, vnindex_vol_pct, high_vol_regime,
+days_to_tet, days_since_tet, pre_tet_window, post_tet_window) slightly lowers IC and edge
+but increases Sharpe (+0.51). Calendar/vol features add mild diversification without improving
+core predictive power.
+
+**Verdict:** NEUTRAL. Sharpe improvement is real but edge decline (-0.33%) means net effect is
+neutral for practical trading. H54 remains champion.
+
+---
+## F42: Sector-Relative Features — Marginal Edge Gain, Lower Sharpe (2026-03-19, Session 25)
+
+**H80** added sector-relative momentum features: deviation of stock's 1d/5d/20d relative return
+from its sector mean. 15 named sectors + "Other" bucket (57% of stocks).
+
+**Results (394 stocks, no VIX filter, 2015-2025):**
+
+| System | avg_edge | Sharpe | IC |
+|---|---|---|---|
+| H54 baseline | +25.52% | 9.17 | +0.1515 |
+| H80 (sector-rel) | +25.70% | 8.35 | +0.1524 |
+
+IC improves marginally (+0.0009). Edge slightly better (+0.18%) but Sharpe degrades (-0.82).
+The "Other" bucket (226/393 stocks) receives full-universe mean demeaning — nearly equivalent
+to existing market-relative features. Within-sector resolution adds noise more than signal.
+
+**Verdict:** NEUTRAL. Does not improve H54. Sector-relative features are mostly captured by
+existing market-relative (vs VNINDEX) features.
+
+---
+## F43: IC Stability Filter Does Not Improve Portfolio (2026-03-19, Session 25)
+
+**H81** restricted daily universe to tickers with positive historical IC in >=K of prior 3 years.
+Overall IC positivity rate: 88.9% of (year, ticker) pairs. Mean IC = +0.133.
+
+**Results (2015-2025):**
+
+| Filter | avg_edge | Sharpe | Years |
+|---|---|---|---|
+| H54 baseline (no filter) | +25.52% | 9.17 | 11/11 |
+| IC>0 in >=1/3 yrs | +25.46% | 8.29 | 10/10 |
+| IC>0 in >=2/3 yrs | +25.45% | 8.13 | 9/9 |
+| IC>0 in >=3/3 yrs | +24.81% | 9.57 | 8/8 |
+
+Since 88.9% of tickers already have positive IC, filtering barely changes the universe.
+Tighter filters lose years of data and portfolio breadth without compensating gain.
+
+**Verdict:** FAIL. XS model already selects stocks that perform well across the full universe.
+IC stability filter provides no filtering signal beyond the model's daily probabilities.
+
+---
+## F44: Classifier + Regressor Ensemble — Trades Edge for Sharpe (2026-03-19, Session 25)
+
+**H82** blended XGBoost classifier probas (xs_proba) with rank-normalized regressor scores
+using daily rank percentile normalization.
+
+**Results (394 stocks, no VIX filter, 2015-2025):**
+
+| Alpha (clf weight) | avg_edge | Sharpe | Pos years |
+|---|---|---|---|
+| 1.0 (clf only = H54) | +25.52% | 9.17 | 11/11 |
+| 0.7 | +25.06% | 9.22 | 11/11 |
+| 0.5 | +25.02% | 9.62 | 11/11 |
+| 0.3 | +24.70% | **11.41** | 11/11 |
+| 0.0 (reg only) | +22.15% | 8.49 | 11/11 |
+
+Regressor alone is weaker (-3.37% edge). Blending at alpha=0.3 gives Sharpe 11.41 (highest
+observed in any system) but at cost of -0.82% edge. Pure risk-return tradeoff.
+
+**Verdict:** NEUTRAL. Classifier (H54) has best edge. Alpha=0.3-0.5 useful if Sharpe stability
+is prioritized over max edge. Regressor is a useful complement in multi-objective optimization.
+
+---
+## F45: XS Fundamentals (52-Ticker, Zero-Fill) — Higher Sharpe, Slightly Lower Edge (2026-03-19, Session 25)
+
+**H86** added P/E rank, EPS YoY rank, ROE rank, NPM rank, Debt/Equity rank from 52-ticker dataset,
+zero-filled for remaining 341 stocks.
+
+**Results (394 stocks, no VIX filter, 2015-2025):**
+
+| System | avg_edge | Sharpe | IC |
+|---|---|---|---|
+| H54 baseline | +25.52% | 9.17 | +0.1515 |
+| H86 (fundamentals) | +25.13% | **9.79** | +0.1505 |
+
+Only 52/394 tickers have real fundamental data, yet Sharpe improves (+0.62) while edge drops
+slightly (-0.39%). The model learns that "zero" fundamentals (unmapped stocks) have different
+risk characteristics. The 52 tickers with data are among the most liquid and their fundamental
+signals reduce portfolio concentration risk.
+
+**Verdict:** NEUTRAL. Not a champion replacement. Sharpe gain (+0.62) is real and reproducible.
+Could be combined with H77 or H82 in a future "Sharpe optimizer" session.
+
+---
+## F46: Session 25 Convergence — H54 Remains Optimal, Feature Space Exhausted (2026-03-19, Session 25)
+
+After testing 9 hypotheses (H77-H86) across feature augmentation, filtering, ensemble methods,
+and barrier amplitude grids, H54 remains the undefeated champion.
+
+**Systematic finding:** Every feature addition tested in Sessions 19-25 fails to beat H54
+on avg_edge > 25.52%. Signal appears near its natural limit:
+1. Universe size (393 stocks) is near-saturated
+2. Feature set (35 technical + relative momentum) captures the core signal
+3. 1% barrier + 5d horizon is the optimal label definition
+4. No external filter (VIX, IC stability, sector) improves the raw signal
+
+**Sharpe improvements without edge gain (potential future combination):**
+- H77 (dormant features): Sharpe +0.51
+- H86 (XS fundamentals): Sharpe +0.62
+- H82 alpha=0.3 (regressor blend): Sharpe +2.24 but edge -0.82%
+- Combined H77+H86+H82(alpha=0.5) → estimate Sharpe ~10+ with edge ~25%
+
+**Verdict:** H54 is the production champion. Cross-sectional momentum in VN stocks is real,
+robust, and economically significant (+25.52% edge, Sharpe 9.17, 11/11 years).
+
+---
+## F47: H87 Combination - Sharpe-Optimized Near-Champion, But H54 Still Wins on Edge (2026-03-19, Session 26)
+
+**H87a** combined H77 dormant features and H86 XS fundamentals in the 394-stock barrier model.
+
+**Direct classifier result (no VIX filter, TOP_N=5, min_proba=0.55):**
+
+| System | avg_edge | Sharpe | IC |
+|---|---|---|---|
+| H54 baseline | +25.52% | 9.17 | +0.1515 |
+| H87a (dormant + fundamentals) | +24.75% | 9.42 | +0.1502 |
+
+The raw feature combination slightly improves Sharpe (+0.25) but gives back -0.77% edge. This
+confirms H77 and H86 mostly act as variance smoothers, not new predictive signal.
+
+**H87b** then applied the H82 classifier-regressor blend on top of H87a:
+
+| Alpha (clf weight) | avg_edge | Sharpe | Pos years |
+|---|---|---|---|
+| 1.0 | +24.73% | 9.39 | 11/11 |
+| 0.7 | +25.03% | 10.25 | 11/11 |
+| 0.5 | +24.94% | 9.94 | 11/11 |
+| 0.3 | +24.52% | 9.62 | 11/11 |
+
+The planned `alpha=0.5` blend narrowly misses the Session 26 target (Sharpe > 10 while keeping
+edge > 24), but `alpha=0.7` clears it. Compared with Session 25's H82 result, the combination
+shifts the useful tradeoff toward the classifier-heavy side: it keeps edge above 25% while still
+reaching Sharpe > 10.
+
+**Verdict:** NEUTRAL for champion replacement, PASS for Sharpe optimization. H54 remains the
+production edge champion. H87(alpha=0.7) is the best near-champion variant so far if the goal is
+"Sharpe > 10 without letting edge fall below 25%."
+
+---
+## F48: Dedicated H78 E=1 Simulation - Daily Rebalancing Still Wins in Executable Terms (2026-03-19, Session 26)
+
+Session 24 inferred that H=2 might beat H=1 once the T-close -> T+1-open overnight gap was removed.
+Session 26 tested this directly using executable T+1-open returns.
+
+**Setup:** H54 saved probabilities, 393-stock HOSE universe, `TOP_N=5`, `MIN_PROBA=0.55`, no VIX filter.
+Returns were measured from actual next-open execution onward:
+signal at T close -> enter at T+1 open -> first holding-day return is T+1 open to T+2 open.
+
+**Results (2015-2025):**
+
+| Hold | gross/day | trades/yr | net/yr @0.30% RT |
+|---|---|---|---|
+| H=1 | **+0.542%** | 2246 | **+66.32%** |
+| H=2 | +0.348% | 1180 | +50.98% |
+| H=3 | +0.216% | 796 | +29.82% |
+| H=5 | +0.151% | 475 | +23.27% |
+
+K-band variant (`H=3`, `K=15`) is effectively identical to H=1, confirming again that the
+top-5 turns over so aggressively that a narrow stay-in band does not change the portfolio.
+
+**Key conclusion:** Removing the overnight gap does NOT make H=2 optimal. The signal still decays
+fast enough that daily rebalancing remains best, even in the executable framework.
+
+This overturns the earlier Session 24 inference. The right interpretation of F33/F37 is:
+- the overnight gap is real and should not be counted,
+- but the remaining open-to-open alpha at H=1 is still larger than the turnover savings from H=2.
+
+**Verdict:** FAIL for the "H=2 beats H=1 in E=1" hypothesis. CLOSED. Execution realism does not
+change the preferred holding period: H=1 remains optimal.
+
+---
+## F49: Current H54 No-VIX Cost Stress - Break-Even Near 0.54% RT (2026-03-19, Session 26)
+
+Earlier cost studies were done on the older VIX-filtered execution setup. Session 26 reran cost
+sensitivity on the **current production system**: H54 with no external VIX filter.
+
+**Setup:** H54 saved probabilities, 393-stock HOSE universe, executable E=1 open-to-open returns,
+`TOP_N=5`, `MIN_PROBA=0.55`, no VIX filter.
+
+**Results:**
+
+| Strategy | gross/trade | trades/yr | exact breakeven RT | ann. net @0.30% RT |
+|---|---|---|---|---|
+| Daily H=1 | **+0.539%** | 246.8 | **0.54%** | **+59.02%** |
+| Weekly H=5 | +0.643% | 50.2 | 0.64% | +17.20% |
+
+**Key conclusions:**
+1. The current H54 production strategy is economically viable if actual all-in RT cost stays
+   below roughly **0.5%**.
+2. Daily H=1 remains the preferred execution mode. Weekly H=5 only improves cost tolerance by
+   about **0.10% RT** while sacrificing a large amount of annual net edge.
+3. The strategy is robust for large-cap and many mid-cap execution conditions, but likely too
+   fragile for thin-stock cost levels above ~0.7% RT.
+
+This updates the practical trading interpretation of the signal:
+- edge is real and executable,
+- but cost control is a first-order constraint,
+- and the correct operating rule for the current champion is still daily H=1, not a slower hold.
+
+**Verdict:** PASS. The current H54 system survives realistic costs, with a quantified and usable
+break-even threshold.
+
+---
+## F50: H87 Alpha=0.7 Is Operationalizable, But Not a Clear Executable Upgrade Over H54 (2026-03-19, Session 26)
+
+Session 26 turned the H87 `alpha=0.7` blend into a first-class saved artifact:
+`data/features/xs_blend_h87_alpha0.7.parquet`
+
+This artifact reproduces the earlier label-space portfolio result:
+- avg edge: +25.03%
+- Sharpe: 10.25
+- 11/11 positive years
+
+But the executable E=1 cost stress shows that the economic advantage over H54 is only marginal:
+
+| Metric | H54 | H87(alpha=0.7) |
+|---|---|---|
+| E=1 gross/trade, daily H=1 | +0.539% | +0.546% |
+| Exact breakeven RT, daily H=1 | 0.54% | 0.55% |
+| Annual net @0.30% RT, daily H=1 | +59.02% | +59.19% |
+| Exact breakeven RT, weekly H=5 | 0.64% | 0.74% |
+
+**Interpretation:**
+1. H87(alpha=0.7) is now easy to run, save, and test like any other system.
+2. It does NOT justify replacing H54 as the primary production system.
+3. Its main practical value is as an alternate reference or possible higher-cost fallback, not as a new champion.
+
+**Verdict:** NEUTRAL. Operationalization PASS, champion replacement FAIL.
+
+---
+## F51: Current H54 No-VIX Live Validation - Signal Alive in 2026, Costs Still First-Order (2026-03-19, Session 26)
+
+Session 26 reran the 2026 holdout as a **live-validation artifact for the current production setup**:
+H54 features/model, no external VIX filter, executable E=1 open-to-open returns, `TOP_N=5`,
+`MIN_PROBA=0.55`.
+
+**Saved artifact:** `data/features/xs_live_validation_h54_2026.parquet`
+
+**Results (2026-01-05 to 2026-03-11, 389 tickers, 43 days):**
+
+| Metric | Value |
+|---|---|
+| 2026 IC | **+0.1323** |
+| 2025 IC | +0.1201 |
+| Equal-weight gross/trade | **+0.155%** |
+| Equal-weight net/trade @0.30% RT | -0.145% |
+| Square-weight gross/trade | **+0.198%** |
+| Square-weight net/trade @0.30% RT | -0.102% |
+| Live trades | 42 |
+
+**Key conclusion:** The cross-sectional ranking signal is still clearly alive in 2026. IC remains
+strong and is above the last full backtest year (2025). Executable gross returns are positive.
+But at current early-2026 realized edge levels, `0.30%` RT costs still push the realized net slightly
+negative. The right interpretation is not "signal dead" but "signal alive, costs still binding,
+sample still short."
+
+**Verdict:** WEAK PASS. Use as monitoring evidence only, not as a tuning target.
+
+---
+## F52: H54 Daily vs H87 Weekly Crossover - Fallback Threshold Near 0.49% RT (2026-03-19, Session 26)
+
+Session 26 compared the current default strategy (H54 daily H=1) against the most plausible
+higher-cost fallback (H87 alpha=0.7, weekly H=5), using the saved executable cost-stress summaries.
+
+**Results:**
+
+| RT cost | H54 daily ann. net | H87 weekly ann. net | Winner |
+|---|---|---|---|
+| 0.30% | **+59.01%** | +21.71% | H54 daily |
+| 0.50% | +9.65% | **+11.80%** | H87 weekly |
+| 0.70% | -39.71% | **+1.89%** | H87 weekly |
+
+**Crossover:** approximately **0.49% RT**
+
+**Key conclusion:** The deployment rule is now explicit:
+1. If actual all-in RT cost is below about **0.49%**, H54 daily remains the best operating mode.
+2. If actual RT cost is above about **0.49%**, H87 weekly is the better fallback.
+3. H87 weekly is not a new champion. It is a cost-robust alternate for higher-friction names.
+
+**Verdict:** PASS. This closes the higher-cost fallback decision rule.
+
+---
+## F53: XS Momentum Signal — Production-Parked, Deployment Gap Defined (2026-03-24, Session 27)
+
+After 26 sessions of validation, the XS cross-sectional momentum signal (H54) is formally **parked**.
+It is not a dead signal — the ranking skill is confirmed and alive. It is not a production system —
+the execution gap has not been closed.
+
+**What is established:**
+- Walk-forward IC = +0.1515 across 11/11 years (2015-2025), p < 0.05 every year
+- 2026 live holdout IC = +0.134 (ranking skill intact)
+- Gross returns positive in both backtest (+0.539%/trade) and 2026 partial holdout (+0.198%/trade sq-weight)
+- 4/4 robustness tests passed (permutation, sector neutrality, mean-reversion decomposition, execution timing)
+
+**What is NOT established (the deployment gap):**
+1. **Real fill verification.** The model assumes full fills at T+1 open for all 5 positions. This has never been tested with order-book data. For mid/small-cap names (where the signal is strongest), partial fills and queue position are unknown.
+2. **Net P&L positive at actual cost.** 2026 partial-year net is slightly negative at 0.30% RT. Net could be positive at lower actual costs or with longer in-sample, but it has not been confirmed.
+3. **Execution infrastructure.** No system exists to generate and act on the daily signal in real time.
+4. **Retail-scale constraint.** Restricting to top-50 liquid stocks halves IC. The strategy requires mid/small-cap names where fills are hardest to verify.
+
+**Conditions to unpark:**
+- Real fill data available for a sample of opening-auction executions
+- Net P&L confirmed positive over at least one full calendar year at actual realized costs
+- Execution infrastructure in place for daily rebalancing
+
+**Research direction shift:**
+The goal is now to build a library of orthogonal learnable signals for RL training. H54 is the first
+validated feature in that library (IC ~0.152). New directions: volume/order-flow signals (H90),
+1-day target horizon (H91), sector sub-models (H92), LLM news sentiment (H89).
+
+**Verdict:** PARKED. Signal alive, deployment gap open. Do not trade until gap is closed.
+
+---
+## F54: H90 — Volume XS Features Add IC (+0.0084) (2026-03-24, Session 28)
+
+Adding 4 volume features (vol_ratio, obv_roc, vwap_dev_5d, vol_trend) to the cross-sectional XS
+model improves average walk-forward IC from +0.1515 to +0.1599 (+0.0084).
+
+**Experiment:** `cross_sectional_wf.py --barrier-pct 0.01 --use-volume-signals`
+**Saved probas:** `data/features/xs_barrier_vol_hose_full.parquet`
+
+**Results vs H54 baseline:**
+
+| Metric | H90 (volume) | H54 (baseline) | Delta |
+|---|---|---|---|
+| Avg IC | +0.1599 | +0.1515 | +0.0084 |
+| Avg edge (N=5) | +25.82% | +25.52% | +0.30% |
+| Sharpe (N=5) | 9.48 | 9.17 | +0.31 |
+| Sig years | 11/11 | 11/11 | — |
+
+The improvement is consistent across most years (IC higher in 8 of 11 years). Volume features
+reflect order-flow demand imbalance in the opening auction — consistent with the mechanistic
+hypothesis from the alpha-xs-momentum paper.
+
+Features added: `vol_ratio` (vol/20d MA), `obv_roc` (OBV rate of change), `vwap_dev_5d`
+(price deviation from 5-day VWAP), `vol_trend` (5d/20d vol MA ratio).
+
+**Verdict:** PASS. Volume features are a real additive signal. Marginal IC improvement; save for
+combination with other improvements.
+
+---
+## F55: H91 — 1-Day Target: Lower IC, Higher Sharpe — Mixed (2026-03-24, Session 28)
+
+Training on a 1-day barrier label (instead of 5-day) lowers average IC but dramatically increases
+Sharpe. The 1-day label is a purer match to the T+1 open execution window.
+
+**Experiment:** `cross_sectional_wf.py --barrier-pct 0.01 --target-horizon 1`
+**Saved probas:** `data/features/xs_barrier_1d_hose_full.parquet`
+
+**Results vs H54 baseline:**
+
+| Metric | H91 (1-day) | H54 (5-day) | Delta |
+|---|---|---|---|
+| Avg IC | +0.1395 | +0.1515 | -0.012 |
+| Avg edge (N=5) | +23.90% | +25.52% | -1.62% |
+| Edge std (N=5) | 2.06% | higher | lower variance |
+| Sharpe (N=5) | **11.63** | 9.17 | +2.46 |
+| Best Sharpe (N=10) | **12.33** | ~9.1 | +3.2 |
+| Sig years | 11/11 | 11/11 | — |
+
+**Interpretation:** The 1-day model trades some average edge for dramatically lower year-to-year variance.
+The model predicts the execution outcome directly, making it more consistent. This is the correct
+target for RL training — an agent needs reliable signals, not maximum raw edge.
+
+**Key implication for RL:** The 1-day label is a better RL training signal. Lower variance means
+the model's predictions are more trustworthy on any given day.
+
+**Verdict:** MIXED. IC fails success bar (-0.012 vs baseline). Sharpe finding is real and valuable.
+See F56 (H93) for the combination result.
+
+---
+## F56: H93 — Volume + 1-Day Combined: Sharpe 15.08, Edge Std 1.60% (2026-03-24, Session 28)
+
+Combining H90 (volume features) with H91 (1-day barrier label) produces the highest Sharpe system
+found to date — not by increasing edge, but by dramatically reducing year-to-year variance.
+
+**Experiment:** `cross_sectional_wf.py --barrier-pct 0.01 --target-horizon 1 --use-volume-signals`
+**Saved probas:** `data/features/xs_barrier_vol_1d_hose_full.parquet`
+**Saved artifact:** `artifacts/run_summaries/20260324_211805_h40_rank_portfolio_xs_barrier_vol_1d_hose_full_portfolio.json`
+
+**Full comparison (N=5, no VIX filter):**
+
+| System | IC | Avg Edge | Edge Std | Sharpe |
+|---|---|---|---|---|
+| H54 (5-day, no vol) | +0.1515 | +25.52% | ~2.8% | 9.17 |
+| H90 (5-day + vol) | +0.1599 | +25.82% | ~2.7% | 9.48 |
+| H91 (1-day, no vol) | +0.1395 | +23.90% | 2.06% | 11.63 |
+| **H93 (1-day + vol)** | +0.1491 | +24.15% | **1.60%** | **15.08** |
+
+**IC by year (H93):** 0.187, 0.166, 0.163, 0.158, 0.159, 0.154, 0.142, 0.101, 0.139, 0.142, 0.129
+
+**Top-N Sharpe sweep:**
+
+| N | Avg Edge | Sharpe |
+|---|---|---|
+| 1 | +28.36% | 9.02 |
+| 2 | +26.40% | 13.44 |
+| 3 | +25.83% | 13.97 |
+| **5** | **+24.15%** | **15.08** |
+| 7 | +22.95% | 14.06 |
+| 10 | +21.53% | 13.78 |
+
+**Interpretation:** The 1-day label makes the model predict the execution target directly (what happens
+in the next day), reducing label noise from days 2-5 that don't affect P&L. Volume features add IC
+on top. Together they produce the lowest year-to-year variance seen (std 1.60%) and a Sharpe of 15.08
+— nearly double H54's 9.17.
+
+H93 does not replace H54 as production champion (still parked, execution gap still open). But it is
+the best RL training signal found to date: higher Sharpe, lower variance, prediction target aligned
+with execution window.
+
+**For RL training:** H93 probas (`xs_barrier_vol_1d_hose_full.parquet`) are the recommended signal
+file for RL state features. IC ~0.149 with edge std 1.60% gives a much more reliable daily ranking
+signal than H54.
+
+**Verdict:** PASS. Success bar met (Sharpe 15.08 >> 11.63 target). New best-Sharpe system.
+
+---
+## F57: H94 — Sector-Relative Features Add Nothing to H93 (2026-03-24, Session 28)
+
+Adding sector-relative momentum features (`sector_rel_1d`, `sector_rel_5d`, `sector_rel_20d`) on
+top of H93 (volume + 1-day label) produces no improvement. IC is unchanged (+0.0001), edge
+slightly improves (+0.44%) but variance increases (1.60% → 1.73%), lowering Sharpe from 15.08 to 14.21.
+
+| System | IC | Avg Edge | Edge Std | Sharpe |
+|---|---|---|---|---|
+| H93 | +0.1491 | +24.15% | 1.60% | 15.08 |
+| H94 | +0.1492 | +24.59% | 1.73% | 14.21 |
+
+**Interpretation:** The existing `rel_ret_Nd` (market-relative return lags) already encode most of
+the cross-sectional signal. Sector-relative features are largely redundant. This replicates the
+Session 25 H80 finding under the new H93 configuration — the result is robust to the label change.
+
+**Verdict:** NEUTRAL. H93 remains the best configuration. Do not add sector-relative features.
+
+---
+## F58: vnstock Sector Classification Available via company.overview() (2026-03-24, Session 29)
+
+`Vnstock().stock(symbol, source='VCI').company.overview()` returns columns `icb_name2`, `icb_name3`,
+`icb_name4` — ICB-coded sector/industry labels. These can be fetched per ticker and joined to build
+a full sector map across all 394 HOSE stocks. Enables H92 sector sub-models.
+
+**ICB levels available:**
+- `icb_name2`: Top-level sector (e.g., "Công nghệ Thông tin")
+- `icb_name3`: Sub-sector (e.g., "Phần mềm & Dịch vụ Máy tính")
+- `icb_name4`: Industry (e.g., "Phần mềm")
+
+**Action:** Run `data_tools/fetch_sector_classification.py` to pull all 394 tickers and save
+`data/features/sector_classification.parquet`.
+
+---
