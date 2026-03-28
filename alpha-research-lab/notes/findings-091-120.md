@@ -519,3 +519,129 @@ positive retail region.
 branch is either:
 - a very local refinement around the H145 near-miss, or
 - a new long-only alpha search explicitly conditioned on tradability / liquidity-opening states.
+
+---
+## F107: The H145 Near-Miss Is a Sparse Opportunity-State Problem, Not Just a Bad Threshold Problem (2026-03-28, Session 51)
+
+H147 audited the H145 near-miss directly around:
+- score variant `liq_blend_50_50`
+- construction `k3_r5_eq`
+- local gate grid on `tv_to_adv20` and `clv`
+- `20m` notional, `5%` ADV cap, `0.30%` RT
+
+Best audited state:
+- `adv20_125_clv45` or `adv20_125_clv50`
+- `1B` ADV20 floor
+- same economics as H145:
+  - total return **+93.88%**
+  - relative vs VNINDEX **-0.49%**
+  - average cash weight **33.52%**
+  - positive years **4/7**
+
+But the state itself is very sparse:
+- raw zero-candidate days are about **97%** of dates
+- `2019` and `2020` are fully in cash in the best scenario
+- opportunity only becomes dense enough to matter later in the holdout
+
+**Key finding:** the near-miss is not mainly caused by “choosing the wrong local threshold.” It is
+caused by the fact that the attractive liquidity-opening state is genuinely rare, especially early
+in the holdout.
+
+**Implication:** threshold polishing alone is unlikely to create deployability. The next useful
+lever must either:
+- increase opportunity density without opening the junk-liquidity floodgate, or
+- discover alpha that only exists inside tradable states.
+
+---
+## F108: Local H145 Gate Refinement Is Exhausted; the Best Result Is Still the Original Near-Miss (2026-03-28, Session 51)
+
+H148 stayed tightly around the H145 neighborhood:
+- score fixed at `liq_blend_50_50`
+- candidate menu fixed at `k3_r5_eq`, `k5_r5_eq`, `k5_r10_eq`
+- `tv_to_adv20 >= 1.05, 1.10, 1.15, 1.20, 1.25`
+- `clv >= none, 0.45, 0.50, 0.55`
+- ADV20 floor `= 500m, 750m, 1B, 1.5B`
+- notionals `= 20m, 50m`
+- ADV caps `= 5%, 10%`
+
+Result:
+- **no retail-viable scenario**
+- best scenario is still:
+  - `adv20_125_clv45` or `adv20_125_clv50`
+  - `k3_r5_eq`
+  - `20m`
+  - `5%` ADV cap
+  - `1B` floor
+  - total return **+93.88%**
+  - relative vs VNINDEX **-0.49%**
+  - average cash weight **33.52%**
+  - positive years **4/7**
+
+**Key finding:** the local threshold branch is now scientifically exhausted. Re-running nearby gate
+grids is not generating new information.
+
+**Implication:** future work should not spend another session on narrow H145 threshold sweeps unless
+new alpha enters the system.
+
+---
+## F109: Softening the Liquidity Gate Makes the Book Busier but Worse (2026-03-28, Session 51)
+
+H149 replaced the hard H145 gate with soft activation scores built on top of `liq_blend_50_50`:
+- `soft_85_15`
+- `soft_75_25`
+- `soft_65_35`
+- `soft_mul`
+
+Best H149 scenario:
+- `soft_85_15`
+- `k3_r5_eq`
+- `50m`
+- `5%` ADV cap
+- `500m` floor
+- total return **-0.57%**
+- relative vs VNINDEX **-48.97%**
+- average cash weight **36.65%**
+- positive years **3/7**
+
+Compared with the H145 near-miss:
+- turnover rose sharply
+- the book held more names
+- benchmark-relative economics deteriorated badly
+
+**Key finding:** the H145 gate is not failing because it is “too binary.” Softening the entry logic
+does not rescue the strategy. It mostly adds activity and cost without preserving the favorable
+selection effect.
+
+**Implication:** do not spend more time on soft activation / fuzzy gating around the current
+library. That branch is weaker than the hard-gated near-miss.
+
+---
+## F110: The Current Library Has a Tradability-Conditioned Sub-Core, but Construction Alone Is No Longer the Main Research Path (2026-03-28, Session 51)
+
+H150 decomposed the current RL signal library under liquidity-opening states:
+- unrestricted
+- `tv_to_adv20 >= 1.10`
+- `tv_to_adv20 >= 1.10 and clv >= 0.45`
+- `tv_to_adv20 >= 1.25 and clv >= 0.50`
+
+Findings:
+- `s1_proba` remains the strongest signal both unrestricted and in tradable states
+  - unrestricted avg daily IC **+0.1491**
+  - `tv110` avg daily IC **+0.1510**
+- strongest conditional uplifts vs unrestricted come from:
+  - `c7_ceiling_count_5d`
+  - `c12_gap_absorb_3`
+  - `c13_compress_blowoff_2`
+  - `c10_illiq_level_rank`
+  - `c8_vol_zscore_5d`
+
+This means the library is not uniformly useful under friction. A narrower subset becomes more
+interesting exactly when liquidity is opening.
+
+**Key finding:** the repo now has evidence for a **tradability-conditioned signal sub-core**. The
+problem is no longer “we have no idea what survives.” The problem is that the current generic
+construction layer does not monetize that sub-core yet.
+
+**Implication:** the next honest step is not another broad construction tweak. It is either:
+- a narrow tradability-conditioned composite built from the surviving signals, or
+- new long-only alpha search explicitly defined inside tradable states.

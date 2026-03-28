@@ -1,0 +1,2147 @@
+{
+  "artifacts": {
+    "daily_ic": "artifacts/portfolio_baselines/20260328_205505_h150_conditional_alpha_decomposition_daily_ic.parquet",
+    "results": "artifacts/portfolio_baselines/20260328_205505_h150_conditional_alpha_decomposition_results.parquet",
+    "uplift": "artifacts/portfolio_baselines/20260328_205505_h150_conditional_alpha_decomposition_uplift.parquet"
+  },
+  "metadata": {
+    "matrix": "data/features/xs_rl_signal_matrix.parquet",
+    "stock_dir": "data/stock",
+    "tradability": "data/features/execution/tradability_daily.parquet",
+    "tradability_source": "artifact"
+  },
+  "mode": "portfolio_conditional_alpha_decomposition",
+  "name": "h150_conditional_alpha_decomposition",
+  "summary": {
+    "best_liquidity_opening": {
+      "avg_daily_ic": 0.150961,
+      "avg_sample_size": 102.99,
+      "days_in_state": 2748,
+      "evaluated_days": 2747,
+      "per_year": [
+        {
+          "avg_daily_ic": 0.167924,
+          "avg_sample_size": 71.8,
+          "positive_days": 226,
+          "total_days": 248,
+          "year": 2015
+        },
+        {
+          "avg_daily_ic": 0.149127,
+          "avg_sample_size": 79.18,
+          "positive_days": 219,
+          "total_days": 251,
+          "year": 2016
+        },
+        {
+          "avg_daily_ic": 0.150814,
+          "avg_sample_size": 90.86,
+          "positive_days": 225,
+          "total_days": 250,
+          "year": 2017
+        },
+        {
+          "avg_daily_ic": 0.149355,
+          "avg_sample_size": 94.33,
+          "positive_days": 216,
+          "total_days": 249,
+          "year": 2018
+        },
+        {
+          "avg_daily_ic": 0.158628,
+          "avg_sample_size": 97.27,
+          "positive_days": 231,
+          "total_days": 250,
+          "year": 2019
+        },
+        {
+          "avg_daily_ic": 0.158204,
+          "avg_sample_size": 117.33,
+          "positive_days": 234,
+          "total_days": 252,
+          "year": 2020
+        },
+        {
+          "avg_daily_ic": 0.162899,
+          "avg_sample_size": 121.74,
+          "positive_days": 226,
+          "total_days": 250,
+          "year": 2021
+        },
+        {
+          "avg_daily_ic": 0.10632,
+          "avg_sample_size": 110.57,
+          "positive_days": 192,
+          "total_days": 249,
+          "year": 2022
+        },
+        {
+          "avg_daily_ic": 0.149622,
+          "avg_sample_size": 117.47,
+          "positive_days": 223,
+          "total_days": 249,
+          "year": 2023
+        },
+        {
+          "avg_daily_ic": 0.161248,
+          "avg_sample_size": 115.19,
+          "positive_days": 231,
+          "total_days": 250,
+          "year": 2024
+        },
+        {
+          "avg_daily_ic": 0.146301,
+          "avg_sample_size": 117.0,
+          "positive_days": 222,
+          "total_days": 249,
+          "year": 2025
+        }
+      ],
+      "positive_years": 11,
+      "rows_in_state": 282924,
+      "signal": "s1_proba",
+      "state": "tv110",
+      "state_day_coverage": 1.0,
+      "state_row_coverage": 0.342356,
+      "total_years": 11
+    },
+    "best_unrestricted": {
+      "avg_daily_ic": 0.149134,
+      "avg_sample_size": 300.73,
+      "days_in_state": 2748,
+      "evaluated_days": 2748,
+      "per_year": [
+        {
+          "avg_daily_ic": 0.187146,
+          "avg_sample_size": 208.85,
+          "positive_days": 245,
+          "total_days": 248,
+          "year": 2015
+        },
+        {
+          "avg_daily_ic": 0.165991,
+          "avg_sample_size": 230.54,
+          "positive_days": 250,
+          "total_days": 251,
+          "year": 2016
+        },
+        {
+          "avg_daily_ic": 0.16335,
+          "avg_sample_size": 256.86,
+          "positive_days": 247,
+          "total_days": 250,
+          "year": 2017
+        },
+        {
+          "avg_daily_ic": 0.157792,
+          "avg_sample_size": 277.52,
+          "positive_days": 235,
+          "total_days": 250,
+          "year": 2018
+        },
+        {
+          "avg_daily_ic": 0.158644,
+          "avg_sample_size": 291.87,
+          "positive_days": 248,
+          "total_days": 250,
+          "year": 2019
+        },
+        {
+          "avg_daily_ic": 0.15375,
+          "avg_sample_size": 311.57,
+          "positive_days": 237,
+          "total_days": 252,
+          "year": 2020
+        },
+        {
+          "avg_daily_ic": 0.142295,
+          "avg_sample_size": 343.05,
+          "positive_days": 235,
+          "total_days": 250,
+          "year": 2021
+        },
+        {
+          "avg_daily_ic": 0.100812,
+          "avg_sample_size": 351.51,
+          "positive_days": 204,
+          "total_days": 249,
+          "year": 2022
+        },
+        {
+          "avg_daily_ic": 0.139458,
+          "avg_sample_size": 341.12,
+          "positive_days": 236,
+          "total_days": 249,
+          "year": 2023
+        },
+        {
+          "avg_daily_ic": 0.142381,
+          "avg_sample_size": 345.28,
+          "positive_days": 246,
+          "total_days": 250,
+          "year": 2024
+        },
+        {
+          "avg_daily_ic": 0.128738,
+          "avg_sample_size": 349.87,
+          "positive_days": 230,
+          "total_days": 249,
+          "year": 2025
+        }
+      ],
+      "positive_years": 11,
+      "rows_in_state": 826404,
+      "signal": "s1_proba",
+      "state": "unrestricted",
+      "state_day_coverage": 1.0,
+      "state_row_coverage": 1.0,
+      "total_years": 11
+    },
+    "min_names_per_day": 10,
+    "signal_count": 13,
+    "state_count": 4,
+    "strongest_uplift": {
+      "avg_daily_ic": 0.059154,
+      "avg_daily_ic_unrestricted": 0.014071,
+      "avg_sample_size": 50.3,
+      "days_in_state": 2747,
+      "evaluated_days": 2614,
+      "ic_uplift_vs_unrestricted": 0.045083,
+      "per_year": [
+        {
+          "avg_daily_ic": 0.018955,
+          "avg_sample_size": 37.04,
+          "positive_days": 100,
+          "total_days": 195,
+          "year": 2015
+        },
+        {
+          "avg_daily_ic": 0.043734,
+          "avg_sample_size": 40.43,
+          "positive_days": 141,
+          "total_days": 233,
+          "year": 2016
+        },
+        {
+          "avg_daily_ic": 0.049128,
+          "avg_sample_size": 45.09,
+          "positive_days": 155,
+          "total_days": 244,
+          "year": 2017
+        },
+        {
+          "avg_daily_ic": 0.030296,
+          "avg_sample_size": 46.69,
+          "positive_days": 141,
+          "total_days": 245,
+          "year": 2018
+        },
+        {
+          "avg_daily_ic": 0.060076,
+          "avg_sample_size": 47.84,
+          "positive_days": 154,
+          "total_days": 243,
+          "year": 2019
+        },
+        {
+          "avg_daily_ic": 0.074302,
+          "avg_sample_size": 57.98,
+          "positive_days": 168,
+          "total_days": 250,
+          "year": 2020
+        },
+        {
+          "avg_daily_ic": 0.090413,
+          "avg_sample_size": 60.86,
+          "positive_days": 180,
+          "total_days": 250,
+          "year": 2021
+        },
+        {
+          "avg_daily_ic": 0.034942,
+          "avg_sample_size": 51.88,
+          "positive_days": 130,
+          "total_days": 240,
+          "year": 2022
+        },
+        {
+          "avg_daily_ic": 0.058522,
+          "avg_sample_size": 55.22,
+          "positive_days": 153,
+          "total_days": 239,
+          "year": 2023
+        },
+        {
+          "avg_daily_ic": 0.0789,
+          "avg_sample_size": 53.11,
+          "positive_days": 146,
+          "total_days": 233,
+          "year": 2024
+        },
+        {
+          "avg_daily_ic": 0.102473,
+          "avg_sample_size": 53.87,
+          "positive_days": 164,
+          "total_days": 242,
+          "year": 2025
+        }
+      ],
+      "positive_years": 11,
+      "rows_in_state": 135721,
+      "signal": "c7_ceiling_count_5d",
+      "state": "tv125_clv50",
+      "state_day_coverage": 0.999636,
+      "state_row_coverage": 0.164231,
+      "total_years": 11
+    },
+    "top_liquidity_opening": [
+      {
+        "avg_daily_ic": 0.150961,
+        "avg_sample_size": 102.99,
+        "days_in_state": 2748,
+        "evaluated_days": 2747,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.167924,
+            "avg_sample_size": 71.8,
+            "positive_days": 226,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.149127,
+            "avg_sample_size": 79.18,
+            "positive_days": 219,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.150814,
+            "avg_sample_size": 90.86,
+            "positive_days": 225,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.149355,
+            "avg_sample_size": 94.33,
+            "positive_days": 216,
+            "total_days": 249,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.158628,
+            "avg_sample_size": 97.27,
+            "positive_days": 231,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.158204,
+            "avg_sample_size": 117.33,
+            "positive_days": 234,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.162899,
+            "avg_sample_size": 121.74,
+            "positive_days": 226,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.10632,
+            "avg_sample_size": 110.57,
+            "positive_days": 192,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.149622,
+            "avg_sample_size": 117.47,
+            "positive_days": 223,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.161248,
+            "avg_sample_size": 115.19,
+            "positive_days": 231,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.146301,
+            "avg_sample_size": 117.0,
+            "positive_days": 222,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 282924,
+        "signal": "s1_proba",
+        "state": "tv110",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 0.342356,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.141283,
+        "avg_sample_size": 49.41,
+        "days_in_state": 2747,
+        "evaluated_days": 2747,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.133141,
+            "avg_sample_size": 35.82,
+            "positive_days": 187,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.130611,
+            "avg_sample_size": 39.8,
+            "positive_days": 204,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.127159,
+            "avg_sample_size": 44.86,
+            "positive_days": 189,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.126311,
+            "avg_sample_size": 46.36,
+            "positive_days": 194,
+            "total_days": 249,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.130683,
+            "avg_sample_size": 47.55,
+            "positive_days": 202,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.153246,
+            "avg_sample_size": 57.83,
+            "positive_days": 204,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.193286,
+            "avg_sample_size": 60.86,
+            "positive_days": 223,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.105437,
+            "avg_sample_size": 50.87,
+            "positive_days": 177,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.141706,
+            "avg_sample_size": 54.25,
+            "positive_days": 205,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.152342,
+            "avg_sample_size": 52.01,
+            "positive_days": 205,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.159946,
+            "avg_sample_size": 53.14,
+            "positive_days": 213,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 135721,
+        "signal": "s1_proba",
+        "state": "tv125_clv50",
+        "state_day_coverage": 0.999636,
+        "state_row_coverage": 0.164231,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.132701,
+        "avg_sample_size": 62.53,
+        "days_in_state": 2747,
+        "evaluated_days": 2747,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.130776,
+            "avg_sample_size": 44.04,
+            "positive_days": 189,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.130761,
+            "avg_sample_size": 49.45,
+            "positive_days": 201,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.12515,
+            "avg_sample_size": 55.58,
+            "positive_days": 195,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.127199,
+            "avg_sample_size": 58.0,
+            "positive_days": 201,
+            "total_days": 249,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.12095,
+            "avg_sample_size": 59.35,
+            "positive_days": 205,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.13962,
+            "avg_sample_size": 72.93,
+            "positive_days": 214,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.173748,
+            "avg_sample_size": 77.88,
+            "positive_days": 223,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.100493,
+            "avg_sample_size": 66.42,
+            "positive_days": 180,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.130547,
+            "avg_sample_size": 69.41,
+            "positive_days": 210,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.139311,
+            "avg_sample_size": 67.03,
+            "positive_days": 205,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.14097,
+            "avg_sample_size": 67.62,
+            "positive_days": 215,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 171773,
+        "signal": "s1_proba",
+        "state": "tv110_clv45",
+        "state_day_coverage": 0.999636,
+        "state_row_coverage": 0.207856,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.059154,
+        "avg_sample_size": 50.3,
+        "days_in_state": 2747,
+        "evaluated_days": 2614,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.018955,
+            "avg_sample_size": 37.04,
+            "positive_days": 100,
+            "total_days": 195,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.043734,
+            "avg_sample_size": 40.43,
+            "positive_days": 141,
+            "total_days": 233,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.049128,
+            "avg_sample_size": 45.09,
+            "positive_days": 155,
+            "total_days": 244,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.030296,
+            "avg_sample_size": 46.69,
+            "positive_days": 141,
+            "total_days": 245,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.060076,
+            "avg_sample_size": 47.84,
+            "positive_days": 154,
+            "total_days": 243,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.074302,
+            "avg_sample_size": 57.98,
+            "positive_days": 168,
+            "total_days": 250,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.090413,
+            "avg_sample_size": 60.86,
+            "positive_days": 180,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.034942,
+            "avg_sample_size": 51.88,
+            "positive_days": 130,
+            "total_days": 240,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.058522,
+            "avg_sample_size": 55.22,
+            "positive_days": 153,
+            "total_days": 239,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.0789,
+            "avg_sample_size": 53.11,
+            "positive_days": 146,
+            "total_days": 233,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.102473,
+            "avg_sample_size": 53.87,
+            "positive_days": 164,
+            "total_days": 242,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 135721,
+        "signal": "c7_ceiling_count_5d",
+        "state": "tv125_clv50",
+        "state_day_coverage": 0.999636,
+        "state_row_coverage": 0.164231,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.051353,
+        "avg_sample_size": 63.4,
+        "days_in_state": 2747,
+        "evaluated_days": 2641,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.018955,
+            "avg_sample_size": 45.22,
+            "positive_days": 105,
+            "total_days": 201,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.04084,
+            "avg_sample_size": 49.97,
+            "positive_days": 143,
+            "total_days": 239,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.048425,
+            "avg_sample_size": 55.75,
+            "positive_days": 159,
+            "total_days": 246,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.028473,
+            "avg_sample_size": 58.34,
+            "positive_days": 145,
+            "total_days": 246,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.050322,
+            "avg_sample_size": 59.52,
+            "positive_days": 150,
+            "total_days": 244,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.066244,
+            "avg_sample_size": 72.99,
+            "positive_days": 171,
+            "total_days": 251,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.080068,
+            "avg_sample_size": 77.88,
+            "positive_days": 181,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.023781,
+            "avg_sample_size": 67.25,
+            "positive_days": 135,
+            "total_days": 243,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.055333,
+            "avg_sample_size": 70.48,
+            "positive_days": 159,
+            "total_days": 240,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.064277,
+            "avg_sample_size": 67.89,
+            "positive_days": 148,
+            "total_days": 238,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.081717,
+            "avg_sample_size": 68.35,
+            "positive_days": 163,
+            "total_days": 243,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 171773,
+        "signal": "c7_ceiling_count_5d",
+        "state": "tv110_clv45",
+        "state_day_coverage": 0.999636,
+        "state_row_coverage": 0.207856,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.049557,
+        "avg_sample_size": 49.33,
+        "days_in_state": 2747,
+        "evaluated_days": 2747,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.049121,
+            "avg_sample_size": 35.81,
+            "positive_days": 145,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.047703,
+            "avg_sample_size": 39.8,
+            "positive_days": 156,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.040786,
+            "avg_sample_size": 44.86,
+            "positive_days": 144,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.053225,
+            "avg_sample_size": 46.35,
+            "positive_days": 154,
+            "total_days": 249,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.032242,
+            "avg_sample_size": 47.54,
+            "positive_days": 142,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.070406,
+            "avg_sample_size": 57.82,
+            "positive_days": 172,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.074999,
+            "avg_sample_size": 60.82,
+            "positive_days": 175,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.034373,
+            "avg_sample_size": 50.87,
+            "positive_days": 147,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.048852,
+            "avg_sample_size": 54.25,
+            "positive_days": 147,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.034886,
+            "avg_sample_size": 51.82,
+            "positive_days": 145,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.058359,
+            "avg_sample_size": 52.55,
+            "positive_days": 151,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 135721,
+        "signal": "c12_gap_absorb_3",
+        "state": "tv125_clv50",
+        "state_day_coverage": 0.999636,
+        "state_row_coverage": 0.164231,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.046438,
+        "avg_sample_size": 102.71,
+        "days_in_state": 2748,
+        "evaluated_days": 2747,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.04827,
+            "avg_sample_size": 71.8,
+            "positive_days": 148,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.044935,
+            "avg_sample_size": 79.12,
+            "positive_days": 161,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.050199,
+            "avg_sample_size": 90.84,
+            "positive_days": 160,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.055812,
+            "avg_sample_size": 94.21,
+            "positive_days": 174,
+            "total_days": 249,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.059655,
+            "avg_sample_size": 97.2,
+            "positive_days": 169,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.048378,
+            "avg_sample_size": 117.26,
+            "positive_days": 170,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.021607,
+            "avg_sample_size": 121.58,
+            "positive_days": 141,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.015248,
+            "avg_sample_size": 110.53,
+            "positive_days": 140,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.063996,
+            "avg_sample_size": 117.44,
+            "positive_days": 165,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.054701,
+            "avg_sample_size": 114.52,
+            "positive_days": 166,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.048017,
+            "avg_sample_size": 115.19,
+            "positive_days": 174,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 282924,
+        "signal": "c13_compress_blowoff_2",
+        "state": "tv110",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 0.342356,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.042994,
+        "avg_sample_size": 62.44,
+        "days_in_state": 2747,
+        "evaluated_days": 2747,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.042422,
+            "avg_sample_size": 44.04,
+            "positive_days": 149,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.041762,
+            "avg_sample_size": 49.45,
+            "positive_days": 158,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.034165,
+            "avg_sample_size": 55.57,
+            "positive_days": 147,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.046474,
+            "avg_sample_size": 57.98,
+            "positive_days": 154,
+            "total_days": 249,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.028915,
+            "avg_sample_size": 59.34,
+            "positive_days": 146,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.06273,
+            "avg_sample_size": 72.91,
+            "positive_days": 173,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.062756,
+            "avg_sample_size": 77.83,
+            "positive_days": 178,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.03437,
+            "avg_sample_size": 66.42,
+            "positive_days": 149,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.044194,
+            "avg_sample_size": 69.41,
+            "positive_days": 144,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.024946,
+            "avg_sample_size": 66.82,
+            "positive_days": 141,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.050048,
+            "avg_sample_size": 66.96,
+            "positive_days": 147,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 171773,
+        "signal": "c12_gap_absorb_3",
+        "state": "tv110_clv45",
+        "state_day_coverage": 0.999636,
+        "state_row_coverage": 0.207856,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.034252,
+        "avg_sample_size": 102.11,
+        "days_in_state": 2748,
+        "evaluated_days": 2747,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.058774,
+            "avg_sample_size": 71.05,
+            "positive_days": 152,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.037911,
+            "avg_sample_size": 78.39,
+            "positive_days": 139,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.030403,
+            "avg_sample_size": 90.14,
+            "positive_days": 131,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.037836,
+            "avg_sample_size": 93.29,
+            "positive_days": 140,
+            "total_days": 249,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.03507,
+            "avg_sample_size": 95.84,
+            "positive_days": 146,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.022311,
+            "avg_sample_size": 116.21,
+            "positive_days": 128,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.013264,
+            "avg_sample_size": 120.81,
+            "positive_days": 129,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.035654,
+            "avg_sample_size": 109.88,
+            "positive_days": 146,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.021088,
+            "avg_sample_size": 116.6,
+            "positive_days": 129,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.052644,
+            "avg_sample_size": 114.44,
+            "positive_days": 149,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.032054,
+            "avg_sample_size": 116.37,
+            "positive_days": 134,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 282924,
+        "signal": "c10_illiq_level_rank",
+        "state": "tv110",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 0.342356,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.032366,
+        "avg_sample_size": 49.41,
+        "days_in_state": 2747,
+        "evaluated_days": 2747,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.032455,
+            "avg_sample_size": 35.82,
+            "positive_days": 135,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.051649,
+            "avg_sample_size": 39.8,
+            "positive_days": 156,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.027535,
+            "avg_sample_size": 44.86,
+            "positive_days": 145,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.034618,
+            "avg_sample_size": 46.36,
+            "positive_days": 143,
+            "total_days": 249,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.038248,
+            "avg_sample_size": 47.55,
+            "positive_days": 148,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.032261,
+            "avg_sample_size": 57.83,
+            "positive_days": 144,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.039067,
+            "avg_sample_size": 60.86,
+            "positive_days": 146,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.009028,
+            "avg_sample_size": 50.87,
+            "positive_days": 127,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.012214,
+            "avg_sample_size": 54.25,
+            "positive_days": 128,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.041742,
+            "avg_sample_size": 52.01,
+            "positive_days": 157,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.036987,
+            "avg_sample_size": 53.14,
+            "positive_days": 137,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 135721,
+        "signal": "c8_vol_zscore_5d",
+        "state": "tv125_clv50",
+        "state_day_coverage": 0.999636,
+        "state_row_coverage": 0.164231,
+        "total_years": 11
+      }
+    ],
+    "top_unrestricted": [
+      {
+        "avg_daily_ic": 0.149134,
+        "avg_sample_size": 300.73,
+        "days_in_state": 2748,
+        "evaluated_days": 2748,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.187146,
+            "avg_sample_size": 208.85,
+            "positive_days": 245,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.165991,
+            "avg_sample_size": 230.54,
+            "positive_days": 250,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.16335,
+            "avg_sample_size": 256.86,
+            "positive_days": 247,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.157792,
+            "avg_sample_size": 277.52,
+            "positive_days": 235,
+            "total_days": 250,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.158644,
+            "avg_sample_size": 291.87,
+            "positive_days": 248,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.15375,
+            "avg_sample_size": 311.57,
+            "positive_days": 237,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.142295,
+            "avg_sample_size": 343.05,
+            "positive_days": 235,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.100812,
+            "avg_sample_size": 351.51,
+            "positive_days": 204,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.139458,
+            "avg_sample_size": 341.12,
+            "positive_days": 236,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.142381,
+            "avg_sample_size": 345.28,
+            "positive_days": 246,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.128738,
+            "avg_sample_size": 349.87,
+            "positive_days": 230,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 826404,
+        "signal": "s1_proba",
+        "state": "unrestricted",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 1.0,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.037253,
+        "avg_sample_size": 300.08,
+        "days_in_state": 2748,
+        "evaluated_days": 2748,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.057999,
+            "avg_sample_size": 208.83,
+            "positive_days": 182,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.039141,
+            "avg_sample_size": 230.43,
+            "positive_days": 165,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.038742,
+            "avg_sample_size": 256.81,
+            "positive_days": 169,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.047493,
+            "avg_sample_size": 277.31,
+            "positive_days": 181,
+            "total_days": 250,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.046402,
+            "avg_sample_size": 291.71,
+            "positive_days": 178,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.031559,
+            "avg_sample_size": 311.38,
+            "positive_days": 167,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.00498,
+            "avg_sample_size": 342.8,
+            "positive_days": 137,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.000449,
+            "avg_sample_size": 351.41,
+            "positive_days": 129,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.054473,
+            "avg_sample_size": 341.04,
+            "positive_days": 183,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.050544,
+            "avg_sample_size": 343.81,
+            "positive_days": 183,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.038131,
+            "avg_sample_size": 345.38,
+            "positive_days": 172,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 826404,
+        "signal": "c13_compress_blowoff_2",
+        "state": "unrestricted",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 1.0,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.03131,
+        "avg_sample_size": 299.73,
+        "days_in_state": 2748,
+        "evaluated_days": 2748,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.045485,
+            "avg_sample_size": 207.85,
+            "positive_days": 175,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.034651,
+            "avg_sample_size": 229.55,
+            "positive_days": 170,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.027881,
+            "avg_sample_size": 255.88,
+            "positive_days": 173,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.032535,
+            "avg_sample_size": 276.52,
+            "positive_days": 172,
+            "total_days": 250,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.039066,
+            "avg_sample_size": 290.88,
+            "positive_days": 183,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.021933,
+            "avg_sample_size": 310.58,
+            "positive_days": 157,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.021556,
+            "avg_sample_size": 342.05,
+            "positive_days": 155,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.023197,
+            "avg_sample_size": 350.51,
+            "positive_days": 162,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.032872,
+            "avg_sample_size": 340.12,
+            "positive_days": 165,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.037603,
+            "avg_sample_size": 344.28,
+            "positive_days": 178,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.027771,
+            "avg_sample_size": 348.87,
+            "positive_days": 162,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 826404,
+        "signal": "c6_contrarian_intra_5d",
+        "state": "unrestricted",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 1.0,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.030248,
+        "avg_sample_size": 300.38,
+        "days_in_state": 2748,
+        "evaluated_days": 2748,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.04474,
+            "avg_sample_size": 208.84,
+            "positive_days": 166,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.037171,
+            "avg_sample_size": 230.51,
+            "positive_days": 177,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.030663,
+            "avg_sample_size": 256.84,
+            "positive_days": 171,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.04081,
+            "avg_sample_size": 277.48,
+            "positive_days": 180,
+            "total_days": 250,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.030532,
+            "avg_sample_size": 291.84,
+            "positive_days": 171,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.040312,
+            "avg_sample_size": 311.54,
+            "positive_days": 181,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.035425,
+            "avg_sample_size": 342.96,
+            "positive_days": 172,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.017656,
+            "avg_sample_size": 351.49,
+            "positive_days": 144,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.022469,
+            "avg_sample_size": 341.1,
+            "positive_days": 154,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.016505,
+            "avg_sample_size": 344.46,
+            "positive_days": 153,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.016319,
+            "avg_sample_size": 347.14,
+            "positive_days": 149,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 826404,
+        "signal": "c12_gap_absorb_3",
+        "state": "unrestricted",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 1.0,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.028706,
+        "avg_sample_size": 300.38,
+        "days_in_state": 2748,
+        "evaluated_days": 2748,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.028084,
+            "avg_sample_size": 208.84,
+            "positive_days": 158,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.030055,
+            "avg_sample_size": 230.51,
+            "positive_days": 158,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.026177,
+            "avg_sample_size": 256.84,
+            "positive_days": 162,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.015491,
+            "avg_sample_size": 277.48,
+            "positive_days": 137,
+            "total_days": 250,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.035751,
+            "avg_sample_size": 291.84,
+            "positive_days": 169,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.026349,
+            "avg_sample_size": 311.54,
+            "positive_days": 171,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.039251,
+            "avg_sample_size": 342.96,
+            "positive_days": 168,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.018994,
+            "avg_sample_size": 351.49,
+            "positive_days": 139,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.033956,
+            "avg_sample_size": 341.1,
+            "positive_days": 154,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.0274,
+            "avg_sample_size": 344.46,
+            "positive_days": 154,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.034276,
+            "avg_sample_size": 347.14,
+            "positive_days": 162,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 826404,
+        "signal": "c9_reversal_1d",
+        "state": "unrestricted",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 1.0,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.025769,
+        "avg_sample_size": 300.73,
+        "days_in_state": 2748,
+        "evaluated_days": 2748,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.039414,
+            "avg_sample_size": 208.85,
+            "positive_days": 167,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.023226,
+            "avg_sample_size": 230.54,
+            "positive_days": 154,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.016727,
+            "avg_sample_size": 256.86,
+            "positive_days": 155,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.020508,
+            "avg_sample_size": 277.52,
+            "positive_days": 147,
+            "total_days": 250,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.026408,
+            "avg_sample_size": 291.87,
+            "positive_days": 161,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.029313,
+            "avg_sample_size": 311.57,
+            "positive_days": 166,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.014335,
+            "avg_sample_size": 343.05,
+            "positive_days": 139,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.013264,
+            "avg_sample_size": 351.51,
+            "positive_days": 146,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.047387,
+            "avg_sample_size": 341.12,
+            "positive_days": 164,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.02876,
+            "avg_sample_size": 345.28,
+            "positive_days": 149,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.024235,
+            "avg_sample_size": 349.87,
+            "positive_days": 150,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 826404,
+        "signal": "c4_oc_asym_5d",
+        "state": "unrestricted",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 1.0,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.020785,
+        "avg_sample_size": 299.51,
+        "days_in_state": 2748,
+        "evaluated_days": 2748,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.042985,
+            "avg_sample_size": 207.79,
+            "positive_days": 154,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.037678,
+            "avg_sample_size": 229.5,
+            "positive_days": 152,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.018967,
+            "avg_sample_size": 255.86,
+            "positive_days": 133,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.034708,
+            "avg_sample_size": 276.1,
+            "positive_days": 135,
+            "total_days": 250,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.022766,
+            "avg_sample_size": 289.82,
+            "positive_days": 138,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.019821,
+            "avg_sample_size": 309.97,
+            "positive_days": 120,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.006923,
+            "avg_sample_size": 341.87,
+            "positive_days": 120,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.022848,
+            "avg_sample_size": 350.71,
+            "positive_days": 131,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": -0.004479,
+            "avg_sample_size": 340.07,
+            "positive_days": 113,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.021756,
+            "avg_sample_size": 344.28,
+            "positive_days": 131,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.004623,
+            "avg_sample_size": 348.65,
+            "positive_days": 122,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 10,
+        "rows_in_state": 826404,
+        "signal": "c10_illiq_level_rank",
+        "state": "unrestricted",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 1.0,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.014346,
+        "avg_sample_size": 300.52,
+        "days_in_state": 2748,
+        "evaluated_days": 2748,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.021355,
+            "avg_sample_size": 208.83,
+            "positive_days": 141,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.022898,
+            "avg_sample_size": 230.49,
+            "positive_days": 150,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.01774,
+            "avg_sample_size": 256.82,
+            "positive_days": 147,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.012259,
+            "avg_sample_size": 277.37,
+            "positive_days": 133,
+            "total_days": 250,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.008438,
+            "avg_sample_size": 291.8,
+            "positive_days": 143,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.00881,
+            "avg_sample_size": 311.43,
+            "positive_days": 148,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.016718,
+            "avg_sample_size": 342.86,
+            "positive_days": 154,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.005222,
+            "avg_sample_size": 351.47,
+            "positive_days": 136,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.022258,
+            "avg_sample_size": 341.09,
+            "positive_days": 151,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.00652,
+            "avg_sample_size": 344.92,
+            "positive_days": 123,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.015651,
+            "avg_sample_size": 348.69,
+            "positive_days": 146,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 826404,
+        "signal": "c14_clv_volconf_resid_rank",
+        "state": "unrestricted",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 1.0,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.014071,
+        "avg_sample_size": 300.75,
+        "days_in_state": 2748,
+        "evaluated_days": 2746,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.000633,
+            "avg_sample_size": 208.87,
+            "positive_days": 117,
+            "total_days": 247,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.008591,
+            "avg_sample_size": 230.54,
+            "positive_days": 135,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.019195,
+            "avg_sample_size": 256.86,
+            "positive_days": 155,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.008622,
+            "avg_sample_size": 277.52,
+            "positive_days": 132,
+            "total_days": 250,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.007194,
+            "avg_sample_size": 291.87,
+            "positive_days": 134,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.023459,
+            "avg_sample_size": 311.57,
+            "positive_days": 157,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.024403,
+            "avg_sample_size": 343.05,
+            "positive_days": 158,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.013163,
+            "avg_sample_size": 351.51,
+            "positive_days": 131,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": 0.014489,
+            "avg_sample_size": 341.12,
+            "positive_days": 146,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.010842,
+            "avg_sample_size": 345.31,
+            "positive_days": 145,
+            "total_days": 249,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.023996,
+            "avg_sample_size": 349.87,
+            "positive_days": 161,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 11,
+        "rows_in_state": 826404,
+        "signal": "c7_ceiling_count_5d",
+        "state": "unrestricted",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 1.0,
+        "total_years": 11
+      },
+      {
+        "avg_daily_ic": 0.011732,
+        "avg_sample_size": 300.73,
+        "days_in_state": 2748,
+        "evaluated_days": 2748,
+        "per_year": [
+          {
+            "avg_daily_ic": 0.011891,
+            "avg_sample_size": 208.85,
+            "positive_days": 136,
+            "total_days": 248,
+            "year": 2015
+          },
+          {
+            "avg_daily_ic": 0.021258,
+            "avg_sample_size": 230.54,
+            "positive_days": 149,
+            "total_days": 251,
+            "year": 2016
+          },
+          {
+            "avg_daily_ic": 0.019623,
+            "avg_sample_size": 256.86,
+            "positive_days": 146,
+            "total_days": 250,
+            "year": 2017
+          },
+          {
+            "avg_daily_ic": 0.013332,
+            "avg_sample_size": 277.52,
+            "positive_days": 150,
+            "total_days": 250,
+            "year": 2018
+          },
+          {
+            "avg_daily_ic": 0.009774,
+            "avg_sample_size": 291.87,
+            "positive_days": 136,
+            "total_days": 250,
+            "year": 2019
+          },
+          {
+            "avg_daily_ic": 0.013563,
+            "avg_sample_size": 311.57,
+            "positive_days": 146,
+            "total_days": 252,
+            "year": 2020
+          },
+          {
+            "avg_daily_ic": 0.013673,
+            "avg_sample_size": 343.05,
+            "positive_days": 139,
+            "total_days": 250,
+            "year": 2021
+          },
+          {
+            "avg_daily_ic": 0.019027,
+            "avg_sample_size": 351.51,
+            "positive_days": 145,
+            "total_days": 249,
+            "year": 2022
+          },
+          {
+            "avg_daily_ic": -0.007856,
+            "avg_sample_size": 341.12,
+            "positive_days": 127,
+            "total_days": 249,
+            "year": 2023
+          },
+          {
+            "avg_daily_ic": 0.004349,
+            "avg_sample_size": 345.28,
+            "positive_days": 129,
+            "total_days": 250,
+            "year": 2024
+          },
+          {
+            "avg_daily_ic": 0.010312,
+            "avg_sample_size": 349.87,
+            "positive_days": 139,
+            "total_days": 249,
+            "year": 2025
+          }
+        ],
+        "positive_years": 10,
+        "rows_in_state": 826404,
+        "signal": "c8_vol_zscore_5d",
+        "state": "unrestricted",
+        "state_day_coverage": 1.0,
+        "state_row_coverage": 1.0,
+        "total_years": 11
+      }
+    ],
+    "year_range": [
+      2015,
+      2025
+    ]
+  },
+  "ts": "20260328_205505"
+}

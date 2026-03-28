@@ -141,3 +141,62 @@ def best_variant_rows(results: pd.DataFrame, *, variant_column: str = "score_var
         ignore_index=True,
     )
     return ordered.groupby(variant_column, as_index=False, sort=False).head(1).reset_index(drop=True)
+
+
+def make_gate_label(*, adv20_ratio_threshold: float, clv_threshold: float | None = None) -> str:
+    ratio_text = f"adv20_{int(round(float(adv20_ratio_threshold) * 100)):03d}"
+    if clv_threshold is None:
+        return ratio_text
+    clv_text = f"clv{int(round(float(clv_threshold) * 100)):02d}"
+    return f"{ratio_text}_{clv_text}"
+
+
+def add_liquidity_opening_gate_columns(
+    frame: pd.DataFrame,
+    *,
+    adv20_ratio_thresholds: Iterable[float],
+    clv_thresholds: Iterable[float | None],
+    prefix: str = "gate",
+) -> tuple[pd.DataFrame, list[str]]:
+    work = frame.copy()
+    gate_columns: list[str] = []
+    for adv20_ratio_threshold in adv20_ratio_thresholds:
+        for clv_threshold in clv_thresholds:
+            label = make_gate_label(
+                adv20_ratio_threshold=float(adv20_ratio_threshold),
+                clv_threshold=None if clv_threshold is None else float(clv_threshold),
+            )
+            column = f"{prefix}__{label}"
+            mask = pd.to_numeric(work["tv_to_adv20"], errors="coerce") >= float(adv20_ratio_threshold)
+            if clv_threshold is not None:
+                mask &= pd.to_numeric(work["clv"], errors="coerce") >= float(clv_threshold)
+            work[column] = mask.fillna(False).astype(bool)
+            gate_columns.append(column)
+    return work, gate_columns
+
+
+def add_soft_activation_score_variants(
+    frame: pd.DataFrame,
+    *,
+    base_score_column: str,
+    prefix: str = "act",
+) -> tuple[pd.DataFrame, list[str]]:
+    work = frame.copy()
+    base = pd.to_numeric(work[base_score_column], errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    activation = (
+        work["xs_tv_to_adv20_rank"].astype(float).clip(0.0, 1.0)
+        + work["clv"].astype(float).clip(0.0, 1.0)
+        + work["buyable_score"].astype(float).clip(0.0, 1.0)
+    ) / 3.0
+
+    work[f"score__{prefix}_85_15"] = (0.85 * base + 0.15 * activation).clip(0.0, 1.0)
+    work[f"score__{prefix}_75_25"] = (0.75 * base + 0.25 * activation).clip(0.0, 1.0)
+    work[f"score__{prefix}_65_35"] = (0.65 * base + 0.35 * activation).clip(0.0, 1.0)
+    work[f"score__{prefix}_mul"] = (base * (0.75 + 0.50 * activation)).clip(0.0, 1.0)
+    variants = [
+        f"{prefix}_85_15",
+        f"{prefix}_75_25",
+        f"{prefix}_65_35",
+        f"{prefix}_mul",
+    ]
+    return work, variants

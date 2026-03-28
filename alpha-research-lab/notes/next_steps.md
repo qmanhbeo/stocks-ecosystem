@@ -1,15 +1,15 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_50_log.md` for the latest full session detail.
+Use `notes/session_51_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 50 complete (H143-H146 friction-extraction wave complete; H143 FAIL; H144 FAIL; H145 NEAR-MISS; H146 FAIL, 2026-03-28)
+**Session status:** Session 51 complete (H147-H150 follow-up wave complete; H147 AUDIT; H148 FAIL; H149 FAIL; H150 DECOMPOSITION PASS, 2026-03-28)
 
-### New reality check after Session 50
+### New reality check after Session 51
 
 **Execution alignment correction (Session 49)**
 - The deterministic portfolio engine had a one-day liquidity timing bug:
@@ -261,6 +261,103 @@ Use `notes/session_50_log.md` for the latest full session detail.
     - a very local refinement around the H145 near-miss, or
     - a new long-only alpha search conditioned on tradability / liquidity-opening states
 
+**H147 - Liquidity-State Opportunity Audit**
+- Audited the H145 near-miss directly around:
+  - score variant `liq_blend_50_50`
+  - construction `k3_r5_eq`
+  - local gate grid on `tv_to_adv20` and `clv`
+  - `20m`, `5%` ADV cap, `0.30%` RT
+- Best audited state:
+  - gate = `adv20_125_clv45` or `adv20_125_clv50`
+  - `1B` ADV20 floor
+  - same economics as the H145 near-miss:
+    - `+93.88%` total
+    - `-0.49%` relative vs VNINDEX
+    - `33.52%` average cash
+    - `4/7` positive years
+- Critical audit finding:
+  - zero-candidate days are extremely common in the raw state count (`~97%` of dates)
+  - `2019` and `2020` are fully in cash in the best scenario
+  - the near-miss is coming from a **very sparse opportunity state**, not from an obviously bad ranking inside a rich state
+- Implication:
+  - local threshold tuning was worth testing once
+  - but the bottleneck is now clearly opportunity density, not just “wrong threshold”
+
+**H148 - Local Liquidity-Gate Refinement**
+- Swept only the H145 neighborhood:
+  - score variant fixed at `liq_blend_50_50`
+  - candidate menu fixed at `k3_r5_eq`, `k5_r5_eq`, `k5_r10_eq`
+  - `tv_to_adv20 >= 1.05, 1.10, 1.15, 1.20, 1.25`
+  - `clv >= none, 0.45, 0.50, 0.55`
+  - ADV20 floor `= 500m, 750m, 1B, 1.5B`
+  - notionals `= 20m, 50m`
+  - ADV caps `= 5%, 10%`
+- Result: **no retail-viable scenario**
+  - the best scenario is exactly the old H145 near-miss:
+    - `adv20_125_clv45` or `adv20_125_clv50`
+    - `k3_r5_eq`
+    - `20m`
+    - `5%` ADV cap
+    - `1B` floor
+    - `+93.88%` total
+    - `-0.49%` relative
+    - `33.52%` cash
+    - `4/7` positive years
+- Implication:
+  - the “just tweak the gate a little more” branch is exhausted
+  - there is no justification for another local threshold sweep unless new alpha enters the system
+
+**H149 - Soft Activation Score**
+- Replaced the hard H145-style entry gate with soft activation variants built on top of `liq_blend_50_50`:
+  - `soft_85_15`
+  - `soft_75_25`
+  - `soft_65_35`
+  - `soft_mul`
+- Tested only the tight menu:
+  - `k3_r5_eq`, `k5_r5_eq`
+  - notionals `20m, 50m`
+  - ADV caps `5%, 10%`
+  - ADV20 floors `500m, 750m, 1B`
+- Result: **hard fail**
+  - best scenario:
+    - `soft_85_15`
+    - `k3_r5_eq`
+    - `50m`
+    - `5%` ADV cap
+    - `500m` floor
+    - `-0.57%` total
+    - `-48.97%` relative
+    - `36.65%` average cash
+    - `3/7` positive years
+- Implication:
+  - the H145 gate is not failing because it is “too binary”
+  - softening the gate increases turnover and degrades the economics materially
+
+**H150 - Conditional Alpha Decomposition**
+- Tested each signal in the RL matrix under four states:
+  - unrestricted
+  - `tv_to_adv20 >= 1.10`
+  - `tv_to_adv20 >= 1.10 and clv >= 0.45`
+  - `tv_to_adv20 >= 1.25 and clv >= 0.50`
+- Best unrestricted signal:
+  - `s1_proba`
+  - avg daily IC `+0.1491`
+  - `11/11` positive years
+- Best liquidity-opening state:
+  - `s1_proba` under `tv110`
+  - avg daily IC `+0.1510`
+  - `11/11` positive years
+- Strongest conditional uplifts vs unrestricted:
+  - `c7_ceiling_count_5d` under `tv125_clv50`: avg daily IC `+0.0592`
+  - `c12_gap_absorb_3` under `tv125_clv50`: avg daily IC `+0.0496`
+  - `c13_compress_blowoff_2` under `tv110`: avg daily IC `+0.0464`
+  - `c10_illiq_level_rank` under `tv110`: avg daily IC `+0.0343`
+  - `c8_vol_zscore_5d` also improves materially in liquidity-opening states
+- Implication:
+  - the library does have a **tradability-conditioned sub-core**
+  - but current construction is still not enough to monetize it under the retail gate
+  - the next experiment should not be another generic construction tweak; it should be a **narrow tradability-conditioned composite** built from the surviving signals
+
 **Hard rule**
 - this repo is permanently long-only
 - no synthetic hedges
@@ -268,8 +365,11 @@ Use `notes/session_50_log.md` for the latest full session detail.
 - no research branches that cannot realistically make money as long-only in Vietnam
 
 **Next frontier**
-- new long-only alpha search conditioned on tradability / liquidity-opening states
-- only very local construction refinement around the H145 near-miss (`adv20_125_clv50`, `1B` floor) if continuing this branch
+- narrow tradability-conditioned composite from the surviving H150 signals:
+  - base = `s1_proba`
+  - strongest conditioned uplifts = `c7`, `c12`, `c13`, `c10`, with `c8` as a secondary candidate
+- new long-only alpha search should also be explicitly conditioned on liquidity-opening / tradability states
+- do **not** spend another session on generic construction sweeps or softer gating
 - long-only execution and blotter validation only after a candidate becomes benchmark-positive under the retail gate
 - keep RL deferred until a deterministic long-only deployable baseline exists
 
@@ -725,19 +825,22 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - but deployability is still unresolved
   - do not add more ML or RL complexity until capacity is addressed honestly
 
-### Session 50 next queue (in order)
+### Session 51 next queue (in order)
 
-1. **Tradability-conditioned long-only alpha search**
-   - new hypotheses should be explicitly conditioned on liquidity-opening / tradability states
-   - do not reopen generic raw-signal mining before testing state-conditioned formulations
-2. **Only local refinement around the H145 near-miss**
-   - if continuing construction work, stay near:
-     - score variant `liq_blend_50_50`
-     - entry gate `adv20_125_clv50`
-     - `1B` ADV20 floor
-   - do not run another wide H146-style sweep unless there is a stronger reason
-3. **Keep execution expansion and RL deferred**
-   - stronger live/paper blotter validation only after a retail-positive candidate exists
+1. **H151: narrow tradability-conditioned composite**
+   - build a long-only composite centered on:
+     - `s1_proba`
+     - `c7_ceiling_count_5d`
+     - `c12_gap_absorb_3`
+     - `c13_compress_blowoff_2`
+     - `c10_illiq_level_rank`
+     - optional `c8_vol_zscore_5d`
+   - activate or reweight the composite inside the H150 liquidity-opening states only
+2. **H152: tradability-conditioned alpha search**
+   - any new alpha hypothesis should be defined conditionally on tradability / liquidity-opening
+   - do not reopen broad unconditioned signal mining
+3. **Keep live execution and RL deferred**
+   - do not run `H142` blotter until a retail-positive candidate exists
    - RL remains deferred until a deterministic long-only retail-positive baseline exists
 
 ### Remaining blocked paths

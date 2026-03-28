@@ -114,6 +114,10 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h144_entry_slicing_simulation.py`: pending multi-day buy plans under the existing long-only settlement rule
 - `analysis/h145_volume_confirmed_entry_filter.py`: liquidity-opening / volume-confirmed entry gates for long-only construction
 - `analysis/h146_variable_breadth_portfolio.py`: variable-breadth long-only sweep on the strongest score-plus-gate combination
+- `analysis/h147_liquidity_state_opportunity_audit.py`: sparse-opportunity audit around the H145 near-miss
+- `analysis/h148_local_liquidity_gate_refinement.py`: narrow H145-neighborhood gate refinement only
+- `analysis/h149_soft_activation_score.py`: softer liquidity-opening activation scores on top of the H145 score family
+- `analysis/h150_conditional_alpha_decomposition.py`: per-signal conditional IC decomposition inside tradable states
 
 ## Saved Result Artifacts
 
@@ -136,6 +140,10 @@ Main experiment runners write compact JSON summaries to `artifacts/run_summaries
 - Portfolio entry slicing simulation: `latest_portfolio_entry_slicing_simulation.json`
 - Portfolio volume-confirmed entry filter: `latest_portfolio_volume_confirmed_entry_filter.json`
 - Portfolio variable breadth: `latest_portfolio_variable_breadth.json`
+- Portfolio liquidity-state opportunity audit: `latest_portfolio_liquidity_state_opportunity_audit.json`
+- Portfolio local liquidity-gate refinement: `latest_portfolio_local_liquidity_gate_refinement.json`
+- Portfolio soft activation score: `latest_portfolio_soft_activation_score.json`
+- Portfolio conditional alpha decomposition: `latest_portfolio_conditional_alpha_decomposition.json`
 
 Large daily portfolio baseline outputs are written under `artifacts/portfolio_baselines/`.
 

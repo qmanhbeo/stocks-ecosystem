@@ -3,9 +3,12 @@ from __future__ import annotations
 import pandas as pd
 
 from src.portfolio_friction_features import (
+    add_liquidity_opening_gate_columns,
+    add_soft_activation_score_variants,
     add_liquidity_aware_score_variants,
     build_boolean_matrix,
     build_friction_feature_frame,
+    make_gate_label,
 )
 
 
@@ -71,3 +74,38 @@ def test_build_boolean_matrix_pivots_by_date_and_ticker():
     assert bool(matrix[0, 0]) is True
     assert bool(matrix[0, 1]) is False
     assert bool(matrix[1, 1]) is False
+
+
+def test_make_gate_label_formats_thresholds():
+    assert make_gate_label(adv20_ratio_threshold=1.1, clv_threshold=None) == "adv20_110"
+    assert make_gate_label(adv20_ratio_threshold=1.25, clv_threshold=0.45) == "adv20_125_clv45"
+
+
+def test_add_gate_and_soft_activation_variants():
+    frame = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2024-01-01", "2024-01-01"]),
+            "ticker": ["AAA", "BBB"],
+            "score__base": [0.8, 0.2],
+            "tv_to_adv20": [1.3, 0.9],
+            "clv": [0.6, 0.4],
+            "xs_tv_to_adv20_rank": [1.0, 0.5],
+            "buyable_score": [1.0, 0.0],
+        }
+    )
+
+    frame, gate_columns = add_liquidity_opening_gate_columns(
+        frame,
+        adv20_ratio_thresholds=[1.25],
+        clv_thresholds=[None, 0.5],
+    )
+    frame, variants = add_soft_activation_score_variants(
+        frame,
+        base_score_column="score__base",
+    )
+
+    assert gate_columns == ["gate__adv20_125", "gate__adv20_125_clv50"]
+    assert bool(frame.loc[0, "gate__adv20_125_clv50"]) is True
+    assert bool(frame.loc[1, "gate__adv20_125_clv50"]) is False
+    assert "act_75_25" in variants
+    assert "score__act_mul" in frame.columns

@@ -124,6 +124,10 @@ Read these first when you want the minimal result.
 - Portfolio entry slicing simulation: `artifacts/run_summaries/latest_portfolio_entry_slicing_simulation.json`
 - Portfolio volume-confirmed entry filter: `artifacts/run_summaries/latest_portfolio_volume_confirmed_entry_filter.json`
 - Portfolio variable breadth: `artifacts/run_summaries/latest_portfolio_variable_breadth.json`
+- Portfolio liquidity-state opportunity audit: `artifacts/run_summaries/latest_portfolio_liquidity_state_opportunity_audit.json`
+- Portfolio local liquidity-gate refinement: `artifacts/run_summaries/latest_portfolio_local_liquidity_gate_refinement.json`
+- Portfolio soft activation score: `artifacts/run_summaries/latest_portfolio_soft_activation_score.json`
+- Portfolio conditional alpha decomposition: `artifacts/run_summaries/latest_portfolio_conditional_alpha_decomposition.json`
 
 Execution/tradability producer:
 
@@ -154,6 +158,10 @@ Mode-specific durable outputs:
 - `analysis/h144_entry_slicing_simulation.py`: `artifacts/run_summaries/latest_portfolio_entry_slicing_simulation.json` plus sliced vs unsliced outputs under `artifacts/portfolio_baselines/`
 - `analysis/h145_volume_confirmed_entry_filter.py`: `artifacts/run_summaries/latest_portfolio_volume_confirmed_entry_filter.json` plus entry-gate outputs under `artifacts/portfolio_baselines/`
 - `analysis/h146_variable_breadth_portfolio.py`: `artifacts/run_summaries/latest_portfolio_variable_breadth.json` plus variable-breadth sweep outputs under `artifacts/portfolio_baselines/`
+- `analysis/h147_liquidity_state_opportunity_audit.py`: `artifacts/run_summaries/latest_portfolio_liquidity_state_opportunity_audit.json` plus daily opportunity-count outputs under `artifacts/portfolio_baselines/`
+- `analysis/h148_local_liquidity_gate_refinement.py`: `artifacts/run_summaries/latest_portfolio_local_liquidity_gate_refinement.json` plus local-gate refinement outputs under `artifacts/portfolio_baselines/`
+- `analysis/h149_soft_activation_score.py`: `artifacts/run_summaries/latest_portfolio_soft_activation_score.json` plus soft-activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h150_conditional_alpha_decomposition.py`: `artifacts/run_summaries/latest_portfolio_conditional_alpha_decomposition.json` plus conditional-IC tables under `artifacts/portfolio_baselines/`
 
 For any new analysis script, keep the large output wherever it naturally belongs, but also write
 one compact summary JSON under `artifacts/run_summaries/`.
