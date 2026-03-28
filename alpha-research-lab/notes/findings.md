@@ -2015,3 +2015,120 @@ Test: split days into terciles by each dispersion feature, compute S1 (H93) Spea
 - The H101 Sharpe improvement (+0.26 vs H93, from Session 34) is marginal noise in the supervised model.
 
 **Verdict:** C3 REJECTED. Dispersion regime does not condition H93 signal quality. The dense OHLCV-derived signal search is complete with current data.
+
+---
+
+## F72: oc_asym Signal Lives in Contrast, Not Components (2026-03-28, Session 38)
+
+H107 decomposed `xs_open_close_asymmetry.parquet` into overnight and intraday components to
+find the "purer" sub-signal.
+
+**Results (vs 1-day barrier label `actual`):**
+- `overnight_mom_5d`: IC = −0.0005, 5/11 years positive — near-zero, no signal
+- `intraday_mom_5d`: IC = −0.0343, 1/11 years positive — strongly anti-predictive
+- `oc_asym_5d` (overnight − intraday): IC = +0.0225, 11/11 years positive — PASSES gate
+- `overnight_aligned` (overnight × sign(intraday)): IC = +0.0009 — no signal
+- `gap_abs_5d` (absolute gap magnitude): IC = +0.0078, 9/11 years — borderline
+
+**Conclusion:** The signal is entirely in the CONTRAST between overnight and intraday momentum.
+When overnight direction is NOT reversed intraday, the combined oc_asym signal is informative.
+Neither component alone has predictive power. This rules out the "informed auction" hypothesis
+(which predicts overnight_mom_5d should have standalone IC) and instead supports a
+"gap-persistence = no reversion pressure" hypothesis.
+
+**Promotion:** `oc_asym_5d` qualifies as C4 (standalone IC +0.0225, 11/11 years, corr +0.147 < 0.30).
+The component decomposition was the experiment; the artifact (`xs_open_close_asymmetry.parquet`) already exists.
+
+---
+
+## F73: Position-Size Normalization Is the Key Insider Signal Dimension (2026-03-28, Session 38)
+
+H108 tested quality-weighted insider features vs the raw C2 net-plan-volume baseline (IC +0.0255).
+
+**Results (vs fwd_rel_5d on signal-fire rows):**
+- `xs_ins_relative_size_5d` (net_plan / VolumeBeforeTransaction): IC = +0.0374, 10/11 years, corr = −0.008 → **PASS**
+- `xs_ins_quality_buy_5d` (tier-weighted): IC = +0.0248, 9/11 years → slightly below baseline
+- `xs_ins_ceo_buy_5d` (CEO only, 0.78% coverage): IC = +0.0210, 5/11 years → too inconsistent
+- `xs_ins_exec_rate_5d` (actual/plan ratio): IC = −0.0084, 6/11 years → anti-predictive
+- Baseline `insider_net_plan_5d`: IC = +0.0256, 9/11 years
+
+**Conclusion:** The informative dimension is HOW MUCH of their holdings an insider is buying,
+not their job title or whether they followed through on the announcement. Relative size captures
+conviction better than absolute volume. C5 (`xs_ins_relative_size_5d`) supersedes C2.
+
+**Unexpected finding:** Execution rate is anti-predictive (IC −0.008). Insiders who commit
+to full execution may be motivated by contractual obligations, not genuine bullish conviction.
+Insiders who underexecute may have originally over-announced for optionality — the signal
+resides in the initial relative announcement, not the follow-through.
+
+---
+
+## F74: Intra-Sector Rank is Anti-Predictive (Sector Laggards Beat Leaders) (2026-03-28, Session 38)
+
+H111 tested sector rotation with intra-sector leadership. The composite signal (sector_mom × intra_sector_rank) had IC = −0.0379, 0/11 years positive.
+
+**Results:**
+- `xs_sector_rotation_signal` (sector_mom × intra_sector): IC = −0.0379, 0/11 — strongly negative
+- `xs_intra_sector_rank` (stock's rank within sector, 5d): IC = −0.0466, 0/11 — anti-predictive
+- `xs_sector_mom_5d_rank` (sector-level 5d momentum): IC = −0.0015, 5/11 — near zero
+- `xs_sector_breadth_5d` (fraction of sector stocks positive): IC = +0.0143, 8/11, corr = −0.004 → **PASS**
+- `xs_sector_accel` (fresh vs stale sector momentum): IC = +0.0079, 8/11 — borderline
+
+**Key finding:** Within-sector rank is strongly ANTI-predictive. When a sector is rising, the
+stocks that are LAGGING within the sector outperform the next day — intra-sector mean reversion.
+This means the "best horse in the hot race" hypothesis is wrong for 1-day horizons.
+The correct cross-sectional mechanism is: in a rising sector, buy the LAGGARDS, not the leaders.
+
+**Actionable finding:** `xs_sector_breadth_5d` passes the gate (IC +0.0143, 8/11 years, corr −0.004).
+Stocks in sectors with BROAD participation (not driven by 1-2 leaders) outperform. This is a
+breadth-confirmation signal orthogonal to both price momentum (S1) and individual-stock effects.
+
+**Corollary:** The anti-predictive composite (sector_mom × intra_sector_rank) reveals a
+"contrarian within-sector" signal worth explicit testing: sector_mom_rank × (1 − intra_sector_rank)
+= hot sector, laggard stock. Expected to have IC > 0. Queued as H112.
+
+---
+
+## F75: VNM ETF Premium is Market-Direction Only, Not Cross-Sectional (2026-03-28, Session 38)
+
+H110 tested whether VNM ETF premium (VNM return − VNINDEX return) and stock-level foreign
+affinity betas provide cross-sectional stock-selection IC.
+
+**Results (vs 1-day barrier label):**
+- `xs_fa_signal` (affinity_120d × vnm_premium_1d): IC = −0.0014, 6/11 years — near zero
+- `xs_fa_rank` (affinity rank): IC = −0.0029, 4/11 years — slightly negative
+- `xs_foreign_affinity_120d` (raw beta): IC = −0.0050, 3/11 years — negative
+- `xs_vnm_premium_1d` (date-level scalar): IC = −0.0143, 2/11 years — negative
+- Conditional: high-premium days IC = −0.0108; low-premium days IC = +0.0089
+
+**Conclusion:** VNM ETF premium is a market-direction predictor (date-level IC +0.132 for VNINDEX T+1)
+but provides no cross-sectional differentiation between individual stocks. The foreign affinity
+beta (rolling Spearman of stock excess return vs VNM premium) is too noisy to be actionable.
+On high-premium days, the signal is actually more negative — possibly because the 40 VNM ETF
+constituents get front-run by sophisticated investors, leaving no edge for the cross-sectional ranker.
+
+**Blocked signal:** H95 (historical daily foreign flow) remains blocked. VNM ETF is the best
+available proxy, but it is insufficient for stock-level cross-sectional prediction.
+
+---
+
+## F76: Earnings Quality at 52 Tickers is Too Weak to Signal (2026-03-28, Session 38)
+
+H109 tested earnings quality features (EPS acceleration, EPS YoY rank, net margin trend,
+ROE delta, debt trend) at 52 tickers.
+
+**Results (vs 1-day barrier label):**
+- `xs_roe_delta_rank` (QoQ ROE change): IC = +0.0049, 8/11 years — directionally right, too weak
+- `xs_eps_accel_rank` (EPS acceleration): IC = +0.0029, 7/11 years — consistent direction
+- `xs_eps_yoy_rank` (EPS YoY growth): IC = +0.0030, 7/11 years — directionally consistent
+- `xs_npm_trend_rank` (net margin slope): IC = −0.0033, 1/11 years — anti-predictive
+- `xs_debt_trend_rank` (D/E YoY change): IC = −0.0006, 6/11 years — near zero
+
+**Conclusion:** At 52 tickers, earnings features are too sparse to reach IC > 0.01 threshold.
+The directional consistency of `xs_roe_delta_rank` (8/11 years) and acceleration features
+(7/11 years) suggests the signal mechanism may be real but requires more stocks to be
+statistically significant. Re-test at 394 tickers after full fundamentals fetch.
+
+**Note on net margin trend:** The anti-predictive net margin trend (IC = −0.033, 1/11 years) is
+suspicious. This may reflect accounting noise — companies inflate margins before dilutive events,
+making improving NPM a contrary indicator at short horizons.

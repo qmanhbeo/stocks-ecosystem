@@ -88,6 +88,7 @@ Use `notes/session_26_log.md` for the latest full session detail.
 | 35 | 2026-03-26 | Standalone gate enforced; H103 return skewness FAIL; dense standalone checks logged (H100 standalone +, H101 context weak, H103 standalone weak) | H93/H101 tie-class |
 | 36 | 2026-03-26 | H104 earnings calendar dense features built; H104 and H105 both FAIL (Sharpe collapse), standalone IC weak | H93/H101 tie-class |
 | 37 | 2026-03-27 | H106 C3 regime-conditional IC: dispersion spread ≤2%, p=0.124 — C3 REJECTED; dense search closed | H93 only |
+| 38 | 2026-03-28 | H107 FAIL (overnight decomp); H108 PASS (C5 xs_ins_relative_size IC +0.037); H109 FAIL (52-ticker); H110 FAIL (VNM ETF cross-sectional); H111 PARTIAL (breadth PASS, rotation FAIL) | H93 + C4 + C5 |
 
 \* Contaminated: stock selection was post-hoc.
 
@@ -241,23 +242,58 @@ See `notes/session_36_log.md`.
 
 ---
 
-## Active Priority: Session 38
+## Session 38 Results (2026-03-28)
 
-### Dense Signal Search: CLOSED
-All OHLCV-derived dense candidates have been tested and rejected (H100–H106). No further
-candidates in queue. H93 (S1) is the only confirmed RL signal.
+**Signal library now has: S1 (confirmed) + C1 + C2 + C4 + C5 (candidates)**
+
+- **H107 (Overnight gap decomposition): FAIL as hypothesis, but reveals C4.**
+  overnight_mom_5d IC ≈ 0; intraday_mom_5d IC = −0.034; oc_asym_5d IC = +0.0225 (11/11 years).
+  Signal lives in the contrast, not the components. oc_asym_5d → promoted to **C4 candidate**.
+
+- **H108 (Insider quality): PASS.**
+  xs_ins_relative_size_5d (net_plan / VolumeBeforeTransaction) IC = +0.0374, 10/11 years, corr = −0.008.
+  +46% over raw C2. Position-size normalization is the key dimension. → **C5 candidate** (supersedes C2).
+
+- **H109 (Earnings quality 52 tickers): FAIL.**
+  Best: xs_roe_delta_rank IC = +0.0049 (8/11 years). Universe too small. Re-test at 394 tickers.
+
+- **H110 (VNM ETF foreign demand proxy): FAIL.**
+  VNM ETF premium is a market-direction signal (date-level IC +0.132 for VNINDEX) but provides no
+  cross-sectional stock differentiation. Foreign affinity beta is too noisy.
+
+- **H111 (Sector rotation): PARTIAL PASS.**
+  xs_sector_rotation_signal IC = −0.0379 (intra-sector rank anti-predictive: laggards beat leaders).
+  xs_sector_breadth_5d (fraction of sector stocks positive): IC = +0.0143, 8/11 years, corr = −0.004. → PASS.
+  Queued: H112 = contrarian intra-sector signal (sector_mom_rank × (1 − intra_sector_rank)).
+
+New artifacts:
+- `data/features/xs_insider_quality_features.parquet` — xs_ins_relative_size_5d (C5)
+- `data/features/xs_sector_rotation_daily.parquet` — xs_sector_breadth_5d
+- `data/features/xs_earnings_quality_daily.parquet` — 52-ticker earnings quality
+- `data/features/xs_foreign_demand_daily.parquet` — VNM ETF features (not predictive)
+
+## Active Priority: Session 39
+
+### Signal library status
+| Signal | IC | Corr w/ S1 | Coverage | Status |
+|--------|----|------------|----------|--------|
+| S1/H93 | +0.149 | N/A | 100% | CONFIRMED |
+| C1 keyword news | +0.043 | +0.009 | 0.8% | Candidate (inconsistent) |
+| C2 raw insider | +0.026 | −0.027 | 3.6% | Superseded by C5 |
+| C4 oc_asym_5d | +0.023 | +0.147 | 100% | Candidate |
+| C5 ins_relative_size | +0.037 | −0.008 | 3.4% | Candidate |
+| xs_sector_breadth_5d | +0.014 | −0.004 | 100% | Candidate (S38 new) |
+
+### Queued hypotheses
+- **H112** — Contrarian intra-sector: sector_mom_rank × (1 − intra_sector_rank). Predicts: IC > 0 (laggards catch up in hot sectors). Data: `xs_sector_rotation_daily.parquet` (built).
+- **H113** — Earnings quality at 394 tickers. Run `build_earnings_quality_features.py` (full fetch ~5 min). Promising: xs_roe_delta_rank 8/11 years positive at 52 tickers.
+- **H114** — VN30 index rebalancing pressure. Derivable from existing daily value traded data. Stocks approaching top-30 boundary face ETF AUM inflow.
+- **H115** — Google Trends retail attention ("cổ phiếu"). Need Google Trends API. Retail-specific effect.
 
 ### Remaining blocked paths
 - **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)
 - **H95 Foreign flow** — BLOCKED (historical daily data not available via vnstock)
 - **Order book imbalance** — BLOCKED (intraday data not available historically)
-
-### Options for next phase
-1. Declare signal search Phase 1 complete; shift to RL agent development using S1 alone.
-2. Wait for H98 LLM to become operational.
-3. Identify a new data source (foreign flow, intraday, order book provider).
-4. Explore fundamentals-based cross-sectional signals (P/E, P/B rank) — data exists in
-   `data/fundamentals_cache/` but not yet tested as a standalone cross-sectional signal.
 
 ---
 

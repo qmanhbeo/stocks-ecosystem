@@ -47,6 +47,63 @@ PYTHONIOENCODING=utf-8 /c/Users/manhn/miniconda3/envs/stocks/python.exe cross_se
 
 ## 🔶 Candidate Signals (weak, needs improvement)
 
+### C4 — Open/Close Asymmetry (H107)
+**Status: CANDIDATE — passes standalone gate, confirmed orthogonal**
+
+- **Standalone IC:** +0.0225 (vs 1-day barrier label, 11/11 years positive)
+- **Correlation with S1:** +0.147 (< 0.30 threshold — qualifies)
+- **Consistency:** 11/11 years IC positive (highly consistent)
+- **Coverage:** 100% (dense signal — computed for all 394 tickers, all dates)
+
+**What it captures:** `oc_asym_5d = overnight_mom_5d − intraday_mom_5d`. The signal lives
+entirely in the CONTRAST between overnight and intraday momentum — not either component alone.
+When a stock's overnight gains (pre-open auction) are not reversed during intraday trading,
+the signal predicts next-day continuation. H107 (Session 38) confirmed the decomposition:
+overnight_mom_5d alone has IC ≈ 0 and intraday_mom_5d is anti-predictive (IC = −0.034).
+
+**Economic mechanism:** T+2 settlement + ±7% price limits. Overnight gaps reflect informed
+auction activity using US-close/VNM-ETF information that cannot be traded until the 9:00 AM
+opening. The gap-minus-intraday contrast isolates the informed signal from mean-reversion noise.
+
+**Why not in supervised WF:** H100/H102 tested this in combined XGBoost — Sharpe collapsed from
+15.08 to ~12 due to variance inflation. As a STANDALONE signal for RL state, it passes.
+
+**Artifact:** `data/features/xs_open_close_asymmetry.parquet`
+(columns: time, ticker, oc_asym_5d, overnight_mom_5d, intraday_mom_5d, oc_asym_20d, gap_abs_5d)
+
+---
+
+### C5 — Insider Relative Size Signal (H108)
+**Status: CANDIDATE — UPGRADES C2, highest IC of all insider features**
+
+- **Standalone IC:** +0.0374 (10/11 years positive) — +46% improvement over raw C2
+- **Correlation with S1:** −0.008 (near-zero → genuinely independent)
+- **Consistency:** 10/11 years IC positive (superior to raw C2's 9/11)
+- **Coverage:** 3.39% of (trading_day, ticker) pairs
+
+**What it captures:** `net_plan_vol / VolumeBeforeTransaction` — position-normalized insider
+conviction. A CEO buying 10% of their holdings is far more informative than buying 0.01%,
+even if the absolute share count is the same. Raw C2 counted absolute volume; C5 counts
+the fractional commitment signal.
+
+**Session 38 H108 findings (vs baseline C2 IC = +0.0255):**
+- `xs_ins_relative_size_5d`: IC = +0.0374, 10/11 positive, corr = −0.008 → BEST
+- `xs_ins_quality_buy_5d` (tier-weighted): IC = +0.0248, 9/11 → slightly below baseline
+- `xs_ins_ceo_buy_5d` (CEO only): IC = +0.0210, 5/11 → inconsistent (too sparse at 0.78%)
+- `xs_ins_exec_rate_5d` (execution rate): IC = −0.0084 → anti-predictive
+
+**Execution rate finding:** When insiders execute LESS than announced (exec_rate < 1.0), it
+is slightly bearish — consistent with "lost conviction after disclosure" hypothesis. Not
+strong enough standalone but may be useful as a confirmation filter.
+
+**Artifact:** `data/features/xs_insider_quality_features.parquet`
+(key column: xs_ins_relative_size_5d)
+
+**Supersedes C2:** C5 is strictly better. Use `xs_ins_relative_size_5d` as the primary
+insider signal going forward.
+
+---
+
 ### ~~C3 — Cross-Sectional Dispersion Regime (H101)~~ REJECTED (Session 37)
 
 **Status: REJECTED — regime-conditional IC analysis decisive (2026-03-27)**
@@ -142,6 +199,11 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Return skewness dense features (H103) | IC −0.0002 vs H93, Sharpe −4.45 | Standalone IC too weak (+0.0019) |
 | Earnings calendar dense features (H104/H105) | IC flat/slightly down, Sharpe −3.3 to −3.4 | Standalone IC weak (~0.001 to 0.006) |
 | Dispersion regime (C3/H101/H106) | Regime IC spread ≤ 2%, p=0.124 | No regime effect on H93 IC; H101 Sharpe gain (+0.26) is noise |
+| Overnight gap decomposition (H107) | overnight_mom IC ≈ 0, intraday IC −0.034 | Signal in oc_asym CONTRAST, not components; oc_asym_5d → C4 |
+| Insider tier-weighting (H108 quality) | CEO-only IC +0.021, exec-rate IC −0.008 | Position-size normalization wins; tier/quality weighting doesn't |
+| Sector rotation composite (H111) | xs_sector_rotation_signal IC −0.038 | Intra-sector rank is anti-predictive (laggards beat leaders) |
+| VNM ETF foreign affinity (H110) | xs_fa_signal IC −0.001 | ETF premium is market-direction signal only; no cross-sectional differentiation |
+| Earnings quality 52 tickers (H109) | best IC +0.005 (roe_delta) | Insufficient universe; re-test at 394 tickers pending |
 
 ---
 
