@@ -6,6 +6,7 @@ Current chunks:
 - [findings-001-030.md](./findings-001-030.md)
 - [findings-031-060.md](./findings-031-060.md)
 - [findings-061-090.md](./findings-061-090.md)
+- [findings-091-120.md](./findings-091-120.md)
 
 ## Convention
 
@@ -19,4 +20,4 @@ Current chunks:
 ## How To Read
 
 Start here, then open the chunk file that contains the finding you need.
-`findings-061-090.md` is now full. The next new finding should start `findings-091-120.md`.
+`findings-091-120.md` is now the active findings chunk.

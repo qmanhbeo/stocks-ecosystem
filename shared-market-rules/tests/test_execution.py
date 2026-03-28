@@ -32,5 +32,7 @@ def test_compute_tradability_flags_blocks_limit_and_zero_volume_days():
 
 
 def test_settlement_helpers_map_entry_to_earliest_sell_step():
-    assert required_holding_age_for_sell() == 2
-    assert earliest_sell_step_after_entry(5) == 7
+    assert required_holding_age_for_sell() == 3
+    assert required_holding_age_for_sell(min_hold_days_override=1) == 3
+    assert required_holding_age_for_sell(min_hold_days_override=5) == 5
+    assert earliest_sell_step_after_entry(5) == 8

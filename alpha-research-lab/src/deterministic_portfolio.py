@@ -1,0 +1,677 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+import sys
+from typing import Mapping
+
+import numpy as np
+import pandas as pd
+
+WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
+SHARED_MARKET_RULES_ROOT = WORKSPACE_ROOT / "shared-market-rules"
+if str(SHARED_MARKET_RULES_ROOT) not in sys.path:
+    sys.path.insert(0, str(SHARED_MARKET_RULES_ROOT))
+
+from shared_market_rules import can_execute_sell, compute_tradability_flags
+
+RESERVED_COLUMNS = {"time", "ticker", "actual"}
+WEIGHTING_RULES = ("equal", "linear", "square")
+RECENT_CORE_COLUMNS = [
+    "s1_proba",
+    "c10_illiq_level_rank",
+    "c11_ret_60d_lag_rank",
+    "c12_gap_absorb_3",
+    "c13_compress_blowoff_2",
+    "c14_clv_volconf_resid_rank",
+]
+
+
+@dataclass(frozen=True)
+class ExecutionResult:
+    executed_weights: np.ndarray
+    buy_turnover: float
+    sell_turnover: float
+    total_turnover: float
+    blocked_buy_indices: tuple[int, ...]
+    blocked_sell_indices: tuple[int, ...]
+    capacity_clipped_indices: tuple[int, ...]
+
+
+@dataclass(frozen=True)
+class StrategyRunResult:
+    strategy_name: str
+    signal_columns: tuple[str, ...]
+    daily: pd.DataFrame
+    summary: dict[str, object]
+
+
+@dataclass(frozen=True)
+class MarketInputs:
+    dates: np.ndarray
+    tickers: tuple[str, ...]
+    benchmark_open: np.ndarray
+    open_matrix: np.ndarray
+    adv20_matrix: np.ndarray
+    can_buy_matrix: np.ndarray
+    can_sell_matrix: np.ndarray
+    availability_matrix: np.ndarray
+    score_matrices: Mapping[str, np.ndarray]
+    tradability_source: str
+
+
+def available_signal_columns(frame: pd.DataFrame) -> list[str]:
+    return [col for col in frame.columns if col not in RESERVED_COLUMNS]
+
+
+def default_strategy_names() -> tuple[str, ...]:
+    return ("s1_only", "recent_core", "full_library")
+
+
+def signal_fill_value(column: str) -> float:
+    if column.endswith("_present"):
+        return 0.0
+    return 0.5
+
+
+def resolve_strategy_columns(matrix_columns: list[str], strategy_name: str) -> list[str]:
+    signal_columns = [col for col in matrix_columns if col not in RESERVED_COLUMNS]
+    if strategy_name == "s1_only":
+        cols = ["s1_proba"]
+    elif strategy_name == "recent_core":
+        cols = list(RECENT_CORE_COLUMNS)
+    elif strategy_name == "full_library":
+        cols = signal_columns
+    else:
+        raise ValueError(
+            f"Unknown strategy {strategy_name!r}; expected one of {default_strategy_names()}"
+        )
+
+    missing = [col for col in cols if col not in signal_columns]
+    if missing:
+        raise ValueError(f"Strategy {strategy_name!r} requires missing columns: {missing}")
+    return cols
+
+
+def compute_strategy_scores(
+    matrix: pd.DataFrame,
+    strategy_columns: Mapping[str, list[str]],
+) -> pd.DataFrame:
+    scored = matrix[["time", "ticker", "actual"]].copy()
+    for strategy_name, columns in strategy_columns.items():
+        work = pd.DataFrame(index=matrix.index)
+        for column in columns:
+            numeric = pd.to_numeric(matrix[column], errors="coerce")
+            if column.endswith("_present"):
+                work[column] = numeric.fillna(0.0).clip(lower=0.0, upper=1.0)
+            else:
+                ranked = numeric.groupby(matrix["time"], sort=False).rank(method="average", pct=True)
+                work[column] = ranked.fillna(signal_fill_value(column))
+        scored[f"score__{strategy_name}"] = work.mean(axis=1)
+    return scored
+
+
+def load_price_panel(
+    tickers: list[str],
+    stock_dir: Path,
+    *,
+    adv_window: int = 20,
+    adv_min_periods: int = 5,
+) -> pd.DataFrame:
+    parts: list[pd.DataFrame] = []
+    for ticker in sorted(set(tickers)):
+        path = stock_dir / f"gia_lich_su_{ticker}_1D.parquet"
+        if not path.exists():
+            continue
+        df = pd.read_parquet(path, columns=["time", "open", "close", "volume"])
+        df["time"] = pd.to_datetime(df["time"])
+        df = df.sort_values("time").reset_index(drop=True)
+        df["ticker"] = ticker
+        traded_value = pd.to_numeric(df["close"], errors="coerce") * pd.to_numeric(df["volume"], errors="coerce")
+        df["adv20_value"] = traded_value.rolling(adv_window, min_periods=adv_min_periods).mean()
+        parts.append(df[["time", "ticker", "open", "close", "volume", "adv20_value"]])
+    if not parts:
+        return pd.DataFrame(columns=["time", "ticker", "open", "close", "volume", "adv20_value"])
+    return pd.concat(parts, ignore_index=True)
+
+
+def load_or_build_tradability_panel(
+    price_panel: pd.DataFrame,
+    tradability_path: Path,
+) -> tuple[pd.DataFrame, str]:
+    if tradability_path.exists():
+        tradability = pd.read_parquet(tradability_path)
+        tradability["time"] = pd.to_datetime(tradability["time"])
+        merged = price_panel[["time", "ticker"]].merge(
+            tradability,
+            on=["time", "ticker"],
+            how="left",
+            validate="one_to_one",
+        )
+        for column in [
+            "has_volume",
+            "is_ceiling",
+            "is_floor",
+            "can_buy_next_open",
+            "can_sell_next_open",
+        ]:
+            merged[column] = merged[column].fillna(False).astype(bool)
+        return merged, "artifact"
+
+    parts: list[pd.DataFrame] = []
+    for ticker, group in price_panel.groupby("ticker", sort=False):
+        flags = compute_tradability_flags(group[["time", "ticker", "close", "volume"]].copy())
+        parts.append(flags)
+    tradability = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame()
+    return tradability, "computed_on_the_fly"
+
+
+def load_benchmark_open(benchmark_path: Path) -> pd.Series:
+    benchmark = pd.read_parquet(benchmark_path, columns=["time", "open"])
+    benchmark["time"] = pd.to_datetime(benchmark["time"])
+    benchmark = benchmark.sort_values("time").drop_duplicates("time")
+    return benchmark.set_index("time")["open"].astype(float)
+
+
+def build_market_inputs(
+    scored: pd.DataFrame,
+    price_panel: pd.DataFrame,
+    tradability: pd.DataFrame,
+    benchmark_open: pd.Series,
+    *,
+    tradability_source: str,
+    strategy_names: list[str],
+    start_year: int,
+    end_year: int,
+) -> MarketInputs:
+    universe = scored[(scored["time"].dt.year >= start_year) & (scored["time"].dt.year <= end_year)].copy()
+    if universe.empty:
+        raise ValueError(f"No signal rows in year range {start_year}-{end_year}")
+
+    dates = np.asarray(sorted(universe["time"].drop_duplicates()), dtype="datetime64[ns]")
+    tickers = tuple(sorted(universe["ticker"].drop_duplicates()))
+
+    open_wide = (
+        price_panel.pivot(index="time", columns="ticker", values="open")
+        .reindex(index=pd.to_datetime(dates), columns=list(tickers))
+        .sort_index()
+    )
+    adv20_wide = (
+        price_panel.pivot(index="time", columns="ticker", values="adv20_value")
+        .reindex(index=pd.to_datetime(dates), columns=list(tickers))
+        .sort_index()
+    )
+    can_buy_wide = (
+        tradability.pivot(index="time", columns="ticker", values="can_buy_next_open")
+        .reindex(index=pd.to_datetime(dates), columns=list(tickers))
+        .sort_index()
+    )
+    can_buy_wide = can_buy_wide.where(pd.notna(can_buy_wide), False).astype(bool)
+    can_sell_wide = (
+        tradability.pivot(index="time", columns="ticker", values="can_sell_next_open")
+        .reindex(index=pd.to_datetime(dates), columns=list(tickers))
+        .sort_index()
+    )
+    can_sell_wide = can_sell_wide.where(pd.notna(can_sell_wide), False).astype(bool)
+    availability = (
+        universe.assign(_available=True)
+        .pivot(index="time", columns="ticker", values="_available")
+        .reindex(index=pd.to_datetime(dates), columns=list(tickers))
+        .sort_index()
+    )
+    availability = availability.where(pd.notna(availability), False).astype(bool)
+
+    score_matrices: dict[str, np.ndarray] = {}
+    for strategy_name in strategy_names:
+        score_col = f"score__{strategy_name}"
+        score_wide = (
+            universe.pivot(index="time", columns="ticker", values=score_col)
+            .reindex(index=pd.to_datetime(dates), columns=list(tickers))
+            .sort_index()
+        )
+        score_matrices[strategy_name] = score_wide.to_numpy(dtype=np.float64)
+
+    benchmark = benchmark_open.reindex(pd.to_datetime(dates))
+    return MarketInputs(
+        dates=dates,
+        tickers=tickers,
+        benchmark_open=benchmark.to_numpy(dtype=np.float64),
+        open_matrix=open_wide.to_numpy(dtype=np.float64),
+        adv20_matrix=adv20_wide.to_numpy(dtype=np.float64),
+        can_buy_matrix=can_buy_wide.to_numpy(dtype=bool),
+        can_sell_matrix=can_sell_wide.to_numpy(dtype=bool),
+        availability_matrix=availability.to_numpy(dtype=bool),
+        score_matrices=score_matrices,
+        tradability_source=str(tradability_source),
+    )
+
+
+def _safe_open_returns(open_t: np.ndarray, open_t1: np.ndarray) -> np.ndarray:
+    returns = np.zeros_like(open_t, dtype=np.float64)
+    valid = np.isfinite(open_t) & np.isfinite(open_t1) & (open_t > 0.0) & (open_t1 > 0.0)
+    returns[valid] = (open_t1[valid] / open_t[valid]) - 1.0
+    return returns
+
+
+def _benchmark_return(open_t: float, open_t1: float) -> float:
+    if not np.isfinite(open_t) or not np.isfinite(open_t1) or open_t <= 0.0 or open_t1 <= 0.0:
+        return 0.0
+    return float(open_t1 / open_t - 1.0)
+
+
+def _update_holding_ages(
+    previous_weights: np.ndarray,
+    executed_weights: np.ndarray,
+    previous_holding_ages: np.ndarray,
+) -> np.ndarray:
+    prev = np.asarray(previous_weights, dtype=np.float64)
+    executed = np.asarray(executed_weights, dtype=np.float64)
+    prev_ages = np.asarray(previous_holding_ages, dtype=np.int64)
+    new_ages = np.zeros_like(prev_ages, dtype=np.int64)
+    prev_active = prev > 1e-12
+    exec_active = executed > 1e-12
+    continued = prev_active & exec_active
+    new_positions = (~prev_active) & exec_active
+    new_ages[continued] = prev_ages[continued] + 1
+    new_ages[new_positions] = 1
+    return new_ages
+
+
+def apply_execution_constraints(
+    *,
+    current_weights: np.ndarray,
+    desired_weights: np.ndarray,
+    holding_ages: np.ndarray,
+    can_buy_next_open: np.ndarray,
+    can_sell_next_open: np.ndarray,
+    required_holding_age: int,
+    max_weight_per_name: np.ndarray,
+) -> ExecutionResult:
+    current = np.asarray(current_weights, dtype=np.float64)
+    desired = np.asarray(desired_weights, dtype=np.float64)
+    ages = np.asarray(holding_ages, dtype=np.int64)
+    can_buy = np.asarray(can_buy_next_open, dtype=bool)
+    can_sell = np.asarray(can_sell_next_open, dtype=bool)
+    max_weight = np.asarray(max_weight_per_name, dtype=np.float64)
+
+    executed = current.copy()
+    blocked_sell_indices: list[int] = []
+    for idx in range(len(current)):
+        if desired[idx] >= current[idx] - 1e-12:
+            continue
+        if can_execute_sell(
+            bool(can_sell[idx]),
+            int(ages[idx]),
+            min_hold_days_override=int(required_holding_age),
+        ):
+            executed[idx] = desired[idx]
+        else:
+            blocked_sell_indices.append(idx)
+
+    cash_after_sells = max(1.0 - float(executed.sum()), 0.0)
+    desired_buys = np.clip(desired - executed, 0.0, None)
+    buy_headroom = np.maximum(max_weight - executed, 0.0)
+    capped_buys = np.minimum(desired_buys, buy_headroom)
+
+    blocked_buy_mask = (desired_buys > 1e-12) & (~can_buy)
+    capacity_clipped_mask = (desired_buys > capped_buys + 1e-12) & can_buy
+
+    allowed_buys = capped_buys.copy()
+    allowed_buys[~can_buy] = 0.0
+    allowed_total = float(allowed_buys.sum())
+    if allowed_total > 0.0 and cash_after_sells > 0.0:
+        scale = min(1.0, cash_after_sells / allowed_total)
+        executed += allowed_buys * scale
+
+    buy_turnover = float(np.clip(executed - current, 0.0, None).sum())
+    sell_turnover = float(np.clip(current - executed, 0.0, None).sum())
+    return ExecutionResult(
+        executed_weights=executed,
+        buy_turnover=buy_turnover,
+        sell_turnover=sell_turnover,
+        total_turnover=buy_turnover + sell_turnover,
+        blocked_buy_indices=tuple(np.flatnonzero(blocked_buy_mask).tolist()),
+        blocked_sell_indices=tuple(blocked_sell_indices),
+        capacity_clipped_indices=tuple(np.flatnonzero(capacity_clipped_mask).tolist()),
+    )
+
+
+def _max_drawdown(values: np.ndarray) -> float:
+    arr = np.asarray(values, dtype=np.float64)
+    if arr.size == 0:
+        return 0.0
+    peaks = np.maximum.accumulate(arr)
+    peaks = np.clip(peaks, 1e-12, None)
+    drawdowns = (arr / peaks) - 1.0
+    return float(drawdowns.min())
+
+
+def _annualized_ratio(returns: np.ndarray) -> float | None:
+    arr = np.asarray(returns, dtype=np.float64)
+    if arr.size == 0:
+        return None
+    std = float(arr.std(ddof=0))
+    if std <= 0.0:
+        return None
+    return float(arr.mean() / std * np.sqrt(252.0))
+
+
+def _annualized_return(final_value: float, initial_value: float, periods: int) -> float | None:
+    if periods <= 0 or initial_value <= 0.0 or final_value <= 0.0:
+        return None
+    return float((final_value / initial_value) ** (252.0 / periods) - 1.0)
+
+
+def compute_selected_target_weights(
+    scores: np.ndarray,
+    selected_indices: list[int] | tuple[int, ...],
+    *,
+    weighting: str,
+) -> np.ndarray:
+    scores_arr = np.asarray(scores, dtype=np.float64)
+    target = np.zeros_like(scores_arr, dtype=np.float64)
+    if not selected_indices:
+        return target
+    if weighting not in WEIGHTING_RULES:
+        raise ValueError(f"Unknown weighting {weighting!r}; expected one of {WEIGHTING_RULES}")
+
+    selected = np.asarray(selected_indices, dtype=np.int64)
+    if weighting == "equal":
+        raw = np.ones(len(selected), dtype=np.float64)
+    else:
+        selected_scores = scores_arr[selected]
+        finite_scores = np.where(np.isfinite(selected_scores), selected_scores, np.nan)
+        floor = np.nanmin(finite_scores) if np.any(np.isfinite(finite_scores)) else 0.0
+        shifted = np.clip(selected_scores - float(floor), 0.0, None) + 1e-6
+        raw = shifted if weighting == "linear" else shifted ** 2
+
+    raw_sum = float(raw.sum())
+    if raw_sum <= 0.0 or not np.isfinite(raw_sum):
+        raw = np.ones(len(selected), dtype=np.float64)
+        raw_sum = float(raw.sum())
+
+    target[selected] = raw / raw_sum
+    return target
+
+
+def summarize_daily_results(
+    daily: pd.DataFrame,
+    *,
+    initial_notional_vnd: float,
+    top_k: int,
+) -> dict[str, object]:
+    if daily.empty:
+        return {
+            "days": 0,
+            "final_portfolio_value_vnd": float(initial_notional_vnd),
+            "final_benchmark_value_vnd": float(initial_notional_vnd),
+            "portfolio_total_return": 0.0,
+            "benchmark_total_return": 0.0,
+            "relative_total_return": 0.0,
+            "portfolio_sharpe_annualized": None,
+            "information_ratio_annualized": None,
+            "max_drawdown": 0.0,
+            "positive_years": 0,
+            "total_years": 0,
+            "avg_daily_turnover": 0.0,
+            "avg_cash_weight": 1.0,
+            "avg_num_holdings": 0.0,
+            "avg_invested_weight": 0.0,
+            "avg_universe_size": 0.0,
+            "avg_selected_count": 0.0,
+            "rebalance_days": 0,
+            "blocked_buy_events": 0,
+            "blocked_sell_events": 0,
+            "capacity_clipped_events": 0,
+            "avg_holding_age": 0.0,
+            "per_year": [],
+            "top_k": int(top_k),
+        }
+
+    final_portfolio_value = float(daily["portfolio_value_vnd"].iloc[-1])
+    final_benchmark_value = float(daily["benchmark_value_vnd"].iloc[-1])
+    portfolio_total_return = final_portfolio_value / float(initial_notional_vnd) - 1.0
+    benchmark_total_return = final_benchmark_value / float(initial_notional_vnd) - 1.0
+    relative_total_return = final_portfolio_value / max(final_benchmark_value, 1e-12) - 1.0
+    portfolio_annualized_return = _annualized_return(
+        final_portfolio_value,
+        float(initial_notional_vnd),
+        int(len(daily)),
+    )
+    benchmark_annualized_return = _annualized_return(
+        final_benchmark_value,
+        float(initial_notional_vnd),
+        int(len(daily)),
+    )
+    relative_annualized_return = _annualized_return(
+        final_portfolio_value / max(final_benchmark_value, 1e-12),
+        1.0,
+        int(len(daily)),
+    )
+
+    portfolio_return = daily["portfolio_return"].to_numpy(dtype=np.float64)
+    relative_return = daily["relative_return"].to_numpy(dtype=np.float64)
+
+    daily = daily.copy()
+    daily["year"] = pd.to_datetime(daily["execution_date"]).dt.year
+    per_year = []
+    for year, group in daily.groupby("year", sort=True):
+        port_gross = float(np.prod(1.0 + group["portfolio_return"].to_numpy(dtype=np.float64)) - 1.0)
+        bench_gross = float(np.prod(1.0 + group["benchmark_return"].to_numpy(dtype=np.float64)) - 1.0)
+        rel_gross = float(
+            np.prod(
+                (1.0 + group["portfolio_return"].to_numpy(dtype=np.float64))
+                / np.clip(1.0 + group["benchmark_return"].to_numpy(dtype=np.float64), 1e-12, None)
+            )
+            - 1.0
+        )
+        per_year.append(
+            {
+                "year": int(year),
+                "portfolio_return": round(port_gross, 6),
+                "benchmark_return": round(bench_gross, 6),
+                "relative_return": round(rel_gross, 6),
+                "avg_turnover": round(float(group["turnover"].mean()), 6),
+                "avg_cash_weight": round(float(group["cash_weight"].mean()), 6),
+                "avg_num_holdings": round(float(group["num_holdings"].mean()), 4),
+                "days": int(len(group)),
+            }
+        )
+
+    return {
+        "days": int(len(daily)),
+        "final_portfolio_value_vnd": round(final_portfolio_value, 2),
+        "final_benchmark_value_vnd": round(final_benchmark_value, 2),
+        "portfolio_total_return": round(portfolio_total_return, 6),
+        "benchmark_total_return": round(benchmark_total_return, 6),
+        "relative_total_return": round(relative_total_return, 6),
+        "portfolio_annualized_return": round(portfolio_annualized_return, 6)
+        if portfolio_annualized_return is not None else None,
+        "benchmark_annualized_return": round(benchmark_annualized_return, 6)
+        if benchmark_annualized_return is not None else None,
+        "relative_annualized_return": round(relative_annualized_return, 6)
+        if relative_annualized_return is not None else None,
+        "portfolio_sharpe_annualized": round(_annualized_ratio(portfolio_return), 6)
+        if _annualized_ratio(portfolio_return) is not None else None,
+        "information_ratio_annualized": round(_annualized_ratio(relative_return), 6)
+        if _annualized_ratio(relative_return) is not None else None,
+        "max_drawdown": round(_max_drawdown(daily["portfolio_value_vnd"].to_numpy(dtype=np.float64)), 6),
+        "positive_years": int(sum(1 for row in per_year if row["portfolio_return"] > 0.0)),
+        "total_years": int(len(per_year)),
+        "avg_daily_turnover": round(float(daily["turnover"].mean()), 6),
+        "avg_cash_weight": round(float(daily["cash_weight"].mean()), 6),
+        "avg_num_holdings": round(float(daily["num_holdings"].mean()), 4),
+        "avg_invested_weight": round(float((1.0 - daily["cash_weight"]).mean()), 6),
+        "avg_universe_size": round(float(daily["eligible_universe_size"].mean()), 4),
+        "avg_selected_count": round(float(daily["selected_count"].mean()), 4),
+        "rebalance_days": int((daily["turnover"] > 1e-12).sum()),
+        "blocked_buy_events": int(daily["blocked_buy_count"].sum()),
+        "blocked_sell_events": int(daily["blocked_sell_count"].sum()),
+        "capacity_clipped_events": int(daily["capacity_clipped_count"].sum()),
+        "avg_holding_age": round(float(daily["avg_holding_age"].mean()), 4),
+        "per_year": per_year,
+        "top_k": int(top_k),
+    }
+
+
+def simulate_strategy(
+    *,
+    strategy_name: str,
+    signal_columns: list[str],
+    market_inputs: MarketInputs,
+    top_k: int,
+    rebalance_every: int,
+    weighting: str,
+    initial_notional_vnd: float,
+    max_adv_participation: float,
+    required_holding_age: int,
+    buy_fee_rate: float,
+    sell_fee_rate: float,
+    capital_gains_tax_rate: float,
+    min_score: float | None = None,
+) -> StrategyRunResult:
+    if top_k <= 0:
+        raise ValueError("top_k must be > 0")
+    if rebalance_every <= 0:
+        raise ValueError("rebalance_every must be > 0")
+    if weighting not in WEIGHTING_RULES:
+        raise ValueError(f"Unknown weighting {weighting!r}; expected one of {WEIGHTING_RULES}")
+
+    dates = pd.to_datetime(market_inputs.dates)
+    tickers = market_inputs.tickers
+    n_dates = len(dates)
+    n_tickers = len(tickers)
+    if n_dates < 2:
+        raise ValueError("Need at least two dates to simulate open-to-open portfolio returns")
+
+    score_matrix = np.asarray(market_inputs.score_matrices[strategy_name], dtype=np.float64)
+    open_matrix = np.asarray(market_inputs.open_matrix, dtype=np.float64)
+    adv20_matrix = np.asarray(market_inputs.adv20_matrix, dtype=np.float64)
+    can_buy_matrix = np.asarray(market_inputs.can_buy_matrix, dtype=bool)
+    can_sell_matrix = np.asarray(market_inputs.can_sell_matrix, dtype=bool)
+    availability_matrix = np.asarray(market_inputs.availability_matrix, dtype=bool)
+    benchmark_open = np.asarray(market_inputs.benchmark_open, dtype=np.float64)
+
+    weights = np.zeros(n_tickers, dtype=np.float64)
+    holding_ages = np.zeros(n_tickers, dtype=np.int64)
+    cash_weight = 1.0
+    portfolio_value = float(initial_notional_vnd)
+    benchmark_value = float(initial_notional_vnd)
+    last_rebalance_step = -rebalance_every
+
+    records: list[dict[str, object]] = []
+    for step in range(n_dates - 1):
+        open_t = open_matrix[step]
+        open_t1 = open_matrix[step + 1]
+        asset_returns = _safe_open_returns(open_t, open_t1)
+        benchmark_ret = _benchmark_return(benchmark_open[step], benchmark_open[step + 1])
+
+        asset_values_before = weights * portfolio_value * (1.0 + asset_returns)
+        cash_value_before = cash_weight * portfolio_value
+        value_before_rebalance = float(asset_values_before.sum() + cash_value_before)
+        if value_before_rebalance <= 0.0:
+            value_before_rebalance = 1e-12
+
+        drifted_weights = asset_values_before / value_before_rebalance
+        benchmark_value *= 1.0 + benchmark_ret
+
+        do_rebalance = bool(
+            drifted_weights.sum() <= 1e-12 or (step - last_rebalance_step) >= rebalance_every
+        )
+        scores = score_matrix[step]
+        eligible = availability_matrix[step].copy()
+        if min_score is not None:
+            eligible &= scores >= float(min_score)
+
+        selected_indices: list[int] = []
+        desired_weights = drifted_weights.copy() if not do_rebalance else np.zeros(n_tickers, dtype=np.float64)
+        if do_rebalance and np.any(eligible):
+            ranked_pool = np.flatnonzero(eligible)
+            ranked_scores = scores[ranked_pool]
+            order = np.lexsort((ranked_pool, -ranked_scores))
+            selected_indices = ranked_pool[order[: min(top_k, len(order))]].tolist()
+            if selected_indices:
+                desired_weights = compute_selected_target_weights(
+                    scores,
+                    selected_indices,
+                    weighting=weighting,
+                )
+                last_rebalance_step = step
+
+        if max_adv_participation > 0.0:
+            capacity_weights = np.nan_to_num(
+                adv20_matrix[step + 1] * float(max_adv_participation) / max(value_before_rebalance, 1e-12),
+                nan=0.0,
+                posinf=1.0,
+                neginf=0.0,
+            )
+            capacity_weights = np.clip(capacity_weights, 0.0, 1.0)
+        else:
+            capacity_weights = np.ones(n_tickers, dtype=np.float64)
+
+        execution_result = apply_execution_constraints(
+            current_weights=drifted_weights,
+            desired_weights=desired_weights,
+            holding_ages=holding_ages,
+            can_buy_next_open=can_buy_matrix[step + 1] & np.isfinite(open_t1) & (open_t1 > 0.0),
+            can_sell_next_open=can_sell_matrix[step + 1] & np.isfinite(open_t1) & (open_t1 > 0.0),
+            required_holding_age=required_holding_age,
+            max_weight_per_name=capacity_weights,
+        )
+
+        transaction_cost = (
+            execution_result.buy_turnover * float(buy_fee_rate)
+            + execution_result.sell_turnover * (float(sell_fee_rate) + float(capital_gains_tax_rate))
+        )
+        value_after_rebalance = value_before_rebalance * max(1.0 - transaction_cost, 0.0)
+        weights = execution_result.executed_weights
+        holding_ages = _update_holding_ages(
+            previous_weights=drifted_weights,
+            executed_weights=weights,
+            previous_holding_ages=holding_ages,
+        )
+        cash_weight = float(max(1.0 - float(weights.sum()), 0.0))
+        portfolio_return = value_after_rebalance / portfolio_value - 1.0
+        portfolio_value = float(value_after_rebalance)
+
+        active_mask = weights > 1e-12
+        avg_holding_age = float(np.mean(holding_ages[active_mask])) if np.any(active_mask) else 0.0
+        records.append(
+            {
+                "strategy": strategy_name,
+                "signal_date": dates[step].isoformat(),
+                "execution_date": dates[step + 1].isoformat(),
+                "portfolio_value_vnd": portfolio_value,
+                "benchmark_value_vnd": float(benchmark_value),
+                "portfolio_return": float(portfolio_return),
+                "benchmark_return": float(benchmark_ret),
+                "relative_return": float(portfolio_return - benchmark_ret),
+                "turnover": float(execution_result.total_turnover),
+                "buy_turnover": float(execution_result.buy_turnover),
+                "sell_turnover": float(execution_result.sell_turnover),
+                "cash_weight": float(cash_weight),
+                "num_holdings": int(np.count_nonzero(active_mask)),
+                "avg_holding_age": float(avg_holding_age),
+                "blocked_buy_count": int(len(execution_result.blocked_buy_indices)),
+                "blocked_sell_count": int(len(execution_result.blocked_sell_indices)),
+                "capacity_clipped_count": int(len(execution_result.capacity_clipped_indices)),
+                "eligible_universe_size": int(np.count_nonzero(eligible)),
+                "selected_count": int(len(selected_indices) if do_rebalance else np.count_nonzero(weights > 1e-12)),
+                "weighting_rule": weighting,
+                "requested_tickers": [tickers[idx] for idx in selected_indices],
+                "held_tickers": [tickers[idx] for idx in np.flatnonzero(active_mask)],
+            }
+        )
+
+    daily = pd.DataFrame.from_records(records)
+    summary = summarize_daily_results(
+        daily,
+        initial_notional_vnd=initial_notional_vnd,
+        top_k=top_k,
+    )
+    return StrategyRunResult(
+        strategy_name=strategy_name,
+        signal_columns=tuple(signal_columns),
+        daily=daily,
+        summary=summary,
+    )

@@ -77,7 +77,8 @@ Execution reality is an ecosystem-level contract, not a repo-local detail.
 Current strict-core defaults:
 - signal at `T` close
 - fill at `T+1` open
-- earliest sell after a buy at `T+1` open is `T+3` open
+- earliest legal sell decision after a buy at `T+1` open is `T+3` close
+- earliest exit fill is `T+4` open
 - zero-volume blocks both sides
 - ceiling blocks buys
 - floor blocks sells

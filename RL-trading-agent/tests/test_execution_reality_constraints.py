@@ -40,7 +40,7 @@ def _make_env(df: pd.DataFrame, **kwargs) -> TestEnv:
     return TestEnv(**common)
 
 
-def test_default_settlement_blocks_exit_until_t_plus_3_open():
+def test_default_settlement_blocks_exit_until_t_plus_3_close():
     env = _make_env(_make_df([100.0] * 12))
     env.reset()
 
@@ -52,6 +52,11 @@ def test_default_settlement_blocks_exit_until_t_plus_3_open():
     env.step(0)
     assert env.position == 1
     assert env.hold_count == 2
+    assert env.pending_action == 1
+
+    env.step(0)
+    assert env.position == 1
+    assert env.hold_count == 3
     assert env.pending_action == 1
 
     env.step(0)
@@ -80,12 +85,16 @@ def test_ceiling_execution_day_blocks_buys():
 
 
 def test_floor_execution_day_blocks_sells():
-    closes = [100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 93.0, 100.0, 100.0, 100.0, 100.0, 100.0]
-    env = _make_env(_make_df([100.0] * 12, closes=closes), min_hold_days=1)
+    closes = [100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 93.0, 100.0, 100.0, 100.0]
+    env = _make_env(_make_df([100.0] * 12, closes=closes))
     env.reset()
 
     env.step(1)
     assert env.position == 1
+
+    env.step(1)
+    env.step(1)
+    assert env.hold_count >= env.min_hold_days
 
     env.step(0)
     assert env.position == 1

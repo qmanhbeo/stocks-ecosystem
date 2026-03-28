@@ -129,6 +129,10 @@ def test_portfolio_choice_env_blocks_early_sell_until_settlement(tmp_path):
     assert info_2["blocked_sell_tickers"] == ["ACB"]
 
     _obs_3, _reward_3, _terminated_3, _truncated_3, info_3 = env.step(all_cash)
-    assert info_3["num_holdings"] == 0
-    assert info_3["cash_weight"] == 1.0
+    assert info_3["num_holdings"] == 1
+    assert info_3["blocked_sell_tickers"] == ["ACB"]
+
+    _obs_4, _reward_4, _terminated_4, _truncated_4, info_4 = env.step(all_cash)
+    assert info_4["num_holdings"] == 0
+    assert info_4["cash_weight"] == 1.0
     env.close()

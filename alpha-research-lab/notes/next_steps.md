@@ -1,13 +1,78 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_44_log.md` for the latest full session detail.
+Use `notes/session_47_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 44 complete (H133 and H134 PASS; C13 and C14 added to RL matrix, 2026-03-28)
+**Session status:** Session 47 complete (H137 nested selection FAIL; focus shifts to simpler honest validation / hedging, 2026-03-28)
+
+### New reality check after Session 47
+
+**H135 - Signal Library Portfolio Baseline (corrected)**
+- Session 46 found a scoring bug in the original H135 blend:
+  - non-presence signals were averaged in raw scale
+  - `C4` and `C5` were not already on a common `0-1` rank scale
+  - corrected blend logic now cross-sectionally ranks each non-presence signal by date before averaging
+- Corrected H135 baseline under the same execution contract:
+  - next-open execution
+  - `T+2.5` sellability (`T+3` close decision, `T+4` open exit fill)
+  - zero-volume / ceiling / floor tradability blocks
+  - 0.30% round-trip cost
+  - top-5 equal-weight, 3-day rebalance
+- Corrected result:
+  - `s1_only`: `-68.33%` total, `-10.01%` annualized
+  - `recent_core`: `-46.81%` total, `-5.63%` annualized
+  - `full_library`: `+72.10%` total, `+5.11%` annualized
+  - benchmark VNINDEX: `+223.17%` total
+- Implication: the library is **not dead**, but default construction still underperforms badly.
+
+**H136 - Portfolio Construction Sweep**
+- Swept `full_library` across:
+  - `top_k = 3, 5, 8, 10`
+  - rebalance cadence `= 3, 5, 10`
+  - weighting `= equal, linear, square`
+  - score gate `= none, 0.521, 0.570, 0.600`
+- Best configuration:
+  - `top_k = 5`
+  - rebalance every `5` signal days
+  - `equal` weighting
+  - score gate effectively irrelevant (`none`, `0.521`, and `0.570` tied)
+- Best result:
+  - `+1105.71%` total return
+  - `+25.66%` annualized
+  - `+273.09%` relative vs VNINDEX
+  - information ratio `0.50`
+  - max drawdown `-59.76%`
+  - `8/11` positive years
+- Structural takeaway:
+  - rebalance cadence matters more than fancy weighting
+  - `5d` and `10d` cadence dominate `3d`
+  - `equal` weighting beats `linear` and `square`
+  - portfolio construction, not more signal mining, is the dominant frontier right now
+
+**H137 - Nested Walk-Forward Portfolio Selection**
+- Tested the honest version of “let the machine choose construction”:
+  - expanding train window
+  - minimum 4 train years
+  - select the best H136-style config on past years only
+  - freeze it and test on the next year
+  - test years: `2019-2025`
+- Out-of-sample stitched result:
+  - `+21.38%` total
+  - `+2.84%` annualized
+  - `-42.46%` relative vs VNINDEX
+  - information ratio `-0.08`
+  - max drawdown `-55.65%`
+- Selected configs were simple, not exotic:
+  - mostly `top_k=5`, rebalance every `10` days, `equal` weighting
+  - early years briefly chose `top_k=3` or `top_k=10` with `5d` cadence
+- Implication:
+  - the H136 full-sample winner is not reliable enough to trust directly
+  - simple nested config selection does **not** yet justify “ML for construction”
+  - the next honest path is smaller, simpler, and more regime-aware, or else move to hedged constructions
 
 ### Current production system
 
@@ -95,6 +160,9 @@ Use `notes/session_44_log.md` for the latest full session detail.
 | 42 | 2026-03-28 | H123 PASS (C11 continuation); H124 standalone PASS but rejected on independence; C11 added to RL matrix, low-beta signal excluded | H93 + C4-C11 |
 | 43 | 2026-03-28 | H125/H131/H132 FAIL; H127 standalone PASS but redundant with C8; H128 anti-predictive; H130 PASS (C12 gap absorption) | H93 + C4-C12 |
 | 44 | 2026-03-28 | H133 PASS (C13 compression blow-off); H134 PASS (C14 residual close-strength); H126 standalone PASS but redundant with C11 | H93 + C4-C14 |
+| 45 | 2026-03-28 | H135 initial realistic portfolio baseline logged as FAIL; later corrected in Session 46 after signal-scale bug fix | H93 + C4-C14 |
+| 46 | 2026-03-28 | H135 corrected: full_library baseline turns positive; H136 sweep finds top-5 equal-weight, 5d cadence, +1105.71% total and +25.66% annualized | H93 + C4-C14 |
+| 47 | 2026-03-28 | H137 nested walk-forward selection: +21.38% total OOS but -42.46% vs VNINDEX; simple config selection overfits and does not validate ML construction yet | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 
@@ -278,7 +346,7 @@ New artifacts:
 - `data/features/xs_earnings_quality_daily.parquet` — 52-ticker earnings quality
 - `data/features/xs_foreign_demand_daily.parquet` — VNM ETF features (not predictive)
 
-## Active Priority: Session 45
+## Active Priority: Session 48
 
 ### Signal library status after Session 44
 | Signal | IC | Corr w/ S1 | Coverage | Status |
@@ -383,11 +451,78 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - corr vs S1: -0.0051
   - Low-beta is mostly the same axis as illiquidity/size, so it stays out of the matrix
 
-### Session 45 next queue (in order)
+### Session 45 experiment results (2026-03-28)
+- **H135 IMPLEMENTED** — realistic deterministic portfolio baseline for the promoted RL signal library
+  - script: `analysis/h135_signal_library_portfolio_baseline.py`
+  - engine: `src/deterministic_portfolio.py`
+  - tradability artifact published: `data/features/execution/tradability_daily.parquet`
+- **INITIAL BASELINE RESULT WAS WRONG-SCALED**
+  - the first `full_library` blend averaged raw signal columns directly
+  - Session 46 found that `C4` and `C5` were not on a common `0-1` rank scale inside the matrix
+  - the Session 45 `full_library` fail should be treated as a logging artifact, not the final scientific verdict
+- **CAPACITY STRESS REMAINS VALID**
+  - `1B VND` notional with `1% ADV20` participation leaves the system ~`99.9%` in cash
+  - capacity is still a first-order stress dimension, not a safe default constant
 
-1. **H135** — Gap-failure exhaustion: combine H130 and H133 logic. Test whether compression expansion that also fails to hold an opening gap is an even stronger reversal state.
-2. **H136** — Sector-conditioned blow-off reversal: test whether C13 sharpens inside hot sectors, recent ceiling clusters, or high-breadth regimes.
-3. **H137** — Residual long-horizon reversal: remove C11 from 90d/120d ranks directly, then test the sign-flipped residual as a distinct long-horizon reversal axis.
+### Session 46 experiment results (2026-03-28)
+- **H135 CORRECTED** — non-presence signals are now cross-sectionally ranked by date before blending
+  - `s1_only`: `-68.33%` total, `-10.01%` annualized, IR `-0.57`
+  - `recent_core`: `-46.81%` total, `-5.63%` annualized, IR `-0.40`
+  - `full_library`: `+72.10%` total, `+5.11%` annualized, IR `-0.05`
+  - benchmark VNINDEX: `+223.17%` total over the same 2015-2025 window
+- **H136 PASS** — deterministic portfolio construction materially improves monetization
+  - script: `analysis/h136_portfolio_construction_sweep.py`
+  - best configuration: `top_k=5`, rebalance every `5` signal days, `equal` weighting
+  - score gate is effectively irrelevant in the winning region (`none`, `0.521`, `0.570` tie)
+  - best result: `+1105.71%` total, `+25.66%` annualized, `+273.09%` relative vs VNINDEX, IR `0.50`, max DD `-59.76%`, `8/11` positive years
+- **SWEEP PATTERN**
+  - `5d` cadence dominates the grid; `10d` is the next-best regime; `3d` is materially worse
+  - `equal` weighting beats `linear` and `square`
+  - `top_k=5` is best absolute performer; `top_k=8/10` are competitive but lower
+- **STRATEGIC VERDICT**
+  - do not pivot to RL yet
+  - the next honest bottleneck is validating and capacity-stressing the deterministic portfolio candidate
+  - RL should be treated as a later overlay that must beat this deterministic baseline
+
+### Session 47 experiment results (2026-03-28)
+- **H137 IMPLEMENTED** — nested walk-forward portfolio-construction selection
+  - script: `analysis/h137_nested_portfolio_selection.py`
+  - helper module: `src/portfolio_construction_search.py`
+  - protocol: pick the best H136-style config on train years only, then test on the next year
+- **H137 FAIL** — simple ML-style config selection does not validate out of sample
+  - stitched OOS test years `2019-2025`
+  - `+21.38%` total, `+2.84%` annualized
+  - `-42.46%` relative vs VNINDEX
+  - information ratio `-0.08`
+  - max drawdown `-55.65%`
+- **SELECTION PATTERN**
+  - selected configs are mostly simple:
+    - `top_k=5`, `rebalance_every=10`, `equal` weighting chosen `4/7` test years
+    - early years briefly choose `top_k=3`, `5d`, `equal`
+    - one year chooses `top_k=10`, `5d`, `equal`
+  - this is not a case where exotic weighting or thresholding saves the result
+- **STRATEGIC VERDICT**
+  - direct “machine learns the best config” is not production-ready from this dataset
+  - full-sample H136 winner is too optimistic
+  - next work should either simplify further or move toward hedged constructions instead of adding more ML complexity
+
+### Session 48 next queue (in order)
+
+1. **Honest fixed-rule validation on the reduced menu**
+   - compare a tiny candidate set only:
+     - `top_k=5`, `cadence=10`, `equal`
+     - `top_k=5`, `cadence=5`, `equal`
+     - `top_k=3`, `cadence=5`, `equal`
+   - test whether one simple rule is robust enough without yearly re-selection
+2. **If long-only still cannot beat benchmark honestly**
+   - move to hedged constructions
+   - benchmark-hedged / long-short lite
+   - sector-neutral variants
+3. **Capacity and fee stress**
+   - only on the reduced-menu candidates that survive honest validation
+4. **Do not expand ML complexity yet**
+   - no larger selector model
+   - no portfolio RL overlay until a deterministic honest baseline is competitive
 
 ### Remaining blocked paths
 - **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)

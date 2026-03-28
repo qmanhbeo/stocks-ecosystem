@@ -71,7 +71,7 @@ Execution realism is shared with the research lab:
 - canonical spec: `../docs/execution_reality.md`
 - shared rule code: `../shared-market-rules/shared_market_rules/`
 - producer artifact: `../data/features/execution/tradability_daily.parquet`
-- strict core: T+1 entry, earliest sell at T+3 open, zero-volume blocks both sides, ceiling blocks buys, floor blocks sells
+- strict core: T+1 entry, first legal sell decision at T+3 close, earliest exit fill at T+4 open, zero-volume blocks both sides, ceiling blocks buys, floor blocks sells
 
 ## Train and evaluate RL
 

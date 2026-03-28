@@ -1,0 +1,117 @@
+from __future__ import annotations
+
+from itertools import product
+from typing import Iterable
+
+import pandas as pd
+
+from src.deterministic_portfolio import WEIGHTING_RULES
+
+
+def parse_min_score_grid(raw_values: list[str] | None, strategy_scores: pd.Series) -> list[float | None]:
+    if raw_values:
+        parsed: list[float | None] = []
+        for value in raw_values:
+            text = str(value).strip().lower()
+            if text in {"none", "null", "na"}:
+                parsed.append(None)
+            else:
+                parsed.append(float(text))
+        return parsed
+
+    finite = strategy_scores.dropna().astype(float)
+    quantiles = finite.quantile([0.75, 0.9, 0.95]).tolist()
+    grid: list[float | None] = [None]
+    for value in quantiles:
+        rounded = round(float(value), 3)
+        if rounded not in {v for v in grid if v is not None}:
+            grid.append(rounded)
+    return grid
+
+
+def sortable_min_score(value: float | None) -> float:
+    return -1.0 if value is None else float(value)
+
+
+def candidate_sort_key(row: dict[str, object]) -> tuple[float, float, float, float]:
+    return (
+        float(row["portfolio_total_return"]),
+        float(row["information_ratio_annualized"] or -999.0),
+        float(row["portfolio_sharpe_annualized"] or -999.0),
+        -float(row["avg_daily_turnover"]),
+    )
+
+
+def sort_candidate_results(results: pd.DataFrame) -> pd.DataFrame:
+    return results.sort_values(
+        by=[
+            "portfolio_total_return",
+            "information_ratio_annualized",
+            "portfolio_sharpe_annualized",
+            "avg_daily_turnover",
+            "top_k",
+            "rebalance_every",
+            "weighting",
+            "min_score",
+        ],
+        ascending=[False, False, False, True, True, True, True, True],
+        key=lambda col: col.map(sortable_min_score) if col.name == "min_score" else col,
+        ignore_index=True,
+    )
+
+
+def enumerate_config_grid(
+    *,
+    top_k_grid: Iterable[int],
+    rebalance_grid: Iterable[int],
+    weighting_grid: Iterable[str],
+    min_score_grid: Iterable[float | None],
+) -> list[tuple[int, int, str, float | None]]:
+    weightings = [str(v) for v in weighting_grid]
+    invalid = sorted(set(weightings) - set(WEIGHTING_RULES))
+    if invalid:
+        raise ValueError(f"Unknown weighting values: {invalid}; expected subset of {WEIGHTING_RULES}")
+    return list(
+        product(
+            sorted(set(int(v) for v in top_k_grid)),
+            sorted(set(int(v) for v in rebalance_grid)),
+            weightings,
+            list(min_score_grid),
+        )
+    )
+
+
+def build_year_splits(
+    *,
+    start_year: int,
+    end_year: int,
+    min_train_years: int,
+    train_years: int | None = None,
+) -> list[dict[str, int]]:
+    if min_train_years <= 0:
+        raise ValueError("min_train_years must be > 0")
+    if train_years is not None and train_years <= 0:
+        raise ValueError("train_years must be > 0 when provided")
+    if end_year <= start_year:
+        raise ValueError("end_year must be greater than start_year")
+
+    splits: list[dict[str, int]] = []
+    first_test_year = start_year + int(min_train_years)
+    for test_year in range(first_test_year, end_year + 1):
+        if train_years is None:
+            train_start = start_year
+        else:
+            train_start = max(start_year, test_year - int(train_years))
+        train_end = test_year - 1
+        if (train_end - train_start + 1) < min_train_years:
+            continue
+        splits.append(
+            {
+                "train_start_year": int(train_start),
+                "train_end_year": int(train_end),
+                "test_year": int(test_year),
+            }
+        )
+    if not splits:
+        raise ValueError("No valid year splits produced")
+    return splits

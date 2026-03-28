@@ -117,7 +117,7 @@ class TrainEpisodeSamplingConfig:
 class EnvConfig:
     train_split: float = 0.7
     val_split: float = 0.15
-    min_hold_days: int = 2
+    min_hold_days: int = 3
     buy_fee_rate: float = 0.003
     sell_fee_rate: float = 0.003
     capital_gains_tax_rate: float = 0.001

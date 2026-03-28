@@ -109,13 +109,15 @@ def test_min_hold_gate_uses_sampled_hold_count():
         env.reset()
         if env.position != 1:
             continue
+        pre_hold_count = env.hold_count
         _, _, _, _, info = env.step(0)  # request exit
-        can_exit_expected = env.hold_count >= env.min_hold_days
+        can_exit_expected = pre_hold_count >= env.min_hold_days
         if can_exit_expected:
             assert env.pending_action == 0
+            assert bool(info["position"]) is False
         else:
             assert env.pending_action == 1
-        assert bool(info["position"]) is True
+            assert bool(info["position"]) is True
         return
     raise AssertionError("Expected long-start state with probability 1.0")
 

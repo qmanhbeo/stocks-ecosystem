@@ -13,7 +13,9 @@ class ExecutionPolicy:
     decision_timing: str = "close_t"
     entry_timing: str = "open_t_plus_1"
     settlement_lag_days: int = 2
-    earliest_sell_offset_from_entry_open: int = 2
+    # With close-based decisions and next-open execution, Vietnam T+2.5 settlement
+    # means the first legal sell decision is close[T+3], which fills at open[T+4].
+    earliest_sell_fill_offset_from_entry_open: int = 3
     price_limit_pct: float = 0.07
     price_limit_tolerance: float = 0.001
     buy_block_on_zero_volume: bool = True
@@ -44,15 +46,18 @@ def required_holding_age_for_sell(
     min_hold_days_override: int | None = None,
 ) -> int:
     if min_hold_days_override is not None:
-        return int(min_hold_days_override)
-    return int(policy.earliest_sell_offset_from_entry_open)
+        return max(
+            int(min_hold_days_override),
+            int(policy.earliest_sell_fill_offset_from_entry_open),
+        )
+    return int(policy.earliest_sell_fill_offset_from_entry_open)
 
 
 def earliest_sell_step_after_entry(
     entry_execution_step: int,
     policy: ExecutionPolicy = DEFAULT_EXECUTION_POLICY,
 ) -> int:
-    return int(entry_execution_step) + int(policy.earliest_sell_offset_from_entry_open)
+    return int(entry_execution_step) + int(policy.earliest_sell_fill_offset_from_entry_open)
 
 
 def can_schedule_sell(

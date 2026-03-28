@@ -175,7 +175,8 @@ class PortfolioChoiceEnv(gym.Env):
         )
 
         self.lookback_window = 0
-        self.min_hold_days = resolve_required_holding_age()
+        self.requested_min_hold_days = int(DEFAULT_CONFIG["min_hold_days"])
+        self.min_hold_days = resolve_required_holding_age(self.requested_min_hold_days)
         self.required_holding_age = int(self.min_hold_days)
         self.normalize = False
         self.include_can_exit = False

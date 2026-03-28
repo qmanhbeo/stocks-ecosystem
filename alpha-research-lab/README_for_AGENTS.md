@@ -101,6 +101,9 @@ Read these first when you want the minimal result.
 - Cross-sectional: `artifacts/run_summaries/latest_cross_sectional.json`
 - Ensemble: `artifacts/run_summaries/latest_ensemble.json`
 - Portfolio: `artifacts/run_summaries/latest_portfolio.json`
+- Portfolio baseline: `artifacts/run_summaries/latest_portfolio_baseline.json`
+- Portfolio construction sweep: `artifacts/run_summaries/latest_portfolio_construction_sweep.json`
+- Portfolio nested selection: `artifacts/run_summaries/latest_portfolio_nested_selection.json`
 
 Execution/tradability producer:
 
@@ -119,6 +122,9 @@ Mode-specific durable outputs:
 - `cross_sectional_wf.py`: `xs_wf_results.jsonl` plus optional saved probability files
 - `ensemble_wf.py`: `xs_wf_results.jsonl`
 - `analysis/h40_rank_portfolio.py`: `artifacts/run_summaries/latest_portfolio.json`
+- `analysis/h135_signal_library_portfolio_baseline.py`: `artifacts/run_summaries/latest_portfolio_baseline.json` plus daily curves under `artifacts/portfolio_baselines/`
+- `analysis/h136_portfolio_construction_sweep.py`: `artifacts/run_summaries/latest_portfolio_construction_sweep.json` plus sweep outputs under `artifacts/portfolio_baselines/`
+- `analysis/h137_nested_portfolio_selection.py`: `artifacts/run_summaries/latest_portfolio_nested_selection.json` plus selected-config, train-candidate, and stitched OOS outputs under `artifacts/portfolio_baselines/`
 
 For any new analysis script, keep the large output wherever it naturally belongs, but also write
 one compact summary JSON under `artifacts/run_summaries/`.
@@ -214,6 +220,7 @@ conda run -n stocks python ensemble_wf.py ensemble \
 Core portfolio evaluator:
 
 - `analysis/h40_rank_portfolio.py` writes `artifacts/run_summaries/latest_portfolio.json`
+- `analysis/h135_signal_library_portfolio_baseline.py` is the realistic deterministic baseline for the RL signal library
 
 ### Decision Rule
 
@@ -235,6 +242,7 @@ After running a main experiment runner, inspect these compact summaries before r
 - Cross-sectional: `artifacts/run_summaries/latest_cross_sectional.json`
 - Ensemble: `artifacts/run_summaries/latest_ensemble.json`
 - Portfolio: `artifacts/run_summaries/latest_portfolio.json`
+- Portfolio baseline: `artifacts/run_summaries/latest_portfolio_baseline.json`
 
 ### Current Best RL Signal: H93
 
