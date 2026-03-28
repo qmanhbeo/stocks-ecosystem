@@ -124,15 +124,57 @@ def load_price_panel(
         path = stock_dir / f"gia_lich_su_{ticker}_1D.parquet"
         if not path.exists():
             continue
-        df = pd.read_parquet(path, columns=["time", "open", "close", "volume"])
+        df = pd.read_parquet(path, columns=["time", "open", "high", "low", "close", "volume"])
         df["time"] = pd.to_datetime(df["time"])
         df = df.sort_values("time").reset_index(drop=True)
         df["ticker"] = ticker
-        traded_value = pd.to_numeric(df["close"], errors="coerce") * pd.to_numeric(df["volume"], errors="coerce")
+        close = pd.to_numeric(df["close"], errors="coerce")
+        high = pd.to_numeric(df["high"], errors="coerce")
+        low = pd.to_numeric(df["low"], errors="coerce")
+        volume = pd.to_numeric(df["volume"], errors="coerce")
+        traded_value = close * volume
         df["adv20_value"] = traded_value.rolling(adv_window, min_periods=adv_min_periods).mean()
-        parts.append(df[["time", "ticker", "open", "close", "volume", "adv20_value"]])
+        df["adv5_value"] = traded_value.rolling(5, min_periods=3).mean()
+        spread = high - low
+        df["traded_value_vnd"] = traded_value
+        df["clv"] = np.where(
+            np.isfinite(spread) & (spread > 0.0),
+            ((close - low) / spread).clip(0.0, 1.0),
+            0.5,
+        )
+        parts.append(
+            df[
+                [
+                    "time",
+                    "ticker",
+                    "open",
+                    "high",
+                    "low",
+                    "close",
+                    "volume",
+                    "traded_value_vnd",
+                    "adv20_value",
+                    "adv5_value",
+                    "clv",
+                ]
+            ]
+        )
     if not parts:
-        return pd.DataFrame(columns=["time", "ticker", "open", "close", "volume", "adv20_value"])
+        return pd.DataFrame(
+            columns=[
+                "time",
+                "ticker",
+                "open",
+                "high",
+                "low",
+                "close",
+                "volume",
+                "traded_value_vnd",
+                "adv20_value",
+                "adv5_value",
+                "clv",
+            ]
+        )
     return pd.concat(parts, ignore_index=True)
 
 
@@ -287,6 +329,7 @@ def apply_execution_constraints(
     can_sell_next_open: np.ndarray,
     required_holding_age: int,
     max_weight_per_name: np.ndarray,
+    max_buy_weight_delta: np.ndarray | None = None,
 ) -> ExecutionResult:
     current = np.asarray(current_weights, dtype=np.float64)
     desired = np.asarray(desired_weights, dtype=np.float64)
@@ -294,6 +337,7 @@ def apply_execution_constraints(
     can_buy = np.asarray(can_buy_next_open, dtype=bool)
     can_sell = np.asarray(can_sell_next_open, dtype=bool)
     max_weight = np.asarray(max_weight_per_name, dtype=np.float64)
+    max_buy_delta = None if max_buy_weight_delta is None else np.asarray(max_buy_weight_delta, dtype=np.float64)
 
     executed = current.copy()
     blocked_sell_indices: list[int] = []
@@ -313,6 +357,8 @@ def apply_execution_constraints(
     desired_buys = np.clip(desired - executed, 0.0, None)
     buy_headroom = np.maximum(max_weight - executed, 0.0)
     capped_buys = np.minimum(desired_buys, buy_headroom)
+    if max_buy_delta is not None:
+        capped_buys = np.minimum(capped_buys, np.maximum(max_buy_delta, 0.0))
 
     blocked_buy_mask = (desired_buys > 1e-12) & (~can_buy)
     capacity_clipped_mask = (desired_buys > capped_buys + 1e-12) & can_buy
@@ -555,6 +601,7 @@ def summarize_daily_results(
             "blocked_sell_events": 0,
             "capacity_clipped_events": 0,
             "avg_holding_age": 0.0,
+            "avg_pending_entry_count": 0.0,
             "per_year": [],
             "top_k": int(top_k),
         }
@@ -640,6 +687,8 @@ def summarize_daily_results(
         "blocked_sell_events": int(daily["blocked_sell_count"].sum()),
         "capacity_clipped_events": int(daily["capacity_clipped_count"].sum()),
         "avg_holding_age": round(float(daily["avg_holding_age"].mean()), 4),
+        "avg_pending_entry_count": round(float(daily["pending_entry_count"].mean()), 4)
+        if "pending_entry_count" in daily.columns else 0.0,
         "per_year": per_year,
         "top_k": int(top_k),
     }
@@ -663,6 +712,10 @@ def simulate_strategy(
     min_adv20_value_vnd: float = 0.0,
     max_position_vnd: float = 0.0,
     max_names_if_liquidity_thin: int | None = None,
+    entry_allowed_matrix: np.ndarray | None = None,
+    entry_slice_days: int = 1,
+    daily_buy_adv_participation: float = 0.0,
+    min_deployable_weight: float = 0.0,
     capture_blotter: bool = False,
 ) -> StrategyRunResult:
     if top_k <= 0:
@@ -671,6 +724,10 @@ def simulate_strategy(
         raise ValueError("rebalance_every must be > 0")
     if weighting not in WEIGHTING_RULES:
         raise ValueError(f"Unknown weighting {weighting!r}; expected one of {WEIGHTING_RULES}")
+    if entry_slice_days <= 0:
+        raise ValueError("entry_slice_days must be > 0")
+    if min_deployable_weight < 0.0 or min_deployable_weight > 1.0:
+        raise ValueError("min_deployable_weight must be within [0, 1]")
 
     dates = pd.to_datetime(market_inputs.dates)
     tickers = market_inputs.tickers
@@ -686,6 +743,15 @@ def simulate_strategy(
     can_sell_matrix = np.asarray(market_inputs.can_sell_matrix, dtype=bool)
     availability_matrix = np.asarray(market_inputs.availability_matrix, dtype=bool)
     benchmark_open = np.asarray(market_inputs.benchmark_open, dtype=np.float64)
+    if entry_allowed_matrix is None:
+        entry_allowed = np.ones_like(availability_matrix, dtype=bool)
+    else:
+        entry_allowed = np.asarray(entry_allowed_matrix, dtype=bool)
+        if entry_allowed.shape != availability_matrix.shape:
+            raise ValueError(
+                "entry_allowed_matrix must match availability_matrix shape "
+                f"{availability_matrix.shape}; got {entry_allowed.shape}"
+            )
 
     weights = np.zeros(n_tickers, dtype=np.float64)
     holding_ages = np.zeros(n_tickers, dtype=np.int64)
@@ -693,6 +759,12 @@ def simulate_strategy(
     portfolio_value = float(initial_notional_vnd)
     benchmark_value = float(initial_notional_vnd)
     last_rebalance_step = -rebalance_every
+    pending_entry_target = np.zeros(n_tickers, dtype=np.float64)
+    pending_entry_days_left = np.zeros(n_tickers, dtype=np.int64)
+    pending_plan_started_count = 0
+    pending_entry_days_total = 0
+    partial_fill_count = 0
+    expired_entry_plan_count = 0
 
     records: list[dict[str, object]] = []
     blotter_records: list[dict[str, object]] = []
@@ -715,15 +787,33 @@ def simulate_strategy(
             drifted_weights.sum() <= 1e-12 or (step - last_rebalance_step) >= rebalance_every
         )
         scores = score_matrix[step]
+        adv20_for_execution = adv20_matrix[step]
+        capacity_weights = compute_capacity_weight_limits(
+            adv20_value_vnd=adv20_for_execution,
+            portfolio_value_vnd=value_before_rebalance,
+            max_adv_participation=max_adv_participation,
+            max_position_vnd=max_position_vnd,
+        )
+        daily_buy_limits = None
+        if daily_buy_adv_participation > 0.0:
+            daily_buy_limits = compute_capacity_weight_limits(
+                adv20_value_vnd=adv20_for_execution,
+                portfolio_value_vnd=value_before_rebalance,
+                max_adv_participation=daily_buy_adv_participation,
+                max_position_vnd=0.0,
+            )
         eligible = availability_matrix[step].copy()
         if min_score is not None:
             eligible &= scores >= float(min_score)
-        adv20_for_execution = adv20_matrix[step]
         if min_adv20_value_vnd > 0.0:
             eligible &= np.isfinite(adv20_for_execution) & (adv20_for_execution >= float(min_adv20_value_vnd))
+        if min_deployable_weight > 0.0:
+            eligible &= capacity_weights >= float(min_deployable_weight)
+        held_mask = drifted_weights > 1e-12
+        eligible &= held_mask | entry_allowed[step]
 
         selected_indices: list[int] = []
-        desired_weights = drifted_weights.copy() if not do_rebalance else np.zeros(n_tickers, dtype=np.float64)
+        desired_weights = drifted_weights.copy()
         if do_rebalance and np.any(eligible):
             ranked_pool = np.flatnonzero(eligible)
             ranked_scores = scores[ranked_pool]
@@ -739,13 +829,15 @@ def simulate_strategy(
                     weighting=weighting,
                 )
                 last_rebalance_step = step
+            else:
+                desired_weights = np.zeros(n_tickers, dtype=np.float64)
+            pending_entry_target = np.zeros(n_tickers, dtype=np.float64)
+            pending_entry_days_left = np.zeros(n_tickers, dtype=np.int64)
+        elif entry_slice_days > 1 and np.any(pending_entry_days_left > 0):
+            active_pending = pending_entry_days_left > 0
+            pending_entry_days_total += int(np.count_nonzero(active_pending))
+            desired_weights = np.maximum(desired_weights, pending_entry_target)
 
-        capacity_weights = compute_capacity_weight_limits(
-            adv20_value_vnd=adv20_for_execution,
-            portfolio_value_vnd=value_before_rebalance,
-            max_adv_participation=max_adv_participation,
-            max_position_vnd=max_position_vnd,
-        )
         can_buy_next_open = can_buy_matrix[step] & np.isfinite(open_t1) & (open_t1 > 0.0)
         can_sell_next_open = can_sell_matrix[step] & np.isfinite(open_t1) & (open_t1 > 0.0)
 
@@ -757,7 +849,17 @@ def simulate_strategy(
             can_sell_next_open=can_sell_next_open,
             required_holding_age=required_holding_age,
             max_weight_per_name=capacity_weights,
+            max_buy_weight_delta=daily_buy_limits,
         )
+
+        if entry_slice_days > 1:
+            requested_buy_mask = desired_weights > drifted_weights + 1e-12
+            partial_fill_mask = (
+                requested_buy_mask
+                & (execution_result.executed_weights > drifted_weights + 1e-12)
+                & (execution_result.executed_weights < desired_weights - 1e-12)
+            )
+            partial_fill_count += int(np.count_nonzero(partial_fill_mask))
 
         transaction_cost = (
             execution_result.buy_turnover * float(buy_fee_rate)
@@ -794,6 +896,19 @@ def simulate_strategy(
             executed_weights=weights,
             previous_holding_ages=holding_ages,
         )
+        if entry_slice_days > 1:
+            if do_rebalance:
+                new_pending_mask = desired_weights > weights + 1e-12
+                pending_entry_target = np.where(new_pending_mask, desired_weights, 0.0)
+                pending_entry_days_left = np.where(new_pending_mask, int(entry_slice_days) - 1, 0)
+                pending_plan_started_count += int(np.count_nonzero(new_pending_mask))
+            else:
+                active_pending = pending_entry_days_left > 0
+                expired_mask = active_pending & (pending_entry_days_left == 1) & (pending_entry_target > weights + 1e-12)
+                expired_entry_plan_count += int(np.count_nonzero(expired_mask))
+                still_active_mask = active_pending & ~expired_mask
+                pending_entry_days_left = np.where(still_active_mask, pending_entry_days_left - 1, 0)
+                pending_entry_target = np.where(still_active_mask, pending_entry_target, 0.0)
         cash_weight = float(max(1.0 - float(weights.sum()), 0.0))
         portfolio_return = value_after_rebalance / portfolio_value - 1.0
         portfolio_value = float(value_after_rebalance)
@@ -821,6 +936,7 @@ def simulate_strategy(
                 "capacity_clipped_count": int(len(execution_result.capacity_clipped_indices)),
                 "eligible_universe_size": int(np.count_nonzero(eligible)),
                 "selected_count": int(len(selected_indices) if do_rebalance else np.count_nonzero(weights > 1e-12)),
+                "pending_entry_count": int(np.count_nonzero(pending_entry_days_left > 0)),
                 "weighting_rule": weighting,
                 "requested_tickers": [tickers[idx] for idx in selected_indices],
                 "held_tickers": [tickers[idx] for idx in np.flatnonzero(active_mask)],
@@ -833,6 +949,23 @@ def simulate_strategy(
         initial_notional_vnd=initial_notional_vnd,
         top_k=top_k,
     )
+    if entry_slice_days > 1:
+        avg_pending_entry_days = (
+            float(pending_entry_days_total) / float(pending_plan_started_count)
+            if pending_plan_started_count > 0 else 0.0
+        )
+        summary.update(
+            {
+                "entry_slice_days": int(entry_slice_days),
+                "avg_pending_entry_days": round(avg_pending_entry_days, 4),
+                "expired_entry_plan_count": int(expired_entry_plan_count),
+                "partial_fill_count": int(partial_fill_count),
+            }
+        )
+    if daily_buy_adv_participation > 0.0:
+        summary["daily_buy_adv_participation"] = round(float(daily_buy_adv_participation), 6)
+    if min_deployable_weight > 0.0:
+        summary["min_deployable_weight"] = round(float(min_deployable_weight), 6)
     blotter = pd.DataFrame.from_records(blotter_records) if capture_blotter else None
     return StrategyRunResult(
         strategy_name=strategy_name,

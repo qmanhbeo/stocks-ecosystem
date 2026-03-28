@@ -1,15 +1,15 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_49_log.md` for the latest full session detail.
+Use `notes/session_50_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 49 complete (signal-date liquidity fix applied; H138/H139 rerun; H140 FAIL; H141 STOP; H142 diagnostic only, 2026-03-28)
+**Session status:** Session 50 complete (H143-H146 friction-extraction wave complete; H143 FAIL; H144 FAIL; H145 NEAR-MISS; H146 FAIL, 2026-03-28)
 
-### New reality check after Session 49
+### New reality check after Session 50
 
 **Execution alignment correction (Session 49)**
 - The deterministic portfolio engine had a one-day liquidity timing bug:
@@ -83,7 +83,7 @@ Use `notes/session_49_log.md` for the latest full session detail.
 - Implication:
   - the H136 full-sample winner is not reliable enough to trust directly
   - simple nested config selection does **not** yet justify “ML for construction”
-  - the next honest path is smaller, simpler, and more regime-aware, or else move to hedged constructions
+  - the next honest path is smaller, simpler, and more realistic within a long-only framework
 
 **H138 - Fixed-Menu Honest Validation (rerun after signal-date liquidity fix)**
 - Reran the fixed menu on the honest `2019-2025` holdout under the corrected engine:
@@ -143,7 +143,7 @@ Use `notes/session_49_log.md` for the latest full session detail.
     - `+12.00%` total, but `-42.51%` relative, `87.13%` average cash, only `2/7` positive years
 - Implication:
   - even retail-sized long-only deployability still collapses once actual liquidity rules are imposed
-  - the next move is **not** more long-only tuning or RL
+  - the next move is **not** synthetic hedging, shorting, or RL
 
 **H141 - Capacity-Aware Construction Sweep**
 - Designed to search a tiny long-only menu only inside H140-viable liquidity regions.
@@ -167,10 +167,111 @@ Use `notes/session_49_log.md` for the latest full session detail.
   - the tooling is ready
   - the long-only candidate itself is not strong enough to justify live promotion
 
+**H143 - Liquidity-Aware Scoring**
+- Tested soft tradability-aware score variants on the honest `2019-2025` holdout:
+  - `liq_base`
+  - `liq_x_adv_rank`
+  - `liq_x_tradability_rank`
+  - `liq_blend_70_30`
+  - `liq_blend_50_50`
+  - `liq_log_adv`
+- Same retail grid as H140:
+  - notionals `20m, 50m, 100m VND`
+  - ADV caps `2%, 5%, 10%`
+  - ADV20 floors `250m, 500m, 1B VND`
+  - `0.30%` round-trip cost
+- Result: **no retail-viable scenario**
+  - best scenario:
+    - `liq_blend_50_50`
+    - `k3_r5_eq`
+    - `20m` notional
+    - `10%` ADV cap
+    - `250m` ADV20 floor
+    - `+32.46%` total
+    - `-32.01%` relative vs VNINDEX
+    - `25.11%` average cash
+    - `4/7` positive years
+- Implication:
+  - soft tradability-aware ranking improves the absolute curve materially versus H140
+  - but score engineering alone still does not create a deployable retail region
+
+**H144 - Entry Slicing Simulation**
+- Tested staged long-only accumulation on the best H143 variants plus `liq_base`:
+  - variants = `liq_base`, `liq_blend_50_50`, `liq_x_tradability_rank`
+  - construction fixed to `k5_r5_eq`
+  - entry slices `= 1, 2, 3, 5` days
+  - sliced runs interpret ADV cap as a **daily buy limit**, not an overall position cap
+- Result: **no retail-viable scenario**
+  - best scenario:
+    - `liq_x_tradability_rank`
+    - unsliced baseline (`entry_slice_days = 1`)
+    - `20m` notional
+    - `5%` ADV cap
+    - `250m` ADV20 floor
+    - `+28.57%` total
+    - `-34.01%` relative
+    - `25.79%` average cash
+    - `4/7` positive years
+  - sliced versions slightly reduced cash drag (`25.18%` vs `25.79%`) but did **not** improve benchmark-relative economics
+- Implication:
+  - multi-day entry planning is now modeled realistically
+  - execution mechanics help modestly, but not enough to rescue deployability
+
+**H145 - Volume-Confirmed Entry Filter**
+- Tested entry gates on the strongest H143 score variant (`liq_blend_50_50`):
+  - `none`
+  - `adv20_125`
+  - `adv20_150`
+  - `adv5_150`
+  - `adv20_125_clv50`
+- Same retail grid as H143.
+- Result: **no retail-viable scenario**, but this is the closest any retail branch has come so far
+  - best scenario:
+    - gate = `adv20_125_clv50`
+    - `k3_r5_eq` or `k5_r5_eq`
+    - `20m` notional
+    - `5%` ADV cap
+    - `1B` ADV20 floor
+    - `+93.88%` total
+    - `-0.49%` relative vs VNINDEX
+    - `33.52%` average cash
+    - `4/7` positive years
+- Implication:
+  - “only enter when liquidity is opening” is the strongest friction lever tested so far
+  - the book is still not deployable by the current gate, but it is now near benchmark-flat instead of deeply negative
+
+**H146 - Variable-Breadth Portfolio**
+- Tested variable breadth on the strongest H145 combination:
+  - score variant = `liq_blend_50_50`
+  - entry gate = `adv20_125_clv50`
+  - `max_k = 3, 5`
+  - score gates `= none, 0.55, 0.60`
+  - minimum deployable weight `= 10%, 15%, 20%`
+  - thin-name cap `= off or 2 names`
+- Result: **no retail-viable scenario**
+  - best scenario is effectively the same as the H145 near-miss:
+    - `+93.88%` total
+    - `-0.49%` relative
+    - `33.52%` average cash
+    - `4/7` positive years
+    - average holdings only `0.74`
+- Implication:
+  - fixed `top_k` is **not** the main remaining bottleneck once the stronger liquidity-opening gate is applied
+  - the next honest move is not another broad construction sweep; it is either:
+    - a very local refinement around the H145 near-miss, or
+    - a new long-only alpha search conditioned on tradability / liquidity-opening states
+
+**Hard rule**
+- this repo is permanently long-only
+- no synthetic hedges
+- no stock shorting assumptions
+- no research branches that cannot realistically make money as long-only in Vietnam
+
 **Next frontier**
-- benchmark-relative or hedged constructions using the same signal library
-- if staying long-only, make it an explicitly tiny-capital illiquidity-harvesting strategy instead of a pseudo-scalable one
-- keep RL deferred until a deterministic deployable baseline exists
+- new long-only alpha search conditioned on tradability / liquidity-opening states
+- only very local construction refinement around the H145 near-miss (`adv20_125_clv50`, `1B` floor) if continuing this branch
+- long-only execution and blotter validation only after a candidate becomes benchmark-positive under the retail gate
+- keep RL deferred until a deterministic long-only deployable baseline exists
 
 ### Current production system
 
@@ -604,7 +705,7 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
 - **STRATEGIC VERDICT**
   - direct “machine learns the best config” is not production-ready from this dataset
   - full-sample H136 winner is too optimistic
-  - next work should either simplify further or move toward hedged constructions instead of adding more ML complexity
+  - next work should simplify further inside a realistic long-only framework instead of adding more ML complexity
 
 ### Session 48 experiment results (2026-03-28)
 - **H138 PASS** — simple fixed long-only rules beat benchmark on the honest holdout
@@ -624,21 +725,20 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - but deployability is still unresolved
   - do not add more ML or RL complexity until capacity is addressed honestly
 
-### Session 49 next queue (in order)
+### Session 50 next queue (in order)
 
-1. **Capacity-aware long-only construction**
-   - test liquidity-aware universe / score gating / capacity-aware position sizing
-   - objective: find any region with positive benchmark-relative return under explicit ADV caps
-2. **If capacity-aware long-only still fails**
-   - move to hedged constructions
-   - benchmark-hedged / long-short lite
-   - sector-neutral variants
-3. **Execution realism expansion**
-   - only after a capped region exists
-   - test stronger slippage / fee bands on the surviving constructions
-4. **Do not expand ML complexity yet**
-   - no larger selector model
-   - no portfolio RL overlay until a deployable deterministic baseline exists
+1. **Tradability-conditioned long-only alpha search**
+   - new hypotheses should be explicitly conditioned on liquidity-opening / tradability states
+   - do not reopen generic raw-signal mining before testing state-conditioned formulations
+2. **Only local refinement around the H145 near-miss**
+   - if continuing construction work, stay near:
+     - score variant `liq_blend_50_50`
+     - entry gate `adv20_125_clv50`
+     - `1B` ADV20 floor
+   - do not run another wide H146-style sweep unless there is a stronger reason
+3. **Keep execution expansion and RL deferred**
+   - stronger live/paper blotter validation only after a retail-positive candidate exists
+   - RL remains deferred until a deterministic long-only retail-positive baseline exists
 
 ### Remaining blocked paths
 - **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)

@@ -167,6 +167,6 @@ Session 49 resolved the retail-deployability branch:
 - H141 therefore stops, and H142 is only diagnostic
 
 ## Next queue
-1. Hedged / benchmark-relative constructions using the current signal library
-2. If staying long-only, explicitly embrace a tiny-capital illiquidity-harvesting framing instead of pretending scalability
-3. Keep RL deferred until a deterministic deployable baseline exists
+1. Long-only only: if continuing this branch, explicitly embrace a tiny-capital illiquidity-harvesting framing instead of pretending scalability
+2. Expand long-only execution realism only after a candidate deserves it
+3. Keep RL deferred until a deterministic long-only deployable baseline exists

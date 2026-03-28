@@ -18,6 +18,17 @@ Execution reality is shared at the workspace level:
 
 `notes/next_steps.md` is the live small-brain state source. This file is the working manual.
 
+## Hard Rule
+
+This lab is permanently long-only.
+
+- no synthetic hedges
+- no stock shorting assumptions
+- no benchmark-hedged or long-short research branches
+- if a strategy cannot plausibly make money as a real long-only Vietnam strategy, it is not a valid direction here
+
+Do not suggest synthetic hedge diagnostics as a fallback. If long-only fails, document that plainly and search for a better long-only construction instead.
+
 ---
 
 ## Primary Goal
@@ -109,6 +120,10 @@ Read these first when you want the minimal result.
 - Portfolio retail validation: `artifacts/run_summaries/latest_portfolio_retail_validation.json`
 - Portfolio capacity-aware sweep: `artifacts/run_summaries/latest_portfolio_capacity_aware_sweep.json`
 - Portfolio live candidate blotter: `artifacts/run_summaries/latest_portfolio_live_candidate_blotter.json`
+- Portfolio liquidity-aware scoring: `artifacts/run_summaries/latest_portfolio_liquidity_aware_scoring.json`
+- Portfolio entry slicing simulation: `artifacts/run_summaries/latest_portfolio_entry_slicing_simulation.json`
+- Portfolio volume-confirmed entry filter: `artifacts/run_summaries/latest_portfolio_volume_confirmed_entry_filter.json`
+- Portfolio variable breadth: `artifacts/run_summaries/latest_portfolio_variable_breadth.json`
 
 Execution/tradability producer:
 
@@ -135,6 +150,10 @@ Mode-specific durable outputs:
 - `analysis/h140_retail_capacity_aware_validation.py`: `artifacts/run_summaries/latest_portfolio_retail_validation.json` plus retail-grid outputs under `artifacts/portfolio_baselines/`
 - `analysis/h141_capacity_aware_construction_sweep.py`: `artifacts/run_summaries/latest_portfolio_capacity_aware_sweep.json` plus constrained-sweep outputs under `artifacts/portfolio_baselines/`
 - `analysis/h142_live_candidate_blotter.py`: `artifacts/run_summaries/latest_portfolio_live_candidate_blotter.json` plus detailed and daily blotter outputs under `artifacts/portfolio_baselines/`
+- `analysis/h143_liquidity_aware_scoring.py`: `artifacts/run_summaries/latest_portfolio_liquidity_aware_scoring.json` plus score-variant results under `artifacts/portfolio_baselines/`
+- `analysis/h144_entry_slicing_simulation.py`: `artifacts/run_summaries/latest_portfolio_entry_slicing_simulation.json` plus sliced vs unsliced outputs under `artifacts/portfolio_baselines/`
+- `analysis/h145_volume_confirmed_entry_filter.py`: `artifacts/run_summaries/latest_portfolio_volume_confirmed_entry_filter.json` plus entry-gate outputs under `artifacts/portfolio_baselines/`
+- `analysis/h146_variable_breadth_portfolio.py`: `artifacts/run_summaries/latest_portfolio_variable_breadth.json` plus variable-breadth sweep outputs under `artifacts/portfolio_baselines/`
 
 For any new analysis script, keep the large output wherever it naturally belongs, but also write
 one compact summary JSON under `artifacts/run_summaries/`.

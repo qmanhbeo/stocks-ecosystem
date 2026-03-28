@@ -43,6 +43,17 @@ This means the root data directory is the canonical dataset surface for the whol
 5. The lab publishes shared execution tradability flags at `data/features/execution/tradability_daily.parquet`
 6. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 
+## Strategy Guardrails
+
+This workspace is long-only by policy.
+
+- no synthetic hedges
+- no equity shorting assumptions
+- no research branches that depend on unrealistic short exposure
+- if a strategy cannot make money realistically as long-only in Vietnam, it is not a valid direction for this ecosystem
+
+This rule applies to both research in `alpha-research-lab/` and any future RL runtime work in `RL-trading-agent/`.
+
 ## Bootstrap
 
 From the workspace root, install the current shared Python stack with:

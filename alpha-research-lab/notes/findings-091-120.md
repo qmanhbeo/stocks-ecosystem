@@ -174,7 +174,7 @@ production edge.
 **Implication:** do not add more ML complexity yet. The next honest path is:
 - reduce to a tiny fixed menu of simple constructions
 - test those honestly
-- if long-only still fails benchmark-relative, move to hedged constructions before RL
+- if long-only still fails benchmark-relative, stay inside realistic long-only research and do not jump to synthetic hedges before RL
 
 ---
 ## F96: Fixed Simple Constructions Beat the Benchmark Out of Sample Better Than the ML-Style Selector (2026-03-28, Session 48)
@@ -336,9 +336,10 @@ Even that “best” case only produced:
 portfolio library does not have a deployable region. The failure is not just a scaling-to-1B
 problem. It persists even when the notional is pushed down to `20m-200m VND`.
 
-**Implication:** the next honest move is **not** more long-only tuning or RL. It is either:
-- hedged / benchmark-relative constructions, or
-- an explicitly tiny-capital illiquidity-harvesting path with no scalability pretense
+**Implication:** the next honest move is **not** more long-only tuning, RL, or synthetic hedging.
+Within this repo, the valid continuation is an explicitly tiny-capital long-only
+illiquidity-harvesting path with no scalability pretense, or a plain admission that the current
+library is not deployable enough yet.
 
 ---
 ## F101: Without a Viable Retail Region, H141 and H142 Become a Stop Signal, Not a Promotion Path (2026-03-28, Session 49)
@@ -365,4 +366,156 @@ with large cash drag, that is a sign to change research direction rather than ke
 same construction class.
 
 **Implication:** treat H141/H142 as the end of the current long-only retail deployability branch.
-The next branch should be hedged construction research, not RL overlays on a non-deployable book.
+The next branch should still remain long-only; do not jump to synthetic hedges or RL overlays on a
+non-deployable book.
+
+---
+## F102: Long-Only and Anti-Synthetic Is a Permanent Repo Rule, Not a Temporary Preference (2026-03-28, Session 49)
+
+The user set a hard constraint for this workspace:
+
+- the repo is permanently **long-only**
+- no synthetic hedges
+- no stock shorting assumptions
+- no “research-only” construction that cannot realistically make money in the Vietnam market
+
+This rule exists because synthetic hedges and short-based diagnostics can create the false sense
+that a weak long-only strategy has been “rescued” when the live trading path does not actually
+exist for the intended user.
+
+**Key finding:** once the execution/tradability layer is treated seriously, realism is not only
+about fees and settlement. It is also about the **set of instruments and trade directions the user
+can actually use**.
+
+**Implication:** future work in this repo must remain inside the long-only constraint. If a strategy
+cannot be made realistic as long-only in Vietnam, the correct response is to say so plainly, not to
+introduce synthetic hedges or short exposure.
+
+---
+## F103: Soft Tradability-Aware Scoring Improves the Curve but Does Not Create a Retail-Viable Region (2026-03-28, Session 50)
+
+H143 turned the generic “rank by signal” rule into several soft liquidity-aware score variants:
+- `liq_x_adv_rank`
+- `liq_x_tradability_rank`
+- `liq_blend_70_30`
+- `liq_blend_50_50`
+- `liq_log_adv`
+
+Tested on the honest `2019-2025` holdout across:
+- notionals `20m, 50m, 100m VND`
+- ADV caps `2%, 5%, 10%`
+- ADV20 floors `250m, 500m, 1B`
+- candidate menu = `k3_r5_eq`, `k5_r5_eq`, `k5_r10_eq`
+
+Best H143 scenario:
+- `liq_blend_50_50`
+- `k3_r5_eq`
+- `20m` notional
+- `10%` ADV cap
+- `250m` ADV20 floor
+- total return **+32.46%**
+- relative vs VNINDEX **-32.01%**
+- average cash weight **25.11%**
+- positive years **4/7**
+
+**Key finding:** soft tradability-aware selection is directionally right. It materially improves the
+absolute result and cash deployment relative to the H140 retail baseline, but it still does **not**
+produce a benchmark-positive, retail-viable long-only region.
+
+**Implication:** the failure is not just “the score ignores liquidity.” Even after the score is made
+liquidity-aware, more friction remains in the extraction process.
+
+---
+## F104: Multi-Day Entry Slicing Makes the Execution Model More Realistic, but It Does Not Rescue Benchmark-Relative Economics (2026-03-28, Session 50)
+
+H144 introduced pending multi-day buy plans:
+- buys can continue over `2`, `3`, or `5` future execution days
+- the ADV cap becomes a **daily buy limit** for sliced runs
+- exits stay unchanged under the existing `T+2.5` long-only settlement rule
+
+The experiment tested the strongest H143 score variants plus the base score under `k5_r5_eq`.
+
+Best H144 scenario:
+- `liq_x_tradability_rank`
+- unsliced baseline (`entry_slice_days = 1`)
+- `20m` notional
+- `5%` ADV cap
+- `250m` ADV20 floor
+- total return **+28.57%**
+- relative vs VNINDEX **-34.01%**
+
+Sliced versions did reduce cash drag slightly:
+- unsliced cash weight: **25.79%**
+- 2-day / 3-day / 5-day sliced cash weight: about **25.18%**
+
+But they also created many partial / expired plans and did **not** improve benchmark-relative return.
+
+**Key finding:** the current edge is not failing only because the engine assumes one-shot entry.
+Realistic staged accumulation is now modeled, and it is not the missing unlock.
+
+**Implication:** keep the slicing capability for realism, but do not treat execution scheduling as
+the next dominant research lever.
+
+---
+## F105: Liquidity-Opening Entry Gates Are the Strongest Friction Lever Tested So Far, but Still Miss the Retail Viability Bar (2026-03-28, Session 50)
+
+H145 tested entry-gating rules on the strongest H143 score variant (`liq_blend_50_50`):
+- no gate
+- `adv20_125`
+- `adv20_150`
+- `adv5_150`
+- `adv20_125_clv50`
+
+Best H145 scenario:
+- gate = `adv20_125_clv50`
+- `k3_r5_eq` or `k5_r5_eq`
+- `20m` notional
+- `5%` ADV cap
+- `1B` ADV20 floor
+- total return **+93.88%**
+- relative vs VNINDEX **-0.49%**
+- average cash weight **33.52%**
+- positive years **4/7**
+
+This is the closest any retail long-only branch has come since explicit capacity realism was added.
+
+**Key finding:** “only enter when liquidity is visibly opening” is the best construction lever found
+in Sessions 49-50. It moves the strategy from deeply benchmark-negative toward nearly benchmark-flat.
+But under the current retail gate, it still fails:
+- relative return is still slightly negative
+- average cash is still above the `25%` viability cutoff
+- positive-year count is still below the `5/7` bar
+
+**Implication:** future long-only work should be conditioned on liquidity-opening states rather than
+generic score ranking alone.
+
+---
+## F106: Variable Breadth Does Not Solve the Remaining Retail Deployability Gap Once the Stronger Entry Gate Is Applied (2026-03-28, Session 50)
+
+H146 took the strongest H145 combination:
+- score variant = `liq_blend_50_50`
+- entry gate = `adv20_125_clv50`
+
+and tested variable breadth across:
+- `max_k = 3, 5`
+- score gates `= none, 0.55, 0.60`
+- minimum deployable weight `= 10%, 15%, 20%`
+- thin-name cap `= off or 2`
+
+Best H146 scenario:
+- total return **+93.88%**
+- relative vs VNINDEX **-0.49%**
+- average cash weight **33.52%**
+- average holdings **0.74**
+- positive years **4/7**
+
+This is effectively the same near-miss found in H145.
+
+**Key finding:** once the stronger liquidity-opening gate is in place, fixed `top_k` is not the
+main remaining bottleneck. Allowing the book to shrink dynamically does **not** unlock a benchmark-
+positive retail region.
+
+**Implication:** do not spend the next session on another broad construction sweep. The honest next
+branch is either:
+- a very local refinement around the H145 near-miss, or
+- a new long-only alpha search explicitly conditioned on tradability / liquidity-opening states.

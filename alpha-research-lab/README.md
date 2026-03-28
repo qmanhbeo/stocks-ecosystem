@@ -15,6 +15,17 @@ edge, Sharpe 9.17) is the current best strategy, but it is **parked** — not ye
 **This is not a race to beat H54. New signals are evaluated on their own merit as independent
 information sources, not on whether they improve a combined model.**
 
+## Hard Trading Rule
+
+This lab is permanently long-only.
+
+- no synthetic hedges
+- no stock shorting assumptions
+- no “research-only” constructions that cannot be traded realistically in Vietnam
+- if a construction cannot plausibly make money as a real long-only strategy, it is not a valid path for this repo
+
+Index futures overlays are out of scope for this repo. Stay long-only.
+
 ## Signal Evaluation Criteria
 
 For a signal to enter the library it must meet:
@@ -99,6 +110,10 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h140_retail_capacity_aware_validation.py`: retail-sized deployability grid over the fixed-menu candidates
 - `analysis/h141_capacity_aware_construction_sweep.py`: tiny construction sweep inside any H140-viable liquidity region
 - `analysis/h142_live_candidate_blotter.py`: execution-facing blotter export for the current capacity-aware candidate
+- `analysis/h143_liquidity_aware_scoring.py`: soft tradability-aware score variants for the long-only retail branch
+- `analysis/h144_entry_slicing_simulation.py`: pending multi-day buy plans under the existing long-only settlement rule
+- `analysis/h145_volume_confirmed_entry_filter.py`: liquidity-opening / volume-confirmed entry gates for long-only construction
+- `analysis/h146_variable_breadth_portfolio.py`: variable-breadth long-only sweep on the strongest score-plus-gate combination
 
 ## Saved Result Artifacts
 
@@ -117,6 +132,10 @@ Main experiment runners write compact JSON summaries to `artifacts/run_summaries
 - Portfolio retail validation: `latest_portfolio_retail_validation.json`
 - Portfolio capacity-aware sweep: `latest_portfolio_capacity_aware_sweep.json`
 - Portfolio live candidate blotter: `latest_portfolio_live_candidate_blotter.json`
+- Portfolio liquidity-aware scoring: `latest_portfolio_liquidity_aware_scoring.json`
+- Portfolio entry slicing simulation: `latest_portfolio_entry_slicing_simulation.json`
+- Portfolio volume-confirmed entry filter: `latest_portfolio_volume_confirmed_entry_filter.json`
+- Portfolio variable breadth: `latest_portfolio_variable_breadth.json`
 
 Large daily portfolio baseline outputs are written under `artifacts/portfolio_baselines/`.
 
