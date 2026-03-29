@@ -194,6 +194,12 @@ Build the compact date-level activation surface used to test selector timing ove
 - **Output:** `data/features/activation_state_daily.parquet`
 - **Usage:** `python data_tools/build_activation_state_features.py`
 
+### `build_activation_meta_features.py`
+Build the selector-efficacy activation-meta surface used for learnable/path-dependent activation experiments.
+- **Requires:** `activation_state_daily.parquet` plus the frozen always-on selector simulations
+- **Output:** `data/features/activation_meta_daily.parquet`
+- **Usage:** `python data_tools/build_activation_meta_features.py`
+
 ---
 
 ## Feature Files Reference
@@ -210,6 +216,7 @@ Build the compact date-level activation surface used to test selector timing ove
 | `xs_open_close_asymmetry.parquet` | H100 | Dense ticker-day open/close asymmetry features | 826k |
 | `xs_dispersion_regime_daily.parquet` | H101 | Dense date-level dispersion regime features | ~2.7k |
 | `activation_state_daily.parquet` | H157-H162 | Dense date-level selection/activation state surface | ~2.7k |
+| `activation_meta_daily.parquet` | H163-H174 | Dense date-level selector-efficacy / activation-meta surface | ~2.7k |
 | `xs_return_skewness.parquet` | H103 | Dense ticker-day return skewness/tail-shape features | 826k |
 | `xs_earnings_calendar_daily.parquet` | H104 | Dense date-level earnings/reporting calendar features | ~2.7k |
 | `xs_news_sentiment_daily.parquet` | **C1 raw** | Daily keyword sentiment (sparse) | ~29k |

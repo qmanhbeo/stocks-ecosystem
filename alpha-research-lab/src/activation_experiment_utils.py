@@ -16,17 +16,18 @@ def print_top_activation_results(results: pd.DataFrame, *, title: str, top_n: in
     print("=" * 208)
     print(
         f"{'rank':<5} {'selector':<24} {'gate':<36} {'tot_ret':>10} {'rel_ret':>10} {'IR':>8} "
-        f"{'max_dd':>9} {'cash':>8} {'act_on':>8} {'act_hit':>8} {'cycles':>8} {'yrs+':>7}"
+        f"{'max_dd':>9} {'cash':>8} {'act_on':>8} {'act_sc':>8} {'act_hit':>8} {'cycles':>8} {'yrs+':>7}"
     )
     print("-" * 208)
     for i, row in enumerate(top.itertuples(index=False), start=1):
         info_ratio = float("nan") if row.information_ratio_annualized is None else row.information_ratio_annualized
         hit_rate = float("nan") if row.active_cycle_hit_rate is None else row.active_cycle_hit_rate
         on_rate = float("nan") if row.activation_on_rate is None else row.activation_on_rate
+        scale = float("nan") if getattr(row, "avg_activation_scale", None) is None else row.avg_activation_scale
         print(
             f"{i:<5} {row.selector_name:<24} {row.gate_name:<36} "
             f"{row.portfolio_total_return*100:>+9.2f}% {row.relative_total_return*100:>+9.2f}% {info_ratio:>8.2f} "
-            f"{row.max_drawdown*100:>8.2f}% {row.avg_cash_weight*100:>7.2f}% {on_rate*100:>7.2f}% "
+            f"{row.max_drawdown*100:>8.2f}% {row.avg_cash_weight*100:>7.2f}% {on_rate*100:>7.2f}% {scale*100:>7.2f}% "
             f"{hit_rate*100:>7.2f}% {row.active_cycle_count:>8} {row.positive_years:>3}/{row.total_years:<3}"
         )
 

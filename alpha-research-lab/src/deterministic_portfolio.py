@@ -718,6 +718,7 @@ def simulate_strategy(
     min_deployable_weight: float = 0.0,
     capture_blotter: bool = False,
     activation_mask: np.ndarray | None = None,
+    activation_scale: np.ndarray | None = None,
 ) -> StrategyRunResult:
     if top_k <= 0:
         raise ValueError("top_k must be > 0")
@@ -753,15 +754,30 @@ def simulate_strategy(
                 "entry_allowed_matrix must match availability_matrix shape "
                 f"{availability_matrix.shape}; got {entry_allowed.shape}"
             )
-    if activation_mask is None:
-        activation_allowed = np.ones(n_dates, dtype=bool)
-    else:
+    if activation_mask is not None and activation_scale is not None:
+        raise ValueError("Provide at most one of activation_mask or activation_scale")
+    if activation_scale is not None:
+        activation_schedule = np.asarray(activation_scale, dtype=np.float64)
+        if activation_schedule.shape != (n_dates,):
+            raise ValueError(
+                "activation_scale must match dates shape "
+                f"({n_dates},); got {activation_schedule.shape}"
+            )
+        activation_schedule = np.clip(
+            np.nan_to_num(activation_schedule, nan=0.0, posinf=1.0, neginf=0.0),
+            0.0,
+            1.0,
+        )
+    elif activation_mask is not None:
         activation_allowed = np.asarray(activation_mask, dtype=bool)
         if activation_allowed.shape != (n_dates,):
             raise ValueError(
                 "activation_mask must match dates shape "
                 f"({n_dates},); got {activation_allowed.shape}"
             )
+        activation_schedule = activation_allowed.astype(np.float64)
+    else:
+        activation_schedule = np.ones(n_dates, dtype=np.float64)
 
     weights = np.zeros(n_tickers, dtype=np.float64)
     holding_ages = np.zeros(n_tickers, dtype=np.int64)
@@ -796,7 +812,8 @@ def simulate_strategy(
         do_rebalance = bool(
             drifted_weights.sum() <= 1e-12 or (step - last_rebalance_step) >= rebalance_every
         )
-        activation_on = bool(activation_allowed[step])
+        activation_exposure = float(activation_schedule[step])
+        activation_on = activation_exposure > 1e-12
         scores = score_matrix[step]
         adv20_for_execution = adv20_matrix[step]
         capacity_weights = compute_capacity_weight_limits(
@@ -840,6 +857,7 @@ def simulate_strategy(
                         selected_indices,
                         weighting=weighting,
                     )
+                    desired_weights *= activation_exposure
                     last_rebalance_step = step
                 else:
                     desired_weights = np.zeros(n_tickers, dtype=np.float64)
@@ -956,6 +974,7 @@ def simulate_strategy(
                 "pending_entry_count": int(np.count_nonzero(pending_entry_days_left > 0)),
                 "rebalance_triggered": bool(do_rebalance),
                 "activation_on": bool(activation_on),
+                "activation_scale": float(activation_exposure),
                 "weighting_rule": weighting,
                 "requested_tickers": [tickers[idx] for idx in selected_indices],
                 "held_tickers": [tickers[idx] for idx in np.flatnonzero(active_mask)],

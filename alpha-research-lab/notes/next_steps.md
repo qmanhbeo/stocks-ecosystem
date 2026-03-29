@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_57_log.md` for the latest full session detail.
+Use `notes/session_58_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 57 H157-H162 completed (selection alpha vs activation alpha split is now explicit; deterministic binary activation did not beat the always-on `full_library + k5_r5_eq` selector; ADV / capacity still parked for the current-account branch; RL remains exploratory; docs updated; 2026-03-29)
+**Session status:** Session 58 H163-H174 completed (activation alpha was revisited with materially different designs; smoothed recent selector efficacy beat the always-on `full_library + k5_r5_eq` selector; ADV / capacity still parked for the current-account branch; RL remains exploratory; docs updated; 2026-03-29)
 
 ### Start next session here
 
@@ -23,12 +23,52 @@ Use `notes/session_57_log.md` for the latest full session detail.
 5. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
-   - Session 57 says selection alpha is strong, but binary on/off activation is not yet an edge
+   - Session 58 says selection alpha is strong, and activation alpha only becomes real once it is framed as smoothed selector-efficacy forecasting rather than static binary gating
 6. Resume the active research queue in this order:
-   - `H151`: narrow tradability-conditioned composite
-   - `H152`: tradability-conditioned alpha search
-   - activation alpha: parked unless the design changes materially (for example partial exposure sizing instead of binary on/off)
+   - `H175`: robustify `H170` smoothed recent-efficacy activation with honest threshold/window sweeps and selector-specific walk-forward calibration
+   - `H176`: turn `H170` into 3-state exposure sizing (`off` / `half` / `full`) instead of binary activation
+   - `H177`: learn a compact activation meta-model from past-cycle efficacy, implementation pain, selector confidence, and entry quality
+   - `H151`: narrow tradability-conditioned composite (parked secondary branch)
+   - `H152`: tradability-conditioned alpha search (parked secondary branch)
    - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened
+
+### Session 58 activation-meta decision
+
+- Session 57 established that deterministic **binary** activation was not enough.
+- Session 58 rebuilt the branch around materially different hypotheses:
+  - partial exposure sizing
+  - path-dependent recent selector efficacy
+  - interaction terms
+  - entry-window quality
+  - hysteresis
+  - selector-specific activation
+- New artifact:
+  - `data/features/activation_meta_daily.parquet`
+- Main result:
+  - **activation alpha is real only in the smoothed recent-selector-efficacy family**
+  - new best gate:
+    - `H170` `recentsm__rel3_gt0`
+    - `full_library + k5_r5_eq`
+    - `+841.14%` total
+    - `+383.07%` relative vs VNINDEX
+    - information ratio `0.84`
+    - max DD `-34.00%`
+  - this beats the previous always-on champion:
+    - `+769.71%` total
+    - `+346.40%` relative
+    - information ratio `0.81`
+    - max DD `-34.04%`
+- Secondary read:
+  - `H163` partial exposure sizing improved weaker selectors and reduced drawdown in places, but did not beat the always-on full-library selector
+  - `H164`, `H166`, `H167`, `H171`, `H172`, `H173`, and `H174` all failed to beat the champion
+  - `H168` and `H169` materially helped `S1`, not `full_library`
+- Branch decision:
+  - activation alpha is **not** a generic regime-gating problem
+  - activation alpha is now the active branch again, but narrowly:
+    - selector-efficacy persistence
+    - path dependence
+    - eventually sizing / meta-labeling on top of `H170`
+  - `H151/H152` are now parked behind the `H170` follow-up queue
 
 ### Session 57 activation-alpha decision
 
@@ -54,10 +94,10 @@ Use `notes/session_57_log.md` for the latest full session detail.
 - Secondary result:
   - several activation gates materially improved the weaker `S1`-only selector
   - but none of them overtook the always-on `full_library` selector
-- Branch decision:
-  - activation alpha is **not solved**
-  - deterministic binary on/off gating is now a tested branch, not an open assumption
-  - the active queue returns to selection-side work (`H151/H152`)
+- Branch decision at the end of Session 57:
+  - activation alpha was **not solved**
+  - deterministic binary on/off gating became a tested branch, not an open assumption
+  - that result was later superseded by Session 58's path-dependent activation wave
 
 ### Session 53 strategic decision
 
@@ -1081,20 +1121,28 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - historical verdict from Session 48: do not add more ML or RL complexity until capacity is addressed honestly
   - superseded operationally by Session 53 for the current-account branch only
 
-### Next queue after Session 57 (in order)
+### Next queue after Session 58 (in order)
 
-1. **H151: narrow tradability-conditioned composite**
-   - this is now the active **selection-alpha** branch
-   - use the H150 surviving sub-core as the starting signal set
-   - do not entangle it with another activation overlay while the selector itself is being rebuilt
-2. **H152: tradability-conditioned alpha search**
-   - only after the narrow composite work is defined cleanly
-   - keep the long-only, anti-synthetic rule unchanged
-3. **Activation alpha: parked**
-   - Session 57 tested binary on/off activation across H157-H162
-   - do not reopen this as the active branch unless the design changes materially
-   - if revisited later, prefer partial exposure sizing or a more structural timing model over another binary gate sweep
-4. **RL branch: exploratory only**
+1. **H175: robustify `H170` smoothed recent efficacy**
+   - run honest threshold/window sweeps around `recentsm__rel3_gt0` and `recentsm__hit5_ge55`
+   - require walk-forward calibration rather than one fixed global threshold if necessary
+   - the goal is to prove the H170 edge is robust, not a one-off threshold accident
+2. **H176: convert `H170` into 3-state exposure sizing**
+   - `off / half / full`
+   - use the H170 efficacy family as the state driver instead of static regime filters
+   - compare directly against both always-on and the binary H170 gates
+3. **H177: learn a compact activation meta-model**
+   - input families:
+     - recent selector efficacy
+     - implementation pain
+     - selector confidence
+     - entry-window quality
+   - keep it small and interpretable; do not jump straight to a large flexible model
+4. **Selection-side work: parked secondary branch**
+   - `H151`: narrow tradability-conditioned composite
+   - `H152`: tradability-conditioned alpha search
+   - keep these parked unless the H170 branch fails robustness
+5. **RL branch: exploratory only**
    - keep the H155 artifact as evidence that RL can work sometimes
    - do not spend more compute on new RL ladders unless one of these changes first:
      - reward design

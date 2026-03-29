@@ -60,6 +60,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - The lab publishes the consolidated RL feature surface at `data/features/xs_rl_signal_matrix.parquet`
 - The lab publishes the shared execution tradability artifact at `data/features/execution/tradability_daily.parquet`
 - The lab publishes the date-level activation surface at `data/features/activation_state_daily.parquet`
+- The lab publishes the selector-efficacy activation-meta surface at `data/features/activation_meta_daily.parquet`
 - RL consumes that matrix through `../RL-trading-agent` via `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 - Execution reality is shared with RL via `../docs/execution_reality.md` and `../shared-market-rules/`
 
@@ -89,10 +90,17 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
   - selection alpha = choose the right names
   - activation alpha = decide when the selector should be on
 - Session 57 tested deterministic binary activation (`H157-H162`) and did **not** beat the always-on `full_library + k5_r5_eq` selector
-- Active next research branch is back to selection-side work:
-  - `H151`: narrow tradability-conditioned composite
-  - `H152`: tradability-conditioned alpha search
-- Activation alpha is now a parked branch until there is a materially different design, such as partial exposure sizing rather than binary on/off gating
+- Session 58 tested materially different activation designs (`H163-H174`) and found one real winner:
+  - `H170` smoothed recent selector efficacy
+  - `recentsm__rel3_gt0` on `full_library + k5_r5_eq`
+  - `+841.14%` total
+  - `+383.07%` relative vs VNINDEX
+  - IR `0.84`
+- Active next research branch is now:
+  - `H175`: robustify `H170` with honest threshold/window sweeps and walk-forward calibration
+  - `H176`: turn `H170` into 3-state exposure sizing (`off` / `half` / `full`)
+  - `H177`: learn a compact activation meta-model from selector-efficacy and implementation-pain features
+- Selection-side work (`H151/H152`) is now parked behind the `H170` follow-up queue
 - RL remains exploratory only
 
 ## Parked Historical Execution Benchmark
@@ -146,6 +154,19 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h160_breadth_dispersion_gate.py`: cross-sectional breadth / dispersion activation gates
 - `analysis/h161_recent_efficacy_cooldown_gate.py`: recent-selector-efficacy cooldown gates
 - `analysis/h162_composite_activation_score.py`: interpretable composite activation score
+- `data_tools/build_activation_meta_features.py`: selector-efficacy activation-meta artifact with forward cycle labels and recent selector-path features
+- `analysis/h163_partial_exposure_sizing.py`: 0/50/100 exposure sizing overlays
+- `analysis/h164_opportunity_concentration_gate.py`: score-shape / concentration activation gates
+- `analysis/h165_selector_agreement_gate.py`: selector agreement / disagreement activation gates
+- `analysis/h166_tradability_acceleration_gate.py`: tradability acceleration activation gates
+- `analysis/h167_selector_fragility_gate.py`: recent implementation-pain activation gates
+- `analysis/h168_interaction_regime_gate.py`: interaction-only regime gates
+- `analysis/h169_breadth_collapse_gate.py`: breadth-collapse risk-off gates
+- `analysis/h170_smoothed_recent_efficacy_gate.py`: smoothed selector-efficacy activation gates
+- `analysis/h171_selector_drawdown_phase_gate.py`: selector drawdown-phase activation gates
+- `analysis/h172_entry_window_quality_gate.py`: entry-window quality activation gates
+- `analysis/h173_selector_specific_activation.py`: selector-specific vs global activation comparison
+- `analysis/h174_hysteresis_activation.py`: streak / hysteresis activation schedules
 
 ## Live Paper-Trade Prerequisite
 
@@ -186,6 +207,18 @@ Main experiment runners write compact JSON summaries to `artifacts/run_summaries
 - Portfolio activation breadth / dispersion: `latest_portfolio_activation_breadth_dispersion.json`
 - Portfolio activation recent efficacy: `latest_portfolio_activation_recent_efficacy.json`
 - Portfolio activation composite: `latest_portfolio_activation_composite.json`
+- Portfolio activation partial exposure: `latest_portfolio_activation_partial_exposure.json`
+- Portfolio activation opportunity concentration: `latest_portfolio_activation_opportunity_concentration.json`
+- Portfolio activation selector agreement: `latest_portfolio_activation_selector_agreement.json`
+- Portfolio activation tradability acceleration: `latest_portfolio_activation_tradability_acceleration.json`
+- Portfolio activation selector fragility: `latest_portfolio_activation_selector_fragility.json`
+- Portfolio activation interaction regime: `latest_portfolio_activation_interaction_regime.json`
+- Portfolio activation breadth collapse: `latest_portfolio_activation_breadth_collapse.json`
+- Portfolio activation smoothed recent efficacy: `latest_portfolio_activation_smoothed_recent_efficacy.json`
+- Portfolio activation drawdown phase: `latest_portfolio_activation_drawdown_phase.json`
+- Portfolio activation entry-window quality: `latest_portfolio_activation_entry_window_quality.json`
+- Portfolio activation selector-specific: `latest_portfolio_activation_selector_specific.json`
+- Portfolio activation hysteresis: `latest_portfolio_activation_hysteresis.json`
 
 Large daily portfolio baseline outputs are written under `artifacts/portfolio_baselines/`.
 

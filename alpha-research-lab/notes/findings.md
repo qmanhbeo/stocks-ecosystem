@@ -20,4 +20,4 @@ Current chunks:
 ## How To Read
 
 Start here, then open the chunk file that contains the finding you need.
-`findings-091-120.md` is now the active findings chunk.
+`findings-091-120.md` is now full. The next finding should start `findings-121-150.md`.

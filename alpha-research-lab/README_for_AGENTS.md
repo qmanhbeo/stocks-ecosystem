@@ -67,8 +67,16 @@ Operationally important summary:
   - selection alpha = choose the right names
   - activation alpha = decide when the selector should be on
 - `H157-H162` tested deterministic binary activation and did not beat the always-on `full_library + k5_r5_eq` selector
-- the active next branch has returned to `H151/H152`
-- activation alpha is parked unless the design changes materially
+- `H163-H174` then revisited activation with materially different designs and found one real winner:
+  - `H170` `recentsm__rel3_gt0` on `full_library + k5_r5_eq`
+  - `+841.14%` total
+  - `+383.07%` relative vs VNINDEX
+  - information ratio `0.84`
+- the active next branch is now the `H170` follow-up queue:
+  - `H175`: robustify smoothed recent efficacy
+  - `H176`: 3-state exposure sizing on top of `H170`
+  - `H177`: learn a compact activation meta-model
+- `H151/H152` are parked behind the new activation branch
 - the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
 - `H154` first ladder is complete: `S1`-only RL won on seed `1208`, conditioned sub-core is mixed,
@@ -146,6 +154,18 @@ Read these first when you want the minimal result.
 - Portfolio activation breadth / dispersion: `artifacts/run_summaries/latest_portfolio_activation_breadth_dispersion.json`
 - Portfolio activation recent efficacy: `artifacts/run_summaries/latest_portfolio_activation_recent_efficacy.json`
 - Portfolio activation composite: `artifacts/run_summaries/latest_portfolio_activation_composite.json`
+- Portfolio activation partial exposure: `artifacts/run_summaries/latest_portfolio_activation_partial_exposure.json`
+- Portfolio activation opportunity concentration: `artifacts/run_summaries/latest_portfolio_activation_opportunity_concentration.json`
+- Portfolio activation selector agreement: `artifacts/run_summaries/latest_portfolio_activation_selector_agreement.json`
+- Portfolio activation tradability acceleration: `artifacts/run_summaries/latest_portfolio_activation_tradability_acceleration.json`
+- Portfolio activation selector fragility: `artifacts/run_summaries/latest_portfolio_activation_selector_fragility.json`
+- Portfolio activation interaction regime: `artifacts/run_summaries/latest_portfolio_activation_interaction_regime.json`
+- Portfolio activation breadth collapse: `artifacts/run_summaries/latest_portfolio_activation_breadth_collapse.json`
+- Portfolio activation smoothed recent efficacy: `artifacts/run_summaries/latest_portfolio_activation_smoothed_recent_efficacy.json`
+- Portfolio activation drawdown phase: `artifacts/run_summaries/latest_portfolio_activation_drawdown_phase.json`
+- Portfolio activation entry-window quality: `artifacts/run_summaries/latest_portfolio_activation_entry_window_quality.json`
+- Portfolio activation selector-specific: `artifacts/run_summaries/latest_portfolio_activation_selector_specific.json`
+- Portfolio activation hysteresis: `artifacts/run_summaries/latest_portfolio_activation_hysteresis.json`
 
 Execution/tradability producer:
 
@@ -181,12 +201,25 @@ Mode-specific durable outputs:
 - `analysis/h149_soft_activation_score.py`: `artifacts/run_summaries/latest_portfolio_soft_activation_score.json` plus soft-activation outputs under `artifacts/portfolio_baselines/`
 - `analysis/h150_conditional_alpha_decomposition.py`: `artifacts/run_summaries/latest_portfolio_conditional_alpha_decomposition.json` plus conditional-IC tables under `artifacts/portfolio_baselines/`
 - `data_tools/build_activation_state_features.py`: `data/features/activation_state_daily.parquet`
+- `data_tools/build_activation_meta_features.py`: `data/features/activation_meta_daily.parquet`
 - `analysis/h157_opportunity_density_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_opportunity_density.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
 - `analysis/h158_tradability_breadth_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_tradability_breadth.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
 - `analysis/h159_market_regime_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_market_regime.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
 - `analysis/h160_breadth_dispersion_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_breadth_dispersion.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
 - `analysis/h161_recent_efficacy_cooldown_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_recent_efficacy.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
 - `analysis/h162_composite_activation_score.py`: `artifacts/run_summaries/latest_portfolio_activation_composite.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
+- `analysis/h163_partial_exposure_sizing.py`: `artifacts/run_summaries/latest_portfolio_activation_partial_exposure.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h164_opportunity_concentration_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_opportunity_concentration.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h165_selector_agreement_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_selector_agreement.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h166_tradability_acceleration_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_tradability_acceleration.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h167_selector_fragility_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_selector_fragility.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h168_interaction_regime_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_interaction_regime.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h169_breadth_collapse_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_breadth_collapse.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h170_smoothed_recent_efficacy_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_smoothed_recent_efficacy.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h171_selector_drawdown_phase_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_drawdown_phase.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h172_entry_window_quality_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_entry_window_quality.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h173_selector_specific_activation.py`: `artifacts/run_summaries/latest_portfolio_activation_selector_specific.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h174_hysteresis_activation.py`: `artifacts/run_summaries/latest_portfolio_activation_hysteresis.json` plus activation outputs under `artifacts/portfolio_baselines/`
 
 For any new analysis script, keep the large output wherever it naturally belongs, but also write
 one compact summary JSON under `artifacts/run_summaries/`.

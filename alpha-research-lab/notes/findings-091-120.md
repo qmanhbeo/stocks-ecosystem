@@ -897,3 +897,89 @@ Secondary result:
 **Key finding:** deterministic binary activation is now a **tested negative** for the current champion selector.
 
 **Implication:** the active branch should return to selection-side work (`H151/H152`). If activation is revisited later, it should not begin with another binary on/off gate sweep; it needs a materially different design, such as partial exposure sizing or a more structural timing model.
+
+## F119: Activation Alpha Exists, but It Is Path-Dependent; Smoothed Recent Selector Efficacy Beat the Always-On `full_library + k5_r5_eq` Champion (2026-03-29, Session 58)
+
+Session 58 reopened activation alpha with materially different designs than the binary H157-H162 wave:
+- `H163` partial exposure sizing
+- `H164` opportunity concentration
+- `H165` selector agreement / disagreement
+- `H166` tradability acceleration
+- `H167` implementation-pain fragility
+- `H168` regime interactions
+- `H169` breadth collapse
+- `H170` smoothed recent selector efficacy
+- `H171` selector drawdown phase
+- `H172` entry-window quality
+- `H173` selector-specific activation
+- `H174` hysteresis / streaks
+
+Only one family produced a real full-library win:
+
+| Strategy | Activation Rule | Total Return | Relative vs VNINDEX | IR | Max DD |
+|---|---|---:|---:|---:|---:|
+| `full_library + k5_r5_eq` | `always_on` | +769.71% | +346.40% | 0.81 | -34.04% |
+| `full_library + k5_r5_eq` | `H170 recentsm__rel3_gt0` | **+841.14%** | **+383.07%** | **0.84** | **-34.00%** |
+| `full_library + k5_r5_eq` | `H170 recentsm__hit5_ge55` | +796.59% | +360.20% | 0.82 | -32.02% |
+
+The winning `H170` gates only use information from completed past cycles:
+- smoothed recent selector relative return
+- smoothed recent selector hit rate
+- no current-cycle look-ahead
+
+Most other activation families still failed to beat the always-on champion:
+- `H163` sizing improved weaker branches but not the champion
+- `H164`, `H166`, `H167`, `H171`, `H172`, `H173`, and `H174` all remained below always-on `full_library`
+- `H168` and `H169` helped `S1`, not `full_library`
+
+**Key finding:** activation alpha is not a generic regime-filtering problem. It only became real when activation was reframed as **path-dependent selector-efficacy persistence**.
+
+**Implication:** the active next branch should not return to static gates or generic market-timing. It should focus on:
+- robustifying the `H170` family
+- converting it into exposure sizing (`off / half / full`)
+- and eventually learning compact activation meta-models from past-cycle efficacy and implementation state
+
+## F120: Static Activation Features Mostly Help Weaker Selectors; The Full-Library Champion Requires a Selector-Efficacy Meta Layer, Not Another Regime Filter (2026-03-29, Session 58)
+
+Across Sessions 57 and 58, the activation evidence now separates cleanly into two groups.
+
+### 1. Static / structural activation families
+These include:
+- opportunity density
+- tradability breadth
+- market regime
+- breadth / dispersion
+- selector agreement
+- tradability acceleration
+- drawdown phase
+- entry-window quality
+- selector-specific static rules
+- hysteresis
+
+These families often improved the weaker `S1` selector, sometimes materially:
+
+| Selector | Gate | Total Return | Relative vs VNINDEX | IR |
+|---|---|---:|---:|---:|
+| `S1` | `H168 inter__conf_q60_above_ma20` | +332.40% | +121.94% | 0.40 |
+| `S1` | `H169 breadth__buyable_q40` | +225.76% | +67.21% | 0.30 |
+| `S1` | `H163 size__entry_q55_q70` | +177.84% | +42.61% | 0.20 |
+
+But they still did **not** beat the full-library always-on champion.
+
+### 2. Meta / path-dependent activation families
+So far the only successful one is:
+- smoothed recent selector efficacy (`H170`)
+
+This is structurally different:
+- it uses the selector’s own recent realized behavior
+- it captures persistence in whether the selector is currently working
+- it is closer to a **meta-label** problem than a pure regime-classification problem
+
+**Key finding:** the current full-library selector does not need another static macro or tradability filter. It needs a small meta layer that forecasts whether the selector is currently in a good or bad efficacy regime.
+
+**Implication:** future activation research should prioritize:
+- selector-efficacy forecasting
+- recent implementation strain only when combined with efficacy state
+- 3-state exposure sizing rather than binary on/off
+
+Static activation families are now demoted to secondary context features unless they prove useful inside that meta layer.

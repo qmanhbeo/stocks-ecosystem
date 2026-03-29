@@ -190,6 +190,8 @@ def _build_selector_snapshot(group: pd.DataFrame, *, score_column: str, prefix: 
         f"{prefix}_top10_mean_adv20_rank": _safe_mean(top10["xs_adv20_rank"]),
         f"{prefix}_top5_mean_tv_to_adv20_rank": _safe_mean(top5["xs_tv_to_adv20_rank"]),
         f"{prefix}_top10_mean_tv_to_adv20_rank": _safe_mean(top10["xs_tv_to_adv20_rank"]),
+        f"{prefix}_top5_mean_clv": _safe_mean(top5["clv"]),
+        f"{prefix}_top10_mean_clv": _safe_mean(top10["clv"]),
         f"{prefix}_top5_mean_sector_breadth": _safe_mean(top5.get("xs_sector_breadth_5d", pd.Series(dtype=float))),
         f"{prefix}_top5_mean_sector_mom": _safe_mean(top5.get("xs_sector_mom_5d_rank", pd.Series(dtype=float))),
         f"{prefix}_top1_ticker": str(top1.iloc[0]["ticker"]) if not top1.empty else "",
@@ -250,6 +252,8 @@ def build_activation_state_frame(
         friction["xs_sector_mom_5d_rank"] = np.nan
 
     rows: list[dict[str, object]] = []
+    prev_top5: dict[str, set[str]] = {"full": set(), "s1": set()}
+    prev_top1: dict[str, str] = {"full": "", "s1": ""}
     for time, group in friction.groupby("time", sort=True):
         row = {"time": pd.Timestamp(time)}
         row.update(_build_selector_snapshot(group, score_column="score__full_library", prefix="full"))
@@ -271,8 +275,16 @@ def build_activation_state_frame(
                 "buyable_breadth_all": float(group["can_buy_next_open"].astype(bool).mean()),
                 "liq_open_breadth_all": float(liq_open_all.mean()),
                 "candidate_count": int(len(group)),
+                "full_top5_prev_overlap_ratio": float(len(full_top5 & prev_top5["full"]) / max(len(full_top5 | prev_top5["full"]), 1)),
+                "s1_top5_prev_overlap_ratio": float(len(s1_top5 & prev_top5["s1"]) / max(len(s1_top5 | prev_top5["s1"]), 1)),
+                "full_top1_prev_same": float(row["full_top1_ticker"] == prev_top1["full"]),
+                "s1_top1_prev_same": float(row["s1_top1_ticker"] == prev_top1["s1"]),
             }
         )
+        prev_top5["full"] = full_top5
+        prev_top5["s1"] = s1_top5
+        prev_top1["full"] = str(row["full_top1_ticker"])
+        prev_top1["s1"] = str(row["s1_top1_ticker"])
         rows.append(row)
 
     daily = pd.DataFrame(rows).sort_values("time").reset_index(drop=True)
@@ -348,10 +360,19 @@ def load_or_build_activation_state(
     start_year: int = 2015,
     end_year: int = 2025,
 ) -> tuple[pd.DataFrame, str]:
+    required_columns = {
+        "full_top5_mean_clv",
+        "s1_top5_mean_clv",
+        "full_top5_prev_overlap_ratio",
+        "s1_top5_prev_overlap_ratio",
+        "full_top1_prev_same",
+        "s1_top1_prev_same",
+    }
     if out_path.exists():
         frame = pd.read_parquet(out_path)
         frame["time"] = pd.to_datetime(frame["time"])
-        return frame, "artifact"
+        if required_columns.issubset(frame.columns):
+            return frame, "artifact"
     frame = persist_activation_state(
         matrix_path=matrix_path,
         tradability_path=tradability_path,
@@ -376,6 +397,20 @@ def align_activation_mask(
     return aligned.where(pd.notna(aligned), False).astype(bool).to_numpy()
 
 
+def align_activation_values(
+    activation_state: pd.DataFrame,
+    *,
+    dates: Iterable[pd.Timestamp],
+    value_column: str,
+    fill_value: float = 0.0,
+) -> np.ndarray:
+    series = activation_state[["time", value_column]].copy()
+    series["time"] = pd.to_datetime(series["time"])
+    aligned = series.drop_duplicates("time").set_index("time")[value_column].reindex(pd.to_datetime(list(dates)))
+    values = pd.to_numeric(aligned, errors="coerce").fillna(float(fill_value))
+    return np.clip(values.to_numpy(dtype=np.float64), 0.0, 1.0)
+
+
 def compute_cycle_metrics(daily: pd.DataFrame) -> dict[str, object]:
     if daily.empty or "rebalance_triggered" not in daily.columns:
         return {
@@ -385,6 +420,7 @@ def compute_cycle_metrics(daily: pd.DataFrame) -> dict[str, object]:
             "avg_active_cycle_return": None,
             "avg_off_cycle_return": None,
             "activation_on_rate": None,
+            "avg_activation_scale": None,
         }
 
     work = daily.reset_index(drop=True).copy()
@@ -397,6 +433,7 @@ def compute_cycle_metrics(daily: pd.DataFrame) -> dict[str, object]:
             "avg_active_cycle_return": None,
             "avg_off_cycle_return": None,
             "activation_on_rate": None,
+            "avg_activation_scale": None,
         }
 
     rows: list[dict[str, object]] = []
@@ -405,10 +442,12 @@ def compute_cycle_metrics(daily: pd.DataFrame) -> dict[str, object]:
         cycle = work.iloc[int(start):end]
         cycle_ret = float(np.prod(1.0 + cycle["portfolio_return"].to_numpy(dtype=np.float64)) - 1.0)
         activation_on = bool(cycle.iloc[0]["activation_on"])
+        activation_scale = float(cycle.iloc[0]["activation_scale"]) if "activation_scale" in cycle.columns else float(activation_on)
         rows.append(
             {
                 "cycle_start": pd.Timestamp(cycle.iloc[0]["signal_date"]),
                 "activation_on": activation_on,
+                "activation_scale": activation_scale,
                 "cycle_return": cycle_ret,
             }
         )
@@ -423,6 +462,7 @@ def compute_cycle_metrics(daily: pd.DataFrame) -> dict[str, object]:
         "avg_active_cycle_return": round(float(active["cycle_return"].mean()), 6) if not active.empty else None,
         "avg_off_cycle_return": round(float(off["cycle_return"].mean()), 6) if not off.empty else None,
         "activation_on_rate": round(float(cycles["activation_on"].mean()), 6),
+        "avg_activation_scale": round(float(cycles["activation_scale"].mean()), 6),
     }
 
 
@@ -503,11 +543,16 @@ def run_activation_scenarios(
         if selector_gates is None:
             continue
         for gate_name, mask_like in selector_gates.items():
-            mask = np.asarray(mask_like, dtype=bool)
-            if mask.shape != (len(market_inputs.dates),):
+            raw = np.asarray(mask_like)
+            if raw.shape != (len(market_inputs.dates),):
                 raise ValueError(
-                    f"Gate {gate_name!r} has shape {mask.shape}; expected {(len(market_inputs.dates),)}"
+                    f"Gate {gate_name!r} has shape {raw.shape}; expected {(len(market_inputs.dates),)}"
                 )
+            activation_scale = np.clip(
+                np.nan_to_num(raw.astype(np.float64), nan=0.0, posinf=1.0, neginf=0.0),
+                0.0,
+                1.0,
+            )
             result = simulate_strategy(
                 strategy_name=selector.strategy_name,
                 signal_columns=list(selector.signal_columns),
@@ -521,7 +566,7 @@ def run_activation_scenarios(
                 buy_fee_rate=float(fee_leg),
                 sell_fee_rate=float(fee_leg),
                 capital_gains_tax_rate=float(capital_gains_tax_rate),
-                activation_mask=mask,
+                activation_scale=activation_scale,
             )
             cycle_metrics = compute_cycle_metrics(result.daily)
             row = {

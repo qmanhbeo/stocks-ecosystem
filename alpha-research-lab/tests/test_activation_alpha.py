@@ -71,6 +71,39 @@ def test_simulate_strategy_activation_mask_forces_cash_cycle():
     assert daily.loc[3, "cash_weight"] == 1.0
 
 
+def test_simulate_strategy_activation_scale_supports_partial_exposure():
+    scores = np.array(
+        [
+            [0.9, 0.1],
+            [0.9, 0.1],
+            [0.9, 0.1],
+            [0.9, 0.1],
+        ],
+        dtype=np.float64,
+    )
+    result = simulate_strategy(
+        strategy_name="full_library",
+        signal_columns=["mock_signal"],
+        market_inputs=_market_inputs(scores),
+        top_k=1,
+        rebalance_every=1,
+        weighting="equal",
+        initial_notional_vnd=1.0,
+        max_adv_participation=0.0,
+        required_holding_age=3,
+        buy_fee_rate=0.0,
+        sell_fee_rate=0.0,
+        capital_gains_tax_rate=0.0,
+        activation_scale=np.array([0.5, 0.5, 1.0, 1.0], dtype=np.float64),
+    )
+
+    daily = result.daily
+    assert bool(daily.loc[0, "activation_on"]) is True
+    assert daily.loc[0, "activation_scale"] == 0.5
+    assert daily.loc[0, "cash_weight"] == 0.5
+    assert daily.loc[2, "activation_scale"] == 1.0
+
+
 def test_compute_cycle_metrics_summarizes_active_cycles():
     daily = pd.DataFrame(
         {
@@ -91,3 +124,4 @@ def test_compute_cycle_metrics_summarizes_active_cycles():
     assert metrics["active_cycle_count"] == 1
     assert metrics["active_cycle_hit_rate"] == 1.0
     assert metrics["activation_on_rate"] == 0.5
+    assert metrics["avg_activation_scale"] == 0.5
