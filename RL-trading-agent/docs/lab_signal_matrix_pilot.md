@@ -41,6 +41,20 @@ Minimum comparator set:
 This comparator is a required gate for the RL branch. If it does not exist yet as a one-command
 helper, add it before calling any RL result meaningful.
 
+Current command:
+
+```bash
+cd /home/manh/stocks/RL-trading-agent
+conda run -n stocks python -m vn_stock_rl.evaluation.portfolio_baseline \
+  --mode test \
+  --start-date 2016-01-01 \
+  --portfolio-universe-size 20 \
+  --portfolio-top-k 3 \
+  --signal-columns s1_proba c4_oc_asym_5d c5_ins_relative_size_5d c5_signal_present c6_contrarian_intra_5d c7_ceiling_count_5d c8_vol_zscore_5d c9_reversal_1d c10_illiq_level_rank c11_ret_60d_lag_rank c12_gap_absorb_3 c13_compress_blowoff_2 c14_clv_volconf_resid_rank \
+  --strategies s1_only full_library conditioned_subcore \
+  --name h153_portfolio_baseline_u20_k3
+```
+
 ## Step 3: Smoke-test portfolio mode with adapted lab signals
 
 ```bash
@@ -147,3 +161,44 @@ conda run -n stocks python -m vn_stock_rl.evaluation.cli --model artifacts/train
 
 Do not interpret a single seed as conclusive. This pilot is only the first gate. Promote RL only if
 it beats the matching deterministic comparator and survives reruns on additional seeds.
+
+## Observed first-seed result (`2026-03-29`, seed `1208`)
+
+This ladder has now been run once on the shared test split `2025-06-12` to `2025-12-31`.
+
+Deterministic comparators from `H153`:
+- `s1_only`: `-2.50%`
+- `full_library`: `+0.41%`
+- `conditioned_subcore`: `+6.32%`
+- equal-weight universe benchmark: `+31.74%`
+
+First-seed RL outcomes:
+- `pilot_portfolio_s1_seed1208`
+  - test return `+40.30%`
+  - Sharpe `2.72`
+  - max drawdown `-8.55%`
+  - rebalances `1`
+- `pilot_portfolio_labmatrix_seed1208`
+  - test return `-7.90%`
+  - Sharpe `-0.27`
+  - max drawdown `-30.65%`
+  - rebalances `90`
+- `pilot_portfolio_subcore_seed1208`
+  - test return `+15.60%`
+  - Sharpe `1.01`
+  - max drawdown `-18.59%`
+  - rebalances `97`
+
+Interpretation:
+- `S1`-only RL is the current leader
+- conditioned sub-core is better than its deterministic comparator but still below the benchmark
+- the full matrix should not get more compute without a design change
+
+## Active next step
+
+Run `H155` as multi-seed robustness on `pilot_portfolio_s1_seed1208` first.
+
+Optional:
+- run a smaller confirmatory seed sweep on `pilot_portfolio_subcore_seed1208`
+
+Do not escalate the full-matrix run until the source of its churn / underperformance is understood.

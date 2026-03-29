@@ -77,6 +77,16 @@ _parse_news_feature_columns = parse_news_feature_columns
 _parse_signal_feature_columns = parse_signal_feature_columns
 _parse_reward_benchmark = parse_reward_benchmark
 
+
+def _sb3_progress_bar_available() -> bool:
+    try:
+        import rich  # noqa: F401
+        import tqdm  # noqa: F401
+    except ImportError:
+        return False
+    return True
+
+
 def _append_with_running_sum(window: deque, running_sum: float, value: float):
     if len(window) == window.maxlen:
         running_sum -= float(window[0])
@@ -858,9 +868,59 @@ def train(
     # Create vectorized environment
     if n_envs > 1:
         print(f"Using {n_envs} parallel environments for faster training...")
-        train_env = SubprocVecEnv([make_env(i) for i in range(n_envs)])
-        if seed is not None:
-            train_env.seed(seed)
+        try:
+            train_env = SubprocVecEnv([make_env(i) for i in range(n_envs)])
+            if seed is not None:
+                train_env.seed(seed)
+        except (PermissionError, OSError) as exc:
+            print(
+                "Parallel environment startup failed; falling back to a single environment. "
+                f"Original error: {exc}"
+            )
+            n_envs = 1
+            train_env = _build_env(
+                mode="train",
+                stock=stock,
+                stocks=stocks,
+                all_stocks=all_stocks,
+                portfolio_choice=portfolio_choice,
+                portfolio_universe_size=portfolio_universe_size,
+                portfolio_top_k=portfolio_top_k,
+                data_dir=data_dir,
+                drawdown_penalty_enabled=drawdown_penalty_enabled,
+                drawdown_penalty_lambda=drawdown_penalty_lambda,
+                drawdown_penalty_train_only=drawdown_penalty_train_only,
+                reward_benchmark=reward_benchmark,
+                benchmark_weight=benchmark_weight,
+                benchmark_relative_reward=benchmark_relative_reward,
+                train_episode_sampling_enabled=train_episode_sampling_enabled,
+                train_episode_min_fraction=train_episode_min_fraction,
+                train_episode_max_fraction=train_episode_max_fraction,
+                start_date=start_date,
+                end_date=end_date,
+                source_mode=source_mode,
+                ma_windows=ma_windows,
+                helpers_ma_windows=helpers_ma_windows,
+                returns_windows=returns_windows,
+                helpers_returns_windows=helpers_returns_windows,
+                engineered_features=engineered_features,
+                window_policy=window_policy,
+                feature_windows=feature_windows,
+                logspace_min=logspace_min,
+                logspace_max=logspace_max,
+                logspace_count=logspace_count,
+                rs_market_proxies=rs_market_proxies,
+                rs_include_long=rs_include_long,
+                calendar_features=calendar_features,
+                news_feature_columns=news_feature_columns,
+                news_prediction_dir=news_prediction_dir,
+                signal_feature_columns=signal_feature_columns,
+                signal_prediction_dir=signal_prediction_dir,
+                help_tickers=help_tickers,
+                market_data_dir=market_data_dir,
+                help_assets=help_assets,
+                help_assets_dir=help_assets_dir,
+            )
     else:
         print("Using single environment (no parallelization)...")
         train_env = _build_env(
@@ -1430,11 +1490,14 @@ def train(
     
     run_started_at_utc = datetime.now(timezone.utc)
     interrupted = False
+    use_progress_bar = _sb3_progress_bar_available()
+    if not use_progress_bar:
+        print("Progress bar disabled: stable-baselines3 extra packages `rich`/`tqdm` not available.")
     try:
         model.learn(
             total_timesteps=total_timesteps,
             callback=callbacks,
-            progress_bar=True
+            progress_bar=use_progress_bar
         )
     except KeyboardInterrupt:
         interrupted = True

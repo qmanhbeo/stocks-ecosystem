@@ -21,6 +21,7 @@ env/
 !RL-trading-agent/vn_stock_rl/env/
 RL-trading-agent/vn_stock_rl/env/*
 !RL-trading-agent/vn_stock_rl/env/__init__.py
+!RL-trading-agent/vn_stock_rl/env/market_rules.py
 !RL-trading-agent/vn_stock_rl/env/portfolio_choice.py
 
 # Notebook noise

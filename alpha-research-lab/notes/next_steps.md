@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_53_log.md` for the latest full session detail.
+Use `notes/session_55_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 53 direction update complete (ADV / capacity parked for the current-account branch, not solved; long-only portfolio-choice RL becomes the active next research branch; docs updated; 2026-03-29)
+**Session status:** Session 55 H154 first pilot ladder completed (ADV / capacity still parked for the current-account branch, not solved; `S1`-only RL strongest on seed 1208; H155 multi-seed next; docs updated; 2026-03-29)
 
 ### Start next session here
 
@@ -21,9 +21,9 @@ Use `notes/session_53_log.md` for the latest full session detail.
 3. If a new live recommendation is needed, restore canonical full-history continuity in root `data/stock/` first, especially `VNINDEX`.
 4. Rerun the official live `S1` scorer only after lookback sufficiency is verified.
 5. Resume research on the RL branch in this order:
-   - `H153`: same-universe deterministic benchmark for portfolio-choice RL
-   - `H154`: controlled long-only RL pilot ladder
-   - `H155`: multi-seed robustness and evaluation
+   - `H155`: multi-seed robustness on `pilot_portfolio_s1_seed1208`
+   - optional confirmatory multi-seed on `pilot_portfolio_subcore_seed1208`
+   - do not spend more compute on `pilot_portfolio_labmatrix_seed1208` unless the state/reward design changes
 
 ### Session 53 strategic decision
 
@@ -39,6 +39,63 @@ Use `notes/session_53_log.md` for the latest full session detail.
 - Previously planned tradability-conditioned alpha branch is now parked, not deleted:
   - `H151`: narrow tradability-conditioned composite
   - `H152`: tradability-conditioned alpha search
+
+### Session 54 implementation update
+
+- `H153` now has a concrete RL-side runner:
+  - `python -m vn_stock_rl.evaluation.portfolio_baseline`
+- It reuses `PortfolioChoiceEnv`, so the deterministic comparator:
+  - uses the exact same universe selection logic as RL
+  - uses the same long-only execution and settlement rules
+  - writes comparable summary and daily baseline outputs
+- H153 real baseline result on the first live branch configuration:
+  - universe size `20`, top-k `3`, test split `2025-06-12` to `2025-12-30`
+  - `s1_only`: `-2.50%` total, `-25.99%` relative
+  - `full_library`: `+0.41%` total, `-23.78%` relative
+  - `conditioned_subcore`: `+6.32%` total, `-19.30%` relative
+  - equal-weight universe benchmark: `+31.74%`
+- H154 smoke run passed end to end after patching the trainer to disable the SB3 progress bar automatically when `rich` / `tqdm` extras are unavailable.
+- Historical note:
+  - at the end of Session 54, the full H154 ladder and H155 were still pending
+  - Session 55 completed the first real H154 ladder; see the Session 55 update below for the live state
+
+### Session 55 RL pilot update
+
+- `H154` first real pilot ladder is now complete on seed `1208` with the same:
+  - portfolio universe size `20`
+  - top-k `3`
+  - test split `2025-06-12` to `2025-12-31`
+  - PPO `mlp` policy
+  - `100000` timesteps
+- Held-out RL evaluation results:
+  - `S1` only RL:
+    - return `+40.30%`
+    - equal-weight universe benchmark `+31.74%`
+    - Sharpe `2.72`
+    - max drawdown `-8.55%`
+    - rebalances `1`
+  - full-matrix RL (`S1 + C4-C14`):
+    - return `-7.90%`
+    - Sharpe `-0.27`
+    - max drawdown `-30.65%`
+    - rebalances `90`
+  - conditioned sub-core RL (`S1 + C7 + C8 + C10 + C12 + C13`):
+    - return `+15.60%`
+    - Sharpe `1.01`
+    - max drawdown `-18.59%`
+    - rebalances `97`
+- Same-universe deterministic comparators from H153:
+  - `s1_only`: `-2.50%`
+  - `full_library`: `+0.41%`
+  - `conditioned_subcore`: `+6.32%`
+- Practical reading:
+  - `S1`-only RL is the only clear winner on the first seed
+  - conditioned sub-core RL beats its deterministic comparator but still trails the benchmark and trails `S1`-only RL badly
+  - full-matrix RL is a clean failure on this setup
+- Active next step:
+  - run `H155` multi-seed robustness on `S1`-only first
+  - treat conditioned sub-core as optional secondary validation
+  - do not promote the richer feature sets without a stronger explanation for the churn / underperformance
 
 ### New reality check after Session 51
 
@@ -547,6 +604,8 @@ Use `notes/session_53_log.md` for the latest full session detail.
 | 51 | 2026-03-28 | H147-H150: H145 near-miss is sparse-state driven; local refinement and soft activation fail; H150 identifies a tradability-conditioned sub-core | H93 + C4-C14 |
 | 52 | 2026-03-28 | Official live pipeline blocked by truncated benchmark history, but an honest ad hoc live full_library paper-trade state was recovered for the 2026-03-27 close | H93 + C4-C14 |
 | 53 | 2026-03-29 | ADV / capacity explicitly parked for the current-account branch; RL becomes the active next research branch with deterministic benchmark-first gating | H93 + C4-C14 |
+| 54 | 2026-03-29 | H153 same-universe deterministic comparator implemented and run; conditioned sub-core best in the RL universe but still below equal-weight benchmark; H154 smoke passed | H93 + C4-C14 |
+| 55 | 2026-03-29 | H154 first real pilot ladder completed: `S1`-only RL beats deterministic comparator and equal-weight benchmark on seed 1208; conditioned sub-core is mixed; full matrix fails cleanly | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 
@@ -910,21 +969,18 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - historical verdict from Session 48: do not add more ML or RL complexity until capacity is addressed honestly
   - superseded operationally by Session 53 for the current-account branch only
 
-### Next queue after Session 53 (in order)
+### Next queue after Session 55 (in order)
 
-1. **H153: same-universe deterministic benchmark for portfolio-choice RL**
-   - build deterministic `S1-only` and `full_library` top-k comparators on the exact universe selected by `PortfolioChoiceEnv`
-   - keep the same long-only execution contract used everywhere else
-   - do not interpret any RL result before this comparator exists
-2. **H154: controlled long-only RL pilot ladder**
-   - run the current portfolio-choice RL env on:
-     - `S1` only
-     - full matrix `S1 + C4-C14`
-     - conditioned sub-core `S1 + C7 + C8 + C10 + C12 + C13`
-   - compare every run against the matching H153 deterministic comparator, not against an equal-weight universe benchmark
-3. **H155: multi-seed robustness and evaluation**
-   - rerun any promising H154 setup on at least 3 seeds
-   - only promote RL as the active improvement branch if it is stable and benchmark-superior
+1. **H155: multi-seed robustness and evaluation**
+   - rerun `pilot_portfolio_s1_seed1208` on at least 3 seeds
+   - use the existing H153 deterministic comparator and the equal-weight universe benchmark as reference
+   - promote RL only if the `S1`-only win survives seed variation
+2. **Optional secondary check**
+   - rerun `pilot_portfolio_subcore_seed1208` on a smaller seed set only if extra compute is available
+   - objective is to test whether its first-seed improvement over the deterministic sub-core is real or noise
+3. **Design diagnosis only after H155**
+   - if `S1` remains best, inspect why extra features degrade the policy
+   - likely targets: observation scaling, reward / turnover interaction, or action instability from larger state surfaces
 4. **Parked, not deleted**
    - `H151`: narrow tradability-conditioned composite
    - `H152`: tradability-conditioned alpha search

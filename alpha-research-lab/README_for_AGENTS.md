@@ -65,6 +65,9 @@ Operationally important summary:
 - ADV / capacity is parked for the current-account branch, not solved for scale
 - the active next branch is benchmark-first long-only portfolio-choice RL
 - `H151/H152` are parked research hypotheses; the live queue is `H153/H154/H155`
+- `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
+- `H154` first ladder is complete: `S1`-only RL won on seed `1208`, conditioned sub-core is mixed,
+  and full-matrix RL failed; `H155` multi-seed robustness is now the active next step
 
 Do not maintain a partial summary table here unless you update it together with `notes/signal_library.md`.
 

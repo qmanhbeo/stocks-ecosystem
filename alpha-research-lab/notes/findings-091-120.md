@@ -728,3 +728,82 @@ construction.
 - benchmark-first long-only portfolio-choice RL
 - with the deterministic `full_library` / `S1` comparators as the gate
 - while the tradability-conditioned alpha branch (`H151/H152`) stays parked rather than deleted
+
+---
+## F114: The First Same-Universe RL Comparator Shows a Real Bar for RL to Beat; the Conditioned Sub-Core Is the Strongest Deterministic Baseline in the RL Universe but Still Trails the Equal-Weight Universe Benchmark (2026-03-29, Session 54)
+
+Session 54 implemented and ran `H153`, the first deterministic comparator built directly on top of
+`PortfolioChoiceEnv` so it uses:
+- the exact same liquid-universe selection
+- the same panel intersection
+- the same long-only settlement and tradability rules
+
+Configuration:
+- portfolio universe size = `20`
+- top-k = `3`
+- signal source = adapted lab matrix
+- test split produced by the RL env:
+  - `2025-06-12` to `2025-12-30`
+
+Resolved universe:
+- `STB`, `VNM`, `VRE`, `VJC`, `VHM`, `POW`, `HPG`, `VPB`, `TCB`, `NVL`,
+  `CTG`, `MSN`, `BAF`, `MSB`, `PVD`, `BSR`, `HSG`, `PLX`, `DXG`, `VCB`
+
+Results:
+- `s1_only`: total **-2.50%**, relative **-25.99%**
+- `full_library`: total **+0.41%**, relative **-23.78%**
+- `conditioned_subcore`: total **+6.32%**, relative **-19.30%**
+- equal-weight universe benchmark over the same period: **+31.74%**
+
+The conditioned sub-core (`S1 + C7 + C8 + C10 + C12 + C13`) is the strongest deterministic baseline
+inside this RL universe, but it still underperforms the naive equal-weight universe benchmark on the
+test split.
+
+**Key finding:** RL now has a meaningful, same-universe deterministic bar to beat. The branch is no
+longer “run RL and compare to something vague.” But the first benchmark is not trivially strong,
+which means any RL win must still be treated cautiously and checked against seed sensitivity.
+
+**Implication:** move forward with `H154` only against this benchmark-first framing. Promote RL only
+if it beats the matching deterministic comparator and survives `H155` multi-seed reruns.
+
+---
+## F115: The First Portfolio-Choice RL Ladder Says Simpler State Wins; `S1`-Only RL Beat Both the Same-Universe Deterministic Comparator and the Equal-Weight Universe Benchmark on the First Seed, While Richer Signal Sets Hurt (2026-03-29, Session 55)
+
+Session 55 ran the first real `H154` ladder on top of the `H153` same-universe benchmark:
+- portfolio universe size `20`
+- top-k `3`
+- test split `2025-06-12` to `2025-12-31`
+- PPO `mlp`
+- `100000` timesteps
+- seed `1208`
+
+Reference deterministic comparators from `H153`:
+- `s1_only`: **-2.50%**
+- `full_library`: **+0.41%**
+- `conditioned_subcore`: **+6.32%**
+- equal-weight universe benchmark: **+31.74%**
+
+Held-out RL results:
+
+| RL setup | Test Return | Sharpe | Max DD | Rebalances | Reading |
+|---|---:|---:|---:|---:|---|
+| `S1` only | **+40.30%** | **2.72** | **-8.55%** | **1** | clear win |
+| full matrix (`S1 + C4-C14`) | **-7.90%** | **-0.27** | **-30.65%** | **90** | clean fail |
+| conditioned sub-core (`S1 + C7 + C8 + C10 + C12 + C13`) | **+15.60%** | **1.01** | **-18.59%** | **97** | mixed / secondary |
+
+The key comparisons:
+- `S1`-only RL beat deterministic `s1_only` by a wide margin and also beat the equal-weight
+  universe benchmark on this split
+- conditioned sub-core RL improved over its deterministic comparator, but still trailed the
+  equal-weight benchmark and was far worse than `S1`-only RL
+- full-matrix RL underperformed even the deterministic full-library comparator and churned heavily
+
+**Key finding:** on the first seed, adding more signals made the policy worse, not better. The only
+clear win came from the smallest state surface.
+
+This does **not** prove `S1`-only RL is production-ready; it is still a single-seed result.
+But it does change the immediate queue:
+- `H155` should focus on multi-seed robustness for `S1` first
+- conditioned sub-core is optional secondary validation
+- full-matrix RL should be deprioritized until there is a concrete explanation for the churn /
+  instability caused by the larger state

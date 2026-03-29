@@ -72,6 +72,8 @@ Current workspace direction:
 - ADV / capacity is parked for the current-account branch, not solved for scale
 - RL is now the active next research branch
 - RL results must be compared against a same-universe deterministic top-k baseline, not only against an equal-weight universe benchmark
+- H153 comparator command: `python -m vn_stock_rl.evaluation.portfolio_baseline`
+- first H154 ladder result on seed `1208`: `S1`-only RL is currently best, conditioned sub-core is secondary, full matrix failed
 
 Execution realism is shared with the research lab:
 
