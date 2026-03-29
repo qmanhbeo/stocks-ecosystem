@@ -61,6 +61,28 @@ def fetch_ticker(ticker: str, start: str = "2000-01-01", end: str = "2025-12-31"
         return False
 
 
+def run_fetch_round(
+    tickers: list[str],
+    *,
+    end: str,
+    delay: float,
+    round_label: str,
+) -> tuple[list[str], list[str]]:
+    success: list[str] = []
+    failed: list[str] = []
+
+    if not tickers:
+        return success, failed
+
+    print(f"\n{round_label} ({len(tickers)} tickers)")
+    for i, ticker in enumerate(tickers):
+        ok = fetch_ticker(ticker, end=end)
+        (success if ok else failed).append(ticker)
+        if i < len(tickers) - 1:
+            time.sleep(delay)
+    return success, failed
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--exchange", default="HOSE", choices=["HOSE", "HNX", "UPCOM"],
@@ -71,7 +93,15 @@ def main():
                         help="List what would be fetched without actually fetching")
     parser.add_argument("--end", type=str, default="2025-12-31",
                         help="End date for fetch (default: 2025-12-31, never touch 2026)")
+    parser.add_argument("--retry-rounds", type=int, default=2,
+                        help="Automatic retry rounds for failed tickers after the initial pass (default: 2)")
+    parser.add_argument("--retry-delay", type=float, default=1.0,
+                        help="Delay between retry rounds in seconds (default: 1.0)")
     args = parser.parse_args()
+    if args.retry_rounds < 0:
+        raise ValueError("--retry-rounds must be non-negative")
+    if args.retry_delay < 0:
+        raise ValueError("--retry-delay must be non-negative")
 
     print(f"Fetching {args.exchange} ticker list...")
     all_tickers = get_exchange_tickers(args.exchange)
@@ -86,13 +116,24 @@ def main():
         print(f"\n[DRY RUN] Would fetch: {to_fetch[:20]}{'...' if len(to_fetch) > 20 else ''}")
         return
 
-    print(f"\nStarting fetch (delay={args.delay}s, end={args.end})...")
-    success, failed = [], []
-    for i, ticker in enumerate(to_fetch):
-        ok = fetch_ticker(ticker, end=args.end)
-        (success if ok else failed).append(ticker)
-        if i < len(to_fetch) - 1:
-            time.sleep(args.delay)
+    print(f"\nStarting fetch (delay={args.delay}s, retry_rounds={args.retry_rounds}, end={args.end})...")
+    success: list[str] = []
+    remaining = list(to_fetch)
+    for attempt in range(args.retry_rounds + 1):
+        round_label = "Initial pass" if attempt == 0 else f"Retry round {attempt}/{args.retry_rounds}"
+        round_success, remaining = run_fetch_round(
+            remaining,
+            end=args.end,
+            delay=args.delay,
+            round_label=round_label,
+        )
+        success.extend(round_success)
+        if not remaining:
+            break
+        if attempt < args.retry_rounds and args.retry_delay > 0:
+            time.sleep(args.retry_delay)
+
+    failed = remaining
 
     print(f"\n{'='*50}")
     print(f"Done: {len(success)} fetched, {len(failed)} failed")

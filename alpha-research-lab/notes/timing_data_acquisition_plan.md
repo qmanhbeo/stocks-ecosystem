@@ -87,6 +87,16 @@ Hard checks:
 - session boundaries map correctly to Vietnam market hours
 - corporate-action distortions are understood and documented
 
+Current repo normalization bridge:
+- raw open-source acquisition path:
+  - `data_tools/fetch_cafef_intraday.py`
+- repo-aligned adjustment step:
+  - `data_tools/adjust_cafef_intraday_to_vci.py`
+- current factor rule:
+  - `price_factor[t] = vci_daily_close[t] / cafef_raw_intraday_last_close[t]`
+  - adjusted intraday `open/high/low/close = raw_cafef_ohlc * price_factor[t]`
+  - keep `volume` raw unless a separate volume-adjustment contract is proven
+
 Pass:
 - pilot panel builds cleanly and supports derived first-hour / close-auction features
 

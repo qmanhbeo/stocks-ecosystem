@@ -18,14 +18,16 @@ state of each data source. Read this before running experiments or wondering why
 | Insider deals raw | YES | YES (394 tickers) | `fetch_insider_deals.py` |
 | News archive (cafef, 3.6 GB) | NO | YES (fetched this session) | `fetch_news_archive.py` |
 | Historical foreign investor flow | ✗ Not available | — | F59 in findings.md — vnstock only has current-day |
-| Intraday tick data | Partial | YES (`FPT` 1H only) | local legacy sample only; not a multi-ticker research surface |
+| Intraday tick data | Partial | YES (`FPT` 1H legacy + open CafeF fetch path) | `fetch_cafef_intraday.py` + `adjust_cafef_intraday_to_vci.py`; authenticated fallback is `fetch_ssi_intraday.py` |
 
 ## Critical Refresh Warning
 
-The stock refresh scripts rewrite local parquet files with the requested date window.
+The stock refresh scripts now append incrementally by default, but a forced full refresh
+still rewrites local parquet files with the requested date window.
 
-- `fetch_stock.py --overwrite` removes the existing file first, then writes only the requested range
-- `fetch_refresh_all.py --start <recent-date>` rewrites every existing stock parquet to only that recent window
+- `fetch_stock.py` now reads the existing parquet, fetches only the missing tail, merges on `time`, and atomically replaces the old file
+- `fetch_refresh_all.py` now does the same for the full current universe
+- `fetch_stock.py --overwrite` or `fetch_refresh_all.py --full-refresh` still rewrites the target parquet(s) to only the requested `--start/--end` window
 - many downstream features and live scorers need long lookback history, not just a fresh latest date
 
 Operational rule:
@@ -52,26 +54,114 @@ Separate live-system warning:
 
 ## Fetch Scripts
 
+Status guide:
+- `Active` = preferred path for new work
+- `Legacy` = narrow/original-universe/debug path kept for compatibility
+- `Archive-only` = kept for reproducibility after a failed research branch
+- `Utility` = diagnostic helper, not a canonical producer
+
+### Active Fetchers
+
 ### `fetch_stock.py`
 Fetch daily OHLCV for one or more HOSE tickers from VCI via vnstock.
+- **Status:** Active
 - **Output:** `data/stock/gia_lich_su_<TICKER>_1D.parquet`
-- **Usage:** `python data_tools/fetch_stock.py --ticker FPT`
-- **Warning:** with `--overwrite`, the old file is deleted first and the replacement file contains only the requested `--start/--end` window
+- **Usage:** `python data_tools/fetch_stock.py --tickers FPT`
+- **Default behavior:** if the target parquet already exists, fetch only the missing tail, merge on `time`, and atomically replace the old file
+- **Full rewrite:** use `--overwrite` to rewrite from the requested `--start/--end` window
+- **Reliability:** failed tickers now get `2` automatic retry rounds after the initial pass by default
 
 ### `fetch_hose_universe.py`
 Fetch all HOSE-listed stocks not yet in `data/stock/`. Used to expand the universe.
+- **Status:** Active
 - **Output:** `data/stock/gia_lich_su_<TICKER>_1D.parquet` for each new ticker
 - **Coverage:** 394 HOSE tickers (402 files including indices/ETFs)
+- **Reliability:** failed tickers now get `2` automatic retry rounds after the initial pass by default
 
 ### `fetch_refresh_all.py`
-Re-fetch all existing tickers to bring data up to the current date.
+Re-fetch the current stock universe to bring data up to the current date.
+- **Status:** Active
 - **Usage:** `python data_tools/fetch_refresh_all.py`
+- **Usage:** `python data_tools/fetch_refresh_all.py --interval 1H --start 2023-09-01`
 - Run this at the start of a new session to update `data/stock/`.
-- **Warning:** this rewrites each parquet with the exact requested `--start/--end` window; using a recent `--start` is unsafe for long-lookback feature pipelines
+- Ticker discovery comes from the existing `*_1D.parquet` universe files, even when writing another interval such as `1H`.
+- **Output:** `data/stock/gia_lich_su_<TICKER>_<INTERVAL>.parquet`
+- **Default behavior:** if a parquet already exists, fetch only the missing tail, merge on `time`, and atomically replace the old file
+- **Intraday overlap rule:** non-`1D` intervals refetch the last stored trading date as an overlap window, then dedupe on `time`
+- **Full rewrite:** use `--full-refresh` to rewrite each parquet with the exact requested `--start/--end` window
+- **Reliability:** failed tickers now get `2` automatic retry rounds after the initial pass by default
 - **Safe restore pattern:** `python data_tools/fetch_refresh_all.py --start 2000-01-01 --end 2026-12-31`
+
+### `fetch_ssi_intraday.py`
+Fetch historical intraday OHLCV from SSI FastConnect via the official `IntradayOhlc` API.
+- **Status:** Active fallback
+- **Output:** `data/stock/gia_lich_su_<TICKER>_<INTERVAL>.parquet`
+- **Default output label:** `1H` when `--resolution 60`
+- **Usage:** `python data_tools/fetch_ssi_intraday.py --resolution 60 --start 2019-01-01 --end 2025-12-31`
+- **Usage:** `python data_tools/fetch_ssi_intraday.py --tickers FPT,ACB --resolution 60 --start 2019-01-01 --end 2025-12-31`
+- **Credentials:** set `SSI_FC_CONSUMER_ID` and `SSI_FC_CONSUMER_SECRET`, or pass `--consumer-id` and `--consumer-secret`
+- **Notes:**
+  - uses the existing `*_1D.parquet` universe when `--tickers` is omitted
+  - chunks long date ranges automatically to stay inside SSI page limits
+  - intended for the acquisition-first intraday branch; coverage still needs to be validated honestly after fetch
+
+### `fetch_cafef_intraday.py`
+Fetch open historical matched-trade data from CafeF and aggregate it into repo-style hourly OHLCV bars.
+- **Status:** Active
+- **Source:** `https://msh-appdata.cafef.vn/rest-api/api/v1/MatchPrice`
+- **Output:** `data/stock/gia_lich_su_<TICKER>_1H_CAFEF.parquet` by default
+- **Usage:** `python data_tools/fetch_cafef_intraday.py --tickers FPT,ACB --start 2019-01-01 --end 2025-12-31`
+- **Usage:** `python data_tools/fetch_cafef_intraday.py --tickers FPT,ACB --start 2000-01-01 --end 2026-12-31 --workers 8`
+- **Usage:** `python data_tools/fetch_cafef_intraday.py --dry-run`
+- **Notes:**
+  - no auth required
+  - uses the existing `*_1D.parquet` files as the trading calendar, so it only requests dates that already exist in the daily stock data
+  - fetches dates in parallel within each ticker-year; tune with `--workers`
+  - writes complete yearly raw parts first under `data/stock/_cafef_intraday_parts/<INTERVAL_LABEL>/<TICKER>/`, then rebuilds the final ticker parquet by concatenating those yearly parts
+  - unresolved request failures are retried automatically `2` times after the initial pass, at the date level, before a year is allowed to become a saved part
+  - normalizes CafeF's legacy early-history timestamp offset before aggregation, including older rows where the source encoded the shifted session time as a naive timestamp
+  - keeps a source-specific output suffix by default so it does not overwrite vnstock / SSI intraday files
+  - prices are source-raw CafeF session prices; do not assume they numerically match the locally adjusted daily/vnstock price levels without an explicit normalization step
+
+### `adjust_cafef_intraday_to_vci.py`
+Normalize raw CafeF intraday prices onto the local VCI-adjusted daily price backbone.
+- **Status:** Active
+- **Raw input:** `data/stock/gia_lich_su_<TICKER>_1H_CAFEF.parquet`
+- **Daily anchor:** `data/stock/gia_lich_su_<TICKER>_1D.parquet`
+- **Adjusted output:** `data/stock/gia_lich_su_<TICKER>_1H_CAFEF_ADJ.parquet`
+- **Audit output:** `data/stock/_cafef_adjustment_factors/gia_lich_su_<TICKER>_1H_CAFEF_to_1H_CAFEF_ADJ.parquet`
+- **Usage:** `python data_tools/adjust_cafef_intraday_to_vci.py --tickers FPT,ACB`
+- **Formula:**
+  - `price_factor[t] = vci_daily_close[t] / cafef_raw_intraday_last_close[t]`
+  - adjusted intraday `open/high/low/close = raw_cafef_ohlc * price_factor[t]`
+  - `volume` is left unchanged
+- **Why this works:**
+  - the factor is constant within a day, so all same-day returns and bar-shape features are preserved
+  - the adjusted last intraday close is forced onto the local VCI daily close, which restores cross-day continuity against the repo's daily backbone
+- **Why volume is not scaled:**
+  - the local VCI daily files appear price-adjusted but not volume-adjusted
+  - scaling volume by the price factor would be a different economic assumption and is not supported by the observed local files
+- **Audit fields:** the factor parquet stores raw CafeF daily OHLCV, adjusted-from-CafeF daily OHLC, VCI daily OHLCV, `price_factor`, daily OHLC gaps, and raw-vs-VCI volume ratio
+
+### CafeF Intraday Normalization Chain
+Use the open intraday path in two explicit steps:
+1. `python data_tools/fetch_cafef_intraday.py --start 2000-01-01 --end 2026-12-31`
+2. `python data_tools/adjust_cafef_intraday_to_vci.py`
+
+Operational interpretation:
+- `*_1H_CAFEF.parquet` is the raw open-source tape
+- `*_1H_CAFEF_ADJ.parquet` is the repo-aligned intraday price surface for cross-day research
+- if you only need same-day structure features, the raw file is often enough
+- if you need gap / overnight joins or any merge onto adjusted daily prices, use the adjusted file
+
+## Tried But Failed Intraday Attempts
+
+- `fetch_refresh_all.py --interval 1H` via `vnstock` / VCI works only as a shallow intraday source; current observed history starts around `2023-09-11`, so it does not solve deep historical intraday acquisition.
+- `fetch_ssi_intraday.py` uses an official historical endpoint and may still be useful later, but it failed the “completely open” requirement because SSI FastConnect requires credentials and service registration.
 
 ### `fetch_fx_commodities.py`
 Fetch FX rates, commodity prices, and global indices via yfinance.
+- **Status:** Active
 - **Output:** `data/fx-commodities/fx_commodities_<NAME>_1D.parquet`
 - **Available files (20):**
   - `vix_1D` — CBOE VIX (fear index)
@@ -84,37 +174,20 @@ Fetch FX rates, commodity prices, and global indices via yfinance.
   - `us10y_1D`, `us3m_1D` — US yield curve
   - `btc_1D` — Bitcoin
 
-### `fetch_global_macro.py`
-Fetch additional global macro indicators via yfinance (supplement to `fetch_fx_commodities.py`).
-
 ### `fetch_fred_macro.py`
 Fetch Vietnam macroeconomic data from FRED (330+ series). Used for macro regime features.
+- **Status:** Active
 
 ### `fetch_sector_classification.py`
 Fetch ICB sector/sub-sector labels for all HOSE stocks via `vnstock company.overview()`.
+- **Status:** Active
 - **Output:** `data/features/sector_classification.parquet`
 - **Fields:** `ticker`, `icb_name2`, `icb_name3`, `icb_name4` (industry hierarchy)
 - **Coverage:** 398 tickers
 
-### `fetch_dividend_events.py`
-Fetch ex-dividend dates for all HOSE stocks via `vnstock company.events()`.
-- **Output:** `data/dividend_cache/<TICKER>_events.parquet` + `data/features/xs_dividend_calendar.parquet`
-- **Coverage:** 52 tickers (original universe; not yet expanded to full 394)
-- **Status:** Partially built — only covers 52 tickers, not full HOSE universe
-
-### `fetch_fundamentals.py`
-Fetch quarterly EPS, P/E, ROE, margins etc. for FPT only.
-- **Output:** `data/features/fpt_fundamentals.parquet`
-- **Status:** FPT-only legacy script
-
-### `fetch_all_stock_fundamentals.py`
-Fetch quarterly financial ratios for all 52 stocks in original universe.
-- **Output:** `data/fundamentals_cache/<TICKER>.parquet` + `data/features/xs_fundamentals_daily.parquet`
-- **Coverage:** 52 tickers (not expanded to 394)
-- **Status:** Partially built — not run on full HOSE universe
-
 ### `fetch_insider_deals.py`
 Fetch insider + large-shareholder transaction disclosures for all HOSE tickers.
+- **Status:** Active
 - **Source:** CafeF GDCoDong API — `cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx`
 - **Output:** `data/insider_cache/<TICKER>.parquet` + `data/features/xs_insider_deals_raw.parquet`
 - **Coverage:** 394/394 HOSE tickers, date range 2010–2026
@@ -124,41 +197,73 @@ Fetch insider + large-shareholder transaction disclosures for all HOSE tickers.
 
 ### `fetch_news.py`
 Crawl raw news articles from cafef.vn into `data/news/cafef/raw/`.
+- **Status:** Active
 - **Output:** `data/news/cafef/raw/YYYY-MM-DD.jsonl` (one JSON object per article)
-- **Status:** Crawler for live use; the full 2016–2026 archive is in Google Drive
+- **Role:** live/incremental crawler; use alongside the archive restore on fresh clones
 
 ### `fetch_news_archive.py`
 Restore the full 2016–2026 cafef news archive from Google Drive.
+- **Status:** Active
 - **Output:** `data/news/cafef/raw/` — 3,734 JSONL files (~3.6 GB extracted)
 - **GDrive ID:** `1uzE57O1TTb7pMsQuTNtSiTKDgDt723-l`
 - **Usage:** `python data_tools/fetch_news_archive.py`
 - Run this on a fresh clone before any news-related experiments.
 
+### Legacy / Narrow Fetchers
+
+### `fetch_global_macro.py`
+Fetch additional global macro indicators via yfinance.
+- **Status:** Legacy convenience wrapper
+- **Reason:** fully replaceable by the generic `fetch_fx_commodities.py` ticker/alias interface; kept as a fixed-list shortcut for the original macro basket
+
+### `fetch_dividend_events.py`
+Fetch ex-dividend dates for all HOSE stocks via `vnstock company.events()`.
+- **Status:** Legacy original-universe fetcher
+- **Output:** `data/dividend_cache/<TICKER>_events.parquet` + `data/features/xs_dividend_calendar.parquet`
+- **Coverage:** 52 tickers (original universe; not yet expanded to full 394)
+- **Current limitation:** only covers 52 tickers, not the full HOSE universe
+
+### `fetch_fundamentals.py`
+Fetch quarterly EPS, P/E, ROE, margins etc. for FPT only.
+- **Status:** Legacy single-name path
+- **Output:** `data/features/fpt_fundamentals.parquet`
+- **Current limitation:** FPT-only legacy script
+
+### `fetch_all_stock_fundamentals.py`
+Fetch quarterly financial ratios for all 52 stocks in original universe.
+- **Status:** Legacy original-universe fetcher
+- **Output:** `data/fundamentals_cache/<TICKER>.parquet` + `data/features/xs_fundamentals_daily.parquet`
+- **Coverage:** 52 tickers (not expanded to 394)
+- **Current limitation:** not yet run on the full HOSE universe
+
+### Utility Fetchers
+
 ### `probe_listing.py`
 Probe vnstock Listing API to audit the full Vietnamese stock universe.
+- **Status:** Utility
 - Diagnostic tool; no persistent output.
 
 ---
 
 ## Build Scripts
 
+Status guide:
+- `Active` = preferred current producer
+- `Legacy` = limited-coverage, narrow, or superseded path kept for compatibility or historical rebuilds
+- `Archive-only` = retained only to reproduce a rejected research branch
+
+### Active Builders
+
 ### `extract_news_sentiment.py`
 Extract per-ticker daily sentiment from cafef JSONL files using a keyword lexicon.
+- **Status:** Active raw input builder
 - **Requires:** `data/news/` (run `fetch_news_archive.py` first)
 - **Output:** `data/features/xs_news_sentiment_daily.parquet`
-- **Coverage:** ~0.8% of (day, ticker) pairs (very sparse — see F62–F65)
-
-### `build_rolling_news_sentiment.py`
-Build rolling 5d/30d news sentiment to reduce sparsity (H96).
-- **Requires:** `data/news/`
-- **Output:** `data/features/xs_news_sentiment_rolling.parquet` (2.5M rows, full grid)
-- **Result:** Still 94.9% zeros after 30d window — did not help (F63)
-
-### `build_rolling_news_features.py`
-Alternative rolling news feature builder (earlier H96 variant, superseded by above).
+- **Coverage:** ~0.8% of (day, ticker) pairs (very sparse; this is the raw base table, not a dense feature surface)
 
 ### `extract_llm_news_features.py`
 Extract structured per-article features from CafeF JSONL with local Ollama (`/api/generate`).
+- **Status:** Active
 - **Input:** `data/news/cafef/raw/YYYY-MM-DD.jsonl`
 - **Output:** `data/llm_cache/YYYY-MM-DD.jsonl` (resume-safe, atomic write)
 - **Usage:** `python data_tools/extract_llm_news_features.py --date-from 2023-01-01 --date-to 2023-01-03`
@@ -167,6 +272,7 @@ Extract structured per-article features from CafeF JSONL with local Ollama (`/ap
 
 ### `build_llm_news_features.py`
 Build ticker-day and dense market-daily LLM features from `data/llm_cache/`.
+- **Status:** Active
 - **Outputs:**
   - `data/features/xs_llm_news_ticker_day.parquet`
   - `data/features/xs_llm_news_market_daily.parquet`
@@ -174,57 +280,102 @@ Build ticker-day and dense market-daily LLM features from `data/llm_cache/`.
 
 ### `build_open_close_asymmetry_features.py`
 Build dense ticker-day open/close asymmetry features from OHLC.
-- **Output:** `data/features/xs_open_close_asymmetry.parquet` (full grid)
+- **Status:** Active
+- **Output:** `data/features/xs_open_close_asymmetry.parquet`
 - **Usage:** `python data_tools/build_open_close_asymmetry_features.py`
 - **Session 62 note:** now builds from a dense stock-day grid derived from raw stock files, not from the stale historical `S1` spine
 
 ### `build_dispersion_regime_features.py`
 Build dense date-level cross-sectional dispersion/breadth regime features.
+- **Status:** Active
 - **Output:** `data/features/xs_dispersion_regime_daily.parquet`
 - **Usage:** `python data_tools/build_dispersion_regime_features.py`
 - **Session 62 note:** now builds from a dense stock-day grid derived from raw stock files, not from the stale historical `S1` spine
 
 ### `build_return_skewness_features.py`
 Build dense ticker-day return skewness/tail-shape features.
+- **Status:** Active
 - **Output:** `data/features/xs_return_skewness.parquet`
 - **Usage:** `python data_tools/build_return_skewness_features.py`
 
 ### `build_earnings_calendar_features.py`
 Build dense date-level earnings/reporting season calendar features.
+- **Status:** Active
 - **Output:** `data/features/xs_earnings_calendar_daily.parquet`
 - **Usage:** `python data_tools/build_earnings_calendar_features.py`
 
-### `build_insider_features.py`
-Build rolling 5d/30d insider signal feature matrix from raw insider deals.
-- **Requires:** `data/features/xs_insider_deals_raw.parquet`
-- **Output:** `data/features/xs_insider_features.parquet` (826k rows, full grid)
-- **Usage:** `python data_tools/build_insider_features.py`
-
 ### `build_insider_quality_features.py`
 Build dense ticker-day insider quality / relative-size features from the raw insider-deals matrix.
+- **Status:** Active
 - **Requires:** `data/features/xs_insider_deals_raw.parquet`
 - **Output:** `data/features/xs_insider_quality_features.parquet`
 - **Usage:** `python data_tools/build_insider_quality_features.py`
 - **Session 62 note:** now builds from a dense stock-day grid derived from raw stock files, not from the stale historical `S1` spine
 
+### `build_sector_rotation_features.py`
+Build sector breadth / sector momentum / intra-sector rank features from stock OHLC plus sector labels.
+- **Status:** Active
+- **Output:** `data/features/xs_sector_rotation_daily.parquet`
+- **Usage:** `python data_tools/build_sector_rotation_features.py`
+- **Research note:** H111's original `xs_sector_rotation_signal` failed, but this artifact is still actively used because it feeds the promoted contrarian intra-sector signal (`C6`) in `xs_rl_signal_matrix.parquet`
+
+### `build_price_limit_features.py`
+Build dense price-limit-touch features from daily OHLC.
+- **Status:** Active
+- **Output:** `data/features/xs_price_limit_daily.parquet`
+- **Usage:** `python data_tools/build_price_limit_features.py`
+- **Research note:** feeds promoted signal `C7`
+
+### `build_volume_zscore_features.py`
+Build dense abnormal-volume features relative to each stock's own trailing baseline.
+- **Status:** Active
+- **Output:** `data/features/xs_volume_zscore_daily.parquet`
+- **Usage:** `python data_tools/build_volume_zscore_features.py`
+- **Research note:** feeds promoted signal `C8`
+
+### `build_shortterm_reversal_features.py`
+Build dense short-term reversal features from daily OHLC.
+- **Status:** Active
+- **Output:** `data/features/xs_shortterm_reversal.parquet`
+- **Usage:** `python data_tools/build_shortterm_reversal_features.py`
+- **Research note:** feeds promoted signal `C9`
+
 ### `build_macro_regime_features.py`
 Build composite macro regime features from FX/commodity/news data.
+- **Status:** Active
 - **Output:** `data/features/macro_regime_daily.parquet`
+
+### `build_tradability_flags.py`
+Build dense execution tradability flags from the daily stock history.
+- **Status:** Active
+- **Output:** `data/features/execution/tradability_daily.parquet`
+- **Usage:** `python data_tools/build_tradability_flags.py`
+- **Tests:** `tests/test_tradability_flags.py`
+
+### `build_rl_signal_matrix.py`
+Build the consolidated RL signal surface from `S1` plus the current maintained candidate-signal library.
+- **Status:** Active
+- **Output:** `data/features/xs_rl_signal_matrix.parquet`
+- **Inputs:** `xs_barrier_vol_1d_hose_full.parquet`, `xs_barrier_vol_1d_hose_live_current.parquet`, `xs_open_close_asymmetry.parquet`, `xs_insider_quality_features.parquet`, `xs_sector_rotation_daily.parquet`, `xs_price_limit_daily.parquet`, `xs_volume_zscore_daily.parquet`, `xs_shortterm_reversal.parquet`
+- **Usage:** `python data_tools/build_rl_signal_matrix.py`
 
 ### `build_activation_state_features.py`
 Build the compact date-level activation surface used to test selector timing overlays.
-- **Requires:** `xs_rl_signal_matrix.parquet`, `tradability_daily.parquet`, `xs_dispersion_regime_daily.parquet`, `macro_regime_daily.parquet`
+- **Status:** Active
+- **Requires:** `xs_rl_signal_matrix.parquet`, `data/features/execution/tradability_daily.parquet`, `xs_dispersion_regime_daily.parquet`, `macro_regime_daily.parquet`
 - **Output:** `data/features/activation_state_daily.parquet`
 - **Usage:** `python data_tools/build_activation_state_features.py`
 
 ### `build_activation_meta_features.py`
 Build the selector-efficacy activation-meta surface used for learnable/path-dependent activation experiments.
+- **Status:** Active
 - **Requires:** `activation_state_daily.parquet` plus the frozen always-on selector simulations
 - **Output:** `data/features/activation_meta_daily.parquet`
 - **Usage:** `python data_tools/build_activation_meta_features.py`
 
 ### `build_event_surface_daily.py`
 Build the canonical corporate-event surface for the new-data exit ladder.
+- **Status:** Active
 - **Requires:** `xs_rl_signal_matrix.parquet`, `data/dividend_cache/*.parquet`, `xs_earnings_calendar_daily.parquet`, `xs_insider_deals_raw.parquet`
 - **Output:** `data/features/event_surface_daily.parquet`
 - **Usage:** `python data_tools/build_event_surface_daily.py`
@@ -232,36 +383,103 @@ Build the canonical corporate-event surface for the new-data exit ladder.
 
 ### `build_s1_live_extension.py`
 Build the current-year live extension for the canonical `S1` signal without dropping the latest unlabeled rows.
+- **Status:** Active
 - **Requires:** current raw stock history plus the historical `S1` feature pipeline inputs
 - **Output:** `data/features/xs_barrier_vol_1d_hose_live_current.parquet`
 - **Usage:** `python data_tools/build_s1_live_extension.py`
 - **Operational role:** first step in the current-date `full_library` / activation refresh chain
 
+### Legacy / Limited / Superseded Builders
+
+### `build_rolling_news_sentiment.py`
+Build rolling 5d/30d news sentiment to reduce sparsity (H96).
+- **Status:** Legacy historical experiment builder
+- **Requires:** `data/news/`
+- **Output:** `data/features/xs_news_sentiment_rolling.parquet` (2.5M rows, full grid)
+- **Result:** Still 94.9% zeros after 30d window — did not help (F63)
+
+### `build_rolling_news_features.py`
+Build the earlier H96 rolling-news variant.
+- **Status:** Legacy superseded builder
+- **Reason:** earlier H96 variant; superseded by `build_rolling_news_sentiment.py`
+
+### `build_insider_features.py`
+Build rolling 5d/30d insider signal feature matrix from raw insider deals.
+- **Status:** Legacy superseded builder
+- **Requires:** `data/features/xs_insider_deals_raw.parquet`
+- **Output:** `data/features/xs_insider_features.parquet`
+- **Usage:** `python data_tools/build_insider_features.py`
+- **Reason:** raw C2 insider features were superseded by the denser C5 quality artifact in `xs_insider_quality_features.parquet`
+
+### `build_earnings_quality_features.py`
+Build earnings-quality factors from the local fundamentals cache.
+- **Status:** Legacy limited-coverage builder
+- **Output:** `data/features/xs_earnings_quality_daily.parquet`
+- **Usage:** `python data_tools/build_earnings_quality_features.py`
+- **Current limitation:** the documented artifact is still a 52-ticker subset pending a full-universe fundamentals rebuild
+
+### Archive-only / Rejected Builders
+
+### `build_foreign_demand_features.py`
+Build the VNM-ETF-affinity foreign-demand proxy surface.
+- **Status:** Archive-only
+- **Output:** `data/features/xs_foreign_demand_daily.parquet`
+- **Reason:** H110 failed the predictive gate; kept only for reproducibility
+
+### `build_vn30_rebalancing_features.py`
+Build VN30 proximity / rebalancing-pressure features.
+- **Status:** Archive-only
+- **Output:** `data/features/xs_vn30_rebalancing.parquet`
+- **Reason:** H114 failed the predictive gate; kept only for reproducibility
+
 ---
 
 ## Feature Files Reference
 
-### Active (used in current experiments)
+### Active / Maintained Artifacts
 
-| File | Signal | Description | Rows |
-|------|--------|-------------|------|
-| `xs_barrier_vol_1d_hose_full.parquet` | **S1 / H93** | Primary RL signal — XS momentum probas | 826k |
-| `xs_insider_deals_raw.parquet` | **C2 raw** | Raw insider transaction disclosures | 32k |
-| `xs_insider_features.parquet` | **C2 features** | Rolling 5d/30d insider signal matrix | 826k |
-| `xs_llm_news_ticker_day.parquet` | H98 ticker-day | LLM ticker-day event/sentiment features | 826k |
-| `xs_llm_news_market_daily.parquet` | H98 market-daily | Dense date-level LLM market narrative features | ~2.7k |
-| `xs_open_close_asymmetry.parquet` | H100 | Dense ticker-day open/close asymmetry features | 826k |
-| `xs_dispersion_regime_daily.parquet` | H101 | Dense date-level dispersion regime features | ~2.7k |
-| `activation_state_daily.parquet` | H157-H162 | Dense date-level selection/activation state surface | ~2.7k |
-| `activation_meta_daily.parquet` | H163-H174 | Dense date-level selector-efficacy / activation-meta surface | ~2.7k |
-| `event_surface_daily.parquet` | H221 | Dense ticker-day corporate-event surface for exit-side new-data research | 845k |
-| `xs_return_skewness.parquet` | H103 | Dense ticker-day return skewness/tail-shape features | 826k |
-| `xs_earnings_calendar_daily.parquet` | H104 | Dense date-level earnings/reporting calendar features | ~2.7k |
-| `xs_news_sentiment_daily.parquet` | **C1 raw** | Daily keyword sentiment (sparse) | ~29k |
-| `xs_news_sentiment_rolling.parquet` | C1 rolling | 5d/30d rolling news features | 2.5M |
-| `sector_classification.parquet` | — | ICB sector labels for 398 tickers | 398 |
-| `xs_dividend_calendar.parquet` | — | Ex-dividend dates and windows | 826k |
-| `macro_regime_daily.parquet` | — | Macro regime features (VIX, yields, etc.) | ~2.7k |
+| File | Status | Description |
+|------|--------|-------------|
+| `xs_barrier_vol_1d_hose_full.parquet` | Active | Historical `S1` cross-sectional momentum probability surface |
+| `xs_barrier_vol_1d_hose_live_current.parquet` | Active | Current-date live extension for `S1` |
+| `xs_rl_signal_matrix.parquet` | Active | Consolidated `S1` + maintained candidate-signal matrix used by RL and activation research |
+| `xs_insider_deals_raw.parquet` | Active | Raw insider + large-shareholder transaction disclosures |
+| `xs_llm_news_ticker_day.parquet` | Active | Structured LLM ticker-day event/sentiment features |
+| `xs_llm_news_market_daily.parquet` | Active | Dense date-level LLM market narrative features |
+| `xs_open_close_asymmetry.parquet` | Active | Dense ticker-day open/close asymmetry features (`C4`) |
+| `xs_insider_quality_features.parquet` | Active | Dense insider quality / relative-size features (`C5`) |
+| `xs_sector_rotation_daily.parquet` | Active | Sector breadth / intra-sector artifact that still feeds contrarian `C6` |
+| `xs_price_limit_daily.parquet` | Active | Price-limit-touch feature surface (`C7`) |
+| `xs_volume_zscore_daily.parquet` | Active | Abnormal-volume feature surface (`C8`) |
+| `xs_shortterm_reversal.parquet` | Active | Short-term reversal feature surface (`C9`) |
+| `data/features/execution/tradability_daily.parquet` | Active | Execution/liquidity flags used across portfolio, activation, and exit research |
+| `xs_dispersion_regime_daily.parquet` | Active | Dense date-level dispersion regime features |
+| `activation_state_daily.parquet` | Active | Dense date-level selection/activation state surface |
+| `activation_meta_daily.parquet` | Active | Dense date-level selector-efficacy / activation-meta surface |
+| `event_surface_daily.parquet` | Active | Dense ticker-day corporate-event surface for exit-side new-data research |
+| `xs_return_skewness.parquet` | Active | Dense ticker-day return skewness / tail-shape features |
+| `xs_earnings_calendar_daily.parquet` | Active | Dense date-level earnings/reporting calendar features |
+| `xs_news_sentiment_daily.parquet` | Active raw input | Daily keyword-news sentiment base table (sparse) |
+| `sector_classification.parquet` | Active | ICB sector labels for the current HOSE universe |
+| `macro_regime_daily.parquet` | Active | Macro regime features (VIX, yields, macro proxies, news inputs) |
+
+### Legacy / Limited / Superseded Artifacts
+
+| File | Status | Description |
+|------|--------|-------------|
+| `xs_insider_features.parquet` | Superseded | Original rolling insider `C2` matrix; superseded by `xs_insider_quality_features.parquet` |
+| `xs_news_sentiment_rolling.parquet` | Legacy historical | Canonical rolling-news artifact for H96; kept for reproducibility after the rolling-news branch failed |
+| `xs_earnings_quality_daily.parquet` | Limited coverage | Earnings-quality artifact still documented as a 52-ticker subset pending full-universe rebuild |
+| `xs_dividend_calendar.parquet` | Limited coverage | Ex-dividend calendar artifact from the original 52-ticker universe |
+| `xs_fundamentals_daily.parquet` | Limited coverage | Fundamentals artifact from the original 52-ticker universe |
+| `fpt_fundamentals.parquet` | Legacy single-name | FPT-only fundamentals cache kept for the original one-name workflow |
+
+### Archive-only / Rejected Feature Artifacts
+
+| File | Status | Description |
+|------|--------|-------------|
+| `xs_foreign_demand_daily.parquet` | Archive-only | H110 foreign-demand proxy failed the predictive gate |
+| `xs_vn30_rebalancing.parquet` | Archive-only | H114 VN30 rebalancing proximity failed the predictive gate |
 
 ### H93 Variant Probas (historical experiments, not active)
 
@@ -302,7 +520,8 @@ Build the current-year live extension for the canonical `S1` signal without drop
 ## Notes on Data Quality
 
 - **HOSE only** — HNX/UPCOM stocks not included
-- **Prices adjusted** for splits/dividends by VCI
+- **VCI daily prices adjusted** for splits/dividends by VCI
+- **CafeF MatchPrice prices raw** until explicitly normalized by `adjust_cafef_intraday_to_vci.py`
 - **Insider data:** `published_date` (SSC disclosure date) is the safe signal date; `real_end_date` is after-the-fact
 - **News JSONL:** raw titles + bodies; sentiment requires `extract_news_sentiment.py`
 - **CafeF GDCoDong API:** returns both insiders (`CEO_` / `LQ_` prefix) and large shareholders (`CORP_`); filter on `is_insider` column for pure insider signal

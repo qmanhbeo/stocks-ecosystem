@@ -101,15 +101,44 @@ python data_tools/fetch_news_archive.py
 | Data | Reason |
 |------|--------|
 | Historical foreign investor flow (per-ticker, daily) | vnstock only has current-day. F59. |
-| Intraday OHLCV / tick data | vnstock doesn't provide historical intraday |
+| Historical intraday OHLCV / tick data via vnstock | vnstock doesn't provide historical intraday |
 | SSC filing text (structured JSON) | SSC portal is HTML-only |
+
+Open intraday note:
+- CafeF does expose a public historical matched-trade endpoint:
+  - `https://msh-appdata.cafef.vn/rest-api/api/v1/MatchPrice`
+- repo fetcher:
+  - `data_tools/fetch_cafef_intraday.py`
+- repo normalization step:
+  - `data_tools/adjust_cafef_intraday_to_vci.py`
+- this is an open acquisition path, but it is still a source-specific scraper/adapter, not an officially documented bulk research API contract
+- output is kept source-specific by default (`*_1H_CAFEF.parquet`) so it can coexist with other intraday attempts
+- current practical warning:
+  - CafeF session prices are raw source prices
+  - local `1D` VCI prices in this repo are treated as adjusted historical prices
+  - use the daily close factor bridge when cross-day continuity matters:
+    - `price_factor[t] = vci_daily_close[t] / cafef_raw_intraday_last_close[t]`
+    - adjusted intraday `open/high/low/close = raw_cafef_ohlc * price_factor[t]`
+  - `volume` should stay raw unless a separate volume-adjustment contract is proven
+- operational fetch design:
+  - `fetch_cafef_intraday.py` writes complete yearly parts first, then appends them into the final ticker parquet
+  - failed CafeF date requests are retried automatically `2` times after the initial pass before a year is accepted as complete
+
+Tried but failed / limited intraday attempts:
+- `vnstock` / VCI `1H` fetch:
+  - works only from roughly `2023-09-11` onward in current observed behavior
+  - not sufficient for deep historical timing research
+- SSI FastConnect:
+  - official historical intraday endpoint exists
+  - repo fetcher: `data_tools/fetch_ssi_intraday.py`
+  - operationally blocked for the open-data branch because it requires credentials and service registration
 
 ## Timing Research Acquisition Status
 
 Current branch state:
 - event surface v1 exists and is published at `data/features/event_surface_daily.parquet`
 - it failed the predictive gate for continuation / exit timing
-- local intraday data is only `FPT` 1H and is not a usable research surface
+- legacy published local intraday data is only `FPT` 1H; the new CafeF open fetch + VCI adjustment path exists, but coverage/continuity still needs to be validated honestly before reopening timing research
 - local order-book / queue history is absent
 
 Operational consequence:
@@ -130,6 +159,7 @@ Operational consequence:
 ## Notes on Data Quality
 
 - **HOSE only** — HNX/UPCOM not included
-- **Prices adjusted** for splits/dividends by VCI
+- **VCI daily prices adjusted** for splits/dividends by VCI
+- **CafeF MatchPrice prices raw** until explicitly normalized onto the VCI daily backbone
 - **Insider signal date:** use `published_date` (SSC disclosure date) — `real_end_date` is after-the-fact
 - **Ticker identification in news:** parenthetical pattern `(TICKER)` in article titles
