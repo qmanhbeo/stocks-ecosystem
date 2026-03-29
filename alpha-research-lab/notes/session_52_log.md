@@ -93,10 +93,15 @@ This was an honest live paper-trade answer, but it was produced through a one-of
 ## Conclusion
 The official live pipeline is still operationally incomplete, but the session did end with a valid ad hoc paper-trade state for the `2026-03-27` close.
 
-Current reality:
-- the canonical root `VNINDEX` parquet is still not a proper full-history file
-- the official live `S1` artifact is still stale until the canonical pipeline is rerun
-- the live recommendation itself is now known and documented
+Current reality at the end of Session 52:
+- the canonical root `VNINDEX` parquet was still not a proper full-history file
+- the official live `S1` artifact was still stale until the canonical pipeline could be rerun
+- the live recommendation itself was known and documented
+
+Post-session update:
+- root `data/stock/gia_lich_su_VNINDEX_1D.parquet` has since been refreshed back to full history through `2026-03-27`
+- that removes the benchmark file itself as the active blocker
+- the remaining operational question is whether the broader refreshed stock universe is now historically consistent enough for the official live scorer
 
 Date clarification:
 - `2026-03-28` is a Saturday
@@ -114,7 +119,7 @@ A second practical takeaway from this session:
 Start the next session in this order:
 
 1. Record the next market-session result against the paper-trade book: `ANV`, `PTB`, `PTL`, `VSI`, cash `19.57%`
-2. Restore full historical continuity in root `data/stock/`, especially `VNINDEX`
+2. Verify full historical continuity across root `data/stock/`; root `VNINDEX` is now restored, but the rest of the raw surface still needs validation
 3. Verify lookback sufficiency before rerunning any live scorer
 4. Rerun `analysis/h75_2026_holdout.py` against the restored canonical benchmark and refresh the official live `S1` artifact
 5. Persist the ad hoc live-assembly workflow into a real repo script if live paper trades are going to continue

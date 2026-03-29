@@ -63,11 +63,18 @@ Operationally important summary:
 - `C7`, `C12`, `C13`, `C10`, and `C8` show the strongest conditional uplift inside liquidity-opening states
 - `C1` remains sparse and is not part of the promoted dense RL matrix
 - ADV / capacity is parked for the current-account branch, not solved for scale
-- the active next branch is benchmark-first long-only portfolio-choice RL
-- `H151/H152` are parked research hypotheses; the live queue is `H153/H154/H155`
+- the repo is now explicitly split into:
+  - selection alpha = choose the right names
+  - activation alpha = decide when the selector should be on
+- `H157-H162` tested deterministic binary activation and did not beat the always-on `full_library + k5_r5_eq` selector
+- the active next branch has returned to `H151/H152`
+- activation alpha is parked unless the design changes materially
+- the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
 - `H154` first ladder is complete: `S1`-only RL won on seed `1208`, conditioned sub-core is mixed,
-  and full-matrix RL failed; `H155` multi-seed robustness is now the active next step
+  and full-matrix RL failed
+- `H155` is now complete and mixed: `S1`-only RL had two strong wins and two failures across seeds,
+  so RL is exploratory again and the active queue returns to `H151/H152`
 
 Do not maintain a partial summary table here unless you update it together with `notes/signal_library.md`.
 
@@ -133,6 +140,12 @@ Read these first when you want the minimal result.
 - Portfolio local liquidity-gate refinement: `artifacts/run_summaries/latest_portfolio_local_liquidity_gate_refinement.json`
 - Portfolio soft activation score: `artifacts/run_summaries/latest_portfolio_soft_activation_score.json`
 - Portfolio conditional alpha decomposition: `artifacts/run_summaries/latest_portfolio_conditional_alpha_decomposition.json`
+- Portfolio activation opportunity density: `artifacts/run_summaries/latest_portfolio_activation_opportunity_density.json`
+- Portfolio activation tradability breadth: `artifacts/run_summaries/latest_portfolio_activation_tradability_breadth.json`
+- Portfolio activation market regime: `artifacts/run_summaries/latest_portfolio_activation_market_regime.json`
+- Portfolio activation breadth / dispersion: `artifacts/run_summaries/latest_portfolio_activation_breadth_dispersion.json`
+- Portfolio activation recent efficacy: `artifacts/run_summaries/latest_portfolio_activation_recent_efficacy.json`
+- Portfolio activation composite: `artifacts/run_summaries/latest_portfolio_activation_composite.json`
 
 Execution/tradability producer:
 
@@ -167,6 +180,13 @@ Mode-specific durable outputs:
 - `analysis/h148_local_liquidity_gate_refinement.py`: `artifacts/run_summaries/latest_portfolio_local_liquidity_gate_refinement.json` plus local-gate refinement outputs under `artifacts/portfolio_baselines/`
 - `analysis/h149_soft_activation_score.py`: `artifacts/run_summaries/latest_portfolio_soft_activation_score.json` plus soft-activation outputs under `artifacts/portfolio_baselines/`
 - `analysis/h150_conditional_alpha_decomposition.py`: `artifacts/run_summaries/latest_portfolio_conditional_alpha_decomposition.json` plus conditional-IC tables under `artifacts/portfolio_baselines/`
+- `data_tools/build_activation_state_features.py`: `data/features/activation_state_daily.parquet`
+- `analysis/h157_opportunity_density_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_opportunity_density.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
+- `analysis/h158_tradability_breadth_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_tradability_breadth.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
+- `analysis/h159_market_regime_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_market_regime.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
+- `analysis/h160_breadth_dispersion_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_breadth_dispersion.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
+- `analysis/h161_recent_efficacy_cooldown_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_recent_efficacy.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
+- `analysis/h162_composite_activation_score.py`: `artifacts/run_summaries/latest_portfolio_activation_composite.json` plus activation-gate outputs under `artifacts/portfolio_baselines/`
 
 For any new analysis script, keep the large output wherever it naturally belongs, but also write
 one compact summary JSON under `artifacts/run_summaries/`.

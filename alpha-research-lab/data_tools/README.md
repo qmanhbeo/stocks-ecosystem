@@ -188,6 +188,12 @@ Build rolling 5d/30d insider signal feature matrix from raw insider deals.
 Build composite macro regime features from FX/commodity/news data.
 - **Output:** `data/features/macro_regime_daily.parquet`
 
+### `build_activation_state_features.py`
+Build the compact date-level activation surface used to test selector timing overlays.
+- **Requires:** `xs_rl_signal_matrix.parquet`, `tradability_daily.parquet`, `xs_dispersion_regime_daily.parquet`, `macro_regime_daily.parquet`
+- **Output:** `data/features/activation_state_daily.parquet`
+- **Usage:** `python data_tools/build_activation_state_features.py`
+
 ---
 
 ## Feature Files Reference
@@ -203,6 +209,7 @@ Build composite macro regime features from FX/commodity/news data.
 | `xs_llm_news_market_daily.parquet` | H98 market-daily | Dense date-level LLM market narrative features | ~2.7k |
 | `xs_open_close_asymmetry.parquet` | H100 | Dense ticker-day open/close asymmetry features | 826k |
 | `xs_dispersion_regime_daily.parquet` | H101 | Dense date-level dispersion regime features | ~2.7k |
+| `activation_state_daily.parquet` | H157-H162 | Dense date-level selection/activation state surface | ~2.7k |
 | `xs_return_skewness.parquet` | H103 | Dense ticker-day return skewness/tail-shape features | 826k |
 | `xs_earnings_calendar_daily.parquet` | H104 | Dense date-level earnings/reporting calendar features | ~2.7k |
 | `xs_news_sentiment_daily.parquet` | **C1 raw** | Daily keyword sentiment (sparse) | ~29k |

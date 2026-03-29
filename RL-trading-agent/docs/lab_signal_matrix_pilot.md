@@ -194,11 +194,38 @@ Interpretation:
 - conditioned sub-core is better than its deterministic comparator but still below the benchmark
 - the full matrix should not get more compute without a design change
 
-## Active next step
+## Post-H155 branch decision
 
-Run `H155` as multi-seed robustness on `pilot_portfolio_s1_seed1208` first.
+Do not run more RL ladder seeds by default.
 
-Optional:
-- run a smaller confirmatory seed sweep on `pilot_portfolio_subcore_seed1208`
+Current state:
+- `S1`-only RL is interesting but unstable
+- the full matrix remains deprioritized
+- the conditioned sub-core remains secondary
 
-Do not escalate the full-matrix run until the source of its churn / underperformance is understood.
+If RL is revisited, do it only under an explicit design-change branch:
+- reward redesign
+- observation scaling / normalization
+- action or turnover control
+
+## Observed H155 result (`2026-03-29`)
+
+`S1`-only multi-seed sweep:
+- `1208`: `+40.30%`
+- `1209`: `+43.44%`
+- `1210`: `-1.06%`
+- `1211`: `-17.98%`
+
+Aggregate:
+- mean return `+16.18%`
+- benchmark wins `2 / 4`
+- deterministic `s1_only` wins `3 / 4`
+
+Verdict:
+- `S1`-only RL is interesting
+- `S1`-only RL is not stable enough yet
+- RL should not be treated as the validated main branch
+
+Current branch decision:
+- return the active research queue to the parked long-only alpha branch
+- keep RL exploratory until a deliberate design-change pass is opened

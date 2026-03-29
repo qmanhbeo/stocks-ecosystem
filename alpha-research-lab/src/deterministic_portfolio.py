@@ -198,7 +198,7 @@ def load_or_build_tradability_panel(
             "can_buy_next_open",
             "can_sell_next_open",
         ]:
-            merged[column] = merged[column].fillna(False).astype(bool)
+            merged[column] = merged[column].where(pd.notna(merged[column]), False).astype(bool)
         return merged, "artifact"
 
     parts: list[pd.DataFrame] = []
@@ -717,6 +717,7 @@ def simulate_strategy(
     daily_buy_adv_participation: float = 0.0,
     min_deployable_weight: float = 0.0,
     capture_blotter: bool = False,
+    activation_mask: np.ndarray | None = None,
 ) -> StrategyRunResult:
     if top_k <= 0:
         raise ValueError("top_k must be > 0")
@@ -752,6 +753,15 @@ def simulate_strategy(
                 "entry_allowed_matrix must match availability_matrix shape "
                 f"{availability_matrix.shape}; got {entry_allowed.shape}"
             )
+    if activation_mask is None:
+        activation_allowed = np.ones(n_dates, dtype=bool)
+    else:
+        activation_allowed = np.asarray(activation_mask, dtype=bool)
+        if activation_allowed.shape != (n_dates,):
+            raise ValueError(
+                "activation_mask must match dates shape "
+                f"({n_dates},); got {activation_allowed.shape}"
+            )
 
     weights = np.zeros(n_tickers, dtype=np.float64)
     holding_ages = np.zeros(n_tickers, dtype=np.int64)
@@ -786,6 +796,7 @@ def simulate_strategy(
         do_rebalance = bool(
             drifted_weights.sum() <= 1e-12 or (step - last_rebalance_step) >= rebalance_every
         )
+        activation_on = bool(activation_allowed[step])
         scores = score_matrix[step]
         adv20_for_execution = adv20_matrix[step]
         capacity_weights = compute_capacity_weight_limits(
@@ -814,23 +825,29 @@ def simulate_strategy(
 
         selected_indices: list[int] = []
         desired_weights = drifted_weights.copy()
-        if do_rebalance and np.any(eligible):
-            ranked_pool = np.flatnonzero(eligible)
-            ranked_scores = scores[ranked_pool]
-            order = np.lexsort((ranked_pool, -ranked_scores))
-            selection_cap = int(top_k)
-            if max_names_if_liquidity_thin is not None and len(ranked_pool) < top_k:
-                selection_cap = min(selection_cap, int(max_names_if_liquidity_thin))
-            selected_indices = ranked_pool[order[: min(selection_cap, len(order))]].tolist()
-            if selected_indices:
-                desired_weights = compute_selected_target_weights(
-                    scores,
-                    selected_indices,
-                    weighting=weighting,
-                )
-                last_rebalance_step = step
+        if do_rebalance:
+            if activation_on and np.any(eligible):
+                ranked_pool = np.flatnonzero(eligible)
+                ranked_scores = scores[ranked_pool]
+                order = np.lexsort((ranked_pool, -ranked_scores))
+                selection_cap = int(top_k)
+                if max_names_if_liquidity_thin is not None and len(ranked_pool) < top_k:
+                    selection_cap = min(selection_cap, int(max_names_if_liquidity_thin))
+                selected_indices = ranked_pool[order[: min(selection_cap, len(order))]].tolist()
+                if selected_indices:
+                    desired_weights = compute_selected_target_weights(
+                        scores,
+                        selected_indices,
+                        weighting=weighting,
+                    )
+                    last_rebalance_step = step
+                else:
+                    desired_weights = np.zeros(n_tickers, dtype=np.float64)
+            elif activation_on:
+                desired_weights = np.zeros(n_tickers, dtype=np.float64)
             else:
                 desired_weights = np.zeros(n_tickers, dtype=np.float64)
+                last_rebalance_step = step
             pending_entry_target = np.zeros(n_tickers, dtype=np.float64)
             pending_entry_days_left = np.zeros(n_tickers, dtype=np.int64)
         elif entry_slice_days > 1 and np.any(pending_entry_days_left > 0):
@@ -937,6 +954,8 @@ def simulate_strategy(
                 "eligible_universe_size": int(np.count_nonzero(eligible)),
                 "selected_count": int(len(selected_indices) if do_rebalance else np.count_nonzero(weights > 1e-12)),
                 "pending_entry_count": int(np.count_nonzero(pending_entry_days_left > 0)),
+                "rebalance_triggered": bool(do_rebalance),
+                "activation_on": bool(activation_on),
                 "weighting_rule": weighting,
                 "requested_tickers": [tickers[idx] for idx in selected_indices],
                 "held_tickers": [tickers[idx] for idx in np.flatnonzero(active_mask)],

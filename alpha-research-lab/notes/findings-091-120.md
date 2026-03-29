@@ -807,3 +807,93 @@ But it does change the immediate queue:
 - conditioned sub-core is optional secondary validation
 - full-matrix RL should be deprioritized until there is a concrete explanation for the churn /
   instability caused by the larger state
+
+---
+## F116: `S1`-Only Portfolio RL Is Interesting but Not Stable Enough to Promote; H155 Produced Two Strong Wins and Two Failures Across Seeds (2026-03-29, Session 56)
+
+Session 56 ran the required `H155` multi-seed robustness pass on the only promising RL setup from
+Session 55:
+- `S1`-only portfolio-choice RL
+- same universe size `20`
+- same top-k `3`
+- same test split `2025-06-12` to `2025-12-31`
+- same PPO `mlp` configuration
+
+Reference lines:
+- deterministic `s1_only`: **-2.50%**
+- equal-weight universe benchmark: **+31.74%**
+
+Held-out RL seed results:
+
+| Seed | Test Return | Sharpe | Max DD | Rebalances | Reading |
+|---|---:|---:|---:|---:|---|
+| `1208` | **+40.30%** | **2.72** | **-8.55%** | **1** | strong win |
+| `1209` | **+43.44%** | **1.89** | **-21.17%** | **41** | strong win |
+| `1210` | **-1.06%** | **0.12** | **-30.59%** | **86** | weak fail |
+| `1211` | **-17.98%** | **-1.10** | **-36.04%** | **88** | clear fail |
+
+Aggregate:
+- mean RL return: **+16.18%**
+- median RL return: **+19.62%**
+- wins vs equal-weight benchmark: **2 / 4**
+- wins vs deterministic `s1_only`: **3 / 4**
+- positive-return seeds: **2 / 4**
+
+**Key finding:** `S1`-only RL can clearly extract useful behavior on some seeds, but it does not yet
+meet the stability bar required to make RL the active primary branch.
+
+This is not a “nothing there” result. It is a **high-variance** result:
+- the branch is interesting
+- the branch is not dependable enough yet
+
+**Implication:** downgrade RL to exploratory status for now. The active repo branch should return to:
+- `H151`: narrow tradability-conditioned composite
+- `H152`: tradability-conditioned alpha search
+
+If RL is revisited later, it should be under a deliberate design-change branch:
+- reward redesign
+- observation scaling / normalization
+- action or turnover control
+
+## F117: The Repo Must Separate Selection Alpha From Activation Alpha; Current Evidence Says the Library Is Stronger at Choosing Names Than at Deciding When to Turn the Selector On (2026-03-29, Session 57)
+
+Session 57 formalized the problem into two layers:
+- **selection alpha**: choose the right names cross-sectionally
+- **activation alpha**: decide when the selector should be on, off, or later partially on
+
+This split was already implicit in the results:
+- `full_library + k5_r5_eq` was a strong always-on long-only selector
+- `S1`-only RL could sometimes make a lot of money, but with high seed variance
+- that pattern suggested the repo may already know **what** to own better than it knows **when** to have exposure
+
+The lab now treats that split as an explicit architectural rule, not a vague interpretation.
+
+**Implication:** future work should say clearly which layer it is attacking. Do not blur selection-side alpha search with activation overlays.
+
+## F118: Deterministic Binary On/Off Activation Did Not Beat the Always-On `full_library + k5_r5_eq` Selector; Activation Is a Tested Branch, Not an Open Assumption (2026-03-29, Session 57)
+
+Session 57 built the date-level activation artifact `data/features/activation_state_daily.parquet` and ran the full deterministic activation wave:
+- `H157`: opportunity density gate
+- `H158`: tradability breadth gate
+- `H159`: market regime gate
+- `H160`: breadth / dispersion gate
+- `H161`: recent efficacy / cooldown gate
+- `H162`: composite activation score
+
+Reference line:
+- always-on `full_library + k5_r5_eq`: **+769.71%** total, **+346.40%** relative vs VNINDEX, information ratio **0.81**, max DD **-34.04%**
+
+Best non-trivial activation candidates on the full-library selector were all inferior:
+- `H157` `opp__spread_q70`: **+652.12%** total, **+286.05%** relative, IR **0.71**, max DD **-26.51%**
+- `H159` `mkt__credit_risk_on_ge2`: **+614.63%** total, **+266.81%** relative, IR **0.68**, max DD **-28.32%**
+- `H161` `recent__prev_cycle_gt_m02`: **+706.77%** total, **+314.10%** relative, IR **0.76**, max DD **-38.96%**
+
+None of them beat the always-on selector on return. None beat it on information ratio. The recent-efficacy gate was the nearest miss, but it still underperformed and actually worsened drawdown.
+
+Secondary result:
+- several activation gates improved the weaker `S1`-only selector materially
+- but none of those variants overtook the always-on `full_library` selector
+
+**Key finding:** deterministic binary activation is now a **tested negative** for the current champion selector.
+
+**Implication:** the active branch should return to selection-side work (`H151/H152`). If activation is revisited later, it should not begin with another binary on/off gate sweep; it needs a materially different design, such as partial exposure sizing or a more structural timing model.

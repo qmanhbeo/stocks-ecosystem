@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_55_log.md` for the latest full session detail.
+Use `notes/session_57_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 55 H154 first pilot ladder completed (ADV / capacity still parked for the current-account branch, not solved; `S1`-only RL strongest on seed 1208; H155 multi-seed next; docs updated; 2026-03-29)
+**Session status:** Session 57 H157-H162 completed (selection alpha vs activation alpha split is now explicit; deterministic binary activation did not beat the always-on `full_library + k5_r5_eq` selector; ADV / capacity still parked for the current-account branch; RL remains exploratory; docs updated; 2026-03-29)
 
 ### Start next session here
 
@@ -18,12 +18,46 @@ Use `notes/session_55_log.md` for the latest full session detail.
    - `VSI`
    - cash `19.57%`
 2. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
-3. If a new live recommendation is needed, restore canonical full-history continuity in root `data/stock/` first, especially `VNINDEX`.
+3. If a new live recommendation is needed, verify canonical full-history continuity across root `data/stock/` first. Root `VNINDEX` is now restored through `2026-03-27`, but broader universe consistency still needs to be treated as a prerequisite.
 4. Rerun the official live `S1` scorer only after lookback sufficiency is verified.
-5. Resume research on the RL branch in this order:
-   - `H155`: multi-seed robustness on `pilot_portfolio_s1_seed1208`
-   - optional confirmatory multi-seed on `pilot_portfolio_subcore_seed1208`
-   - do not spend more compute on `pilot_portfolio_labmatrix_seed1208` unless the state/reward design changes
+5. Keep the architecture split clear:
+   - selection alpha = choose the right names
+   - activation alpha = decide whether the selector should be on
+   - Session 57 says selection alpha is strong, but binary on/off activation is not yet an edge
+6. Resume the active research queue in this order:
+   - `H151`: narrow tradability-conditioned composite
+   - `H152`: tradability-conditioned alpha search
+   - activation alpha: parked unless the design changes materially (for example partial exposure sizing instead of binary on/off)
+   - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened
+
+### Session 57 activation-alpha decision
+
+- The repo now treats the problem as two layers:
+  - **selection alpha**: choose the right names
+  - **activation alpha**: decide when the selector should be on or off
+- Session 57 built the canonical activation-state artifact:
+  - `data/features/activation_state_daily.parquet`
+- H157-H162 tested deterministic binary activation overlays on the frozen selectors:
+  - `full_library + k5_r5_eq`
+  - `S1`-only `k5_r5_eq`
+- Main result:
+  - **no deterministic activation gate beat the always-on `full_library + k5_r5_eq` selector**
+  - always-on `full_library + k5_r5_eq` remains the current long-only champion:
+    - `+769.71%` total
+    - `+346.40%` relative vs VNINDEX
+    - information ratio `0.81`
+    - max drawdown `-34.04%`
+- Best near-misses:
+  - `H157` opportunity-density `opp__spread_q70`: improved drawdown to `-26.51%` but cut relative return to `+286.05%`
+  - `H159` market regime `mkt__credit_risk_on_ge2`: `+266.81%` relative with lower max DD `-28.32%`, but still below the always-on selector
+  - `H161` recent efficacy `recent__prev_cycle_gt_m02`: `+314.10%` relative, but still below the always-on selector and with **worse** max DD `-38.96%`
+- Secondary result:
+  - several activation gates materially improved the weaker `S1`-only selector
+  - but none of them overtook the always-on `full_library` selector
+- Branch decision:
+  - activation alpha is **not solved**
+  - deterministic binary on/off gating is now a tested branch, not an open assumption
+  - the active queue returns to selection-side work (`H151/H152`)
 
 ### Session 53 strategic decision
 
@@ -97,6 +131,78 @@ Use `notes/session_55_log.md` for the latest full session detail.
   - treat conditioned sub-core as optional secondary validation
   - do not promote the richer feature sets without a stronger explanation for the churn / underperformance
 
+### Session 56 H155 multi-seed update
+
+- `H155` ran the required `S1`-only seed sweep on:
+  - `1208`
+  - `1209`
+  - `1210`
+  - `1211`
+- Held-out RL returns on the same `2025-06-12` to `2025-12-31` test split:
+  - `1208`: `+40.30%`, Sharpe `2.72`, max DD `-8.55%`, rebalances `1`
+  - `1209`: `+43.44%`, Sharpe `1.89`, max DD `-21.17%`, rebalances `41`
+  - `1210`: `-1.06%`, Sharpe `0.12`, max DD `-30.59%`, rebalances `86`
+  - `1211`: `-17.98%`, Sharpe `-1.10`, max DD `-36.04%`, rebalances `88`
+- Reference lines:
+  - deterministic `s1_only`: `-2.50%`
+  - equal-weight universe benchmark: `+31.74%`
+- Aggregate read:
+  - mean RL return: `+16.18%`
+  - median RL return: `+19.62%`
+  - benchmark wins: `2 / 4`
+  - deterministic wins: `3 / 4`
+  - positive-return seeds: `2 / 4`
+- Practical reading:
+  - `S1`-only RL can clearly extract useful behavior on some seeds
+  - but it is not stable enough to promote as the main branch
+  - the branch is now exploratory, not primary
+  - optional conditioned sub-core seed sweeps were not run because the `S1` branch already failed the stability gate
+
+### Session 57 activation-alpha wave
+
+- `H157`: opportunity-density gates
+  - no gate beat always-on `full_library`
+  - best real gate: `opp__spread_q70`
+    - `+652.12%` total
+    - `+286.05%` relative
+    - information ratio `0.71`
+    - max DD `-26.51%`
+- `H158`: tradability-breadth gates
+  - no non-trivial gate beat always-on `full_library`
+  - `trad__top10_buyable_ge5` matched always-on exactly, which means it was effectively always true
+  - strongest real uplift appeared on the weaker `S1` selector, not on the champion
+- `H159`: market-regime gates
+  - best full-library gate: `mkt__credit_risk_on_ge2`
+    - `+614.63%` total
+    - `+266.81%` relative
+    - information ratio `0.68`
+    - max DD `-28.32%`
+  - still below always-on `full_library`
+- `H160`: breadth/dispersion gates
+  - best full-library gate: `bd__disp_q60`
+    - `+378.70%` total
+    - `+145.71%` relative
+    - information ratio `0.53`
+  - no activation win
+- `H161`: recent-efficacy/cooldown gates
+  - nearest full-library miss: `recent__prev_cycle_gt_m02`
+    - `+706.77%` total
+    - `+314.10%` relative
+    - information ratio `0.76`
+    - max DD `-38.96%`
+  - this is the closest branch, but still not an improvement over always-on
+- `H162`: composite activation score
+  - strongest result was on the weaker `S1` selector:
+    - `comp__score_q70`
+    - `+209.28%` total
+    - `+58.75%` relative
+    - max DD `-16.68%`
+  - still far below always-on `full_library`
+- Practical read:
+  - the repo is stronger at **selection alpha** than **activation alpha**
+  - if activation is revisited later, it should not start from another binary on/off gate sweep
+  - the next honest step is back to selection-side work
+
 ### New reality check after Session 51
 
 **Session 52 operational blocker and workaround**
@@ -115,6 +221,10 @@ Use `notes/session_55_log.md` for the latest full session detail.
 - Practical consequence:
   - the **official** live pipeline is still not restored end-to-end
   - but an **ad hoc honest paper-trade state for the 2026-03-27 close was produced**
+- Historical note:
+  - during Session 52, root `VNINDEX` was truncated and had to be recovered from a local backup
+  - after Session 55, root `data/stock/gia_lich_su_VNINDEX_1D.parquet` has been refreshed back to full history through `2026-03-27`
+  - this removes the benchmark file itself as the active blocker, but it does not prove the full raw stock surface is now historically consistent enough for official live scoring
 - Date clarification:
   - `2026-03-28` is a Saturday
   - the latest actionable market close in the refreshed data is `2026-03-27`
@@ -606,6 +716,8 @@ Use `notes/session_55_log.md` for the latest full session detail.
 | 53 | 2026-03-29 | ADV / capacity explicitly parked for the current-account branch; RL becomes the active next research branch with deterministic benchmark-first gating | H93 + C4-C14 |
 | 54 | 2026-03-29 | H153 same-universe deterministic comparator implemented and run; conditioned sub-core best in the RL universe but still below equal-weight benchmark; H154 smoke passed | H93 + C4-C14 |
 | 55 | 2026-03-29 | H154 first real pilot ladder completed: `S1`-only RL beats deterministic comparator and equal-weight benchmark on seed 1208; conditioned sub-core is mixed; full matrix fails cleanly | H93 + C4-C14 |
+| 56 | 2026-03-29 | H155 multi-seed robustness shows `S1`-only RL is high-variance: 2 strong wins, 2 failures; RL remains exploratory and the active branch returns to `H151/H152` | H93 + C4-C14 |
+| 57 | 2026-03-29 | H157-H162 activation-alpha wave completed: binary on/off activation does not beat always-on `full_library + k5_r5_eq`; selection alpha vs activation alpha split is now explicit; active branch returns to `H151/H152` | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 
@@ -969,22 +1081,25 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - historical verdict from Session 48: do not add more ML or RL complexity until capacity is addressed honestly
   - superseded operationally by Session 53 for the current-account branch only
 
-### Next queue after Session 55 (in order)
+### Next queue after Session 57 (in order)
 
-1. **H155: multi-seed robustness and evaluation**
-   - rerun `pilot_portfolio_s1_seed1208` on at least 3 seeds
-   - use the existing H153 deterministic comparator and the equal-weight universe benchmark as reference
-   - promote RL only if the `S1`-only win survives seed variation
-2. **Optional secondary check**
-   - rerun `pilot_portfolio_subcore_seed1208` on a smaller seed set only if extra compute is available
-   - objective is to test whether its first-seed improvement over the deterministic sub-core is real or noise
-3. **Design diagnosis only after H155**
-   - if `S1` remains best, inspect why extra features degrade the policy
-   - likely targets: observation scaling, reward / turnover interaction, or action instability from larger state surfaces
-4. **Parked, not deleted**
-   - `H151`: narrow tradability-conditioned composite
-   - `H152`: tradability-conditioned alpha search
-   - revisit only if RL fails cleanly or the explicit goal returns to signal discovery
+1. **H151: narrow tradability-conditioned composite**
+   - this is now the active **selection-alpha** branch
+   - use the H150 surviving sub-core as the starting signal set
+   - do not entangle it with another activation overlay while the selector itself is being rebuilt
+2. **H152: tradability-conditioned alpha search**
+   - only after the narrow composite work is defined cleanly
+   - keep the long-only, anti-synthetic rule unchanged
+3. **Activation alpha: parked**
+   - Session 57 tested binary on/off activation across H157-H162
+   - do not reopen this as the active branch unless the design changes materially
+   - if revisited later, prefer partial exposure sizing or a more structural timing model over another binary gate sweep
+4. **RL branch: exploratory only**
+   - keep the H155 artifact as evidence that RL can work sometimes
+   - do not spend more compute on new RL ladders unless one of these changes first:
+     - reward design
+     - observation scaling / normalization
+     - action or turnover control
 
 ### Remaining blocked paths
 - **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)

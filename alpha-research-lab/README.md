@@ -59,6 +59,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - No research data is duplicated inside `alpha-research-lab/`
 - The lab publishes the consolidated RL feature surface at `data/features/xs_rl_signal_matrix.parquet`
 - The lab publishes the shared execution tradability artifact at `data/features/execution/tradability_daily.parquet`
+- The lab publishes the date-level activation surface at `data/features/activation_state_daily.parquet`
 - RL consumes that matrix through `../RL-trading-agent` via `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 - Execution reality is shared with RL via `../docs/execution_reality.md` and `../shared-market-rules/`
 
@@ -76,17 +77,23 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 
 - top-5 equal-weight
 - rebalance every 5 signal days
-- `+769.49%` total on the honest `2019-2025` holdout
-- `+346.29%` relative vs VNINDEX
+- `+769.71%` total on the honest `2019-2025` holdout
+- `+346.40%` relative vs VNINDEX
 - not yet retail-deployable under the explicit capacity/tradability gate
 
 ## Current Active Branch
 
 - Keep the deterministic paper trade running on `full_library + k5_r5_eq`
 - Treat ADV / capacity as parked for the current-account branch, not solved
-- Active next research branch: long-only portfolio-choice RL
-- RL must be benchmarked against a same-universe deterministic top-k comparator before interpretation
-- Previously planned tradability-conditioned alpha work (`H151/H152`) is parked, not deleted
+- Explicitly split the problem into two layers:
+  - selection alpha = choose the right names
+  - activation alpha = decide when the selector should be on
+- Session 57 tested deterministic binary activation (`H157-H162`) and did **not** beat the always-on `full_library + k5_r5_eq` selector
+- Active next research branch is back to selection-side work:
+  - `H151`: narrow tradability-conditioned composite
+  - `H152`: tradability-conditioned alpha search
+- Activation alpha is now a parked branch until there is a materially different design, such as partial exposure sizing rather than binary on/off gating
+- RL remains exploratory only
 
 ## Parked Historical Execution Benchmark
 
@@ -132,6 +139,13 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h148_local_liquidity_gate_refinement.py`: narrow H145-neighborhood gate refinement only
 - `analysis/h149_soft_activation_score.py`: softer liquidity-opening activation scores on top of the H145 score family
 - `analysis/h150_conditional_alpha_decomposition.py`: per-signal conditional IC decomposition inside tradable states
+- `data_tools/build_activation_state_features.py`: dense date-level activation-state artifact for selector timing experiments
+- `analysis/h157_opportunity_density_gate.py`: selector-confidence activation gates on top of the frozen long-only selector
+- `analysis/h158_tradability_breadth_gate.py`: buyability / liquidity-breadth activation gates
+- `analysis/h159_market_regime_gate.py`: benchmark / macro regime activation gates
+- `analysis/h160_breadth_dispersion_gate.py`: cross-sectional breadth / dispersion activation gates
+- `analysis/h161_recent_efficacy_cooldown_gate.py`: recent-selector-efficacy cooldown gates
+- `analysis/h162_composite_activation_score.py`: interpretable composite activation score
 
 ## Live Paper-Trade Prerequisite
 
@@ -166,6 +180,12 @@ Main experiment runners write compact JSON summaries to `artifacts/run_summaries
 - Portfolio local liquidity-gate refinement: `latest_portfolio_local_liquidity_gate_refinement.json`
 - Portfolio soft activation score: `latest_portfolio_soft_activation_score.json`
 - Portfolio conditional alpha decomposition: `latest_portfolio_conditional_alpha_decomposition.json`
+- Portfolio activation opportunity density: `latest_portfolio_activation_opportunity_density.json`
+- Portfolio activation tradability breadth: `latest_portfolio_activation_tradability_breadth.json`
+- Portfolio activation market regime: `latest_portfolio_activation_market_regime.json`
+- Portfolio activation breadth / dispersion: `latest_portfolio_activation_breadth_dispersion.json`
+- Portfolio activation recent efficacy: `latest_portfolio_activation_recent_efficacy.json`
+- Portfolio activation composite: `latest_portfolio_activation_composite.json`
 
 Large daily portfolio baseline outputs are written under `artifacts/portfolio_baselines/`.
 
