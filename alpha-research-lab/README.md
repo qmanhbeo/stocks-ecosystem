@@ -114,11 +114,19 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
 
 ## Current Active Branch
 
-- Keep the deterministic paper trade running on `full_library + k5_r5_eq`
+- Keep the deterministic paper trade / live scoreboard running on the frozen sticky branch:
+  - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
 - Treat ADV / capacity as parked for the current-account branch, not solved
 - Explicitly split the problem into two layers:
   - selection alpha = choose the right names
   - activation alpha = decide when the selector should be on
+- Run the repo in two tracks:
+  - live track: freeze the sticky branch and monitor it forward only
+  - research track: reopen alpha discovery under the locked protocol
+    - dev `2015-2022`
+    - validation `2023-2024`
+    - one-shot confirmation `2025`
+    - forward lockbox `2026+`
 - Session 57 tested deterministic binary activation (`H157-H162`) and did **not** beat the always-on `full_library + k5_r5_eq` selector
 - Session 58 tested materially different activation designs (`H163-H174`) and found the first real winner:
   - `H170` smoothed recent selector efficacy
@@ -157,11 +165,17 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
   - `H192A`: parity passed; the complex historical winner is reproducible
   - `H192B`: recent live state on the complex winner was mixed, not trivially all-cash
   - `H193`: pseudo-live ladder rejected the complex winner and rolled the active live branch back to sticky
-- Active next research branch is now:
-  - keep the live forward scoreboard running on the rollback sticky branch
-  - if sticky keeps beating sticky always-on forward, monitor only
-  - if sticky falls behind sticky always-on for `>= 2` completed cycles, rerun parity first and then choose between reopening `H194/H195` or abandoning local activation tuning
-- Selection-side work (`H151/H152`) remains parked behind the operational activation branch
+- Session 66 then reopened offline alpha discovery without changing the live branch:
+  - `H151`: the H150-derived narrow composites did **not** beat the always-on `full_library` selector baseline
+  - `H152`: four new tradability-conditioned signals passed the dev standalone gate inside `liq_open_basic`, but none showed naive always-on selector relevance
+- Active next branch is now dual-track:
+  - live track:
+    - keep the live forward scoreboard running on the rollback sticky branch
+    - if sticky keeps beating sticky always-on forward, monitor only
+    - if sticky falls behind sticky always-on for `>= 2` completed cycles, rerun parity first and then choose between reopening `H194/H195` or abandoning local activation tuning
+  - research track:
+    - `H196`: additive bakeoff for the strongest `H152` atoms on top of the selector backbone
+    - `H197`: second-wave tradability-conditioned signal search if `H196` fails
 - RL remains exploratory only
 
 ## Parked Historical Execution Benchmark
@@ -239,6 +253,8 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h193_pseudo_live_robustness_ladder.py`: expanding-train / next-year ladder for sticky and blocked-buy activation variants
 - `analysis/h194_blocked_buy_sector_recalibration.py`: blocked-buy + sector-cap recalibration family, only if the blocked-buy branch is intentionally reopened
 - `analysis/h195_blocked_buy_hysteresis.py`: blocked-buy hysteresis family, only if the blocked-buy branch is intentionally reopened
+- `analysis/h151_tradability_conditioned_composite_bakeoff.py`: locked-protocol bakeoff for the H150-derived narrow sub-core composites
+- `analysis/h152_tradability_conditioned_signal_search.py`: locked-protocol tradable-state signal search with standalone gates plus naive selector relevance
 
 ## Live Paper-Trade Prerequisite
 

@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_65_log.md` for the latest full session detail.
+Use `notes/session_66_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 65 completed the activation defense-vs-overfit branch (`H192A-H193`) and changed the live branch decision. The complex historical winner `blocked5<=q80 + sector_cap_3` is reproducible, but it loses the train-only pseudo-live ladder to the simpler sticky baseline. The active live branch is now rolled back to `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
+**Session status:** Session 66 reopened offline alpha discovery without changing the live branch. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. `H151` failed to find a better narrow selector inside the existing library, and `H152` found new tradable-state candidate atoms but no promoted selector. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
 
 ### Start next session here
 
@@ -16,13 +16,16 @@ Use `notes/session_65_log.md` for the latest full session detail.
      - held names: `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
      - cash `0.00%`
    - current activation state: `ON`
-2. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
-3. Treat the live branch as operationally current:
+2. Keep the live sticky branch frozen:
+   - no parameter changes on `2026+`
+   - only update `H179/H183` and record completed forward cycles
+3. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
+4. Treat the live branch as operationally current:
    - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-27`
    - `data/features/activation_state_daily.parquet` is now current through `2026-03-27`
    - `data/features/activation_meta_daily.parquet` is now current through `2026-03-27`
    - `H179` no longer reports a stale matrix
-4. Keep the architecture split and the branch decision clear:
+5. Keep the architecture split and the branch decision clear:
    - historical max-return system:
      - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked5_q80 + sector_cap_3`
      - `+597.09%` relative vs VNINDEX, IR `1.0093`
@@ -30,7 +33,7 @@ Use `notes/session_65_log.md` for the latest full session detail.
      - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
      - it won the train-only pseudo-live ladder over `2023-2025`
      - it is the rule currently driving `H179/H183`
-5. Session 65 decision tree outcome:
+6. Session 65 decision tree outcome:
    - `H192A`: **PASS**
      - the complex `blocked5<=q80 + sector_cap_3` winner is reproducible
      - historical reference metrics match exactly
@@ -56,29 +59,51 @@ Use `notes/session_65_log.md` for the latest full session detail.
      - branch decision:
        - rollback the active live branch to sticky
        - do **not** run `H194/H195` on the failed blocked-buy family unless the branch is intentionally reopened later
-6. Run the next branch in this exact order:
-   - `H192`: keep the live scoreboard running, but now on the rollback sticky branch.
-     Hypothesis: the sticky activation branch is live-valid only if it keeps beating sticky always-on forward.
-   - If sticky stays ahead of sticky always-on for at least `2` additional completed rebalance cycles:
-     - keep monitoring only
-     - do not reopen blocked-buy family work yet
-   - If sticky falls behind sticky always-on over `>= 2` completed cycles:
-     - rerun `H192A` to confirm parity has not drifted
-     - then choose one branch only:
-       - reopen `H194/H195` if the problem is clearly activation-local again
-       - otherwise stop local activation tuning and move to `H151/H152`
-7. Keep the architecture split clear:
+7. Session 66 selection-side first pass:
+   - locked protocol is now codified in code:
+     - dev `2015-2022`
+     - validation `2023-2024`
+     - one-shot confirmation `2025`
+     - forward lockbox `2026+`
+   - `H151`: **FAIL**
+     - no existing-signal tradability-conditioned composite beat the always-on `full_library` selector baseline on validation
+     - no promoted candidate
+   - `H152`: **PARTIAL**
+     - dev-pass standalone survivors inside `liq_open_basic`:
+       - `h152_sector_laggard_tradable`
+       - `h152_limit_release_pressure`
+       - `h152_liq_open_continue_3`
+       - `h152_breakout_volume_quality`
+     - none showed naive always-on selector relevance
+     - treat them as candidate atoms, not promoted selectors
+8. Run the next branch in this exact order:
+   - live track:
+     - keep the live scoreboard running on the rollback sticky branch
+     - if sticky stays ahead of sticky always-on for at least `2` additional completed rebalance cycles:
+       - keep monitoring only
+       - do not reopen blocked-buy family work yet
+     - if sticky falls behind sticky always-on over `>= 2` completed cycles:
+       - rerun `H192A` to confirm parity has not drifted
+       - then choose one branch only:
+         - reopen `H194/H195` if the problem is clearly activation-local again
+         - otherwise stop local activation tuning and move fully back to selection-side work
+   - research track:
+     - `H196`: additive bakeoff for the strongest `H152` atoms on top of the `full_library` selector backbone
+     - if `H196` fails, run `H197`: second-wave tradability-conditioned signal search families
+   - anti-leakage rule:
+     - do not keep tuning the current `H151/H152` families against `2025`
+     - rank them on dev / validation
+     - use `2025` once per promoted candidate only
+9. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
    - Session 65 says selection alpha is strong, activation alpha is still real, but the currently *deployable* form is simpler than the historical max-return stack:
      - fixed path-dependent selector-efficacy rule
      - plus a small retention bonus
    - blocked-buy veto and sector cap stay as archived historical improvements, not the active live branch
-8. Only after the sticky live branch has clearly failed forward should the branch reopen these secondary ideas:
+10. Only after the sticky live branch has clearly failed forward should the branch reopen these secondary ideas:
    - `H194`: blocked-buy + sector-cap recalibration (implemented, not run after rollback)
    - `H195`: blocked-buy hysteresis (implemented, not run after rollback)
-   - `H151`: narrow tradability-conditioned composite (parked secondary branch)
-   - `H152`: tradability-conditioned alpha search (parked secondary branch)
    - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened
 
 ### Session 64 implementation-pain follow-through
@@ -1066,6 +1091,7 @@ Use `notes/session_65_log.md` for the latest full session detail.
 | 55 | 2026-03-29 | H154 first real pilot ladder completed: `S1`-only RL beats deterministic comparator and equal-weight benchmark on seed 1208; conditioned sub-core is mixed; full matrix fails cleanly | H93 + C4-C14 |
 | 56 | 2026-03-29 | H155 multi-seed robustness shows `S1`-only RL is high-variance: 2 strong wins, 2 failures; RL remains exploratory and the active branch returns to `H151/H152` | H93 + C4-C14 |
 | 57 | 2026-03-29 | H157-H162 activation-alpha wave completed: binary on/off activation does not beat always-on `full_library + k5_r5_eq`; selection alpha vs activation alpha split is now explicit; active branch returns to `H151/H152` | H93 + C4-C14 |
+| 66 | 2026-03-29 | H151/H152 first pass under locked `2015-2025` protocol: no narrow existing-signal composite beats `full_library`; four new tradable-state atoms pass standalone gates but none are promoted selectors | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 

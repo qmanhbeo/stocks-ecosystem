@@ -1,0 +1,155 @@
+{
+  "artifacts": {
+    "best_daily": "artifacts/portfolio_baselines/20260329_172422_h151_tradability_conditioned_composite_bakeoff_best_daily.parquet",
+    "results": "artifacts/portfolio_baselines/20260329_172422_h151_tradability_conditioned_composite_bakeoff_results.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "start_year": 2015
+  },
+  "mode": "portfolio_tradability_composite_bakeoff",
+  "name": "h151_tradability_conditioned_composite_bakeoff",
+  "summary": {
+    "baseline": {
+      "confirmation_avg_cash_weight": 0.05293413379463258,
+      "confirmation_information_ratio_annualized": -0.7549743915577688,
+      "confirmation_relative_total_return": -0.20016368501338921,
+      "dev_avg_cash_weight": 0.03283623787386082,
+      "dev_information_ratio_annualized": 1.2141605578088648,
+      "dev_relative_total_return": 16.40591203650821,
+      "liq_open_basic_confirmation_avg_ic": 0.05101319626694996,
+      "liq_open_basic_confirmation_corr_with_s1": 0.3024786972924622,
+      "liq_open_basic_confirmation_pct_years_positive": 1.0,
+      "liq_open_basic_dev_avg_ic": 0.06419503416898734,
+      "liq_open_basic_dev_corr_with_s1": 0.33947616512998513,
+      "liq_open_basic_dev_pct_years_positive": 1.0,
+      "liq_open_basic_validation_avg_ic": 0.05312657113376854,
+      "liq_open_basic_validation_corr_with_s1": 0.33027295487889335,
+      "liq_open_basic_validation_pct_years_positive": 1.0,
+      "liq_open_strict_confirmation_avg_ic": 0.0580664608979228,
+      "liq_open_strict_dev_avg_ic": 0.06754005456177789,
+      "liq_open_strict_validation_avg_ic": 0.055668802210223335,
+      "overall_information_ratio_annualized": 0.991354,
+      "overall_relative_total_return": 18.970695,
+      "signal_columns": [
+        "s1_proba",
+        "c4_oc_asym_5d",
+        "c5_ins_relative_size_5d",
+        "c5_signal_present",
+        "c6_contrarian_intra_5d",
+        "c7_ceiling_count_5d",
+        "c8_vol_zscore_5d",
+        "c9_reversal_1d",
+        "c10_illiq_level_rank",
+        "c11_ret_60d_lag_rank",
+        "c12_gap_absorb_3",
+        "c13_compress_blowoff_2",
+        "c14_clv_volconf_resid_rank"
+      ],
+      "strategy_name": "full_library_baseline",
+      "validation_avg_cash_weight": 0.023833136079562278,
+      "validation_information_ratio_annualized": 0.8210729094394421,
+      "validation_relative_total_return": 0.43448254906045713
+    },
+    "promoted_candidates": [],
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "tested_candidates": [
+      {
+        "confirmation_relative_total_return": -0.20016368501338921,
+        "promoted": false,
+        "strategy_name": "full_library_baseline",
+        "validation_information_ratio_annualized": 0.8210729094394421,
+        "validation_relative_total_return": 0.43448254906045713
+      },
+      {
+        "confirmation_relative_total_return": -0.027135571050917906,
+        "promoted": false,
+        "strategy_name": "core_5",
+        "validation_information_ratio_annualized": -0.4041274801453103,
+        "validation_relative_total_return": -0.2398400452469719
+      },
+      {
+        "confirmation_relative_total_return": -0.00032873256457710553,
+        "promoted": false,
+        "strategy_name": "core_6",
+        "validation_information_ratio_annualized": -0.6979998090353148,
+        "validation_relative_total_return": -0.331967193666304
+      },
+      {
+        "confirmation_relative_total_return": -0.24708571807580892,
+        "promoted": false,
+        "strategy_name": "core_4",
+        "validation_information_ratio_annualized": -1.4110549780007946,
+        "validation_relative_total_return": -0.5497073102913708
+      }
+    ],
+    "winner": {
+      "beats_validation_baseline": false,
+      "confirmation_avg_cash_weight": 0.05293413379463258,
+      "confirmation_information_ratio_annualized": -0.7549743915577688,
+      "confirmation_relative_total_return": -0.20016368501338921,
+      "dev_avg_cash_weight": 0.03283623787386082,
+      "dev_information_ratio_annualized": 1.2141605578088648,
+      "dev_relative_total_return": 16.40591203650821,
+      "liq_open_basic_confirmation_avg_ic": 0.05101319626694996,
+      "liq_open_basic_confirmation_corr_with_s1": 0.3024786972924622,
+      "liq_open_basic_confirmation_pct_years_positive": 1.0,
+      "liq_open_basic_dev_avg_ic": 0.06419503416898734,
+      "liq_open_basic_dev_corr_with_s1": 0.33947616512998513,
+      "liq_open_basic_dev_pct_years_positive": 1.0,
+      "liq_open_basic_validation_avg_ic": 0.05312657113376854,
+      "liq_open_basic_validation_corr_with_s1": 0.33027295487889335,
+      "liq_open_basic_validation_pct_years_positive": 1.0,
+      "liq_open_strict_confirmation_avg_ic": 0.0580664608979228,
+      "liq_open_strict_dev_avg_ic": 0.06754005456177789,
+      "liq_open_strict_validation_avg_ic": 0.055668802210223335,
+      "overall_information_ratio_annualized": 0.991354,
+      "overall_relative_total_return": 18.970695,
+      "promoted": false,
+      "signal_columns": [
+        "s1_proba",
+        "c4_oc_asym_5d",
+        "c5_ins_relative_size_5d",
+        "c5_signal_present",
+        "c6_contrarian_intra_5d",
+        "c7_ceiling_count_5d",
+        "c8_vol_zscore_5d",
+        "c9_reversal_1d",
+        "c10_illiq_level_rank",
+        "c11_ret_60d_lag_rank",
+        "c12_gap_absorb_3",
+        "c13_compress_blowoff_2",
+        "c14_clv_volconf_resid_rank"
+      ],
+      "strategy_name": "full_library_baseline",
+      "survives_confirmation": false,
+      "validation_avg_cash_weight": 0.023833136079562278,
+      "validation_information_ratio_annualized": 0.8210729094394421,
+      "validation_relative_total_return": 0.43448254906045713
+    }
+  },
+  "ts": "20260329_172422"
+}

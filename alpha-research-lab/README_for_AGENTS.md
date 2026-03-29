@@ -110,11 +110,26 @@ Operationally important summary:
   - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
   - current live holdings from `2026-03-26` signal / `2026-03-27` execution:
     - `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
-- the active next branch is now:
-  - keep the live forward scoreboard running on the rollback sticky branch
-  - if sticky continues to beat sticky always-on forward, monitor only
-  - if sticky falls behind sticky always-on over `>= 2` completed cycles, rerun parity first and then choose between reopening `H194/H195` or moving to `H151/H152`
-- `H151/H152` remain parked behind the operational activation branch
+- Session 66 reopened `H151/H152` under a locked anti-leakage protocol:
+  - dev `2015-2022`
+  - validation `2023-2024`
+  - one-shot confirmation `2025`
+  - forward lockbox `2026+`
+- `H151` result:
+  - no narrow tradability-conditioned composite from the existing library beat the always-on `full_library` selector baseline
+  - no promoted selector candidate
+- `H152` result:
+  - four new tradability-conditioned candidate signals passed the dev standalone gate inside `liq_open_basic`
+  - none showed naive always-on selector relevance
+  - treat them as candidate atoms, not promoted selectors
+- the active next branch is now dual-track:
+  - live track:
+    - keep the live forward scoreboard running on the rollback sticky branch
+    - if sticky continues to beat sticky always-on forward, monitor only
+    - if sticky falls behind sticky always-on over `>= 2` completed cycles, rerun parity first and then choose between reopening `H194/H195` or moving back to selection-side work
+  - research track:
+    - `H196`: additive bakeoff for the strongest `H152` atoms on top of the selector backbone
+    - `H197`: second-wave tradability-conditioned signal search if `H196` fails
 - the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
 - `H154` first ladder is complete: `S1`-only RL won on seed `1208`, conditioned sub-core is mixed,
@@ -270,6 +285,8 @@ Mode-specific durable outputs:
 - `analysis/h178_h175_robustness_stress.py`: `artifacts/run_summaries/latest_portfolio_activation_h175_robustness_stress.json` plus stress outputs under `artifacts/portfolio_baselines/`
 - `analysis/h179_live_activation_overlay.py`: `artifacts/run_summaries/latest_portfolio_live_activation_overlay.json` plus live-overlay daily/detail outputs under `artifacts/portfolio_baselines/`
 - `analysis/h180_h175_small_augmentations.py`: `artifacts/run_summaries/latest_portfolio_activation_h175_small_augmentations.json` plus local-augmentation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h151_tradability_conditioned_composite_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_tradability_composite_bakeoff.json` plus candidate results under `artifacts/portfolio_baselines/`
+- `analysis/h152_tradability_conditioned_signal_search.py`: `artifacts/run_summaries/latest_tradability_conditioned_signal_search.json` plus candidate results under `artifacts/portfolio_baselines/`
 
 For any new analysis script, keep the large output wherever it naturally belongs, but also write
 one compact summary JSON under `artifacts/run_summaries/`.

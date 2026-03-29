@@ -441,3 +441,71 @@ So the rollback branch is not benchmark-beating yet in this short live-forward s
 **Key finding:** the simpler sticky branch is the right current live branch even though the more complex blocked-buy family remains the stronger historical full-window system.
 
 **Implication:** forward monitoring should now focus on sticky vs sticky always-on. The blocked-buy family should stay archived until that simpler live branch clearly fails.
+
+## F140: The Locked Anti-Leakage Protocol Is Now Codified In Code: Dev `2015-2022`, Validation `2023-2024`, One-Shot Confirmation `2025`, Forward Lockbox `2026+` (2026-03-29, Session 66)
+
+Session 66 moved the selection-side branch out of free-form notes and into reusable code:
+- `src/research_protocol.py`
+- `src/tradability_conditioned_research.py`
+
+This locks the offline research process to:
+- dev / discovery: `2015-2022`
+- validation ranking: `2023-2024`
+- one-shot confirmation: `2025`
+- live / forward lockbox: `2026+`
+
+**Key finding:** the repo now has a first-class anti-leakage protocol for reopening alpha discovery while the live sticky branch stays frozen.
+
+**Implication:** future selection-side work should stop scattering year windows through ad hoc scripts. New selector candidates should rank on dev / validation first and only touch `2025` once per promoted candidate.
+
+## F141: H151 Fails Cleanly; No Narrow Tradability-Conditioned Composite From The Existing Library Beats The Always-On `full_library` Selector Baseline (2026-03-29, Session 66)
+
+Session 66 ran the first locked-protocol selector bakeoff over the H150-derived sub-core:
+- `core_4 = S1 + C7 + C12 + C13`
+- `core_5 = S1 + C7 + C10 + C12 + C13`
+- `core_6 = S1 + C7 + C8 + C10 + C12 + C13`
+
+Validation (`2023-2024`) winner remained the baseline:
+- `full_library_baseline`
+- relative return `+43.45%`
+- IR `0.8211`
+
+Narrow composites all lost validation badly:
+- `core_5`: `-23.98%`, IR `-0.4041`
+- `core_6`: `-33.20%`, IR `-0.6980`
+- `core_4`: `-54.97%`, IR `-1.4111`
+
+None survived `2025` confirmation and no selector candidate was promoted.
+
+**Key finding:** the strongest conditional-uplift signals from H150 do not automatically form a stronger standalone selector when compressed into a small always-on composite.
+
+**Implication:** the current full-library selector remains the right backbone. Further selection-side work should focus on additive atoms or genuinely new signals, not on shrinking the library to the H150 sub-core.
+
+## F142: H152 Finds Four New Tradability-Conditioned Standalone Signals With Real Dev IC And Low S1 Correlation, But None Yet Show Naive Always-On Selector Relevance (2026-03-29, Session 66)
+
+Session 66 then ran the first locked-protocol tradable-state search inside the basic liquidity-opening state:
+- `liq_open_basic = can_buy_next_open & tv_to_adv20 >= 1.10 & clv >= 0.45`
+
+Dev-pass standalone survivors:
+- `h152_sector_laggard_tradable`
+  - dev IC `+0.0264`
+  - corr with S1 `+0.1536`
+  - validation IC `+0.0163`
+- `h152_limit_release_pressure`
+  - dev IC `+0.0236`
+  - corr with S1 `+0.1552`
+  - validation IC `+0.0127`
+- `h152_liq_open_continue_3`
+  - dev IC `+0.0248`
+  - corr with S1 `+0.1331`
+- `h152_breakout_volume_quality`
+  - dev IC `+0.0196`
+  - corr with S1 `+0.1006`
+
+But their naive always-on selector tests were poor:
+- validation relative returns ranged from `-23.00%` to `-60.76%`
+- no signal was promoted to selector stage
+
+**Key finding:** there are still new tradability-conditioned alpha atoms available in the data, but they are not drop-in replacements for the current selector.
+
+**Implication:** the right next research move is additive bakeoff work on the strongest new atoms, not immediate selector replacement or live-branch changes.

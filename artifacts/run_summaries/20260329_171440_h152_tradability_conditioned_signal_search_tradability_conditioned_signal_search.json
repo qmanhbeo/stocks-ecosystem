@@ -1,0 +1,108 @@
+{
+  "artifacts": {
+    "results": "artifacts/portfolio_baselines/20260329_171440_h152_tradability_conditioned_signal_search_results.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "start_year": 2015
+  },
+  "mode": "tradability_conditioned_signal_search",
+  "name": "h152_tradability_conditioned_signal_search",
+  "summary": {
+    "promoted": [
+      {
+        "confirmation_avg_ic": 0.019756332563520888,
+        "signal_name": "h152_sector_laggard_tradable",
+        "validation_avg_ic": 0.016266677559647818
+      },
+      {
+        "confirmation_avg_ic": 0.03917489579283425,
+        "signal_name": "h152_limit_release_pressure",
+        "validation_avg_ic": 0.012651584925710118
+      },
+      {
+        "confirmation_avg_ic": 0.0267575136458954,
+        "signal_name": "h152_liq_open_continue_3",
+        "validation_avg_ic": -0.00013694928001412032
+      },
+      {
+        "confirmation_avg_ic": 0.015558272305702343,
+        "signal_name": "h152_breakout_volume_quality",
+        "validation_avg_ic": -0.01740440264577986
+      }
+    ],
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "survivors": [
+      "h152_sector_laggard_tradable",
+      "h152_limit_release_pressure",
+      "h152_liq_open_continue_3",
+      "h152_breakout_volume_quality"
+    ],
+    "tested_signals": [
+      {
+        "confirmation_avg_ic": 0.019756332563520888,
+        "dev_avg_ic": 0.026360396652989795,
+        "dev_corr_with_s1": 0.15359792811928163,
+        "promoted_to_composite_stage": true,
+        "signal_name": "h152_sector_laggard_tradable",
+        "validation_avg_ic": 0.016266677559647818
+      },
+      {
+        "confirmation_avg_ic": 0.03917489579283425,
+        "dev_avg_ic": 0.023633461123911775,
+        "dev_corr_with_s1": 0.15519078979897002,
+        "promoted_to_composite_stage": true,
+        "signal_name": "h152_limit_release_pressure",
+        "validation_avg_ic": 0.012651584925710118
+      },
+      {
+        "confirmation_avg_ic": 0.0267575136458954,
+        "dev_avg_ic": 0.024833248698731866,
+        "dev_corr_with_s1": 0.1330506114414881,
+        "promoted_to_composite_stage": true,
+        "signal_name": "h152_liq_open_continue_3",
+        "validation_avg_ic": -0.00013694928001412032
+      },
+      {
+        "confirmation_avg_ic": 0.015558272305702343,
+        "dev_avg_ic": 0.019642497061562465,
+        "dev_corr_with_s1": 0.10056077009926989,
+        "promoted_to_composite_stage": true,
+        "signal_name": "h152_breakout_volume_quality",
+        "validation_avg_ic": -0.01740440264577986
+      },
+      {
+        "confirmation_avg_ic": 0.015172812507861795,
+        "dev_avg_ic": -0.0026152494381672517,
+        "dev_corr_with_s1": 0.015264785210455436,
+        "promoted_to_composite_stage": false,
+        "signal_name": "h152_gap_quality_entry",
+        "validation_avg_ic": -0.0025149656501978696
+      }
+    ]
+  },
+  "ts": "20260329_171440"
+}
