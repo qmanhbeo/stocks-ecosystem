@@ -1,54 +1,118 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_61_log.md` for the latest full session detail.
+Use `notes/session_62_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 61 planning pass completed after Session 60 (the `H175 rel2_gt0` champion remains the operational activation winner; the next branch is now a concrete `H181-H186` queue spanning live-data refresh, current-date overlay deployment, live scoreboarding, and only then small construction refinements around the champion; ADV / capacity still parked for the current-account branch; RL remains exploratory; docs updated; 2026-03-29)
+**Session status:** Session 62 completed `H181-H186` end to end. The live `full_library` / activation branch is current through `2026-03-27`, the activation overlay is operational on current data, and the overall uncapped long-only champion has improved from plain `h175__rel2_gt0` to `h184 sticky_bonus_0p015`. ADV / capacity remains parked for the current-account branch, RL remains exploratory, and the next branch is now local refinement on top of the refreshed live champion. (2026-03-29)
 
 ### Start next session here
 
 1. Record the next market-session outcome against the current always-on paper-trade book:
-   - `ANV`
-   - `PTB`
-   - `PTL`
-   - `VSI`
-   - cash `19.57%`
+   - current **activated sticky champion** book from the `2026-03-26` signal / `2026-03-27` execution:
+     - `ANV`
+     - `PGV`
+     - `PTB`
+     - `PTL`
+     - `VSI`
+     - cash `0.00%`
+   - current activation state: `ON`
 2. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
-3. Treat the activation overlay as the new operational priority branch:
-   - `H175 rel2_gt0` is now robust enough to operationalize
-   - `H180` showed that small guards do not improve it
-   - the next real job is live data plumbing first, then very local construction work
-4. Run the next branch in this exact order:
-   - `H181`: rebuild / extend `data/features/xs_rl_signal_matrix.parquet` through the current market date, then rebuild:
-     - `data/features/activation_state_daily.parquet`
-     - `data/features/activation_meta_daily.parquet`
-     Acceptance: matrix max date matches the current stock-data max date, and `H179` no longer reports a stale matrix.
-   - `H182`: rerun the live-paper activation overlay on the refreshed matrix and emit a dated blotter.
-     Acceptance: latest overlay date equals latest tradable market date and the summary clearly reports activation state, requested basket, and held basket.
-   - `H183`: start an activated-vs-always-on paper scoreboard once the overlay is current.
-     Acceptance: one dated artifact compares the two books on overlapping forward days without mixing stale matrix dates.
-   - `H184`: sticky-holdings / displacement-margin sweep around the champion.
-     Hypothesis: reduce churn by keeping held names unless a challenger beats the weakest held name by a real score margin.
-   - `H185`: sector concentration cap on the activated selector.
-     Hypothesis: cap sector crowding without reopening selection logic.
-   - `H186`: local exposure control around `rel2_gt0`.
-     Hypothesis: the champion is right on direction but can still improve through mild sizing or hysteresis tied only to the same `recent_rel2` state.
-5. Keep the architecture split clear:
+3. Treat the live branch as operationally current:
+   - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-27`
+   - `data/features/activation_state_daily.parquet` is now current through `2026-03-27`
+   - `data/features/activation_meta_daily.parquet` is now current through `2026-03-27`
+   - `H179` no longer reports a stale matrix
+4. Use the current champion, not the superseded one:
+   - old champion: `full_library + k5_r5_eq + h175__rel2_gt0`
+   - new champion: `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
+   - historical reference (`2019-2025`, `0.30%` RT):
+     - plain `rel2_gt0`: `+480.72%` relative vs VNINDEX, IR `0.9095`
+     - sticky `0.015`: `+509.76%` relative, IR `0.9372`
+5. Run the next branch in this exact order:
+   - `H187`: combine the two positive local refinements that have not yet been tested together:
+     - `sticky_bonus_0p015`
+     - `sector_cap_3`
+     Hypothesis: the sector cap’s mild diversification benefit compounds with the sticky turnover reduction.
+   - `H188`: implementation-pain veto on the sticky champion.
+     Hypothesis: if recent blocked-buy pressure / cash-drag / realized holding-count degradation spikes, the next cycle should de-risk.
+   - `H189`: basket-coherence / score-dispersion guard on the sticky champion.
+     Hypothesis: the sticky champion should stay on only when the selected basket is internally coherent, not just when recent selector efficacy is positive.
+   - `H190`: only after `H187-H189`, revisit selector switching or calendar guards if needed.
+6. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
-   - Session 60 says selection alpha is strong, activation alpha is real, and the best current form is still a simple fixed path-dependent selector-efficacy rule
-6. Only after `H181-H186` should the branch reopen these secondary ideas:
-   - `H187`: implementation-pain veto layered on the champion
-   - `H188`: basket-coherence / score-dispersion filter
-   - `H189`: selector switching between `full_library` and `S1`
-   - `H190`: calendar / entry-window quality guards
+   - Session 62 says selection alpha is strong, activation alpha is real, and the best current form is now a simple fixed path-dependent selector-efficacy rule plus a small retention bonus
+7. Only after `H187-H190` should the branch reopen these secondary ideas:
    - `H151`: narrow tradability-conditioned composite (parked secondary branch)
    - `H152`: tradability-conditioned alpha search (parked secondary branch)
    - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened
+
+### Session 62 live-refresh and local-refinement decision
+
+- `H181` result:
+  - refreshed the current-date signal surface through `2026-03-27`
+  - new current-year `S1` live extension:
+    - `data/features/xs_barrier_vol_1d_hose_live_current.parquet`
+    - `2026-01-05` -> `2026-03-27`
+    - latest labeled date `2026-03-26`
+  - rebuilt:
+    - `data/features/xs_open_close_asymmetry.parquet`
+    - `data/features/xs_insider_quality_features.parquet`
+    - `data/features/xs_dispersion_regime_daily.parquet`
+    - `data/features/xs_price_limit_daily.parquet`
+    - `data/features/xs_volume_zscore_daily.parquet`
+    - `data/features/xs_shortterm_reversal.parquet`
+    - `data/features/xs_sector_rotation_daily.parquet`
+    - `data/features/execution/tradability_daily.parquet`
+    - `data/features/xs_rl_signal_matrix.parquet`
+    - `data/features/activation_state_daily.parquet`
+    - `data/features/activation_meta_daily.parquet`
+  - key infra fix:
+    - `C4`, `C5`, and dispersion features no longer inherit the stale `S1` grid
+- `H182` result:
+  - reran the live activation overlay first on the plain `rel2_gt0` rule, then on the new sticky champion
+  - current official sticky overlay state:
+    - signal date `2026-03-26`
+    - execution date `2026-03-27`
+    - activation `ON`
+    - held names: `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
+    - recent `rel2` state: `+0.013101`
+- `H183` result:
+  - current-year scoreboard is now live on current data
+  - sticky activated book vs sticky always-on (`2026` YTD so far):
+    - activated: `-3.33%` relative vs VNINDEX, IR `-0.36`
+    - always-on: `-11.22%` relative, IR `-1.65`
+  - practical read:
+    - both are below benchmark in the short 2026 window so far
+    - activation is still materially improving the realized path
+- `H184` result:
+  - **PASS** — sticky holdings / displacement margin improved the historical champion
+  - best:
+    - `sticky_bonus_0p015`
+    - `+509.76%` relative vs VNINDEX
+    - IR `0.9372`
+    - avg daily turnover `0.2227`
+  - plain `rel2_gt0` reference:
+    - `+480.72%` relative
+    - IR `0.9095`
+    - avg daily turnover `0.2269`
+- `H185` result:
+  - **MIXED** — sector caps can help slightly, but not enough to beat the sticky champion
+  - best:
+    - `sector_cap_3`
+    - `+482.21%` relative vs VNINDEX
+    - IR `0.9123`
+  - better than plain `rel2_gt0`, but still worse than `sticky_bonus_0p015`
+- `H186` result:
+  - **FAIL** — local exposure sizing around `rel2_gt0` gave up too much return
+  - all tested half/continuous exposure schedules underperformed the binary sticky champion
+  - branch decision:
+    - keep activation binary for now once the recent-efficacy condition is met
+    - do not reopen local sizing unless a stronger state variable appears
 
 ### Session 60 operational activation decision
 

@@ -719,6 +719,9 @@ def simulate_strategy(
     capture_blotter: bool = False,
     activation_mask: np.ndarray | None = None,
     activation_scale: np.ndarray | None = None,
+    incumbent_score_bonus: float = 0.0,
+    sector_labels: tuple[str | None, ...] | None = None,
+    max_names_per_sector: int | None = None,
 ) -> StrategyRunResult:
     if top_k <= 0:
         raise ValueError("top_k must be > 0")
@@ -730,6 +733,8 @@ def simulate_strategy(
         raise ValueError("entry_slice_days must be > 0")
     if min_deployable_weight < 0.0 or min_deployable_weight > 1.0:
         raise ValueError("min_deployable_weight must be within [0, 1]")
+    if max_names_per_sector is not None and max_names_per_sector <= 0:
+        raise ValueError("max_names_per_sector must be > 0 when provided")
 
     dates = pd.to_datetime(market_inputs.dates)
     tickers = market_inputs.tickers
@@ -778,6 +783,11 @@ def simulate_strategy(
         activation_schedule = activation_allowed.astype(np.float64)
     else:
         activation_schedule = np.ones(n_dates, dtype=np.float64)
+    if sector_labels is not None and len(sector_labels) != n_tickers:
+        raise ValueError(
+            "sector_labels must align with tickers "
+            f"({n_tickers}); got {len(sector_labels)}"
+        )
 
     weights = np.zeros(n_tickers, dtype=np.float64)
     holding_ages = np.zeros(n_tickers, dtype=np.int64)
@@ -846,11 +856,28 @@ def simulate_strategy(
             if activation_on and np.any(eligible):
                 ranked_pool = np.flatnonzero(eligible)
                 ranked_scores = scores[ranked_pool]
-                order = np.lexsort((ranked_pool, -ranked_scores))
+                effective_scores = ranked_scores.copy()
+                if incumbent_score_bonus > 0.0:
+                    incumbent_mask = drifted_weights[ranked_pool] > 1e-12
+                    effective_scores[incumbent_mask] += float(incumbent_score_bonus)
+                order = np.lexsort((ranked_pool, -ranked_scores, -effective_scores))
                 selection_cap = int(top_k)
                 if max_names_if_liquidity_thin is not None and len(ranked_pool) < top_k:
                     selection_cap = min(selection_cap, int(max_names_if_liquidity_thin))
-                selected_indices = ranked_pool[order[: min(selection_cap, len(order))]].tolist()
+                ranked_candidates = ranked_pool[order[: len(order)]].tolist()
+                if max_names_per_sector is not None and sector_labels is not None:
+                    counts: dict[str | None, int] = {}
+                    selected_indices = []
+                    for idx in ranked_candidates:
+                        sector = sector_labels[idx]
+                        if counts.get(sector, 0) >= int(max_names_per_sector):
+                            continue
+                        selected_indices.append(idx)
+                        counts[sector] = counts.get(sector, 0) + 1
+                        if len(selected_indices) >= selection_cap:
+                            break
+                else:
+                    selected_indices = ranked_candidates[: min(selection_cap, len(ranked_candidates))]
                 if selected_indices:
                     desired_weights = compute_selected_target_weights(
                         scores,

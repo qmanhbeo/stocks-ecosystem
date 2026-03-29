@@ -25,13 +25,20 @@ Usage:
 from __future__ import annotations
 
 from pathlib import Path
+import sys
 import numpy as np
 import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from src.stock_day_grid import build_stock_day_grid
+
 RAW_PATH = REPO_ROOT / "data" / "features" / "xs_insider_deals_raw.parquet"
 OUT_PATH = REPO_ROOT / "data" / "features" / "xs_insider_quality_features.parquet"
-GRID_SRC = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
+STOCK_DIR = REPO_ROOT / "data" / "stock"
+EXCLUDE = {"VNINDEX", "VN30"}
 
 # Vietnamese position titles → tier weights (higher = more informative)
 TIER_WEIGHTS = {
@@ -118,9 +125,11 @@ def build_features() -> pd.DataFrame:
     ceo = ins[ceo_mask].copy()
 
     # Load grid
-    grid_df = pd.read_parquet(GRID_SRC, columns=["time", "ticker"])
-    grid_df = grid_df.rename(columns={"time": "trading_day"})
-    grid_df["trading_day"] = pd.to_datetime(grid_df["trading_day"])
+    grid_df = build_stock_day_grid(
+        stock_dir=STOCK_DIR,
+        exclude=EXCLUDE,
+        start_year=2015,
+    ).rename(columns={"time": "trading_day"})
     grid = grid_df.drop_duplicates()
     trading_days = sorted(grid["trading_day"].unique())
 

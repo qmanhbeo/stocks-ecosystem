@@ -21,13 +21,18 @@ Columns:
 """
 
 from pathlib import Path
+import sys
 import numpy as np
 import pandas as pd
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from src.stock_day_grid import build_stock_day_grid
+
 STOCK_DIR = REPO_ROOT / "data" / "stock"
-GRID_SRC = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
 OUT_PATH = REPO_ROOT / "data" / "features" / "xs_dispersion_regime_daily.parquet"
 EXCLUDE = {"VNINDEX", "VN30"}
 
@@ -106,9 +111,16 @@ def main():
     std20 = daily["xs_ret_std_1d"].rolling(20, min_periods=5).std()
     daily["xs_dispersion_z20"] = (daily["xs_ret_std_1d"] - mean20) / (std20 + 1e-9)
 
-    # Align to trading-day spine used in WF.
-    days = pd.read_parquet(GRID_SRC, columns=["time"]).drop_duplicates().sort_values("time")
-    days["time"] = pd.to_datetime(days["time"])
+    days = (
+        build_stock_day_grid(
+            stock_dir=STOCK_DIR,
+            exclude=EXCLUDE,
+            min_rows=300,
+            start_year=2015,
+        )[["time"]]
+        .drop_duplicates()
+        .sort_values("time")
+    )
     out = days.merge(daily, on="time", how="left").sort_values("time")
 
     for c in out.columns:

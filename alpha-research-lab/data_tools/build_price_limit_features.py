@@ -32,12 +32,19 @@ from __future__ import annotations
 
 import glob
 from pathlib import Path
+import sys
 
 import numpy as np
 import pandas as pd
-from shared_market_rules import compute_price_limit_flags
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+WORKSPACE_ROOT = REPO_ROOT.parent
+SHARED_MARKET_RULES_ROOT = WORKSPACE_ROOT / "shared-market-rules"
+if str(SHARED_MARKET_RULES_ROOT) not in sys.path:
+    sys.path.insert(0, str(SHARED_MARKET_RULES_ROOT))
+
+from shared_market_rules import compute_price_limit_flags
+
 STOCK_DIR = REPO_ROOT / "data" / "stock"
 OUT_PATH = REPO_ROOT / "data" / "features" / "xs_price_limit_daily.parquet"
 EXCLUDE = {"VNINDEX", "VN30"}

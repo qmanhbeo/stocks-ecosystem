@@ -1,0 +1,172 @@
+{
+  "artifacts": {
+    "daily": "artifacts/portfolio_baselines/20260329_144925_h179_live_activation_overlay_daily.parquet",
+    "detail": "artifacts/portfolio_baselines/20260329_144925_h179_live_activation_overlay_detail.parquet"
+  },
+  "metadata": {
+    "activation_meta": "data/features/activation_meta_daily.parquet",
+    "benchmark": "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+    "end_year": 2026,
+    "latest_execution_days": 20,
+    "matrix": "data/features/xs_rl_signal_matrix.parquet",
+    "start_year": 2019
+  },
+  "mode": "portfolio_live_activation_overlay",
+  "name": "h179_live_activation_overlay",
+  "summary": {
+    "activation_rule": "h175__rel2_gt0",
+    "latest_day": {
+      "activation_on": true,
+      "activation_scale_x": 1.0,
+      "activation_scale_y": 1.0,
+      "avg_holding_age": 3.0,
+      "benchmark_return": -0.0106167207333,
+      "benchmark_value_vnd": 181888491.7956603,
+      "blocked_buy_count": 0,
+      "blocked_sell_count": 0,
+      "buy_turnover": 0.0,
+      "capacity_clipped_count": 0,
+      "cash_weight": 0.0,
+      "eligible_universe_size": 345,
+      "execution_date": "2026-03-27T00:00:00",
+      "held_tickers": [
+        "ANV",
+        "NO1",
+        "PTB",
+        "PTL",
+        "VSI"
+      ],
+      "num_holdings": 5,
+      "pending_entry_count": 0,
+      "portfolio_return": 0.0125481342050755,
+      "portfolio_value_vnd": 1050959239.8435067,
+      "rebalance_triggered": false,
+      "recent_rel2": 0.013100704872670907,
+      "relative_return": 0.0231648549383755,
+      "requested_tickers": [],
+      "selected_count": 5,
+      "sell_turnover": 0.0,
+      "signal_date": "2026-03-26T00:00:00",
+      "strategy": "full_library",
+      "turnover": 0.0,
+      "weighting_rule": "equal"
+    },
+    "latest_stock_date": "2026-03-27",
+    "meta_source": "artifact",
+    "portfolio_summary": {
+      "avg_cash_weight": 0.361595,
+      "avg_daily_turnover": 0.22749,
+      "avg_holding_age": 3.7633,
+      "avg_invested_weight": 0.638405,
+      "avg_num_holdings": 3.289,
+      "avg_pending_entry_count": 0.0,
+      "avg_selected_count": 3.279,
+      "avg_universe_size": 333.9096,
+      "benchmark_annualized_return": 0.087207,
+      "benchmark_total_return": 0.818885,
+      "blocked_buy_events": 71,
+      "blocked_sell_events": 89,
+      "capacity_clipped_events": 0,
+      "days": 1803,
+      "final_benchmark_value_vnd": 181888491.8,
+      "final_portfolio_value_vnd": 1050959239.84,
+      "information_ratio_annualized": 0.878581,
+      "max_drawdown": -0.268489,
+      "per_year": [
+        {
+          "avg_cash_weight": 0.363227,
+          "avg_num_holdings": 3.2289,
+          "avg_turnover": 0.225201,
+          "benchmark_return": 0.068511,
+          "days": 249,
+          "portfolio_return": 0.258734,
+          "relative_return": 0.178026,
+          "year": 2019
+        },
+        {
+          "avg_cash_weight": 0.258008,
+          "avg_num_holdings": 3.9127,
+          "avg_turnover": 0.260453,
+          "benchmark_return": 0.137246,
+          "days": 252,
+          "portfolio_return": 0.863657,
+          "relative_return": 0.638745,
+          "year": 2020
+        },
+        {
+          "avg_cash_weight": 0.34304,
+          "avg_num_holdings": 3.34,
+          "avg_turnover": 0.244862,
+          "benchmark_return": 0.353034,
+          "days": 250,
+          "portfolio_return": 0.935305,
+          "relative_return": 0.430344,
+          "year": 2021
+        },
+        {
+          "avg_cash_weight": 0.443255,
+          "avg_num_holdings": 2.8635,
+          "avg_turnover": 0.191367,
+          "benchmark_return": -0.315296,
+          "days": 249,
+          "portfolio_return": -0.030622,
+          "relative_return": 0.415762,
+          "year": 2022
+        },
+        {
+          "avg_cash_weight": 0.336174,
+          "avg_num_holdings": 3.4217,
+          "avg_turnover": 0.235045,
+          "benchmark_return": 0.11234,
+          "days": 249,
+          "portfolio_return": 0.540274,
+          "relative_return": 0.384716,
+          "year": 2023
+        },
+        {
+          "avg_cash_weight": 0.334798,
+          "avg_num_holdings": 3.46,
+          "avg_turnover": 0.23354,
+          "benchmark_return": 0.124144,
+          "days": 250,
+          "portfolio_return": 0.041534,
+          "relative_return": -0.073487,
+          "year": 2024
+        },
+        {
+          "avg_cash_weight": 0.465206,
+          "avg_num_holdings": 2.751,
+          "avg_turnover": 0.197302,
+          "benchmark_return": 0.384013,
+          "days": 249,
+          "portfolio_return": 0.602486,
+          "relative_return": 0.157855,
+          "year": 2025
+        },
+        {
+          "avg_cash_weight": 0.311279,
+          "avg_num_holdings": 3.4545,
+          "avg_turnover": 0.246361,
+          "benchmark_return": -0.066401,
+          "days": 55,
+          "portfolio_return": -0.071082,
+          "relative_return": -0.005013,
+          "year": 2026
+        }
+      ],
+      "portfolio_annualized_return": 0.389262,
+      "portfolio_sharpe_annualized": 1.306281,
+      "portfolio_total_return": 9.509592,
+      "positive_years": 6,
+      "rebalance_days": 347,
+      "relative_annualized_return": 0.277826,
+      "relative_total_return": 4.778041,
+      "top_k": 5,
+      "total_years": 8
+    },
+    "selector": "full_library_k5_r5_eq",
+    "signal_matrix_end": "2026-03-27",
+    "stale_signal_matrix": false
+  },
+  "ts": "20260329_144925"
+}

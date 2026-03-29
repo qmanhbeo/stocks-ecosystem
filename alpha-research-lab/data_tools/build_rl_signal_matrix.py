@@ -53,6 +53,7 @@ STOCK_DIR = REPO_ROOT / "data" / "stock"
 OUT_PATH = FEAT_DIR / "xs_rl_signal_matrix.parquet"
 
 S1_PATH       = FEAT_DIR / "xs_barrier_vol_1d_hose_full.parquet"
+S1_LIVE_PATH  = FEAT_DIR / "xs_barrier_vol_1d_hose_live_current.parquet"
 C4_PATH       = FEAT_DIR / "xs_open_close_asymmetry.parquet"
 C5_PATH       = FEAT_DIR / "xs_insider_quality_features.parquet"
 C6_PATH       = FEAT_DIR / "xs_sector_rotation_daily.parquet"
@@ -65,6 +66,21 @@ ILLIQ_MIN_DAYS = 10
 VALUE_SCALE = 1e9
 LOOKBACK_DAYS = 60
 EXCLUDE = {"VNINDEX", "VN30"}
+
+
+def load_s1_spine() -> pd.DataFrame:
+    s1 = pd.read_parquet(S1_PATH)[["time", "ticker", "xs_proba", "actual"]]
+    s1["time"] = pd.to_datetime(s1["time"])
+    if S1_LIVE_PATH.exists():
+        live = pd.read_parquet(S1_LIVE_PATH)[["time", "ticker", "xs_proba", "actual"]]
+        live["time"] = pd.to_datetime(live["time"])
+        s1 = (
+            pd.concat([s1, live], ignore_index=True)
+            .sort_values(["time", "ticker"])
+            .drop_duplicates(["time", "ticker"], keep="last")
+            .reset_index(drop=True)
+        )
+    return s1
 
 
 def build_illiq_level_features() -> pd.DataFrame:
@@ -296,9 +312,11 @@ def main():
     print("Building RL signal matrix...")
 
     # S1 — primary signal spine (394 tickers, 2015–2025)
-    s1 = pd.read_parquet(S1_PATH)[["time", "ticker", "xs_proba", "actual"]]
-    s1["time"] = pd.to_datetime(s1["time"])
-    print(f"  S1:  {len(s1):,} rows, {s1['ticker'].nunique()} tickers")
+    s1 = load_s1_spine()
+    print(
+        f"  S1:  {len(s1):,} rows, {s1['ticker'].nunique()} tickers, "
+        f"{s1['time'].min().date()} -> {s1['time'].max().date()}"
+    )
 
     # C4 — open/close asymmetry
     c4 = pd.read_parquet(C4_PATH)[["time", "ticker", "oc_asym_5d"]]

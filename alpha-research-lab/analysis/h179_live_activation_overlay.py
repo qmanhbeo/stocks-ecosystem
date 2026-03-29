@@ -57,6 +57,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--required-holding-age", type=int, default=3)
     parser.add_argument("--initial-notional-vnd", type=float, default=100_000_000.0)
     parser.add_argument("--latest-execution-days", type=int, default=20)
+    parser.add_argument("--incumbent-score-bonus", type=float, default=0.0)
     return parser.parse_args()
 
 
@@ -145,6 +146,7 @@ def main() -> None:
         capital_gains_tax_rate=0.0,
         activation_scale=activation_scale,
         capture_blotter=True,
+        incumbent_score_bonus=float(args.incumbent_score_bonus),
     )
     if result.blotter is None:
         raise ValueError("Expected capture_blotter=True to return blotter rows")
@@ -183,6 +185,7 @@ def main() -> None:
     summary = {
         "meta_source": meta_source,
         "activation_rule": "h175__rel2_gt0",
+        "incumbent_score_bonus": float(args.incumbent_score_bonus),
         "selector": selector.name,
         "signal_matrix_end": str(pd.Timestamp(matrix_max_time).date()),
         "latest_stock_date": str(pd.Timestamp(latest_stock_date).date()) if latest_stock_date is not None else None,

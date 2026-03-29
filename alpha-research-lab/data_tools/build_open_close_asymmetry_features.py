@@ -18,13 +18,18 @@ Columns:
 """
 
 from pathlib import Path
+import sys
 import numpy as np
 import pandas as pd
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from src.stock_day_grid import build_stock_day_grid
+
 STOCK_DIR = REPO_ROOT / "data" / "stock"
-GRID_SRC = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
 OUT_PATH = REPO_ROOT / "data" / "features" / "xs_open_close_asymmetry.parquet"
 EXCLUDE = {"VNINDEX", "VN30"}
 
@@ -96,8 +101,12 @@ def main():
     all_feat = pd.concat(parts, ignore_index=True)
     all_feat = all_feat.sort_values(["time", "ticker"]).reset_index(drop=True)
 
-    grid = pd.read_parquet(GRID_SRC, columns=["time", "ticker"]).drop_duplicates()
-    grid["time"] = pd.to_datetime(grid["time"])
+    grid = build_stock_day_grid(
+        stock_dir=STOCK_DIR,
+        exclude=EXCLUDE,
+        min_rows=300,
+        start_year=2015,
+    )
     out = grid.merge(all_feat, on=["time", "ticker"], how="left")
     for c in out.columns:
         if c not in {"time", "ticker"}:

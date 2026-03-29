@@ -146,3 +146,97 @@ Delta of best augmentation vs champion:
 **Key finding:** nearby cosmetic guards do not improve the fixed champion enough to justify replacing it.
 
 **Implication:** stop spending time on small local tweaks around `rel2_gt0` until the live overlay branch is current and being monitored in real time.
+
+## F126: The Live `full_library` Activation Branch Was Unblocked By Rebuilding the Producer Chain, Not By Inventing New Timing Logic; A Current-Year `S1` Extension Plus Grid-Backed `C4/C5/Dispersion` Builders Restored the Shared Matrix Through 2026-03-27 (2026-03-29, Session 62)
+
+Session 62 resolved the operational blocker exposed in Session 60.
+
+The real issue was upstream data production:
+- the shared `full_library` matrix stopped at `2025-12-31`
+- `C4`, `C5`, and dispersion builders were inheriting a stale historical `S1` grid
+- current-year `S1` rows needed a dedicated live extension path
+
+The fixes were:
+- build `data/features/xs_barrier_vol_1d_hose_live_current.parquet`
+- merge that live extension into `build_rl_signal_matrix.py`
+- rebuild `C4`, `C5`, and dispersion features from dense stock-day grids instead of the stale `S1` spine
+
+After that rebuild chain, these shared artifacts became current through `2026-03-27`:
+- `xs_rl_signal_matrix.parquet`
+- `activation_state_daily.parquet`
+- `activation_meta_daily.parquet`
+
+**Key finding:** the activation branch was blocked by stale producer infrastructure, not by missing alpha or missing activation logic.
+
+**Implication:** future live blockers should be treated first as data-contract and producer-chain problems, not as a cue to reopen broad hypothesis search.
+
+## F127: On Current 2026 YTD Data, the Sticky Activated Book Still Trails VNINDEX, but It Materially Beats the Sticky Always-On Book; Activation Is Improving the Realized Path Even Before the Year Has Matured (2026-03-29, Session 62)
+
+Once the live branch was refreshed, Session 62 built the first current-year activated-vs-always-on scoreboard.
+
+`2026` YTD so far:
+- sticky activated:
+  - `-3.33%` relative vs VNINDEX
+  - IR `-0.36`
+- sticky always-on:
+  - `-11.22%` relative
+  - IR `-1.65`
+
+Both are below benchmark in this short forward window so far, but the activated branch is still materially better.
+
+**Key finding:** activation is not just a historical backtest improvement. It is already reducing damage in the current live-paper period, even though that short period is not yet benchmark-beating.
+
+**Implication:** the right live comparison is activated vs always-on, not activated vs an idealized historical benchmark alone.
+
+## F128: A Small Retention Bonus (`sticky_bonus_0p015`) Improved the Historical Activation Champion; Sticky Holdings Now Replace Plain `rel2_gt0` As the Best Uncapped Long-Only System (2026-03-29, Session 62)
+
+Session 62 tested whether churn leakage could be reduced without changing the selector or the activation family.
+
+Best result:
+- `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
+- `+509.76%` relative vs VNINDEX
+- information ratio `0.9372`
+- avg daily turnover `0.2227`
+
+Plain `rel2_gt0` reference:
+- `+480.72%` relative
+- information ratio `0.9095`
+- avg daily turnover `0.2269`
+
+So a modest incumbent-retention bonus improved both return and IR while slightly reducing churn.
+
+**Key finding:** the best current system is no longer the plain activation rule. It is the same rule plus a small retention bonus.
+
+**Implication:** future refinement work should start from the sticky champion, not from plain `rel2_gt0`.
+
+## F129: A Mild Sector Cap (`max 3 names per sector`) Helps Slightly but Is Dominated by the Sticky Champion; It Is a Secondary Refinement, Not the New Core (2026-03-29, Session 62)
+
+Session 62 also tested mild sector concentration control on the activated selector.
+
+Best sector-cap result:
+- `sector_cap_3`
+- `+482.21%` relative vs VNINDEX
+- information ratio `0.9123`
+
+This is slightly better than plain `rel2_gt0`, but still below the sticky champion:
+- sticky `0.015`: `+509.76%` relative, IR `0.9372`
+
+**Key finding:** mild sector diversification has some value, but it does not beat the retention-based improvement.
+
+**Implication:** if sector control is revisited, it should be tested only as a companion to the sticky champion, not as a replacement for it.
+
+## F130: Local Exposure Sizing Around `recent_rel2` Failed; Once the Selector-Efficacy Condition Is Positive, Binary Activation Still Beats the Nearby Sizing Variants (2026-03-29, Session 62)
+
+Session 62 tested stepped and continuous exposure schedules using the same `recent_rel2` state that powers the activation champion.
+
+Examples:
+- `half_full_0_1bp`: `+379.51%` relative, IR `0.8441`
+- `continuous_clip_1bp`: `+341.01%` relative, IR `0.7921`
+- `quarter_half_full`: `+302.46%` relative, IR `0.7724`
+
+All of them underperformed the plain binary activated rule:
+- `h175__rel2_gt0`: `+480.72%` relative, IR `0.9095`
+
+**Key finding:** nearby exposure-sizing variants are not the right way to improve this branch.
+
+**Implication:** keep activation binary for now once the recent-efficacy condition is met, and only reopen sizing if a materially stronger state variable appears.

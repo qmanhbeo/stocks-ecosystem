@@ -40,7 +40,13 @@ Separate live-system warning:
   - `data/features/xs_rl_signal_matrix.parquet`
   - `data/features/activation_state_daily.parquet`
   - `data/features/activation_meta_daily.parquet`
-- Session 60 proved the activation overlay runner works, but it is only honest through the matrix end date; if stock data extends beyond the matrix, refresh the matrix and both activation artifacts before calling anything “live”
+- Session 62 resolved the old stale-matrix blocker by rebuilding the live branch through `2026-03-27`
+- live refresh chain is now:
+  - `build_s1_live_extension.py`
+  - `build_rl_signal_matrix.py`
+  - `build_activation_state_features.py`
+  - `build_activation_meta_features.py`
+- if stock data extends beyond the matrix again, rerun that full chain before calling anything “live”
 
 ---
 
@@ -170,11 +176,13 @@ Build ticker-day and dense market-daily LLM features from `data/llm_cache/`.
 Build dense ticker-day open/close asymmetry features from OHLC.
 - **Output:** `data/features/xs_open_close_asymmetry.parquet` (full grid)
 - **Usage:** `python data_tools/build_open_close_asymmetry_features.py`
+- **Session 62 note:** now builds from a dense stock-day grid derived from raw stock files, not from the stale historical `S1` spine
 
 ### `build_dispersion_regime_features.py`
 Build dense date-level cross-sectional dispersion/breadth regime features.
 - **Output:** `data/features/xs_dispersion_regime_daily.parquet`
 - **Usage:** `python data_tools/build_dispersion_regime_features.py`
+- **Session 62 note:** now builds from a dense stock-day grid derived from raw stock files, not from the stale historical `S1` spine
 
 ### `build_return_skewness_features.py`
 Build dense ticker-day return skewness/tail-shape features.
@@ -192,6 +200,13 @@ Build rolling 5d/30d insider signal feature matrix from raw insider deals.
 - **Output:** `data/features/xs_insider_features.parquet` (826k rows, full grid)
 - **Usage:** `python data_tools/build_insider_features.py`
 
+### `build_insider_quality_features.py`
+Build dense ticker-day insider quality / relative-size features from the raw insider-deals matrix.
+- **Requires:** `data/features/xs_insider_deals_raw.parquet`
+- **Output:** `data/features/xs_insider_quality_features.parquet`
+- **Usage:** `python data_tools/build_insider_quality_features.py`
+- **Session 62 note:** now builds from a dense stock-day grid derived from raw stock files, not from the stale historical `S1` spine
+
 ### `build_macro_regime_features.py`
 Build composite macro regime features from FX/commodity/news data.
 - **Output:** `data/features/macro_regime_daily.parquet`
@@ -207,6 +222,13 @@ Build the selector-efficacy activation-meta surface used for learnable/path-depe
 - **Requires:** `activation_state_daily.parquet` plus the frozen always-on selector simulations
 - **Output:** `data/features/activation_meta_daily.parquet`
 - **Usage:** `python data_tools/build_activation_meta_features.py`
+
+### `build_s1_live_extension.py`
+Build the current-year live extension for the canonical `S1` signal without dropping the latest unlabeled rows.
+- **Requires:** current raw stock history plus the historical `S1` feature pipeline inputs
+- **Output:** `data/features/xs_barrier_vol_1d_hose_live_current.parquet`
+- **Usage:** `python data_tools/build_s1_live_extension.py`
+- **Operational role:** first step in the current-date `full_library` / activation refresh chain
 
 ---
 

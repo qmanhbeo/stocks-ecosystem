@@ -80,16 +80,23 @@ Operationally important summary:
   - max DD `-20.57%`
 - Session 60 completed that direct branch:
   - `H178`: `h175__rel2_gt0` beat always-on in `15 / 16` fee / start-year stress scenarios
-  - `H179`: the live-paper activation overlay runner exists, but the shared `full_library` matrix is still only current through `2025-12-31`
+  - `H179`: the live-paper activation overlay runner exists
   - `H180`: no small local guard beat the plain champion
+- Session 62 completed that operational-and-local branch:
+  - `H181`: rebuilt the live `S1` extension plus the shared `full_library` matrix and activation surfaces through `2026-03-27`
+  - `H182`: reran the live activation overlay on current data; latest sticky live book is `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
+  - `H183`: current-year scoreboard now compares sticky activated vs sticky always-on on current data
+  - `H184`: sticky holdings / displacement margin improved the champion
+  - `H185`: sector cap `3` helped slightly but did not beat the sticky champion
+  - `H186`: local exposure sizing around `rel2_gt0` failed
+- the current live champion is now:
+  - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
+  - `+509.76%` relative vs VNINDEX
+  - information ratio `0.9372`
 - the active next branch is now:
-  - `H181`: rebuild the current-date `full_library` matrix and activation surfaces
-  - `H182`: rerun the live-paper activation overlay on the refreshed matrix
-  - `H183`: compare activated vs always-on paper books once the overlay is current
-- the next local refinement queue after that is:
-  - `H184`: sticky holdings / displacement margin
-  - `H185`: sector concentration cap
-  - `H186`: local exposure control around `rel2_gt0`
+  - `H187`: combine `sticky_bonus_0p015` with `sector_cap_3`
+  - `H188`: implementation-pain veto on the sticky champion
+  - `H189`: basket-coherence / score-dispersion guard on the sticky champion
 - `H151/H152` remain parked behind the operational activation branch
 - the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
@@ -386,6 +393,15 @@ conda run -n stocks python analysis/h138_fixed_menu_validation.py
 
 # Fetch any new HOSE stocks
 PYTHONIOENCODING=utf-8 conda run -n stocks python data_tools/fetch_hose_universe.py --delay 0.3
+```
+
+### Current Best Uncapped Long-Only System
+
+```bash
+# Session 62 live champion:
+# full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015
+# +509.76% relative vs VNINDEX, IR 0.9372 on 2019-2025
+conda run -n stocks python analysis/h184_sticky_holdings_displacement_margin.py
 ```
 
 ### Parked Historical Execution Benchmark: H54

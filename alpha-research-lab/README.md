@@ -84,13 +84,14 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 
 ## Current Best Uncapped Long-Only System
 
-**`full_library + k5_r5_eq + h175__rel2_gt0`**
+**`full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`**
 
 - same top-5 equal-weight selector baseline
 - activation overlay from smoothed recent selector efficacy
-- `+1052.77%` total on the honest `2019-2025` holdout
-- `+491.69%` relative vs VNINDEX
-- max DD `-20.57%`
+- incumbent retention bonus at rebalance
+- `+509.76%` relative vs VNINDEX on the honest `2019-2025` holdout
+- information ratio `0.94`
+- avg daily turnover `0.2227`
 
 ## Current Active Branch
 
@@ -114,16 +115,19 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
   - max DD `-20.57%`
 - Session 60 then completed the direct follow-up queue (`H178-H180`):
   - `H178`: `h175__rel2_gt0` beat always-on in `15 / 16` start-year / fee stress scenarios
-  - `H179`: the live-paper activation overlay runner now exists, but the shared `full_library` matrix still ends at `2025-12-31`
+  - `H179`: the live-paper activation overlay runner now exists
   - `H180`: small local guards did not beat the plain champion
-- Active next research branch is now operational rather than exploratory:
-  - `H181`: rebuild the current-date `full_library` matrix and activation surfaces
-  - `H182`: rerun the live-paper activation overlay on the refreshed matrix
-  - `H183`: compare activated vs always-on paper books only after the overlay is current
-- After the live branch is current, the next local refinement queue is:
-  - `H184`: sticky holdings / displacement margin
-  - `H185`: sector concentration cap
-  - `H186`: local exposure control around `rel2_gt0`
+- Session 62 then completed the live-refresh and local-refinement wave (`H181-H186`):
+  - `H181`: current-date `full_library` matrix and activation surfaces rebuilt through `2026-03-27`
+  - `H182`: live overlay rerun on current data; latest sticky book is `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
+  - `H183`: activated book beats always-on in `2026` YTD so far, though both trail VNINDEX
+  - `H184`: sticky holdings / displacement margin improved the champion
+  - `H185`: sector cap `3` helped slightly but did not beat the sticky champion
+  - `H186`: local exposure sizing around `rel2_gt0` failed
+- Active next research branch is now:
+  - `H187`: combine `sticky_bonus_0p015` with `sector_cap_3`
+  - `H188`: implementation-pain veto on the sticky champion
+  - `H189`: basket-coherence / score-dispersion guard on the sticky champion
 - Selection-side work (`H151/H152`) remains parked behind the operational activation branch
 - RL remains exploratory only
 
@@ -205,6 +209,11 @@ Live `full_library` paper trades require intact long-history raw stock files.
 - recent-window refreshes can overwrite local parquet files with only the requested date window
 - that can leave `data/stock/` historically inconsistent and break live feature generation
 - before any live recommendation, verify long-history continuity across the active universe and `VNINDEX`
+- current-date refresh now runs through:
+  - `data_tools/build_s1_live_extension.py`
+  - `data_tools/build_rl_signal_matrix.py`
+  - `data_tools/build_activation_state_features.py`
+  - `data_tools/build_activation_meta_features.py`
 
 ## Saved Result Artifacts
 
@@ -255,6 +264,7 @@ Main experiment runners write compact JSON summaries to `artifacts/run_summaries
 - Portfolio activation H175 robustness stress: `latest_portfolio_activation_h175_robustness_stress.json`
 - Portfolio live activation overlay: `latest_portfolio_live_activation_overlay.json`
 - Portfolio activation H175 small augmentations: `latest_portfolio_activation_h175_small_augmentations.json`
+- Portfolio live activation scoreboard: `latest_portfolio_live_activation_scoreboard.json`
 
 Large daily portfolio baseline outputs are written under `artifacts/portfolio_baselines/`.
 
