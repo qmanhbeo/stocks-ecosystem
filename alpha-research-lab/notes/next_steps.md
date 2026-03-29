@@ -97,6 +97,9 @@ Use `notes/session_66_log.md` for the latest full session detail.
 9. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
+   - sequential hypothesis ladders are now the default lab method:
+     - one result should unlock, narrow, or kill the next branch
+     - avoid broad unordered sweeps when a decision tree is possible
    - Session 65 says selection alpha is strong, activation alpha is still real, but the currently *deployable* form is simpler than the historical max-return stack:
      - fixed path-dependent selector-efficacy rule
      - plus a small retention bonus

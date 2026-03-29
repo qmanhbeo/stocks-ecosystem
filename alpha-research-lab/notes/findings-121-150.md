@@ -509,3 +509,15 @@ But their naive always-on selector tests were poor:
 **Key finding:** there are still new tradability-conditioned alpha atoms available in the data, but they are not drop-in replacements for the current selector.
 
 **Implication:** the right next research move is additive bakeoff work on the strongest new atoms, not immediate selector replacement or live-branch changes.
+
+## F143: Sequential Hypothesis Ladders Are Now The Standard Lab Method; Experiment Families Should Use Explicit Decision Trees Rather Than Broad Unordered Sweeps (2026-03-29, Session 66)
+
+Session 66 made explicit what had already become the most reliable working pattern:
+- run a branch as a sequence
+- let each result unlock, narrow, or kill the next step
+- freeze live branches while new hypotheses run offline
+- avoid continuing to tune a failed family unless the branch is intentionally reopened
+
+**Key finding:** this process discipline is not just stylistic. It is the main defense against quiet test-set tuning and branch drift.
+
+**Implication:** future sessions should default to ordered hypothesis ladders with explicit stop / continue conditions, not flat experiment lists.

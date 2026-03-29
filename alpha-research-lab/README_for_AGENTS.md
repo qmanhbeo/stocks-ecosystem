@@ -10,6 +10,21 @@ This repo is designed to support one repeatable loop:
 6. Promote durable conclusions into the chunked permanent findings files.
 7. Update `notes/signal_library.md` if the signal is confirmed or promoted.
 
+## Standard Experiment Design
+
+Sequential hypothesis ladders are the default lab method.
+
+- Do not treat a branch as a flat bag of experiments.
+- Design experiment families so each result either:
+  - unlocks the next experiment,
+  - narrows the next experiment,
+  - or kills the branch cleanly.
+- Prefer explicit decision trees over broad unordered sweeps.
+- If a simpler candidate fails a stronger validation gate, do not keep locally tuning that same family unless the branch is intentionally reopened.
+- When a branch has a live component, freeze the live rule and run new hypotheses in a separate offline track.
+
+The point is to keep the lab falsifiable and to reduce quiet test-set tuning.
+
 Execution reality is shared at the workspace level:
 
 - canonical spec: `../docs/execution_reality.md`

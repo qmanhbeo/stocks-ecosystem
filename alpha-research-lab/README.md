@@ -18,6 +18,15 @@ H54 remains the parked historical execution benchmark.
 **This is not a race to beat H54. New signals are evaluated on their own merit as independent
 information sources, not on whether they improve a combined model.**
 
+## Research Method
+
+This lab now defaults to sequential hypothesis ladders.
+
+- each experiment family should have explicit pass / fail branch logic
+- one result should determine whether the next experiment is needed, narrowed, or rejected
+- prefer decision trees over broad unordered sweeps
+- when a live branch is active, freeze it and run new hypotheses offline under a separate protocol
+
 ## Hard Trading Rule
 
 This lab is permanently long-only.
