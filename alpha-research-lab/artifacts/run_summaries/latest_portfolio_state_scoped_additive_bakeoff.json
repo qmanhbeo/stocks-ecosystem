@@ -1,0 +1,37 @@
+{
+  "artifacts": {},
+  "metadata": {
+    "h196_summary": "artifacts/run_summaries/latest_portfolio_additive_atom_bakeoff.json",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_state_scoped_additive_bakeoff",
+  "name": "h197_state_scoped_additive_bakeoff",
+  "summary": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "reason": "H196 produced no promoted atoms",
+    "skipped": true
+  },
+  "ts": "20260329_175548"
+}

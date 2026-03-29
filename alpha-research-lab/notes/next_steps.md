@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_66_log.md` for the latest full session detail.
+Use `notes/session_69_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 66 reopened offline alpha discovery without changing the live branch. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. `H151` failed to find a better narrow selector inside the existing library, and `H152` found new tradable-state candidate atoms but no promoted selector. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
+**Session status:** Session 69 continued the sequential selector ladder without changing the live branch. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. `H203` passed in always-on form, but `H205` killed the state-scoped pair branch and `H204` produced no promoted fresh-family atom. The H201 winner remains the offline lead selector candidate, not a live-branch replacement. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
 
 ### Start next session here
 
@@ -76,7 +76,97 @@ Use `notes/session_66_log.md` for the latest full session detail.
        - `h152_breakout_volume_quality`
      - none showed naive always-on selector relevance
      - treat them as candidate atoms, not promoted selectors
-8. Run the next branch in this exact order:
+8. Session 67 additive follow-through:
+   - `H196`: **FAIL**
+     - no `H152` atom cleared the locked additive promotion rule on top of `full_library`
+     - nearest miss:
+       - `full_library + h152_sector_laggard_tradable`
+       - validation relative `+47.01%` vs baseline `+43.45%`
+       - validation IR `0.8863` vs baseline `0.8211`
+       - but confirmation IR deterioration failed the promotion gate
+     - branch effect:
+       - close the `H152` additive path
+   - `H197`: **SKIP**
+     - skipped by rule because `H196` produced no promoted atoms
+   - `H198`: **SKIP**
+     - skipped by rule because `H197` produced no promoted winner
+   - `H199`: **PARTIAL PASS**
+     - second-wave survivors:
+       - `h199_sector_laggard_gap_absorb`
+       - `h199_breakout_after_compression`
+       - `h199_ceiling_release_followthrough`
+     - only promoted candidate:
+       - `h199_sector_laggard_gap_absorb`
+       - dev IC `+0.0117`
+       - corr with S1 `+0.0629`
+       - validation IC `+0.0015`
+       - confirmation IC `+0.0135`
+       - naive validation selector relevance `+3.70%`
+     - branch effect:
+       - carry exactly this atom into the next additive test
+9. Session 68 H199 follow-through:
+   - `H200`: **PASS**
+     - `full_library + h199_sector_laggard_gap_absorb`
+     - validation relative `+68.21%` vs baseline `+43.45%`
+     - validation IR `1.16` vs baseline `0.82`
+     - confirmation relative `-5.95%` vs baseline `-20.02%`
+     - promoted cleanly under the locked additive gate
+   - `H201`: **PASS**
+     - best state-scoped blend:
+       - `state_blend__h199_sector_laggard_gap_absorb__30`
+       - validation relative `+46.17%`
+       - validation IR `0.90`
+       - confirmation relative `-13.43%`
+       - confirmation delta vs baseline `+6.58%`
+     - this is now the strongest offline selector candidate from the `H199` family
+   - `H202`: **FAIL**
+     - always-on winner selector stayed strong:
+       - validation relative `+46.17%`
+       - validation IR `0.90`
+     - but `winner + sticky activation` lost to the incumbent sticky branch:
+       - winner + sticky validation relative `+16.64%`
+       - incumbent `full_library + sticky` validation relative `+29.65%`
+       - winner + sticky confirmation relative `+24.70%`
+       - incumbent confirmation relative `+18.80%`
+     - branch effect:
+       - do not replace the live branch
+       - keep the H201 winner as offline-only research evidence
+10. Session 69 selector follow-through:
+   - `H203`: **PASS**
+     - one pair candidate survived the always-on additive gate:
+       - `full_library_pair__h199_sector_laggard_gap_absorb__h199_breakout_after_compression`
+       - validation relative `+65.60%`
+       - validation IR `1.14`
+       - confirmation relative `-14.86%`
+     - branch effect:
+       - the pair family earned one more test
+   - `H205`: **FAIL**
+     - state-scoped pair blends did not beat the H201 offline lead:
+       - best:
+         - `state_pair_blend__h199_sector_laggard_gap_absorb__h199_breakout_after_compression__10`
+         - validation relative `+48.31%`
+         - delta vs H201 winner `+2.14%`
+         - validation IR `0.89`
+         - delta vs H201 winner `-0.01`
+         - confirmation relative `-19.39%`
+         - delta vs H201 winner `-5.96%`
+     - branch effect:
+       - do not run `H206`
+       - close the H203/H205 pairwise extension family
+   - `H204`: **FAIL**
+     - all five fresh atoms were evaluated under the locked dev / validation / confirmation protocol
+     - four passed the dev standalone gate, but none showed selector relevance
+     - best dev IC:
+       - `h204_sector_mom_laggard_volume`
+       - dev IC `+0.0257`
+       - validation IC `+0.0124`
+       - confirmation IC `+0.0291`
+       - validation selector relevance `-29.91%`
+       - confirmation selector relevance `-35.41%`
+     - branch effect:
+       - stop the current selector-discovery ladder here
+       - do not keep recombining H199/H204 atoms against the same locked protocol window
+11. Run the next branch in this exact order:
    - live track:
      - keep the live scoreboard running on the rollback sticky branch
      - if sticky stays ahead of sticky always-on for at least `2` additional completed rebalance cycles:
@@ -88,13 +178,24 @@ Use `notes/session_66_log.md` for the latest full session detail.
          - reopen `H194/H195` if the problem is clearly activation-local again
          - otherwise stop local activation tuning and move fully back to selection-side work
    - research track:
-     - `H196`: additive bakeoff for the strongest `H152` atoms on top of the `full_library` selector backbone
-     - if `H196` fails, run `H197`: second-wave tradability-conditioned signal search families
+     - keep `state_blend__h199_sector_laggard_gap_absorb__30` as the current offline lead selector
+     - do **not** replace the live sticky branch from that result alone
+     - the current selector-discovery ladder is now exhausted:
+       - H199 additive path resolved
+       - H203/H205 pairwise extension resolved
+       - H204 fresh-family search resolved
+     - if continuing offline discovery, the next honest branch must require a genuinely new data family or a new high-level hypothesis family
+     - do **not** reopen:
+       - H199 pairwise recombinations
+       - H204 atom recombinations
+       - H206, because H205 produced no promoted winner
    - anti-leakage rule:
-     - do not keep tuning the current `H151/H152` families against `2025`
+     - do not keep tuning the closed `H152` additive family against `2025`
+     - do not keep retuning the exact single-atom `H199` family against `2025` after `H200/H201/H202` resolved it
+     - do not keep retuning the closed H203/H205 pairwise branch or H204 fresh-family branch against `2025`
      - rank them on dev / validation
      - use `2025` once per promoted candidate only
-9. Keep the architecture split clear:
+12. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
    - sequential hypothesis ladders are now the default lab method:
@@ -104,7 +205,7 @@ Use `notes/session_66_log.md` for the latest full session detail.
      - fixed path-dependent selector-efficacy rule
      - plus a small retention bonus
    - blocked-buy veto and sector cap stay as archived historical improvements, not the active live branch
-10. Only after the sticky live branch has clearly failed forward should the branch reopen these secondary ideas:
+13. Only after the sticky live branch has clearly failed forward should the branch reopen these secondary ideas:
    - `H194`: blocked-buy + sector-cap recalibration (implemented, not run after rollback)
    - `H195`: blocked-buy hysteresis (implemented, not run after rollback)
    - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened

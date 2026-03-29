@@ -1,0 +1,139 @@
+{
+  "artifacts": {
+    "best_daily": "artifacts/portfolio_baselines/20260329_181911_h205_state_scoped_pairwise_bakeoff_best_daily.parquet",
+    "results": "artifacts/portfolio_baselines/20260329_181911_h205_state_scoped_pairwise_bakeoff_results.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "h201_summary": "artifacts/run_summaries/latest_portfolio_state_scoped_h199_atom_bakeoff.json",
+    "h203_summary": "artifacts/run_summaries/latest_portfolio_pairwise_additive_bakeoff.json",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "start_year": 2015
+  },
+  "mode": "portfolio_state_scoped_pairwise_bakeoff",
+  "name": "h205_state_scoped_pairwise_bakeoff",
+  "summary": {
+    "baseline": {
+      "confirmation_avg_cash_weight": 0.029963313599925222,
+      "confirmation_avg_daily_turnover": 0.34898401965108955,
+      "confirmation_information_ratio_annualized": -0.5686366092267358,
+      "confirmation_relative_total_return": -0.13433235831303647,
+      "dev_avg_cash_weight": 0.019918391824940165,
+      "dev_avg_daily_turnover": 0.35448081436879547,
+      "dev_information_ratio_annualized": 0.9056246043110173,
+      "dev_relative_total_return": 5.769354898931718,
+      "liq_open_basic_confirmation_avg_ic": 0.06929854613937088,
+      "liq_open_basic_confirmation_corr_with_s1": 0.3677197853272793,
+      "liq_open_basic_dev_avg_ic": 0.0713099721018575,
+      "liq_open_basic_dev_corr_with_s1": 0.376244851978142,
+      "liq_open_basic_validation_avg_ic": 0.06989672858738644,
+      "liq_open_basic_validation_corr_with_s1": 0.37570845223798777,
+      "overall_information_ratio_annualized": 0.790827,
+      "overall_relative_total_return": 7.565309,
+      "strategy_name": "state_blend__h199_sector_laggard_gap_absorb__30",
+      "validation_avg_cash_weight": 0.016834903941260238,
+      "validation_avg_daily_turnover": 0.35844307174910606,
+      "validation_information_ratio_annualized": 0.9001919979742458,
+      "validation_relative_total_return": 0.46165396548989657
+    },
+    "baseline_strategy": "state_blend__h199_sector_laggard_gap_absorb__30",
+    "promoted_candidates": [],
+    "promoted_pairs_from_h203": [
+      "full_library_pair__h199_sector_laggard_gap_absorb__h199_breakout_after_compression"
+    ],
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "tested_candidates": [
+      {
+        "confirmation_relative_delta": -0.059557067370103134,
+        "confirmation_relative_total_return": -0.1938894256831396,
+        "promoted": false,
+        "strategy_name": "state_pair_blend__h199_sector_laggard_gap_absorb__h199_breakout_after_compression__10",
+        "validation_information_ratio_annualized": 0.8886925209350818,
+        "validation_ir_delta": -0.011499477039163986,
+        "validation_relative_delta": 0.021400261476583804,
+        "validation_relative_total_return": 0.48305422696648037
+      },
+      {
+        "confirmation_relative_delta": -0.06886895179265318,
+        "confirmation_relative_total_return": -0.20320131010568965,
+        "promoted": false,
+        "strategy_name": "state_pair_blend__h199_sector_laggard_gap_absorb__h199_breakout_after_compression__20",
+        "validation_information_ratio_annualized": 0.8747948031244742,
+        "validation_ir_delta": -0.025397194849771543,
+        "validation_relative_delta": 0.011308667562858421,
+        "validation_relative_total_return": 0.472962633052755
+      },
+      {
+        "confirmation_relative_delta": 0.0,
+        "confirmation_relative_total_return": -0.13433235831303647,
+        "promoted": false,
+        "strategy_name": "state_blend__h199_sector_laggard_gap_absorb__30",
+        "validation_information_ratio_annualized": 0.9001919979742458,
+        "validation_ir_delta": 0.0,
+        "validation_relative_delta": 0.0,
+        "validation_relative_total_return": 0.46165396548989657
+      },
+      {
+        "confirmation_relative_delta": -0.03719149663647969,
+        "confirmation_relative_total_return": -0.17152385494951616,
+        "promoted": false,
+        "strategy_name": "state_pair_blend__h199_sector_laggard_gap_absorb__h199_breakout_after_compression__30",
+        "validation_information_ratio_annualized": 0.8480504972143795,
+        "validation_ir_delta": -0.05214150075986623,
+        "validation_relative_delta": -0.0140616731288834,
+        "validation_relative_total_return": 0.44759229236101317
+      }
+    ],
+    "winner": {
+      "confirmation_avg_cash_weight": 0.04878818577837675,
+      "confirmation_avg_daily_turnover": 0.3325378856111456,
+      "confirmation_information_ratio_annualized": -0.7291274215025244,
+      "confirmation_ir_delta": -0.16049081227578865,
+      "confirmation_relative_delta": -0.059557067370103134,
+      "confirmation_relative_total_return": -0.1938894256831396,
+      "dev_avg_cash_weight": 0.03235902582354052,
+      "dev_avg_daily_turnover": 0.33967266351919284,
+      "dev_information_ratio_annualized": 1.2561921382349095,
+      "dev_relative_total_return": 18.202255287555197,
+      "liq_open_basic_confirmation_avg_ic": 0.08670857098324253,
+      "liq_open_basic_confirmation_corr_with_s1": 0.4740761802409195,
+      "liq_open_basic_dev_avg_ic": 0.09313340927069369,
+      "liq_open_basic_dev_corr_with_s1": 0.49910414770219963,
+      "liq_open_basic_validation_avg_ic": 0.0931104225335661,
+      "liq_open_basic_validation_corr_with_s1": 0.4851138556124954,
+      "overall_information_ratio_annualized": 1.035825,
+      "overall_relative_total_return": 21.956406,
+      "promoted": false,
+      "strategy_name": "state_pair_blend__h199_sector_laggard_gap_absorb__h199_breakout_after_compression__10",
+      "validation_avg_cash_weight": 0.02381563899438544,
+      "validation_avg_daily_turnover": 0.3349138152141568,
+      "validation_information_ratio_annualized": 0.8886925209350818,
+      "validation_ir_delta": -0.011499477039163986,
+      "validation_relative_delta": 0.021400261476583804,
+      "validation_relative_total_return": 0.48305422696648037
+    }
+  },
+  "ts": "20260329_181911"
+}

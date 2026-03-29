@@ -137,20 +137,41 @@ Operationally important summary:
   - four new tradability-conditioned candidate signals passed the dev standalone gate inside `liq_open_basic`
   - none showed naive always-on selector relevance
   - treat them as candidate atoms, not promoted selectors
+- Session 67 resolved the next selector ladder:
+  - `H196`: no `H152` atom survived the locked additive promotion gate on top of `full_library`
+  - `H197/H198`: skipped by rule because `H196` produced no promoted atoms
+  - `H199`: second-wave search found one worth-carrying atom:
+    - `h199_sector_laggard_gap_absorb`
+- Session 68 established the current offline lead from the H199 atom:
+  - `H200`: additive bakeoff passed
+  - `H201`: state-scoped additive blend passed
+  - `H202`: sticky-activation compatibility failed
+  - current offline lead selector:
+    - `state_blend__h199_sector_laggard_gap_absorb__30`
+- Session 69 resolved the next selector extension:
+  - `H203`: pairwise additive bakeoff passed in always-on form
+  - `H205`: state-scoped pairwise extension failed
+  - `H204`: fresh-family tradability search found no promoted atom
 - the active next branch is now dual-track:
   - live track:
     - keep the live forward scoreboard running on the rollback sticky branch
     - if sticky continues to beat sticky always-on forward, monitor only
     - if sticky falls behind sticky always-on over `>= 2` completed cycles, rerun parity first and then choose between reopening `H194/H195` or moving back to selection-side work
   - research track:
-    - `H196`: additive bakeoff for the strongest `H152` atoms on top of the selector backbone
-    - `H197`: second-wave tradability-conditioned signal search if `H196` fails
+    - keep `state_blend__h199_sector_laggard_gap_absorb__30` as the offline lead selector
+    - do not replace the live sticky branch from that result alone
+    - the current selector-discovery ladder is exhausted
+    - do not reopen:
+      - H199 pairwise recombinations
+      - H204 atom recombinations
+      - H206, because `H205` produced no promoted winner
+    - the next honest selector-side branch must require a genuinely new data family or a new high-level hypothesis family
 - the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
 - `H154` first ladder is complete: `S1`-only RL won on seed `1208`, conditioned sub-core is mixed,
   and full-matrix RL failed
 - `H155` is now complete and mixed: `S1`-only RL had two strong wins and two failures across seeds,
-  so RL is exploratory again and the active queue returns to `H151/H152`
+  so RL is exploratory again and no longer drives the active research queue
 
 Do not maintain a partial summary table here unless you update it together with `notes/signal_library.md`.
 
@@ -302,6 +323,17 @@ Mode-specific durable outputs:
 - `analysis/h180_h175_small_augmentations.py`: `artifacts/run_summaries/latest_portfolio_activation_h175_small_augmentations.json` plus local-augmentation outputs under `artifacts/portfolio_baselines/`
 - `analysis/h151_tradability_conditioned_composite_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_tradability_composite_bakeoff.json` plus candidate results under `artifacts/portfolio_baselines/`
 - `analysis/h152_tradability_conditioned_signal_search.py`: `artifacts/run_summaries/latest_tradability_conditioned_signal_search.json` plus candidate results under `artifacts/portfolio_baselines/`
+- `analysis/h196_additive_atom_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_additive_atom_bakeoff.json` plus additive-selector results under `artifacts/portfolio_baselines/`
+- `analysis/h197_state_scoped_additive_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_state_scoped_additive_bakeoff.json` plus state-scoped additive outputs under `artifacts/portfolio_baselines/`
+- `analysis/h198_selector_activation_compatibility.py`: `artifacts/run_summaries/latest_portfolio_selector_activation_compatibility.json` plus compatibility outputs under `artifacts/portfolio_baselines/`
+- `analysis/h199_second_wave_tradability_conditioned_search.py`: `artifacts/run_summaries/latest_tradability_conditioned_signal_search_v2.json` plus second-wave signal-search outputs under `artifacts/portfolio_baselines/`
+- `analysis/h200_additive_h199_atom_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_additive_h199_atom_bakeoff.json` plus additive H199 selector outputs under `artifacts/portfolio_baselines/`
+- `analysis/h201_state_scoped_h199_atom_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_state_scoped_h199_atom_bakeoff.json` plus state-scoped H199 selector outputs under `artifacts/portfolio_baselines/`
+- `analysis/h202_h199_selector_activation_compatibility.py`: `artifacts/run_summaries/latest_portfolio_h199_selector_activation_compatibility.json` plus H199 selector-activation compatibility outputs under `artifacts/portfolio_baselines/`
+- `analysis/h203_pairwise_additive_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_pairwise_additive_bakeoff.json` plus pairwise additive selector outputs under `artifacts/portfolio_baselines/`
+- `analysis/h204_third_wave_tradability_conditioned_search.py`: `artifacts/run_summaries/latest_tradability_conditioned_signal_search_v3.json` plus third-wave signal-search outputs under `artifacts/portfolio_baselines/`
+- `analysis/h205_state_scoped_pairwise_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_state_scoped_pairwise_bakeoff.json` plus state-scoped pairwise outputs under `artifacts/portfolio_baselines/`
+- `analysis/h206_pair_selector_activation_compatibility.py`: `artifacts/run_summaries/latest_portfolio_pair_selector_activation_compatibility.json` plus pair-selector compatibility outputs under `artifacts/portfolio_baselines/`
 
 For any new analysis script, keep the large output wherever it naturally belongs, but also write
 one compact summary JSON under `artifacts/run_summaries/`.

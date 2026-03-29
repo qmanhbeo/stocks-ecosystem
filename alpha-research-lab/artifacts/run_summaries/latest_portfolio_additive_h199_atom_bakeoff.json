@@ -1,0 +1,156 @@
+{
+  "artifacts": {
+    "best_daily": "artifacts/portfolio_baselines/20260329_180501_h200_additive_h199_atom_bakeoff_best_daily.parquet",
+    "results": "artifacts/portfolio_baselines/20260329_180501_h200_additive_h199_atom_bakeoff_results.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "h199_summary": "artifacts/run_summaries/latest_tradability_conditioned_signal_search_v2.json",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "start_year": 2015
+  },
+  "mode": "portfolio_additive_h199_atom_bakeoff",
+  "name": "h200_additive_h199_atom_bakeoff",
+  "summary": {
+    "baseline": {
+      "confirmation_avg_cash_weight": 0.05293413379463258,
+      "confirmation_avg_daily_turnover": 0.3306432669549642,
+      "confirmation_information_ratio_annualized": -0.7549743915577688,
+      "confirmation_relative_total_return": -0.20016368501338921,
+      "dev_avg_cash_weight": 0.03283623787386082,
+      "dev_avg_daily_turnover": 0.3391094634917013,
+      "dev_information_ratio_annualized": 1.2141605578088648,
+      "dev_relative_total_return": 16.40591203650821,
+      "liq_open_basic_confirmation_avg_ic": 0.08688896414872503,
+      "liq_open_basic_confirmation_corr_with_s1": 0.4766619584132285,
+      "liq_open_basic_dev_avg_ic": 0.09340551660390509,
+      "liq_open_basic_dev_corr_with_s1": 0.5009907309125062,
+      "liq_open_basic_validation_avg_ic": 0.09385675832358673,
+      "liq_open_basic_validation_corr_with_s1": 0.4865899458702483,
+      "overall_information_ratio_annualized": 0.991354,
+      "overall_relative_total_return": 18.970695,
+      "signal_columns": [
+        "s1_proba",
+        "c4_oc_asym_5d",
+        "c5_ins_relative_size_5d",
+        "c5_signal_present",
+        "c6_contrarian_intra_5d",
+        "c7_ceiling_count_5d",
+        "c8_vol_zscore_5d",
+        "c9_reversal_1d",
+        "c10_illiq_level_rank",
+        "c11_ret_60d_lag_rank",
+        "c12_gap_absorb_3",
+        "c13_compress_blowoff_2",
+        "c14_clv_volconf_resid_rank"
+      ],
+      "strategy_name": "full_library_baseline",
+      "validation_avg_cash_weight": 0.023833136079562278,
+      "validation_avg_daily_turnover": 0.33560260930117686,
+      "validation_information_ratio_annualized": 0.8210729094394421,
+      "validation_relative_total_return": 0.43448254906045713
+    },
+    "h199_promoted_signals": [
+      "h199_sector_laggard_gap_absorb"
+    ],
+    "promoted_candidates": [
+      {
+        "confirmation_ir_delta": 0.6022388002967902,
+        "confirmation_relative_delta": 0.14070019377441412,
+        "strategy_name": "full_library_plus__h199_sector_laggard_gap_absorb",
+        "validation_ir_delta": 0.33657970039466856,
+        "validation_relative_delta": 0.2476332964646868
+      }
+    ],
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "tested_candidates": [
+      {
+        "confirmation_relative_delta": 0.14070019377441412,
+        "confirmation_relative_total_return": -0.0594634912389751,
+        "promoted": true,
+        "strategy_name": "full_library_plus__h199_sector_laggard_gap_absorb",
+        "validation_information_ratio_annualized": 1.1576526098341107,
+        "validation_ir_delta": 0.33657970039466856,
+        "validation_relative_delta": 0.2476332964646868,
+        "validation_relative_total_return": 0.6821158455251439
+      },
+      {
+        "confirmation_relative_delta": 0.0,
+        "confirmation_relative_total_return": -0.20016368501338921,
+        "promoted": false,
+        "strategy_name": "full_library_baseline",
+        "validation_information_ratio_annualized": 0.8210729094394421,
+        "validation_ir_delta": 0.0,
+        "validation_relative_delta": 0.0,
+        "validation_relative_total_return": 0.43448254906045713
+      }
+    ],
+    "winner": {
+      "confirmation_avg_cash_weight": 0.04013547028317178,
+      "confirmation_avg_daily_turnover": 0.3296492842930021,
+      "confirmation_information_ratio_annualized": -0.15273559126097855,
+      "confirmation_ir_delta": 0.6022388002967902,
+      "confirmation_relative_delta": 0.14070019377441412,
+      "confirmation_relative_total_return": -0.0594634912389751,
+      "dev_avg_cash_weight": 0.022514899246694156,
+      "dev_avg_daily_turnover": 0.3494262015532043,
+      "dev_information_ratio_annualized": 1.0994829932984813,
+      "dev_relative_total_return": 11.43872055453716,
+      "liq_open_basic_confirmation_avg_ic": 0.08769812792488217,
+      "liq_open_basic_confirmation_corr_with_s1": 0.47573077677504294,
+      "liq_open_basic_dev_avg_ic": 0.09308647650217142,
+      "liq_open_basic_dev_corr_with_s1": 0.49673631242423133,
+      "liq_open_basic_validation_avg_ic": 0.09286557151933211,
+      "liq_open_basic_validation_corr_with_s1": 0.48724174122339037,
+      "overall_information_ratio_annualized": 1.002133,
+      "overall_relative_total_return": 18.679192,
+      "promoted": true,
+      "signal_columns": [
+        "s1_proba",
+        "c4_oc_asym_5d",
+        "c5_ins_relative_size_5d",
+        "c5_signal_present",
+        "c6_contrarian_intra_5d",
+        "c7_ceiling_count_5d",
+        "c8_vol_zscore_5d",
+        "c9_reversal_1d",
+        "c10_illiq_level_rank",
+        "c11_ret_60d_lag_rank",
+        "c12_gap_absorb_3",
+        "c13_compress_blowoff_2",
+        "c14_clv_volconf_resid_rank",
+        "h199_sector_laggard_gap_absorb"
+      ],
+      "strategy_name": "full_library_plus__h199_sector_laggard_gap_absorb",
+      "validation_avg_cash_weight": 0.0226962960925137,
+      "validation_avg_daily_turnover": 0.35006113721435106,
+      "validation_information_ratio_annualized": 1.1576526098341107,
+      "validation_ir_delta": 0.33657970039466856,
+      "validation_relative_delta": 0.2476332964646868,
+      "validation_relative_total_return": 0.6821158455251439
+    }
+  },
+  "ts": "20260329_180501"
+}

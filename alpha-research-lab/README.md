@@ -177,14 +177,34 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
 - Session 66 then reopened offline alpha discovery without changing the live branch:
   - `H151`: the H150-derived narrow composites did **not** beat the always-on `full_library` selector baseline
   - `H152`: four new tradability-conditioned signals passed the dev standalone gate inside `liq_open_basic`, but none showed naive always-on selector relevance
+- Session 67 then resolved the first additive ladder cleanly:
+  - `H196`: the `H152` atoms did **not** survive the locked additive promotion gate on top of `full_library`
+  - `H197/H198`: skipped by rule because `H196` produced no promoted atoms
+  - `H199`: second-wave search found one worth-carrying atom:
+    - `h199_sector_laggard_gap_absorb`
+- Session 68 then advanced that one promoted H199 atom:
+  - `H200`: additive bakeoff passed
+  - `H201`: state-scoped additive blend passed
+  - `H202`: sticky-activation compatibility failed
+  - current offline lead selector:
+    - `state_blend__h199_sector_laggard_gap_absorb__30`
+- Session 69 then resolved the next selector extension cleanly:
+  - `H203`: pairwise additive bakeoff passed in always-on form
+  - `H205`: state-scoped pairwise extension failed
+  - `H204`: fresh-family tradability search found no promoted atom
 - Active next branch is now dual-track:
   - live track:
     - keep the live forward scoreboard running on the rollback sticky branch
     - if sticky keeps beating sticky always-on forward, monitor only
     - if sticky falls behind sticky always-on for `>= 2` completed cycles, rerun parity first and then choose between reopening `H194/H195` or abandoning local activation tuning
   - research track:
-    - `H196`: additive bakeoff for the strongest `H152` atoms on top of the selector backbone
-    - `H197`: second-wave tradability-conditioned signal search if `H196` fails
+    - keep `state_blend__h199_sector_laggard_gap_absorb__30` as the offline lead selector
+    - do not replace the live sticky branch from that result alone
+    - the current selector-discovery ladder is exhausted
+    - do not reopen:
+      - H199 pairwise recombinations
+      - H204 atom recombinations
+    - the next honest selector-side branch must require a genuinely new data family or a new high-level hypothesis family
 - RL remains exploratory only
 
 ## Parked Historical Execution Benchmark
@@ -264,6 +284,17 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h195_blocked_buy_hysteresis.py`: blocked-buy hysteresis family, only if the blocked-buy branch is intentionally reopened
 - `analysis/h151_tradability_conditioned_composite_bakeoff.py`: locked-protocol bakeoff for the H150-derived narrow sub-core composites
 - `analysis/h152_tradability_conditioned_signal_search.py`: locked-protocol tradable-state signal search with standalone gates plus naive selector relevance
+- `analysis/h196_additive_atom_bakeoff.py`: one-atom additive selector bakeoff for the strongest `H152` atoms on top of `full_library`
+- `analysis/h197_state_scoped_additive_bakeoff.py`: state-scoped additive selector bakeoff, only if `H196` promotes atoms
+- `analysis/h198_selector_activation_compatibility.py`: sticky-activation compatibility test for a promoted additive selector winner
+- `analysis/h199_second_wave_tradability_conditioned_search.py`: second-wave tradability-transition signal search after the first additive path fails
+- `analysis/h200_additive_h199_atom_bakeoff.py`: additive selector bakeoff for the promoted H199 atom(s) on top of `full_library`
+- `analysis/h201_state_scoped_h199_atom_bakeoff.py`: state-scoped selector bakeoff for promoted H200 atom(s)
+- `analysis/h202_h199_selector_activation_compatibility.py`: sticky-activation compatibility test for the promoted H201 selector winner
+- `analysis/h203_pairwise_additive_bakeoff.py`: always-on pairwise additive selector bakeoff around the H201 winner
+- `analysis/h204_third_wave_tradability_conditioned_search.py`: fresh-family tradability-conditioned signal search after the H203/H205 pair branch dies
+- `analysis/h205_state_scoped_pairwise_bakeoff.py`: state-scoped pairwise selector bakeoff for promoted H203 pair candidates
+- `analysis/h206_pair_selector_activation_compatibility.py`: sticky-activation compatibility test for a promoted H205 pair-selector winner
 
 ## Live Paper-Trade Prerequisite
 

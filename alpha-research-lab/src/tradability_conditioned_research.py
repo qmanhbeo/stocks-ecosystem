@@ -213,7 +213,15 @@ def build_candidate_signal_frame(
     start_year: int = 2015,
     end_year: int = 2025,
 ) -> pd.DataFrame:
-    frame = bundle.matrix[["time", "ticker", "actual", "s1_proba"]].copy()
+    base_matrix_cols = ["time", "ticker", "actual", "s1_proba"]
+    optional_matrix_cols = [
+        "c7_ceiling_count_5d",
+        "c8_vol_zscore_5d",
+        "c12_gap_absorb_3",
+        "c13_compress_blowoff_2",
+    ]
+    carry_cols = [column for column in optional_matrix_cols if column in bundle.matrix.columns]
+    frame = bundle.matrix[base_matrix_cols + carry_cols].copy()
     frame = frame.merge(
         bundle.feature_frame[
             [
@@ -237,6 +245,7 @@ def build_candidate_signal_frame(
     ].copy()
     price = price.sort_values(["ticker", "time"]).reset_index(drop=True)
     price["prev_close"] = price.groupby("ticker", sort=False)["close"].shift(1)
+    price["ret_1d"] = price.groupby("ticker", sort=False)["close"].pct_change(1, fill_method=None)
     price["ret_3d"] = price.groupby("ticker", sort=False)["close"].pct_change(3, fill_method=None)
     price["ret_5d"] = price.groupby("ticker", sort=False)["close"].pct_change(5, fill_method=None)
     prev20_high = price.groupby("ticker", sort=False)["close"].transform(
@@ -245,7 +254,7 @@ def build_candidate_signal_frame(
     price["breakout_20d"] = price["close"] / prev20_high - 1.0
     price["gap_to_prev_close"] = price["open"] / price["prev_close"] - 1.0
     frame = frame.merge(
-        price[["time", "ticker", "ret_3d", "ret_5d", "breakout_20d", "gap_to_prev_close"]],
+        price[["time", "ticker", "ret_1d", "ret_3d", "ret_5d", "breakout_20d", "gap_to_prev_close"]],
         on=["time", "ticker"],
         how="left",
         validate="one_to_one",
@@ -261,6 +270,8 @@ def build_candidate_signal_frame(
                 "xs_intra_sector_rank",
                 "xs_sector_rotation_signal",
                 "xs_sector_mom_5d_rank",
+                "xs_sector_mom_20d_rank",
+                "xs_sector_accel",
                 "xs_sector_breadth_5d",
             ]
         ],
@@ -272,11 +283,31 @@ def build_candidate_signal_frame(
     price_limit = pd.read_parquet(PRICE_LIMIT_PATH)
     price_limit["time"] = pd.to_datetime(price_limit["time"])
     frame = frame.merge(
-        price_limit[["time", "ticker", "xs_ceiling_count_5d", "xs_limit_net_5d"]],
+        price_limit[
+            [
+                "time",
+                "ticker",
+                "xs_ceiling_count_5d",
+                "xs_ceiling_count_20d",
+                "xs_floor_count_5d",
+                "xs_floor_count_20d",
+                "xs_limit_net_5d",
+            ]
+        ],
         on=["time", "ticker"],
         how="left",
         validate="one_to_one",
     )
+
+    if DISPERSION_PATH.exists():
+        dispersion = pd.read_parquet(DISPERSION_PATH)
+        dispersion["time"] = pd.to_datetime(dispersion["time"])
+        frame = frame.merge(
+            dispersion[["time", "xs_breadth_up_5d", "xs_breadth_up_20d", "xs_dispersion_z20"]],
+            on=["time"],
+            how="left",
+            validate="many_to_one",
+        )
 
     frame = frame.sort_values(["ticker", "time"]).reset_index(drop=True)
     frame["prev_can_buy_next_open"] = (
@@ -288,9 +319,23 @@ def build_candidate_signal_frame(
     ).astype(float)
     frame["buyable_score"] = frame["can_buy_next_open"].fillna(False).astype(float)
 
+    frame["xs_ret_1d_rank"] = _pct_rank_by_time(frame, "ret_1d")
     frame["xs_ret_3d_rank"] = _pct_rank_by_time(frame, "ret_3d")
     frame["xs_gap_down_rank"] = _pct_rank_by_time(frame.assign(_gap_down=-pd.to_numeric(frame["gap_to_prev_close"], errors="coerce")), "_gap_down")
     frame["xs_breakout_20d_rank"] = _pct_rank_by_time(frame, "breakout_20d")
+    frame["xs_ceiling_count_20d_rank"] = _pct_rank_by_time(frame, "xs_ceiling_count_20d")
+    frame["xs_floor_count_5d_rank"] = _pct_rank_by_time(frame, "xs_floor_count_5d")
+    frame["xs_floor_count_20d_rank"] = _pct_rank_by_time(frame, "xs_floor_count_20d")
+    frame["xs_limit_net_5d_rank"] = _pct_rank_by_time(frame, "xs_limit_net_5d")
+    frame["xs_sector_accel_rank"] = _pct_rank_by_time(frame, "xs_sector_accel")
+    frame["xs_c13_rank"] = _pct_rank_by_time(frame, "c13_compress_blowoff_2") if "c13_compress_blowoff_2" in frame.columns else 0.5
+    frame["xs_c12_rank"] = _pct_rank_by_time(frame, "c12_gap_absorb_3") if "c12_gap_absorb_3" in frame.columns else 0.5
+    frame["xs_c8_rank"] = _pct_rank_by_time(frame, "c8_vol_zscore_5d") if "c8_vol_zscore_5d" in frame.columns else 0.5
+    frame["xs_c7_rank"] = _pct_rank_by_time(frame, "c7_ceiling_count_5d") if "c7_ceiling_count_5d" in frame.columns else 0.5
+    frame["xs_recent_weakness_rank"] = _pct_rank_by_time(
+        frame.assign(_recent_weakness=-pd.to_numeric(frame["ret_1d"], errors="coerce")),
+        "_recent_weakness",
+    )
 
     frame["h152_liq_open_continue_3"] = (
         frame["xs_ret_3d_rank"]
@@ -321,6 +366,68 @@ def build_candidate_signal_frame(
         + frame["xs_tv_to_adv20_rank"]
         + frame["xs_adv20_rank"]
         + frame["buyable_score"]
+    ) / 4.0
+
+    frame["h199_floor_release_rebound"] = (
+        frame["xs_floor_count_5d_rank"]
+        + frame["release_flag"]
+        + frame["xs_gap_down_rank"]
+        + frame["xs_clv_rank"]
+    ) / 4.0
+    frame["h199_ceiling_release_followthrough"] = (
+        frame["xs_ceiling_count_20d_rank"]
+        + frame["release_flag"]
+        + frame["xs_breakout_20d_rank"]
+        + frame["xs_clv_rank"]
+    ) / 4.0
+    frame["h199_sector_laggard_gap_absorb"] = (
+        (1.0 - pd.to_numeric(frame["xs_intra_sector_rank"], errors="coerce").fillna(0.5))
+        + pd.to_numeric(frame["xs_sector_mom_20d_rank"], errors="coerce").fillna(0.5)
+        + frame["xs_c12_rank"]
+        + frame["xs_gap_down_rank"]
+    ) / 4.0
+    frame["h199_breakout_after_compression"] = (
+        frame["xs_breakout_20d_rank"]
+        + frame["xs_c13_rank"]
+        + frame["xs_c8_rank"]
+        + frame["buyable_score"]
+    ) / 4.0
+    frame["h199_buyable_reversal_after_1d_weakness"] = (
+        frame["xs_recent_weakness_rank"]
+        + frame["xs_clv_rank"]
+        + frame["xs_tv_to_adv20_rank"]
+        + frame["buyable_score"]
+    ) / 4.0
+
+    frame["h204_sector_accel_release"] = (
+        frame["xs_sector_accel_rank"]
+        + frame["release_flag"]
+        + frame["xs_tv_to_adv20_rank"]
+        + frame["xs_clv_rank"]
+    ) / 4.0
+    frame["h204_ceiling_memory_gap_absorb"] = (
+        frame["xs_ceiling_count_20d_rank"]
+        + frame["xs_c12_rank"]
+        + frame["xs_gap_down_rank"]
+        + frame["buyable_score"]
+    ) / 4.0
+    frame["h204_breakout_sector_accel_buyable"] = (
+        frame["xs_breakout_20d_rank"]
+        + frame["xs_sector_accel_rank"]
+        + frame["xs_adv20_rank"]
+        + frame["buyable_score"]
+    ) / 4.0
+    frame["h204_sector_mom_laggard_volume"] = (
+        (1.0 - pd.to_numeric(frame["xs_intra_sector_rank"], errors="coerce").fillna(0.5))
+        + pd.to_numeric(frame["xs_sector_mom_20d_rank"], errors="coerce").fillna(0.5)
+        + frame["xs_c8_rank"]
+        + frame["xs_tv_to_adv20_rank"]
+    ) / 4.0
+    frame["h204_release_after_floor_pressure"] = (
+        frame["xs_floor_count_20d_rank"]
+        + frame["release_flag"]
+        + frame["xs_clv_rank"]
+        + frame["xs_c12_rank"]
     ) / 4.0
 
     frame = frame[(frame["time"].dt.year >= int(start_year)) & (frame["time"].dt.year <= int(end_year))].copy()

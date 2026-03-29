@@ -521,3 +521,195 @@ Session 66 made explicit what had already become the most reliable working patte
 **Key finding:** this process discipline is not just stylistic. It is the main defense against quiet test-set tuning and branch drift.
 
 **Implication:** future sessions should default to ordered hypothesis ladders with explicit stop / continue conditions, not flat experiment lists.
+
+## F144: H196 Closes The First Additive Path; None Of The H152 Atoms Survive The Locked Selector-Level Promotion Gate On Top Of `full_library` (2026-03-29, Session 67)
+
+Session 67 tested the strongest H152 atoms in the most conservative additive form:
+- keep the selector backbone fixed at `full_library`
+- add exactly one atom at a time
+- no custom weighting
+- no new activation logic
+
+Best candidate:
+- `full_library + h152_sector_laggard_tradable`
+- validation relative return:
+  - `+47.01%`
+  - baseline `+43.45%`
+  - delta `+3.56%`
+- validation IR:
+  - `0.8863`
+  - baseline `0.8211`
+  - delta `+0.0653`
+
+But that still did **not** pass the locked gate because confirmation deteriorated too much on risk-adjusted terms.
+
+All other H152 atoms were worse:
+- `h152_breakout_volume_quality`
+- `h152_limit_release_pressure`
+- `h152_liq_open_continue_3`
+
+`H197/H198` were then skipped by rule because H196 produced no promoted atoms.
+
+**Key finding:** the H152 atoms have real standalone state-level signal, but they are not additive enough one at a time to justify promotion on top of the current selector backbone.
+
+**Implication:** the first additive family is closed. Do not keep tuning the H152 atoms against `2025`. The next honest move is a second-wave signal search, not a wider additive sweep over the same atoms.
+
+## F145: H199 Finds One Worth-Carrying Second-Wave Atom, `h199_sector_laggard_gap_absorb`; It Is Not A Selector Replacement, But It Is Strong Enough To Enter The Next Additive Ladder (2026-03-29, Session 67)
+
+Session 67 then ran a more specific tradability-transition search inside `liq_open_basic`:
+- `h199_floor_release_rebound`
+- `h199_ceiling_release_followthrough`
+- `h199_sector_laggard_gap_absorb`
+- `h199_breakout_after_compression`
+- `h199_buyable_reversal_after_1d_weakness`
+
+The clear winner was:
+- `h199_sector_laggard_gap_absorb`
+  - dev IC `+0.0117`
+  - corr with S1 `+0.0629`
+  - validation IC `+0.0015`
+  - confirmation IC `+0.0135`
+  - naive validation selector relevance `+3.70%`
+
+Two others passed the dev gate but failed the selector relevance check:
+- `h199_breakout_after_compression`
+- `h199_ceiling_release_followthrough`
+
+**Key finding:** the second-wave search did not yield a replacement selector, but it did yield one credible new atom with low S1 correlation and positive validation / confirmation IC inside the tradable state.
+
+**Implication:** the next sequential branch should test exactly one additive family:
+- `H200`: add `h199_sector_laggard_gap_absorb` to `full_library`
+- then only if it passes:
+  - `H201`: state-scoped additive blend
+  - `H202`: sticky-activation compatibility
+
+## F146: The H199 Winner, `h199_sector_laggard_gap_absorb`, Survives Both The Additive And State-Scoped Selector Ladders; It Is The Strongest New Offline Selector Candidate Since The Live Branch Was Frozen (2026-03-29, Session 68)
+
+Session 68 advanced the promoted H199 atom through the next two selector-only gates.
+
+### H200 additive result
+- `full_library + h199_sector_laggard_gap_absorb`
+- validation relative return:
+  - `+68.21%`
+  - baseline `+43.45%`
+  - delta `+24.76%`
+- validation IR:
+  - `1.16`
+  - baseline `0.82`
+  - delta `+0.34`
+- confirmation relative return:
+  - `-5.95%`
+  - baseline `-20.02%`
+  - delta `+14.07%`
+
+### H201 state-scoped result
+Best variant:
+- `state_blend__h199_sector_laggard_gap_absorb__30`
+- validation relative `+46.17%`
+- validation IR `0.90`
+- confirmation relative `-13.43%`
+- confirmation delta vs baseline `+6.58%`
+
+**Key finding:** this is the first post-freeze selector candidate that survives both an additive selector bakeoff and a state-scoped refinement ladder under the locked anti-leakage protocol.
+
+**Implication:** `state_blend__h199_sector_laggard_gap_absorb__30` is now the current **offline lead selector candidate**. It deserves to be carried forward in selector-side research, but not yet promoted to the live branch.
+
+## F147: The New H199-Based Selector Candidate Fails Frozen Sticky-Activation Compatibility; Stronger Selection Alpha Alone Is Not Enough To Replace The Live Branch (2026-03-29, Session 68)
+
+Session 68 then ran the decisive compatibility check:
+- keep activation fixed at:
+  - `h175__rel2_gt0 + sticky_bonus_0p015`
+- compare:
+  - `winner_always_on`
+  - `winner_plus_sticky`
+  - incumbent `full_library_plus_sticky`
+
+Results:
+- `winner_always_on`
+  - validation relative `+46.17%`
+  - validation IR `0.90`
+- incumbent `full_library_plus_sticky`
+  - validation relative `+29.65%`
+  - validation IR `0.61`
+  - confirmation relative `+18.80%`
+- `winner_plus_sticky`
+  - validation relative `+16.64%`
+  - validation delta vs incumbent `-13.01%`
+  - validation IR `0.40`
+  - validation IR delta `-0.21`
+  - confirmation relative `+24.70%`
+
+So the new selector is genuinely stronger in always-on form, but it loses under the frozen sticky overlay.
+
+**Key finding:** stronger selector alpha is not automatically deployable selector alpha. The current live branch is still constrained by activation compatibility, not just selection quality.
+
+**Implication:** do **not** replace the live sticky branch with the H199-based selector. Keep the live branch frozen and treat the H201 winner as offline-only evidence unless a future branch finds a clean, non-overfit way to make it activation-compatible.
+
+## F148: The H203 Pairwise Extension Looks Good In Always-On Form But Fails The Next Sequential Gate; The Pair Branch Is Closed (2026-03-29, Session 69)
+
+Session 69 extended the H199 family one step further:
+- start from the H201 offline lead:
+  - `state_blend__h199_sector_laggard_gap_absorb__30`
+- test whether adding one companion atom helps:
+  - always-on first via `H203`
+  - then state-scoped via `H205`
+
+### H203 result
+Promoted pair:
+- `full_library_pair__h199_sector_laggard_gap_absorb__h199_breakout_after_compression`
+- validation relative `+65.60%`
+- validation IR `1.14`
+- confirmation relative `-14.86%`
+
+This was strong enough to continue the ladder.
+
+### H205 result
+Best state-scoped pair variant:
+- `state_pair_blend__h199_sector_laggard_gap_absorb__h199_breakout_after_compression__10`
+- validation relative `+48.31%`
+- delta vs the H201 winner `+2.14%`
+- validation IR `0.89`
+- delta vs the H201 winner `-0.01`
+- confirmation relative `-19.39%`
+- delta vs the H201 winner `-5.96%`
+
+So the pair branch failed the locked promotion rule at the state-scoped stage.
+
+**Key finding:** the H199 pairwise extension has real always-on selector information, but it is not strong enough in the next sequential state-scoped gate to dislodge the current offline lead.
+
+**Implication:** close the H203/H205 pair family. Do not keep tuning pairwise H199 recombinations against the same validation / confirmation windows.
+
+## F149: The Fresh H204 Tradability Families Show Standalone IC But No Selector Relevance; The Current Selector-Discovery Ladder Is Exhausted (2026-03-29, Session 69)
+
+Session 69 then reopened the genuinely new-family search with:
+- `h204_sector_accel_release`
+- `h204_ceiling_memory_gap_absorb`
+- `h204_breakout_sector_accel_buyable`
+- `h204_sector_mom_laggard_volume`
+- `h204_release_after_floor_pressure`
+
+Several signals passed the dev standalone gate:
+- `h204_sector_mom_laggard_volume`
+  - dev IC `+0.0257`
+  - validation IC `+0.0124`
+  - confirmation IC `+0.0291`
+- `h204_sector_accel_release`
+  - dev IC `+0.0168`
+  - validation IC `+0.0123`
+  - confirmation IC `+0.0152`
+- `h204_release_after_floor_pressure`
+  - dev IC `+0.0304`
+  - validation IC `+0.0036`
+  - confirmation IC `+0.0224`
+
+But none had selector relevance:
+- `h204_sector_mom_laggard_volume`
+  - validation selector return `-29.91%`
+  - confirmation selector return `-35.41%`
+- `h204_sector_accel_release`
+  - validation selector return `-9.62%`
+  - confirmation selector return `-28.37%`
+
+**Key finding:** the fresh H204 families contain cross-sectional state-level signal, but not in a form that survives naive selector economics under the current protocol.
+
+**Implication:** stop the current selector-discovery ladder here. The next honest selector-side branch must depend on a genuinely new data family or a different high-level hypothesis family, not more recombination of H199/H204 atoms.

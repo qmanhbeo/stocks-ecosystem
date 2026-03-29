@@ -1,0 +1,92 @@
+{
+  "artifacts": {
+    "results": "artifacts/portfolio_baselines/20260329_175628_h199_second_wave_tradability_conditioned_search_results.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "start_year": 2015
+  },
+  "mode": "tradability_conditioned_signal_search_v2",
+  "name": "h199_second_wave_tradability_conditioned_search",
+  "summary": {
+    "promoted": [
+      {
+        "confirmation_avg_ic": 0.013493923324369784,
+        "signal_name": "h199_sector_laggard_gap_absorb",
+        "validation_avg_ic": 0.001466621986989999
+      }
+    ],
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "survivors": [
+      "h199_sector_laggard_gap_absorb",
+      "h199_breakout_after_compression",
+      "h199_ceiling_release_followthrough"
+    ],
+    "tested_signals": [
+      {
+        "confirmation_avg_ic": 0.013493923324369784,
+        "dev_avg_ic": 0.011650783553648146,
+        "dev_corr_with_s1": 0.06288673274198166,
+        "promoted_to_composite_stage": true,
+        "signal_name": "h199_sector_laggard_gap_absorb",
+        "validation_avg_ic": 0.001466621986989999
+      },
+      {
+        "confirmation_avg_ic": 0.016031661578901627,
+        "dev_avg_ic": -0.011913057830423315,
+        "dev_corr_with_s1": -0.06772353847994184,
+        "promoted_to_composite_stage": false,
+        "signal_name": "h199_buyable_reversal_after_1d_weakness",
+        "validation_avg_ic": 0.022712464300139942
+      },
+      {
+        "confirmation_avg_ic": 0.022786285373540056,
+        "dev_avg_ic": 0.01903792057614792,
+        "dev_corr_with_s1": 0.07059152264425245,
+        "promoted_to_composite_stage": false,
+        "signal_name": "h199_breakout_after_compression",
+        "validation_avg_ic": 0.0011504248012337032
+      },
+      {
+        "confirmation_avg_ic": 0.025602796360243506,
+        "dev_avg_ic": 0.011635521487848494,
+        "dev_corr_with_s1": 0.07422923005100535,
+        "promoted_to_composite_stage": false,
+        "signal_name": "h199_ceiling_release_followthrough",
+        "validation_avg_ic": -0.011445176168281567
+      },
+      {
+        "confirmation_avg_ic": 0.00019475271715832767,
+        "dev_avg_ic": -0.017183983135839145,
+        "dev_corr_with_s1": -0.06197187400254653,
+        "promoted_to_composite_stage": false,
+        "signal_name": "h199_floor_release_rebound",
+        "validation_avg_ic": -0.015505409824039003
+      }
+    ]
+  },
+  "ts": "20260329_175628"
+}

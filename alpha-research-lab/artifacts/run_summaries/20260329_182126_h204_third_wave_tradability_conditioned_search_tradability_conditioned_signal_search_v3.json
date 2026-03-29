@@ -1,0 +1,87 @@
+{
+  "artifacts": {
+    "results": "artifacts/portfolio_baselines/20260329_182126_h204_third_wave_tradability_conditioned_search_results.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "start_year": 2015
+  },
+  "mode": "tradability_conditioned_signal_search_v3",
+  "name": "h204_third_wave_tradability_conditioned_search",
+  "summary": {
+    "promoted": [],
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "survivors": [
+      "h204_sector_mom_laggard_volume",
+      "h204_sector_accel_release",
+      "h204_release_after_floor_pressure",
+      "h204_ceiling_memory_gap_absorb"
+    ],
+    "tested_signals": [
+      {
+        "confirmation_avg_ic": 0.02914031569742774,
+        "dev_avg_ic": 0.025673175049440805,
+        "dev_corr_with_s1": 0.13585866806286717,
+        "promoted_to_composite_stage": false,
+        "signal_name": "h204_sector_mom_laggard_volume",
+        "validation_avg_ic": 0.012366152821804617
+      },
+      {
+        "confirmation_avg_ic": 0.015176721894911552,
+        "dev_avg_ic": 0.016799285722081128,
+        "dev_corr_with_s1": 0.09974844370126294,
+        "promoted_to_composite_stage": false,
+        "signal_name": "h204_sector_accel_release",
+        "validation_avg_ic": 0.01233142460579639
+      },
+      {
+        "confirmation_avg_ic": 0.02237152528184578,
+        "dev_avg_ic": 0.030405142634397475,
+        "dev_corr_with_s1": 0.1689675636961462,
+        "promoted_to_composite_stage": false,
+        "signal_name": "h204_release_after_floor_pressure",
+        "validation_avg_ic": 0.003612545288669708
+      },
+      {
+        "confirmation_avg_ic": 0.007676121995634551,
+        "dev_avg_ic": 0.016296808678484258,
+        "dev_corr_with_s1": 0.1039608643705482,
+        "promoted_to_composite_stage": false,
+        "signal_name": "h204_ceiling_memory_gap_absorb",
+        "validation_avg_ic": -0.01423037509347536
+      },
+      {
+        "confirmation_avg_ic": 0.001011319222245091,
+        "dev_avg_ic": 0.008692653531856429,
+        "dev_corr_with_s1": 0.022527327234590614,
+        "promoted_to_composite_stage": false,
+        "signal_name": "h204_breakout_sector_accel_buyable",
+        "validation_avg_ic": -0.017455966467914696
+      }
+    ]
+  },
+  "ts": "20260329_182126"
+}
