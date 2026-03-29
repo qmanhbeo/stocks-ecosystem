@@ -90,12 +90,19 @@ Hard checks:
 Current repo normalization bridge:
 - raw open-source acquisition path:
   - `data_tools/fetch_cafef_intraday.py`
+  - whole-universe wrapper: `data_tools/fetch_cafef_intraday_all.py`
 - repo-aligned adjustment step:
   - `data_tools/adjust_cafef_intraday_to_vci.py`
 - current factor rule:
   - `price_factor[t] = vci_daily_close[t] / cafef_raw_intraday_last_close[t]`
   - adjusted intraday `open/high/low/close = raw_cafef_ohlc * price_factor[t]`
   - keep `volume` raw unless a separate volume-adjustment contract is proven
+- operational note:
+  - bare `python data_tools/fetch_cafef_intraday_all.py` now means full current-universe fetch from `2000-01-01` through `2099-12-31`
+  - yearly CafeF parts are cached with requested-calendar metadata, so old unchanged years are skipped on rerun while the latest year can still refresh
+- current empirical caution:
+  - CafeF intraday coverage can begin much later than the daily listing history for a ticker
+  - treat long empty prefixes as source gaps until coverage is audited ticker-by-ticker
 
 Pass:
 - pilot panel builds cleanly and supports derived first-hour / close-auction features

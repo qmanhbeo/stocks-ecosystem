@@ -109,10 +109,15 @@ Open intraday note:
   - `https://msh-appdata.cafef.vn/rest-api/api/v1/MatchPrice`
 - repo fetcher:
   - `data_tools/fetch_cafef_intraday.py`
+- whole-universe wrapper:
+  - `data_tools/fetch_cafef_intraday_all.py`
 - repo normalization step:
   - `data_tools/adjust_cafef_intraday_to_vci.py`
 - this is an open acquisition path, but it is still a source-specific scraper/adapter, not an officially documented bulk research API contract
 - output is kept source-specific by default (`*_1H_CAFEF.parquet`) so it can coexist with other intraday attempts
+- safe universe command:
+  - `python data_tools/fetch_cafef_intraday_all.py`
+  - wrapper default range is `2000-01-01` through `2099-12-31`
 - current practical warning:
   - CafeF session prices are raw source prices
   - local `1D` VCI prices in this repo are treated as adjusted historical prices
@@ -122,7 +127,12 @@ Open intraday note:
   - `volume` should stay raw unless a separate volume-adjustment contract is proven
 - operational fetch design:
   - `fetch_cafef_intraday.py` writes complete yearly parts first, then appends them into the final ticker parquet
+  - yearly parts now carry a requested-calendar metadata sidecar, so reruns can skip unchanged historical years but still refresh the latest requested year when the daily calendar expands
   - failed CafeF date requests are retried automatically `2` times after the initial pass before a year is accepted as complete
+  - empty early-history years are cached as valid empty yearly parts; this avoids refetching source-empty prefixes on later runs
+- empirical coverage note from the current workspace:
+  - early daily history does not guarantee intraday coverage from CafeF
+  - example: `FPT` daily history starts `2006-12-13`, but the first observed CafeF hourly bars currently start on `2014-10-29`
 
 Tried but failed / limited intraday attempts:
 - `vnstock` / VCI `1H` fetch:

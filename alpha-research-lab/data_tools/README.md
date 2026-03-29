@@ -18,7 +18,7 @@ state of each data source. Read this before running experiments or wondering why
 | Insider deals raw | YES | YES (394 tickers) | `fetch_insider_deals.py` |
 | News archive (cafef, 3.6 GB) | NO | YES (fetched this session) | `fetch_news_archive.py` |
 | Historical foreign investor flow | ✗ Not available | — | F59 in findings.md — vnstock only has current-day |
-| Intraday tick data | Partial | YES (`FPT` 1H legacy + open CafeF fetch path) | `fetch_cafef_intraday.py` + `adjust_cafef_intraday_to_vci.py`; authenticated fallback is `fetch_ssi_intraday.py` |
+| Intraday tick data | Partial | YES (`FPT` 1H legacy + open CafeF fetch path) | `fetch_cafef_intraday_all.py` + `adjust_cafef_intraday_to_vci.py`; authenticated fallback is `fetch_ssi_intraday.py` |
 
 ## Critical Refresh Warning
 
@@ -112,16 +112,31 @@ Fetch open historical matched-trade data from CafeF and aggregate it into repo-s
 - **Output:** `data/stock/gia_lich_su_<TICKER>_1H_CAFEF.parquet` by default
 - **Usage:** `python data_tools/fetch_cafef_intraday.py --tickers FPT,ACB --start 2019-01-01 --end 2025-12-31`
 - **Usage:** `python data_tools/fetch_cafef_intraday.py --tickers FPT,ACB --start 2000-01-01 --end 2026-12-31 --workers 8`
+- **Usage:** `python data_tools/fetch_cafef_intraday.py --start 2000-01-01 --end 2026-12-31 --workers 16` (implicit whole universe)
 - **Usage:** `python data_tools/fetch_cafef_intraday.py --dry-run`
 - **Notes:**
   - no auth required
   - uses the existing `*_1D.parquet` files as the trading calendar, so it only requests dates that already exist in the daily stock data
   - fetches dates in parallel within each ticker-year; tune with `--workers`
   - writes complete yearly raw parts first under `data/stock/_cafef_intraday_parts/<INTERVAL_LABEL>/<TICKER>/`, then rebuilds the final ticker parquet by concatenating those yearly parts
+  - each yearly part now carries a sidecar metadata file with the requested trading-date signature, so reruns can skip unchanged historical years but still refresh the latest requested year when the daily calendar expands
   - unresolved request failures are retried automatically `2` times after the initial pass, at the date level, before a year is allowed to become a saved part
   - normalizes CafeF's legacy early-history timestamp offset before aggregation, including older rows where the source encoded the shifted session time as a naive timestamp
   - keeps a source-specific output suffix by default so it does not overwrite vnstock / SSI intraday files
   - prices are source-raw CafeF session prices; do not assume they numerically match the locally adjusted daily/vnstock price levels without an explicit normalization step
+  - old yearly parts created before the metadata upgrade are still reused as historical cache; run once with `--overwrite` if you want to seed metadata for every existing year immediately
+
+### `fetch_cafef_intraday_all.py`
+Fetch CafeF intraday bars for the full current universe in one explicit command.
+- **Status:** Active convenience wrapper
+- **Universe source:** existing `data/stock/gia_lich_su_*_1D.parquet` files, excluding `VNINDEX` and `VN30`
+- **Default range:** `2000-01-01` through `2099-12-31` when no `--start/--end` is passed
+- **Usage:** `python data_tools/fetch_cafef_intraday_all.py --start 2000-01-01 --end 2026-12-31 --workers 16`
+- **Usage:** `python data_tools/fetch_cafef_intraday_all.py`
+- **Usage:** `python data_tools/fetch_cafef_intraday_all.py --dry-run`
+- **Notes:**
+  - thin wrapper around `fetch_cafef_intraday.py`
+  - does not accept `--tickers`; it always uses the full current universe
 
 ### `adjust_cafef_intraday_to_vci.py`
 Normalize raw CafeF intraday prices onto the local VCI-adjusted daily price backbone.
@@ -145,7 +160,7 @@ Normalize raw CafeF intraday prices onto the local VCI-adjusted daily price back
 
 ### CafeF Intraday Normalization Chain
 Use the open intraday path in two explicit steps:
-1. `python data_tools/fetch_cafef_intraday.py --start 2000-01-01 --end 2026-12-31`
+1. `python data_tools/fetch_cafef_intraday_all.py`
 2. `python data_tools/adjust_cafef_intraday_to_vci.py`
 
 Operational interpretation:
@@ -153,6 +168,7 @@ Operational interpretation:
 - `*_1H_CAFEF_ADJ.parquet` is the repo-aligned intraday price surface for cross-day research
 - if you only need same-day structure features, the raw file is often enough
 - if you need gap / overnight joins or any merge onto adjusted daily prices, use the adjusted file
+- the whole-universe wrapper defaults to `2000-01-01` through `2099-12-31` and reuses unchanged yearly parts, so bare `python data_tools/fetch_cafef_intraday_all.py` is the safe full-history command
 
 ## Tried But Failed Intraday Attempts
 

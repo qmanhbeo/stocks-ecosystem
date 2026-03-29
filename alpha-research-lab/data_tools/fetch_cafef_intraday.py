@@ -26,6 +26,8 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures as cf
+import hashlib
+import json
 import threading
 import time
 from collections import defaultdict
@@ -57,6 +59,7 @@ DEFAULT_RETRY_ROUNDS = 2
 DEFAULT_RETRY_DELAY = 1.0
 DEFAULT_WORKERS = 8
 DEFAULT_PARTS_DIR = DATA_DIR / "_cafef_intraday_parts"
+METADATA_SUFFIX = ".meta.json"
 EXCLUDE = {"VNINDEX", "VN30"}
 BAR_COLUMNS = ["time", "open", "high", "low", "close", "volume"]
 
@@ -78,13 +81,16 @@ def build_session() -> requests.Session:
     return session
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Fetch open historical intraday data from CafeF MatchPrice")
-    parser.add_argument(
-        "--tickers",
-        type=str,
-        help="Comma-separated tickers. Defaults to the existing 1D stock universe under data/stock/",
+def build_parser(*, include_tickers: bool = True, description: str | None = None) -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description=description or "Fetch open historical intraday data from CafeF MatchPrice"
     )
+    if include_tickers:
+        parser.add_argument(
+            "--tickers",
+            type=str,
+            help="Comma-separated tickers. Defaults to the existing 1D stock universe under data/stock/",
+        )
     parser.add_argument("--start", type=str, default="2015-01-01", help="Start date in YYYY-MM-DD")
     parser.add_argument("--end", type=str, default=date.today().isoformat(), help="End date in YYYY-MM-DD")
     parser.add_argument(
@@ -121,7 +127,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--overwrite", action="store_true", help="Overwrite existing output files and yearly parts")
     parser.add_argument("--dry-run", action="store_true", help="Print what would be fetched without hitting CafeF")
-    return parser.parse_args()
+    return parser
+
+
+def parse_args(argv: list[str] | None = None, *, include_tickers: bool = True) -> argparse.Namespace:
+    parser = build_parser(include_tickers=include_tickers)
+    return parser.parse_args(argv)
 
 
 def parse_iso_date(value: str) -> date:
@@ -181,6 +192,10 @@ def build_year_part_path(parts_dir: Path, ticker: str, interval_label: str, year
     return build_parts_root(parts_dir, interval_label, ticker) / f"gia_lich_su_{ticker}_{interval_label}_{year}.parquet"
 
 
+def build_year_metadata_path(parts_dir: Path, ticker: str, interval_label: str, year: int) -> Path:
+    return build_parts_root(parts_dir, interval_label, ticker) / f"gia_lich_su_{ticker}_{interval_label}_{year}{METADATA_SUFFIX}"
+
+
 def load_trading_dates(ticker: str, start_date: date, end_date: date) -> list[date]:
     path = build_daily_path(ticker)
     if not path.exists():
@@ -195,6 +210,101 @@ def group_dates_by_year(trading_dates: Iterable[date]) -> dict[int, list[date]]:
     for trading_date in trading_dates:
         grouped[trading_date.year].append(trading_date)
     return dict(sorted(grouped.items()))
+
+
+def build_dates_signature(trading_dates: Iterable[date]) -> str:
+    payload = ",".join(trading_date.isoformat() for trading_date in trading_dates)
+    return hashlib.sha1(payload.encode("ascii")).hexdigest()
+
+
+def format_optional_timestamp(value: pd.Timestamp | None) -> str | None:
+    if value is None or pd.isna(value):
+        return None
+    return pd.Timestamp(value).isoformat()
+
+
+def build_year_metadata(
+    ticker: str,
+    interval_label: str,
+    year: int,
+    trading_dates: list[date],
+    year_frame: pd.DataFrame,
+) -> dict[str, object]:
+    first_bar_time = year_frame["time"].min() if not year_frame.empty else None
+    last_bar_time = year_frame["time"].max() if not year_frame.empty else None
+    bar_dates = (
+        int(pd.to_datetime(year_frame["time"]).dt.normalize().nunique())
+        if not year_frame.empty
+        else 0
+    )
+    return {
+        "ticker": ticker,
+        "interval_label": interval_label,
+        "year": year,
+        "requested_trading_days": len(trading_dates),
+        "requested_dates_signature": build_dates_signature(trading_dates),
+        "first_requested_date": trading_dates[0].isoformat() if trading_dates else None,
+        "last_requested_date": trading_dates[-1].isoformat() if trading_dates else None,
+        "bars": int(len(year_frame)),
+        "bar_dates": bar_dates,
+        "observed_empty": bool(year_frame.empty),
+        "first_bar_time": format_optional_timestamp(first_bar_time),
+        "last_bar_time": format_optional_timestamp(last_bar_time),
+        "written_at_utc": datetime.utcnow().isoformat(timespec="seconds") + "Z",
+    }
+
+
+def load_year_metadata(metadata_path: Path) -> dict[str, object] | None:
+    if not metadata_path.exists():
+        return None
+    try:
+        payload = json.loads(metadata_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def write_year_metadata(metadata_path: Path, metadata: dict[str, object]) -> None:
+    metadata_path.write_text(
+        json.dumps(metadata, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def metadata_matches_requested_calendar(metadata: dict[str, object], trading_dates: list[date]) -> bool:
+    if not trading_dates:
+        return False
+    return (
+        metadata.get("requested_trading_days") == len(trading_dates)
+        and metadata.get("requested_dates_signature") == build_dates_signature(trading_dates)
+        and metadata.get("first_requested_date") == trading_dates[0].isoformat()
+        and metadata.get("last_requested_date") == trading_dates[-1].isoformat()
+    )
+
+
+def should_refresh_year_part(
+    part_path: Path,
+    metadata_path: Path,
+    year: int,
+    latest_requested_year: int,
+    trading_dates: list[date],
+    overwrite: bool,
+) -> tuple[bool, str]:
+    if overwrite:
+        return True, "overwrite requested"
+    if not part_path.exists():
+        return True, "yearly part missing"
+
+    metadata = load_year_metadata(metadata_path)
+    if metadata is None:
+        if year == latest_requested_year:
+            return True, "latest requested year metadata missing"
+        return False, "legacy yearly part exists without metadata, reusing historical cache"
+
+    if metadata_matches_requested_calendar(metadata, trading_dates):
+        return False, "yearly part metadata matches requested calendar"
+
+    return True, "requested trading calendar changed"
 
 
 def fetch_match_price(session: requests.Session, ticker: str, trading_date: date, timeout: int) -> list[dict[str, object]]:
@@ -440,9 +550,18 @@ def fetch_one_year(
     return finalize_intraday_frame(frames), pending
 
 
-def rebuild_ticker_output(output_path: Path, year_part_paths: list[Path]) -> pd.DataFrame:
+def rebuild_ticker_output(
+    output_path: Path,
+    year_part_paths: list[Path],
+    start_date: date,
+    end_date: date,
+) -> pd.DataFrame:
     frames = [pd.read_parquet(path) for path in year_part_paths if path.exists()]
     out = finalize_intraday_frame(frames)
+    if not out.empty:
+        calendar = pd.to_datetime(out["time"], errors="coerce").dt.date
+        mask = (calendar >= start_date) & (calendar <= end_date)
+        out = out.loc[mask].reset_index(drop=True)
     out.to_parquet(output_path, index=False)
     return out
 
@@ -466,23 +585,32 @@ def fetch_one_ticker(
         return False, f"{ticker}: no trading dates in requested window"
 
     grouped_dates = group_dates_by_year(dates)
+    latest_requested_year = max(grouped_dates)
     output_path = build_output_path(ticker, interval_label)
     year_part_paths = [
         build_year_part_path(parts_dir, ticker, interval_label, year)
         for year in grouped_dates
     ]
-    all_parts_exist = all(path.exists() for path in year_part_paths)
-
-    if output_path.exists() and not overwrite and all_parts_exist:
-        return True, f"{ticker}: exists with all yearly parts, skipping"
 
     failed_years: list[int] = []
     unresolved_dates_total = 0
+    legacy_reuse_years: list[int] = []
 
     for year, year_dates in grouped_dates.items():
         part_path = build_year_part_path(parts_dir, ticker, interval_label, year)
-        if part_path.exists() and not overwrite:
-            print(f"    {ticker} {year}: yearly part exists, reusing", flush=True)
+        metadata_path = build_year_metadata_path(parts_dir, ticker, interval_label, year)
+        refresh_year, reason = should_refresh_year_part(
+            part_path,
+            metadata_path,
+            year,
+            latest_requested_year,
+            year_dates,
+            overwrite,
+        )
+        if not refresh_year:
+            print(f"    {ticker} {year}: {reason}", flush=True)
+            if "without metadata" in reason:
+                legacy_reuse_years.append(year)
             continue
 
         year_frame, unresolved_dates = fetch_one_year(
@@ -508,6 +636,10 @@ def fetch_one_ticker(
             continue
 
         year_frame.to_parquet(part_path, index=False)
+        write_year_metadata(
+            metadata_path,
+            build_year_metadata(ticker, interval_label, year, year_dates, year_frame),
+        )
         print(
             f"    {ticker} {year}: saved yearly part with {len(year_frame)} bars "
             f"from {len(year_dates)} dates",
@@ -518,7 +650,7 @@ def fetch_one_ticker(
     if not available_parts:
         return False, f"{ticker}: no yearly parts available to append"
 
-    out = rebuild_ticker_output(output_path, available_parts)
+    out = rebuild_ticker_output(output_path, available_parts, dates[0], dates[-1])
     if out.empty:
         return False, f"{ticker}: yearly parts appended but no intraday bars produced"
 
@@ -526,6 +658,11 @@ def fetch_one_ticker(
         f"{ticker}: saved {len(out)} bars "
         f"({out['time'].min()} -> {out['time'].max()}) from {len(available_parts)}/{len(year_part_paths)} yearly parts"
     )
+    if legacy_reuse_years:
+        message += (
+            f" | legacy reused without metadata: {','.join(str(year) for year in legacy_reuse_years)}"
+            " (run with --overwrite once to seed metadata)"
+        )
     if failed_years:
         message += (
             f" | unresolved years: {','.join(str(year) for year in failed_years)}"
@@ -535,8 +672,8 @@ def fetch_one_ticker(
     return True, message
 
 
-def main() -> None:
-    args = parse_args()
+def main(argv: list[str] | None = None, *, include_tickers: bool = True) -> None:
+    args = parse_args(argv, include_tickers=include_tickers)
     start_date = parse_iso_date(args.start)
     end_date = parse_iso_date(args.end)
 
@@ -553,7 +690,7 @@ def main() -> None:
     if args.retry_delay < 0:
         raise ValueError("--retry-delay must be non-negative")
 
-    tickers = resolve_tickers(args.tickers)
+    tickers = resolve_tickers(getattr(args, "tickers", None))
     interval_label = args.interval_label.upper()
     parts_dir = Path(args.parts_dir)
 
