@@ -87,6 +87,8 @@ def create_session_record(
         random_seed=config.random_seed,
     )
     session_path = config.sessions_dir / f"{session_id}.json"
+    if session_path.exists():
+        raise FileExistsError(f"Session already exists: {session_path}")
     session_path.write_text(json.dumps(session.to_dict(), indent=2), encoding="utf-8")
     manifest = update_manifest(config=config)
     update_manifest(config=config, session_count=int(manifest.get("session_count", 0)) + 1)
@@ -117,6 +119,7 @@ def build_label_record(
     selected_ranges: Sequence[Union[Dict[str, object], SelectedRange]],
     confidence: str = "medium",
     notes: str = "",
+    ticker_split: str = "unknown",
     config: Optional[SupervisedLabelConfig] = None,
 ) -> LabelRecord:
     config = config or get_default_config()
@@ -129,6 +132,7 @@ def build_label_record(
         chunk_start=chunk_sample.chunk_start,
         chunk_end=chunk_sample.chunk_end,
         source_file=chunk_sample.source_file,
+        ticker_split=str(ticker_split).lower().strip() or "unknown",
         selected_ranges=normalize_selected_ranges(selected_ranges),
         default_label=config.default_label,
         confidence=confidence,

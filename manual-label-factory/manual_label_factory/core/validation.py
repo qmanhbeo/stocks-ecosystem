@@ -33,6 +33,23 @@ REQUIRED_LABEL_FIELDS = (
     "created_at",
 )
 
+VALID_TICKER_SPLITS = {"train", "val", "test", "unknown"}
+
+
+def _infer_ticker_split(ticker: str, config: SupervisedLabelConfig) -> str:
+    normalized_ticker = str(ticker).upper()
+    for split_name, path in config.split_file_map().items():
+        if not path.exists():
+            continue
+        entries = {
+            line.strip().upper()
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        }
+        if normalized_ticker in entries:
+            return split_name
+    return "unknown"
+
 
 def resolve_source_path(source_file: str, config: Optional[SupervisedLabelConfig] = None) -> Path:
     config = config or get_default_config()
@@ -93,6 +110,8 @@ def validate_label_record(
     selected_ranges = record.get("selected_ranges")
     if not isinstance(selected_ranges, list) or not selected_ranges:
         raise LabelValidationError("selected_ranges must contain at least one range")
+    if not config.allow_multiple_ranges and len(selected_ranges) > 1:
+        raise LabelValidationError("selected_ranges must contain exactly one range when allow_multiple_ranges is false")
 
     normalized_ranges: List[Dict[str, object]] = []
     for range_payload in selected_ranges:
@@ -123,6 +142,12 @@ def validate_label_record(
     normalized["confidence"] = confidence
     normalized["notes"] = str(record.get("notes", ""))
     normalized["created_at"] = pd.Timestamp(str(record["created_at"])).isoformat()
+    ticker_split = str(record.get("ticker_split", _infer_ticker_split(ticker, config))).lower().strip() or "unknown"
+    if ticker_split not in VALID_TICKER_SPLITS:
+        raise LabelValidationError(
+            f"Unsupported ticker_split '{record.get('ticker_split')}'. Expected one of {sorted(VALID_TICKER_SPLITS)}"
+        )
+    normalized["ticker_split"] = ticker_split
 
     if check_source:
         source_path = resolve_source_path(str(record["source_file"]), config=config)

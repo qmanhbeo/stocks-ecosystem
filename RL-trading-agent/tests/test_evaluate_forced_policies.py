@@ -39,7 +39,7 @@ def test_evaluate_forced_policies():
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
         data_dir = tmp_path / "data"
-        output_dir = Path(__file__).resolve().parent / "results"
+        output_dir = tmp_path / "results"
         stock = "TEST"
         data_path = _write_parquet(df, data_dir, stock)
         
@@ -107,7 +107,7 @@ def test_evaluate_forced_policies():
         # Execution-aligned buy & hold should match forced buy & hold
         steps = df_hold["step"].values
         open_exec = env.df["open"].values[steps + 1]
-        entry_exec_idx = env.episode_start_idx + 2
+        entry_exec_idx = env.episode_start_idx + 1
         entry_exec_price = env.df.iloc[entry_exec_idx]["open"]
         aligned_series = np.where(
             (steps + 1) < entry_exec_idx,

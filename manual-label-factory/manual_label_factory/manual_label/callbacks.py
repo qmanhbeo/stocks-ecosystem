@@ -128,6 +128,7 @@ def register_callbacks(app, sampler: ChunkSampler, session_id: str, config: Supe
                     selected_ranges=normalized_ranges,
                     confidence=str(confidence or "medium"),
                     notes=str(notes or ""),
+                    ticker_split=sampler.split_name,
                     config=config,
                 )
                 saved = append_label_record(record, config=config)

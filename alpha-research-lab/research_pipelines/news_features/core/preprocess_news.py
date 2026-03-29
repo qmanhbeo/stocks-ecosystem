@@ -49,7 +49,8 @@ def _preprocess_news_dataframe_with_stats(
     config: Optional[NewsFeaturesConfig] = None,
     log_progress: bool = False,
 ) -> tuple[pd.DataFrame, dict[str, object]]:
-    config = config or get_default_config()
+    # The dataframe-only path needs timezone settings, not filesystem side effects.
+    config = config or NewsFeaturesConfig()
     if raw_df.empty:
         return _empty_normalized_dataframe(), {
             "input_rows": 0,

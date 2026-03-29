@@ -2,6 +2,8 @@
 
 `research_pipelines/news_features/` is the canonical news producer for the workspace. It reads shared raw news from `stocks/data/news/`, tags articles against the shared stock universe, builds daily tabular and embedding features, and exports per-ticker parquet files for RL consumption.
 
+By default the pipeline resolves shared data under `/home/manh/stocks/data`. Override that with `STOCKS_DATA_ROOT` if you need a different workspace data root.
+
 ## What It Does
 
 1. Fetch raw news into `data/news/cafef/raw/`.

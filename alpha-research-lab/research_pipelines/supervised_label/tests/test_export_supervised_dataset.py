@@ -52,7 +52,13 @@ def _write_market_parquet(config: SupervisedLabelConfig, ticker: str, days: int)
     return df
 
 
-def _write_bar_labels(config: SupervisedLabelConfig, ticker: str, dates, labels) -> None:
+def _write_bar_labels(
+    config: SupervisedLabelConfig,
+    ticker: str,
+    dates,
+    labels,
+    ticker_split: str | None = None,
+) -> None:
     rows = pd.DataFrame(
         {
             "ticker": ticker,
@@ -64,6 +70,8 @@ def _write_bar_labels(config: SupervisedLabelConfig, ticker: str, dates, labels)
             "session_id": ["session_2026-03-10_001"] * len(dates),
         }
     )
+    if ticker_split is not None:
+        rows["ticker_split"] = [ticker_split] * len(rows)
     rows.to_parquet(config.datasets_dir / config.bar_labels_filename, index=False)
 
 
@@ -110,3 +118,20 @@ def test_export_supervised_dataset_does_not_leak_future_bars():
 
         for feature_name in ("ret_1", "ret_3", "momentum_3", "sma_ratio_3", "volatility_3"):
             assert abs(before_row[feature_name] - after_row[feature_name]) < 1e-12
+
+
+def test_export_supervised_dataset_preserves_bar_label_ticker_split():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir)
+        config = _build_config(root)
+        raw_df = _write_market_parquet(config, "AAA", 90)
+        labeled_dates = raw_df.iloc[40:45]["time"].tolist()
+        _write_bar_labels(config, "AAA", labeled_dates, [0, 1, 1, 0, 1], ticker_split="train")
+        save_split_files({"train": ["AAA"], "val": [], "test": []}, config=config)
+
+        exported_before = export_supervised_dataset_dataframe(config=config)
+        save_split_files({"train": [], "val": ["AAA"], "test": []}, config=config)
+        exported_after = export_supervised_dataset_dataframe(config=config)
+
+        assert exported_before["ticker_split"].tolist() == ["train"] * 5
+        assert exported_after["ticker_split"].tolist() == ["train"] * 5

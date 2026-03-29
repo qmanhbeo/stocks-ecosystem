@@ -157,6 +157,7 @@ def merge_signal_features(
     base_df,
     ticker: str,
     prediction_dir: Optional[Path] = None,
+    include_columns: Optional[Iterable[str]] = None,
 ) :
     import pandas as pd
 
@@ -168,10 +169,12 @@ def merge_signal_features(
     else:
         raise ValueError("Base dataframe must include either 'time' or 'date'")
 
+    columns = list(include_columns) if include_columns is not None else default_signal_feature_columns()
     feature_path = Path(prediction_dir or default_signal_prediction_dir()) / f"{str(ticker).upper()}_signal_predictions.parquet"
     if not feature_path.exists():
-        merged[SIGNAL_PREDICTION_COLUMN] = SIGNAL_MISSING_FILL_VALUE
-        merged[SIGNAL_LABEL_COLUMN] = 0
+        for column in columns:
+            fill_value = signal_fill_value_for_column(column)
+            merged[column] = int(fill_value) if column == SIGNAL_LABEL_COLUMN else fill_value
         return merged
 
     predictions = pd.read_parquet(feature_path)
@@ -179,11 +182,19 @@ def merge_signal_features(
         duplicates = predictions.loc[predictions["date"].duplicated(), "date"].tolist()
         raise ValueError(f"Duplicate prediction dates found for {ticker}: {duplicates[:5]}")
 
+    available_columns = ["date"] + [column for column in columns if column in predictions.columns]
+    predictions = predictions[available_columns].copy()
     predictions["date"] = pd.to_datetime(predictions["date"]).dt.strftime("%Y-%m-%d")
     merged = merged.merge(predictions, on="date", how="left", validate="many_to_one")
-    merged[SIGNAL_PREDICTION_COLUMN] = merged[SIGNAL_PREDICTION_COLUMN].fillna(SIGNAL_MISSING_FILL_VALUE)
-    if SIGNAL_LABEL_COLUMN in merged.columns:
-        merged[SIGNAL_LABEL_COLUMN] = merged[SIGNAL_LABEL_COLUMN].fillna(0).astype(int)
+
+    for column in columns:
+        fill_value = signal_fill_value_for_column(column)
+        if column not in merged.columns:
+            merged[column] = fill_value
+        if column == SIGNAL_LABEL_COLUMN:
+            merged[column] = pd.to_numeric(merged[column], errors="coerce").fillna(fill_value).astype(int)
+        else:
+            merged[column] = pd.to_numeric(merged[column], errors="coerce").fillna(fill_value)
     return merged
 
 

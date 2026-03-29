@@ -37,6 +37,7 @@ class LabelRecord:
     chunk_start: str
     chunk_end: str
     source_file: str
+    ticker_split: str = "unknown"
     selected_ranges: List[SelectedRange] = field(default_factory=list)
     default_label: int = 0
     confidence: str = "medium"
@@ -66,6 +67,7 @@ class SessionRecord:
 @dataclass(slots=True)
 class BarLabelRow:
     ticker: str
+    ticker_split: str
     date: str
     chunk_id: str
     label: int

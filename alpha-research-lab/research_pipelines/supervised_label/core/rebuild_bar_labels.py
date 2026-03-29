@@ -56,6 +56,7 @@ def rebuild_label_rows_for_record(
     return pd.DataFrame(
         {
             "ticker": str(validated["ticker"]),
+            "ticker_split": str(validated.get("ticker_split", "unknown")),
             "date": chunk_df["time"].dt.strftime("%Y-%m-%d"),
             "chunk_id": str(validated["chunk_id"]),
             "label": labels.astype(int).values,

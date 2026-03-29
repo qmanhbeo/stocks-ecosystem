@@ -3,7 +3,7 @@ import pytest
 import requests
 
 from research_pipelines.news_features.config import NewsFeaturesConfig
-from vn_stock_rl.data_tools.fetch_news import (
+from data_tools.fetch_news import (
     NewsArticleParseError,
     NewsFetchInterrupted,
     _fetch_article_result,
@@ -159,7 +159,7 @@ def test_fetch_article_result_raises_parse_error_with_article_url(monkeypatch):
             return None
 
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news._get_with_retries",
+        "data_tools.fetch_news._get_with_retries",
         lambda **kwargs: FakeResponse(),
     )
 
@@ -167,7 +167,7 @@ def test_fetch_article_result_raises_parse_error_with_article_url(monkeypatch):
         raise ValueError("month must be in 1..12")
 
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.parse_cafef_article",
+        "data_tools.fetch_news.parse_cafef_article",
         _raise_parse_failure,
     )
 
@@ -332,9 +332,9 @@ def test_fetch_news_interrupt_preserves_partial_records(monkeypatch, tmp_path):
     )
     config.ensure_directories()
 
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.get_default_config", lambda: config)
+    monkeypatch.setattr("data_tools.fetch_news.get_default_config", lambda: config)
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.load_source_specs",
+        "data_tools.fetch_news.load_source_specs",
         lambda config=None: {
             "cafef": {
                 "base_url": "https://cafef.vn",
@@ -344,15 +344,15 @@ def test_fetch_news_interrupt_preserves_partial_records(monkeypatch, tmp_path):
         },
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.parse_sitemap_index",
+        "data_tools.fetch_news.parse_sitemap_index",
         lambda xml_text: [{"loc": "https://cafef.vn/sitemaps/sitemaps-2026-3-11-15.xml", "lastmod": "2026-03-11T19:00:00+07:00"}],
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news._select_sitemap_urls",
+        "data_tools.fetch_news._select_sitemap_urls",
         lambda index_rows, start_ts, end_ts, max_documents: ["https://cafef.vn/sitemaps/sitemaps-2026-3-11-15.xml"],
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news._candidate_urls_from_sitemap_response",
+        "data_tools.fetch_news._candidate_urls_from_sitemap_response",
         lambda sitemap_url, response, start_ts, end_ts: [
             "https://cafef.vn/abc/bai-viet-1-188260310143703641.chn",
             "https://cafef.vn/abc/bai-viet-2-188260310143703642.chn",
@@ -379,9 +379,9 @@ def test_fetch_news_interrupt_preserves_partial_records(monkeypatch, tmp_path):
                 raise KeyboardInterrupt
             return FakeResponse("<html></html>")
 
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.requests.Session", FakeSession)
+    monkeypatch.setattr("data_tools.fetch_news.requests.Session", FakeSession)
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.parse_cafef_article",
+        "data_tools.fetch_news.parse_cafef_article",
         lambda html, url: {
             "article_id": "a1",
             "source": "cafef",
@@ -434,9 +434,9 @@ def test_fetch_news_skips_missing_article_urls(monkeypatch, tmp_path):
     )
     config.ensure_directories()
 
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.get_default_config", lambda: config)
+    monkeypatch.setattr("data_tools.fetch_news.get_default_config", lambda: config)
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.load_source_specs",
+        "data_tools.fetch_news.load_source_specs",
         lambda config=None: {
             "cafef": {
                 "base_url": "https://cafef.vn",
@@ -446,15 +446,15 @@ def test_fetch_news_skips_missing_article_urls(monkeypatch, tmp_path):
         },
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.parse_sitemap_index",
+        "data_tools.fetch_news.parse_sitemap_index",
         lambda xml_text: [{"loc": "https://cafef.vn/sitemaps/sitemaps-2026-3-11-15.xml", "lastmod": "2026-03-11T19:00:00+07:00"}],
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news._select_sitemap_urls",
+        "data_tools.fetch_news._select_sitemap_urls",
         lambda index_rows, start_ts, end_ts, max_documents: ["https://cafef.vn/sitemaps/sitemaps-2026-3-11-15.xml"],
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news._candidate_urls_from_sitemap_response",
+        "data_tools.fetch_news._candidate_urls_from_sitemap_response",
         lambda sitemap_url, response, start_ts, end_ts: [
             "https://cafef.vn/abc/bai-viet-1-188260310143703641.chn",
             "https://cafef.vn/abc/bai-viet-missing-188260310143703642.chn",
@@ -481,9 +481,9 @@ def test_fetch_news_skips_missing_article_urls(monkeypatch, tmp_path):
                 return FakeResponse(status_code=404)
             return FakeResponse(text="<html></html>")
 
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.requests.Session", FakeSession)
+    monkeypatch.setattr("data_tools.fetch_news.requests.Session", FakeSession)
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.parse_cafef_article",
+        "data_tools.fetch_news.parse_cafef_article",
         lambda html, url: {
             "article_id": url.rsplit("/", 1)[-1],
             "source": "cafef",
@@ -528,7 +528,7 @@ def test_save_fetched_news_creates_seen_url_index_and_dedupes(monkeypatch, tmp_p
         manifest_path=artifacts_dir / "manifest.json",
     )
     config.ensure_directories()
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.get_default_config", lambda: config)
+    monkeypatch.setattr("data_tools.fetch_news.get_default_config", lambda: config)
 
     rows = [
         {
@@ -589,7 +589,7 @@ def test_save_fetched_news_persists_unparsable_records(monkeypatch, tmp_path):
         manifest_path=artifacts_dir / "manifest.json",
     )
     config.ensure_directories()
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.get_default_config", lambda: config)
+    monkeypatch.setattr("data_tools.fetch_news.get_default_config", lambda: config)
 
     rows = [
         {
@@ -641,13 +641,13 @@ def test_fetch_news_skips_previously_scanned_sitemaps(monkeypatch, tmp_path):
         encoding="utf-8",
     )
 
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.get_default_config", lambda: config)
+    monkeypatch.setattr("data_tools.fetch_news.get_default_config", lambda: config)
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news._current_utc_timestamp",
+        "data_tools.fetch_news._current_utc_timestamp",
         lambda: pd.Timestamp("2026-03-11T00:00:00Z"),
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.load_source_specs",
+        "data_tools.fetch_news.load_source_specs",
         lambda config=None: {
             "cafef": {
                 "base_url": "https://cafef.vn",
@@ -657,22 +657,22 @@ def test_fetch_news_skips_previously_scanned_sitemaps(monkeypatch, tmp_path):
         },
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.parse_sitemap_index",
+        "data_tools.fetch_news.parse_sitemap_index",
         lambda xml_text: [
             {"loc": "https://cafef.vn/sitemaps/sitemaps-2026-2-1-5.xml", "lastmod": "2026-02-05T19:00:00+07:00"},
             {"loc": "https://cafef.vn/sitemaps/sitemaps-2026-3-6-10.xml", "lastmod": "2026-03-10T19:00:00+07:00"},
         ],
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news._select_sitemap_urls",
+        "data_tools.fetch_news._select_sitemap_urls",
         lambda index_rows, start_ts, end_ts, max_documents: [row["loc"] for row in index_rows],
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news._candidate_urls_from_sitemap_response",
+        "data_tools.fetch_news._candidate_urls_from_sitemap_response",
         lambda sitemap_url, response, start_ts, end_ts: ["https://cafef.vn/abc/bai-viet-1-188260310143703641.chn"],
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.parse_cafef_article",
+        "data_tools.fetch_news.parse_cafef_article",
         lambda html, url: {
             "article_id": "a1",
             "source": "cafef",
@@ -708,7 +708,7 @@ def test_fetch_news_skips_previously_scanned_sitemaps(monkeypatch, tmp_path):
                 return FakeResponse("<html></html>")
             return FakeResponse("<?xml version='1.0'?><xml/>")
 
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.requests.Session", FakeSession)
+    monkeypatch.setattr("data_tools.fetch_news.requests.Session", FakeSession)
 
     records = fetch_news(
         source="cafef",
@@ -751,13 +751,13 @@ def test_fetch_news_rechecks_recent_scanned_sitemaps(monkeypatch, tmp_path):
         encoding="utf-8",
     )
 
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.get_default_config", lambda: config)
+    monkeypatch.setattr("data_tools.fetch_news.get_default_config", lambda: config)
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news._current_utc_timestamp",
+        "data_tools.fetch_news._current_utc_timestamp",
         lambda: pd.Timestamp("2026-03-11T00:00:00Z"),
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.load_source_specs",
+        "data_tools.fetch_news.load_source_specs",
         lambda config=None: {
             "cafef": {
                 "base_url": "https://cafef.vn",
@@ -767,21 +767,21 @@ def test_fetch_news_rechecks_recent_scanned_sitemaps(monkeypatch, tmp_path):
         },
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.parse_sitemap_index",
+        "data_tools.fetch_news.parse_sitemap_index",
         lambda xml_text: [
             {"loc": "https://cafef.vn/sitemaps/sitemaps-2026-3-6-10.xml", "lastmod": "2026-03-10T19:00:00+07:00"},
         ],
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news._select_sitemap_urls",
+        "data_tools.fetch_news._select_sitemap_urls",
         lambda index_rows, start_ts, end_ts, max_documents: [row["loc"] for row in index_rows],
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news._candidate_urls_from_sitemap_response",
+        "data_tools.fetch_news._candidate_urls_from_sitemap_response",
         lambda sitemap_url, response, start_ts, end_ts: ["https://cafef.vn/abc/bai-viet-1-188260310143703641.chn"],
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.parse_cafef_article",
+        "data_tools.fetch_news.parse_cafef_article",
         lambda html, url: {
             "article_id": "a1",
             "source": "cafef",
@@ -817,7 +817,7 @@ def test_fetch_news_rechecks_recent_scanned_sitemaps(monkeypatch, tmp_path):
                 return FakeResponse("<html></html>")
             return FakeResponse("<?xml version='1.0'?><xml/>")
 
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.requests.Session", FakeSession)
+    monkeypatch.setattr("data_tools.fetch_news.requests.Session", FakeSession)
 
     records = fetch_news(
         source="cafef",
@@ -853,9 +853,9 @@ def test_fetch_news_ticker_mode_uses_ticker_listing_pages(monkeypatch, tmp_path)
     )
     config.ensure_directories()
 
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.get_default_config", lambda: config)
+    monkeypatch.setattr("data_tools.fetch_news.get_default_config", lambda: config)
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.load_source_specs",
+        "data_tools.fetch_news.load_source_specs",
         lambda config=None: {
             "cafef": {
                 "base_url": "https://cafef.vn",
@@ -865,7 +865,7 @@ def test_fetch_news_ticker_mode_uses_ticker_listing_pages(monkeypatch, tmp_path)
         },
     )
     monkeypatch.setattr(
-        "vn_stock_rl.data_tools.fetch_news.parse_cafef_article",
+        "data_tools.fetch_news.parse_cafef_article",
         lambda html, url: {
             "article_id": url.rsplit("/", 1)[-1],
             "source": "cafef",
@@ -908,7 +908,7 @@ def test_fetch_news_ticker_mode_uses_ticker_listing_pages(monkeypatch, tmp_path)
             """
             return FakeResponse(html)
 
-    monkeypatch.setattr("vn_stock_rl.data_tools.fetch_news.requests.Session", FakeSession)
+    monkeypatch.setattr("data_tools.fetch_news.requests.Session", FakeSession)
 
     records = fetch_news(
         source="cafef",

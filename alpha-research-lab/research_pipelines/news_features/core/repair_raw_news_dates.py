@@ -12,7 +12,7 @@ import pandas as pd
 
 from research_pipelines.news_features.config import NewsFeaturesConfig, get_default_config
 from research_pipelines.news_features.io_utils import read_jsonl, update_source_manifest, write_jsonl_records
-from vn_stock_rl.data_tools.fetch_news import infer_cafef_url_timestamp
+from data_tools.fetch_news import infer_cafef_url_timestamp
 
 
 def _repair_record_timestamp(record: dict[str, object]) -> tuple[dict[str, object], str]:

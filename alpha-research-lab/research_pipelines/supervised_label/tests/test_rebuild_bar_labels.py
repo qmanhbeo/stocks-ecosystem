@@ -59,6 +59,7 @@ def test_rebuild_bar_labels_maps_ranges_correctly():
             "label_id": "lbl_000001",
             "session_id": "session_2026-03-10_001",
             "ticker": "HPG",
+            "ticker_split": "train",
             "timeframe": "1D",
             "chunk_id": "HPG_2021-04-03_2021-04-12_len10",
             "chunk_start": "2021-04-03",
@@ -76,6 +77,7 @@ def test_rebuild_bar_labels_maps_ranges_correctly():
         rebuilt = rebuild_label_rows_for_record(record, config=config)
         label_map = dict(zip(rebuilt["date"], rebuilt["label"]))
 
+        assert set(rebuilt["ticker_split"].tolist()) == {"train"}
         assert label_map["2021-04-03"] == 0
         assert label_map["2021-04-04"] == 1
         assert label_map["2021-04-05"] == 1

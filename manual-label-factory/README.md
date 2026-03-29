@@ -9,3 +9,5 @@ python -m manual_label_factory.manual_label
 ```
 
 The UI reads stock data from `/home/manh/stocks/data/stock` by default and writes label artifacts to the shared supervised-label directories under `/home/manh/stocks/data/labels/supervised/`.
+
+Set `STOCKS_DATA_ROOT` if you need the factory to target a different shared data root.

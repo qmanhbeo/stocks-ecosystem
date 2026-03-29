@@ -17,7 +17,7 @@ import requests
 from bs4 import BeautifulSoup
 from requests import Response
 
-from research_pipelines.news_features.config import get_default_config
+from research_pipelines.news_features.config import DEFAULT_MARKET_TIMEZONE, get_default_config
 from research_pipelines.news_features.io_utils import (
     canonicalize_url,
     load_source_specs,
@@ -33,6 +33,7 @@ SITEMAP_RANGE_RE = re.compile(r"sitemaps-(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<
 CAFEF_URL_NUMERIC_SUFFIX_RE = re.compile(r"-(?P<digits>\d+)\.chn$")
 RETRYABLE_STATUS_CODES = {429, 500, 502, 503, 504}
 UNPARSABLE_RAW_BUCKET = "unparsable"
+MARKET_TIMEZONE = DEFAULT_MARKET_TIMEZONE
 
 
 class NewsFetchInterrupted(KeyboardInterrupt):
@@ -220,9 +221,6 @@ def infer_cafef_url_timestamp(url: str) -> pd.Timestamp | None:
         return None
 
     digits = match.group("digits")
-    config = get_default_config()
-    market_timezone = config.market_timezone
-
     candidate_components: list[tuple[int, int, int, int, int, int]] = []
     if digits.startswith("188") and len(digits) >= 15:
         encoded = digits[3:15]
@@ -262,22 +260,19 @@ def infer_cafef_url_timestamp(url: str) -> pd.Timestamp | None:
             )
         except ValueError:
             continue
-        return local_timestamp.tz_localize(market_timezone).tz_convert("UTC")
+        return local_timestamp.tz_localize(MARKET_TIMEZONE).tz_convert("UTC")
 
     return None
 
 
 def _parse_cafef_published_timestamp(published_text: str, url: str) -> tuple[pd.Timestamp | None, str]:
-    config = get_default_config()
-    market_timezone = config.market_timezone
-
     text = str(published_text).strip()
     is_iso_like = bool(re.match(r"^\d{4}-\d{1,2}-\d{1,2}", text))
     parsed = pd.to_datetime(text, errors="coerce", dayfirst=not is_iso_like)
     if not pd.isna(parsed):
         timestamp = pd.Timestamp(parsed)
         if timestamp.tzinfo is None:
-            return timestamp.tz_localize(market_timezone).tz_convert("UTC"), "html"
+            return timestamp.tz_localize(MARKET_TIMEZONE).tz_convert("UTC"), "html"
         return timestamp.tz_convert("UTC"), "html"
 
     inferred = infer_cafef_url_timestamp(url)

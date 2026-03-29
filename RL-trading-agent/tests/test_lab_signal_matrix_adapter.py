@@ -5,7 +5,7 @@ from vn_stock_rl.data_tools.export_lab_signal_matrix import export_lab_signal_ma
 from vn_stock_rl.env import TradingEnv
 
 
-def _make_price_df(length: int = 6) -> pd.DataFrame:
+def _make_price_df(length: int = 20) -> pd.DataFrame:
     times = pd.date_range("2024-01-01", periods=length, freq="D")
     prices = 100.0 + np.arange(length, dtype=np.float64)
     return pd.DataFrame(

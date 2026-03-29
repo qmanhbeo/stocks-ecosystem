@@ -462,7 +462,7 @@ def _compute_eval_metrics(
         open_exec = env.df['open'].values[steps + 1]
         naive_buy_hold_return = float((open_exec[-1] / open_exec[0]) - 1.0)
 
-        entry_exec_idx = env.episode_start_idx + 2
+        entry_exec_idx = env.episode_start_idx + 1
         aligned_buy_hold_series = None
         aligned_buy_hold_return = None
         if entry_exec_idx < len(env.df):

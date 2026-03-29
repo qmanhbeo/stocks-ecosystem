@@ -320,6 +320,7 @@ def generate_auto_labels(
                 chunk_start=chunk_sample.chunk_start,
                 chunk_end=chunk_sample.chunk_end,
                 source_file=chunk_sample.source_file,
+                ticker_split=str(split_name).lower(),
                 selected_ranges=selected_ranges,
                 default_label=config.default_label,
                 confidence=confidence,

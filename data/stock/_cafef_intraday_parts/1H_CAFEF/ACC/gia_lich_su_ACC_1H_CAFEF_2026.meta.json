@@ -1,0 +1,15 @@
+{
+  "bar_dates": 52,
+  "bars": 170,
+  "first_bar_time": "2026-01-05T10:00:00",
+  "first_requested_date": "2026-01-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T13:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "2b349589b6ec3d3e3e3567dddbd8f64aface0cfd",
+  "requested_trading_days": 52,
+  "ticker": "ACC",
+  "written_at_utc": "2026-03-29T23:25:14Z",
+  "year": 2026
+}

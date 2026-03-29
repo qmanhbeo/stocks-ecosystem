@@ -79,11 +79,13 @@ def test_label_storage_writes_jsonl_and_supports_multiple_ranges():
             ],
             confidence="medium",
             notes="trend continuation",
+            ticker_split="train",
             config=config,
         )
         saved = append_label_record(record, config=config)
 
         assert saved["ticker"] == "HPG"
+        assert saved["ticker_split"] == "train"
         assert len(saved["selected_ranges"]) == 2
         assert (config.sessions_dir / f"{session.session_id}.json").exists()
         lines = [line for line in config.labels_jsonl_path.read_text(encoding="utf-8").splitlines() if line.strip()]
@@ -135,3 +137,54 @@ def test_label_storage_rejects_malformed_record():
             pass
         else:
             raise AssertionError("Expected malformed label record to be rejected")
+
+
+def test_label_storage_rejects_multiple_ranges_when_disabled():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir)
+        config = _build_config(root)
+        config.allow_multiple_ranges = False
+        raw_df = _write_market_parquet(config, "VCB", 100)
+        chunk_df = raw_df.iloc[5:70].copy().reset_index(drop=True)
+        session = create_session_record(config=config)
+        chunk = ChunkSample(
+            ticker="VCB",
+            chunk_id="VCB_2021-01-06_2021-03-11_len65",
+            chunk_start="2021-01-06",
+            chunk_end="2021-03-11",
+            source_file=str((config.raw_data_dir / "gia_lich_su_VCB_1D.parquet").relative_to(config.repo_root)),
+            chunk_length=len(chunk_df),
+            dataframe=chunk_df,
+        )
+        record = build_label_record(
+            chunk_sample=chunk,
+            session_id=session.session_id,
+            selected_ranges=[
+                {"start_ts": "2021-01-20", "end_ts": "2021-01-25", "label": 1},
+                {"start_ts": "2021-02-01", "end_ts": "2021-02-05", "label": 1},
+            ],
+            ticker_split="train",
+            config=config,
+        )
+
+        try:
+            append_label_record(record, config=config)
+        except LabelValidationError:
+            pass
+        else:
+            raise AssertionError("Expected multiple selected ranges to be rejected when disabled")
+
+
+def test_create_session_record_rejects_duplicate_explicit_session_id():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir)
+        config = _build_config(root)
+
+        create_session_record(config=config, session_id="session_fixed")
+
+        try:
+            create_session_record(config=config, session_id="session_fixed")
+        except FileExistsError:
+            pass
+        else:
+            raise AssertionError("Expected duplicate explicit session_id to be rejected")

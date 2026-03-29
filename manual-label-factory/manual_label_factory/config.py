@@ -16,7 +16,7 @@ def _shared_data_root() -> Path:
     configured = os.environ.get("STOCKS_DATA_ROOT")
     if configured:
         return Path(configured).expanduser().resolve()
-    return REPO_ROOT.parent.parent / "data"
+    return REPO_ROOT.parent / "data"
 
 
 @dataclass(slots=True)

@@ -4,6 +4,8 @@
 
 Manual buy-zone labeling lives in `manual-label-factory`. Heuristic auto-labeling lives under `research_pipelines/signal_labelling/auto_label/`.
 
+By default this pipeline resolves shared data under `/home/manh/stocks/data`. Override that with `STOCKS_DATA_ROOT` if you need a different workspace data root.
+
 ## Label Semantics
 
 The UI saves hindsight-assisted region labels on a displayed chart chunk:
@@ -61,7 +63,7 @@ After you finish labeling, use the rebuild/export/train/predict commands only wh
 6. Train and evaluate the baseline signal model.
 7. Generate per-bar signal probabilities for later RL feature merges.
 
-The exported supervised dataset keeps the original ticker-level split metadata in `ticker_split`. Because v1 labels are created only from training tickers, it also adds a deterministic `dataset_split` column so the baseline model can reserve validation and test holdouts from labeled chunks without leaking across rows from the same chunk.
+The exported supervised dataset keeps the original ticker-level split metadata in `ticker_split`, persisted with the label/rebuild artifacts so later split refreshes do not rewrite provenance. Because v1 labels are created only from training tickers, it also adds a deterministic `dataset_split` column so the baseline model can reserve validation and test holdouts from labeled chunks without leaking across rows from the same chunk.
 
 Heuristic auto labels follow that same pattern by default: generate labels on the ticker `train` split first, then let `export_supervised_dataset` assign chunk-level `dataset_split` values for supervised train/val/test holdouts.
 

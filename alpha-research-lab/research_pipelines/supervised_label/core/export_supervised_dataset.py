@@ -45,6 +45,12 @@ def build_ticker_split_lookup(config: SupervisedLabelConfig) -> Dict[str, str]:
     return lookup
 
 
+def _normalize_ticker_split_series(series: pd.Series) -> pd.Series:
+    normalized = series.astype(str).str.lower().str.strip()
+    normalized = normalized.replace({"": "unknown", "nan": "unknown", "none": "unknown"})
+    return normalized
+
+
 def export_supervised_dataset_dataframe(
     config: Optional[SupervisedLabelConfig] = None,
     bar_labels_path: Optional[Path] = None,
@@ -58,14 +64,17 @@ def export_supervised_dataset_dataframe(
     if bar_labels.empty:
         raise ValueError("Bar labels dataset is empty")
 
-    ticker_split_lookup = build_ticker_split_lookup(config)
+    ticker_split_lookup = {} if "ticker_split" in bar_labels.columns else build_ticker_split_lookup(config)
     datasets: List[pd.DataFrame] = []
     for ticker in sorted(bar_labels["ticker"].astype(str).unique()):
         labels_for_ticker = bar_labels.loc[bar_labels["ticker"].astype(str) == ticker].copy()
         raw_df = load_ticker_dataframe(ticker=ticker, config=config, timeframe=config.timeframe)
         features = build_feature_frame(raw_df, lookback_window=config.lookback_window)
         merged = labels_for_ticker.merge(features, on="date", how="left", validate="many_to_one")
-        merged["ticker_split"] = ticker_split_lookup.get(str(ticker).upper(), "unknown")
+        if "ticker_split" in labels_for_ticker.columns:
+            merged["ticker_split"] = _normalize_ticker_split_series(merged["ticker_split"])
+        else:
+            merged["ticker_split"] = ticker_split_lookup.get(str(ticker).upper(), "unknown")
         merged["dataset_split"] = merged["chunk_id"].astype(str).map(lambda value: assign_dataset_split(value, config))
         merged = merged.loc[merged["history_ready"] == 1].copy()
         feature_columns = get_feature_columns(merged)

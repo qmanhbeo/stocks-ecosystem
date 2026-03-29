@@ -10,13 +10,14 @@ from typing import Dict, List
 
 PACKAGE_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = PACKAGE_ROOT.parent.parent
+DEFAULT_MARKET_TIMEZONE = "Asia/Ho_Chi_Minh"
 
 
 def _shared_data_root() -> Path:
     configured = os.environ.get("STOCKS_DATA_ROOT")
     if configured:
         return Path(configured).expanduser().resolve()
-    return REPO_ROOT.parent.parent / "data"
+    return REPO_ROOT.parent / "data"
 
 
 @dataclass(slots=True)
@@ -39,7 +40,7 @@ class NewsFeaturesConfig:
     source_manifest_filename: str = "manifest.json"
     default_source: str = "cafef"
     timeframe: str = "1D"
-    market_timezone: str = "Asia/Ho_Chi_Minh"
+    market_timezone: str = DEFAULT_MARKET_TIMEZONE
     rolling_windows: List[int] = field(default_factory=lambda: [3, 5])
     keyword_score_column: str = "news_sentiment_keyword_score"
     embedding_model_name: str = "paraphrase-multilingual-MiniLM-L12-v2"

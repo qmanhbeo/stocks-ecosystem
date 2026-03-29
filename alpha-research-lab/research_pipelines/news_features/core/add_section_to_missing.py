@@ -10,7 +10,7 @@ import requests
 
 from research_pipelines.news_features.config import NewsFeaturesConfig, get_default_config
 from research_pipelines.news_features.io_utils import load_source_specs, read_jsonl, write_jsonl_records
-from vn_stock_rl.data_tools.fetch_news import (
+from data_tools.fetch_news import (
     _get_with_retries,
     _make_thread_session_getter,
     _should_skip_article_response,
