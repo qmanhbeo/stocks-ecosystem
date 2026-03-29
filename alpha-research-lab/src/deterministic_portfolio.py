@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 import sys
 from typing import Mapping
@@ -25,6 +25,17 @@ RECENT_CORE_COLUMNS = [
     "c13_compress_blowoff_2",
     "c14_clv_volconf_resid_rank",
 ]
+THESIS_FAMILY_COMPONENTS = {
+    "momentum_continuation": ("s1_proba", "c11_ret_60d_lag_rank"),
+    "breakout_followthrough": (
+        "c8_vol_zscore_5d",
+        "c12_gap_absorb_3",
+        "c13_compress_blowoff_2",
+        "c14_clv_volconf_resid_rank",
+    ),
+    "crowding_pressure": ("c7_ceiling_count_5d", "c10_illiq_level_rank"),
+}
+THESIS_FAMILY_NAMES = tuple(THESIS_FAMILY_COMPONENTS.keys())
 
 
 @dataclass(frozen=True)
@@ -59,6 +70,7 @@ class MarketInputs:
     availability_matrix: np.ndarray
     score_matrices: Mapping[str, np.ndarray]
     tradability_source: str
+    feature_matrices: Mapping[str, np.ndarray] = field(default_factory=dict)
 
 
 def available_signal_columns(frame: pd.DataFrame) -> list[str]:
@@ -226,6 +238,8 @@ def build_market_inputs(
     strategy_names: list[str],
     start_year: int,
     end_year: int,
+    feature_frame: pd.DataFrame | None = None,
+    feature_columns: list[str] | None = None,
 ) -> MarketInputs:
     universe = scored[(scored["time"].dt.year >= start_year) & (scored["time"].dt.year <= end_year)].copy()
     if universe.empty:
@@ -274,6 +288,30 @@ def build_market_inputs(
         )
         score_matrices[strategy_name] = score_wide.to_numpy(dtype=np.float64)
 
+    feature_matrices: dict[str, np.ndarray] = {}
+    if feature_frame is not None:
+        feature_universe = feature_frame[
+            (feature_frame["time"].dt.year >= start_year) & (feature_frame["time"].dt.year <= end_year)
+        ].copy()
+        if not feature_universe.empty:
+            columns = list(feature_columns) if feature_columns is not None else available_signal_columns(feature_universe)
+            for column in columns:
+                if column not in feature_universe.columns:
+                    continue
+                numeric = pd.to_numeric(feature_universe[column], errors="coerce")
+                if column.endswith("_present"):
+                    ranked_feature = numeric.fillna(0.0).clip(lower=0.0, upper=1.0)
+                else:
+                    ranked_feature = numeric.groupby(feature_universe["time"], sort=False).rank(method="average", pct=True)
+                    ranked_feature = ranked_feature.fillna(signal_fill_value(column))
+                ranked_wide = (
+                    feature_universe.assign(_feature_value=ranked_feature)
+                    .pivot(index="time", columns="ticker", values="_feature_value")
+                    .reindex(index=pd.to_datetime(dates), columns=list(tickers))
+                    .sort_index()
+                )
+                feature_matrices[str(column)] = ranked_wide.to_numpy(dtype=np.float64)
+
     benchmark = benchmark_open.reindex(pd.to_datetime(dates))
     return MarketInputs(
         dates=dates,
@@ -286,6 +324,7 @@ def build_market_inputs(
         availability_matrix=availability.to_numpy(dtype=bool),
         score_matrices=score_matrices,
         tradability_source=str(tradability_source),
+        feature_matrices=feature_matrices,
     )
 
 
@@ -468,6 +507,178 @@ def compute_selected_target_weights(
     return target
 
 
+def _rank_positions_desc(scores: np.ndarray, eligible_mask: np.ndarray) -> np.ndarray:
+    score_arr = np.asarray(scores, dtype=np.float64)
+    eligible = np.asarray(eligible_mask, dtype=bool) & np.isfinite(score_arr)
+    out = np.full(score_arr.shape, np.nan, dtype=np.float64)
+    ranked_pool = np.flatnonzero(eligible)
+    if ranked_pool.size == 0:
+        return out
+    order = np.lexsort((ranked_pool, -score_arr[ranked_pool]))
+    ranked = ranked_pool[order]
+    out[ranked] = np.arange(1, len(ranked) + 1, dtype=np.float64)
+    return out
+
+
+def _build_thesis_family_matrix(feature_matrices: Mapping[str, np.ndarray]) -> tuple[np.ndarray, tuple[str, ...]]:
+    family_names: list[str] = []
+    family_parts: list[np.ndarray] = []
+    for family_name, components in THESIS_FAMILY_COMPONENTS.items():
+        mats = [np.asarray(feature_matrices[column], dtype=np.float64) for column in components if column in feature_matrices]
+        if not mats:
+            continue
+        stacked = np.stack(mats, axis=0)
+        valid_counts = np.sum(np.isfinite(stacked), axis=0)
+        summed = np.nansum(stacked, axis=0)
+        family_score = np.divide(
+            summed,
+            valid_counts,
+            out=np.full_like(summed, np.nan, dtype=np.float64),
+            where=valid_counts > 0,
+        )
+        family_parts.append(family_score)
+        family_names.append(family_name)
+    if not family_parts:
+        return np.zeros((0, 0, 0), dtype=np.float64), tuple()
+    return np.stack(family_parts, axis=0), tuple(family_names)
+
+
+def _compute_exit_signal_mask(
+    *,
+    exit_rule_name: str | None,
+    exit_rule_params: Mapping[str, object] | None,
+    scores: np.ndarray,
+    rank_positions: np.ndarray,
+    holding_ages: np.ndarray,
+    held_mask: np.ndarray,
+    eligible_mask: np.ndarray,
+    required_holding_age: int,
+    top_k: int,
+    blocked_sell_streaks: np.ndarray,
+    entry_scores: np.ndarray,
+    return_since_entry: np.ndarray,
+    adv20_current: np.ndarray,
+    entry_adv20_values: np.ndarray,
+    peak_return_since_entry: np.ndarray,
+    underwater_days_since_entry: np.ndarray,
+    entry_thesis_family_codes: np.ndarray,
+    entry_thesis_scores: np.ndarray,
+    current_thesis_scores: np.ndarray | None,
+) -> np.ndarray:
+    exit_mask = np.zeros_like(held_mask, dtype=bool)
+    if not exit_rule_name:
+        return exit_mask
+
+    params = dict(exit_rule_params or {})
+    legal_to_exit = np.asarray(held_mask, dtype=bool) & (np.asarray(holding_ages, dtype=np.int64) >= int(required_holding_age))
+    if not np.any(legal_to_exit):
+        return exit_mask
+
+    score_arr = np.asarray(scores, dtype=np.float64)
+    rank_arr = np.asarray(rank_positions, dtype=np.float64)
+    eligible = np.asarray(eligible_mask, dtype=bool)
+    held = np.asarray(held_mask, dtype=bool)
+    blocked_streak = np.asarray(blocked_sell_streaks, dtype=np.int64)
+    entry_score_arr = np.asarray(entry_scores, dtype=np.float64)
+    entry_return_arr = np.asarray(return_since_entry, dtype=np.float64)
+    peak_return_arr = np.asarray(peak_return_since_entry, dtype=np.float64)
+    underwater_days_arr = np.asarray(underwater_days_since_entry, dtype=np.int64)
+    adv_current_arr = np.asarray(adv20_current, dtype=np.float64)
+    entry_adv_arr = np.asarray(entry_adv20_values, dtype=np.float64)
+
+    nonheld_pool = eligible & ~held & np.isfinite(score_arr)
+    best_nonheld_score = float(np.nanmax(score_arr[nonheld_pool])) if np.any(nonheld_pool) else float("nan")
+    score_margin = np.nan_to_num(best_nonheld_score - score_arr, nan=-np.inf)
+    raw_rank_threshold = params.get("rank_exit_threshold", top_k)
+    rank_threshold = top_k if raw_rank_threshold is None else int(raw_rank_threshold)
+    rank_violation = np.nan_to_num(rank_arr, nan=np.inf) > float(rank_threshold)
+    score_drop = np.nan_to_num(entry_score_arr - score_arr, nan=0.0)
+    adv_ratio = np.nan_to_num(
+        adv_current_arr / np.clip(entry_adv_arr, 1e-12, None),
+        nan=np.inf,
+        posinf=np.inf,
+        neginf=0.0,
+    )
+
+    family = str(exit_rule_name)
+    if family == "rank_decay":
+        margin = float(params.get("replacement_margin", 0.0))
+        margin_ok = np.ones_like(score_margin, dtype=bool) if margin <= 0.0 else score_margin >= margin
+        exit_mask = legal_to_exit & rank_violation & margin_ok
+    elif family == "time_plus_decay":
+        extra_hold = int(params.get("min_hold_extra_days", 0))
+        eligible_after_extra = held & (np.asarray(holding_ages, dtype=np.int64) >= int(required_holding_age) + extra_hold)
+        mode = str(params.get("mode", "or"))
+        score_drop_threshold = float(params.get("score_drop_threshold", 0.05))
+        score_violation = score_drop >= score_drop_threshold
+        if mode == "rank_only":
+            exit_mask = eligible_after_extra & rank_violation
+        elif mode == "score_only":
+            exit_mask = eligible_after_extra & score_violation
+        elif mode == "and":
+            exit_mask = eligible_after_extra & rank_violation & score_violation
+        else:
+            exit_mask = eligible_after_extra & (rank_violation | score_violation)
+    elif family == "sticky_winner":
+        rank_buffer = int(params.get("rank_buffer", 0))
+        margin = float(params.get("replacement_margin", 0.02))
+        buffered_violation = np.nan_to_num(rank_arr, nan=np.inf) > float(top_k + rank_buffer)
+        exit_mask = legal_to_exit & buffered_violation & (score_margin >= margin)
+    elif family == "liquidity_deterioration":
+        blocked_streak_threshold = int(params.get("blocked_sell_streak_threshold", 2))
+        adv_drop_ratio_threshold = float(params.get("adv20_ratio_threshold", 0.70))
+        exit_mask = legal_to_exit & (
+            (blocked_streak >= blocked_streak_threshold)
+            | (adv_ratio <= adv_drop_ratio_threshold)
+        )
+    elif family == "strength_exhaustion":
+        return_threshold = float(params.get("return_since_entry_threshold", 0.15))
+        score_drop_threshold = float(params.get("score_drop_threshold", 0.05))
+        exit_mask = legal_to_exit & (entry_return_arr >= return_threshold) & (score_drop >= score_drop_threshold)
+    elif family == "replacement_pressure":
+        margin = float(params.get("replacement_margin", 0.02))
+        exit_mask = legal_to_exit & (score_margin >= margin)
+    elif family == "thesis_inconsistency":
+        thesis_drop_threshold = float(params.get("thesis_drop_threshold", 0.15))
+        score_drop_threshold = float(params.get("score_drop_threshold", 0.05))
+        valid_codes = np.asarray(entry_thesis_family_codes, dtype=np.int64)
+        current_thesis = np.full_like(score_arr, np.nan, dtype=np.float64)
+        if current_thesis_scores is not None and current_thesis_scores.size > 0:
+            valid_idx = legal_to_exit & (valid_codes >= 0) & (valid_codes < current_thesis_scores.shape[0])
+            held_positions = np.flatnonzero(valid_idx)
+            if held_positions.size > 0:
+                current_thesis[held_positions] = current_thesis_scores[valid_codes[held_positions], held_positions]
+        thesis_drop = np.nan_to_num(np.asarray(entry_thesis_scores, dtype=np.float64) - current_thesis, nan=0.0)
+        exit_mask = legal_to_exit & np.isfinite(current_thesis) & (thesis_drop >= thesis_drop_threshold) & (score_drop >= score_drop_threshold)
+    elif family == "failed_followthrough":
+        grace_days = int(params.get("grace_days", 2))
+        peak_return_threshold = float(params.get("peak_return_threshold", 0.03))
+        current_return_threshold = float(params.get("current_return_threshold", 0.0))
+        score_drop_threshold = float(params.get("score_drop_threshold", 0.0))
+        eligible_after_grace = held & (np.asarray(holding_ages, dtype=np.int64) >= int(required_holding_age) + grace_days)
+        exit_mask = (
+            eligible_after_grace
+            & (peak_return_arr <= peak_return_threshold)
+            & (entry_return_arr <= current_return_threshold)
+            & (score_drop >= score_drop_threshold)
+        )
+    elif family == "time_under_water":
+        grace_days = int(params.get("grace_days", 5))
+        underwater_days_threshold = int(params.get("underwater_days_threshold", 3))
+        peak_return_threshold = float(params.get("peak_return_threshold", 0.05))
+        eligible_after_grace = held & (np.asarray(holding_ages, dtype=np.int64) >= int(required_holding_age) + grace_days)
+        exit_mask = (
+            eligible_after_grace
+            & (underwater_days_arr >= underwater_days_threshold)
+            & (peak_return_arr <= peak_return_threshold)
+            & (entry_return_arr <= 0.0)
+        )
+    else:
+        raise ValueError(f"Unknown exit_rule_name {exit_rule_name!r}")
+
+    return exit_mask.astype(bool)
+
+
 def _build_blotter_rows(
     *,
     strategy_name: str,
@@ -489,6 +700,17 @@ def _build_blotter_rows(
     portfolio_value_before_rebalance_vnd: float,
     capacity_weight_limits: np.ndarray,
     weighting: str,
+    rank_positions: np.ndarray,
+    entry_scores: np.ndarray,
+    entry_rank_positions: np.ndarray,
+    return_since_entry: np.ndarray,
+    peak_return_since_entry: np.ndarray,
+    underwater_days_since_entry: np.ndarray,
+    blocked_sell_streaks: np.ndarray,
+    exit_signal_indices: tuple[int, ...],
+    entry_thesis_family_names: tuple[str | None, ...],
+    entry_thesis_scores: np.ndarray,
+    current_thesis_scores: np.ndarray,
 ) -> list[dict[str, object]]:
     detail_indices = sorted(
         set(selected_indices)
@@ -505,6 +727,7 @@ def _build_blotter_rows(
     blocked_buy = set(blocked_buy_indices)
     blocked_sell = set(blocked_sell_indices)
     capacity_clipped = set(capacity_clipped_indices)
+    exit_signal = set(exit_signal_indices)
     rows: list[dict[str, object]] = []
     safe_value = max(float(portfolio_value_before_rebalance_vnd), 1e-12)
 
@@ -540,6 +763,21 @@ def _build_blotter_rows(
                 "ticker": tickers[idx],
                 "weighting_rule": weighting,
                 "signal_score": float(scores[idx]) if np.isfinite(scores[idx]) else None,
+                "score_rank": float(rank_positions[idx]) if np.isfinite(rank_positions[idx]) else None,
+                "entry_score": float(entry_scores[idx]) if np.isfinite(entry_scores[idx]) else None,
+                "entry_rank": float(entry_rank_positions[idx]) if np.isfinite(entry_rank_positions[idx]) else None,
+                "score_change_since_entry": float(scores[idx] - entry_scores[idx])
+                if np.isfinite(scores[idx]) and np.isfinite(entry_scores[idx]) else None,
+                "return_since_entry": float(return_since_entry[idx]) if np.isfinite(return_since_entry[idx]) else None,
+                "peak_return_since_entry": float(peak_return_since_entry[idx]) if np.isfinite(peak_return_since_entry[idx]) else None,
+                "underwater_days_since_entry": int(underwater_days_since_entry[idx]),
+                "blocked_sell_streak": int(blocked_sell_streaks[idx]),
+                "entry_thesis_family": entry_thesis_family_names[idx],
+                "entry_thesis_score": float(entry_thesis_scores[idx]) if np.isfinite(entry_thesis_scores[idx]) else None,
+                "current_thesis_score": float(current_thesis_scores[idx]) if np.isfinite(current_thesis_scores[idx]) else None,
+                "thesis_score_change_since_entry": float(current_thesis_scores[idx] - entry_thesis_scores[idx])
+                if np.isfinite(current_thesis_scores[idx]) and np.isfinite(entry_thesis_scores[idx]) else None,
+                "exit_signal": bool(idx in exit_signal),
                 "selected": bool(idx in selected_indices),
                 "holding_age_before": int(holding_ages[idx]),
                 "held_before": bool(current_weight > 1e-12),
@@ -602,6 +840,8 @@ def summarize_daily_results(
             "capacity_clipped_events": 0,
             "avg_holding_age": 0.0,
             "avg_pending_entry_count": 0.0,
+            "exit_rule_trigger_events": 0,
+            "avg_exit_signal_count": 0.0,
             "per_year": [],
             "top_k": int(top_k),
         }
@@ -689,6 +929,10 @@ def summarize_daily_results(
         "avg_holding_age": round(float(daily["avg_holding_age"].mean()), 4),
         "avg_pending_entry_count": round(float(daily["pending_entry_count"].mean()), 4)
         if "pending_entry_count" in daily.columns else 0.0,
+        "exit_rule_trigger_events": int(daily["exit_signal_count"].sum())
+        if "exit_signal_count" in daily.columns else 0,
+        "avg_exit_signal_count": round(float(daily["exit_signal_count"].mean()), 4)
+        if "exit_signal_count" in daily.columns else 0.0,
         "per_year": per_year,
         "top_k": int(top_k),
     }
@@ -722,6 +966,8 @@ def simulate_strategy(
     incumbent_score_bonus: float = 0.0,
     sector_labels: tuple[str | None, ...] | None = None,
     max_names_per_sector: int | None = None,
+    exit_rule_name: str | None = None,
+    exit_rule_params: Mapping[str, object] | None = None,
 ) -> StrategyRunResult:
     if top_k <= 0:
         raise ValueError("top_k must be > 0")
@@ -750,6 +996,7 @@ def simulate_strategy(
     can_sell_matrix = np.asarray(market_inputs.can_sell_matrix, dtype=bool)
     availability_matrix = np.asarray(market_inputs.availability_matrix, dtype=bool)
     benchmark_open = np.asarray(market_inputs.benchmark_open, dtype=np.float64)
+    thesis_family_matrix, thesis_family_names = _build_thesis_family_matrix(getattr(market_inputs, "feature_matrices", {}) or {})
     if entry_allowed_matrix is None:
         entry_allowed = np.ones_like(availability_matrix, dtype=bool)
     else:
@@ -801,6 +1048,15 @@ def simulate_strategy(
     pending_entry_days_total = 0
     partial_fill_count = 0
     expired_entry_plan_count = 0
+    entry_scores = np.full(n_tickers, np.nan, dtype=np.float64)
+    entry_rank_positions = np.full(n_tickers, np.nan, dtype=np.float64)
+    entry_open_prices = np.full(n_tickers, np.nan, dtype=np.float64)
+    entry_adv20_values = np.full(n_tickers, np.nan, dtype=np.float64)
+    peak_return_since_entry = np.full(n_tickers, 0.0, dtype=np.float64)
+    underwater_days_since_entry = np.zeros(n_tickers, dtype=np.int64)
+    entry_thesis_family_codes = np.full(n_tickers, -1, dtype=np.int64)
+    entry_thesis_scores = np.full(n_tickers, np.nan, dtype=np.float64)
+    blocked_sell_streaks = np.zeros(n_tickers, dtype=np.int64)
 
     records: list[dict[str, object]] = []
     blotter_records: list[dict[str, object]] = []
@@ -849,9 +1105,48 @@ def simulate_strategy(
             eligible &= capacity_weights >= float(min_deployable_weight)
         held_mask = drifted_weights > 1e-12
         eligible &= held_mask | entry_allowed[step]
+        rank_positions = _rank_positions_desc(scores, availability_matrix[step])
+        return_since_entry = np.full(n_tickers, np.nan, dtype=np.float64)
+        valid_entry_return = (
+            held_mask
+            & np.isfinite(entry_open_prices)
+            & (entry_open_prices > 0.0)
+            & np.isfinite(open_t)
+            & (open_t > 0.0)
+        )
+        return_since_entry[valid_entry_return] = open_t[valid_entry_return] / entry_open_prices[valid_entry_return] - 1.0
+        peak_return_since_entry = np.where(
+            held_mask & np.isfinite(return_since_entry),
+            np.maximum(peak_return_since_entry, np.nan_to_num(return_since_entry, nan=-np.inf)),
+            peak_return_since_entry,
+        )
+        peak_return_since_entry = np.where(held_mask, peak_return_since_entry, 0.0)
+        underwater_days_since_entry = np.where(
+            held_mask & np.isfinite(return_since_entry) & (return_since_entry <= 0.0),
+            underwater_days_since_entry + 1,
+            underwater_days_since_entry,
+        ).astype(np.int64)
+        underwater_days_since_entry = np.where(held_mask, underwater_days_since_entry, 0).astype(np.int64)
+        blocked_sell_streaks = np.where(
+            held_mask & ~can_sell_matrix[step],
+            blocked_sell_streaks + 1,
+            0,
+        ).astype(np.int64)
+        blocked_sell_streaks = np.where(held_mask, blocked_sell_streaks, 0).astype(np.int64)
+        if thesis_family_matrix.size > 0:
+            current_thesis_scores = thesis_family_matrix[:, step, :]
+        else:
+            current_thesis_scores = np.zeros((0, n_tickers), dtype=np.float64)
+        current_entry_thesis_scores = np.full(n_tickers, np.nan, dtype=np.float64)
+        if current_thesis_scores.size > 0:
+            valid_thesis_positions = held_mask & (entry_thesis_family_codes >= 0) & (entry_thesis_family_codes < current_thesis_scores.shape[0])
+            thesis_idx = np.flatnonzero(valid_thesis_positions)
+            if thesis_idx.size > 0:
+                current_entry_thesis_scores[thesis_idx] = current_thesis_scores[entry_thesis_family_codes[thesis_idx], thesis_idx]
 
         selected_indices: list[int] = []
         desired_weights = drifted_weights.copy()
+        exit_signal_mask = np.zeros(n_tickers, dtype=bool)
         if do_rebalance:
             if activation_on and np.any(eligible):
                 ranked_pool = np.flatnonzero(eligible)
@@ -865,7 +1160,58 @@ def simulate_strategy(
                 if max_names_if_liquidity_thin is not None and len(ranked_pool) < top_k:
                     selection_cap = min(selection_cap, int(max_names_if_liquidity_thin))
                 ranked_candidates = ranked_pool[order[: len(order)]].tolist()
-                if max_names_per_sector is not None and sector_labels is not None:
+                if exit_rule_name:
+                    exit_signal_mask = _compute_exit_signal_mask(
+                        exit_rule_name=exit_rule_name,
+                        exit_rule_params=exit_rule_params,
+                        scores=scores,
+                        rank_positions=rank_positions,
+                        holding_ages=holding_ages,
+                        held_mask=held_mask,
+                        eligible_mask=availability_matrix[step],
+                        required_holding_age=required_holding_age,
+                        top_k=top_k,
+                        blocked_sell_streaks=blocked_sell_streaks,
+                        entry_scores=entry_scores,
+                        return_since_entry=return_since_entry,
+                        adv20_current=adv20_for_execution,
+                        entry_adv20_values=entry_adv20_values,
+                        peak_return_since_entry=peak_return_since_entry,
+                        underwater_days_since_entry=underwater_days_since_entry,
+                        entry_thesis_family_codes=entry_thesis_family_codes,
+                        entry_thesis_scores=entry_thesis_scores,
+                        current_thesis_scores=current_thesis_scores,
+                    )
+                    retained = [idx for idx in ranked_candidates if held_mask[idx] and not exit_signal_mask[idx]]
+                    if max_names_per_sector is not None and sector_labels is not None:
+                        counts: dict[str | None, int] = {}
+                        retained_kept: list[int] = []
+                        for idx in retained:
+                            sector = sector_labels[idx]
+                            if counts.get(sector, 0) >= int(max_names_per_sector):
+                                continue
+                            retained_kept.append(idx)
+                            counts[sector] = counts.get(sector, 0) + 1
+                            if len(retained_kept) >= selection_cap:
+                                break
+                        retained = retained_kept
+                        remaining_candidates: list[int] = []
+                        for idx in ranked_candidates:
+                            if held_mask[idx]:
+                                continue
+                            sector = sector_labels[idx]
+                            if counts.get(sector, 0) >= int(max_names_per_sector):
+                                continue
+                            remaining_candidates.append(idx)
+                            if len(retained) + len(remaining_candidates) >= selection_cap:
+                                break
+                        selected_indices = retained + remaining_candidates[: max(selection_cap - len(retained), 0)]
+                    else:
+                        remaining_candidates = [idx for idx in ranked_candidates if not held_mask[idx]]
+                        selected_indices = retained[:selection_cap]
+                        if len(selected_indices) < selection_cap:
+                            selected_indices.extend(remaining_candidates[: selection_cap - len(selected_indices)])
+                elif max_names_per_sector is not None and sector_labels is not None:
                     counts: dict[str | None, int] = {}
                     selected_indices = []
                     for idx in ranked_candidates:
@@ -949,15 +1295,58 @@ def simulate_strategy(
                     portfolio_value_before_rebalance_vnd=value_before_rebalance,
                     capacity_weight_limits=capacity_weights,
                     weighting=weighting,
+                    rank_positions=rank_positions,
+                    entry_scores=entry_scores,
+                    entry_rank_positions=entry_rank_positions,
+                    return_since_entry=return_since_entry,
+                    peak_return_since_entry=peak_return_since_entry,
+                    underwater_days_since_entry=underwater_days_since_entry,
+                    blocked_sell_streaks=blocked_sell_streaks,
+                    exit_signal_indices=tuple(np.flatnonzero(exit_signal_mask).tolist()),
+                    entry_thesis_family_names=tuple(
+                        thesis_family_names[code] if 0 <= code < len(thesis_family_names) else None
+                        for code in entry_thesis_family_codes
+                    ),
+                    entry_thesis_scores=entry_thesis_scores,
+                    current_thesis_scores=current_entry_thesis_scores,
                 )
             )
         value_after_rebalance = value_before_rebalance * max(1.0 - transaction_cost, 0.0)
+        new_positions_mask = (~held_mask) & (execution_result.executed_weights > 1e-12)
+        sold_mask = held_mask & (execution_result.executed_weights <= 1e-12)
         weights = execution_result.executed_weights
         holding_ages = _update_holding_ages(
             previous_weights=drifted_weights,
             executed_weights=weights,
             previous_holding_ages=holding_ages,
         )
+        entry_scores = np.where(new_positions_mask, scores, entry_scores)
+        entry_scores = np.where(sold_mask, np.nan, entry_scores)
+        entry_rank_positions = np.where(new_positions_mask, rank_positions, entry_rank_positions)
+        entry_rank_positions = np.where(sold_mask, np.nan, entry_rank_positions)
+        entry_open_prices = np.where(new_positions_mask, open_t1, entry_open_prices)
+        entry_open_prices = np.where(sold_mask, np.nan, entry_open_prices)
+        entry_adv20_values = np.where(new_positions_mask, adv20_for_execution, entry_adv20_values)
+        entry_adv20_values = np.where(sold_mask, np.nan, entry_adv20_values)
+        if thesis_family_matrix.size > 0:
+            current_entry_family_scores = current_thesis_scores
+            best_family_codes = np.argmax(current_entry_family_scores, axis=0).astype(np.int64)
+            best_family_scores = np.take_along_axis(current_entry_family_scores, best_family_codes.reshape(1, -1), axis=0).reshape(-1)
+            best_family_codes = np.where(np.any(np.isfinite(current_entry_family_scores), axis=0), best_family_codes, -1)
+            best_family_scores = np.where(best_family_codes >= 0, best_family_scores, np.nan)
+        else:
+            best_family_codes = np.full(n_tickers, -1, dtype=np.int64)
+            best_family_scores = np.full(n_tickers, np.nan, dtype=np.float64)
+        entry_thesis_family_codes = np.where(new_positions_mask, best_family_codes, entry_thesis_family_codes)
+        entry_thesis_family_codes = np.where(sold_mask, -1, entry_thesis_family_codes)
+        entry_thesis_scores = np.where(new_positions_mask, best_family_scores, entry_thesis_scores)
+        entry_thesis_scores = np.where(sold_mask, np.nan, entry_thesis_scores)
+        peak_return_since_entry = np.where(new_positions_mask, 0.0, peak_return_since_entry)
+        peak_return_since_entry = np.where(sold_mask, 0.0, peak_return_since_entry)
+        underwater_days_since_entry = np.where(new_positions_mask, 0, underwater_days_since_entry).astype(np.int64)
+        underwater_days_since_entry = np.where(sold_mask, 0, underwater_days_since_entry).astype(np.int64)
+        blocked_sell_streaks = np.where(sold_mask, 0, blocked_sell_streaks)
+        blocked_sell_streaks = np.where(new_positions_mask, 0, blocked_sell_streaks)
         if entry_slice_days > 1:
             if do_rebalance:
                 new_pending_mask = desired_weights > weights + 1e-12
@@ -1000,10 +1389,13 @@ def simulate_strategy(
                 "selected_count": int(len(selected_indices) if do_rebalance else np.count_nonzero(weights > 1e-12)),
                 "pending_entry_count": int(np.count_nonzero(pending_entry_days_left > 0)),
                 "rebalance_triggered": bool(do_rebalance),
+                "exit_rule_name": str(exit_rule_name) if exit_rule_name else None,
+                "exit_signal_count": int(np.count_nonzero(exit_signal_mask)),
                 "activation_on": bool(activation_on),
                 "activation_scale": float(activation_exposure),
                 "weighting_rule": weighting,
                 "requested_tickers": [tickers[idx] for idx in selected_indices],
+                "exit_signal_tickers": [tickers[idx] for idx in np.flatnonzero(exit_signal_mask)],
                 "held_tickers": [tickers[idx] for idx in np.flatnonzero(active_mask)],
             }
         )

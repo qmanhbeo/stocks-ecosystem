@@ -1,0 +1,70 @@
+{
+  "artifacts": {
+    "best_daily": "artifacts/portfolio_baselines/20260329_192839_h215_failed_followthrough_exit_best_daily.parquet",
+    "best_exit_panel": "artifacts/portfolio_baselines/20260329_192839_h215_failed_followthrough_exit_best_exit_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260329_192839_h215_failed_followthrough_exit_results.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_failed_followthrough",
+  "name": "h215_failed_followthrough_exit",
+  "summary": {
+    "baseline_variant": "strength_exhaustion__return_since_entry_threshold_0p15__score_drop_threshold_0p05",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "winner": {
+      "avg_exit_signal_count": 0.024,
+      "confirmation_avg_cash_weight": 7.936534071617585e-17,
+      "confirmation_avg_daily_turnover": 0.014899052451430353,
+      "confirmation_information_ratio_annualized": -0.22083552324460545,
+      "confirmation_ir_delta": -0.011068769440611137,
+      "confirmation_relative_delta": -0.005167676136541899,
+      "confirmation_relative_total_return": -0.052214726031645786,
+      "dev_avg_cash_weight": 0.003222328891841208,
+      "dev_avg_daily_turnover": 0.028586705071953787,
+      "dev_information_ratio_annualized": 0.30969422641512345,
+      "dev_relative_total_return": 0.5596515344244968,
+      "exit_rule_name": "failed_followthrough",
+      "exit_rule_params": {
+        "current_return_threshold": 0.0,
+        "grace_days": 2,
+        "peak_return_threshold": 0.03,
+        "score_drop_threshold": 0.0
+      },
+      "exit_rule_trigger_events": 66,
+      "overall_information_ratio_annualized": 0.389686,
+      "overall_relative_total_return": 1.311848,
+      "promoted": false,
+      "validation_avg_cash_weight": 7.319907316666864e-17,
+      "validation_avg_daily_turnover": 0.008047045640557488,
+      "validation_information_ratio_annualized": 1.217397984613296,
+      "validation_ir_delta": 0.04484199559754076,
+      "validation_relative_delta": 0.019480511467393047,
+      "validation_relative_total_return": 0.5639462836149447,
+      "variant": "failed_followthrough__current_return_threshold_0p0__grace_days_2__peak_return_threshold_0p03__score_drop_threshold_0p0"
+    }
+  },
+  "ts": "20260329_192839"
+}

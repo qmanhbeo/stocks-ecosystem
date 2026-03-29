@@ -126,9 +126,10 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
 - Keep the deterministic paper trade / live scoreboard running on the frozen sticky branch:
   - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
 - Treat ADV / capacity as parked for the current-account branch, not solved
-- Explicitly split the problem into two layers:
+- Explicitly split the problem into three layers:
   - selection alpha = choose the right names
   - activation alpha = decide when the selector should be on
+  - exit alpha = decide when to stop holding a bought name after entry
 - Run the repo in two tracks:
   - live track: freeze the sticky branch and monitor it forward only
   - research track: reopen alpha discovery under the locked protocol
@@ -192,6 +193,16 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
   - `H203`: pairwise additive bakeoff passed in always-on form
   - `H205`: state-scoped pairwise extension failed
   - `H204`: fresh-family tradability search found no promoted atom
+- Session 70 then resolved the first exit-alpha ladder cleanly:
+  - `H207`: rank-decay exits beat the always-on selector baseline
+  - `H211`: strength-exhaustion exits beat the H207 anchor in always-on form
+  - `H212`: replacement-pressure exits failed
+  - `H213`: the H211 exit winner failed frozen sticky-activation compatibility
+- Session 71 then tested genuinely new exit families:
+  - `H214`: thesis inconsistency failed
+  - `H215`: failed follow-through was a near-miss but did not clear the locked gate
+  - `H216`: time-under-water failed badly on confirmation
+  - `H217`: skipped because no new family displaced H211
 - Active next branch is now dual-track:
   - live track:
     - keep the live forward scoreboard running on the rollback sticky branch
@@ -199,11 +210,15 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
     - if sticky falls behind sticky always-on for `>= 2` completed cycles, rerun parity first and then choose between reopening `H194/H195` or abandoning local activation tuning
   - research track:
     - keep `state_blend__h199_sector_laggard_gap_absorb__30` as the offline lead selector
+    - keep `strength_exhaustion__return_since_entry_threshold_0p15__score_drop_threshold_0p05` as offline-only exit evidence
     - do not replace the live sticky branch from that result alone
     - the current selector-discovery ladder is exhausted
+    - the current exit ladder is also exhausted
     - do not reopen:
       - H199 pairwise recombinations
       - H204 atom recombinations
+      - H207-H213 threshold retuning on the same locked window
+      - H214-H217 threshold retuning on the same locked window
     - the next honest selector-side branch must require a genuinely new data family or a new high-level hypothesis family
 - RL remains exploratory only
 

@@ -1,0 +1,68 @@
+{
+  "artifacts": {
+    "best_daily": "artifacts/portfolio_baselines/20260329_190859_h209_sticky_winner_exit_best_daily.parquet",
+    "best_exit_panel": "artifacts/portfolio_baselines/20260329_190859_h209_sticky_winner_exit_best_exit_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260329_190859_h209_sticky_winner_exit_results.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_sticky_winner",
+  "name": "h209_sticky_winner_exit",
+  "summary": {
+    "baseline_variant": "rank_decay__rank_exit_threshold_5p0__replacement_margin_0p05",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "winner": {
+      "avg_exit_signal_count": 0.7918,
+      "confirmation_avg_cash_weight": 0.04483913152936387,
+      "confirmation_avg_daily_turnover": 0.3239184017685031,
+      "confirmation_information_ratio_annualized": -0.760257069591844,
+      "confirmation_ir_delta": 0.010130362647714275,
+      "confirmation_relative_delta": 0.0021795068092004266,
+      "confirmation_relative_total_return": -0.20277045286442508,
+      "dev_avg_cash_weight": 0.0333224041165291,
+      "dev_avg_daily_turnover": 0.329236177217151,
+      "dev_information_ratio_annualized": 1.2059605039860533,
+      "dev_relative_total_return": 16.10718571692416,
+      "exit_rule_name": "sticky_winner",
+      "exit_rule_params": {
+        "rank_buffer": 2,
+        "replacement_margin": 0.05
+      },
+      "exit_rule_trigger_events": 2175,
+      "overall_information_ratio_annualized": 0.998026,
+      "overall_relative_total_return": 19.484415,
+      "promoted": false,
+      "validation_avg_cash_weight": 0.02637588798956027,
+      "validation_avg_daily_turnover": 0.3251598998794166,
+      "validation_information_ratio_annualized": 0.9143949226052837,
+      "validation_ir_delta": 0.02282482991521917,
+      "validation_relative_delta": 0.012341933425776608,
+      "validation_relative_total_return": 0.501971236118022,
+      "variant": "sticky_winner__rank_buffer_2__replacement_margin_0p05"
+    }
+  },
+  "ts": "20260329_190859"
+}

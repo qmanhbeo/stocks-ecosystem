@@ -1,0 +1,38 @@
+{
+  "artifacts": {},
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_new_family_activation_compatibility",
+  "name": "h217_new_exit_activation_compatibility",
+  "summary": {
+    "anchor_variant": "strength_exhaustion__return_since_entry_threshold_0p15__score_drop_threshold_0p05",
+    "original_anchor_variant": "strength_exhaustion__return_since_entry_threshold_0p15__score_drop_threshold_0p05",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "reason": "No genuinely new exit-family winner displaced the existing H211 anchor",
+    "skipped": true
+  },
+  "ts": "20260329_192920"
+}

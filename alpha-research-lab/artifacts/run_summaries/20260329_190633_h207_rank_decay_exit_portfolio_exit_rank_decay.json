@@ -1,0 +1,99 @@
+{
+  "artifacts": {
+    "best_daily": "artifacts/portfolio_baselines/20260329_190633_h207_rank_decay_exit_best_daily.parquet",
+    "best_exit_panel": "artifacts/portfolio_baselines/20260329_190633_h207_rank_decay_exit_best_exit_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260329_190633_h207_rank_decay_exit_results.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "start_year": 2015
+  },
+  "mode": "portfolio_exit_rank_decay",
+  "name": "h207_rank_decay_exit",
+  "summary": {
+    "baseline": {
+      "avg_exit_signal_count": 0.0,
+      "confirmation_avg_cash_weight": 0.05293413379463258,
+      "confirmation_avg_daily_turnover": 0.3306432669549642,
+      "confirmation_information_ratio_annualized": -0.7549743915577688,
+      "confirmation_relative_total_return": -0.20016368501338921,
+      "dev_avg_cash_weight": 0.03283623787386082,
+      "dev_avg_daily_turnover": 0.3391094634917013,
+      "dev_information_ratio_annualized": 1.2141605578088648,
+      "dev_relative_total_return": 16.40591203650821,
+      "exit_rule_name": null,
+      "exit_rule_params": null,
+      "exit_rule_trigger_events": 0,
+      "overall_information_ratio_annualized": 0.991354,
+      "overall_relative_total_return": 18.970695,
+      "validation_avg_cash_weight": 0.023833136079562278,
+      "validation_avg_daily_turnover": 0.33560260930117686,
+      "validation_information_ratio_annualized": 0.8210729094394421,
+      "validation_relative_total_return": 0.43448254906045713,
+      "variant": "always_on_baseline"
+    },
+    "promoted_candidates": [
+      {
+        "confirmation_ir_delta": -0.015413040681789503,
+        "confirmation_relative_delta": -0.004786274660236289,
+        "validation_ir_delta": 0.07049718325062238,
+        "validation_relative_delta": 0.055146753631788226,
+        "variant": "rank_decay__rank_exit_threshold_5__replacement_margin_0p05"
+      }
+    ],
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "winner": {
+      "avg_exit_signal_count": 0.8074,
+      "confirmation_avg_cash_weight": 0.04897112586410043,
+      "confirmation_avg_daily_turnover": 0.3263636892959443,
+      "confirmation_information_ratio_annualized": -0.7703874322395583,
+      "confirmation_ir_delta": -0.015413040681789503,
+      "confirmation_relative_delta": -0.004786274660236289,
+      "confirmation_relative_total_return": -0.2049499596736255,
+      "dev_avg_cash_weight": 0.03240778780547651,
+      "dev_avg_daily_turnover": 0.3350236112284336,
+      "dev_information_ratio_annualized": 1.2372999825156725,
+      "dev_relative_total_return": 17.534110427720975,
+      "exit_rule_name": "rank_decay",
+      "exit_rule_params": {
+        "rank_exit_threshold": 5,
+        "replacement_margin": 0.05
+      },
+      "exit_rule_trigger_events": 2218,
+      "overall_information_ratio_annualized": 1.017688,
+      "overall_relative_total_return": 20.9505,
+      "promoted": true,
+      "validation_avg_cash_weight": 0.026345564668031174,
+      "validation_avg_daily_turnover": 0.32966893069931286,
+      "validation_information_ratio_annualized": 0.8915700926900645,
+      "validation_ir_delta": 0.07049718325062238,
+      "validation_relative_delta": 0.055146753631788226,
+      "validation_relative_total_return": 0.48962930269224536,
+      "variant": "rank_decay__rank_exit_threshold_5__replacement_margin_0p05"
+    }
+  },
+  "ts": "20260329_190633"
+}

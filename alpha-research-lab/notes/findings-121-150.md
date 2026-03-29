@@ -713,3 +713,57 @@ But none had selector relevance:
 **Key finding:** the fresh H204 families contain cross-sectional state-level signal, but not in a form that survives naive selector economics under the current protocol.
 
 **Implication:** stop the current selector-discovery ladder here. The next honest selector-side branch must depend on a genuinely new data family or a different high-level hypothesis family, not more recombination of H199/H204 atoms.
+
+## F150: Exit Alpha Exists In Always-On Form, But The First Promoted Exit Winner Fails Frozen Sticky-Activation Compatibility; Do Not Change The Live Branch From H207-H213 (2026-03-29, Session 70)
+
+Session 70 opened a new layer explicitly:
+- selection alpha: what to buy
+- activation alpha: when the selector should be on
+- exit alpha: when to stop holding a bought name after entry
+
+The first exit ladder was run sequentially on top of the frozen selector backbone:
+- `H207`: rank-decay exit
+- `H208`: time-plus-decay exit
+- `H209`: sticky-winner exit
+- `H210`: liquidity-deterioration exit
+- `H211`: strength-exhaustion exit
+- `H212`: replacement-pressure exit
+- `H213`: frozen sticky-activation compatibility
+
+The ladder found two important things.
+
+### 1. Exit alpha is real in always-on form
+`H207` promoted a clean rank-decay rule:
+- `rank_decay__rank_exit_threshold_5p0__replacement_margin_0p05`
+- validation relative `+48.96%`
+- validation delta vs always-on baseline `+5.51%`
+- confirmation relative `-20.49%`
+
+`H211` then beat that anchor:
+- `strength_exhaustion__return_since_entry_threshold_0p15__score_drop_threshold_0p05`
+- validation relative `+54.45%`
+- validation delta vs H207 anchor `+5.48%`
+- validation IR `1.17`
+- confirmation relative `-4.70%`
+- confirmation delta vs H207 anchor `+15.79%`
+
+So there is real exit alpha under the always-on selector.
+
+### 2. That exit alpha is not yet deployable under the frozen sticky branch
+`H213` tested the H211 winner against the active live-compatible branch:
+- incumbent:
+  - `full_library_plus_sticky`
+  - validation relative `+29.65%`
+  - validation IR `0.61`
+  - confirmation relative `+18.80%`
+- candidate:
+  - `winner_plus_sticky`
+  - validation relative `+28.45%`
+  - validation IR `0.62`
+  - confirmation relative `+14.63%`
+
+So the promoted exit winner did **not** beat the incumbent sticky branch under the locked compatibility rule.
+
+**Key finding:** exit alpha is real, but the first winning exit family is currently offline-only evidence. It does not justify changing the live sticky branch.
+
+**Implication:** close the H207-H213 ladder and do not retune its thresholds against `2025`. The next honest branch must use a genuinely new exit hypothesis family or a genuinely new data family if exit research is reopened.

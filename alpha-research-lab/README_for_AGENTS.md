@@ -81,6 +81,7 @@ Operationally important summary:
 - the repo is now explicitly split into:
   - selection alpha = choose the right names
   - activation alpha = decide when the selector should be on
+  - exit alpha = decide when to stop holding a bought name after entry
 - `H157-H162` tested deterministic binary activation and did not beat the always-on `full_library + k5_r5_eq` selector
 - `H163-H174` then revisited activation with materially different designs and found the first real winner:
   - `H170` `recentsm__rel3_gt0` on `full_library + k5_r5_eq`
@@ -152,6 +153,16 @@ Operationally important summary:
   - `H203`: pairwise additive bakeoff passed in always-on form
   - `H205`: state-scoped pairwise extension failed
   - `H204`: fresh-family tradability search found no promoted atom
+- Session 70 resolved the first exit-alpha ladder:
+  - `H207`: rank-decay exits beat the always-on selector baseline
+  - `H211`: strength-exhaustion exits beat the H207 anchor in always-on form
+  - `H212`: replacement-pressure exits failed
+  - `H213`: the H211 winner failed frozen sticky-activation compatibility
+- Session 71 resolved the genuinely new exit-family follow-through:
+  - `H214`: thesis inconsistency failed
+  - `H215`: failed follow-through was a near-miss but did not clear the locked gate
+  - `H216`: time-under-water failed badly on confirmation
+  - `H217`: skipped because no new family displaced H211
 - the active next branch is now dual-track:
   - live track:
     - keep the live forward scoreboard running on the rollback sticky branch
@@ -159,12 +170,16 @@ Operationally important summary:
     - if sticky falls behind sticky always-on over `>= 2` completed cycles, rerun parity first and then choose between reopening `H194/H195` or moving back to selection-side work
   - research track:
     - keep `state_blend__h199_sector_laggard_gap_absorb__30` as the offline lead selector
+    - keep `strength_exhaustion__return_since_entry_threshold_0p15__score_drop_threshold_0p05` as offline-only exit evidence
     - do not replace the live sticky branch from that result alone
     - the current selector-discovery ladder is exhausted
+    - the current exit ladder is also exhausted
     - do not reopen:
       - H199 pairwise recombinations
       - H204 atom recombinations
       - H206, because `H205` produced no promoted winner
+      - H207-H213 threshold retuning on the same locked window
+      - H214-H217 threshold retuning on the same locked window
     - the next honest selector-side branch must require a genuinely new data family or a new high-level hypothesis family
 - the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
@@ -261,6 +276,17 @@ Read these first when you want the minimal result.
 - Portfolio activation H175 robustness stress: `artifacts/run_summaries/latest_portfolio_activation_h175_robustness_stress.json`
 - Portfolio live activation overlay: `artifacts/run_summaries/latest_portfolio_live_activation_overlay.json`
 - Portfolio activation H175 small augmentations: `artifacts/run_summaries/latest_portfolio_activation_h175_small_augmentations.json`
+- Portfolio exit rank decay: `artifacts/run_summaries/latest_portfolio_exit_rank_decay.json`
+- Portfolio exit time-plus-decay: `artifacts/run_summaries/latest_portfolio_exit_time_plus_decay.json`
+- Portfolio exit sticky winner: `artifacts/run_summaries/latest_portfolio_exit_sticky_winner.json`
+- Portfolio exit liquidity deterioration: `artifacts/run_summaries/latest_portfolio_exit_liquidity_deterioration.json`
+- Portfolio exit strength exhaustion: `artifacts/run_summaries/latest_portfolio_exit_strength_exhaustion.json`
+- Portfolio exit replacement pressure: `artifacts/run_summaries/latest_portfolio_exit_replacement_pressure.json`
+- Portfolio exit activation compatibility: `artifacts/run_summaries/latest_portfolio_exit_activation_compatibility.json`
+- Portfolio exit thesis inconsistency: `artifacts/run_summaries/latest_portfolio_exit_thesis_inconsistency.json`
+- Portfolio exit failed followthrough: `artifacts/run_summaries/latest_portfolio_exit_failed_followthrough.json`
+- Portfolio exit time under water: `artifacts/run_summaries/latest_portfolio_exit_time_under_water.json`
+- Portfolio exit new-family activation compatibility: `artifacts/run_summaries/latest_portfolio_exit_new_family_activation_compatibility.json`
 
 Execution/tradability producer:
 
@@ -321,6 +347,17 @@ Mode-specific durable outputs:
 - `analysis/h178_h175_robustness_stress.py`: `artifacts/run_summaries/latest_portfolio_activation_h175_robustness_stress.json` plus stress outputs under `artifacts/portfolio_baselines/`
 - `analysis/h179_live_activation_overlay.py`: `artifacts/run_summaries/latest_portfolio_live_activation_overlay.json` plus live-overlay daily/detail outputs under `artifacts/portfolio_baselines/`
 - `analysis/h180_h175_small_augmentations.py`: `artifacts/run_summaries/latest_portfolio_activation_h175_small_augmentations.json` plus local-augmentation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h207_rank_decay_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_rank_decay.json` plus exit-rule results under `artifacts/portfolio_baselines/`
+- `analysis/h208_time_plus_decay_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_time_plus_decay.json` plus exit-rule results under `artifacts/portfolio_baselines/`
+- `analysis/h209_sticky_winner_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_sticky_winner.json` plus exit-rule results under `artifacts/portfolio_baselines/`
+- `analysis/h210_liquidity_deterioration_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_liquidity_deterioration.json` plus exit-rule results under `artifacts/portfolio_baselines/`
+- `analysis/h211_strength_exhaustion_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_strength_exhaustion.json` plus exit-rule results under `artifacts/portfolio_baselines/`
+- `analysis/h212_replacement_pressure_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_replacement_pressure.json` plus exit-rule results under `artifacts/portfolio_baselines/`
+- `analysis/h213_exit_activation_compatibility.py`: `artifacts/run_summaries/latest_portfolio_exit_activation_compatibility.json` plus compatibility outputs under `artifacts/portfolio_baselines/`
+- `analysis/h214_thesis_inconsistency_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_thesis_inconsistency.json` plus exit-rule results under `artifacts/portfolio_baselines/`
+- `analysis/h215_failed_followthrough_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_failed_followthrough.json` plus exit-rule results under `artifacts/portfolio_baselines/`
+- `analysis/h216_time_under_water_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_time_under_water.json` plus exit-rule results under `artifacts/portfolio_baselines/`
+- `analysis/h217_new_exit_activation_compatibility.py`: `artifacts/run_summaries/latest_portfolio_exit_new_family_activation_compatibility.json` plus compatibility outputs under `artifacts/portfolio_baselines/`
 - `analysis/h151_tradability_conditioned_composite_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_tradability_composite_bakeoff.json` plus candidate results under `artifacts/portfolio_baselines/`
 - `analysis/h152_tradability_conditioned_signal_search.py`: `artifacts/run_summaries/latest_tradability_conditioned_signal_search.json` plus candidate results under `artifacts/portfolio_baselines/`
 - `analysis/h196_additive_atom_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_additive_atom_bakeoff.json` plus additive-selector results under `artifacts/portfolio_baselines/`

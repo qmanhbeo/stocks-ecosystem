@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_69_log.md` for the latest full session detail.
+Use `notes/session_71_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 69 continued the sequential selector ladder without changing the live branch. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. `H203` passed in always-on form, but `H205` killed the state-scoped pair branch and `H204` produced no promoted fresh-family atom. The H201 winner remains the offline lead selector candidate, not a live-branch replacement. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
+**Session status:** Session 71 completed a genuinely new exit-family follow-through without changing the live branch. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. Exit alpha is established in always-on form, but both the original H211 winner and the newer H214-H216 families remain offline-only evidence. The current offline lead selector candidate remains `state_blend__h199_sector_laggard_gap_absorb__30`, not a live-branch replacement. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
 
 ### Start next session here
 
@@ -33,6 +33,24 @@ Use `notes/session_69_log.md` for the latest full session detail.
      - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
      - it won the train-only pseudo-live ladder over `2023-2025`
      - it is the rule currently driving `H179/H183`
+   - exit-alpha branch:
+     - always-on winner:
+       - `strength_exhaustion__return_since_entry_threshold_0p15__score_drop_threshold_0p05`
+       - validation relative `+54.45%`
+       - validation delta vs H207 anchor `+5.48%`
+       - confirmation relative `-4.70%`
+       - confirmation delta vs H207 anchor `+15.79%`
+     - frozen sticky compatibility:
+       - `winner_plus_sticky` validation relative `+28.45%` vs incumbent `+29.65%`
+       - confirmation relative `+14.63%` vs incumbent `+18.80%`
+       - branch decision:
+         - exit alpha is real offline
+         - do **not** change the live branch from it
+   - new-family exit follow-through:
+     - `H214`: thesis inconsistency failed cleanly
+     - `H215`: failed follow-through was the closest new-family near-miss but still failed the locked gate
+     - `H216`: time-under-water failed badly on confirmation
+     - `H217`: skipped because no genuinely new exit-family winner displaced H211
 6. Session 65 decision tree outcome:
    - `H192A`: **PASS**
      - the complex `blocked5<=q80 + sector_cap_3` winner is reproducible
@@ -166,7 +184,74 @@ Use `notes/session_69_log.md` for the latest full session detail.
      - branch effect:
        - stop the current selector-discovery ladder here
        - do not keep recombining H199/H204 atoms against the same locked protocol window
-11. Run the next branch in this exact order:
+11. Session 70 exit-alpha ladder:
+   - objective:
+     - test whether the missing edge is post-entry exit timing rather than more selection or activation complexity
+   - `H207`: **PASS**
+     - promoted always-on anchor:
+       - `rank_decay__rank_exit_threshold_5p0__replacement_margin_0p05`
+       - validation relative `+48.96%`
+       - validation delta vs always-on baseline `+5.51%`
+       - validation IR `0.89`
+       - validation IR delta `+0.07`
+       - confirmation relative `-20.49%`
+       - confirmation delta `-0.48%`
+   - `H208`: **FAIL**
+     - time-plus-decay variants did not beat the H207 rank-decay winner under the locked promotion rule
+   - `H209`: **FAIL**
+     - sticky winner exits improved slightly but did not clear the promotion gate over the H207 anchor
+   - `H210`: **FAIL**
+     - liquidity-deterioration exits added no value
+   - `H211`: **PASS**
+     - promoted always-on exit winner:
+       - `strength_exhaustion__return_since_entry_threshold_0p15__score_drop_threshold_0p05`
+       - validation relative `+54.45%`
+       - validation delta vs H207 anchor `+5.48%`
+       - validation IR `1.17`
+       - validation IR delta `+0.28`
+       - confirmation relative `-4.70%`
+       - confirmation delta vs H207 anchor `+15.79%`
+   - `H212`: **FAIL**
+     - replacement-pressure exits did not beat the H211 winner
+   - `H213`: **FAIL**
+     - the H211 winner improved always-on selector economics
+     - but failed frozen sticky compatibility:
+       - `full_library_plus_sticky`: validation relative `+29.65%`, IR `0.61`, confirmation relative `+18.80%`
+       - `winner_plus_sticky`: validation relative `+28.45%`, IR `0.62`, confirmation relative `+14.63%`
+     - branch effect:
+       - keep the live sticky branch unchanged
+       - close the current exit ladder
+       - do not retune H207-H213 thresholds against `2025`
+12. Session 71 genuinely new exit-family follow-through:
+   - objective:
+     - reopen exit research only with genuinely different post-entry families, not H207-H213 threshold tuning
+   - `H214`: **FAIL**
+     - thesis inconsistency exit did not come close to the H211 winner
+     - best new variant:
+       - `thesis_inconsistency__score_drop_threshold_0p05__thesis_drop_threshold_0p1`
+       - validation relative `+28.44%`
+       - delta vs H211 `-26.01%`
+   - `H215`: **FAIL, NEAR-MISS**
+     - best variant:
+       - `failed_followthrough__current_return_threshold_0p0__grace_days_2__peak_return_threshold_0p03__score_drop_threshold_0p0`
+       - validation relative `+56.39%`
+       - delta vs H211 `+1.95%`
+       - validation IR delta `+0.0448`
+       - confirmation delta `-0.52%`
+     - real information, but not enough to promote
+   - `H216`: **FAIL**
+     - best variant:
+       - `time_under_water__grace_days_5__peak_return_threshold_0p03__underwater_days_threshold_3`
+       - validation relative `+55.30%`
+       - delta vs H211 `+0.85%`
+       - confirmation delta `-34.66%`
+     - strong confirmation failure
+   - `H217`: **SKIP**
+     - skipped by rule because no new family displaced H211
+   - branch effect:
+     - the current exit ladder is more clearly closed
+     - do not reopen H214-H217 on the same locked window
+13. Run the next branch in this exact order:
    - live track:
      - keep the live scoreboard running on the rollback sticky branch
      - if sticky stays ahead of sticky always-on for at least `2` additional completed rebalance cycles:
@@ -180,24 +265,38 @@ Use `notes/session_69_log.md` for the latest full session detail.
    - research track:
      - keep `state_blend__h199_sector_laggard_gap_absorb__30` as the current offline lead selector
      - do **not** replace the live sticky branch from that result alone
+     - keep the exit-alpha result archived as offline-only evidence:
+       - `strength_exhaustion__return_since_entry_threshold_0p15__score_drop_threshold_0p05`
+       - do not promote it to live under the current sticky overlay
      - the current selector-discovery ladder is now exhausted:
        - H199 additive path resolved
        - H203/H205 pairwise extension resolved
        - H204 fresh-family search resolved
+     - the current exit ladder is also resolved:
+       - H207-H213 complete
+       - exit alpha exists offline
+       - sticky compatibility failed
+       - H214-H217 new-family follow-through complete
+       - no new family displaced H211
      - if continuing offline discovery, the next honest branch must require a genuinely new data family or a new high-level hypothesis family
      - do **not** reopen:
        - H199 pairwise recombinations
        - H204 atom recombinations
        - H206, because H205 produced no promoted winner
+       - H207-H213 threshold retuning on the same locked window
+       - H214-H217 retuning on the same locked window
    - anti-leakage rule:
      - do not keep tuning the closed `H152` additive family against `2025`
      - do not keep retuning the exact single-atom `H199` family against `2025` after `H200/H201/H202` resolved it
      - do not keep retuning the closed H203/H205 pairwise branch or H204 fresh-family branch against `2025`
+     - do not keep retuning the closed exit-alpha branch H207-H213 against `2025`
+     - do not keep retuning the closed new-family exit branch H214-H217 against `2025`
      - rank them on dev / validation
      - use `2025` once per promoted candidate only
-12. Keep the architecture split clear:
+14. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
+   - exit alpha = decide when to stop holding a bought name after entry
    - sequential hypothesis ladders are now the default lab method:
      - one result should unlock, narrow, or kill the next branch
      - avoid broad unordered sweeps when a decision tree is possible
@@ -205,7 +304,7 @@ Use `notes/session_69_log.md` for the latest full session detail.
      - fixed path-dependent selector-efficacy rule
      - plus a small retention bonus
    - blocked-buy veto and sector cap stay as archived historical improvements, not the active live branch
-13. Only after the sticky live branch has clearly failed forward should the branch reopen these secondary ideas:
+15. Only after the sticky live branch has clearly failed forward should the branch reopen these secondary ideas:
    - `H194`: blocked-buy + sector-cap recalibration (implemented, not run after rollback)
    - `H195`: blocked-buy hysteresis (implemented, not run after rollback)
    - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened
@@ -1196,6 +1295,11 @@ Use `notes/session_69_log.md` for the latest full session detail.
 | 56 | 2026-03-29 | H155 multi-seed robustness shows `S1`-only RL is high-variance: 2 strong wins, 2 failures; RL remains exploratory and the active branch returns to `H151/H152` | H93 + C4-C14 |
 | 57 | 2026-03-29 | H157-H162 activation-alpha wave completed: binary on/off activation does not beat always-on `full_library + k5_r5_eq`; selection alpha vs activation alpha split is now explicit; active branch returns to `H151/H152` | H93 + C4-C14 |
 | 66 | 2026-03-29 | H151/H152 first pass under locked `2015-2025` protocol: no narrow existing-signal composite beats `full_library`; four new tradable-state atoms pass standalone gates but none are promoted selectors | H93 + C4-C14 |
+| 67 | 2026-03-29 | H196-H199: the H152 additive path closes; second-wave search promotes `h199_sector_laggard_gap_absorb` as the one worth-carrying atom | H93 + C4-C14 |
+| 68 | 2026-03-29 | H200-H202: the H199 atom survives additive and state-scoped selector gates but fails frozen sticky-activation compatibility; keep it offline-only | H93 + C4-C14 |
+| 69 | 2026-03-29 | H203-H205/H204: pairwise selector extension fails the next sequential gate and fresh H204 families show no selector relevance; selector-discovery ladder is exhausted | H93 + C4-C14 |
+| 70 | 2026-03-29 | H207-H213 exit-alpha ladder: rank-decay and strength-exhaustion exits win offline, but the promoted exit winner fails frozen sticky compatibility; live branch remains unchanged | H93 + C4-C14 |
+| 71 | 2026-03-29 | H214-H217 genuinely new exit-family follow-through: thesis inconsistency, failed follow-through, and time-under-water do not beat the H211 winner; new-family sticky compatibility is skipped | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 

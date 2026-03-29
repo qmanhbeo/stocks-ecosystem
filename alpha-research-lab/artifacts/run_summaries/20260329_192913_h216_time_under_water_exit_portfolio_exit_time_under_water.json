@@ -1,0 +1,69 @@
+{
+  "artifacts": {
+    "best_daily": "artifacts/portfolio_baselines/20260329_192913_h216_time_under_water_exit_best_daily.parquet",
+    "best_exit_panel": "artifacts/portfolio_baselines/20260329_192913_h216_time_under_water_exit_best_exit_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260329_192913_h216_time_under_water_exit_results.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_time_under_water",
+  "name": "h216_time_under_water_exit",
+  "summary": {
+    "baseline_variant": "strength_exhaustion__return_since_entry_threshold_0p15__score_drop_threshold_0p05",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "winner": {
+      "avg_exit_signal_count": 0.0095,
+      "confirmation_avg_cash_weight": 4.3695524663961985e-17,
+      "confirmation_avg_daily_turnover": 0.01522470453338229,
+      "confirmation_information_ratio_annualized": -2.6759186450713104,
+      "confirmation_ir_delta": -2.466151891267316,
+      "confirmation_relative_delta": -0.34655540570554433,
+      "confirmation_relative_total_return": -0.3936024556006482,
+      "dev_avg_cash_weight": 0.0010426786761213926,
+      "dev_avg_daily_turnover": 0.021487769238403627,
+      "dev_information_ratio_annualized": 0.3038988935312873,
+      "dev_relative_total_return": 0.5009149427634456,
+      "exit_rule_name": "time_under_water",
+      "exit_rule_params": {
+        "grace_days": 5,
+        "peak_return_threshold": 0.03,
+        "underwater_days_threshold": 3
+      },
+      "exit_rule_trigger_events": 26,
+      "overall_information_ratio_annualized": 0.232437,
+      "overall_relative_total_return": 0.413431,
+      "promoted": false,
+      "validation_avg_cash_weight": 1.1124479204660886e-16,
+      "validation_avg_daily_turnover": 0.005592374480733821,
+      "validation_information_ratio_annualized": 1.4059893281946776,
+      "validation_ir_delta": 0.23343333917892228,
+      "validation_relative_delta": 0.008497661198017203,
+      "validation_relative_total_return": 0.5529634333455689,
+      "variant": "time_under_water__grace_days_5__peak_return_threshold_0p03__underwater_days_threshold_3"
+    }
+  },
+  "ts": "20260329_192913"
+}

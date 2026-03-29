@@ -1,0 +1,68 @@
+{
+  "artifacts": {
+    "best_daily": "artifacts/portfolio_baselines/20260329_191008_h211_strength_exhaustion_exit_best_daily.parquet",
+    "best_exit_panel": "artifacts/portfolio_baselines/20260329_191008_h211_strength_exhaustion_exit_best_exit_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260329_191008_h211_strength_exhaustion_exit_results.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_strength_exhaustion",
+  "name": "h211_strength_exhaustion_exit",
+  "summary": {
+    "baseline_variant": "rank_decay__rank_exit_threshold_5p0__replacement_margin_0p05",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "winner": {
+      "avg_exit_signal_count": 0.0299,
+      "confirmation_avg_cash_weight": 0.00415877515365717,
+      "confirmation_avg_daily_turnover": 0.02728271664295179,
+      "confirmation_information_ratio_annualized": -0.20976675380399432,
+      "confirmation_ir_delta": 0.560620678435564,
+      "confirmation_relative_delta": 0.15790290977852162,
+      "confirmation_relative_total_return": -0.04704704989510389,
+      "dev_avg_cash_weight": 0.004712106845280555,
+      "dev_avg_daily_turnover": 0.03779206261021243,
+      "dev_information_ratio_annualized": 0.7496457854469982,
+      "dev_relative_total_return": 3.312952825937593,
+      "exit_rule_name": "strength_exhaustion",
+      "exit_rule_params": {
+        "return_since_entry_threshold": 0.15,
+        "score_drop_threshold": 0.05
+      },
+      "exit_rule_trigger_events": 82,
+      "overall_information_ratio_annualized": 0.728896,
+      "overall_relative_total_return": 5.347818,
+      "promoted": true,
+      "validation_avg_cash_weight": 0.002042713127059326,
+      "validation_avg_daily_turnover": 0.015031455444135158,
+      "validation_information_ratio_annualized": 1.1725559890157553,
+      "validation_ir_delta": 0.2809858963256908,
+      "validation_relative_delta": 0.05483646945530629,
+      "validation_relative_total_return": 0.5444657721475517,
+      "variant": "strength_exhaustion__return_since_entry_threshold_0p15__score_drop_threshold_0p05"
+    }
+  },
+  "ts": "20260329_191008"
+}
