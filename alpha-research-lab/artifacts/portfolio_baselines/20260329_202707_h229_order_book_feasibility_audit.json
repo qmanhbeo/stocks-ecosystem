@@ -1,0 +1,15 @@
+{
+  "decision": "order_book_branch_can_open_later",
+  "feasible_now": true,
+  "local_order_book_files": [
+    "data/dividend_cache/BID_events.parquet",
+    "data/features/signals/predictions/rl_lab_matrix/BID_signal_predictions.parquet",
+    "data/features/xs_barrier_depth4_fpt_proba.csv",
+    "data/features/xs_barrier_depth5_fpt_proba.csv",
+    "data/fundamentals_cache/BID_ratios.parquet",
+    "data/insider_cache/BID.parquet",
+    "data/stock/gia_lich_su_BID_1D.parquet"
+  ],
+  "probe_schema_present": true,
+  "reason": "Historical queue/depth files exist locally"
+}

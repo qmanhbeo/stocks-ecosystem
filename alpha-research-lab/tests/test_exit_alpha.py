@@ -154,3 +154,65 @@ def test_time_under_water_exit_requires_persistent_stall() -> None:
         current_thesis_scores=None,
     )
     assert exit_mask.tolist() == [True]
+
+
+def test_continuation_hazard_supports_generic_feature_coefficients() -> None:
+    exit_mask = _compute_exit_signal_mask(
+        exit_rule_name="continuation_hazard",
+        exit_rule_params={
+            "intercept": 0.0,
+            "continue_prob_threshold": 0.50,
+            "coef__event_density_20d": -2.0,
+        },
+        scores=pd.Series([0.60]).to_numpy(),
+        rank_positions=pd.Series([3.0]).to_numpy(),
+        holding_ages=pd.Series([4]).to_numpy(),
+        held_mask=pd.Series([True]).to_numpy(),
+        eligible_mask=pd.Series([True]).to_numpy(),
+        required_holding_age=3,
+        top_k=5,
+        blocked_sell_streaks=pd.Series([0]).to_numpy(),
+        entry_scores=pd.Series([0.62]).to_numpy(),
+        entry_rank_positions=pd.Series([2.0]).to_numpy(),
+        return_since_entry=pd.Series([0.01]).to_numpy(),
+        adv20_current=pd.Series([1.0]).to_numpy(),
+        entry_adv20_values=pd.Series([1.0]).to_numpy(),
+        peak_return_since_entry=pd.Series([0.03]).to_numpy(),
+        underwater_days_since_entry=pd.Series([0]).to_numpy(),
+        entry_thesis_family_codes=pd.Series([-1]).to_numpy(),
+        entry_thesis_scores=pd.Series([float("nan")]).to_numpy(),
+        current_thesis_scores=None,
+        current_feature_values={"event_density_20d": pd.Series([1.0]).to_numpy()},
+    )
+    assert exit_mask.tolist() == [True]
+
+
+def test_multi_rule_any_combines_exit_families() -> None:
+    exit_mask = _compute_exit_signal_mask(
+        exit_rule_name="multi_rule_any",
+        exit_rule_params={
+            "rules": [
+                {"name": "strength_exhaustion", "params": {"return_since_entry_threshold": 0.15, "score_drop_threshold": 0.05}},
+                {"name": "rank_decay", "params": {"rank_exit_threshold": 5, "replacement_margin": 0.05}},
+            ]
+        },
+        scores=pd.Series([0.40]).to_numpy(),
+        rank_positions=pd.Series([7.0]).to_numpy(),
+        holding_ages=pd.Series([4]).to_numpy(),
+        held_mask=pd.Series([True]).to_numpy(),
+        eligible_mask=pd.Series([True]).to_numpy(),
+        required_holding_age=3,
+        top_k=5,
+        blocked_sell_streaks=pd.Series([0]).to_numpy(),
+        entry_scores=pd.Series([0.60]).to_numpy(),
+        entry_rank_positions=pd.Series([2.0]).to_numpy(),
+        return_since_entry=pd.Series([0.20]).to_numpy(),
+        adv20_current=pd.Series([1.0]).to_numpy(),
+        entry_adv20_values=pd.Series([1.0]).to_numpy(),
+        peak_return_since_entry=pd.Series([0.22]).to_numpy(),
+        underwater_days_since_entry=pd.Series([0]).to_numpy(),
+        entry_thesis_family_codes=pd.Series([-1]).to_numpy(),
+        entry_thesis_scores=pd.Series([float("nan")]).to_numpy(),
+        current_thesis_scores=None,
+    )
+    assert exit_mask.tolist() == [True]

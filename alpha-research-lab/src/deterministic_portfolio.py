@@ -565,6 +565,7 @@ def _compute_exit_signal_mask(
     entry_thesis_family_codes: np.ndarray,
     entry_thesis_scores: np.ndarray,
     current_thesis_scores: np.ndarray | None,
+    current_feature_values: Mapping[str, np.ndarray] | None = None,
 ) -> np.ndarray:
     exit_mask = np.zeros_like(held_mask, dtype=bool)
     if not exit_rule_name:
@@ -603,7 +604,37 @@ def _compute_exit_signal_mask(
     )
 
     family = str(exit_rule_name)
-    if family == "rank_decay":
+    if family == "multi_rule_any":
+        rules = list(params.get("rules", []))
+        combo = np.zeros_like(held_mask, dtype=bool)
+        for rule in rules:
+            if not isinstance(rule, Mapping):
+                continue
+            combo |= _compute_exit_signal_mask(
+                exit_rule_name=str(rule.get("name") or ""),
+                exit_rule_params=rule.get("params"),
+                scores=scores,
+                rank_positions=rank_positions,
+                holding_ages=holding_ages,
+                held_mask=held_mask,
+                eligible_mask=eligible_mask,
+                required_holding_age=required_holding_age,
+                top_k=top_k,
+                blocked_sell_streaks=blocked_sell_streaks,
+                entry_scores=entry_scores,
+                entry_rank_positions=entry_rank_positions,
+                return_since_entry=return_since_entry,
+                adv20_current=adv20_current,
+                entry_adv20_values=entry_adv20_values,
+                peak_return_since_entry=peak_return_since_entry,
+                underwater_days_since_entry=underwater_days_since_entry,
+                entry_thesis_family_codes=entry_thesis_family_codes,
+                entry_thesis_scores=entry_thesis_scores,
+                current_thesis_scores=current_thesis_scores,
+                current_feature_values=current_feature_values,
+            )
+        exit_mask = combo
+    elif family == "rank_decay":
         margin = float(params.get("replacement_margin", 0.0))
         margin_ok = np.ones_like(score_margin, dtype=bool) if margin <= 0.0 else score_margin >= margin
         exit_mask = legal_to_exit & rank_violation & margin_ok
@@ -687,16 +718,43 @@ def _compute_exit_signal_mask(
                     current_thesis_scores[valid_codes[held_positions], held_positions]
                     - np.asarray(entry_thesis_scores, dtype=np.float64)[held_positions]
                 )
+        feature_lookup: dict[str, np.ndarray] = {
+            "holding_age_before": np.asarray(holding_ages, dtype=np.float64),
+            "score_change_since_entry": np.nan_to_num(score_arr - entry_score_arr, nan=0.0),
+            "return_since_entry": np.nan_to_num(entry_return_arr, nan=0.0),
+            "peak_return_since_entry": np.nan_to_num(peak_return_arr, nan=0.0),
+            "underwater_days_since_entry": np.asarray(underwater_days_arr, dtype=np.float64),
+            "blocked_sell_streak": np.asarray(blocked_streak, dtype=np.float64),
+            "thesis_score_change_since_entry": np.nan_to_num(thesis_change, nan=0.0),
+            "score_rank": np.nan_to_num(rank_arr, nan=0.0),
+            "entry_rank": np.nan_to_num(entry_rank_arr, nan=0.0),
+        }
+        for feature_name, values in (current_feature_values or {}).items():
+            feature_lookup[str(feature_name)] = np.nan_to_num(np.asarray(values, dtype=np.float64), nan=0.0)
         linear = float(params.get("intercept", 0.0))
-        linear += float(params.get("coef_holding_age_before", 0.0)) * np.asarray(holding_ages, dtype=np.float64)
-        linear += float(params.get("coef_score_change_since_entry", 0.0)) * np.nan_to_num(score_arr - entry_score_arr, nan=0.0)
-        linear += float(params.get("coef_return_since_entry", 0.0)) * np.nan_to_num(entry_return_arr, nan=0.0)
-        linear += float(params.get("coef_peak_return_since_entry", 0.0)) * np.nan_to_num(peak_return_arr, nan=0.0)
-        linear += float(params.get("coef_underwater_days_since_entry", 0.0)) * np.asarray(underwater_days_arr, dtype=np.float64)
-        linear += float(params.get("coef_blocked_sell_streak", 0.0)) * np.asarray(blocked_streak, dtype=np.float64)
-        linear += float(params.get("coef_thesis_score_change_since_entry", 0.0)) * np.nan_to_num(thesis_change, nan=0.0)
-        linear += float(params.get("coef_score_rank", 0.0)) * np.nan_to_num(rank_arr, nan=0.0)
-        linear += float(params.get("coef_entry_rank", 0.0)) * np.nan_to_num(entry_rank_arr, nan=0.0)
+        legacy_map = {
+            "coef_holding_age_before": "holding_age_before",
+            "coef_score_change_since_entry": "score_change_since_entry",
+            "coef_return_since_entry": "return_since_entry",
+            "coef_peak_return_since_entry": "peak_return_since_entry",
+            "coef_underwater_days_since_entry": "underwater_days_since_entry",
+            "coef_blocked_sell_streak": "blocked_sell_streak",
+            "coef_thesis_score_change_since_entry": "thesis_score_change_since_entry",
+            "coef_score_rank": "score_rank",
+            "coef_entry_rank": "entry_rank",
+        }
+        for param_name, feature_name in legacy_map.items():
+            coef = float(params.get(param_name, 0.0))
+            if coef != 0.0:
+                linear += coef * feature_lookup[feature_name]
+        for param_name, value in params.items():
+            if not str(param_name).startswith("coef__"):
+                continue
+            feature_name = str(param_name).split("coef__", 1)[1]
+            feature_values = feature_lookup.get(feature_name)
+            if feature_values is None:
+                continue
+            linear += float(value) * feature_values
         continue_prob = 1.0 / (1.0 + np.exp(-np.clip(linear, -50.0, 50.0)))
         exit_mask = legal_to_exit & (continue_prob < continue_prob_threshold)
     else:
@@ -1163,6 +1221,11 @@ def simulate_strategy(
             current_thesis_scores = thesis_family_matrix[:, step, :]
         else:
             current_thesis_scores = np.zeros((0, n_tickers), dtype=np.float64)
+        current_feature_values = {
+            str(feature_name): np.asarray(feature_matrix[step], dtype=np.float64)
+            for feature_name, feature_matrix in (getattr(market_inputs, "feature_matrices", {}) or {}).items()
+            if np.asarray(feature_matrix).ndim == 2 and np.asarray(feature_matrix).shape[0] > step
+        }
         current_entry_thesis_scores = np.full(n_tickers, np.nan, dtype=np.float64)
         if current_thesis_scores.size > 0:
             valid_thesis_positions = held_mask & (entry_thesis_family_codes >= 0) & (entry_thesis_family_codes < current_thesis_scores.shape[0])
@@ -1208,6 +1271,7 @@ def simulate_strategy(
                         entry_thesis_family_codes=entry_thesis_family_codes,
                         entry_thesis_scores=entry_thesis_scores,
                         current_thesis_scores=current_thesis_scores,
+                        current_feature_values=current_feature_values,
                     )
                     retained = [idx for idx in ranked_candidates if held_mask[idx] and not exit_signal_mask[idx]]
                     if max_names_per_sector is not None and sector_labels is not None:

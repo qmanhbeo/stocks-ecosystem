@@ -167,6 +167,21 @@ Operationally important summary:
   - `H218`: no dev-trained continuation model cleared the predictive gate
   - `H219`: skipped because H218 produced no promoted continuation model
   - `H220`: skipped because H219 produced no promoted continuation-band winner
+- Session 73 resolved the first genuinely new-data exit ladder:
+  - `H221`: built `data/features/event_surface_daily.parquet` with held-row coverage `89.59%`
+  - `H222`: event predictive screening failed
+  - `H223/H224`: skipped because H222 produced no promoted event model
+  - `H225`: intraday / auction structure failed the local coverage gate (`0.00%`, only `FPT` 1H exists)
+  - `H226-H228`: skipped by rule
+  - `H229`: order-book / queue feasibility failed locally; no historical queue/depth archive exists under `data/`
+- Session 74 then codified the acquisition-first branch:
+  - timing research should now start from:
+    - `notes/timing_data_acquisition_plan.md`
+    - `notes/timing_data_source_scorecard.csv`
+  - next acquisition order:
+    - multi-ticker intraday / auction source first
+    - richer company-event source second
+    - otherwise stop timing research and wait for new data or more live evidence
 - the active next branch is now dual-track:
   - live track:
     - keep the live forward scoreboard running on the rollback sticky branch
@@ -185,7 +200,12 @@ Operationally important summary:
       - H207-H213 threshold retuning on the same locked window
       - H214-H217 threshold retuning on the same locked window
       - H218-H220 threshold retuning on the same locked window
-    - the next honest exit branch must require a genuinely new data family
+      - H221-H229 on the same local data stack without new data acquisition
+    - exit-side research is now closed on the current local data stack
+    - the next honest exit branch now requires actual new data acquisition:
+      - richer company-event timestamps
+      - multi-ticker intraday / auction data
+      - historical order-book / queue archives
     - the next honest selector-side branch must require a genuinely new data family or a new high-level hypothesis family
 - the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
@@ -207,6 +227,11 @@ Read in this order:
 3. `notes/signal_library.md`
 4. `notes/findings.md` index plus the relevant `notes/findings-*.md` chunk
 5. `notes/session_NN_log.md` only when you need a detailed traceback
+
+When the active branch is timing-data acquisition rather than modeling, read next:
+
+6. `notes/timing_data_acquisition_plan.md`
+7. `notes/timing_data_source_scorecard.csv`
 
 Use this file for:
 

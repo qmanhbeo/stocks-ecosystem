@@ -41,7 +41,39 @@ This means the root data directory is the canonical dataset surface for the whol
 3. Published artifacts are written into root `data/`
 4. The lab publishes a consolidated RL signal matrix at `data/features/xs_rl_signal_matrix.parquet`
 5. The lab publishes shared execution tradability flags at `data/features/execution/tradability_daily.parquet`
-6. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
+6. The lab now also publishes the canonical corporate-event surface at `data/features/event_surface_daily.parquet`
+7. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
+
+## Fresh Start
+
+If you are starting this workspace fresh, read in this order:
+
+1. `README.md`
+2. `alpha-research-lab/README.md`
+3. `alpha-research-lab/notes/next_steps.md`
+4. `alpha-research-lab/notes/session_74_log.md`
+5. `alpha-research-lab/README_for_AGENTS.md` if you are continuing research or making repo changes as an agent
+
+If you are picking up the currently active timing-research branch, continue with:
+
+6. `alpha-research-lab/notes/timing_data_acquisition_plan.md`
+7. `alpha-research-lab/notes/timing_data_source_scorecard.csv`
+
+If you are working on RL runtime or feature consumption, also read:
+
+8. `RL-trading-agent/README.md`
+9. `RL-trading-agent/AGENTS.md`
+
+Current active live branch:
+- `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
+
+Current research posture:
+- keep the live sticky branch frozen
+- do not retune timing rules on `2026+`
+- acquisition-first timing research:
+  - multi-ticker intraday / auction source first
+  - richer company-event source second
+  - otherwise stop timing research and wait for new data or more live evidence
 
 ## Strategy Guardrails
 

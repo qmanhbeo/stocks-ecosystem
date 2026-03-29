@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_72_log.md` for the latest full session detail.
+Use `notes/session_74_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 72 completed the continuation / hold-vs-exit hazard branch without changing the live branch. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. Exit alpha is established only in the earlier H211 always-on exhaustion family; the newer H214-H216 families and the H218-H220 continuation family all remain closed offline branches. The current offline lead selector candidate remains `state_blend__h199_sector_laggard_gap_absorb__30`, not a live-branch replacement. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
+**Session status:** Session 74 did not reopen modeling. It codified the active acquisition-first branch after Session 73 closed timing research on the current local data stack. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. Exit alpha is still established only in the earlier H211 always-on exhaustion family; the newer H214-H216 families, the H218-H220 continuation family, and the new-data H221-H229 branch are all closed offline. The current offline lead selector candidate remains `state_blend__h199_sector_laggard_gap_absorb__30`, not a live-branch replacement. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
 
 ### Start next session here
 
@@ -20,12 +20,23 @@ Use `notes/session_72_log.md` for the latest full session detail.
    - no parameter changes on `2026+`
    - only update `H179/H183` and record completed forward cycles
 3. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
-4. Treat the live branch as operationally current:
+4. Keep the Session 73 branch closure explicit:
+   - do **not** reopen `H221-H229` on the current local data stack
+   - event surface is now published, but it failed the predictive gate
+   - intraday / order-book work now requires new data acquisition, not more local rule tuning
+5. Start any new timing-data work from the acquisition plan, not from model scripts:
+   - read `notes/timing_data_acquisition_plan.md`
+   - check `notes/timing_data_source_scorecard.csv`
+   - branch order is:
+     - intraday / auction acquisition first
+     - richer company-event source second
+     - otherwise stop timing research and wait for more forward live evidence
+6. Treat the live branch as operationally current:
    - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-27`
    - `data/features/activation_state_daily.parquet` is now current through `2026-03-27`
    - `data/features/activation_meta_daily.parquet` is now current through `2026-03-27`
    - `H179` no longer reports a stale matrix
-5. Keep the architecture split and the branch decision clear:
+7. Keep the architecture split and the branch decision clear:
    - historical max-return system:
      - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked5_q80 + sector_cap_3`
      - `+597.09%` relative vs VNINDEX, IR `1.0093`
@@ -55,7 +66,17 @@ Use `notes/session_72_log.md` for the latest full session detail.
      - `H218`: continuation model failed at the first predictive gate
      - `H219`: skipped because H218 produced no promoted continuation model
      - `H220`: skipped because H219 produced no promoted continuation-band winner
-6. Session 65 decision tree outcome:
+   - new-data exit branch:
+     - `H221`: corporate-event surface built successfully with held-row coverage `89.59%`
+     - `H222`: event predictive screening failed
+     - `H223/H224`: skipped because H222 produced no promoted event model
+     - `H225`: intraday coverage failed (`0.00%`, only `FPT` 1H local data)
+     - `H226-H228`: skipped by rule
+     - `H229`: order-book / queue feasibility failed on the local workspace
+     - branch decision:
+       - stop exit-side research on the current local data stack
+       - do not reopen H221-H229 without genuinely new data acquisition
+8. Session 65 decision tree outcome:
    - `H192A`: **PASS**
      - the complex `blocked5<=q80 + sector_cap_3` winner is reproducible
      - historical reference metrics match exactly
@@ -81,7 +102,7 @@ Use `notes/session_72_log.md` for the latest full session detail.
      - branch decision:
        - rollback the active live branch to sticky
        - do **not** run `H194/H195` on the failed blocked-buy family unless the branch is intentionally reopened later
-7. Session 66 selection-side first pass:
+9. Session 66 selection-side first pass:
    - locked protocol is now codified in code:
      - dev `2015-2022`
      - validation `2023-2024`
@@ -98,7 +119,7 @@ Use `notes/session_72_log.md` for the latest full session detail.
        - `h152_breakout_volume_quality`
      - none showed naive always-on selector relevance
      - treat them as candidate atoms, not promoted selectors
-8. Session 67 additive follow-through:
+10. Session 67 additive follow-through:
    - `H196`: **FAIL**
      - no `H152` atom cleared the locked additive promotion rule on top of `full_library`
      - nearest miss:
@@ -126,7 +147,7 @@ Use `notes/session_72_log.md` for the latest full session detail.
        - naive validation selector relevance `+3.70%`
      - branch effect:
        - carry exactly this atom into the next additive test
-9. Session 68 H199 follow-through:
+11. Session 68 H199 follow-through:
    - `H200`: **PASS**
      - `full_library + h199_sector_laggard_gap_absorb`
      - validation relative `+68.21%` vs baseline `+43.45%`
@@ -153,7 +174,7 @@ Use `notes/session_72_log.md` for the latest full session detail.
      - branch effect:
        - do not replace the live branch
        - keep the H201 winner as offline-only research evidence
-10. Session 69 selector follow-through:
+12. Session 69 selector follow-through:
    - `H203`: **PASS**
      - one pair candidate survived the always-on additive gate:
        - `full_library_pair__h199_sector_laggard_gap_absorb__h199_breakout_after_compression`
@@ -188,7 +209,7 @@ Use `notes/session_72_log.md` for the latest full session detail.
      - branch effect:
        - stop the current selector-discovery ladder here
        - do not keep recombining H199/H204 atoms against the same locked protocol window
-11. Session 70 exit-alpha ladder:
+13. Session 70 exit-alpha ladder:
    - objective:
      - test whether the missing edge is post-entry exit timing rather than more selection or activation complexity
    - `H207`: **PASS**
@@ -226,7 +247,7 @@ Use `notes/session_72_log.md` for the latest full session detail.
        - keep the live sticky branch unchanged
        - close the current exit ladder
        - do not retune H207-H213 thresholds against `2025`
-12. Session 71 genuinely new exit-family follow-through:
+14. Session 71 genuinely new exit-family follow-through:
    - objective:
      - reopen exit research only with genuinely different post-entry families, not H207-H213 threshold tuning
    - `H214`: **FAIL**
@@ -276,7 +297,52 @@ Use `notes/session_72_log.md` for the latest full session detail.
    - branch effect:
      - close H218-H220
      - the next honest exit branch now requires a genuinely new data family
-14. Run the next branch in this exact order:
+14. Session 73 genuinely new-data exit branch:
+   - `H221`: **PASS**
+     - built `data/features/event_surface_daily.parquet`
+     - ticker/day coverage:
+       - `394` tickers
+       - `845,646` rows
+       - held-position coverage `89.59%`
+     - branch effect:
+       - event data is usable locally
+   - `H222`: **FAIL**
+     - best model:
+       - `event_only_core`
+       - validation AUC `0.5180`
+       - validation top-quintile hold advantage `-0.0030`
+       - confirmation AUC `0.4862`
+       - confirmation top-quintile hold advantage `-0.0108`
+     - branch effect:
+       - corporate-event surface does not create useful continuation / exit signal on current data
+   - `H223`: **SKIP**
+     - skipped by rule because H222 produced no promoted event model
+   - `H224`: **SKIP**
+     - skipped by rule because H223 was skipped
+   - `H225`: **FAIL**
+     - local intraday coverage is not usable:
+       - only `gia_lich_su_FPT_1H.parquet` exists
+       - held-row coverage `0.00%`
+   - `H226-H228`: **SKIP**
+     - intraday branch closed by the H225 coverage gate
+   - `H229`: **FAIL**
+     - no historical queue / depth archive exists under local `data/`
+     - only schema evidence exists in `analysis/probe_vnstock2_output.txt`
+   - branch effect:
+     - close H221-H229
+     - do not continue exit-side research on the current local data stack
+15. Session 74 acquisition-branch codification:
+   - no new model branch was opened
+   - new canonical acquisition docs:
+     - `notes/timing_data_acquisition_plan.md`
+     - `notes/timing_data_source_scorecard.csv`
+   - active acquisition decision tree:
+     - `H230-H233`: multi-ticker intraday / auction acquisition
+     - if that fails: `H234-H236` richer company-event source
+     - if that fails: `H237` stop timing research and wait for new data or more live evidence
+   - branch effect:
+     - future sessions should treat timing-data acquisition as the active non-live branch
+16. Run the next branch in this exact order:
    - live track:
      - keep the live scoreboard running on the rollback sticky branch
      - if sticky stays ahead of sticky always-on for at least `2` additional completed rebalance cycles:
@@ -305,10 +371,14 @@ Use `notes/session_72_log.md` for the latest full session detail.
        - no new family displaced H211
        - H218-H220 continuation / hold-vs-exit branch complete
        - no predictive continuation model emerged
-     - if continuing offline discovery, the next honest exit branch must require a genuinely new data family:
-       - corporate event surface
-       - intraday / auction structure
-       - order-book / queue data if obtainable
+     - exit-side work is now closed on the current local data stack:
+       - corporate-event surface failed the predictive gate
+       - intraday / auction structure failed the local coverage gate
+       - order-book / queue feasibility failed locally
+     - if continuing exit research later, the next honest move is new data acquisition:
+       - company-specific public event timestamps beyond the current sparse event surface
+       - multi-ticker intraday / auction data
+       - historical order-book / queue archives
      - do **not** reopen:
        - H199 pairwise recombinations
        - H204 atom recombinations
@@ -316,6 +386,7 @@ Use `notes/session_72_log.md` for the latest full session detail.
        - H207-H213 threshold retuning on the same locked window
        - H214-H217 retuning on the same locked window
        - H218-H220 retuning on the same locked window
+       - H221-H229 on the same local data stack without new data acquisition
    - anti-leakage rule:
      - do not keep tuning the closed `H152` additive family against `2025`
      - do not keep retuning the exact single-atom `H199` family against `2025` after `H200/H201/H202` resolved it
@@ -325,7 +396,7 @@ Use `notes/session_72_log.md` for the latest full session detail.
      - do not keep retuning the closed continuation exit branch H218-H220 against `2025`
      - rank them on dev / validation
      - use `2025` once per promoted candidate only
-15. Keep the architecture split clear:
+17. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
    - exit alpha = decide when to stop holding a bought name after entry
@@ -336,7 +407,7 @@ Use `notes/session_72_log.md` for the latest full session detail.
      - fixed path-dependent selector-efficacy rule
      - plus a small retention bonus
    - blocked-buy veto and sector cap stay as archived historical improvements, not the active live branch
-16. Only after the sticky live branch has clearly failed forward should the branch reopen these secondary ideas:
+18. Only after the sticky live branch has clearly failed forward should the branch reopen these secondary ideas:
    - `H194`: blocked-buy + sector-cap recalibration (implemented, not run after rollback)
    - `H195`: blocked-buy hysteresis (implemented, not run after rollback)
    - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened

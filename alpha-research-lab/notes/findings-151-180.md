@@ -101,3 +101,113 @@ Because `H218` failed, the next two rungs were skipped:
 **Key finding:** a materially different exit target is not enough by itself. On current daily data, the hold-vs-exit continuation family does not contain useful predictive edge.
 
 **Implication:** close `H218-H220` and do not retune it on the same locked window. The next honest exit branch must now depend on a genuinely new data family, not just a new formulation over the same daily inputs.
+
+## F153: The Corporate-Event Surface Has Real Local Coverage But Does Not Create Useful Continuation / Exit Signal Under The Locked Protocol; The Event Branch Dies Before Deterministic Integration (2026-03-29, Session 73)
+
+Session 73 opened the first genuinely new-data exit branch the right way:
+- `H221`: build a reusable corporate-event surface
+- `H222`: test it on the continuation / hold-vs-exit target
+- only if that passed, continue to deterministic exit integration
+
+### H221 — Coverage is real
+The new event surface was built successfully at:
+- `data/features/event_surface_daily.parquet`
+
+Coverage summary:
+- `394` tickers
+- `845,646` `(time, ticker)` rows
+- held-position coverage `89.59%`
+- event-source history coverage:
+  - dividend-event tickers `51`
+  - issuance-event tickers `52`
+  - insider-event tickers `387`
+
+This means the event branch did **not** fail for trivial data sparsity reasons.
+
+### H222 — Predictive screening fails anyway
+Best model:
+- `event_only_core`
+- validation AUC `0.5180`
+- validation top-quintile hold advantage `-0.0030`
+- confirmation AUC `0.4862`
+- confirmation top-quintile hold advantage `-0.0108`
+
+Other variants were not better:
+- `event_plus_path_core`
+- `event_plus_path_thesis`
+
+So the branch died at the predictive screen:
+- `H223`: skipped
+- `H224`: skipped
+
+**Key finding:** adding corporate-event timing to the current daily held-position state does not create useful continuation / exit alpha on the locked `2015-2025` protocol.
+
+**Implication:** do not keep tuning the event branch locally. The event surface is now a valid published artifact, but the exit-side event family is closed on current data.
+
+## F154: Exit-Side New-Data Research Is Now Blocked Locally By Information Availability, Not By More Rule Ideas (2026-03-29, Session 73)
+
+After the event branch failed at `H222`, Session 73 carried the ladder forward honestly instead of quietly stopping.
+
+### H225 — Intraday / auction structure fails on local coverage
+Local intraday state:
+- only `data/stock/gia_lich_su_FPT_1H.parquet` exists
+- held-position coverage against the continuation panel is `0.00%`
+
+So:
+- `H225`: fail
+- `H226-H228`: skipped by rule
+
+### H229 — Order-book / queue feasibility fails locally
+Local feasibility audit result:
+- no historical queue/depth archive exists under local `data/`
+- only a schema probe exists in:
+  - `analysis/probe_vnstock2_output.txt`
+
+So:
+- local order-book / queue research is **not feasible now**
+
+**Key finding:** the exit branch is now blocked by missing information, not by a lack of more threshold ideas. On the current local workspace, the honest exit-side branch is closed.
+
+**Implication:** do not continue exit tuning on the current local data stack. The next honest exit-side move requires actual new data acquisition:
+- richer company-event timestamps
+- multi-ticker intraday / auction data
+- historical order-book / queue archives
+
+## F155: Once Timing Research Is Closed On The Current Local Data Stack, The Next Active Branch Must Be Data Acquisition First, Not More Timing Rule Tuning (2026-03-29, Session 74)
+
+Session 74 did not open another model family.
+
+It codified the operational consequence of Sessions 70-73:
+- the live sticky branch stays frozen
+- timing research on the current local daily stack is exhausted
+- the next honest work is acquisition-first, not more rule invention
+
+Active acquisition order is now:
+1. multi-ticker intraday / auction data
+2. richer company-event source than the current event surface v1
+3. otherwise stop timing research and wait for either real data access or more forward live evidence
+
+This is now documented explicitly in:
+- `notes/timing_data_acquisition_plan.md`
+- `notes/timing_data_source_scorecard.csv`
+
+**Key finding:** when the lab reaches the information limit of the current stack, the next branch should be operational data acquisition with explicit viability gates, not another loop of offline timing experiments.
+
+## F156: A Usable Timing-Data Source Must Clear Coverage, Timestamp, And Continuity Gates Before It Is Allowed To Reopen Modeling (2026-03-29, Session 74)
+
+Session 74 also made the acquisition branch concrete instead of leaving it as a loose idea.
+
+For intraday / auction data to count as usable, it must satisfy:
+- historical access, not live-only
+- multi-ticker coverage
+- enough held-row coverage to matter
+- stable timestamps and session structure
+- enough fields to derive first-hour and close-auction features
+
+For a richer company-event source to count as usable, it must satisfy:
+- first-public timestamps are recoverable
+- event timing is company-specific, not just quarter-phase
+- coverage materially improves over event surface v1
+- the source is not leak-prone or retrospectively backfilled
+
+**Key finding:** new data access is not enough by itself. A new source only reopens timing research after it clears explicit viability gates first.

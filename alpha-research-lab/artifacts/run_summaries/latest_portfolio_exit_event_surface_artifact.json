@@ -1,0 +1,54 @@
+{
+  "artifacts": {
+    "coverage_panel": "artifacts/portfolio_baselines/20260329_202507_h221_event_surface_coverage_panel.parquet",
+    "event_surface": "data/features/event_surface_daily.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_event_surface_artifact",
+  "name": "h221_event_surface_artifact",
+  "summary": {
+    "coverage_gate": 0.6,
+    "coverage_gate_passed": true,
+    "event_surface": {
+      "any_event_tickers": 387,
+      "dates": 2803,
+      "dividend_event_tickers": 51,
+      "insider_event_tickers": 387,
+      "issuance_event_tickers": 52,
+      "rows": 845646,
+      "tickers": 394
+    },
+    "held_panel_coverage": {
+      "coverage_share": 0.8959469068499645,
+      "covered_rows": 7560,
+      "covered_tickers": 358,
+      "panel_rows": 8438
+    },
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "ts": "20260329_202507"
+}

@@ -1,0 +1,36 @@
+{
+  "artifacts": {},
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_event_surface_integration",
+  "name": "h223_event_surface_exit_integration",
+  "summary": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "reason": "H222 produced no promoted event model",
+    "skipped": true
+  },
+  "ts": "20260329_202645"
+}

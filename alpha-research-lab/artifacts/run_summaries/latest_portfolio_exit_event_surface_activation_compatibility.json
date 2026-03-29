@@ -1,0 +1,36 @@
+{
+  "artifacts": {},
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_event_surface_activation_compatibility",
+  "name": "h224_event_surface_activation_compatibility",
+  "summary": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "reason": "H223 was skipped",
+    "skipped": true
+  },
+  "ts": "20260329_202646"
+}

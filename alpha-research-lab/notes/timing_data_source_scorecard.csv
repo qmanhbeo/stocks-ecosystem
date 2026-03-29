@@ -1,0 +1,4 @@
+source_name,data_family,current_state,date_coverage,ticker_coverage,held_row_coverage,decision,next_action,notes
+local_fpt_1h_legacy,intraday,partial,2023-09 onward,1 ticker,0.00%,fail,acquire multi-ticker intraday source,Only FPT 1H exists locally
+current_event_surface_v1,corporate_event,published,2015-2026,394 tickers,89.59%,fail predictive gate,seek richer company-specific event source,Good coverage but H222 failed
+local_order_book_queue,order_book,absent,N/A,0 tickers,0.00%,fail,do not pursue without new archive,Only schema probe exists locally

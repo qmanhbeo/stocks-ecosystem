@@ -14,6 +14,10 @@ All paths below are written as `data/...` because this repo is meant to be run f
 inside `alpha-research-lab/`, where `data/` is a symlink to the shared workspace root
 `/home/manh/stocks/data`.
 
+For the active timing-data acquisition branch, also read:
+- `notes/timing_data_acquisition_plan.md`
+- `notes/timing_data_source_scorecard.csv`
+
 | Data | In git? | How to restore if missing |
 |------|---------|---------------------------|
 | `data/features/*.parquet` | YES | Already in repo; regenerate with scripts below if corrupted |
@@ -99,6 +103,18 @@ python data_tools/fetch_news_archive.py
 | Historical foreign investor flow (per-ticker, daily) | vnstock only has current-day. F59. |
 | Intraday OHLCV / tick data | vnstock doesn't provide historical intraday |
 | SSC filing text (structured JSON) | SSC portal is HTML-only |
+
+## Timing Research Acquisition Status
+
+Current branch state:
+- event surface v1 exists and is published at `data/features/event_surface_daily.parquet`
+- it failed the predictive gate for continuation / exit timing
+- local intraday data is only `FPT` 1H and is not a usable research surface
+- local order-book / queue history is absent
+
+Operational consequence:
+- do not keep tuning timing rules on the current local data stack
+- if timing research continues, follow `notes/timing_data_acquisition_plan.md`
 
 ---
 

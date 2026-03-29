@@ -1,0 +1,41 @@
+{
+  "artifacts": {
+    "audit": "artifacts/portfolio_baselines/20260329_202739_h229_order_book_feasibility_audit.json"
+  },
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_order_book_feasibility_audit",
+  "name": "h229_order_book_feasibility_audit",
+  "summary": {
+    "decision": "stop_exit_side_research_on_current_data_stack",
+    "feasible_now": false,
+    "local_order_book_files": [],
+    "probe_schema_present": true,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "reason": "Local workspace has no historical queue/depth time series under data/; only a schema probe exists"
+  },
+  "ts": "20260329_202739"
+}

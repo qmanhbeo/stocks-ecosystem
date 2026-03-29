@@ -18,7 +18,7 @@ state of each data source. Read this before running experiments or wondering why
 | Insider deals raw | YES | YES (394 tickers) | `fetch_insider_deals.py` |
 | News archive (cafef, 3.6 GB) | NO | YES (fetched this session) | `fetch_news_archive.py` |
 | Historical foreign investor flow | ✗ Not available | — | F59 in findings.md — vnstock only has current-day |
-| Intraday tick data | ✗ Not available | — | vnstock doesn't provide historical intraday |
+| Intraday tick data | Partial | YES (`FPT` 1H only) | local legacy sample only; not a multi-ticker research surface |
 
 ## Critical Refresh Warning
 
@@ -223,6 +223,13 @@ Build the selector-efficacy activation-meta surface used for learnable/path-depe
 - **Output:** `data/features/activation_meta_daily.parquet`
 - **Usage:** `python data_tools/build_activation_meta_features.py`
 
+### `build_event_surface_daily.py`
+Build the canonical corporate-event surface for the new-data exit ladder.
+- **Requires:** `xs_rl_signal_matrix.parquet`, `data/dividend_cache/*.parquet`, `xs_earnings_calendar_daily.parquet`, `xs_insider_deals_raw.parquet`
+- **Output:** `data/features/event_surface_daily.parquet`
+- **Usage:** `python data_tools/build_event_surface_daily.py`
+- **Session 73 note:** the artifact has strong local coverage, but the first event-driven continuation/exit branch still failed at the predictive gate
+
 ### `build_s1_live_extension.py`
 Build the current-year live extension for the canonical `S1` signal without dropping the latest unlabeled rows.
 - **Requires:** current raw stock history plus the historical `S1` feature pipeline inputs
@@ -247,6 +254,7 @@ Build the current-year live extension for the canonical `S1` signal without drop
 | `xs_dispersion_regime_daily.parquet` | H101 | Dense date-level dispersion regime features | ~2.7k |
 | `activation_state_daily.parquet` | H157-H162 | Dense date-level selection/activation state surface | ~2.7k |
 | `activation_meta_daily.parquet` | H163-H174 | Dense date-level selector-efficacy / activation-meta surface | ~2.7k |
+| `event_surface_daily.parquet` | H221 | Dense ticker-day corporate-event surface for exit-side new-data research | 845k |
 | `xs_return_skewness.parquet` | H103 | Dense ticker-day return skewness/tail-shape features | 826k |
 | `xs_earnings_calendar_daily.parquet` | H104 | Dense date-level earnings/reporting calendar features | ~2.7k |
 | `xs_news_sentiment_daily.parquet` | **C1 raw** | Daily keyword sentiment (sparse) | ~29k |

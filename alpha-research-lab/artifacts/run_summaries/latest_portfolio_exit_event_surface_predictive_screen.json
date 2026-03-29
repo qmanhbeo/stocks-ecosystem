@@ -1,0 +1,116 @@
+{
+  "artifacts": {
+    "results": "artifacts/portfolio_baselines/20260329_202542_h222_event_surface_predictive_screen_results.parquet",
+    "scored_dataset": "artifacts/portfolio_baselines/20260329_202542_h222_event_surface_predictive_screen_scored_dataset.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_event_surface_predictive_screen",
+  "name": "h222_event_surface_predictive_screen",
+  "summary": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "winner": {
+      "coef__blocked_sell_streak": NaN,
+      "coef__days_since_dividend": -0.0010290096690726898,
+      "coef__days_since_issuance": 0.0006654128272363297,
+      "coef__days_since_q_end": -0.002758667075655675,
+      "coef__days_to_next_dividend": 0.00017778315695096393,
+      "coef__days_to_next_issuance": -4.841872685602886e-06,
+      "coef__days_to_next_q_end": 0.003039198224355841,
+      "coef__dividend_event_density_20d": -5.193231010743202,
+      "coef__dividend_window_post_5d": 0.0,
+      "coef__dividend_window_pre_20d": 5.578687196961508,
+      "coef__event_density_20d": -0.0002624477823972513,
+      "coef__holding_age_before": NaN,
+      "coef__in_report_w15_45": 0.2674123721119893,
+      "coef__in_report_w30_60": 0.22430357725339414,
+      "coef__issuance_event_density_20d": -0.16527143707760206,
+      "coef__issuance_window_post_5d": 0.30429220252499667,
+      "coef__issuance_window_pre_20d": 0.7248742110784167,
+      "coef__peak_return_since_entry": NaN,
+      "coef__post_q_end_10d": -0.31175733290838237,
+      "coef__pre_q_end_10d": -0.1875322563169791,
+      "coef__quarter_phase_cos": 0.3146470325303731,
+      "coef__quarter_phase_sin": -0.32661995643953595,
+      "coef__recent_any_filing_20d": 0.0031185960466076448,
+      "coef__recent_any_filing_5d": -0.026160044685017415,
+      "coef__recent_insider_filing_20d": 0.0019500999930652445,
+      "coef__recent_insider_filing_5d": 0.0022328753483263726,
+      "coef__recent_major_holder_filing_20d": 0.012774920440843919,
+      "coef__recent_major_holder_filing_5d": -0.13385580147496665,
+      "coef__return_since_entry": NaN,
+      "coef__score_change_since_entry": NaN,
+      "coef__thesis_score_change_since_entry": NaN,
+      "coef__underwater_days_since_entry": NaN,
+      "confirmation_auc": 0.4861739527991046,
+      "confirmation_count": 737,
+      "confirmation_mean_hold_advantage": -0.007088004409355148,
+      "confirmation_positive_rate": 0.37177747625508817,
+      "confirmation_top_quintile_hold_advantage": -0.010826216117337884,
+      "dev_auc": 0.5443001959245175,
+      "dev_count": 6168,
+      "dev_mean_hold_advantage": 0.005589620394877662,
+      "dev_positive_rate": 0.48605706874189364,
+      "dev_top_quintile_hold_advantage": 0.011666553521666567,
+      "feature_columns": [
+        "days_to_next_dividend",
+        "days_since_dividend",
+        "dividend_window_pre_20d",
+        "dividend_window_post_5d",
+        "days_to_next_issuance",
+        "days_since_issuance",
+        "issuance_window_pre_20d",
+        "issuance_window_post_5d",
+        "recent_insider_filing_5d",
+        "recent_insider_filing_20d",
+        "recent_major_holder_filing_5d",
+        "recent_major_holder_filing_20d",
+        "recent_any_filing_5d",
+        "recent_any_filing_20d",
+        "dividend_event_density_20d",
+        "issuance_event_density_20d",
+        "event_density_20d",
+        "days_since_q_end",
+        "days_to_next_q_end",
+        "in_report_w15_45",
+        "in_report_w30_60",
+        "pre_q_end_10d",
+        "post_q_end_10d",
+        "quarter_phase_sin",
+        "quarter_phase_cos"
+      ],
+      "intercept": -0.00931382141942752,
+      "model_name": "event_only_core",
+      "promoted": false,
+      "validation_auc": 0.5180432887305257,
+      "validation_count": 1533,
+      "validation_mean_hold_advantage": 3.239563754030353e-05,
+      "validation_positive_rate": 0.44487932159165033,
+      "validation_top_quintile_hold_advantage": -0.003021943624678136
+    }
+  },
+  "ts": "20260329_202542"
+}

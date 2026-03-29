@@ -1,0 +1,49 @@
+{
+  "artifacts": {
+    "audit": "artifacts/portfolio_baselines/20260329_202707_h229_order_book_feasibility_audit.json"
+  },
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_order_book_feasibility_audit",
+  "name": "h229_order_book_feasibility_audit",
+  "summary": {
+    "decision": "order_book_branch_can_open_later",
+    "feasible_now": true,
+    "local_order_book_files": [
+      "data/dividend_cache/BID_events.parquet",
+      "data/features/signals/predictions/rl_lab_matrix/BID_signal_predictions.parquet",
+      "data/features/xs_barrier_depth4_fpt_proba.csv",
+      "data/features/xs_barrier_depth5_fpt_proba.csv",
+      "data/fundamentals_cache/BID_ratios.parquet",
+      "data/insider_cache/BID.parquet",
+      "data/stock/gia_lich_su_BID_1D.parquet"
+    ],
+    "probe_schema_present": true,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "reason": "Historical queue/depth files exist locally"
+  },
+  "ts": "20260329_202707"
+}

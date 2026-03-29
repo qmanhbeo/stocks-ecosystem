@@ -37,6 +37,8 @@ def load_full_library_backbone(
     benchmark_path: Path,
     start_year: int,
     end_year: int,
+    extra_feature_frame: pd.DataFrame | None = None,
+    extra_feature_columns: list[str] | None = None,
 ) -> tuple[object, pd.DataFrame, object]:
     bundle = load_research_bundle(
         matrix_path=matrix_path,
@@ -51,6 +53,24 @@ def load_full_library_backbone(
     price_panel = load_price_panel(scored["ticker"].unique().tolist(), stock_dir)
     tradability, tradability_source = load_or_build_tradability_panel(price_panel, tradability_path)
     benchmark_open = load_benchmark_open(benchmark_path)
+    feature_frame = bundle.matrix.copy()
+    feature_columns = sorted(
+        {column for cols in THESIS_FAMILY_COMPONENTS.values() for column in cols if column in bundle.matrix.columns}
+    )
+    if extra_feature_frame is not None and not extra_feature_frame.empty:
+        extra = extra_feature_frame.copy()
+        extra["time"] = pd.to_datetime(extra["time"])
+        merge_columns = [column for column in extra.columns if column not in {"time", "ticker"}]
+        feature_frame = feature_frame.merge(
+            extra[["time", "ticker"] + merge_columns],
+            on=["time", "ticker"],
+            how="left",
+            validate="one_to_one",
+        )
+        for column in extra_feature_columns or merge_columns:
+            if column in feature_frame.columns and column not in feature_columns:
+                feature_columns.append(str(column))
+
     market_inputs = build_market_inputs(
         scored,
         price_panel,
@@ -60,8 +80,8 @@ def load_full_library_backbone(
         strategy_names=["full_library"],
         start_year=int(start_year),
         end_year=int(end_year),
-        feature_frame=bundle.matrix,
-        feature_columns=sorted({column for cols in THESIS_FAMILY_COMPONENTS.values() for column in cols if column in bundle.matrix.columns}),
+        feature_frame=feature_frame,
+        feature_columns=feature_columns,
     )
     return bundle, scored, market_inputs
 

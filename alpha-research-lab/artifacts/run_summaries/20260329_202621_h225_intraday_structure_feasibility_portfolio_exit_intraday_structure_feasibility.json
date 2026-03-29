@@ -1,0 +1,45 @@
+{
+  "artifacts": {
+    "coverage_panel": "artifacts/portfolio_baselines/20260329_202621_h225_intraday_structure_feasibility_coverage.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_intraday_structure_feasibility",
+  "name": "h225_intraday_structure_feasibility",
+  "summary": {
+    "available_1h_files": [
+      "gia_lich_su_FPT_1H.parquet"
+    ],
+    "available_intraday_tickers": [
+      "FPT"
+    ],
+    "coverage_gate": 0.5,
+    "coverage_gate_passed": false,
+    "coverage_share": 0.0,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "ts": "20260329_202621"
+}

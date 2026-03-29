@@ -1,0 +1,36 @@
+{
+  "artifacts": {},
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_intraday_activation_compatibility",
+  "name": "h228_intraday_activation_compatibility",
+  "summary": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "reason": "H227 produced no promoted intraday exit winner",
+    "skipped": true
+  },
+  "ts": "20260329_202707"
+}

@@ -1,0 +1,36 @@
+{
+  "artifacts": {},
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_intraday_predictive_screen",
+  "name": "h226_intraday_predictive_screen",
+  "summary": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "reason": "H225 coverage gate failed",
+    "skipped": true
+  },
+  "ts": "20260329_202706"
+}

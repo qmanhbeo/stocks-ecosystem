@@ -57,6 +57,9 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - `notes/signal_library.md`: **the registry of confirmed and candidate signals**
 - `README_for_AGENTS.md`: exact agent loop, commands, result artifacts, data, note conventions
 - `notes/findings.md`: index for the chunked durable findings files
+- if you are continuing the active timing-research branch, then read:
+  - `notes/timing_data_acquisition_plan.md`
+  - `notes/timing_data_source_scorecard.csv`
 
 `README.md` is an overview. The live source of truth is `notes/next_steps.md`.
 
@@ -70,6 +73,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - The lab publishes the shared execution tradability artifact at `data/features/execution/tradability_daily.parquet`
 - The lab publishes the date-level activation surface at `data/features/activation_state_daily.parquet`
 - The lab publishes the selector-efficacy activation-meta surface at `data/features/activation_meta_daily.parquet`
+- The lab now also publishes the ticker-day corporate-event surface at `data/features/event_surface_daily.parquet`
 - RL consumes that matrix through `../RL-trading-agent` via `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 - Execution reality is shared with RL via `../docs/execution_reality.md` and `../shared-market-rules/`
 
@@ -207,6 +211,19 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
   - `H218`: continuation / hold-vs-exit model failed at the first predictive gate
   - `H219`: skipped because H218 produced no promoted continuation model
   - `H220`: skipped because H219 produced no promoted continuation-band winner
+- Session 73 then completed the first genuinely new-data exit ladder:
+  - `H221`: built `data/features/event_surface_daily.parquet` with held-row coverage `89.59%`
+  - `H222`: corporate-event predictive screening failed
+  - `H223/H224`: skipped because H222 produced no promoted event model
+  - `H225`: intraday / auction structure failed the local coverage gate (`0.00%`, only `FPT` 1H exists)
+  - `H226-H228`: skipped by rule
+  - `H229`: order-book / queue feasibility failed locally; no historical queue/depth archive exists under `data/`
+- Session 74 then codified the acquisition-first follow-up:
+  - timing research now starts from `notes/timing_data_acquisition_plan.md`
+  - acquisition order is:
+    - multi-ticker intraday / auction source
+    - richer company-event source
+    - otherwise stop timing research and wait for new data or more forward live evidence
 - Active next branch is now dual-track:
   - live track:
     - keep the live forward scoreboard running on the rollback sticky branch
@@ -224,7 +241,12 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
       - H207-H213 threshold retuning on the same locked window
       - H214-H217 threshold retuning on the same locked window
       - H218-H220 threshold retuning on the same locked window
-    - the next honest exit branch must require a genuinely new data family
+      - H221-H229 on the same local data stack without new data acquisition
+    - exit-side research is now closed on the current local data stack
+    - the next honest exit branch now requires actual new data acquisition:
+      - richer company-event timestamps
+      - multi-ticker intraday / auction data
+      - historical order-book / queue archives
     - the next honest selector-side branch must require a genuinely new data family or a new high-level hypothesis family
 - RL remains exploratory only
 
