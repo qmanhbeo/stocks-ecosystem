@@ -22,6 +22,10 @@ from research_pipelines.supervised_label.core.feature_builder import build_featu
 from research_pipelines.supervised_label.core.label_storage import update_manifest
 
 
+def _prediction_output_filename(ticker: str) -> str:
+    return f"{str(ticker).upper()}_signal_predictions.parquet"
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Generate per-bar signal probabilities from a trained model.")
     parser.add_argument("--model-path", type=Path, default=None, help="Optional model path override.")
@@ -65,6 +69,11 @@ def main() -> None:
         metadata_path = Path(args.metadata_path) if args.metadata_path else variant_paths.metadata_path
         output_dir = Path(args.output_dir) if args.output_dir else variant_paths.predictions_dir
         output_dir.mkdir(parents=True, exist_ok=True)
+        existing_prediction_files = {
+            path.name: path
+            for path in output_dir.glob("*_signal_predictions.parquet")
+            if path.is_file()
+        }
         if args.label_variant == "both" and (not model_path.exists() or not metadata_path.exists()):
             print(f"[{variant}] skipped_missing_model_inputs model={model_path} metadata={metadata_path}")
             continue
@@ -72,6 +81,7 @@ def main() -> None:
         model = joblib.load(model_path)
         metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
         feature_columns = list(metadata.get("feature_columns", []))
+        written_filenames: set[str] = set()
 
         for ticker in tickers:
             raw_df = load_ticker_dataframe(ticker=ticker, config=config, timeframe=config.timeframe)
@@ -93,7 +103,14 @@ def main() -> None:
             )
             if predictions["date"].duplicated().any():
                 raise ValueError(f"Duplicate prediction dates generated for {ticker}")
-            predictions.to_parquet(output_dir / f"{ticker}_signal_predictions.parquet", index=False)
+            filename = _prediction_output_filename(ticker)
+            written_filenames.add(filename)
+            predictions.to_parquet(output_dir / filename, index=False)
+
+        for filename, path in sorted(existing_prediction_files.items()):
+            if filename in written_filenames:
+                continue
+            path.unlink()
 
         output_ref = make_relative_to_repo(output_dir, config=config)
         update_manifest(

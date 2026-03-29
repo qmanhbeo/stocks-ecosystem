@@ -130,9 +130,21 @@ def create_or_load_splits(
     overwrite: bool = False,
 ) -> Dict[str, List[str]]:
     config = config or get_default_config()
+    if overwrite:
+        tickers = list(get_ticker_to_path_map(config=config, timeframe=config.timeframe).keys())
+        split_map = split_tickers(
+            tickers=tickers,
+            train_ratio=config.train_ratio,
+            val_ratio=config.val_ratio,
+            seed=config.random_seed,
+        )
+        save_split_files(split_map, config=config)
+        return split_map
+
     existing = load_split_files(config=config)
-    if not overwrite and any(existing.values()):
+    if any(existing.values()):
         return existing
+
     tickers = list(get_ticker_to_path_map(config=config, timeframe=config.timeframe).keys())
     split_map = split_tickers(
         tickers=tickers,

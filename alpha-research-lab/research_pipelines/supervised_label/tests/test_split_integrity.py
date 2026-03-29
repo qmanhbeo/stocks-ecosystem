@@ -97,3 +97,19 @@ def test_create_or_load_splits_rejects_duplicate_or_unknown_tickers():
             match="Split files reference tickers that are not present|Split files assign the same ticker to multiple splits",
         ):
             create_or_load_splits(config=config, overwrite=False)
+
+
+def test_create_or_load_splits_overwrite_recovers_from_partial_files():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir)
+        config = _build_config(root)
+        for ticker in ("AAA", "BBB", "CCC"):
+            _write_market_parquet(config, ticker)
+
+        config.split_file_map()["train"].write_text("AAA\n", encoding="utf-8")
+
+        split_map = create_or_load_splits(config=config, overwrite=True)
+
+        assert sorted(split_map.keys()) == ["test", "train", "val"]
+        assert sum(len(values) for values in split_map.values()) == 3
+        assert all(path.exists() for path in config.split_file_map().values())

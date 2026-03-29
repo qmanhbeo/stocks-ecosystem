@@ -1,8 +1,13 @@
 import numpy as np
 import pandas as pd
+import tempfile
+from pathlib import Path
 
 from research_pipelines.news_features.config import NewsFeaturesConfig
-from research_pipelines.news_features.core.aggregate_daily_features import aggregate_daily_feature_dataframe
+from research_pipelines.news_features.core.aggregate_daily_features import (
+    aggregate_daily_feature_dataframe,
+    aggregate_daily_feature_exports,
+)
 from research_pipelines.news_features.core.build_embedding_features import build_embedding_feature_dataframe
 from research_pipelines.news_features.core.build_tabular_features import build_tabular_feature_dataframe
 
@@ -121,3 +126,39 @@ def test_build_embedding_features_and_aggregate_exports():
     combined = aggregate_daily_feature_dataframe(tabular, embeddings, config=config)
     assert set(config.embedding_columns()) <= set(combined.columns)
     assert {"ticker", "date", "news_article_count_1d"} <= set(combined.columns)
+
+
+def test_aggregate_daily_feature_exports_removes_stale_per_ticker_files():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir)
+        config = NewsFeaturesConfig(
+            repo_root=root,
+            package_root=root / "pkg",
+            data_root=root / "data",
+            feature_root=root / "data" / "features" / "news",
+            raw_news_dir=root / "data" / "news",
+            raw_stock_dir=root / "data" / "stock",
+            artifacts_dir=root / "data" / "features" / "news",
+            configs_dir=root / "configs",
+            normalized_dir=root / "data" / "features" / "news" / "normalized",
+            tagged_dir=root / "data" / "features" / "news" / "tagged",
+            datasets_dir=root / "data" / "features" / "news" / "datasets",
+            predictions_dir=root / "data" / "features" / "news" / "predictions",
+            manifest_path=root / "data" / "features" / "news" / "manifest.json",
+        )
+        config.ensure_directories()
+
+        pd.DataFrame({"ticker": ["BBB"], "date": ["2024-01-01"], "x": [1.0]}).to_parquet(
+            config.per_ticker_feature_path("BBB"),
+            index=False,
+        )
+        pd.DataFrame({"ticker": ["AAA"], "date": ["2024-01-01"], "x": [2.0]}).to_parquet(
+            config.tabular_dataset_path(),
+            index=False,
+        )
+
+        combined = aggregate_daily_feature_exports(config=config)
+
+        assert combined["ticker"].tolist() == ["AAA"]
+        assert config.per_ticker_feature_path("AAA").exists()
+        assert not config.per_ticker_feature_path("BBB").exists()

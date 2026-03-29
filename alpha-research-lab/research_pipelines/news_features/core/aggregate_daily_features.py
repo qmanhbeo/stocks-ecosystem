@@ -12,6 +12,10 @@ from research_pipelines.news_features.config import NewsFeaturesConfig, get_defa
 from research_pipelines.news_features.io_utils import update_manifest
 
 
+def _news_feature_filename(ticker: str) -> str:
+    return f"{str(ticker).upper()}_news_features.parquet"
+
+
 def aggregate_daily_feature_dataframe(
     tabular_df: pd.DataFrame,
     embedding_df: pd.DataFrame,
@@ -82,16 +86,28 @@ def aggregate_daily_feature_exports(config: Optional[NewsFeaturesConfig] = None)
     print(f"Aggregate build completed in {aggregate_elapsed:.1f}s. Writing outputs...", flush=True)
     write_start = perf_counter()
     combined.to_parquet(config.combined_dataset_path(), index=False)
+    existing_prediction_files = {
+        path.name: path
+        for path in config.predictions_dir.glob("*_news_features.parquet")
+        if path.is_file()
+    }
     ticker_groups = list(combined.groupby("ticker", sort=True))
     total_tickers = len(ticker_groups)
     progress_interval = 1 if total_tickers <= 10 else 10
+    written_filenames: set[str] = set()
     for ticker_index, (ticker, group) in enumerate(ticker_groups, start=1):
+        filename = _news_feature_filename(str(ticker))
+        written_filenames.add(filename)
         group.to_parquet(config.per_ticker_feature_path(str(ticker)), index=False)
         if ticker_index == 1 or ticker_index % progress_interval == 0 or ticker_index == total_tickers:
             print(
                 f"Wrote per-ticker aggregate file {ticker_index}/{total_tickers}: {ticker}",
                 flush=True,
             )
+    for filename, path in sorted(existing_prediction_files.items()):
+        if filename in written_filenames:
+            continue
+        path.unlink()
     write_elapsed = perf_counter() - write_start
     update_manifest(
         config=config,
