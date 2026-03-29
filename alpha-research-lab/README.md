@@ -120,6 +120,10 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
   - `H181`: rebuild the current-date `full_library` matrix and activation surfaces
   - `H182`: rerun the live-paper activation overlay on the refreshed matrix
   - `H183`: compare activated vs always-on paper books only after the overlay is current
+- After the live branch is current, the next local refinement queue is:
+  - `H184`: sticky holdings / displacement margin
+  - `H185`: sector concentration cap
+  - `H186`: local exposure control around `rel2_gt0`
 - Selection-side work (`H151/H152`) remains parked behind the operational activation branch
 - RL remains exploratory only
 

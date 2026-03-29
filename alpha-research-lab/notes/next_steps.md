@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_60_log.md` for the latest full session detail.
+Use `notes/session_61_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 60 H178-H180 completed (the `H175 rel2_gt0` champion was stressed honestly and stayed strong in 15/16 scenarios; the live-paper activation overlay runner now exists; small local guards did not beat the plain champion; the only active operational blocker for a true current-date activation overlay is stale `full_library` matrix coverage past `2025-12-31`; ADV / capacity still parked for the current-account branch; RL remains exploratory; docs updated; 2026-03-29)
+**Session status:** Session 61 planning pass completed after Session 60 (the `H175 rel2_gt0` champion remains the operational activation winner; the next branch is now a concrete `H181-H186` queue spanning live-data refresh, current-date overlay deployment, live scoreboarding, and only then small construction refinements around the champion; ADV / capacity still parked for the current-account branch; RL remains exploratory; docs updated; 2026-03-29)
 
 ### Start next session here
 
@@ -21,22 +21,31 @@ Use `notes/session_60_log.md` for the latest full session detail.
 3. Treat the activation overlay as the new operational priority branch:
    - `H175 rel2_gt0` is now robust enough to operationalize
    - `H180` showed that small guards do not improve it
-   - the next real job is live data plumbing, not more gate creativity
-4. If a true current-date `full_library` activation recommendation is needed, do this first:
-   - rebuild / extend `data/features/xs_rl_signal_matrix.parquet` through the current market date
-   - rebuild `data/features/activation_state_daily.parquet`
-   - rebuild `data/features/activation_meta_daily.parquet`
-   - rerun `H179`
-   Root `VNINDEX` is restored through `2026-03-27`; the remaining blocker is the stock-derived signal matrix, not the benchmark file.
-5. Rerun the official live `S1` scorer only after lookback sufficiency is verified if the fallback branch is needed.
+   - the next real job is live data plumbing first, then very local construction work
+4. Run the next branch in this exact order:
+   - `H181`: rebuild / extend `data/features/xs_rl_signal_matrix.parquet` through the current market date, then rebuild:
+     - `data/features/activation_state_daily.parquet`
+     - `data/features/activation_meta_daily.parquet`
+     Acceptance: matrix max date matches the current stock-data max date, and `H179` no longer reports a stale matrix.
+   - `H182`: rerun the live-paper activation overlay on the refreshed matrix and emit a dated blotter.
+     Acceptance: latest overlay date equals latest tradable market date and the summary clearly reports activation state, requested basket, and held basket.
+   - `H183`: start an activated-vs-always-on paper scoreboard once the overlay is current.
+     Acceptance: one dated artifact compares the two books on overlapping forward days without mixing stale matrix dates.
+   - `H184`: sticky-holdings / displacement-margin sweep around the champion.
+     Hypothesis: reduce churn by keeping held names unless a challenger beats the weakest held name by a real score margin.
+   - `H185`: sector concentration cap on the activated selector.
+     Hypothesis: cap sector crowding without reopening selection logic.
+   - `H186`: local exposure control around `rel2_gt0`.
+     Hypothesis: the champion is right on direction but can still improve through mild sizing or hysteresis tied only to the same `recent_rel2` state.
 5. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
    - Session 60 says selection alpha is strong, activation alpha is real, and the best current form is still a simple fixed path-dependent selector-efficacy rule
-6. Resume the active queue in this order:
-   - `H181`: rebuild the current-date `full_library` matrix and activation surfaces so `H179` can emit an honest live overlay beyond `2025-12-31`
-   - `H182`: rerun the live-paper activation overlay on the refreshed matrix and start a dated paper blotter for the activated branch
-   - `H183`: compare activated-vs-always-on paper books only after the live overlay is current
+6. Only after `H181-H186` should the branch reopen these secondary ideas:
+   - `H187`: implementation-pain veto layered on the champion
+   - `H188`: basket-coherence / score-dispersion filter
+   - `H189`: selector switching between `full_library` and `S1`
+   - `H190`: calendar / entry-window quality guards
    - `H151`: narrow tradability-conditioned composite (parked secondary branch)
    - `H152`: tradability-conditioned alpha search (parked secondary branch)
    - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened

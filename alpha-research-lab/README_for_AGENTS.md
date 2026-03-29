@@ -86,6 +86,10 @@ Operationally important summary:
   - `H181`: rebuild the current-date `full_library` matrix and activation surfaces
   - `H182`: rerun the live-paper activation overlay on the refreshed matrix
   - `H183`: compare activated vs always-on paper books once the overlay is current
+- the next local refinement queue after that is:
+  - `H184`: sticky holdings / displacement margin
+  - `H185`: sector concentration cap
+  - `H186`: local exposure control around `rel2_gt0`
 - `H151/H152` remain parked behind the operational activation branch
 - the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
