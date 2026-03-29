@@ -1,0 +1,232 @@
+{
+  "artifacts": {
+    "aggregate": "artifacts/portfolio_baselines/20260329_160138_h193_pseudo_live_robustness_ladder_aggregate.parquet",
+    "best_daily": "artifacts/portfolio_baselines/20260329_160138_h193_pseudo_live_robustness_ladder_best_daily.parquet",
+    "results": "artifacts/portfolio_baselines/20260329_160138_h193_pseudo_live_robustness_ladder_results.parquet"
+  },
+  "metadata": {
+    "current_variant": "impl__blocked5_q80_sector_cap_3",
+    "test_years": [
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "mode": "portfolio_activation_pseudo_live_robustness_ladder",
+  "name": "h193_pseudo_live_robustness_ladder",
+  "summary": {
+    "current_variant": {
+      "mean_activation_on_rate": 0.271337,
+      "mean_avg_cash_weight": 0.4154912189481829,
+      "mean_information_ratio_annualized": 0.42749854940886217,
+      "mean_max_drawdown": -0.1394339016829301,
+      "mean_relative_total_return": 0.1404031993906825,
+      "on_efficient_frontier": false,
+      "positive_years": 2,
+      "variant": "impl__blocked5_q80_sector_cap_3"
+    },
+    "current_variant_on_frontier": false,
+    "efficient_frontier": [
+      "sticky_bonus_0p015"
+    ],
+    "recommended_rollback_variant": "sticky_bonus_0p015",
+    "test_years": [
+      2023,
+      2024,
+      2025
+    ],
+    "winner": {
+      "mean_activation_on_rate": 0.307491,
+      "mean_avg_cash_weight": 0.3787027223169806,
+      "mean_information_ratio_annualized": 0.5856003878058371,
+      "mean_max_drawdown": -0.15869667869537998,
+      "mean_relative_total_return": 0.14914938580298062,
+      "on_efficient_frontier": true,
+      "positive_years": 2,
+      "variant": "sticky_bonus_0p015"
+    },
+    "yearly_results": [
+      {
+        "activation_on_rate": 0.333333,
+        "active_cycle_count": 35,
+        "active_cycle_hit_rate": 0.742857,
+        "avg_cash_weight": 0.3452363490964557,
+        "avg_num_holdings": 3.2931726907630523,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": 0.0625,
+        "information_ratio_annualized": 1.9460437450093795,
+        "max_drawdown": -0.10984210848348774,
+        "portfolio_total_return": 0.8014620787656987,
+        "relative_total_return": 0.5971206427921192,
+        "test_year": 2023,
+        "variant": "impl__blocked3_q80"
+      },
+      {
+        "activation_on_rate": 0.333333,
+        "active_cycle_count": 35,
+        "active_cycle_hit_rate": 0.742857,
+        "avg_cash_weight": 0.3452363490964557,
+        "avg_num_holdings": 3.2931726907630523,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": 0.0987654410539716,
+        "information_ratio_annualized": 1.9460437450093715,
+        "max_drawdown": -0.10984210848348885,
+        "portfolio_total_return": 0.801462078765691,
+        "relative_total_return": 0.5971206427921159,
+        "test_year": 2023,
+        "variant": "impl__blocked5_q80"
+      },
+      {
+        "activation_on_rate": 0.333333,
+        "active_cycle_count": 35,
+        "active_cycle_hit_rate": 0.742857,
+        "avg_cash_weight": 0.3452363490964557,
+        "avg_num_holdings": 3.2931726907630523,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": 0.0987654410539716,
+        "information_ratio_annualized": 1.9460437450093733,
+        "max_drawdown": -0.10984210848348797,
+        "portfolio_total_return": 0.8014620787656936,
+        "relative_total_return": 0.5971206427921183,
+        "test_year": 2023,
+        "variant": "impl__blocked5_q80_sector_cap_3"
+      },
+      {
+        "activation_on_rate": 0.357895,
+        "active_cycle_count": 34,
+        "active_cycle_hit_rate": 0.705882,
+        "avg_cash_weight": 0.33617375197977883,
+        "avg_num_holdings": 3.4216867469879517,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": NaN,
+        "information_ratio_annualized": 1.3583962857629504,
+        "max_drawdown": -0.15292595709633128,
+        "portfolio_total_return": 0.5597848185844245,
+        "relative_total_return": 0.38029002265811407,
+        "test_year": 2023,
+        "variant": "sticky_bonus_0p015"
+      },
+      {
+        "activation_on_rate": 0.326316,
+        "active_cycle_count": 31,
+        "active_cycle_hit_rate": 0.483871,
+        "avg_cash_weight": 0.36286320070475464,
+        "avg_num_holdings": 3.316,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": 0.03906254768371786,
+        "information_ratio_annualized": -0.8219544809331724,
+        "max_drawdown": -0.14864495986366544,
+        "portfolio_total_return": -0.07412155287257671,
+        "relative_total_return": -0.18386244009080732,
+        "test_year": 2024,
+        "variant": "impl__blocked3_q80"
+      },
+      {
+        "activation_on_rate": 0.326316,
+        "active_cycle_count": 31,
+        "active_cycle_hit_rate": 0.483871,
+        "avg_cash_weight": 0.3628632007047547,
+        "avg_num_holdings": 3.316,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": 0.09876543209890842,
+        "information_ratio_annualized": -0.8219544809331756,
+        "max_drawdown": -0.14864495986366566,
+        "portfolio_total_return": -0.0741215528725776,
+        "relative_total_return": -0.18386244009080832,
+        "test_year": 2024,
+        "variant": "impl__blocked5_q80"
+      },
+      {
+        "activation_on_rate": 0.326316,
+        "active_cycle_count": 31,
+        "active_cycle_hit_rate": 0.483871,
+        "avg_cash_weight": 0.36286320070475464,
+        "avg_num_holdings": 3.316,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": 0.09876543209890842,
+        "information_ratio_annualized": -0.8219544809331634,
+        "max_drawdown": -0.14864495986366388,
+        "portfolio_total_return": -0.07412155287257494,
+        "relative_total_return": -0.18386244009080566,
+        "test_year": 2024,
+        "variant": "impl__blocked5_q80_sector_cap_3"
+      },
+      {
+        "activation_on_rate": 0.358696,
+        "active_cycle_count": 33,
+        "active_cycle_hit_rate": 0.545455,
+        "avg_cash_weight": 0.33472856396156286,
+        "avg_num_holdings": 3.46,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": NaN,
+        "information_ratio_annualized": -0.29440444014630224,
+        "max_drawdown": -0.16749740116944156,
+        "portfolio_total_return": 0.039387816255104235,
+        "relative_total_return": -0.08401263113883195,
+        "test_year": 2024,
+        "variant": "sticky_bonus_0p015"
+      },
+      {
+        "activation_on_rate": 0.143791,
+        "active_cycle_count": 22,
+        "active_cycle_hit_rate": 0.636364,
+        "avg_cash_weight": 0.5584544283284789,
+        "avg_num_holdings": 2.253012048192771,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": 0.03128053043037726,
+        "information_ratio_annualized": 0.0495130677304648,
+        "max_drawdown": -0.1598146367016383,
+        "portfolio_total_return": 0.4099389079815152,
+        "relative_total_return": -0.017781961720575334,
+        "test_year": 2025,
+        "variant": "impl__blocked3_q80"
+      },
+      {
+        "activation_on_rate": 0.154362,
+        "active_cycle_count": 23,
+        "active_cycle_hit_rate": 0.652174,
+        "avg_cash_weight": 0.5383741070433383,
+        "avg_num_holdings": 2.353413654618474,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": 0.06830775779507713,
+        "information_ratio_annualized": 0.15840638415038238,
+        "max_drawdown": -0.1598146367016383,
+        "portfolio_total_return": 0.4454787805438323,
+        "relative_total_return": 0.007951395470737976,
+        "test_year": 2025,
+        "variant": "impl__blocked5_q80"
+      },
+      {
+        "activation_on_rate": 0.154362,
+        "active_cycle_count": 23,
+        "active_cycle_hit_rate": 0.652174,
+        "avg_cash_weight": 0.5383741070433383,
+        "avg_num_holdings": 2.353413654618474,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": 0.06830775779507713,
+        "information_ratio_annualized": 0.15840638415037664,
+        "max_drawdown": -0.15981463670163842,
+        "portfolio_total_return": 0.4454787805438294,
+        "relative_total_return": 0.007951395470734868,
+        "test_year": 2025,
+        "variant": "impl__blocked5_q80_sector_cap_3"
+      },
+      {
+        "activation_on_rate": 0.205882,
+        "active_cycle_count": 28,
+        "active_cycle_hit_rate": 0.678571,
+        "avg_cash_weight": 0.46520585100960016,
+        "avg_num_holdings": 2.751004016064257,
+        "blocked_buy_off_threshold": null,
+        "blocked_buy_on_threshold": NaN,
+        "information_ratio_annualized": 0.6928093178008633,
+        "max_drawdown": -0.15566667782036714,
+        "portfolio_total_return": 0.6442437461502897,
+        "relative_total_return": 0.15117076588965972,
+        "test_year": 2025,
+        "variant": "sticky_bonus_0p015"
+      }
+    ]
+  },
+  "ts": "20260329_160138"
+}

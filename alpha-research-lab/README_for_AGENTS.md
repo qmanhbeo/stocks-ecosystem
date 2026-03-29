@@ -98,14 +98,22 @@ Operationally important summary:
   - `H190`: `sector_cap_3` became additive once paired with the stronger `blocked5<=q80` veto family
   - `H191`: the veto family improved again from `blocked3<=q80` to `blocked5<=q80`
   - live reruns on the final winner still show current activation state `OFF / cash`
-- the current live champion is now:
+- Session 65 then resolved the defense-vs-overfit fork:
+  - `H192A`: parity passed; the complex historical winner is reproducible
+  - `H192B`: the recent live state on that winner was mixed, not trivially all-cash
+  - `H193`: the train-only pseudo-live ladder rejected the complex winner and rolled the active live branch back to sticky
+- historical max-return system remains:
   - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked5_q80 + sector_cap_3`
   - `+597.09%` relative vs VNINDEX
   - information ratio `1.0093`
+- active live branch is now:
+  - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
+  - current live holdings from `2026-03-26` signal / `2026-03-27` execution:
+    - `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
 - the active next branch is now:
-  - `H192`: maintain the live forward scoreboard on the current winner
-  - `H193`: refine the blocked-buy veto family jointly with `sector_cap_3`
-  - `H194`: if the forward branch stays fully defensive, test mild re-entry hysteresis on the `blocked5` veto family
+  - keep the live forward scoreboard running on the rollback sticky branch
+  - if sticky continues to beat sticky always-on forward, monitor only
+  - if sticky falls behind sticky always-on over `>= 2` completed cycles, rerun parity first and then choose between reopening `H194/H195` or moving to `H151/H152`
 - `H151/H152` remain parked behind the operational activation branch
 - the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`

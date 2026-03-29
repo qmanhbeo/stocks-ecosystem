@@ -95,6 +95,23 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - information ratio `1.01`
 - avg daily turnover `0.2036`
 
+This is still the strongest **historical** system.
+It is no longer the active live branch after Session 65's pseudo-live rollback test.
+
+## Current Active Live Branch
+
+**`full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`**
+
+- Session 65 validated that the complex `blocked5 + sector_cap_3` winner is reproducible
+- but `H193` rejected it on the expanding-train / next-year pseudo-live ladder
+- the sticky branch beat all blocked-buy variants on mean relative return and mean IR over `2023-2025`
+- current live overlay state from the `2026-03-26` signal / `2026-03-27` execution:
+  - `ON`
+  - holdings: `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
+- current `2026` YTD scoreboard:
+  - activated sticky: `-3.33%` relative vs VNINDEX
+  - sticky always-on: `-11.22%` relative
+
 ## Current Active Branch
 
 - Keep the deterministic paper trade running on `full_library + k5_r5_eq`
@@ -136,10 +153,14 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
   - `H190`: `sector_cap_3` finally became additive once paired with the stronger `blocked5<=q80` veto family
   - `H191`: the blocked-buy veto family improved again from `blocked3<=q80` to `blocked5<=q80`
   - current live overlay state on the final winner remains `OFF / cash`
+- Session 65 then resolved the defense-vs-overfit fork:
+  - `H192A`: parity passed; the complex historical winner is reproducible
+  - `H192B`: recent live state on the complex winner was mixed, not trivially all-cash
+  - `H193`: pseudo-live ladder rejected the complex winner and rolled the active live branch back to sticky
 - Active next research branch is now:
-  - `H192`: maintain the live forward scoreboard on the current winner
-  - `H193`: refine the blocked-buy veto family jointly with `sector_cap_3`
-  - `H194`: if the forward branch stays fully defensive, test mild re-entry hysteresis on the `blocked5` veto family
+  - keep the live forward scoreboard running on the rollback sticky branch
+  - if sticky keeps beating sticky always-on forward, monitor only
+  - if sticky falls behind sticky always-on for `>= 2` completed cycles, rerun parity first and then choose between reopening `H194/H195` or abandoning local activation tuning
 - Selection-side work (`H151/H152`) remains parked behind the operational activation branch
 - RL remains exploratory only
 
@@ -213,6 +234,11 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h178_h175_robustness_stress.py`: honest start-year / fee stress for the fixed activation champion
 - `analysis/h179_live_activation_overlay.py`: execution-facing live/paper overlay runner for the activation champion
 - `analysis/h180_h175_small_augmentations.py`: constrained local guard sweep around `rel2_gt0`
+- `analysis/h192a_champion_parity_audit.py`: parity check between archived champion reference, direct runner, live overlay, and live scoreboard
+- `analysis/h192b_forward_monitor_diagnostic.py`: recent-window live-state occupancy and offense/defense classification for the current activation branch
+- `analysis/h193_pseudo_live_robustness_ladder.py`: expanding-train / next-year ladder for sticky and blocked-buy activation variants
+- `analysis/h194_blocked_buy_sector_recalibration.py`: blocked-buy + sector-cap recalibration family, only if the blocked-buy branch is intentionally reopened
+- `analysis/h195_blocked_buy_hysteresis.py`: blocked-buy hysteresis family, only if the blocked-buy branch is intentionally reopened
 
 ## Live Paper-Trade Prerequisite
 

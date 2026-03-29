@@ -1,57 +1,82 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_64_log.md` for the latest full session detail.
+Use `notes/session_65_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 64 completed `H190-H191` plus final live reruns on the actual winner. The live `full_library` / activation branch remains current through `2026-03-27`, the implementation-pain family improved again from `blocked3<=q80` to `blocked5<=q80`, and adding `sector_cap_3` on top produced the best historical result so far. The current live activated state remains `OFF / cash`. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
+**Session status:** Session 65 completed the activation defense-vs-overfit branch (`H192A-H193`) and changed the live branch decision. The complex historical winner `blocked5<=q80 + sector_cap_3` is reproducible, but it loses the train-only pseudo-live ladder to the simpler sticky baseline. The active live branch is now rolled back to `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
 
 ### Start next session here
 
-1. Record the next market-session outcome against the current activated paper-trade book:
-   - current **activated implementation-pain + sector-cap champion** state from the `2026-03-26` signal / `2026-03-27` execution:
-     - held names: none
-     - cash `100.00%`
-   - current activation state: `OFF`
+1. Record the next market-session outcome against the **rollback sticky activated** paper-trade book:
+   - current active live branch from the `2026-03-26` signal / `2026-03-27` execution:
+     - held names: `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
+     - cash `0.00%`
+   - current activation state: `ON`
 2. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
 3. Treat the live branch as operationally current:
    - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-27`
    - `data/features/activation_state_daily.parquet` is now current through `2026-03-27`
    - `data/features/activation_meta_daily.parquet` is now current through `2026-03-27`
    - `H179` no longer reports a stale matrix
-4. Use the current champion, not the superseded one:
-   - old champion: `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked3_q80`
-   - new champion: `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked5_q80 + sector_cap_3`
-   - historical reference (`2019-2025`, `0.30%` RT):
-     - sticky `0.015`: `+509.76%` relative vs VNINDEX, IR `0.9372`
-     - `impl__blocked3_q80`: `+527.16%` relative, IR `0.9471`
-     - `impl__blocked5_q80`: `+590.23%` relative, IR `1.0027`
-     - `impl__blocked5_q80 + sector_cap_3`: `+597.09%` relative, IR `1.0093`
-5. Run the next branch in this exact order:
-   - `H192`: keep the live scoreboard running on the new champion.
-     Hypothesis: the current-year edge from the veto winner is real only if it keeps beating sticky always-on forward, not just historically.
-   - `H193`: refine the blocked-buy veto family jointly with `sector_cap_3`.
-     Hypothesis: the best blocked-buy threshold may shift once the sector cap is active.
-     Candidate family:
-       - `blocked5<=q75 + sector_cap_3`
-       - `blocked5<=q80 + sector_cap_3`
-       - `blocked5<=q85 + sector_cap_3`
-       - `blocked3<=q80 + sector_cap_3`
-   - `H194`: if the live branch stays fully in cash too long, test a mild re-entry hysteresis around the `blocked5` veto family.
-     Hypothesis: the current winner may be a little too defensive in forward time even if it is historically strongest.
-   - `H195`: only after `H192-H194`, revisit selector switching or calendar guards if still needed.
-6. Keep the architecture split clear:
+4. Keep the architecture split and the branch decision clear:
+   - historical max-return system:
+     - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked5_q80 + sector_cap_3`
+     - `+597.09%` relative vs VNINDEX, IR `1.0093`
+   - active pseudo-live / live branch:
+     - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
+     - it won the train-only pseudo-live ladder over `2023-2025`
+     - it is the rule currently driving `H179/H183`
+5. Session 65 decision tree outcome:
+   - `H192A`: **PASS**
+     - the complex `blocked5<=q80 + sector_cap_3` winner is reproducible
+     - historical reference metrics match exactly
+     - live overlay and live scoreboard now agree with the direct runner
+   - `H192B`: **MIXED, NOT EXTREME**
+     - recent 30-day monitor on the complex winner:
+       - activation-on rate `30.0%`
+       - avg cash `59.55%`
+       - blocked-extreme rate `36.67%`
+       - top-5 buyable mean `4.77`
+       - current forward edge vs always-on is positive
+     - this is not an “all-cash, obviously too-defensive” state
+   - `H193`: **ROLLBACK**
+     - expanding-train / next-year test years `2023-2025`
+     - winner:
+       - `sticky_bonus_0p015`
+       - mean relative return `+14.91%`
+       - mean IR `0.5856`
+     - rejected:
+       - `impl__blocked5_q80 + sector_cap_3`
+       - mean relative `+14.04%`
+       - mean IR `0.4275`
+     - branch decision:
+       - rollback the active live branch to sticky
+       - do **not** run `H194/H195` on the failed blocked-buy family unless the branch is intentionally reopened later
+6. Run the next branch in this exact order:
+   - `H192`: keep the live scoreboard running, but now on the rollback sticky branch.
+     Hypothesis: the sticky activation branch is live-valid only if it keeps beating sticky always-on forward.
+   - If sticky stays ahead of sticky always-on for at least `2` additional completed rebalance cycles:
+     - keep monitoring only
+     - do not reopen blocked-buy family work yet
+   - If sticky falls behind sticky always-on over `>= 2` completed cycles:
+     - rerun `H192A` to confirm parity has not drifted
+     - then choose one branch only:
+       - reopen `H194/H195` if the problem is clearly activation-local again
+       - otherwise stop local activation tuning and move to `H151/H152`
+7. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
-   - Session 64 says selection alpha is strong, activation alpha is real, and the best current form is now:
-     - a fixed path-dependent selector-efficacy rule
+   - Session 65 says selection alpha is strong, activation alpha is still real, but the currently *deployable* form is simpler than the historical max-return stack:
+     - fixed path-dependent selector-efficacy rule
      - plus a small retention bonus
-     - plus an implementation-pain veto
-     - plus a mild sector cap
-7. Only after `H192-H195` should the branch reopen these secondary ideas:
+   - blocked-buy veto and sector cap stay as archived historical improvements, not the active live branch
+8. Only after the sticky live branch has clearly failed forward should the branch reopen these secondary ideas:
+   - `H194`: blocked-buy + sector-cap recalibration (implemented, not run after rollback)
+   - `H195`: blocked-buy hysteresis (implemented, not run after rollback)
    - `H151`: narrow tradability-conditioned composite (parked secondary branch)
    - `H152`: tradability-conditioned alpha search (parked secondary branch)
    - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened
@@ -92,6 +117,51 @@ Use `notes/session_64_log.md` for the latest full session detail.
   - practical read:
     - the historical winner still prefers to stay out on the current live date
     - the forward edge so far is still entirely defensive
+
+### Session 65 defense-vs-overfit decision
+
+- `H192A` result:
+  - **PASS**
+  - the complex `blocked5<=q80 + sector_cap_3` winner is reproducible
+  - historical reference parity holds exactly against the archived Session 64 summary
+  - the live overlay and live scoreboard now match the direct champion runner after the shared-helper refactor
+- `H192B` result:
+  - **MIXED**
+  - recent 30-day monitor on the complex winner:
+    - activation-on rate `30.0%`
+    - avg cash `59.55%`
+    - blocked-extreme rate `36.67%`
+    - top-5 buyable mean `4.77`
+    - `2026` YTD relative return vs VNINDEX `+3.75%`
+    - delta vs always-on `+14.97%`
+  - practical read:
+    - the complex winner is not “broken by all-cash behavior”
+    - but it is not obviously the right live branch either
+- `H193` result:
+  - **ROLLBACK**
+  - expanding-train / next-year tests `2023-2025` rejected the complex winner
+  - aggregate ranking:
+    - `sticky_bonus_0p015`: mean relative `+14.91%`, mean IR `0.5856`
+    - `impl__blocked5_q80 + sector_cap_3`: mean relative `+14.04%`, mean IR `0.4275`
+    - `impl__blocked5_q80`: mean relative `+14.04%`, mean IR `0.4275`
+    - `impl__blocked3_q80`: mean relative `+13.18%`, mean IR `0.3912`
+  - branch decision:
+    - active live branch rolled back to sticky
+    - `H194/H195` remain implemented but were **not** run because the blocked-buy family failed the pseudo-live gate
+- live reruns on the rollback sticky branch:
+  - current official activated overlay state:
+    - signal date `2026-03-26`
+    - execution date `2026-03-27`
+    - activation `ON`
+    - held names: `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
+    - cash `0.00%`
+  - `2026` YTD scoreboard:
+    - activated sticky: `-3.33%` relative vs VNINDEX, IR `-0.36`
+    - sticky always-on: `-11.22%` relative, IR `-1.65`
+  - practical read:
+    - sticky still trails benchmark in the short 2026 window
+    - sticky is materially better than sticky always-on
+    - this is good enough to keep the rollback branch live for now
 
 ### Session 63 local-refinement follow-through
 

@@ -1,0 +1,135 @@
+{
+  "artifacts": {
+    "overlay_daily": "artifacts/portfolio_baselines/20260329_160205_h192a_champion_parity_audit_overlay_daily.parquet",
+    "scoreboard_daily": "artifacts/portfolio_baselines/20260329_160205_h192a_champion_parity_audit_scoreboard_daily.parquet"
+  },
+  "metadata": {
+    "overlay_summary": "artifacts/run_summaries/latest_portfolio_live_activation_overlay.json",
+    "reference_summary": "/home/manh/stocks/alpha-research-lab/artifacts/run_summaries/latest_portfolio_activation_impl_pain_sector_combo.json",
+    "scoreboard_summary": "artifacts/run_summaries/latest_portfolio_live_activation_scoreboard.json"
+  },
+  "mode": "portfolio_activation_champion_parity_audit",
+  "name": "h192a_champion_parity_audit",
+  "summary": {
+    "direct_latest_overlay_day": {
+      "activation_on": false,
+      "activation_scale": 0.0,
+      "avg_holding_age": 0.0,
+      "benchmark_return": -0.0106167207333,
+      "benchmark_value_vnd": 181888491.7956603,
+      "blocked_buy_count": 0,
+      "blocked_sell_count": 0,
+      "buy_turnover": 0.0,
+      "capacity_clipped_count": 0,
+      "cash_weight": 1.0,
+      "eligible_universe_size": 345,
+      "execution_date": "2026-03-27T00:00:00",
+      "held_tickers": [],
+      "num_holdings": 0,
+      "pending_entry_count": 0,
+      "portfolio_return": 0.0,
+      "portfolio_value_vnd": 1487215677.7904813,
+      "rebalance_triggered": true,
+      "relative_return": 0.0106167207333,
+      "requested_tickers": [],
+      "selected_count": 0,
+      "sell_turnover": 0.0,
+      "signal_date": "2026-03-26T00:00:00",
+      "strategy": "full_library",
+      "turnover": 0.0,
+      "weighting_rule": "equal"
+    },
+    "direct_latest_scoreboard_day": {
+      "activation_on": false,
+      "activation_scale": 0.0,
+      "avg_holding_age": 0.0,
+      "benchmark_return": -0.0106167207333,
+      "benchmark_value_vnd": 181888491.7956603,
+      "blocked_buy_count": 0,
+      "blocked_sell_count": 0,
+      "buy_turnover": 0.0,
+      "capacity_clipped_count": 0,
+      "cash_weight": 1.0,
+      "eligible_universe_size": 345,
+      "execution_date": "2026-03-27T00:00:00",
+      "held_tickers": [],
+      "num_holdings": 0,
+      "pending_entry_count": 0,
+      "portfolio_return": 0.0,
+      "portfolio_value_vnd": 1487215677.7904813,
+      "rebalance_triggered": true,
+      "relative_return": 0.0106167207333,
+      "requested_tickers": [],
+      "selected_count": 0,
+      "sell_turnover": 0.0,
+      "signal_date": "2026-03-26T00:00:00",
+      "strategy": "full_library",
+      "turnover": 0.0,
+      "weighting_rule": "equal"
+    },
+    "historical_reference_check": {
+      "deltas": {
+        "avg_cash_weight": {
+          "current": 0.427508,
+          "delta": 0.0,
+          "reference": 0.427508
+        },
+        "avg_daily_turnover": {
+          "current": 0.203567,
+          "delta": 0.0,
+          "reference": 0.203567
+        },
+        "information_ratio_annualized": {
+          "current": 1.009283,
+          "delta": 0.0,
+          "reference": 1.009283
+        },
+        "max_drawdown": {
+          "current": -0.29183,
+          "delta": 0.0,
+          "reference": -0.29183
+        },
+        "portfolio_total_return": {
+          "current": 12.581092,
+          "delta": 0.0,
+          "reference": 12.581092
+        },
+        "relative_total_return": {
+          "current": 5.970914,
+          "delta": 0.0,
+          "reference": 5.970914
+        }
+      },
+      "passes": true,
+      "reference_path": "/home/manh/stocks/alpha-research-lab/artifacts/run_summaries/latest_portfolio_activation_impl_pain_sector_combo.json"
+    },
+    "overall_pass": true,
+    "overlay_overlap_check": {
+      "left_count": 20,
+      "matches": true,
+      "right_count": 20,
+      "rows_left_only": [],
+      "rows_right_only": [],
+      "value_diffs": []
+    },
+    "scoreboard_overlap_check": {
+      "left_count": 55,
+      "matches": true,
+      "right_count": 55,
+      "rows_left_only": [],
+      "rows_right_only": [],
+      "value_diffs": []
+    },
+    "spec": {
+      "blocked_buy_max_quantile": 0.8,
+      "blocked_buy_off_quantile": null,
+      "blocked_buy_span": 5,
+      "incumbent_score_bonus": 0.015,
+      "max_names_per_sector": 3,
+      "name": "impl__blocked5_q80_sector_cap_3",
+      "rel_span": 2,
+      "rel_threshold": 0.0
+    }
+  },
+  "ts": "20260329_160205"
+}

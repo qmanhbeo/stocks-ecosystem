@@ -364,3 +364,80 @@ Current-year scoreboard:
 **Key finding:** the forward live edge is still real relative to always-on, but for now it is entirely coming from defense.
 
 **Implication:** the branch now needs monitoring and possibly mild re-entry logic, not more generic activation families.
+
+## F137: The Complex `blocked5<=q80 + sector_cap_3` Winner Is Reproducible Once Historical and Live Runners Share One Canonical Spec; Session 65 Parity Passed Exactly Against the Archived Session 64 Reference (2026-03-29, Session 65)
+
+Session 65 first solved the branch-drift problem rather than blindly running more tweaks.
+
+Changes:
+- one canonical champion spec
+- one shared gate-construction path
+- live overlay and live scoreboard rerun on that shared path
+
+Result:
+- the historical `2019-2025` reproduction of
+  - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked5_q80 + sector_cap_3`
+  matched the archived Session 64 reference exactly:
+  - portfolio total return `12.581092`
+  - relative vs VNINDEX `5.970914`
+  - information ratio `1.009283`
+  - avg cash `0.427508`
+  - avg daily turnover `0.203567`
+- the refreshed `H179` and `H183` runners matched the direct champion runner exactly on overlapping dates
+
+**Key finding:** the defense-vs-overfit problem was not caused by a silent live/historical runner mismatch. The complex winner is real on the current artifact surface.
+
+**Implication:** the next branch decision had to come from honest pseudo-live testing, not from blaming parity drift.
+
+## F138: The Complex Historical Winner Fails the Expanding-Train / Next-Year Pseudo-Live Ladder; The Simpler Sticky Baseline Beats All Blocked-Buy Variants on Mean Relative Return and Mean IR Over 2023-2025 (2026-03-29, Session 65)
+
+Session 65 then ran the first proper pseudo-live ladder with:
+- train-only threshold calibration
+- expanding train windows
+- next-year tests for `2023`, `2024`, and `2025`
+
+Candidate ranking:
+
+| Variant | Mean Relative Return | Mean IR | Mean Cash | Frontier |
+|---|---:|---:|---:|---|
+| `sticky_bonus_0p015` | **+14.91%** | **0.5856** | 37.87% | Yes |
+| `impl__blocked5_q80 + sector_cap_3` | +14.04% | 0.4275 | 41.55% | No |
+| `impl__blocked5_q80` | +14.04% | 0.4275 | 41.55% | No |
+| `impl__blocked3_q80` | +13.18% | 0.3912 | 42.22% | No |
+
+So the complex winner was not “wrong” historically.
+It was simply weaker than the simpler sticky baseline once evaluated under train-only pseudo-live discipline.
+
+**Key finding:** the blocked-buy veto family and sector cap improve historical full-window results, but they do not survive the stronger pseudo-live ranking bar.
+
+**Implication:** the active live branch should be rolled back to `sticky_bonus_0p015` unless and until new forward evidence justifies reopening the veto family.
+
+## F139: Rolling Back to Sticky Produces a More Credible Live Branch; It Is Active Again, Holds `ANV`, `PGV`, `PTB`, `PTL`, `VSI`, and Still Beats Sticky Always-On in 2026 YTD Even Though Both Trail VNINDEX (2026-03-29, Session 65)
+
+After `H193` rejected the complex winner, Session 65 reran the live overlay and live scoreboard on the rollback candidate:
+- `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
+
+Latest live state (`2026-03-26` signal / `2026-03-27` execution):
+- activation `ON`
+- holdings:
+  - `ANV`
+  - `PGV`
+  - `PTB`
+  - `PTL`
+  - `VSI`
+
+`2026` YTD scoreboard:
+- activated sticky:
+  - `-3.33%` relative vs VNINDEX
+  - IR `-0.36`
+- sticky always-on:
+  - `-11.22%` relative
+  - IR `-1.65`
+
+So the rollback branch is not benchmark-beating yet in this short live-forward slice, but it is:
+- active rather than pathologically defensive
+- materially better than its always-on counterpart
+
+**Key finding:** the simpler sticky branch is the right current live branch even though the more complex blocked-buy family remains the stronger historical full-window system.
+
+**Implication:** forward monitoring should now focus on sticky vs sticky always-on. The blocked-buy family should stay archived until that simpler live branch clearly fails.

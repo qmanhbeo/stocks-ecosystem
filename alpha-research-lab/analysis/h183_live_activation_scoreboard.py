@@ -17,37 +17,36 @@ from datetime import datetime
 from pathlib import Path
 import sys
 
-import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-WORKSPACE_ROOT = ROOT.parent
-SHARED_MARKET_RULES_ROOT = WORKSPACE_ROOT / "shared-market-rules"
-if str(SHARED_MARKET_RULES_ROOT) not in sys.path:
-    sys.path.insert(0, str(SHARED_MARKET_RULES_ROOT))
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from shared_market_rules import required_holding_age_for_sell
-
-from src.activation_alpha import compute_cycle_metrics, load_activation_experiment_inputs
-from src.activation_meta import ACTIVATION_META_PATH, load_or_build_activation_meta
+from src.activation_meta import ACTIVATION_META_PATH
 from src.activation_meta_experiment_utils import (
     ACTIVATION_STATE_PATH,
     BENCHMARK_PATH,
     RL_MATRIX_PATH,
     STOCK_DIR,
     TRADABILITY_PATH,
-    selector_recent_relative_ewm_from_prev,
 )
+from src.champion_activation_utils import (
+    ChampionVariantSpec,
+    current_champion_variant,
+    load_champion_setup,
+    load_sector_labels_for_market_inputs,
+    run_champion_variant,
+)
+from src.champion_branch_experiment_utils import jsonable, slice_execution_year, summarize_daily_slice
 from src.deterministic_portfolio import simulate_strategy
 from src.run_summary import write_run_summary
 
 OUT_DIR = Path("artifacts/portfolio_baselines")
-SECTOR_PATH = Path("data/features/sector_classification.parquet")
 
 
 def parse_args() -> argparse.Namespace:
+    default_spec = current_champion_variant()
     parser = argparse.ArgumentParser()
     parser.add_argument("--matrix", type=str, default=str(RL_MATRIX_PATH))
     parser.add_argument("--tradability", type=str, default=str(TRADABILITY_PATH))
@@ -60,159 +59,66 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--round-trip-cost", type=float, default=0.003)
     parser.add_argument("--required-holding-age", type=int, default=3)
     parser.add_argument("--initial-notional-vnd", type=float, default=100_000_000.0)
-    parser.add_argument("--incumbent-score-bonus", type=float, default=0.0)
-    parser.add_argument("--blocked-buy-ewm3-max-quantile", type=float, default=None)
-    parser.add_argument("--blocked-buy-ewm5-max-quantile", type=float, default=None)
-    parser.add_argument("--max-names-per-sector", type=int, default=None)
+    parser.add_argument("--incumbent-score-bonus", type=float, default=float(default_spec.incumbent_score_bonus))
+    parser.add_argument(
+        "--blocked-buy-ewm3-max-quantile",
+        type=float,
+        default=None if default_spec.blocked_buy_span != 3 else float(default_spec.blocked_buy_max_quantile),
+    )
+    parser.add_argument(
+        "--blocked-buy-ewm5-max-quantile",
+        type=float,
+        default=None if default_spec.blocked_buy_span != 5 else float(default_spec.blocked_buy_max_quantile),
+    )
+    parser.add_argument("--max-names-per-sector", type=int, default=default_spec.max_names_per_sector)
+    parser.add_argument("--disable-blocked-buy-veto", action="store_true")
+    parser.add_argument("--disable-sector-cap", action="store_true")
     return parser.parse_args()
-
-
-def _jsonable(value):
-    if isinstance(value, pd.Timestamp):
-        return value.isoformat()
-    if isinstance(value, np.generic):
-        return value.item()
-    if isinstance(value, tuple):
-        return [_jsonable(item) for item in value]
-    if isinstance(value, list):
-        return [_jsonable(item) for item in value]
-    if isinstance(value, dict):
-        return {str(key): _jsonable(item) for key, item in value.items()}
-    return value
-
-
-def _sector_labels_for_market_inputs(tickers: tuple[str, ...]) -> tuple[str | None, ...]:
-    sectors = pd.read_parquet(SECTOR_PATH)[["symbol", "icb_name2"]].drop_duplicates("symbol")
-    sector_map = dict(zip(sectors["symbol"], sectors["icb_name2"]))
-    return tuple(sector_map.get(ticker) for ticker in tickers)
-
-
-def _slice_year(daily: pd.DataFrame, year: int) -> pd.DataFrame:
-    work = daily.copy()
-    work["signal_date"] = pd.to_datetime(work["signal_date"])
-    work["execution_date"] = pd.to_datetime(work["execution_date"])
-    return work.loc[work["execution_date"].dt.year == int(year)].reset_index(drop=True)
-
-
-def _summarize_slice(daily: pd.DataFrame) -> dict[str, object]:
-    if daily.empty:
-        return {
-            "days": 0,
-            "portfolio_total_return": None,
-            "benchmark_total_return": None,
-            "relative_total_return": None,
-            "information_ratio_annualized": None,
-            "max_drawdown": None,
-            "avg_cash_weight": None,
-            "avg_num_holdings": None,
-            "latest_day": {},
-            "cycle_metrics": compute_cycle_metrics(daily),
-        }
-
-    portfolio_curve = np.cumprod(1.0 + daily["portfolio_return"].to_numpy(dtype=np.float64))
-    benchmark_curve = np.cumprod(1.0 + daily["benchmark_return"].to_numpy(dtype=np.float64))
-    relative_curve = np.cumprod(1.0 + daily["relative_return"].to_numpy(dtype=np.float64))
-    latest = daily.iloc[-1].to_dict()
-    latest["signal_date"] = pd.Timestamp(latest["signal_date"])
-    latest["execution_date"] = pd.Timestamp(latest["execution_date"])
-    ir = None
-    rel_arr = daily["relative_return"].to_numpy(dtype=np.float64)
-    if len(rel_arr) > 1 and np.std(rel_arr, ddof=0) > 0:
-        ir = float(np.mean(rel_arr) / np.std(rel_arr, ddof=0) * np.sqrt(252.0))
-    peaks = np.maximum.accumulate(portfolio_curve)
-    drawdown = float(np.min(portfolio_curve / np.clip(peaks, 1e-12, None) - 1.0))
-    return {
-        "days": int(len(daily)),
-        "portfolio_total_return": float(portfolio_curve[-1] - 1.0),
-        "benchmark_total_return": float(benchmark_curve[-1] - 1.0),
-        "relative_total_return": float(relative_curve[-1] - 1.0),
-        "information_ratio_annualized": ir,
-        "max_drawdown": drawdown,
-        "avg_cash_weight": float(pd.to_numeric(daily["cash_weight"], errors="coerce").mean()),
-        "avg_num_holdings": float(pd.to_numeric(daily["num_holdings"], errors="coerce").mean()),
-        "latest_day": _jsonable(latest),
-        "cycle_metrics": compute_cycle_metrics(daily),
-    }
 
 
 def main() -> None:
     args = parse_args()
-    inputs = load_activation_experiment_inputs(
-        matrix_path=Path(args.matrix),
-        tradability_path=Path(args.tradability),
-        stock_dir=Path(args.stock_dir),
-        benchmark_path=Path(args.benchmark),
-        start_year=int(args.history_start_year),
-        end_year=int(args.evaluation_year),
-    )
-    meta_state, meta_source = load_or_build_activation_meta(
-        out_path=Path(args.activation_meta),
-        matrix_path=Path(args.matrix),
-        tradability_path=Path(args.tradability),
-        stock_dir=Path(args.stock_dir),
-        benchmark_path=Path(args.benchmark),
-        activation_state_path=Path(args.activation_state),
+    setup = load_champion_setup(
         start_year=int(args.history_start_year),
         end_year=int(args.evaluation_year),
         round_trip_cost=float(args.round_trip_cost),
         required_holding_age=int(args.required_holding_age),
         initial_notional_vnd=float(args.initial_notional_vnd),
+        matrix_path=Path(args.matrix),
+        tradability_path=Path(args.tradability),
+        stock_dir=Path(args.stock_dir),
+        benchmark_path=Path(args.benchmark),
+        activation_state_path=Path(args.activation_state),
+        activation_meta_path=Path(args.activation_meta),
     )
-
-    selector = next(selector for selector in inputs.selectors if selector.name == "full_library_k5_r5_eq")
-    rel2 = selector_recent_relative_ewm_from_prev(meta_state, prefix="full", span=2)
-    rel2.index = pd.to_datetime(meta_state["time"])
-    gate = rel2 > 0.0
-    veto_desc = "none"
-    if args.blocked_buy_ewm3_max_quantile is not None:
-        blocked3 = pd.Series(
-            pd.to_numeric(meta_state["full_recent_blocked_buy_ewm3"], errors="coerce").to_numpy(),
-            index=pd.to_datetime(meta_state["time"]),
+    blocked_quantile = None
+    blocked_span = None
+    if not args.disable_blocked_buy_veto:
+        blocked_quantile = (
+            args.blocked_buy_ewm3_max_quantile
+            if args.blocked_buy_ewm3_max_quantile is not None
+            else args.blocked_buy_ewm5_max_quantile
         )
-        threshold = float(blocked3.quantile(float(args.blocked_buy_ewm3_max_quantile)))
-        gate = gate & (blocked3 <= threshold)
-        veto_desc = f"blocked3<=q{int(round(float(args.blocked_buy_ewm3_max_quantile) * 100.0))}"
-    if args.blocked_buy_ewm5_max_quantile is not None:
-        blocked5 = pd.Series(
-            pd.to_numeric(meta_state["full_recent_blocked_buy_ewm5"], errors="coerce").to_numpy(),
-            index=pd.to_datetime(meta_state["time"]),
-        )
-        threshold = float(blocked5.quantile(float(args.blocked_buy_ewm5_max_quantile)))
-        gate = gate & (blocked5 <= threshold)
-        veto_desc = f"blocked5<=q{int(round(float(args.blocked_buy_ewm5_max_quantile) * 100.0))}"
-    aligned = (
-        pd.DataFrame({"time": pd.to_datetime(meta_state["time"]), "activation_scale": gate.astype(float), "recent_rel2": rel2})
-        .drop_duplicates("time")
-        .set_index("time")
-        .reindex(pd.to_datetime(inputs.market_inputs.dates))
-    )
-    activation_scale = aligned["activation_scale"].fillna(0.0).to_numpy(dtype=np.float64)
-
-    fee_leg = float(args.round_trip_cost) / 2.0
-    hold_age = required_holding_age_for_sell(min_hold_days_override=int(args.required_holding_age))
-    common_kwargs = dict(
-        strategy_name=selector.strategy_name,
-        signal_columns=list(selector.signal_columns),
-        market_inputs=inputs.market_inputs,
-        top_k=int(selector.top_k),
-        rebalance_every=int(selector.rebalance_every),
-        weighting=str(selector.weighting),
-        initial_notional_vnd=float(args.initial_notional_vnd),
-        max_adv_participation=0.0,
-        required_holding_age=int(hold_age),
-        buy_fee_rate=float(fee_leg),
-        sell_fee_rate=float(fee_leg),
-        capital_gains_tax_rate=0.0,
+        if blocked_quantile is not None:
+            blocked_span = 3 if args.blocked_buy_ewm3_max_quantile is not None else 5
+    spec = ChampionVariantSpec(
+        name="custom_live_scoreboard",
         incumbent_score_bonus=float(args.incumbent_score_bonus),
-        sector_labels=_sector_labels_for_market_inputs(inputs.market_inputs.tickers) if args.max_names_per_sector else None,
-        max_names_per_sector=args.max_names_per_sector,
+        blocked_buy_span=blocked_span,
+        blocked_buy_max_quantile=blocked_quantile,
+        max_names_per_sector=None if args.disable_sector_cap else args.max_names_per_sector,
     )
+    activated = run_champion_variant(setup, spec=spec)
 
-    always_on = simulate_strategy(**common_kwargs)
-    activated = simulate_strategy(**common_kwargs, activation_scale=activation_scale)
+    always_kwargs = dict(setup.common_kwargs)
+    always_kwargs["incumbent_score_bonus"] = float(args.incumbent_score_bonus)
+    if spec.max_names_per_sector:
+        always_kwargs["sector_labels"] = load_sector_labels_for_market_inputs(setup.inputs.market_inputs.tickers)
+        always_kwargs["max_names_per_sector"] = int(spec.max_names_per_sector)
+    always_on = simulate_strategy(**always_kwargs)
 
-    always_on_slice = _slice_year(always_on.daily, int(args.evaluation_year))
-    activated_slice = _slice_year(activated.daily, int(args.evaluation_year))
+    always_on_slice = slice_execution_year(always_on.daily, int(args.evaluation_year))
+    activated_slice = slice_execution_year(activated.result.daily, int(args.evaluation_year))
 
     ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -223,15 +129,20 @@ def main() -> None:
     base_daily["variant"] = "always_on"
     pd.concat([daily, base_daily], ignore_index=True).to_parquet(daily_path, index=False)
 
-    activated_summary = _summarize_slice(activated_slice)
-    always_summary = _summarize_slice(always_on_slice)
+    activated_summary = summarize_daily_slice(activated_slice)
+    always_summary = summarize_daily_slice(always_on_slice)
+    veto_desc = "none"
+    if spec.blocked_buy_span is not None and spec.blocked_buy_max_quantile is not None:
+        veto_desc = f"blocked{int(spec.blocked_buy_span)}<=q{int(round(float(spec.blocked_buy_max_quantile) * 100.0))}"
     summary = {
-        "meta_source": meta_source,
+        "meta_source": setup.meta_source,
         "activation_rule": "h175__rel2_gt0",
         "incumbent_score_bonus": float(args.incumbent_score_bonus),
         "implementation_veto": veto_desc,
-        "max_names_per_sector": args.max_names_per_sector,
-        "selector": selector.name,
+        "blocked_buy_on_threshold": activated.blocked_buy_on_threshold,
+        "blocked_buy_off_threshold": activated.blocked_buy_off_threshold,
+        "max_names_per_sector": spec.max_names_per_sector,
+        "selector": setup.selector_name,
         "evaluation_year": int(args.evaluation_year),
         "activated": activated_summary,
         "always_on": always_summary,
@@ -259,7 +170,9 @@ def main() -> None:
             "evaluation_year": int(args.evaluation_year),
             "blocked_buy_ewm3_max_quantile": args.blocked_buy_ewm3_max_quantile,
             "blocked_buy_ewm5_max_quantile": args.blocked_buy_ewm5_max_quantile,
-            "max_names_per_sector": args.max_names_per_sector,
+            "max_names_per_sector": spec.max_names_per_sector,
+            "disable_blocked_buy_veto": bool(args.disable_blocked_buy_veto),
+            "disable_sector_cap": bool(args.disable_sector_cap),
         },
     )
 
