@@ -203,6 +203,10 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
   - `H215`: failed follow-through was a near-miss but did not clear the locked gate
   - `H216`: time-under-water failed badly on confirmation
   - `H217`: skipped because no new family displaced H211
+- Session 72 then changed the exit target itself:
+  - `H218`: continuation / hold-vs-exit model failed at the first predictive gate
+  - `H219`: skipped because H218 produced no promoted continuation model
+  - `H220`: skipped because H219 produced no promoted continuation-band winner
 - Active next branch is now dual-track:
   - live track:
     - keep the live forward scoreboard running on the rollback sticky branch
@@ -219,6 +223,8 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
       - H204 atom recombinations
       - H207-H213 threshold retuning on the same locked window
       - H214-H217 threshold retuning on the same locked window
+      - H218-H220 threshold retuning on the same locked window
+    - the next honest exit branch must require a genuinely new data family
     - the next honest selector-side branch must require a genuinely new data family or a new high-level hypothesis family
 - RL remains exploratory only
 

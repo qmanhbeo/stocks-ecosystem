@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_71_log.md` for the latest full session detail.
+Use `notes/session_72_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 71 completed a genuinely new exit-family follow-through without changing the live branch. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. Exit alpha is established in always-on form, but both the original H211 winner and the newer H214-H216 families remain offline-only evidence. The current offline lead selector candidate remains `state_blend__h199_sector_laggard_gap_absorb__30`, not a live-branch replacement. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
+**Session status:** Session 72 completed the continuation / hold-vs-exit hazard branch without changing the live branch. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. Exit alpha is established only in the earlier H211 always-on exhaustion family; the newer H214-H216 families and the H218-H220 continuation family all remain closed offline branches. The current offline lead selector candidate remains `state_blend__h199_sector_laggard_gap_absorb__30`, not a live-branch replacement. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
 
 ### Start next session here
 
@@ -51,6 +51,10 @@ Use `notes/session_71_log.md` for the latest full session detail.
      - `H215`: failed follow-through was the closest new-family near-miss but still failed the locked gate
      - `H216`: time-under-water failed badly on confirmation
      - `H217`: skipped because no genuinely new exit-family winner displaced H211
+   - continuation / hold-vs-exit branch:
+     - `H218`: continuation model failed at the first predictive gate
+     - `H219`: skipped because H218 produced no promoted continuation model
+     - `H220`: skipped because H219 produced no promoted continuation-band winner
 6. Session 65 decision tree outcome:
    - `H192A`: **PASS**
      - the complex `blocked5<=q80 + sector_cap_3` winner is reproducible
@@ -251,7 +255,28 @@ Use `notes/session_71_log.md` for the latest full session detail.
    - branch effect:
      - the current exit ladder is more clearly closed
      - do not reopen H214-H217 on the same locked window
-13. Run the next branch in this exact order:
+13. Session 72 continuation / hold-vs-exit hazard branch:
+   - objective:
+     - change the exit target itself instead of inventing another explicit sell heuristic
+   - target:
+     - forward `5`-day hold-vs-benchmark advantage for legally sellable held positions
+   - `H218`: **FAIL**
+     - best model:
+       - `continuation_core`
+       - validation AUC `0.5060`
+       - validation top-quintile hold advantage `-0.0058`
+       - confirmation AUC `0.5106`
+       - confirmation top-quintile hold advantage `-0.0081`
+     - branch effect:
+       - no continuation model is worth converting into an exit rule
+   - `H219`: **SKIP**
+     - skipped by rule because H218 produced no promoted continuation model
+   - `H220`: **SKIP**
+     - skipped by rule because H219 produced no promoted continuation-band winner
+   - branch effect:
+     - close H218-H220
+     - the next honest exit branch now requires a genuinely new data family
+14. Run the next branch in this exact order:
    - live track:
      - keep the live scoreboard running on the rollback sticky branch
      - if sticky stays ahead of sticky always-on for at least `2` additional completed rebalance cycles:
@@ -278,22 +303,29 @@ Use `notes/session_71_log.md` for the latest full session detail.
        - sticky compatibility failed
        - H214-H217 new-family follow-through complete
        - no new family displaced H211
-     - if continuing offline discovery, the next honest branch must require a genuinely new data family or a new high-level hypothesis family
+       - H218-H220 continuation / hold-vs-exit branch complete
+       - no predictive continuation model emerged
+     - if continuing offline discovery, the next honest exit branch must require a genuinely new data family:
+       - corporate event surface
+       - intraday / auction structure
+       - order-book / queue data if obtainable
      - do **not** reopen:
        - H199 pairwise recombinations
        - H204 atom recombinations
        - H206, because H205 produced no promoted winner
        - H207-H213 threshold retuning on the same locked window
        - H214-H217 retuning on the same locked window
+       - H218-H220 retuning on the same locked window
    - anti-leakage rule:
      - do not keep tuning the closed `H152` additive family against `2025`
      - do not keep retuning the exact single-atom `H199` family against `2025` after `H200/H201/H202` resolved it
      - do not keep retuning the closed H203/H205 pairwise branch or H204 fresh-family branch against `2025`
      - do not keep retuning the closed exit-alpha branch H207-H213 against `2025`
      - do not keep retuning the closed new-family exit branch H214-H217 against `2025`
+     - do not keep retuning the closed continuation exit branch H218-H220 against `2025`
      - rank them on dev / validation
      - use `2025` once per promoted candidate only
-14. Keep the architecture split clear:
+15. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
    - exit alpha = decide when to stop holding a bought name after entry
@@ -304,7 +336,7 @@ Use `notes/session_71_log.md` for the latest full session detail.
      - fixed path-dependent selector-efficacy rule
      - plus a small retention bonus
    - blocked-buy veto and sector cap stay as archived historical improvements, not the active live branch
-15. Only after the sticky live branch has clearly failed forward should the branch reopen these secondary ideas:
+16. Only after the sticky live branch has clearly failed forward should the branch reopen these secondary ideas:
    - `H194`: blocked-buy + sector-cap recalibration (implemented, not run after rollback)
    - `H195`: blocked-buy hysteresis (implemented, not run after rollback)
    - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened
@@ -1300,6 +1332,7 @@ Use `notes/session_71_log.md` for the latest full session detail.
 | 69 | 2026-03-29 | H203-H205/H204: pairwise selector extension fails the next sequential gate and fresh H204 families show no selector relevance; selector-discovery ladder is exhausted | H93 + C4-C14 |
 | 70 | 2026-03-29 | H207-H213 exit-alpha ladder: rank-decay and strength-exhaustion exits win offline, but the promoted exit winner fails frozen sticky compatibility; live branch remains unchanged | H93 + C4-C14 |
 | 71 | 2026-03-29 | H214-H217 genuinely new exit-family follow-through: thesis inconsistency, failed follow-through, and time-under-water do not beat the H211 winner; new-family sticky compatibility is skipped | H93 + C4-C14 |
+| 72 | 2026-03-29 | H218-H220 continuation / hold-vs-exit hazard branch: no dev-trained continuation model clears the predictive gate, so exit bands and sticky compatibility are skipped | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 

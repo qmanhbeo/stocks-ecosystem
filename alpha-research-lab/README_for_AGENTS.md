@@ -163,6 +163,10 @@ Operationally important summary:
   - `H215`: failed follow-through was a near-miss but did not clear the locked gate
   - `H216`: time-under-water failed badly on confirmation
   - `H217`: skipped because no new family displaced H211
+- Session 72 resolved the continuation / hold-vs-exit hazard branch:
+  - `H218`: no dev-trained continuation model cleared the predictive gate
+  - `H219`: skipped because H218 produced no promoted continuation model
+  - `H220`: skipped because H219 produced no promoted continuation-band winner
 - the active next branch is now dual-track:
   - live track:
     - keep the live forward scoreboard running on the rollback sticky branch
@@ -180,6 +184,8 @@ Operationally important summary:
       - H206, because `H205` produced no promoted winner
       - H207-H213 threshold retuning on the same locked window
       - H214-H217 threshold retuning on the same locked window
+      - H218-H220 threshold retuning on the same locked window
+    - the next honest exit branch must require a genuinely new data family
     - the next honest selector-side branch must require a genuinely new data family or a new high-level hypothesis family
 - the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
@@ -287,6 +293,9 @@ Read these first when you want the minimal result.
 - Portfolio exit failed followthrough: `artifacts/run_summaries/latest_portfolio_exit_failed_followthrough.json`
 - Portfolio exit time under water: `artifacts/run_summaries/latest_portfolio_exit_time_under_water.json`
 - Portfolio exit new-family activation compatibility: `artifacts/run_summaries/latest_portfolio_exit_new_family_activation_compatibility.json`
+- Portfolio exit continuation alpha model: `artifacts/run_summaries/latest_portfolio_exit_continuation_alpha_model.json`
+- Portfolio exit continuation bands: `artifacts/run_summaries/latest_portfolio_exit_continuation_bands.json`
+- Portfolio exit continuation activation compatibility: `artifacts/run_summaries/latest_portfolio_exit_continuation_activation_compatibility.json`
 
 Execution/tradability producer:
 
@@ -358,6 +367,9 @@ Mode-specific durable outputs:
 - `analysis/h215_failed_followthrough_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_failed_followthrough.json` plus exit-rule results under `artifacts/portfolio_baselines/`
 - `analysis/h216_time_under_water_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_time_under_water.json` plus exit-rule results under `artifacts/portfolio_baselines/`
 - `analysis/h217_new_exit_activation_compatibility.py`: `artifacts/run_summaries/latest_portfolio_exit_new_family_activation_compatibility.json` plus compatibility outputs under `artifacts/portfolio_baselines/`
+- `analysis/h218_continuation_alpha_model.py`: `artifacts/run_summaries/latest_portfolio_exit_continuation_alpha_model.json` plus continuation-model outputs under `artifacts/portfolio_baselines/`
+- `analysis/h219_continuation_exit_bands.py`: `artifacts/run_summaries/latest_portfolio_exit_continuation_bands.json` plus continuation-band outputs under `artifacts/portfolio_baselines/`
+- `analysis/h220_continuation_exit_activation_compatibility.py`: `artifacts/run_summaries/latest_portfolio_exit_continuation_activation_compatibility.json` plus compatibility outputs under `artifacts/portfolio_baselines/`
 - `analysis/h151_tradability_conditioned_composite_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_tradability_composite_bakeoff.json` plus candidate results under `artifacts/portfolio_baselines/`
 - `analysis/h152_tradability_conditioned_signal_search.py`: `artifacts/run_summaries/latest_tradability_conditioned_signal_search.json` plus candidate results under `artifacts/portfolio_baselines/`
 - `analysis/h196_additive_atom_bakeoff.py`: `artifacts/run_summaries/latest_portfolio_additive_atom_bakeoff.json` plus additive-selector results under `artifacts/portfolio_baselines/`

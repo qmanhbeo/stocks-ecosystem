@@ -1,0 +1,76 @@
+{
+  "artifacts": {
+    "baseline_daily": "artifacts/portfolio_baselines/20260329_194410_h218_continuation_alpha_model_baseline_daily.parquet",
+    "results": "artifacts/portfolio_baselines/20260329_194410_h218_continuation_alpha_model_results.parquet",
+    "scored_dataset": "artifacts/portfolio_baselines/20260329_194410_h218_continuation_alpha_model_scored_dataset.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_continuation_alpha_model",
+  "name": "h218_continuation_alpha_model",
+  "summary": {
+    "horizon_days": 5,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "winner": {
+      "coef__blocked_sell_streak": 0.0,
+      "coef__entry_rank": NaN,
+      "coef__holding_age_before": 0.02751220438966124,
+      "coef__peak_return_since_entry": -1.1088850835555144,
+      "coef__return_since_entry": 0.3432718894498029,
+      "coef__score_change_since_entry": 1.0144878135563027,
+      "coef__score_rank": NaN,
+      "coef__thesis_score_change_since_entry": NaN,
+      "coef__underwater_days_since_entry": -0.010242766545580146,
+      "confirmation_auc": 0.5106178367044505,
+      "confirmation_count": 737,
+      "confirmation_mean_hold_advantage": -0.007088004409355148,
+      "confirmation_positive_rate": 0.37177747625508817,
+      "confirmation_top_quintile_hold_advantage": -0.008123666806252075,
+      "dev_auc": 0.5336074733313271,
+      "dev_count": 6168,
+      "dev_mean_hold_advantage": 0.005589620394877662,
+      "dev_positive_rate": 0.48605706874189364,
+      "dev_top_quintile_hold_advantage": 0.012226020422752181,
+      "feature_columns": [
+        "holding_age_before",
+        "score_change_since_entry",
+        "return_since_entry",
+        "peak_return_since_entry",
+        "underwater_days_since_entry",
+        "blocked_sell_streak"
+      ],
+      "intercept": 0.0020217126568552457,
+      "model_name": "continuation_core",
+      "promoted": false,
+      "validation_auc": 0.5060287879362213,
+      "validation_count": 1533,
+      "validation_mean_hold_advantage": 3.239563754030353e-05,
+      "validation_positive_rate": 0.44487932159165033,
+      "validation_top_quintile_hold_advantage": -0.005779543798481696
+    }
+  },
+  "ts": "20260329_194410"
+}

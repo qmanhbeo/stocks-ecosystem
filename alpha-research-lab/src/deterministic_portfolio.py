@@ -556,6 +556,7 @@ def _compute_exit_signal_mask(
     top_k: int,
     blocked_sell_streaks: np.ndarray,
     entry_scores: np.ndarray,
+    entry_rank_positions: np.ndarray,
     return_since_entry: np.ndarray,
     adv20_current: np.ndarray,
     entry_adv20_values: np.ndarray,
@@ -580,6 +581,7 @@ def _compute_exit_signal_mask(
     held = np.asarray(held_mask, dtype=bool)
     blocked_streak = np.asarray(blocked_sell_streaks, dtype=np.int64)
     entry_score_arr = np.asarray(entry_scores, dtype=np.float64)
+    entry_rank_arr = np.asarray(entry_rank_positions, dtype=np.float64)
     entry_return_arr = np.asarray(return_since_entry, dtype=np.float64)
     peak_return_arr = np.asarray(peak_return_since_entry, dtype=np.float64)
     underwater_days_arr = np.asarray(underwater_days_since_entry, dtype=np.int64)
@@ -673,6 +675,30 @@ def _compute_exit_signal_mask(
             & (peak_return_arr <= peak_return_threshold)
             & (entry_return_arr <= 0.0)
         )
+    elif family == "continuation_hazard":
+        continue_prob_threshold = float(params.get("continue_prob_threshold", 0.50))
+        thesis_change = np.full_like(score_arr, 0.0, dtype=np.float64)
+        if current_thesis_scores is not None and current_thesis_scores.size > 0:
+            valid_codes = np.asarray(entry_thesis_family_codes, dtype=np.int64)
+            valid_idx = legal_to_exit & (valid_codes >= 0) & (valid_codes < current_thesis_scores.shape[0])
+            held_positions = np.flatnonzero(valid_idx)
+            if held_positions.size > 0:
+                thesis_change[held_positions] = (
+                    current_thesis_scores[valid_codes[held_positions], held_positions]
+                    - np.asarray(entry_thesis_scores, dtype=np.float64)[held_positions]
+                )
+        linear = float(params.get("intercept", 0.0))
+        linear += float(params.get("coef_holding_age_before", 0.0)) * np.asarray(holding_ages, dtype=np.float64)
+        linear += float(params.get("coef_score_change_since_entry", 0.0)) * np.nan_to_num(score_arr - entry_score_arr, nan=0.0)
+        linear += float(params.get("coef_return_since_entry", 0.0)) * np.nan_to_num(entry_return_arr, nan=0.0)
+        linear += float(params.get("coef_peak_return_since_entry", 0.0)) * np.nan_to_num(peak_return_arr, nan=0.0)
+        linear += float(params.get("coef_underwater_days_since_entry", 0.0)) * np.asarray(underwater_days_arr, dtype=np.float64)
+        linear += float(params.get("coef_blocked_sell_streak", 0.0)) * np.asarray(blocked_streak, dtype=np.float64)
+        linear += float(params.get("coef_thesis_score_change_since_entry", 0.0)) * np.nan_to_num(thesis_change, nan=0.0)
+        linear += float(params.get("coef_score_rank", 0.0)) * np.nan_to_num(rank_arr, nan=0.0)
+        linear += float(params.get("coef_entry_rank", 0.0)) * np.nan_to_num(entry_rank_arr, nan=0.0)
+        continue_prob = 1.0 / (1.0 + np.exp(-np.clip(linear, -50.0, 50.0)))
+        exit_mask = legal_to_exit & (continue_prob < continue_prob_threshold)
     else:
         raise ValueError(f"Unknown exit_rule_name {exit_rule_name!r}")
 
@@ -1173,6 +1199,7 @@ def simulate_strategy(
                         top_k=top_k,
                         blocked_sell_streaks=blocked_sell_streaks,
                         entry_scores=entry_scores,
+                        entry_rank_positions=entry_rank_positions,
                         return_since_entry=return_since_entry,
                         adv20_current=adv20_for_execution,
                         entry_adv20_values=entry_adv20_values,
