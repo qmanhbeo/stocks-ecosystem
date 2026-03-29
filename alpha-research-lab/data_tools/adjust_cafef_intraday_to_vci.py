@@ -29,6 +29,8 @@ Examples:
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 from pathlib import Path
 
 import numpy as np
@@ -42,6 +44,7 @@ FACTOR_DIR.mkdir(parents=True, exist_ok=True)
 
 DEFAULT_RAW_LABEL = "1H_CAFEF"
 DEFAULT_ADJUSTED_LABEL = "1H_CAFEF_ADJ"
+METADATA_SUFFIX = ".meta.json"
 DAILY_INTERVAL = "1D"
 EXCLUDE = {"VNINDEX", "VN30"}
 BAR_COLUMNS = ["time", "open", "high", "low", "close", "volume"]
@@ -92,6 +95,11 @@ def build_adjusted_path(ticker: str, adjusted_label: str) -> Path:
 def build_factor_path(ticker: str, raw_label: str, adjusted_label: str, factor_dir: Path) -> Path:
     factor_dir.mkdir(parents=True, exist_ok=True)
     return factor_dir / f"gia_lich_su_{ticker}_{raw_label}_to_{adjusted_label}.parquet"
+
+
+def build_metadata_path(ticker: str, raw_label: str, adjusted_label: str, factor_dir: Path) -> Path:
+    factor_dir.mkdir(parents=True, exist_ok=True)
+    return factor_dir / f"gia_lich_su_{ticker}_{raw_label}_to_{adjusted_label}{METADATA_SUFFIX}"
 
 
 def resolve_tickers(raw_tickers: str | None, raw_label: str) -> list[str]:
@@ -145,6 +153,123 @@ def load_daily(ticker: str) -> pd.DataFrame:
             "volume": "vci_volume",
         }
     )
+
+
+def build_dates_signature(session_dates: pd.Series) -> str:
+    normalized = (
+        pd.to_datetime(session_dates, errors="coerce")
+        .dropna()
+        .dt.normalize()
+        .drop_duplicates()
+        .sort_values()
+    )
+    payload = ",".join(ts.strftime("%Y-%m-%d") for ts in normalized)
+    return hashlib.sha1(payload.encode("ascii")).hexdigest()
+
+
+def build_frame_digest(frame: pd.DataFrame, columns: list[str]) -> str:
+    normalized = frame[columns].copy()
+    for column in columns:
+        if pd.api.types.is_datetime64_any_dtype(normalized[column]):
+            normalized[column] = (
+                pd.to_datetime(normalized[column], errors="coerce")
+                .dt.strftime("%Y-%m-%dT%H:%M:%S")
+                .fillna("NaT")
+            )
+    row_hashes = pd.util.hash_pandas_object(normalized, index=False).to_numpy(dtype="uint64")
+    digest = hashlib.sha1()
+    digest.update(row_hashes.tobytes())
+    return digest.hexdigest()
+
+
+def format_optional_timestamp(value: pd.Timestamp | None) -> str | None:
+    if value is None or pd.isna(value):
+        return None
+    return pd.Timestamp(value).isoformat()
+
+
+def build_source_state(intraday: pd.DataFrame, daily: pd.DataFrame) -> dict[str, object]:
+    overlap_dates = sorted(
+        set(pd.to_datetime(intraday["session_date"], errors="coerce").dropna().tolist())
+        & set(pd.to_datetime(daily["session_date"], errors="coerce").dropna().tolist())
+    )
+    overlap_index = pd.Index(overlap_dates)
+    intraday_overlap = (
+        intraday.loc[intraday["session_date"].isin(overlap_index), BAR_COLUMNS + ["session_date"]]
+        .sort_values("time")
+        .reset_index(drop=True)
+    )
+    daily_overlap = (
+        daily.loc[daily["session_date"].isin(overlap_index)].copy()
+        .sort_values("session_date")
+        .reset_index(drop=True)
+    )
+    return {
+        "overlap_days": len(overlap_dates),
+        "overlap_signature": build_dates_signature(pd.Series(overlap_dates, dtype="datetime64[ns]")),
+        "raw_overlap_rows": int(len(intraday_overlap)),
+        "raw_overlap_last_time": format_optional_timestamp(
+            intraday_overlap["time"].max() if not intraday_overlap.empty else None
+        ),
+        "raw_overlap_digest": build_frame_digest(intraday_overlap, BAR_COLUMNS + ["session_date"]),
+        "daily_overlap_rows": int(len(daily_overlap)),
+        "daily_overlap_digest": build_frame_digest(
+            daily_overlap,
+            [
+                "session_date",
+                "vci_open_adj",
+                "vci_high_adj",
+                "vci_low_adj",
+                "vci_close_adj",
+                "vci_volume",
+            ],
+        ),
+    }
+
+
+def load_adjustment_metadata(metadata_path: Path) -> dict[str, object] | None:
+    if not metadata_path.exists():
+        return None
+    try:
+        payload = json.loads(metadata_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def write_adjustment_metadata(metadata_path: Path, metadata: dict[str, object]) -> None:
+    metadata_path.write_text(
+        json.dumps(metadata, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def build_adjustment_metadata(
+    ticker: str,
+    raw_label: str,
+    adjusted_label: str,
+    source_state: dict[str, object],
+    adjusted: pd.DataFrame,
+    factors: pd.DataFrame,
+) -> dict[str, object]:
+    return {
+        "ticker": ticker,
+        "raw_label": raw_label,
+        "adjusted_label": adjusted_label,
+        "source_state": source_state,
+        "adjusted_rows": int(len(adjusted)),
+        "factor_rows": int(len(factors)),
+        "adjusted_last_time": format_optional_timestamp(adjusted["time"].max() if not adjusted.empty else None),
+        "factor_last_session_date": format_optional_timestamp(
+            factors["session_date"].max() if not factors.empty else None
+        ),
+        "written_at_utc": pd.Timestamp.utcnow().isoformat(),
+    }
+
+
+def source_state_matches_metadata(metadata: dict[str, object], source_state: dict[str, object]) -> bool:
+    recorded = metadata.get("source_state")
+    return isinstance(recorded, dict) and recorded == source_state
 
 
 def build_daily_factor_frame(intraday: pd.DataFrame, daily: pd.DataFrame) -> pd.DataFrame:
@@ -248,17 +373,33 @@ def adjust_one_ticker(
 ) -> tuple[bool, str]:
     adjusted_path = build_adjusted_path(ticker, adjusted_label)
     factor_path = build_factor_path(ticker, raw_label, adjusted_label, factor_dir)
-
-    if adjusted_path.exists() and factor_path.exists() and not overwrite:
-        return True, f"{ticker}: adjusted output exists, skipping"
+    metadata_path = build_metadata_path(ticker, raw_label, adjusted_label, factor_dir)
 
     intraday = load_intraday(ticker, raw_label)
     daily = load_daily(ticker)
+    source_state = build_source_state(intraday, daily)
+
+    if adjusted_path.exists() and factor_path.exists() and not overwrite:
+        metadata = load_adjustment_metadata(metadata_path)
+        if metadata is not None and source_state_matches_metadata(metadata, source_state):
+            return True, f"{ticker}: adjusted output is up to date, skipping"
+
     factors = build_daily_factor_frame(intraday, daily)
     adjusted = apply_adjustment(intraday, factors)
 
     adjusted.to_parquet(adjusted_path, index=False)
     factors.to_parquet(factor_path, index=False)
+    write_adjustment_metadata(
+        metadata_path,
+        build_adjustment_metadata(
+            ticker,
+            raw_label,
+            adjusted_label,
+            source_state,
+            adjusted,
+            factors,
+        ),
+    )
     return True, summarize_adjustment(ticker, factors, adjusted, intraday)
 
 

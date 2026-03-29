@@ -1,0 +1,15 @@
+{
+  "bar_dates": 214,
+  "bars": 788,
+  "first_bar_time": "2025-01-02T11:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T14:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "0ee8834718f96d6e8177070f3487528e13eca014",
+  "requested_trading_days": 248,
+  "ticker": "ACG",
+  "written_at_utc": "2026-03-29T23:27:17Z",
+  "year": 2025
+}

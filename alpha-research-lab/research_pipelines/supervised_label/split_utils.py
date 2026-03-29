@@ -54,9 +54,63 @@ def save_split_files(split_map: Dict[str, List[str]], config: Optional[Supervise
     return file_map
 
 
+def _validate_split_files_exist(file_map: Dict[str, Path]) -> None:
+    exists_map = {split_name: path.exists() for split_name, path in file_map.items()}
+    if any(exists_map.values()) and not all(exists_map.values()):
+        present = sorted(split_name for split_name, exists in exists_map.items() if exists)
+        missing = sorted(split_name for split_name, exists in exists_map.items() if not exists)
+        raise ValueError(
+            "Partial split files detected. "
+            f"Present splits: {present}. Missing splits: {missing}. "
+            "Refresh the full split set instead of reusing a partial split state."
+        )
+
+
+def _validate_split_map(
+    split_map: Dict[str, List[str]],
+    *,
+    available_tickers: set[str],
+) -> None:
+    assigned_split_by_ticker: Dict[str, str] = {}
+    duplicate_assignments: Dict[str, set[str]] = {}
+    unknown_tickers: Dict[str, List[str]] = {}
+
+    for split_name, tickers in split_map.items():
+        for ticker in tickers:
+            if ticker not in available_tickers:
+                unknown_tickers.setdefault(split_name, []).append(ticker)
+            previous_split = assigned_split_by_ticker.get(ticker)
+            if previous_split is None:
+                assigned_split_by_ticker[ticker] = split_name
+                continue
+            if previous_split != split_name:
+                duplicate_assignments.setdefault(ticker, {previous_split}).add(split_name)
+
+    if unknown_tickers:
+        summary = ", ".join(
+            f"{split_name}={sorted(dict.fromkeys(tickers))[:5]}"
+            for split_name, tickers in sorted(unknown_tickers.items())
+        )
+        raise ValueError(
+            "Split files reference tickers that are not present in the raw data universe: "
+            f"{summary}"
+        )
+
+    if duplicate_assignments:
+        summary = ", ".join(
+            f"{ticker}:{sorted(splits)}"
+            for ticker, splits in sorted(duplicate_assignments.items())
+        )
+        raise ValueError(
+            "Split files assign the same ticker to multiple splits: "
+            f"{summary}"
+        )
+
+
 def load_split_files(config: Optional[SupervisedLabelConfig] = None) -> Dict[str, List[str]]:
     config = config or get_default_config()
     file_map = config.split_file_map()
+    _validate_split_files_exist(file_map)
     split_map: Dict[str, List[str]] = {}
     for split_name, path in file_map.items():
         if not path.exists():
@@ -64,6 +118,10 @@ def load_split_files(config: Optional[SupervisedLabelConfig] = None) -> Dict[str
             continue
         lines = [line.strip().upper() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
         split_map[split_name] = sorted(dict.fromkeys(lines))
+
+    if any(split_map.values()):
+        available_tickers = set(get_ticker_to_path_map(config=config, timeframe=config.timeframe).keys())
+        _validate_split_map(split_map, available_tickers=available_tickers)
     return split_map
 
 

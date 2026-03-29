@@ -93,3 +93,28 @@ def test_trading_env_reads_custom_lab_signal_exports(tmp_path):
 
     np.testing.assert_allclose(env._signal, expected)
     env.close()
+
+
+def test_export_lab_signal_matrix_removes_stale_subset_files(tmp_path):
+    matrix_path = tmp_path / "xs_rl_signal_matrix.parquet"
+    output_dir = tmp_path / "rl_lab_matrix"
+    matrix = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2024-01-01", "2024-01-01"]),
+            "ticker": ["ACB", "FPT"],
+            "actual": [1, 0],
+            "s1_proba": [0.8, 0.4],
+        }
+    )
+    matrix.to_parquet(matrix_path, index=False)
+
+    export_lab_signal_matrix(matrix_path=matrix_path, output_dir=output_dir)
+    manifest = export_lab_signal_matrix(
+        matrix_path=matrix_path,
+        output_dir=output_dir,
+        tickers=["ACB"],
+    )
+
+    assert (output_dir / "ACB_signal_predictions.parquet").exists()
+    assert not (output_dir / "FPT_signal_predictions.parquet").exists()
+    assert manifest["stale_files_removed"] == ["FPT_signal_predictions.parquet"]

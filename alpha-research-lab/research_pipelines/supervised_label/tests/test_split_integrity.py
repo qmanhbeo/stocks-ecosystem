@@ -3,10 +3,11 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from research_pipelines.supervised_label.config import SupervisedLabelConfig
 from research_pipelines.supervised_label.core.chunk_sampler import ChunkSampler
-from research_pipelines.supervised_label.split_utils import save_split_files
+from research_pipelines.supervised_label.split_utils import create_or_load_splits, save_split_files
 
 
 def _build_config(root: Path) -> SupervisedLabelConfig:
@@ -64,3 +65,35 @@ def test_labeling_sampler_never_draws_from_val_or_test_tickers():
         sampled_tickers = {sampler.sample_chunk().ticker for _ in range(10)}
 
         assert sampled_tickers == {"AAA"}
+
+
+def test_create_or_load_splits_rejects_partial_existing_files():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir)
+        config = _build_config(root)
+        for ticker in ("AAA", "BBB", "CCC"):
+            _write_market_parquet(config, ticker)
+
+        config.split_file_map()["train"].write_text("AAA\n", encoding="utf-8")
+
+        with pytest.raises(ValueError, match="Partial split files detected"):
+            create_or_load_splits(config=config, overwrite=False)
+
+
+def test_create_or_load_splits_rejects_duplicate_or_unknown_tickers():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir)
+        config = _build_config(root)
+        for ticker in ("AAA", "BBB", "CCC"):
+            _write_market_parquet(config, ticker)
+
+        file_map = config.split_file_map()
+        file_map["train"].write_text("AAA\nBBB\n", encoding="utf-8")
+        file_map["val"].write_text("BBB\n", encoding="utf-8")
+        file_map["test"].write_text("MISSING\n", encoding="utf-8")
+
+        with pytest.raises(
+            ValueError,
+            match="Split files reference tickers that are not present|Split files assign the same ticker to multiple splits",
+        ):
+            create_or_load_splits(config=config, overwrite=False)

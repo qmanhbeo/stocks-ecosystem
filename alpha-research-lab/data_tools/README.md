@@ -157,6 +157,8 @@ Normalize raw CafeF intraday prices onto the local VCI-adjusted daily price back
   - the local VCI daily files appear price-adjusted but not volume-adjusted
   - scaling volume by the price factor would be a different economic assumption and is not supported by the observed local files
 - **Audit fields:** the factor parquet stores raw CafeF daily OHLCV, adjusted-from-CafeF daily OHLC, VCI daily OHLCV, `price_factor`, daily OHLC gaps, and raw-vs-VCI volume ratio
+- **Refresh behavior:** reruns now skip only when the current raw CafeF and VCI-overlap state matches the last adjustment metadata; if raw intraday bars or daily anchors changed, the adjusted output is rebuilt automatically
+- **Migration note:** adjusted outputs written before the metadata upgrade will refresh once on the next run so the new freshness metadata can be seeded
 
 ### CafeF Intraday Normalization Chain
 Use the open intraday path in two explicit steps:

@@ -31,6 +31,10 @@ def _resolve_signal_columns(columns: Iterable[str]) -> list[str]:
     return resolved
 
 
+def _signal_prediction_filename(ticker: str) -> str:
+    return f"{str(ticker).upper()}_signal_predictions.parquet"
+
+
 def export_lab_signal_matrix(
     matrix_path: str | Path,
     output_dir: str | Path,
@@ -103,19 +107,34 @@ def export_lab_signal_matrix(
         raise ValueError(f"Duplicate ticker/date rows found in lab signal matrix export: {sample}")
 
     output_dir.mkdir(parents=True, exist_ok=True)
+    existing_prediction_files = {
+        path.name: path
+        for path in output_dir.glob("*_signal_predictions.parquet")
+        if path.is_file()
+    }
     file_count = 0
     rows_written = 0
     tickers_written: list[str] = []
+    written_filenames: set[str] = set()
     for ticker, ticker_df in export_frame.groupby("ticker", sort=True):
         file_count += 1
         rows_written += int(len(ticker_df))
         tickers_written.append(str(ticker))
+        filename = _signal_prediction_filename(str(ticker))
+        written_filenames.add(filename)
         out = (
             ticker_df[["date", *resolved_signal_columns]]
             .sort_values("date")
             .reset_index(drop=True)
         )
-        out.to_parquet(output_dir / f"{ticker}_signal_predictions.parquet", index=False)
+        out.to_parquet(output_dir / filename, index=False)
+
+    stale_files_removed: list[str] = []
+    for filename, path in sorted(existing_prediction_files.items()):
+        if filename in written_filenames:
+            continue
+        path.unlink()
+        stale_files_removed.append(filename)
 
     manifest = {
         "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -129,6 +148,7 @@ def export_lab_signal_matrix(
         "files_written": file_count,
         "date_min": export_frame["date"].min(),
         "date_max": export_frame["date"].max(),
+        "stale_files_removed": stale_files_removed,
     }
     with (output_dir / "manifest.json").open("w", encoding="utf-8") as handle:
         json.dump(manifest, handle, indent=2, sort_keys=True)
