@@ -1,17 +1,21 @@
 # Lab Signal Matrix Pilot
 
-This is the first controlled portfolio-choice RL experiment for the research lab's consolidated signal matrix.
+This is the benchmark-first portfolio-choice RL experiment for the research lab's consolidated signal matrix.
 
 ## Goal
 
-Test whether the lab signal stack improves portfolio-choice RL behavior beyond a simpler `S1`-only setup.
+Test whether the lab signal stack improves portfolio-choice RL behavior beyond simpler deterministic
+and RL baselines.
 
-Use the same universe, seed, reward setup, and train window across the first two RL runs:
+Run order:
 
-1. `S1` only
-2. full lab matrix (`S1 + C4-C14`)
+1. build a same-universe deterministic top-`K` comparator
+2. run `S1`-only RL
+3. run full-matrix RL (`S1 + C4-C14`)
+4. run conditioned sub-core RL (`S1 + C7 + C8 + C10 + C12 + C13`)
 
-Keep the equal-weight universe benchmark from evaluation as the non-RL reference point until a dedicated deterministic top-`K` rank baseline is added.
+Do not interpret RL against the old equal-weight universe benchmark alone. The active non-RL
+reference point is now the same-universe deterministic top-`K` baseline.
 
 ## Step 1: Export the lab matrix into RL's per-ticker contract
 
@@ -25,7 +29,19 @@ Export destination:
 
 - `/home/manh/stocks/data/features/signals/predictions/rl_lab_matrix/`
 
-## Step 2: Smoke-test portfolio mode with adapted lab signals
+## Step 2: Build the deterministic comparator first
+
+Before interpreting any RL run, build a deterministic top-`K` baseline on the exact universe used by
+`PortfolioChoiceEnv`.
+
+Minimum comparator set:
+- `S1` only
+- full lab matrix composite
+
+This comparator is a required gate for the RL branch. If it does not exist yet as a one-command
+helper, add it before calling any RL result meaningful.
+
+## Step 3: Smoke-test portfolio mode with adapted lab signals
 
 ```bash
 cd /home/manh/stocks/RL-trading-agent
@@ -44,7 +60,7 @@ conda run -n stocks python -m vn_stock_rl.training.cli \
   --name smoke_portfolio_labmatrix
 ```
 
-## Step 3: Run the controlled pilot ladder
+## Step 4: Run the controlled pilot ladder
 
 Shared settings:
 
@@ -94,19 +110,40 @@ conda run -n stocks python -m vn_stock_rl.training.cli \
   --name pilot_portfolio_labmatrix_seed1208
 ```
 
-## Step 4: Evaluate both runs
+Conditioned sub-core:
+
+```bash
+conda run -n stocks python -m vn_stock_rl.training.cli \
+  --portfolio-choice \
+  --policy mlp \
+  --start-date 2016-01-01 \
+  --timesteps 100000 \
+  --eval-freq 10000 \
+  --n-eval-episodes 1 \
+  --n-envs 4 \
+  --seed 1208 \
+  --portfolio-universe-size 20 \
+  --portfolio-top-k 3 \
+  --signal-columns s1_proba c7_ceiling_count_5d c8_vol_zscore_5d c10_illiq_level_rank c12_gap_absorb_3 c13_compress_blowoff_2 \
+  --name pilot_portfolio_subcore_seed1208
+```
+
+## Step 5: Evaluate all runs
 
 ```bash
 conda run -n stocks python -m vn_stock_rl.evaluation.cli --model artifacts/trained_models/pilot_portfolio_s1_seed1208/model_best.zip --portfolio-choice --mode test
 conda run -n stocks python -m vn_stock_rl.evaluation.cli --model artifacts/trained_models/pilot_portfolio_labmatrix_seed1208/model_best.zip --portfolio-choice --mode test
+conda run -n stocks python -m vn_stock_rl.evaluation.cli --model artifacts/trained_models/pilot_portfolio_subcore_seed1208/model_best.zip --portfolio-choice --mode test
 ```
 
 ## What to compare
 
+- same-universe deterministic top-`K` baseline
 - total return
 - Sharpe
 - max drawdown
 - rebalance count / average cash weight
 - sensitivity to rerunning with new seeds
 
-Do not interpret a single seed as conclusive. This pilot is a go/no-go integration test for portfolio-choice RL on the lab matrix.
+Do not interpret a single seed as conclusive. This pilot is only the first gate. Promote RL only if
+it beats the matching deterministic comparator and survives reruns on additional seeds.

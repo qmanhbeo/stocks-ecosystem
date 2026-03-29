@@ -62,6 +62,9 @@ Operationally important summary:
 - `S1` remains the strongest standalone signal
 - `C7`, `C12`, `C13`, `C10`, and `C8` show the strongest conditional uplift inside liquidity-opening states
 - `C1` remains sparse and is not part of the promoted dense RL matrix
+- ADV / capacity is parked for the current-account branch, not solved for scale
+- the active next branch is benchmark-first long-only portfolio-choice RL
+- `H151/H152` are parked research hypotheses; the live queue is `H153/H154/H155`
 
 Do not maintain a partial summary table here unless you update it together with `notes/signal_library.md`.
 

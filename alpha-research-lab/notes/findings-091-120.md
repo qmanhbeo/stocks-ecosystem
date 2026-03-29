@@ -698,3 +698,33 @@ look fresh. Benchmark continuity is a first-class dependency for live scoring.
 - check `VNINDEX` history first
 - use the local media-output backup only as a temporary recovery path
 - restore the canonical root benchmark file before treating the live pipeline as healthy
+
+---
+## F113: ADV / Capacity Is Now a Parked Scale-Risk Branch, Not the Active Blocker for the Current-Account Research Track (2026-03-29, Session 53)
+
+Sessions 48-51 established two things simultaneously:
+- the uncapped long-only branch is economically strong
+- the same branch does not survive explicit ADV floors and participation caps
+
+Session 53 did **not** overturn that evidence. Instead, it changed how the repo should use it.
+
+New working interpretation:
+- ADV / capacity remains **unsolved**
+- ADV / capacity remains important for scale and deployability research
+- ADV / capacity is **parked** for the current-account branch because the immediate account size does
+  not justify treating those caps as the dominant active blocker
+
+This creates two explicit tracks:
+- **current-account branch:** long-only, no ADV cap as the active research constraint, keep live
+  execution reality and the deterministic paper trade running
+- **scale branch:** ADV / capacity research remains documented, but is not the next active queue
+
+**Key finding:** the repo should stop treating capacity as the next mandatory obstacle for every
+session. For the current account size, the more informative next question is whether the existing
+signal library can be exploited better by a long-only RL policy than by the current deterministic
+construction.
+
+**Implication:** the active next branch is now:
+- benchmark-first long-only portfolio-choice RL
+- with the deterministic `full_library` / `S1` comparators as the gate
+- while the tradability-conditioned alpha branch (`H151/H152`) stays parked rather than deleted

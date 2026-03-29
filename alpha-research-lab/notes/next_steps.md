@@ -1,13 +1,13 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_52_log.md` for the latest full session detail.
+Use `notes/session_53_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 52 wrap-up complete (ad hoc live paper-trade state recorded off the 2026-03-27 close; official live pipeline still not fully restored; docs updated; 2026-03-28)
+**Session status:** Session 53 direction update complete (ADV / capacity parked for the current-account branch, not solved; long-only portfolio-choice RL becomes the active next research branch; docs updated; 2026-03-29)
 
 ### Start next session here
 
@@ -17,11 +17,28 @@ Use `notes/session_52_log.md` for the latest full session detail.
    - `PTL`
    - `VSI`
    - cash `19.57%`
-2. If a new live recommendation is needed, restore canonical full-history continuity in root `data/stock/` first, especially `VNINDEX`.
-3. Rerun the official live `S1` scorer only after lookback sufficiency is verified.
-4. Resume research only after the live operational path is stable:
-   - `H151`: narrow tradability-conditioned composite
-   - `H152`: tradability-conditioned alpha search
+2. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
+3. If a new live recommendation is needed, restore canonical full-history continuity in root `data/stock/` first, especially `VNINDEX`.
+4. Rerun the official live `S1` scorer only after lookback sufficiency is verified.
+5. Resume research on the RL branch in this order:
+   - `H153`: same-universe deterministic benchmark for portfolio-choice RL
+   - `H154`: controlled long-only RL pilot ladder
+   - `H155`: multi-seed robustness and evaluation
+
+### Session 53 strategic decision
+
+- ADV / capacity is now **parked for the current-account branch**.
+- That means:
+  - it remains documented clearly as an unresolved scale / deployability problem
+  - it is **not** treated as the active blocker for the current account size
+  - the branch does **not** claim ADV is solved
+- Active next research branch:
+  - keep the deterministic paper-trade branch running
+  - move the main research queue to **long-only portfolio-choice RL**
+  - benchmark RL against a **same-universe deterministic top-k comparator** before interpreting results
+- Previously planned tradability-conditioned alpha branch is now parked, not deleted:
+  - `H151`: narrow tradability-conditioned composite
+  - `H152`: tradability-conditioned alpha search
 
 ### New reality check after Session 51
 
@@ -197,7 +214,8 @@ Use `notes/session_52_log.md` for the latest full session detail.
     - `+12.00%` total, but `-42.51%` relative, `87.13%` average cash, only `2/7` positive years
 - Implication:
   - even retail-sized long-only deployability still collapses once actual liquidity rules are imposed
-  - the next move is **not** synthetic hedging, shorting, or RL
+  - the next move is **not** synthetic hedging or shorting
+  - the old “not RL yet” reading is now superseded by the Session 53 current-account prioritization decision
 
 **H141 - Capacity-Aware Construction Sweep**
 - Designed to search a tiny long-only menu only inside H140-viable liquidity regions.
@@ -528,6 +546,7 @@ Use `notes/session_52_log.md` for the latest full session detail.
 | 50 | 2026-03-28 | H143-H146: liquidity-aware scoring, entry slicing, volume-confirmed gating, and variable breadth all fail the retail gate; H145 is the closest near-miss | H93 + C4-C14 |
 | 51 | 2026-03-28 | H147-H150: H145 near-miss is sparse-state driven; local refinement and soft activation fail; H150 identifies a tradability-conditioned sub-core | H93 + C4-C14 |
 | 52 | 2026-03-28 | Official live pipeline blocked by truncated benchmark history, but an honest ad hoc live full_library paper-trade state was recovered for the 2026-03-27 close | H93 + C4-C14 |
+| 53 | 2026-03-29 | ADV / capacity explicitly parked for the current-account branch; RL becomes the active next research branch with deterministic benchmark-first gating | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 
@@ -845,9 +864,10 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - `equal` weighting beats `linear` and `square`
   - `top_k=5` is best absolute performer; `top_k=8/10` are competitive but lower
 - **STRATEGIC VERDICT**
-  - do not pivot to RL yet
+  - historical verdict from Session 46: do not pivot to RL yet
   - the next honest bottleneck is validating and capacity-stressing the deterministic portfolio candidate
   - RL should be treated as a later overlay that must beat this deterministic baseline
+  - superseded operationally by Session 53, which parks capacity for the current-account branch and starts RL with deterministic benchmark-first gating
 
 ### Session 47 experiment results (2026-03-28)
 - **H137 IMPLEMENTED** — nested walk-forward portfolio-construction selection
@@ -887,25 +907,28 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
 - **STRATEGIC VERDICT**
   - long-only is not dead
   - but deployability is still unresolved
-  - do not add more ML or RL complexity until capacity is addressed honestly
+  - historical verdict from Session 48: do not add more ML or RL complexity until capacity is addressed honestly
+  - superseded operationally by Session 53 for the current-account branch only
 
-### Next queue after Session 52 (in order)
+### Next queue after Session 53 (in order)
 
-1. **H151: narrow tradability-conditioned composite**
-   - build a long-only composite centered on:
-     - `s1_proba`
-     - `c7_ceiling_count_5d`
-     - `c12_gap_absorb_3`
-     - `c13_compress_blowoff_2`
-     - `c10_illiq_level_rank`
-     - optional `c8_vol_zscore_5d`
-   - activate or reweight the composite inside the H150 liquidity-opening states only
-2. **H152: tradability-conditioned alpha search**
-   - any new alpha hypothesis should be defined conditionally on tradability / liquidity-opening
-   - do not reopen broad unconditioned signal mining
-3. **Keep live execution and RL deferred**
-   - do not run `H142` blotter until a retail-positive candidate exists
-   - RL remains deferred until a deterministic long-only retail-positive baseline exists
+1. **H153: same-universe deterministic benchmark for portfolio-choice RL**
+   - build deterministic `S1-only` and `full_library` top-k comparators on the exact universe selected by `PortfolioChoiceEnv`
+   - keep the same long-only execution contract used everywhere else
+   - do not interpret any RL result before this comparator exists
+2. **H154: controlled long-only RL pilot ladder**
+   - run the current portfolio-choice RL env on:
+     - `S1` only
+     - full matrix `S1 + C4-C14`
+     - conditioned sub-core `S1 + C7 + C8 + C10 + C12 + C13`
+   - compare every run against the matching H153 deterministic comparator, not against an equal-weight universe benchmark
+3. **H155: multi-seed robustness and evaluation**
+   - rerun any promising H154 setup on at least 3 seeds
+   - only promote RL as the active improvement branch if it is stable and benchmark-superior
+4. **Parked, not deleted**
+   - `H151`: narrow tradability-conditioned composite
+   - `H152`: tradability-conditioned alpha search
+   - revisit only if RL fails cleanly or the explicit goal returns to signal discovery
 
 ### Remaining blocked paths
 - **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)

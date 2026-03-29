@@ -66,6 +66,13 @@ This writes per-ticker files to `../data/features/signals/predictions/rl_lab_mat
 Then point training/evaluation at that directory with `--signal-prediction-dir` and pass the desired lab columns via `--signal-columns`.
 In `--portfolio-choice` mode, RL defaults to that lab-adapter directory automatically when `--signal-prediction-dir` is omitted.
 
+Current workspace direction:
+
+- long-only only
+- ADV / capacity is parked for the current-account branch, not solved for scale
+- RL is now the active next research branch
+- RL results must be compared against a same-universe deterministic top-k baseline, not only against an equal-weight universe benchmark
+
 Execution realism is shared with the research lab:
 
 - canonical spec: `../docs/execution_reality.md`
@@ -90,7 +97,7 @@ First portfolio-choice pilot with the lab matrix:
 vn-stock-train --portfolio-choice --policy mlp --start-date 2016-01-01 --timesteps 100000 --eval-freq 10000 --n-eval-episodes 1 --n-envs 4 --seed 1208 --portfolio-universe-size 20 --portfolio-top-k 3 --signal-columns s1_proba c4_oc_asym_5d c5_ins_relative_size_5d c5_signal_present c6_contrarian_intra_5d c7_ceiling_count_5d c8_vol_zscore_5d c9_reversal_1d c10_illiq_level_rank c11_ret_60d_lag_rank c12_gap_absorb_3 c13_compress_blowoff_2 c14_clv_volconf_resid_rank --name pilot_portfolio_labmatrix_seed1208
 ```
 
-See [docs/lab_signal_matrix_pilot.md](docs/lab_signal_matrix_pilot.md) for the portfolio-mode smoke test and `S1` vs full-matrix run ladder.
+See [docs/lab_signal_matrix_pilot.md](docs/lab_signal_matrix_pilot.md) for the benchmark-first portfolio-mode run ladder.
 
 ## Hyperparameters & Trading Env configs
 

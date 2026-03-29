@@ -11,7 +11,8 @@ and ideally uncorrelated with existing signals.
 
 A secondary goal is tracking which signals combine into tradeable strategies. The strongest
 uncapped long-only construction currently is the corrected `full_library + k5_r5_eq` branch from
-H138/H139, but it is **not yet proven deployable under explicit retail liquidity constraints**.
+H138/H139. ADV / capacity work is now **parked for the current-account branch, not solved**.
+That branch is still **not** proven deployable under explicit retail liquidity constraints.
 H54 remains the parked historical execution benchmark.
 
 **This is not a race to beat H54. New signals are evaluated on their own merit as independent
@@ -78,6 +79,14 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - `+769.49%` total on the honest `2019-2025` holdout
 - `+346.29%` relative vs VNINDEX
 - not yet retail-deployable under the explicit capacity/tradability gate
+
+## Current Active Branch
+
+- Keep the deterministic paper trade running on `full_library + k5_r5_eq`
+- Treat ADV / capacity as parked for the current-account branch, not solved
+- Active next research branch: long-only portfolio-choice RL
+- RL must be benchmarked against a same-universe deterministic top-k comparator before interpretation
+- Previously planned tradability-conditioned alpha work (`H151/H152`) is parked, not deleted
 
 ## Parked Historical Execution Benchmark
 
