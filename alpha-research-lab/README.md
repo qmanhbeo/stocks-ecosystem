@@ -84,14 +84,16 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 
 ## Current Best Uncapped Long-Only System
 
-**`full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`**
+**`full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked5_q80 + sector_cap_3`**
 
 - same top-5 equal-weight selector baseline
 - activation overlay from smoothed recent selector efficacy
 - incumbent retention bonus at rebalance
-- `+509.76%` relative vs VNINDEX on the honest `2019-2025` holdout
-- information ratio `0.94`
-- avg daily turnover `0.2227`
+- implementation-pain veto on slower blocked-buy pressure
+- mild sector cap (`max 3 names / sector`)
+- `+597.09%` relative vs VNINDEX on the honest `2019-2025` holdout
+- information ratio `1.01`
+- avg daily turnover `0.2036`
 
 ## Current Active Branch
 
@@ -124,10 +126,20 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
   - `H184`: sticky holdings / displacement margin improved the champion
   - `H185`: sector cap `3` helped slightly but did not beat the sticky champion
   - `H186`: local exposure sizing around `rel2_gt0` failed
+- Session 63 then completed the next local refinement wave (`H187-H189`) and reran the live branch on the new winner:
+  - `H187`: sticky + sector cap did not stack
+  - `H188`: implementation-pain veto `blocked3<=q80` improved the champion again
+  - `H189`: basket-coherence / score-dispersion guards failed
+  - current live overlay state on the new champion is `OFF / cash`
+  - current-year activated-vs-always-on scoreboard is positive for the new champion because it is staying out
+- Session 64 then followed through on that winner:
+  - `H190`: `sector_cap_3` finally became additive once paired with the stronger `blocked5<=q80` veto family
+  - `H191`: the blocked-buy veto family improved again from `blocked3<=q80` to `blocked5<=q80`
+  - current live overlay state on the final winner remains `OFF / cash`
 - Active next research branch is now:
-  - `H187`: combine `sticky_bonus_0p015` with `sector_cap_3`
-  - `H188`: implementation-pain veto on the sticky champion
-  - `H189`: basket-coherence / score-dispersion guard on the sticky champion
+  - `H192`: maintain the live forward scoreboard on the current winner
+  - `H193`: refine the blocked-buy veto family jointly with `sector_cap_3`
+  - `H194`: if the forward branch stays fully defensive, test mild re-entry hysteresis on the `blocked5` veto family
 - Selection-side work (`H151/H152`) remains parked behind the operational activation branch
 - RL remains exploratory only
 

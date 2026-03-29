@@ -1,25 +1,21 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_62_log.md` for the latest full session detail.
+Use `notes/session_64_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 62 completed `H181-H186` end to end. The live `full_library` / activation branch is current through `2026-03-27`, the activation overlay is operational on current data, and the overall uncapped long-only champion has improved from plain `h175__rel2_gt0` to `h184 sticky_bonus_0p015`. ADV / capacity remains parked for the current-account branch, RL remains exploratory, and the next branch is now local refinement on top of the refreshed live champion. (2026-03-29)
+**Session status:** Session 64 completed `H190-H191` plus final live reruns on the actual winner. The live `full_library` / activation branch remains current through `2026-03-27`, the implementation-pain family improved again from `blocked3<=q80` to `blocked5<=q80`, and adding `sector_cap_3` on top produced the best historical result so far. The current live activated state remains `OFF / cash`. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
 
 ### Start next session here
 
-1. Record the next market-session outcome against the current always-on paper-trade book:
-   - current **activated sticky champion** book from the `2026-03-26` signal / `2026-03-27` execution:
-     - `ANV`
-     - `PGV`
-     - `PTB`
-     - `PTL`
-     - `VSI`
-     - cash `0.00%`
-   - current activation state: `ON`
+1. Record the next market-session outcome against the current activated paper-trade book:
+   - current **activated implementation-pain + sector-cap champion** state from the `2026-03-26` signal / `2026-03-27` execution:
+     - held names: none
+     - cash `100.00%`
+   - current activation state: `OFF`
 2. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
 3. Treat the live branch as operationally current:
    - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-27`
@@ -27,29 +23,119 @@ Use `notes/session_62_log.md` for the latest full session detail.
    - `data/features/activation_meta_daily.parquet` is now current through `2026-03-27`
    - `H179` no longer reports a stale matrix
 4. Use the current champion, not the superseded one:
-   - old champion: `full_library + k5_r5_eq + h175__rel2_gt0`
-   - new champion: `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
+   - old champion: `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked3_q80`
+   - new champion: `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked5_q80 + sector_cap_3`
    - historical reference (`2019-2025`, `0.30%` RT):
-     - plain `rel2_gt0`: `+480.72%` relative vs VNINDEX, IR `0.9095`
-     - sticky `0.015`: `+509.76%` relative, IR `0.9372`
+     - sticky `0.015`: `+509.76%` relative vs VNINDEX, IR `0.9372`
+     - `impl__blocked3_q80`: `+527.16%` relative, IR `0.9471`
+     - `impl__blocked5_q80`: `+590.23%` relative, IR `1.0027`
+     - `impl__blocked5_q80 + sector_cap_3`: `+597.09%` relative, IR `1.0093`
 5. Run the next branch in this exact order:
-   - `H187`: combine the two positive local refinements that have not yet been tested together:
-     - `sticky_bonus_0p015`
-     - `sector_cap_3`
-     Hypothesis: the sector cap’s mild diversification benefit compounds with the sticky turnover reduction.
-   - `H188`: implementation-pain veto on the sticky champion.
-     Hypothesis: if recent blocked-buy pressure / cash-drag / realized holding-count degradation spikes, the next cycle should de-risk.
-   - `H189`: basket-coherence / score-dispersion guard on the sticky champion.
-     Hypothesis: the sticky champion should stay on only when the selected basket is internally coherent, not just when recent selector efficacy is positive.
-   - `H190`: only after `H187-H189`, revisit selector switching or calendar guards if needed.
+   - `H192`: keep the live scoreboard running on the new champion.
+     Hypothesis: the current-year edge from the veto winner is real only if it keeps beating sticky always-on forward, not just historically.
+   - `H193`: refine the blocked-buy veto family jointly with `sector_cap_3`.
+     Hypothesis: the best blocked-buy threshold may shift once the sector cap is active.
+     Candidate family:
+       - `blocked5<=q75 + sector_cap_3`
+       - `blocked5<=q80 + sector_cap_3`
+       - `blocked5<=q85 + sector_cap_3`
+       - `blocked3<=q80 + sector_cap_3`
+   - `H194`: if the live branch stays fully in cash too long, test a mild re-entry hysteresis around the `blocked5` veto family.
+     Hypothesis: the current winner may be a little too defensive in forward time even if it is historically strongest.
+   - `H195`: only after `H192-H194`, revisit selector switching or calendar guards if still needed.
 6. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
-   - Session 62 says selection alpha is strong, activation alpha is real, and the best current form is now a simple fixed path-dependent selector-efficacy rule plus a small retention bonus
-7. Only after `H187-H190` should the branch reopen these secondary ideas:
+   - Session 64 says selection alpha is strong, activation alpha is real, and the best current form is now:
+     - a fixed path-dependent selector-efficacy rule
+     - plus a small retention bonus
+     - plus an implementation-pain veto
+     - plus a mild sector cap
+7. Only after `H192-H195` should the branch reopen these secondary ideas:
    - `H151`: narrow tradability-conditioned composite (parked secondary branch)
    - `H152`: tradability-conditioned alpha search (parked secondary branch)
    - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened
+
+### Session 64 implementation-pain follow-through
+
+- `H190` result:
+  - **PASS**
+  - sector control finally helped once paired with the stronger blocked-buy veto family
+  - best:
+    - `impl__blocked5_q80 + sector_cap_3`
+    - `+597.09%` relative vs VNINDEX
+    - IR `1.0093`
+    - avg daily turnover `0.2036`
+  - this beat the plain `impl__blocked5_q80` winner:
+    - `+590.23%` relative
+    - IR `1.0027`
+- `H191` result:
+  - **PASS**
+  - the blocked-buy veto family improved again
+  - best pure veto:
+    - `impl__blocked5_q80`
+    - `+590.23%` relative vs VNINDEX
+    - IR `1.0027`
+  - this beat the Session 63 `blocked3<=q80` winner:
+    - `+527.16%` relative
+    - IR `0.9471`
+  - local hysteresis around `blocked3` did not add anything over the plain threshold
+- final live reruns on the current winner:
+  - rule: `h175__rel2_gt0 + sticky_bonus_0p015 + blocked5<=q80 + sector_cap_3`
+  - current overlay state from `2026-03-26` signal / `2026-03-27` execution:
+    - activation `OFF`
+    - held names: none
+    - cash `100.00%`
+  - `2026` YTD scoreboard:
+    - activated: `+5.73%` relative vs VNINDEX, IR `1.17`, avg cash `100.00%`
+    - always-on: `-11.22%` relative, IR `-1.65`
+  - practical read:
+    - the historical winner still prefers to stay out on the current live date
+    - the forward edge so far is still entirely defensive
+
+### Session 63 local-refinement follow-through
+
+- `H187` result:
+  - **FAIL**
+  - sticky + sector cap did not stack
+  - best remained the sticky champion:
+    - `sticky_bonus_0p015`
+    - `+509.76%` relative vs VNINDEX
+    - IR `0.9372`
+  - combined `sticky_bonus_0p015 + sector_cap_3` underperformed:
+    - `+498.04%` relative
+    - IR `0.9280`
+- `H188` result:
+  - **PASS**
+  - implementation-pain veto improved the champion
+  - best:
+    - `impl__blocked3_q80`
+    - `+527.16%` relative vs VNINDEX
+    - IR `0.9471`
+    - avg cash `41.47%`
+    - blocked-buy events `42`
+  - sticky baseline:
+    - `+509.76%` relative
+    - IR `0.9372`
+    - blocked-buy events `68`
+- `H189` result:
+  - **FAIL**
+  - basket-coherence / score-dispersion guards improved neither return nor IR
+  - best remained the sticky baseline; every coherence gate gave up too much return and pushed cash too high
+- live reruns on the new `H188` winner:
+  - current official activated overlay state:
+    - signal date `2026-03-26`
+    - execution date `2026-03-27`
+    - activation `OFF`
+    - held names: none
+    - cash `100.00%`
+    - rule: `h175__rel2_gt0 + sticky_bonus_0p015 + blocked3<=q80`
+  - `2026` YTD scoreboard:
+    - activated: `+5.73%` relative vs VNINDEX, IR `1.17`, avg cash `100.00%`
+    - always-on: `-11.22%` relative, IR `-1.65`, avg cash `5.49%`
+  - practical read:
+    - the new champion is improving the short live-forward path by staying out
+    - the live branch is now more defensive than the Session 62 sticky champion
 
 ### Session 62 live-refresh and local-refinement decision
 

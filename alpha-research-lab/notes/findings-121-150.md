@@ -240,3 +240,127 @@ All of them underperformed the plain binary activated rule:
 **Key finding:** nearby exposure-sizing variants are not the right way to improve this branch.
 
 **Implication:** keep activation binary for now once the recent-efficacy condition is met, and only reopen sizing if a materially stronger state variable appears.
+
+## F131: Sticky Retention and Mild Sector Diversification Do Not Stack; `sticky_bonus_0p015` Still Beats `sticky_bonus_0p015 + sector_cap_3` (2026-03-29, Session 63)
+
+Session 63 started by testing whether the two independently positive local refinements from Session 62 could be combined.
+
+Reference:
+- `sticky_bonus_0p015`
+- `+509.76%` relative vs VNINDEX
+- IR `0.9372`
+
+Combined candidate:
+- `sticky_bonus_0p015 + sector_cap_3`
+- `+498.04%` relative
+- IR `0.9280`
+
+So the mild sector cap did not compound with the sticky turnover reduction.
+
+**Key finding:** sector diversification remains secondary. The sticky improvement is the real local gain; adding `sector_cap_3` on top does not create a new champion.
+
+**Implication:** if sector control is used later, it should be tested only alongside stronger new information, not assumed to stack automatically with sticky retention.
+
+## F132: A Direct Implementation-Pain Veto (`blocked3<=q80`) Improved the Sticky Champion Again; The Best Current System Is Now Sticky Retention Plus a Blocked-Buy Pressure Veto (2026-03-29, Session 63)
+
+Session 63 then tested whether the sticky champion should deactivate when recent implementation strain is high.
+
+Best result:
+- `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked3_q80`
+- `+527.16%` relative vs VNINDEX
+- IR `0.9471`
+- avg cash `41.47%`
+- blocked-buy events `42`
+
+Sticky baseline:
+- `+509.76%` relative
+- IR `0.9372`
+- blocked-buy events `68`
+
+This is the first local refinement after Session 62 that improved the champion again.
+
+**Key finding:** the most useful next refinement is not another confidence filter. It is a direct veto on recent blocked-buy strain.
+
+**Implication:** the current best system is now:
+- fixed selector-efficacy activation
+- plus sticky retention
+- plus a blocked-buy pressure veto
+
+## F133: Basket-Coherence / Score-Dispersion Guards Failed on the Sticky Champion; They Reduced Return Too Much and Mostly Added Cash (2026-03-29, Session 63)
+
+Session 63 tested several basket-shape guards on the sticky champion:
+- coherence quantiles
+- spread + score-std conjunctions
+- spread/overlap and std/overlap conjunctions
+
+All of them underperformed the sticky baseline.
+
+Examples:
+- `coh__q60`: `+423.72%` relative, IR `0.8960`, avg cash `58.63%`
+- `coh__q70`: `+288.69%` relative, IR `0.7399`, avg cash `65.17%`
+- sticky baseline: `+509.76%`, IR `0.9372`, avg cash `36.29%`
+
+**Key finding:** current basket-shape coherence is not the lever that improves this branch.
+
+**Implication:** future local work should stay focused on implementation strain and closely related veto variables, not on more coherence-style guards.
+
+## F134: The Implementation-Pain Family Improved Again When Refined Locally; `blocked5<=q80` Beats the Earlier `blocked3<=q80` Winner (2026-03-29, Session 64)
+
+Session 64 refined the blocked-buy veto family directly.
+
+Best pure veto:
+- `impl__blocked5_q80`
+- `+590.23%` relative vs VNINDEX
+- IR `1.0027`
+
+Previous winner:
+- `impl__blocked3_q80`
+- `+527.16%` relative
+- IR `0.9471`
+
+So the slower blocked-buy memory turned out to be stronger than the shorter one.
+
+**Key finding:** the implementation-pain branch is real enough that local refinement matters, and the better state variable is `blocked5`, not `blocked3`.
+
+**Implication:** future veto-family work should center on `blocked5` and related strain persistence, not on returning to the older `blocked3` baseline.
+
+## F135: Sector Control Finally Became Additive Once the Stronger `blocked5<=q80` Veto Was Active; The Current Best System Is `blocked5<=q80 + sector_cap_3` (2026-03-29, Session 64)
+
+Session 64 then retested sector control against the stronger veto family.
+
+Best overall result:
+- `impl__blocked5_q80 + sector_cap_3`
+- `+597.09%` relative vs VNINDEX
+- IR `1.0093`
+
+Reference:
+- `impl__blocked5_q80`
+- `+590.23%` relative
+- IR `1.0027`
+
+This is the first time sector control has clearly improved the best current system.
+
+**Key finding:** sector diversification was not generally useless; it just needed to be paired with the right implementation-pain regime first.
+
+**Implication:** the current best uncapped long-only system now includes:
+- selector-efficacy activation
+- sticky retention
+- blocked-buy veto
+- mild sector cap
+
+## F136: The Current Live Winner Is Still Fully Defensive; On the Latest Live Date It Is `OFF / cash`, and Its 2026 YTD Outperformance vs Always-On Is Entirely Defensive So Far (2026-03-29, Session 64)
+
+After rerunning the canonical live overlay and scoreboard on the new winner:
+- rule: `blocked5<=q80 + sector_cap_3` on top of the sticky activation branch
+- latest live state (`2026-03-26` signal / `2026-03-27` execution):
+  - activation `OFF`
+  - held names: none
+  - cash `100.00%`
+
+Current-year scoreboard:
+- activated: `+5.73%` relative vs VNINDEX, IR `1.17`
+- always-on: `-11.22%` relative, IR `-1.65`
+
+**Key finding:** the forward live edge is still real relative to always-on, but for now it is entirely coming from defense.
+
+**Implication:** the branch now needs monitoring and possibly mild re-entry logic, not more generic activation families.

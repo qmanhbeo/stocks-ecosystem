@@ -44,6 +44,7 @@ from src.deterministic_portfolio import simulate_strategy
 from src.run_summary import write_run_summary
 
 OUT_DIR = Path("artifacts/portfolio_baselines")
+SECTOR_PATH = Path("data/features/sector_classification.parquet")
 
 
 def parse_args() -> argparse.Namespace:
@@ -60,6 +61,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--required-holding-age", type=int, default=3)
     parser.add_argument("--initial-notional-vnd", type=float, default=100_000_000.0)
     parser.add_argument("--incumbent-score-bonus", type=float, default=0.0)
+    parser.add_argument("--blocked-buy-ewm3-max-quantile", type=float, default=None)
+    parser.add_argument("--blocked-buy-ewm5-max-quantile", type=float, default=None)
+    parser.add_argument("--max-names-per-sector", type=int, default=None)
     return parser.parse_args()
 
 
@@ -75,6 +79,12 @@ def _jsonable(value):
     if isinstance(value, dict):
         return {str(key): _jsonable(item) for key, item in value.items()}
     return value
+
+
+def _sector_labels_for_market_inputs(tickers: tuple[str, ...]) -> tuple[str | None, ...]:
+    sectors = pd.read_parquet(SECTOR_PATH)[["symbol", "icb_name2"]].drop_duplicates("symbol")
+    sector_map = dict(zip(sectors["symbol"], sectors["icb_name2"]))
+    return tuple(sector_map.get(ticker) for ticker in tickers)
 
 
 def _slice_year(daily: pd.DataFrame, year: int) -> pd.DataFrame:
@@ -151,7 +161,25 @@ def main() -> None:
 
     selector = next(selector for selector in inputs.selectors if selector.name == "full_library_k5_r5_eq")
     rel2 = selector_recent_relative_ewm_from_prev(meta_state, prefix="full", span=2)
+    rel2.index = pd.to_datetime(meta_state["time"])
     gate = rel2 > 0.0
+    veto_desc = "none"
+    if args.blocked_buy_ewm3_max_quantile is not None:
+        blocked3 = pd.Series(
+            pd.to_numeric(meta_state["full_recent_blocked_buy_ewm3"], errors="coerce").to_numpy(),
+            index=pd.to_datetime(meta_state["time"]),
+        )
+        threshold = float(blocked3.quantile(float(args.blocked_buy_ewm3_max_quantile)))
+        gate = gate & (blocked3 <= threshold)
+        veto_desc = f"blocked3<=q{int(round(float(args.blocked_buy_ewm3_max_quantile) * 100.0))}"
+    if args.blocked_buy_ewm5_max_quantile is not None:
+        blocked5 = pd.Series(
+            pd.to_numeric(meta_state["full_recent_blocked_buy_ewm5"], errors="coerce").to_numpy(),
+            index=pd.to_datetime(meta_state["time"]),
+        )
+        threshold = float(blocked5.quantile(float(args.blocked_buy_ewm5_max_quantile)))
+        gate = gate & (blocked5 <= threshold)
+        veto_desc = f"blocked5<=q{int(round(float(args.blocked_buy_ewm5_max_quantile) * 100.0))}"
     aligned = (
         pd.DataFrame({"time": pd.to_datetime(meta_state["time"]), "activation_scale": gate.astype(float), "recent_rel2": rel2})
         .drop_duplicates("time")
@@ -176,6 +204,8 @@ def main() -> None:
         sell_fee_rate=float(fee_leg),
         capital_gains_tax_rate=0.0,
         incumbent_score_bonus=float(args.incumbent_score_bonus),
+        sector_labels=_sector_labels_for_market_inputs(inputs.market_inputs.tickers) if args.max_names_per_sector else None,
+        max_names_per_sector=args.max_names_per_sector,
     )
 
     always_on = simulate_strategy(**common_kwargs)
@@ -199,6 +229,8 @@ def main() -> None:
         "meta_source": meta_source,
         "activation_rule": "h175__rel2_gt0",
         "incumbent_score_bonus": float(args.incumbent_score_bonus),
+        "implementation_veto": veto_desc,
+        "max_names_per_sector": args.max_names_per_sector,
         "selector": selector.name,
         "evaluation_year": int(args.evaluation_year),
         "activated": activated_summary,
@@ -225,6 +257,9 @@ def main() -> None:
             "activation_meta": str(args.activation_meta),
             "history_start_year": int(args.history_start_year),
             "evaluation_year": int(args.evaluation_year),
+            "blocked_buy_ewm3_max_quantile": args.blocked_buy_ewm3_max_quantile,
+            "blocked_buy_ewm5_max_quantile": args.blocked_buy_ewm5_max_quantile,
+            "max_names_per_sector": args.max_names_per_sector,
         },
     )
 

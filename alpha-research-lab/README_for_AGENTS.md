@@ -89,14 +89,23 @@ Operationally important summary:
   - `H184`: sticky holdings / displacement margin improved the champion
   - `H185`: sector cap `3` helped slightly but did not beat the sticky champion
   - `H186`: local exposure sizing around `rel2_gt0` failed
+- Session 63 completed the next local refinement wave:
+  - `H187`: sticky + sector cap did not stack
+  - `H188`: implementation-pain veto `blocked3<=q80` improved the champion
+  - `H189`: basket-coherence / score-dispersion guards failed
+  - live reruns on the new winner showed current activation state `OFF / cash`
+- Session 64 then followed through on that branch:
+  - `H190`: `sector_cap_3` became additive once paired with the stronger `blocked5<=q80` veto family
+  - `H191`: the veto family improved again from `blocked3<=q80` to `blocked5<=q80`
+  - live reruns on the final winner still show current activation state `OFF / cash`
 - the current live champion is now:
-  - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
-  - `+509.76%` relative vs VNINDEX
-  - information ratio `0.9372`
+  - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked5_q80 + sector_cap_3`
+  - `+597.09%` relative vs VNINDEX
+  - information ratio `1.0093`
 - the active next branch is now:
-  - `H187`: combine `sticky_bonus_0p015` with `sector_cap_3`
-  - `H188`: implementation-pain veto on the sticky champion
-  - `H189`: basket-coherence / score-dispersion guard on the sticky champion
+  - `H192`: maintain the live forward scoreboard on the current winner
+  - `H193`: refine the blocked-buy veto family jointly with `sector_cap_3`
+  - `H194`: if the forward branch stays fully defensive, test mild re-entry hysteresis on the `blocked5` veto family
 - `H151/H152` remain parked behind the operational activation branch
 - the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
@@ -398,10 +407,10 @@ PYTHONIOENCODING=utf-8 conda run -n stocks python data_tools/fetch_hose_universe
 ### Current Best Uncapped Long-Only System
 
 ```bash
-# Session 62 live champion:
-# full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015
-# +509.76% relative vs VNINDEX, IR 0.9372 on 2019-2025
-conda run -n stocks python analysis/h184_sticky_holdings_displacement_margin.py
+# Session 64 live champion:
+# full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked5_q80 + sector_cap_3
+# +597.09% relative vs VNINDEX, IR 1.0093 on 2019-2025
+conda run -n stocks python analysis/h190_impl_pain_sector_combo.py
 ```
 
 ### Parked Historical Execution Benchmark: H54
