@@ -7,6 +7,8 @@ from typing import Mapping, Sequence
 
 import numpy as np
 import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
 
 from src.activation_alpha import (
     ACTIVATION_STATE_PATH,
@@ -94,6 +96,25 @@ def selector_entry_quality_series(meta_state: pd.DataFrame, *, prefix: str) -> p
     ) / 3.0
 
 
+def selector_recent_relative_ewm_from_prev(
+    meta_state: pd.DataFrame,
+    *,
+    prefix: str,
+    span: int,
+) -> pd.Series:
+    prev = pd.to_numeric(meta_state[f"{prefix}_prev_cycle_relative_return"], errors="coerce")
+    return prev.ewm(span=int(span), adjust=False, min_periods=1).mean()
+
+
+def selector_recent_hit_rate_ewm(
+    meta_state: pd.DataFrame,
+    *,
+    prefix: str,
+    span: int,
+) -> pd.Series:
+    return pd.to_numeric(meta_state[f"{prefix}_recent_hit_rate_ewm{int(span)}"], errors="coerce")
+
+
 def quantile_gate(series: pd.Series, quantile: float, *, operator: str = ">=") -> pd.Series:
     numeric = pd.to_numeric(series, errors="coerce")
     threshold = float(numeric.quantile(float(quantile)))
@@ -128,6 +149,22 @@ def three_level_schedule(
     return out.astype(float)
 
 
+def thresholded_three_state_schedule(
+    series: pd.Series,
+    *,
+    low_threshold: float,
+    high_threshold: float,
+    low_scale: float = 0.0,
+    mid_scale: float = 0.5,
+    high_scale: float = 1.0,
+) -> pd.Series:
+    numeric = pd.to_numeric(series, errors="coerce").fillna(float(low_threshold) - 1e-12)
+    out = pd.Series(np.full(len(numeric), float(low_scale), dtype=np.float64), index=numeric.index)
+    out = out.mask(numeric >= float(low_threshold), float(mid_scale))
+    out = out.mask(numeric >= float(high_threshold), float(high_scale))
+    return out.astype(float)
+
+
 def hysteresis_schedule(
     strong_signal: pd.Series,
     weak_signal: pd.Series,
@@ -154,6 +191,75 @@ def hysteresis_schedule(
             strong_count = 0
         out.append(state)
     return pd.Series(out, index=strong_signal.index, dtype=float)
+
+
+def subperiod_relative_return(
+    daily: pd.DataFrame,
+    *,
+    start_year: int | None = None,
+    end_year: int | None = None,
+) -> float:
+    if daily.empty:
+        return float("-inf")
+    work = daily.copy()
+    years = pd.to_datetime(work["execution_date"]).dt.year
+    mask = pd.Series(True, index=work.index)
+    if start_year is not None:
+        mask &= years >= int(start_year)
+    if end_year is not None:
+        mask &= years <= int(end_year)
+    work = work.loc[mask].copy()
+    if work.empty:
+        return float("-inf")
+    portfolio = np.prod(1.0 + pd.to_numeric(work["portfolio_return"], errors="coerce").to_numpy(dtype=np.float64))
+    benchmark = np.prod(1.0 + pd.to_numeric(work["benchmark_return"], errors="coerce").to_numpy(dtype=np.float64))
+    if not np.isfinite(portfolio) or not np.isfinite(benchmark) or benchmark <= 0.0:
+        return float("-inf")
+    return float(portfolio / benchmark - 1.0)
+
+
+def walk_forward_logistic_scores(
+    frame: pd.DataFrame,
+    *,
+    feature_columns: Sequence[str],
+    target_column: str,
+    min_train_years: int = 2,
+) -> pd.Series:
+    work = frame.copy()
+    work["time"] = pd.to_datetime(work["time"])
+    years = work["time"].dt.year
+    unique_years = sorted(years.dropna().unique().tolist())
+    out = pd.Series(np.nan, index=work.index, dtype=float)
+    for pos, year in enumerate(unique_years):
+        if pos < int(min_train_years):
+            continue
+        train_mask = years < int(year)
+        test_mask = years == int(year)
+        if not bool(test_mask.any()):
+            continue
+        train = work.loc[train_mask, list(feature_columns) + [target_column]].copy()
+        train = train.replace([np.inf, -np.inf], np.nan).dropna()
+        test = work.loc[test_mask, list(feature_columns)].copy()
+        test = test.replace([np.inf, -np.inf], np.nan)
+        if train.empty:
+            continue
+        y_train = pd.to_numeric(train[target_column], errors="coerce").astype(int)
+        if y_train.nunique() < 2:
+            out.loc[test_mask] = float(y_train.iloc[0]) if not y_train.empty else 0.0
+            continue
+        scaler = StandardScaler()
+        x_train = scaler.fit_transform(train[list(feature_columns)].to_numpy(dtype=np.float64))
+        model = LogisticRegression(
+            max_iter=2000,
+            class_weight="balanced",
+            solver="lbfgs",
+            random_state=0,
+        )
+        model.fit(x_train, y_train.to_numpy(dtype=np.int64))
+        test_fill = test.fillna(train[list(feature_columns)].median(numeric_only=True))
+        x_test = scaler.transform(test_fill[list(feature_columns)].to_numpy(dtype=np.float64))
+        out.loc[test_mask] = model.predict_proba(x_test)[:, 1]
+    return out.clip(0.0, 1.0)
 
 
 def selector_baseline_rows(results: pd.DataFrame) -> dict[str, list[dict[str, object]]]:

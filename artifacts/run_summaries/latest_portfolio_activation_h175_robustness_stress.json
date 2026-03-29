@@ -1,0 +1,77 @@
+{
+  "artifacts": {
+    "results": "artifacts/portfolio_baselines/20260329_142052_h178_h175_robustness_stress_results.parquet"
+  },
+  "metadata": {
+    "activation_meta": "data/features/activation_meta_daily.parquet",
+    "activation_state": "data/features/activation_state_daily.parquet",
+    "benchmark": "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+    "end_year": 2025,
+    "matrix": "data/features/xs_rl_signal_matrix.parquet",
+    "meta_start_year": 2015,
+    "round_trip_costs": [
+      0.001,
+      0.003,
+      0.005,
+      0.007
+    ],
+    "start_years": [
+      2016,
+      2017,
+      2018,
+      2019
+    ]
+  },
+  "mode": "portfolio_activation_h175_robustness_stress",
+  "name": "h178_h175_robustness_stress",
+  "summary": {
+    "beat_ir_count": 15,
+    "beat_ir_rate": 0.9375,
+    "beat_relative_count": 15,
+    "beat_relative_rate": 0.9375,
+    "best_scenario": {
+      "always_information_ratio": 0.607238,
+      "always_max_drawdown": -0.366697,
+      "always_relative_total_return": 3.910435,
+      "delta_information_ratio_vs_always_on": 0.3310179999999999,
+      "delta_relative_total_return_vs_always_on": 7.9093420000000005,
+      "end_year": 2025,
+      "gate_avg_cash_weight": 0.349026,
+      "gate_information_ratio": 0.938256,
+      "gate_max_drawdown": -0.201601,
+      "gate_portfolio_annualized_return": 0.446859,
+      "gate_portfolio_total_return": 37.984494,
+      "gate_relative_total_return": 11.819777,
+      "meta_source": "built",
+      "round_trip_cost": 0.001,
+      "start_year": 2016,
+      "subperiod_rel_2019_2021": 2.355103411159627,
+      "subperiod_rel_2022_2023": 1.265187122894873,
+      "subperiod_rel_2024_2025": 0.1490888337830345,
+      "worst_available_subperiod_relative_return": 0.1490888337830345
+    },
+    "scenario_count": 16,
+    "worst_scenario": {
+      "always_information_ratio": 0.967582,
+      "always_max_drawdown": -0.314516,
+      "always_relative_total_return": 10.423091,
+      "delta_information_ratio_vs_always_on": -0.002987000000000073,
+      "delta_relative_total_return_vs_always_on": -0.5903829999999992,
+      "end_year": 2025,
+      "gate_avg_cash_weight": 0.359109,
+      "gate_information_ratio": 0.964595,
+      "gate_max_drawdown": -0.201601,
+      "gate_portfolio_annualized_return": 0.456573,
+      "gate_portfolio_total_return": 27.643593,
+      "gate_relative_total_return": 9.832708,
+      "meta_source": "built",
+      "round_trip_cost": 0.001,
+      "start_year": 2017,
+      "subperiod_rel_2019_2021": 2.355103411159616,
+      "subperiod_rel_2022_2023": 1.2651871228948752,
+      "subperiod_rel_2024_2025": 0.1490888337830365,
+      "worst_available_subperiod_relative_return": 0.1490888337830365
+    }
+  },
+  "ts": "20260329_142052"
+}

@@ -1,36 +1,114 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_58_log.md` for the latest full session detail.
+Use `notes/session_60_log.md` for the latest full session detail.
 
 ---
 
 ## Current State
 
-**Session status:** Session 58 H163-H174 completed (activation alpha was revisited with materially different designs; smoothed recent selector efficacy beat the always-on `full_library + k5_r5_eq` selector; ADV / capacity still parked for the current-account branch; RL remains exploratory; docs updated; 2026-03-29)
+**Session status:** Session 60 H178-H180 completed (the `H175 rel2_gt0` champion was stressed honestly and stayed strong in 15/16 scenarios; the live-paper activation overlay runner now exists; small local guards did not beat the plain champion; the only active operational blocker for a true current-date activation overlay is stale `full_library` matrix coverage past `2025-12-31`; ADV / capacity still parked for the current-account branch; RL remains exploratory; docs updated; 2026-03-29)
 
 ### Start next session here
 
-1. Record the next market-session outcome against the current paper-trade book:
+1. Record the next market-session outcome against the current always-on paper-trade book:
    - `ANV`
    - `PTB`
    - `PTL`
    - `VSI`
    - cash `19.57%`
 2. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
-3. If a new live recommendation is needed, verify canonical full-history continuity across root `data/stock/` first. Root `VNINDEX` is now restored through `2026-03-27`, but broader universe consistency still needs to be treated as a prerequisite.
-4. Rerun the official live `S1` scorer only after lookback sufficiency is verified.
+3. Treat the activation overlay as the new operational priority branch:
+   - `H175 rel2_gt0` is now robust enough to operationalize
+   - `H180` showed that small guards do not improve it
+   - the next real job is live data plumbing, not more gate creativity
+4. If a true current-date `full_library` activation recommendation is needed, do this first:
+   - rebuild / extend `data/features/xs_rl_signal_matrix.parquet` through the current market date
+   - rebuild `data/features/activation_state_daily.parquet`
+   - rebuild `data/features/activation_meta_daily.parquet`
+   - rerun `H179`
+   Root `VNINDEX` is restored through `2026-03-27`; the remaining blocker is the stock-derived signal matrix, not the benchmark file.
+5. Rerun the official live `S1` scorer only after lookback sufficiency is verified if the fallback branch is needed.
 5. Keep the architecture split clear:
    - selection alpha = choose the right names
    - activation alpha = decide whether the selector should be on
-   - Session 58 says selection alpha is strong, and activation alpha only becomes real once it is framed as smoothed selector-efficacy forecasting rather than static binary gating
-6. Resume the active research queue in this order:
-   - `H175`: robustify `H170` smoothed recent-efficacy activation with honest threshold/window sweeps and selector-specific walk-forward calibration
-   - `H176`: turn `H170` into 3-state exposure sizing (`off` / `half` / `full`) instead of binary activation
-   - `H177`: learn a compact activation meta-model from past-cycle efficacy, implementation pain, selector confidence, and entry quality
+   - Session 60 says selection alpha is strong, activation alpha is real, and the best current form is still a simple fixed path-dependent selector-efficacy rule
+6. Resume the active queue in this order:
+   - `H181`: rebuild the current-date `full_library` matrix and activation surfaces so `H179` can emit an honest live overlay beyond `2025-12-31`
+   - `H182`: rerun the live-paper activation overlay on the refreshed matrix and start a dated paper blotter for the activated branch
+   - `H183`: compare activated-vs-always-on paper books only after the live overlay is current
    - `H151`: narrow tradability-conditioned composite (parked secondary branch)
    - `H152`: tradability-conditioned alpha search (parked secondary branch)
    - keep RL exploratory only; do not spend more compute on new RL ladders until the branch is intentionally reopened
+
+### Session 60 operational activation decision
+
+- Session 60 executed the direct follow-up queue:
+  - `H178`: robustness stress for `h175__rel2_gt0`
+  - `H179`: live-paper activation overlay
+  - `H180`: small augmentations around the champion
+- `H178` result:
+  - `h175__rel2_gt0` beat always-on on both relative return and information ratio in `15 / 16` stress scenarios
+  - the only failing scenario was a mild one:
+    - start `2017`
+    - round-trip cost `0.10%`
+    - relative underperformance `-0.5904`
+    - IR underperformance `-0.0030`
+  - on the original `2019-2025`, `0.30%` RT setup it still matches the champion:
+    - always-on: `+346.40%` relative, IR `0.81`
+    - `h175__rel2_gt0`: `+491.69%` relative, IR `0.93`
+  - practical read:
+    - the activation champion is robust enough to operationalize
+    - it is not just a one-window artifact
+- `H179` result:
+  - the live-paper activation overlay runner is now operational
+  - latest matrix-supported overlay state:
+    - signal date `2025-12-30`
+    - execution date `2025-12-31`
+    - activation `ON`
+    - held names: `DBT`, `FIT`, `KLB`, `PDN`, `TMT`
+    - recent `rel2` state: `+0.008169`
+  - but this is **not** yet a true current-date live overlay because:
+    - `data/features/xs_rl_signal_matrix.parquet` ends at `2025-12-31`
+    - stock data now extends to `2026-03-27`
+- `H180` result:
+  - no small augmentation beat the plain `h175__rel2_gt0` champion
+  - best guard:
+    - `h180__rel2_gt0_conf_q50`
+    - improved max DD to `-18.94%`
+    - but reduced relative return to `+413.39%`
+    - and reduced IR to `0.88`
+  - branch decision:
+    - keep the plain fixed champion
+    - stop searching for nearby cosmetic tweaks until the live overlay is current
+
+### Session 59 activation-meta decision
+
+- Session 58 found the first real activation family:
+  - `H170 recentsm__rel3_gt0`
+- Session 59 stress-tested and extended that family:
+  - `H175`: threshold/window sweeps plus yearly walk-forward calibration
+  - `H176`: 3-state exposure sizing
+  - `H177`: compact walk-forward logistic meta-model
+- New champion:
+  - `H175` `h175__rel2_gt0`
+  - `full_library + k5_r5_eq`
+  - `+1052.77%` total
+  - `+491.69%` relative vs VNINDEX
+  - IR `0.93`
+  - max DD `-20.57%`
+- This beat:
+  - the Session 58 `H170` winner (`+383.07%` relative, IR `0.84`)
+  - the old always-on champion (`+346.40%` relative, IR `0.81`)
+- Important negative results:
+  - `H175` walk-forward yearly rule selection underperformed the fixed `rel2_gt0` rule
+  - `H176` 3-state sizing improved several branches but did not beat the new fixed champion
+  - `H177` compact activation meta-model helped, but did not beat the fixed champion either
+- Branch decision:
+  - activation alpha remains active
+  - but the branch is now **simpler**, not more complex:
+    - fixed smoothed selector-efficacy rules beat the heavier follow-ups
+  - do not escalate to larger learned activation models until the fixed champion is stressed more honestly
 
 ### Session 58 activation-meta decision
 
@@ -69,6 +147,7 @@ Use `notes/session_58_log.md` for the latest full session detail.
     - path dependence
     - eventually sizing / meta-labeling on top of `H170`
   - `H151/H152` are now parked behind the `H170` follow-up queue
+  - this was later refined further by Session 59, which found a stronger fixed `H175 rel2_gt0` rule
 
 ### Session 57 activation-alpha decision
 
@@ -1121,27 +1200,22 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
   - historical verdict from Session 48: do not add more ML or RL complexity until capacity is addressed honestly
   - superseded operationally by Session 53 for the current-account branch only
 
-### Next queue after Session 58 (in order)
+### Next queue after Session 59 (in order)
 
-1. **H175: robustify `H170` smoothed recent efficacy**
-   - run honest threshold/window sweeps around `recentsm__rel3_gt0` and `recentsm__hit5_ge55`
-   - require walk-forward calibration rather than one fixed global threshold if necessary
-   - the goal is to prove the H170 edge is robust, not a one-off threshold accident
-2. **H176: convert `H170` into 3-state exposure sizing**
-   - `off / half / full`
-   - use the H170 efficacy family as the state driver instead of static regime filters
-   - compare directly against both always-on and the binary H170 gates
-3. **H177: learn a compact activation meta-model**
-   - input families:
-     - recent selector efficacy
-     - implementation pain
-     - selector confidence
-     - entry-window quality
-   - keep it small and interpretable; do not jump straight to a large flexible model
+1. **H178: robustness stress for `h175__rel2_gt0`**
+   - test alternate start years and rolling subperiods
+   - test fee sensitivity around the current 0.30% RT assumption
+   - the goal is to verify that the new champion is not a narrow split artifact
+2. **H179: live-paper activation overlay**
+   - apply `h175__rel2_gt0` on top of the current deterministic paper-trade branch
+   - compare live paper outcomes against the always-on selector state
+3. **H180: only small augmentations around the champion**
+   - example: add a hit-rate guard to `rel2_gt0`
+   - do not reopen broad activation-family mining unless `H178` weakens the current champion materially
 4. **Selection-side work: parked secondary branch**
    - `H151`: narrow tradability-conditioned composite
    - `H152`: tradability-conditioned alpha search
-   - keep these parked unless the H170 branch fails robustness
+   - keep these parked unless the `rel2_gt0` branch fails robustness
 5. **RL branch: exploratory only**
    - keep the H155 artifact as evidence that RL can work sometimes
    - do not spend more compute on new RL ladders unless one of these changes first:

@@ -72,7 +72,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - Lowest year-to-year variance of any system tested
 - Artifact: `data/features/xs_barrier_vol_1d_hose_full.parquet`
 
-## Current Best Uncapped Long-Only Construction
+## Current Best Uncapped Long-Only Selector Baseline
 
 **`full_library + k5_r5_eq` (H138/H139 corrected engine, no ADV cap)**
 
@@ -82,6 +82,16 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - `+346.40%` relative vs VNINDEX
 - not yet retail-deployable under the explicit capacity/tradability gate
 
+## Current Best Uncapped Long-Only System
+
+**`full_library + k5_r5_eq + h175__rel2_gt0`**
+
+- same top-5 equal-weight selector baseline
+- activation overlay from smoothed recent selector efficacy
+- `+1052.77%` total on the honest `2019-2025` holdout
+- `+491.69%` relative vs VNINDEX
+- max DD `-20.57%`
+
 ## Current Active Branch
 
 - Keep the deterministic paper trade running on `full_library + k5_r5_eq`
@@ -90,17 +100,27 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
   - selection alpha = choose the right names
   - activation alpha = decide when the selector should be on
 - Session 57 tested deterministic binary activation (`H157-H162`) and did **not** beat the always-on `full_library + k5_r5_eq` selector
-- Session 58 tested materially different activation designs (`H163-H174`) and found one real winner:
+- Session 58 tested materially different activation designs (`H163-H174`) and found the first real winner:
   - `H170` smoothed recent selector efficacy
   - `recentsm__rel3_gt0` on `full_library + k5_r5_eq`
   - `+841.14%` total
   - `+383.07%` relative vs VNINDEX
   - IR `0.84`
-- Active next research branch is now:
-  - `H175`: robustify `H170` with honest threshold/window sweeps and walk-forward calibration
-  - `H176`: turn `H170` into 3-state exposure sizing (`off` / `half` / `full`)
-  - `H177`: learn a compact activation meta-model from selector-efficacy and implementation-pain features
-- Selection-side work (`H151/H152`) is now parked behind the `H170` follow-up queue
+- Session 59 then robustified that family (`H175-H177`) and found a stronger fixed rule:
+  - `H175` `h175__rel2_gt0`
+  - `+1052.77%` total
+  - `+491.69%` relative vs VNINDEX
+  - IR `0.93`
+  - max DD `-20.57%`
+- Session 60 then completed the direct follow-up queue (`H178-H180`):
+  - `H178`: `h175__rel2_gt0` beat always-on in `15 / 16` start-year / fee stress scenarios
+  - `H179`: the live-paper activation overlay runner now exists, but the shared `full_library` matrix still ends at `2025-12-31`
+  - `H180`: small local guards did not beat the plain champion
+- Active next research branch is now operational rather than exploratory:
+  - `H181`: rebuild the current-date `full_library` matrix and activation surfaces
+  - `H182`: rerun the live-paper activation overlay on the refreshed matrix
+  - `H183`: compare activated vs always-on paper books only after the overlay is current
+- Selection-side work (`H151/H152`) remains parked behind the operational activation branch
 - RL remains exploratory only
 
 ## Parked Historical Execution Benchmark
@@ -167,6 +187,12 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h172_entry_window_quality_gate.py`: entry-window quality activation gates
 - `analysis/h173_selector_specific_activation.py`: selector-specific vs global activation comparison
 - `analysis/h174_hysteresis_activation.py`: streak / hysteresis activation schedules
+- `analysis/h175_h170_robustness.py`: threshold/window sweeps and yearly walk-forward calibration around the H170 family
+- `analysis/h176_h170_three_state_sizing.py`: 3-state exposure sizing on top of smoothed selector efficacy
+- `analysis/h177_activation_meta_model.py`: compact walk-forward logistic activation model
+- `analysis/h178_h175_robustness_stress.py`: honest start-year / fee stress for the fixed activation champion
+- `analysis/h179_live_activation_overlay.py`: execution-facing live/paper overlay runner for the activation champion
+- `analysis/h180_h175_small_augmentations.py`: constrained local guard sweep around `rel2_gt0`
 
 ## Live Paper-Trade Prerequisite
 
@@ -219,6 +245,12 @@ Main experiment runners write compact JSON summaries to `artifacts/run_summaries
 - Portfolio activation entry-window quality: `latest_portfolio_activation_entry_window_quality.json`
 - Portfolio activation selector-specific: `latest_portfolio_activation_selector_specific.json`
 - Portfolio activation hysteresis: `latest_portfolio_activation_hysteresis.json`
+- Portfolio activation H170 robustness: `latest_portfolio_activation_h170_robustness.json`
+- Portfolio activation H170 three-state sizing: `latest_portfolio_activation_h170_three_state_sizing.json`
+- Portfolio activation meta-model: `latest_portfolio_activation_meta_model.json`
+- Portfolio activation H175 robustness stress: `latest_portfolio_activation_h175_robustness_stress.json`
+- Portfolio live activation overlay: `latest_portfolio_live_activation_overlay.json`
+- Portfolio activation H175 small augmentations: `latest_portfolio_activation_h175_small_augmentations.json`
 
 Large daily portfolio baseline outputs are written under `artifacts/portfolio_baselines/`.
 

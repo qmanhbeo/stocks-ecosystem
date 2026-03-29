@@ -67,16 +67,26 @@ Operationally important summary:
   - selection alpha = choose the right names
   - activation alpha = decide when the selector should be on
 - `H157-H162` tested deterministic binary activation and did not beat the always-on `full_library + k5_r5_eq` selector
-- `H163-H174` then revisited activation with materially different designs and found one real winner:
+- `H163-H174` then revisited activation with materially different designs and found the first real winner:
   - `H170` `recentsm__rel3_gt0` on `full_library + k5_r5_eq`
   - `+841.14%` total
   - `+383.07%` relative vs VNINDEX
   - information ratio `0.84`
-- the active next branch is now the `H170` follow-up queue:
-  - `H175`: robustify smoothed recent efficacy
-  - `H176`: 3-state exposure sizing on top of `H170`
-  - `H177`: learn a compact activation meta-model
-- `H151/H152` are parked behind the new activation branch
+- `H175-H177` then extended that branch and found a stronger fixed rule:
+  - `H175` `h175__rel2_gt0`
+  - `+1052.77%` total
+  - `+491.69%` relative vs VNINDEX
+  - information ratio `0.93`
+  - max DD `-20.57%`
+- Session 60 completed that direct branch:
+  - `H178`: `h175__rel2_gt0` beat always-on in `15 / 16` fee / start-year stress scenarios
+  - `H179`: the live-paper activation overlay runner exists, but the shared `full_library` matrix is still only current through `2025-12-31`
+  - `H180`: no small local guard beat the plain champion
+- the active next branch is now:
+  - `H181`: rebuild the current-date `full_library` matrix and activation surfaces
+  - `H182`: rerun the live-paper activation overlay on the refreshed matrix
+  - `H183`: compare activated vs always-on paper books once the overlay is current
+- `H151/H152` remain parked behind the operational activation branch
 - the RL branch is now exploratory after `H155`
 - `H153` runner now exists at `python -m vn_stock_rl.evaluation.portfolio_baseline`
 - `H154` first ladder is complete: `S1`-only RL won on seed `1208`, conditioned sub-core is mixed,
@@ -166,6 +176,12 @@ Read these first when you want the minimal result.
 - Portfolio activation entry-window quality: `artifacts/run_summaries/latest_portfolio_activation_entry_window_quality.json`
 - Portfolio activation selector-specific: `artifacts/run_summaries/latest_portfolio_activation_selector_specific.json`
 - Portfolio activation hysteresis: `artifacts/run_summaries/latest_portfolio_activation_hysteresis.json`
+- Portfolio activation H170 robustness: `artifacts/run_summaries/latest_portfolio_activation_h170_robustness.json`
+- Portfolio activation H170 three-state sizing: `artifacts/run_summaries/latest_portfolio_activation_h170_three_state_sizing.json`
+- Portfolio activation meta-model: `artifacts/run_summaries/latest_portfolio_activation_meta_model.json`
+- Portfolio activation H175 robustness stress: `artifacts/run_summaries/latest_portfolio_activation_h175_robustness_stress.json`
+- Portfolio live activation overlay: `artifacts/run_summaries/latest_portfolio_live_activation_overlay.json`
+- Portfolio activation H175 small augmentations: `artifacts/run_summaries/latest_portfolio_activation_h175_small_augmentations.json`
 
 Execution/tradability producer:
 
@@ -220,6 +236,12 @@ Mode-specific durable outputs:
 - `analysis/h172_entry_window_quality_gate.py`: `artifacts/run_summaries/latest_portfolio_activation_entry_window_quality.json` plus activation outputs under `artifacts/portfolio_baselines/`
 - `analysis/h173_selector_specific_activation.py`: `artifacts/run_summaries/latest_portfolio_activation_selector_specific.json` plus activation outputs under `artifacts/portfolio_baselines/`
 - `analysis/h174_hysteresis_activation.py`: `artifacts/run_summaries/latest_portfolio_activation_hysteresis.json` plus activation outputs under `artifacts/portfolio_baselines/`
+- `analysis/h175_h170_robustness.py`: `artifacts/run_summaries/latest_portfolio_activation_h170_robustness.json` plus robustness outputs under `artifacts/portfolio_baselines/`
+- `analysis/h176_h170_three_state_sizing.py`: `artifacts/run_summaries/latest_portfolio_activation_h170_three_state_sizing.json` plus sizing outputs under `artifacts/portfolio_baselines/`
+- `analysis/h177_activation_meta_model.py`: `artifacts/run_summaries/latest_portfolio_activation_meta_model.json` plus meta-model outputs under `artifacts/portfolio_baselines/`
+- `analysis/h178_h175_robustness_stress.py`: `artifacts/run_summaries/latest_portfolio_activation_h175_robustness_stress.json` plus stress outputs under `artifacts/portfolio_baselines/`
+- `analysis/h179_live_activation_overlay.py`: `artifacts/run_summaries/latest_portfolio_live_activation_overlay.json` plus live-overlay daily/detail outputs under `artifacts/portfolio_baselines/`
+- `analysis/h180_h175_small_augmentations.py`: `artifacts/run_summaries/latest_portfolio_activation_h175_small_augmentations.json` plus local-augmentation outputs under `artifacts/portfolio_baselines/`
 
 For any new analysis script, keep the large output wherever it naturally belongs, but also write
 one compact summary JSON under `artifacts/run_summaries/`.

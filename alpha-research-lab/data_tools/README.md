@@ -34,6 +34,14 @@ Operational rule:
 - check `data/stock/gia_lich_su_VNINDEX_1D.parquet` explicitly after any refresh; a truncated benchmark file alone is enough to break live `S1`
 - Session 52 fallback note: a local full-history benchmark backup currently exists at `../media-output/signal-xs-momentum/data/stock/gia_lich_su_VNINDEX_1D.parquet`, but that is emergency recovery only, not the canonical data source
 
+Separate live-system warning:
+- restoring stock history alone does **not** make the `full_library` branch current
+- the shared `full_library` / activation branch also depends on:
+  - `data/features/xs_rl_signal_matrix.parquet`
+  - `data/features/activation_state_daily.parquet`
+  - `data/features/activation_meta_daily.parquet`
+- Session 60 proved the activation overlay runner works, but it is only honest through the matrix end date; if stock data extends beyond the matrix, refresh the matrix and both activation artifacts before calling anything “live”
+
 ---
 
 ## Fetch Scripts
