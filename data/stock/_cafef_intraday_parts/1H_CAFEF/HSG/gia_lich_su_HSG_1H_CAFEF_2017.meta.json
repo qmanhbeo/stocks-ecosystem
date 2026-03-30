@@ -1,0 +1,15 @@
+{
+  "bar_dates": 248,
+  "bars": 1240,
+  "first_bar_time": "2017-01-03T10:00:00",
+  "first_requested_date": "2017-01-03",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2017-12-29T14:00:00",
+  "last_requested_date": "2017-12-29",
+  "observed_empty": false,
+  "requested_dates_signature": "db0aa4be7e95972ac254a7877987e9f561d6d870",
+  "requested_trading_days": 250,
+  "ticker": "HSG",
+  "written_at_utc": "2026-03-30T22:05:17Z",
+  "year": 2017
+}

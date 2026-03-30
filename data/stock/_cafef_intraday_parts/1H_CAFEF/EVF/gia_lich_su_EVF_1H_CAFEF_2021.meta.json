@@ -1,0 +1,15 @@
+{
+  "bar_dates": 236,
+  "bars": 1153,
+  "first_bar_time": "2021-01-04T10:00:00",
+  "first_requested_date": "2021-01-04",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2021-12-28T14:00:00",
+  "last_requested_date": "2021-12-29",
+  "observed_empty": false,
+  "requested_dates_signature": "ba3be92cc3223a15f16137b996d45a0028a92467",
+  "requested_trading_days": 248,
+  "ticker": "EVF",
+  "written_at_utc": "2026-03-30T19:44:09Z",
+  "year": 2021
+}

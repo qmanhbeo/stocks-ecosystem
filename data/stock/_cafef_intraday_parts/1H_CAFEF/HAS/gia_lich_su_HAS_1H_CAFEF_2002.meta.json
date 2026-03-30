@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2002-12-19",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2002-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "6f8067395fd89a74298601dbed9fd14f77aa327b",
+  "requested_trading_days": 9,
+  "ticker": "HAS",
+  "written_at_utc": "2026-03-30T21:01:36Z",
+  "year": 2002
+}

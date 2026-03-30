@@ -1,0 +1,15 @@
+{
+  "bar_dates": 135,
+  "bars": 645,
+  "first_bar_time": "2017-06-22T10:00:00",
+  "first_requested_date": "2017-06-22",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2017-12-29T14:00:00",
+  "last_requested_date": "2017-12-29",
+  "observed_empty": false,
+  "requested_dates_signature": "0f62d0a4dc32225e6ef106a3bac3c4b2cc42c03d",
+  "requested_trading_days": 136,
+  "ticker": "HII",
+  "written_at_utc": "2026-03-30T21:39:06Z",
+  "year": 2017
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 216,
+  "bars": 734,
+  "first_bar_time": "2019-01-02T10:00:00",
+  "first_requested_date": "2019-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2019-12-31T12:00:00",
+  "last_requested_date": "2019-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "a40b880fef6f46a03e599cd25e4eb096e5c66e90",
+  "requested_trading_days": 244,
+  "ticker": "GEG",
+  "written_at_utc": "2026-03-30T20:20:52Z",
+  "year": 2019
+}

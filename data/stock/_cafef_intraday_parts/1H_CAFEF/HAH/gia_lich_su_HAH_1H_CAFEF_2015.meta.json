@@ -1,0 +1,15 @@
+{
+  "bar_dates": 202,
+  "bars": 788,
+  "first_bar_time": "2015-03-11T11:00:00",
+  "first_requested_date": "2015-03-11",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2015-12-31T14:00:00",
+  "last_requested_date": "2015-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "2fef19d2abf54e99db7034bee2e6e3a1923fc9ce",
+  "requested_trading_days": 207,
+  "ticker": "HAH",
+  "written_at_utc": "2026-03-30T20:55:45Z",
+  "year": 2015
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 212,
+  "bars": 1017,
+  "first_bar_time": "2021-01-04T10:00:00",
+  "first_requested_date": "2021-01-04",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2021-12-30T14:00:00",
+  "last_requested_date": "2021-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "f8e225a0fa61a4279ec16414df52dc34a2f8f3a7",
+  "requested_trading_days": 242,
+  "ticker": "HHP",
+  "written_at_utc": "2026-03-30T21:29:30Z",
+  "year": 2021
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2010-12-20",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2010-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "0523e178ab0b276926dad0e3d8881bc4747acb63",
+  "requested_trading_days": 10,
+  "ticker": "HTI",
+  "written_at_utc": "2026-03-30T22:16:13Z",
+  "year": 2010
+}

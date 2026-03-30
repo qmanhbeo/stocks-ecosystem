@@ -1,0 +1,15 @@
+{
+  "bar_dates": 205,
+  "bars": 814,
+  "first_bar_time": "2022-03-10T10:00:00",
+  "first_requested_date": "2022-03-08",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2022-12-30T14:00:00",
+  "last_requested_date": "2022-12-30",
+  "observed_empty": false,
+  "requested_dates_signature": "470eead46a47493046e9c53ce0c6c3430cb634a0",
+  "requested_trading_days": 209,
+  "ticker": "GEE",
+  "written_at_utc": "2026-03-30T20:19:27Z",
+  "year": 2022
+}

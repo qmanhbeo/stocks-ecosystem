@@ -1,0 +1,15 @@
+{
+  "bar_dates": 25,
+  "bars": 37,
+  "first_bar_time": "2026-01-13T10:00:00",
+  "first_requested_date": "2026-01-13",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-20T11:00:00",
+  "last_requested_date": "2026-03-20",
+  "observed_empty": false,
+  "requested_dates_signature": "6ddaee470e42e07cb1a36bcd18fbdda75bdf289b",
+  "requested_trading_days": 25,
+  "ticker": "GTA",
+  "written_at_utc": "2026-03-30T20:48:44Z",
+  "year": 2026
+}

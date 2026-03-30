@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2004-01-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2004-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "1a0478c7830a86d87ce0fc0fb7bf8242cf182201",
+  "requested_trading_days": 250,
+  "ticker": "GMD",
+  "written_at_utc": "2026-03-30T20:35:09Z",
+  "year": 2004
+}

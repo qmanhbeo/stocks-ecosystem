@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2013-01-17",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2013-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "214dd582d9320ffe56d5c7194dc196a7ffec26d9",
+  "requested_trading_days": 239,
+  "ticker": "HAR",
+  "written_at_utc": "2026-03-30T20:58:40Z",
+  "year": 2013
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 166,
+  "bars": 755,
+  "first_bar_time": "2018-05-10T10:00:00",
+  "first_requested_date": "2018-05-10",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2018-12-28T14:00:00",
+  "last_requested_date": "2018-12-28",
+  "observed_empty": false,
+  "requested_dates_signature": "ce1c2000e9eeb8105e6858b79afa74167781fddf",
+  "requested_trading_days": 166,
+  "ticker": "HSL",
+  "written_at_utc": "2026-03-30T22:08:07Z",
+  "year": 2018
+}

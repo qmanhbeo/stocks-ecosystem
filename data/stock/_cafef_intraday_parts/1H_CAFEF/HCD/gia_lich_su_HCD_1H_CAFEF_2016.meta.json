@@ -1,0 +1,15 @@
+{
+  "bar_dates": 128,
+  "bars": 606,
+  "first_bar_time": "2016-07-04T10:00:00",
+  "first_requested_date": "2016-07-04",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2016-12-30T14:00:00",
+  "last_requested_date": "2016-12-30",
+  "observed_empty": false,
+  "requested_dates_signature": "dde6b21538cb1fee592d312f14747e2ba3bcd784",
+  "requested_trading_days": 129,
+  "ticker": "HCD",
+  "written_at_utc": "2026-03-30T21:11:11Z",
+  "year": 2016
+}

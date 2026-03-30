@@ -1,0 +1,15 @@
+{
+  "bar_dates": 219,
+  "bars": 591,
+  "first_bar_time": "2020-01-02T12:00:00",
+  "first_requested_date": "2020-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2020-12-31T14:00:00",
+  "last_requested_date": "2020-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "3a486ab15c04cdc4106ed7d006a75c9e85790a0c",
+  "requested_trading_days": 246,
+  "ticker": "GVR",
+  "written_at_utc": "2026-03-30T20:49:23Z",
+  "year": 2020
+}
