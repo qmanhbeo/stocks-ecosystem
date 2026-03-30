@@ -5,6 +5,21 @@ import yfinance as yf
 import pandas as pd
 import re
 
+try:
+    from stock_refresh_utils import (
+        atomic_write_parquet,
+        combine_frames,
+        load_existing_frame,
+        plan_refresh,
+    )
+except ModuleNotFoundError:
+    from data_tools.stock_refresh_utils import (
+        atomic_write_parquet,
+        combine_frames,
+        load_existing_frame,
+        plan_refresh,
+    )
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = REPO_ROOT / "data" / "fx-commodities"
@@ -50,24 +65,62 @@ def _normalize_yf_df(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def fetch_ticker(ticker: str, interval: str, start: str, end: str, alias_map: dict) -> bool:
+def fetch_ticker(
+    ticker: str,
+    interval: str,
+    start: str,
+    end: str,
+    alias_map: dict,
+    *,
+    overwrite: bool = False,
+) -> bool:
     alias = _alias_for_ticker(ticker, alias_map)
     file_path = OUT_DIR / f"fx_commodities_{alias}_{interval}.parquet"
-    if file_path.exists():
-        print(f"⏭️  {ticker} ({alias}): Already exists, skipping...")
-        return True
-    
+    existing = load_existing_frame(file_path)
+
     try:
-        print(f"📥 Fetching {ticker} ({alias})...", end=" ", flush=True)
-        df = yf.download(ticker, start=start, end=end, interval=interval, progress=False, auto_adjust=False)
+        plan = plan_refresh(
+            file_path,
+            interval,
+            start,
+            end,
+            full_refresh=overwrite,
+        )
+        if plan.mode == "skip":
+            print(f"⏭️  {ticker} ({alias}): {plan.message}")
+            return True
+
+        print(f"📥 Fetching {ticker} ({alias}, {plan.message})...", end=" ", flush=True)
+        df = yf.download(
+            ticker,
+            start=plan.fetch_start,
+            end=end,
+            interval=interval,
+            progress=False,
+            auto_adjust=False,
+        )
         df = _normalize_yf_df(df)
         if df.empty:
+            if existing is not None:
+                print("⏭️  No new data returned, keeping existing file")
+                return True
             print("❌ No data returned")
             return False
         df["ticker"] = ticker.upper()
         df["alias"] = alias
-        df.to_parquet(file_path, index=False)
-        print(f"✅ Saved ({len(df)} rows)")
+        base = existing if plan.mode == "incremental" else None
+        before_rows = 0 if base is None else len(base)
+        combined = combine_frames(base, df)
+        atomic_write_parquet(combined, file_path)
+        latest_time = pd.to_datetime(combined["time"], errors="coerce").dropna().max()
+        if plan.mode == "incremental":
+            added_rows = len(combined) - before_rows
+            if added_rows > 0:
+                print(f"✅ Appended {added_rows} new rows (latest {latest_time})")
+            else:
+                print(f"✅ Refreshed overlap window (latest {latest_time})")
+        else:
+            print(f"✅ Saved ({len(combined)} rows)")
         return True
     except Exception as e:
         print(f"❌ Error: {e}")
@@ -140,19 +193,18 @@ def main():
     print(f"Output: {OUT_DIR}")
     print("=" * 60 + "\n")
     
-    if args.overwrite:
-        for ticker in tickers:
-            alias = _alias_for_ticker(ticker, alias_map)
-            file_path = OUT_DIR / f"fx_commodities_{alias}_{args.interval}.parquet"
-            if file_path.exists():
-                file_path.unlink()
-                print(f"🗑️  Removed existing file: {ticker}")
-    
     success_count = 0
     failed = []
     
     for i, ticker in enumerate(tickers):
-        ok = fetch_ticker(ticker, args.interval, args.start, args.end, alias_map)
+        ok = fetch_ticker(
+            ticker,
+            args.interval,
+            args.start,
+            args.end,
+            alias_map,
+            overwrite=args.overwrite,
+        )
         if ok:
             success_count += 1
         else:

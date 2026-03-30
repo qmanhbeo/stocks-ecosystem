@@ -32,6 +32,21 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+try:
+    from stock_refresh_utils import (
+        atomic_write_parquet,
+        combine_frames,
+        load_existing_frame,
+        plan_refresh,
+    )
+except ModuleNotFoundError:
+    from data_tools.stock_refresh_utils import (
+        atomic_write_parquet,
+        combine_frames,
+        load_existing_frame,
+        plan_refresh,
+    )
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = REPO_ROOT / "data" / "stock"
@@ -436,11 +451,21 @@ def fetch_one_ticker(
     overwrite: bool,
 ) -> tuple[bool, str]:
     output_path = build_output_path(ticker, interval_label)
-    if output_path.exists() and not overwrite:
-        return True, f"{ticker}: exists, skipping"
+    existing = load_existing_frame(output_path)
+    refresh_plan = plan_refresh(
+        output_path,
+        interval_label,
+        start_date.isoformat(),
+        end_date.isoformat(),
+        full_refresh=overwrite,
+    )
+    if refresh_plan.mode == "skip":
+        return True, f"{ticker}: {refresh_plan.message}"
+
+    fetch_start = parse_iso_date(refresh_plan.fetch_start)
 
     all_chunks: list[pd.DataFrame] = []
-    for window_start, window_end in iter_date_windows(start_date, end_date, chunk_days):
+    for window_start, window_end in iter_date_windows(fetch_start, end_date, chunk_days):
         rows = client.fetch_intraday_window(
             symbol=ticker,
             start_date=window_start,
@@ -462,17 +487,27 @@ def fetch_one_ticker(
             time.sleep(chunk_delay)
 
     if not all_chunks:
+        if existing is not None:
+            return True, f"{ticker}: no new intraday data returned, keeping existing file"
         return False, f"{ticker}: no intraday data returned"
 
-    out = (
+    incoming = (
         pd.concat(all_chunks, ignore_index=True)
         .sort_values("time")
         .drop_duplicates(subset=["time"], keep="last")
         .reset_index(drop=True)
     )
-    out.to_parquet(output_path, index=False)
+    base = existing if refresh_plan.mode == "incremental" else None
+    before_rows = 0 if base is None else len(base)
+    out = combine_frames(base, incoming)
+    atomic_write_parquet(out, output_path)
     min_time = out["time"].min()
     max_time = out["time"].max()
+    if refresh_plan.mode == "incremental":
+        added_rows = len(out) - before_rows
+        if added_rows > 0:
+            return True, f"{ticker}: appended {added_rows} bars (latest {max_time})"
+        return True, f"{ticker}: refreshed overlap window (latest {max_time})"
     return True, f"{ticker}: saved {len(out)} bars ({min_time} -> {max_time})"
 
 

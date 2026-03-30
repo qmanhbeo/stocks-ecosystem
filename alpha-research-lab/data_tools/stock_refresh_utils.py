@@ -25,7 +25,10 @@ def parse_iso_date(value: str) -> date:
 def load_latest_time(path: Path) -> pd.Timestamp | None:
     if not path.exists():
         return None
-    frame = pd.read_parquet(path, columns=[TIME_COL])
+    try:
+        frame = pd.read_parquet(path, columns=[TIME_COL])
+    except Exception:
+        return None
     ts = pd.to_datetime(frame[TIME_COL], errors="coerce").dropna()
     if ts.empty:
         return None
@@ -124,7 +127,10 @@ def combine_frames(existing: pd.DataFrame | None, incoming: pd.DataFrame) -> pd.
 def load_existing_frame(path: Path) -> pd.DataFrame | None:
     if not path.exists():
         return None
-    return pd.read_parquet(path)
+    try:
+        return pd.read_parquet(path)
+    except Exception:
+        return None
 
 
 def atomic_write_parquet(frame: pd.DataFrame, path: Path) -> None:

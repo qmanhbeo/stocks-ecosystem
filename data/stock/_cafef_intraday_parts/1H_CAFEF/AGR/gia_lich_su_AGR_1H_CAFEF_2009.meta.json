@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2009-12-10",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2009-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "ba7bd594c38d39add6d8a3c0021958b7aa3a082e",
+  "requested_trading_days": 16,
+  "ticker": "AGR",
+  "written_at_utc": "2026-03-29T23:58:18Z",
+  "year": 2009
+}

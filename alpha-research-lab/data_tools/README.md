@@ -103,6 +103,8 @@ Fetch historical intraday OHLCV from SSI FastConnect via the official `IntradayO
 - **Notes:**
   - uses the existing `*_1D.parquet` universe when `--tickers` is omitted
   - chunks long date ranges automatically to stay inside SSI page limits
+  - reruns now refetch from the last stored trading date and append new bars atomically instead of freezing after the first successful write
+  - `--overwrite` still forces a full rebuild, but the old parquet is kept until the replacement file is written successfully
   - intended for the acquisition-first intraday branch; coverage still needs to be validated honestly after fetch
 
 ### `fetch_cafef_intraday.py`
@@ -181,6 +183,7 @@ Operational interpretation:
 Fetch FX rates, commodity prices, and global indices via yfinance.
 - **Status:** Active
 - **Output:** `data/fx-commodities/fx_commodities_<NAME>_1D.parquet`
+- **Refresh behavior:** reruns append missing dates and rewrite atomically; `--overwrite` forces a full rebuild without deleting the last good file first
 - **Available files (20):**
   - `vix_1D` — CBOE VIX (fear index)
   - `sp500_1D` — S&P 500
@@ -233,6 +236,7 @@ Restore the full 2016–2026 cafef news archive from Google Drive.
 Fetch additional global macro indicators via yfinance.
 - **Status:** Legacy convenience wrapper
 - **Reason:** fully replaceable by the generic `fetch_fx_commodities.py` ticker/alias interface; kept as a fixed-list shortcut for the original macro basket
+- **Refresh behavior:** reruns now append missing dates instead of permanently skipping any existing output
 
 ### `fetch_dividend_events.py`
 Fetch ex-dividend dates for all HOSE stocks via `vnstock company.events()`.
@@ -253,6 +257,7 @@ Fetch quarterly financial ratios for all 52 stocks in original universe.
 - **Output:** `data/fundamentals_cache/<TICKER>.parquet` + `data/features/xs_fundamentals_daily.parquet`
 - **Coverage:** 52 tickers (not expanded to 394)
 - **Current limitation:** not yet run on the full HOSE universe
+- **Cache behavior:** unreadable per-ticker cache files are now refetched instead of crashing the whole run
 
 ### Utility Fetchers
 

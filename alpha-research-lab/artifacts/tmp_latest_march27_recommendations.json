@@ -1,0 +1,129 @@
+{
+  "historical_best": {
+    "spec": {
+      "name": "impl__blocked5_q80_sector_cap_3",
+      "rel_span": 2,
+      "rel_threshold": 0.0,
+      "incumbent_score_bonus": 0.015,
+      "blocked_buy_span": 5,
+      "blocked_buy_max_quantile": 0.8,
+      "blocked_buy_off_quantile": null,
+      "max_names_per_sector": 3
+    },
+    "latest_recommendation": {
+      "signal_date": "2026-03-27",
+      "execution_date": "2026-03-30",
+      "activation_on": false,
+      "rebalance_triggered": true,
+      "requested_tickers": [],
+      "held_tickers_after_execution": [],
+      "cash_weight_after_execution": 1.0,
+      "num_holdings_after_execution": 0,
+      "avg_holding_age_after_execution": 0.0,
+      "orders": [],
+      "positions_after_execution": []
+    }
+  },
+  "active_live_branch": {
+    "spec": {
+      "name": "sticky_bonus_0p015",
+      "rel_span": 2,
+      "rel_threshold": 0.0,
+      "incumbent_score_bonus": 0.015,
+      "blocked_buy_span": null,
+      "blocked_buy_max_quantile": null,
+      "blocked_buy_off_quantile": null,
+      "max_names_per_sector": null
+    },
+    "latest_recommendation": {
+      "signal_date": "2026-03-27",
+      "execution_date": "2026-03-30",
+      "activation_on": true,
+      "rebalance_triggered": false,
+      "requested_tickers": [],
+      "held_tickers_after_execution": [
+        "ANV",
+        "PGV",
+        "PTB",
+        "PTL",
+        "VSI"
+      ],
+      "cash_weight_after_execution": 0.0,
+      "num_holdings_after_execution": 5,
+      "avg_holding_age_after_execution": 5.0,
+      "orders": [],
+      "positions_after_execution": [
+        {
+          "ticker": "PTL",
+          "requested_action": "hold",
+          "executed_action": "hold",
+          "current_weight": 0.209154,
+          "desired_weight": 0.209154,
+          "executed_weight": 0.209154,
+          "buy_blocked": false,
+          "sell_blocked": false,
+          "capacity_clipped": false,
+          "holding_age_before": 3,
+          "signal_score": 0.473874,
+          "score_rank": 156.0
+        },
+        {
+          "ticker": "PGV",
+          "requested_action": "hold",
+          "executed_action": "hold",
+          "current_weight": 0.201607,
+          "desired_weight": 0.201607,
+          "executed_weight": 0.201607,
+          "buy_blocked": false,
+          "sell_blocked": false,
+          "capacity_clipped": false,
+          "holding_age_before": 8,
+          "signal_score": 0.59064,
+          "score_rank": 19.0
+        },
+        {
+          "ticker": "PTB",
+          "requested_action": "hold",
+          "executed_action": "hold",
+          "current_weight": 0.198002,
+          "desired_weight": 0.198002,
+          "executed_weight": 0.198002,
+          "buy_blocked": false,
+          "sell_blocked": false,
+          "capacity_clipped": false,
+          "holding_age_before": 3,
+          "signal_score": 0.711669,
+          "score_rank": 1.0
+        },
+        {
+          "ticker": "ANV",
+          "requested_action": "hold",
+          "executed_action": "hold",
+          "current_weight": 0.196917,
+          "desired_weight": 0.196917,
+          "executed_weight": 0.196917,
+          "buy_blocked": false,
+          "sell_blocked": false,
+          "capacity_clipped": false,
+          "holding_age_before": 3,
+          "signal_score": 0.420587,
+          "score_rank": 252.0
+        },
+        {
+          "ticker": "VSI",
+          "requested_action": "hold",
+          "executed_action": "hold",
+          "current_weight": 0.19432,
+          "desired_weight": 0.19432,
+          "executed_weight": 0.19432,
+          "buy_blocked": false,
+          "sell_blocked": false,
+          "capacity_clipped": false,
+          "holding_age_before": 3,
+          "signal_score": 0.557767,
+          "score_rank": 49.0
+        }
+      ]
+    }
+  }
+}

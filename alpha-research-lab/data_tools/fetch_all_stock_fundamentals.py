@@ -21,6 +21,11 @@ import numpy as np
 import pandas as pd
 from vnstock import Vnstock
 
+try:
+    from stock_refresh_utils import atomic_write_parquet
+except ModuleNotFoundError:
+    from data_tools.stock_refresh_utils import atomic_write_parquet
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CACHE_DIR = REPO_ROOT / "data" / "fundamentals_cache"
 OUT_PATH  = REPO_ROOT / "data" / "features" / "xs_fundamentals_daily.parquet"
@@ -47,10 +52,22 @@ def quarter_end_date(year: int, q: int) -> pd.Timestamp:
     return pd.Timestamp(year=year, month=month, day=1) + pd.offsets.MonthEnd(0)
 
 
+def load_cached_ratios(ticker: str) -> pd.DataFrame | None:
+    cache = CACHE_DIR / f"{ticker}_ratios.parquet"
+    if not cache.exists():
+        return None
+    try:
+        return pd.read_parquet(cache)
+    except Exception as exc:
+        print(f"    WARN {ticker}: unreadable cached ratios, refetching ({exc})")
+        return None
+
+
 def fetch_ticker_ratios(ticker: str) -> pd.DataFrame | None:
     cache = CACHE_DIR / f"{ticker}_ratios.parquet"
-    if cache.exists():
-        return pd.read_parquet(cache)
+    cached = load_cached_ratios(ticker)
+    if cached is not None:
+        return cached
     try:
         stock = Vnstock().stock(symbol=ticker, source="VCI")
         df = stock.finance.ratio(period="quarter", lang="en")
@@ -66,7 +83,7 @@ def fetch_ticker_ratios(ticker: str) -> pd.DataFrame | None:
                 rename[c] = "lengthReport"
         df = df.rename(columns=rename)
         df["ticker"] = ticker
-        df.to_parquet(cache, index=False)
+        atomic_write_parquet(df, cache)
         return df
     except Exception as e:
         print(f"    ERROR {ticker}: {e}")
@@ -135,12 +152,8 @@ def build_xs_fundamentals() -> pd.DataFrame:
     # Collect all quarterly rows across tickers
     all_q = []
     for ticker in TICKERS:
-        qdf = ratios_to_daily(
-            pd.read_parquet(CACHE_DIR / f"{ticker}_ratios.parquet")
-            if (CACHE_DIR / f"{ticker}_ratios.parquet").exists()
-            else pd.DataFrame(),
-            ticker
-        )
+        cached = load_cached_ratios(ticker)
+        qdf = ratios_to_daily(cached if cached is not None else pd.DataFrame(), ticker)
         if not qdf.empty:
             all_q.append(qdf)
 

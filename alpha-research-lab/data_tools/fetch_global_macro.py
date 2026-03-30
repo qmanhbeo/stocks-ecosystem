@@ -24,6 +24,21 @@ from pathlib import Path
 import pandas as pd
 import yfinance as yf
 
+try:
+    from stock_refresh_utils import (
+        atomic_write_parquet,
+        combine_frames,
+        load_existing_frame,
+        plan_refresh,
+    )
+except ModuleNotFoundError:
+    from data_tools.stock_refresh_utils import (
+        atomic_write_parquet,
+        combine_frames,
+        load_existing_frame,
+        plan_refresh,
+    )
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR   = REPO_ROOT / "data" / "fx-commodities"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -47,13 +62,19 @@ END   = "2026-12-31"
 
 def fetch_one(ticker: str, alias: str, overwrite: bool) -> bool:
     out = OUT_DIR / f"fx_commodities_{alias}_1D.parquet"
-    if out.exists() and not overwrite:
-        print(f"  SKIP {alias} (already exists)")
-        return True
+    existing = load_existing_frame(out)
     try:
-        print(f"  Fetching {ticker} ({alias})...", end=" ", flush=True)
-        df = yf.download(ticker, start=START, end=END, progress=False, auto_adjust=True)
+        plan = plan_refresh(out, "1D", START, END, full_refresh=overwrite)
+        if plan.mode == "skip":
+            print(f"  SKIP {alias} ({plan.message})")
+            return True
+
+        print(f"  Fetching {ticker} ({alias}, {plan.message})...", end=" ", flush=True)
+        df = yf.download(ticker, start=plan.fetch_start, end=END, progress=False, auto_adjust=True)
         if df.empty:
+            if existing is not None:
+                print("NO NEW DATA (keeping existing file)")
+                return True
             print("NO DATA")
             return False
         df = df.reset_index()
@@ -68,8 +89,19 @@ def fetch_one(ticker: str, alias: str, overwrite: bool) -> bool:
         df["ticker"] = ticker
         df["alias"]  = alias
         df["time"] = pd.to_datetime(df["time"])
-        df.to_parquet(out, index=False)
-        print(f"OK ({len(df)} rows)")
+        base = existing if plan.mode == "incremental" else None
+        before_rows = 0 if base is None else len(base)
+        combined = combine_frames(base, df)
+        atomic_write_parquet(combined, out)
+        latest_time = pd.to_datetime(combined["time"], errors="coerce").dropna().max()
+        if plan.mode == "incremental":
+            added_rows = len(combined) - before_rows
+            if added_rows > 0:
+                print(f"OK (appended {added_rows} rows, latest {latest_time})")
+            else:
+                print(f"OK (refreshed overlap window, latest {latest_time})")
+        else:
+            print(f"OK ({len(combined)} rows)")
         return True
     except Exception as e:
         print(f"ERROR: {e}")
