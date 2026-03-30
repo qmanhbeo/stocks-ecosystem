@@ -199,10 +199,13 @@ Thesis:
 - add stock-specific entry alpha so portfolio breadth can vary from `0..K`
 
 Current status:
-- Sessions 75-76 executed `H238-H245` offline
+- Sessions 75-77 executed `H238-H246` offline
 - strongest structural results were `H239` sparse breadth and the `H245` small-book contract audit
 - `H245` says the branch behaves more like a historical `top1` contract than a `top5` timing overlay
-- no rule, model, soft-prior overlay, or audited `top_k` contract is promotable
+- `H246` says local confirmation overlays do not rescue that contract:
+  - top1 overlays are effectively a no-op
+  - top2 soft-consensus overlays overfit validation badly
+- no rule, model, soft-prior overlay, audited `top_k` contract, or local confirmation overlay is promotable
 - classify the branch as offline evidence, not a live replacement candidate
 
 Canonical offline artifacts:
@@ -211,8 +214,8 @@ Canonical offline artifacts:
 - `data/features/entry_alpha/entry_scores_daily.parquet`
 
 If intentionally reopened:
-- start from `notes/session_75_log.md`, `notes/session_76_log.md`, and `notes/next_steps.md`
-- next honest continuation is `H246`: keep the branch small-book and test a light confirmation / calibration overlay on top of the `top1/top2` contract
+- start from `notes/session_75_log.md`, `notes/session_76_log.md`, `notes/session_77_log.md`, and `notes/next_steps.md`
+- next honest continuation is `H247`: keep the branch small-book but stop testing more local overlays on the current label; sharpen the label / target for the compact entry-model branch instead
 - keep it lower priority than the active timing-data acquisition branch
     - one-shot confirmation `2025`
     - forward lockbox `2026+`
@@ -422,6 +425,7 @@ It also installs the workspace-shared `shared-recommendation` package used for c
 - `analysis/h243_entry_alpha_live_compatibility.py`: pseudo-live compatibility audit against the frozen sticky live branch
 - `analysis/h244_entry_alpha_sparse_breadth_protocol.py`: honest dev/validation/confirmation/forward protocol for the H239 sparse-breadth branch
 - `analysis/h245_entry_alpha_topk_contract_audit.py`: contract audit for whether the entry-alpha branch really wants `top1/top2` sparse books instead of `top5` timing overlays
+- `analysis/h246_entry_alpha_small_book_confirmation.py`: light confirmation / calibration overlays on top of the H245 small-book contracts
 
 ## Live Paper-Trade Prerequisite
 

@@ -5,7 +5,10 @@ import pandas as pd
 
 from src.entry_alpha_research import (
     EntryModelSpec,
+    build_entry_row_mask,
     build_entry_allowed_matrix_from_score,
+    build_small_book_confirmation_overlay_frame,
+    build_small_book_threshold_series,
     build_entry_score_panel,
     build_single_family_screen_frame,
     build_soft_exposure_scale,
@@ -82,6 +85,54 @@ def test_build_single_family_screen_frame_flags_expected_rows():
     assert screened["screen__price_gap_absorb"].tolist() == [True, False, False]
     assert screened["screen__price_reversal_quality"].tolist() == [False, True, False]
     assert screened["screen__price_volconf_quality"].tolist() == [True, False, False]
+
+
+def test_small_book_confirmation_helpers_build_counts_and_thresholds():
+    panel = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2023-01-03", "2023-01-03", "2023-01-03"]),
+            "ticker": ["AAA", "BBB", "CCC"],
+            "screen__price_reversal_quality": [True, False, False],
+            "screen__price_gap_absorb": [True, False, False],
+            "screen__impl_uncrowded_quality": [False, True, False],
+            "screen__price_volconf_quality": [False, True, False],
+        }
+    )
+
+    enriched = build_small_book_confirmation_overlay_frame(panel)
+    thresholds = build_small_book_threshold_series(
+        enriched,
+        base_threshold=0.60,
+        supportive_bonus=0.02,
+        consensus_bonus=0.05,
+        no_confirm_penalty=0.03,
+    )
+
+    assert enriched["confirm_count"].tolist() == [2, 2, 0]
+    assert enriched["confirm_any"].tolist() == [True, True, False]
+    assert enriched["confirm_consensus"].tolist() == [True, True, False]
+    assert thresholds.round(4).tolist() == [0.55, 0.55, 0.63]
+
+
+def test_build_entry_row_mask_applies_rank_score_gap_and_buyability():
+    panel = pd.DataFrame(
+        {
+            "candidate_pool_rank": [1, 2, 3, 4],
+            "selection_score": [0.68, 0.62, 0.61, 0.80],
+            "selection_score_gap_to_next_candidate": [0.05, 0.02, 0.01, 0.10],
+            "can_buy_next_open": [True, True, False, True],
+        }
+    )
+
+    mask = build_entry_row_mask(
+        panel,
+        top_m=3,
+        min_selection_score=0.60,
+        min_score_gap=0.02,
+        require_buyable=True,
+    )
+
+    assert mask.tolist() == [True, True, False, False]
 
 
 def test_fit_entry_model_scores_dataset_and_builds_score_panel():

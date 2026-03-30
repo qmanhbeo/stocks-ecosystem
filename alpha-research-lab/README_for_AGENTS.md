@@ -144,7 +144,12 @@ Operationally important summary:
   - outcome:
     - the branch looks historically more like a `top1` contract than a `top5` timing overlay
     - but no audited `top_k` contract survives the honest forward gate
-    - if the branch is intentionally reopened, start from `H246`, not another generic `top5` sweep
+- Session 77 then ran the first small-book overlay follow-through:
+  - `H246`
+  - outcome:
+    - top1 confirmation overlays are effectively a no-op
+    - top2 soft-consensus overlays overfit validation and fail later
+    - if the branch is intentionally reopened, start from `H247`, not more local confirmation overlays
 - `H163-H174` then revisited activation with materially different designs and found the first real winner:
   - `H170` `recentsm__rel3_gt0` on `full_library + k5_r5_eq`
   - `+841.14%` total
@@ -421,6 +426,7 @@ Mode-specific durable outputs:
 - `analysis/h243_entry_alpha_live_compatibility.py`: `artifacts/run_summaries/latest_entry_alpha_live_compatibility.json` plus pseudo-live compatibility outputs under `artifacts/entry_alpha/`
 - `analysis/h244_entry_alpha_sparse_breadth_protocol.py`: `artifacts/run_summaries/latest_entry_alpha_sparse_breadth_protocol.json` plus dev-selected winner and protocol results under `artifacts/entry_alpha/`
 - `analysis/h245_entry_alpha_topk_contract_audit.py`: `artifacts/run_summaries/latest_entry_alpha_topk_contract_audit.json` plus per-contract winners and selected-contract daily outputs under `artifacts/entry_alpha/`
+- `analysis/h246_entry_alpha_small_book_confirmation.py`: `artifacts/run_summaries/latest_entry_alpha_small_book_confirmation.json` plus small-book overlay results under `artifacts/entry_alpha/`
 - `analysis/h147_liquidity_state_opportunity_audit.py`: `artifacts/run_summaries/latest_portfolio_liquidity_state_opportunity_audit.json` plus daily opportunity-count outputs under `artifacts/portfolio_baselines/`
 - `analysis/h148_local_liquidity_gate_refinement.py`: `artifacts/run_summaries/latest_portfolio_local_liquidity_gate_refinement.json` plus local-gate refinement outputs under `artifacts/portfolio_baselines/`
 - `analysis/h149_soft_activation_score.py`: `artifacts/run_summaries/latest_portfolio_soft_activation_score.json` plus soft-activation outputs under `artifacts/portfolio_baselines/`

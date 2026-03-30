@@ -346,6 +346,27 @@ def build_entry_allowed_matrix_from_mask(
     )
 
 
+def build_entry_row_mask(
+    panel: pd.DataFrame,
+    *,
+    top_m: int,
+    min_selection_score: float | None = None,
+    min_score_gap: float | None = None,
+    require_buyable: bool = True,
+) -> pd.Series:
+    if int(top_m) <= 0:
+        raise ValueError("top_m must be > 0")
+    work = panel.copy()
+    mask = _safe_get_numeric(work, "candidate_pool_rank", default=np.inf) <= float(top_m)
+    if min_selection_score is not None:
+        mask &= _safe_get_numeric(work, "selection_score", default=np.nan) >= float(min_selection_score)
+    if min_score_gap is not None:
+        mask &= _safe_get_numeric(work, "selection_score_gap_to_next_candidate", default=np.nan) >= float(min_score_gap)
+    if require_buyable:
+        mask &= _safe_bool(work, "can_buy_next_open")
+    return pd.Series(mask, index=work.index).fillna(False).astype(bool)
+
+
 def build_entry_allowed_matrix_from_score(
     panel: pd.DataFrame,
     *,
@@ -379,6 +400,49 @@ def build_entry_allowed_matrix_from_score(
         tickers=tickers,
         mask=mask,
     )
+
+
+def build_small_book_confirmation_overlay_frame(panel: pd.DataFrame) -> pd.DataFrame:
+    work = panel.copy()
+    flag_map = {
+        "confirm_reversal": "screen__price_reversal_quality",
+        "confirm_gap_absorb": "screen__price_gap_absorb",
+        "confirm_uncrowded": "screen__impl_uncrowded_quality",
+        "confirm_volconf": "screen__price_volconf_quality",
+    }
+    confirm_columns: list[str] = []
+    for out_column, source_column in flag_map.items():
+        work[out_column] = _safe_bool(work, source_column)
+        confirm_columns.append(out_column)
+    count = pd.Series(np.zeros(len(work), dtype=int), index=work.index)
+    for column in confirm_columns:
+        count = count + work[column].astype(int)
+    work["confirm_count"] = count.astype(int)
+    work["confirm_any"] = (work["confirm_count"] >= 1).astype(bool)
+    work["confirm_consensus"] = (work["confirm_count"] >= 2).astype(bool)
+    return work
+
+
+def build_small_book_threshold_series(
+    panel: pd.DataFrame,
+    *,
+    base_threshold: float,
+    confirm_count_column: str = "confirm_count",
+    supportive_bonus: float = 0.02,
+    consensus_bonus: float = 0.05,
+    no_confirm_penalty: float = 0.03,
+) -> pd.Series:
+    confirm_count = _safe_get_numeric(panel, confirm_count_column, default=0.0)
+    threshold = np.where(
+        confirm_count >= 2.0,
+        float(base_threshold) - float(consensus_bonus),
+        np.where(
+            confirm_count >= 1.0,
+            float(base_threshold) - float(supportive_bonus),
+            float(base_threshold) + float(no_confirm_penalty),
+        ),
+    )
+    return pd.Series(np.asarray(threshold, dtype=float), index=panel.index).clip(lower=0.0)
 
 
 def run_entry_backtest(

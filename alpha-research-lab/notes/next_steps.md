@@ -1,14 +1,14 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_76_log.md` for the latest full session detail.
+Use `notes/session_77_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Current State
 
-**Session status:** Session 76 ran `H245`, the small-book contract audit for the stock-specific entry-alpha branch. It found that the branch behaves more like a historical `top1` contract than a `top5` timing overlay, but no audited `top_k` contract survives the honest forward gate cleanly enough to promote. Entry alpha therefore remains offline evidence only. The active live branch still remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`, and the active non-live priority still remains acquisition-first timing data work rather than more local timing-model tuning on the current data stack. (2026-03-30)
+**Session status:** Session 77 ran `H246`, the small-book confirmation / calibration overlay follow-through for the stock-specific entry-alpha branch. It showed that `top1` overlays are effectively a no-op on the current contract, while `top2` soft-consensus overlays overfit validation and fail badly afterwards. Entry alpha therefore remains offline evidence only. The active live branch still remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`, and the active non-live priority still remains acquisition-first timing data work rather than more local timing-model tuning on the current data stack. (2026-03-30)
 
 ### Start next session here
 
@@ -32,13 +32,14 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
      - intraday / auction acquisition first
      - richer company-event source second
      - otherwise stop timing research and wait for more forward live evidence
-   - do not confuse that branch with the separate parked stock-specific entry-alpha architecture branch documented in `README.md`, `README_for_AGENTS.md`, and `notes/session_75_log.md` plus `notes/session_76_log.md`
-     - Sessions 75-76 already ran the first offline ladder plus the small-book contract audit (`H238-H245`)
+   - do not confuse that branch with the separate parked stock-specific entry-alpha architecture branch documented in `README.md`, `README_for_AGENTS.md`, and `notes/session_75_log.md` plus `notes/session_76_log.md` plus `notes/session_77_log.md`
+     - Sessions 75-77 already ran the first offline ladder plus the small-book follow-through (`H238-H246`)
      - current conclusion:
        - useful sparse-book evidence exists
        - historically the branch looks more like `top1/top2` than `top5`
+       - local confirmation overlays do not turn that into a live-ready rule
        - no promotable live-ready winner exists
-       - if reopened, the next step is `H246`, not a live-branch swap
+       - if reopened, the next step is `H247`, not a live-branch swap
      - it is still **not** the active branch while acquisition-first timing work remains policy
 6. Treat the live branch as operationally current:
    - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-27`
@@ -117,6 +118,7 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
      - `README_for_AGENTS.md`
      - `notes/session_75_log.md`
      - `notes/session_76_log.md`
+     - `notes/session_77_log.md`
    - branch thesis:
      - keep selection alpha as the cross-sectional prior
      - reinterpret activation alpha as a soft exposure prior
@@ -132,8 +134,11 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
    - Session 76 branch outcome:
      - `H245` showed the branch behaves more like a historical `top1` contract than a `top5` timing overlay
      - but no audited `top_k` contract survives the honest forward gate cleanly enough to promote
+   - Session 77 branch outcome:
+     - `H246` showed top1 confirmation overlays are effectively a no-op on the current contract
+     - top2 soft-consensus overlays overfit validation and fail badly in confirmation / forward
    - next architecture hypothesis if intentionally reopened:
-     - `H246`: keep the branch small-book and test a light confirmation / calibration overlay on top of the `top1/top2` contract
+     - `H247`: keep the branch small-book but stop testing more local confirmation overlays on the current label; sharpen the label / target for the compact entry-model branch instead
    - this remains lower priority than H230-H237 acquisition-first work
 10. Session 66 selection-side first pass:
    - locked protocol is now codified in code:
@@ -1441,6 +1446,7 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 | 74 | 2026-03-29 | Timing-data acquisition branch formalized: next honest timing work is source acquisition first, with explicit viability gates before modeling can reopen | H93 + C4-C14 |
 | 75 | 2026-03-30 | H238-H244 entry-alpha ladder: sparse breadth is real offline evidence, but no rule/model/soft-prior/live-compatibility variant is promotable | H93 + C4-C14 |
 | 76 | 2026-03-30 | H245 entry-alpha contract audit: branch looks historically like a small-book `top1` contract, but no audited `top_k` survives the honest forward gate; branch remains offline-only | H93 + C4-C14 |
+| 77 | 2026-03-30 | H246 small-book overlay follow-through: top1 confirmation overlays are a no-op and top2 soft-consensus overlays overfit validation; branch remains offline-only | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 

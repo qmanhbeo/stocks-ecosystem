@@ -291,3 +291,71 @@ So the branch thesis is now sharper:
 **Key finding:** `H245` strengthens the offline architectural conclusion without changing live policy. The right offline interpretation is "small-book structure is real," not "entry alpha is ready."
 
 **Implication:** if the branch is intentionally reopened, the next honest continuation should be a small-book follow-through such as `H246`, not another generic `top5` timing sweep.
+
+## F158: Local Confirmation / Calibration Overlays Do Not Rescue The Small-Book Entry-Alpha Branch On The Current Label Contract (2026-03-30, Session 77)
+
+Session 77 ran `H246`, the first honest follow-through after `H245`.
+
+The question was:
+- can a **light** confirmation / calibration overlay improve the small-book contract?
+
+The branch stayed disciplined:
+- no new full model family
+- no return to generic `top5` timing sweeps
+- only `top1` / `top2`
+- only local confirmation-style overlays
+
+Overlays tested:
+- `soft_consensus_threshold`
+- `soft_reversal_threshold`
+- `soft_gap_absorb_threshold`
+- `soft_uncrowded_threshold`
+- `near_cutoff_no_confirm_veto`
+- `soft_consensus_plus_veto`
+
+### Top1 result
+Base contract from `H245`:
+- `topk1__topm5__score_0p6__gap_none`
+
+Best overlay by validation:
+- `topk1__near_cutoff_no_confirm_veto`
+
+But all top1 overlays produced exactly the same result as the base sparse contract:
+- validation relative `+67.91%`
+- confirmation relative `+48.14%`
+- forward relative `-15.20%`
+- all deltas vs base = `0.00%`
+
+This means the local confirmation overlays were effectively a **no-op** for the `top1` contract.
+
+### Top2 result
+Base contract from `H245`:
+- `topk2__topm5__score_0p65__gap_0p03`
+
+Validation winner:
+- `topk2__soft_consensus_threshold`
+
+Metrics:
+- validation relative `+135.26%`
+- validation delta vs base `+114.99%`
+- confirmation relative `-42.25%`
+- confirmation delta vs base `-27.65%`
+- forward relative `-25.14%`
+- forward delta vs base `-21.84%`
+
+This is a clean validation overfit.
+
+Lighter veto-style overlays were less bad:
+- `near_cutoff_no_confirm_veto`
+- `soft_consensus_plus_veto`
+
+Metrics:
+- validation around `+30%`
+- confirmation around `-34%`
+- forward around `+2.50%`
+
+These showed small forward improvements over the base sparse `top2` contract, but they still degraded confirmation too much and did not clear the honest gate.
+
+**Key finding:** local confirmation / calibration overlays are not the missing ingredient on the current small-book entry-alpha label contract. For `top1`, they do nothing. For `top2`, the strongest overlay overfits validation badly.
+
+**Implication:** close the local-overlay sub-branch. If the entry-alpha branch is intentionally reopened, the next honest continuation should be `H247`: keep it small-book, but stop testing more local overlays on the same target and instead sharpen the label / target for the compact-model branch.
