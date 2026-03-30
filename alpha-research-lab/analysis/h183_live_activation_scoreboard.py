@@ -4,8 +4,8 @@ H183: Activated-vs-always-on live scoreboard for the current-year paper book.
 Compares the current champion selector:
     full_library + k5_r5_eq
 
-against the current champion activation overlay:
-    h175__rel2_gt0
+against the active live activation overlay:
+    h175__rel2_gt0 + sticky_bonus_0p015
 
 using the matrix-supported current-year slice.
 """
@@ -33,7 +33,7 @@ from src.activation_meta_experiment_utils import (
 )
 from src.champion_activation_utils import (
     ChampionVariantSpec,
-    current_champion_variant,
+    current_live_variant,
     load_champion_setup,
     load_sector_labels_for_market_inputs,
     run_champion_variant,
@@ -46,7 +46,7 @@ OUT_DIR = Path("artifacts/portfolio_baselines")
 
 
 def parse_args() -> argparse.Namespace:
-    default_spec = current_champion_variant()
+    default_spec = current_live_variant()
     parser = argparse.ArgumentParser()
     parser.add_argument("--matrix", type=str, default=str(RL_MATRIX_PATH))
     parser.add_argument("--tradability", type=str, default=str(TRADABILITY_PATH))

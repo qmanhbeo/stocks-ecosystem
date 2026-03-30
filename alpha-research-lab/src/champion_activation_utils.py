@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 import sys
 
@@ -24,7 +24,7 @@ from src.activation_meta_experiment_utils import (
     TRADABILITY_PATH,
     selector_recent_relative_ewm_from_prev,
 )
-from src.deterministic_portfolio import simulate_strategy
+from src.deterministic_portfolio import MarketInputs, simulate_strategy
 
 
 SECTOR_PATH = Path("data/features/sector_classification.parquet")
@@ -149,6 +149,18 @@ def current_champion_variant() -> ChampionVariantSpec:
         blocked_buy_span=5,
         blocked_buy_max_quantile=0.80,
         max_names_per_sector=3,
+    )
+
+
+def current_live_variant() -> ChampionVariantSpec:
+    return ChampionVariantSpec(
+        name="sticky_bonus_0p015",
+        rel_span=2,
+        rel_threshold=0.0,
+        incumbent_score_bonus=0.015,
+        blocked_buy_span=None,
+        blocked_buy_max_quantile=None,
+        max_names_per_sector=None,
     )
 
 
@@ -305,6 +317,63 @@ def run_champion_variant(
         blocked_buy_off_threshold=off_threshold,
         sector_labels=sector_labels,
         result=result,
+    )
+
+
+def extend_market_inputs_for_next_open_projection(market_inputs: MarketInputs) -> MarketInputs:
+    # Reuse the latest signal/tradability row and append the next business day so
+    # simulate_strategy can emit the next-open order book without needing future prices.
+    last_date = pd.Timestamp(market_inputs.dates[-1])
+    next_date = (last_date + pd.offsets.BDay(1)).to_datetime64()
+
+    def _append_last_row(values: np.ndarray) -> np.ndarray:
+        arr = np.asarray(values)
+        return np.concatenate([arr, arr[-1:]], axis=0)
+
+    return MarketInputs(
+        dates=np.concatenate(
+            [market_inputs.dates, np.asarray([next_date], dtype=market_inputs.dates.dtype)]
+        ),
+        tickers=market_inputs.tickers,
+        benchmark_open=_append_last_row(market_inputs.benchmark_open),
+        open_matrix=_append_last_row(market_inputs.open_matrix),
+        adv20_matrix=_append_last_row(market_inputs.adv20_matrix),
+        can_buy_matrix=_append_last_row(market_inputs.can_buy_matrix),
+        can_sell_matrix=_append_last_row(market_inputs.can_sell_matrix),
+        availability_matrix=_append_last_row(market_inputs.availability_matrix),
+        score_matrices={
+            str(name): _append_last_row(matrix)
+            for name, matrix in market_inputs.score_matrices.items()
+        },
+        tradability_source=market_inputs.tradability_source,
+        feature_matrices={
+            str(name): _append_last_row(matrix)
+            for name, matrix in market_inputs.feature_matrices.items()
+        },
+    )
+
+
+def project_champion_variant_to_next_open(
+    setup: ChampionSetup,
+    *,
+    spec: ChampionVariantSpec,
+    calibration_mask: pd.Series | None = None,
+    capture_blotter: bool = False,
+) -> ChampionVariantRun:
+    projected_market_inputs = extend_market_inputs_for_next_open_projection(setup.inputs.market_inputs)
+    projected_inputs = replace(setup.inputs, market_inputs=projected_market_inputs)
+    projected_common_kwargs = dict(setup.common_kwargs)
+    projected_common_kwargs["market_inputs"] = projected_market_inputs
+    projected_setup = replace(
+        setup,
+        inputs=projected_inputs,
+        common_kwargs=projected_common_kwargs,
+    )
+    return run_champion_variant(
+        projected_setup,
+        spec=spec,
+        calibration_mask=calibration_mask,
+        capture_blotter=capture_blotter,
     )
 
 

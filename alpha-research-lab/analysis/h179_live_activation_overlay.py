@@ -1,9 +1,9 @@
 """
-H179: Execution-facing live/paper activation overlay for the current champion.
+H179: Execution-facing live/paper activation overlay for the active live branch.
 
 Purpose:
 - turn the fixed H175 activation rule into a paper-trade blotter
-- report the latest matrix-supported activation decision and held book
+- report both the latest completed execution and the next-open recommendation
 - state clearly whether the signal matrix is current enough for a true live recommendation
 """
 
@@ -31,18 +31,23 @@ from src.activation_meta_experiment_utils import (
 )
 from src.champion_activation_utils import (
     ChampionVariantSpec,
-    current_champion_variant,
+    current_live_variant,
     load_champion_setup,
+    project_champion_variant_to_next_open,
     run_champion_variant,
 )
-from src.champion_branch_experiment_utils import jsonable, latest_execution_window
+from src.champion_branch_experiment_utils import (
+    jsonable,
+    latest_execution_window,
+    summarize_latest_recommendation,
+)
 from src.run_summary import write_run_summary
 
 OUT_DIR = Path("artifacts/portfolio_baselines")
 
 
 def parse_args() -> argparse.Namespace:
-    default_spec = current_champion_variant()
+    default_spec = current_live_variant()
     parser = argparse.ArgumentParser()
     parser.add_argument("--matrix", type=str, default=str(RL_MATRIX_PATH))
     parser.add_argument("--tradability", type=str, default=str(TRADABILITY_PATH))
@@ -128,6 +133,9 @@ def main() -> None:
     result = run.result
     if result.blotter is None:
         raise ValueError("Expected capture_blotter=True to return blotter rows")
+    projected_run = project_champion_variant_to_next_open(setup, spec=spec, capture_blotter=True)
+    if projected_run.result.blotter is None:
+        raise ValueError("Expected projected next-open run to return blotter rows")
 
     daily = result.daily.copy()
     daily["signal_date"] = pd.to_datetime(daily["signal_date"])
@@ -152,8 +160,23 @@ def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     daily_path = OUT_DIR / f"{ts}_h179_live_activation_overlay_daily.parquet"
     detail_path = OUT_DIR / f"{ts}_h179_live_activation_overlay_detail.parquet"
+    next_daily_path = OUT_DIR / f"{ts}_h179_live_activation_overlay_next_open_daily.parquet"
+    next_detail_path = OUT_DIR / f"{ts}_h179_live_activation_overlay_next_open_detail.parquet"
     daily_window.to_parquet(daily_path, index=False)
     blotter_window.to_parquet(detail_path, index=False)
+    projected_daily = projected_run.result.daily.copy()
+    projected_daily["signal_date"] = pd.to_datetime(projected_daily["signal_date"])
+    projected_daily["execution_date"] = pd.to_datetime(projected_daily["execution_date"])
+    projected_latest = projected_daily.sort_values("execution_date").tail(1).copy()
+    projected_latest.to_parquet(next_daily_path, index=False)
+    projected_detail = projected_run.result.blotter.copy()
+    projected_detail["execution_date"] = pd.to_datetime(projected_detail["execution_date"])
+    if not projected_latest.empty:
+        projected_exec_date = pd.Timestamp(projected_latest.iloc[0]["execution_date"])
+        projected_detail = projected_detail.loc[
+            projected_detail["execution_date"] == projected_exec_date
+        ].copy().reset_index(drop=True)
+    projected_detail.to_parquet(next_detail_path, index=False)
 
     latest_row = (
         jsonable(daily_window.sort_values("execution_date").tail(1).iloc[0].to_dict())
@@ -180,6 +203,11 @@ def main() -> None:
         "latest_stock_date": str(pd.Timestamp(latest_stock_date).date()) if latest_stock_date is not None else None,
         "stale_signal_matrix": stale_signal_matrix,
         "latest_day": latest_row,
+        "latest_completed_day": latest_row,
+        "next_open_recommendation": summarize_latest_recommendation(
+            projected_run.result.daily,
+            projected_run.result.blotter,
+        ),
         "portfolio_summary": jsonable(result.summary),
     }
     write_run_summary(
@@ -190,6 +218,8 @@ def main() -> None:
         artifacts={
             "daily": str(daily_path),
             "detail": str(detail_path),
+            "next_daily": str(next_daily_path),
+            "next_detail": str(next_detail_path),
         },
         metadata={
             "matrix": str(args.matrix),
@@ -207,7 +237,12 @@ def main() -> None:
     )
 
     print("\nH179: LIVE ACTIVATION OVERLAY")
-    print(pd.DataFrame([summary["latest_day"]]).to_string(index=False) if latest_row else "No latest row")
+    print("Latest completed execution:")
+    print(pd.DataFrame([summary["latest_completed_day"]]).to_string(index=False) if latest_row else "No latest row")
+    next_rec = summary["next_open_recommendation"]
+    if next_rec:
+        print("\nNext-open recommendation:")
+        print(pd.DataFrame([next_rec]).to_string(index=False))
     if stale_signal_matrix:
         print(
             f"\nNOTE: signal matrix ends at {pd.Timestamp(matrix_max_time).date()} while stock data extends to {pd.Timestamp(latest_stock_date).date()}."

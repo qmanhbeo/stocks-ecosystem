@@ -379,7 +379,7 @@ Mode-specific durable outputs:
 - `analysis/h176_h170_three_state_sizing.py`: `artifacts/run_summaries/latest_portfolio_activation_h170_three_state_sizing.json` plus sizing outputs under `artifacts/portfolio_baselines/`
 - `analysis/h177_activation_meta_model.py`: `artifacts/run_summaries/latest_portfolio_activation_meta_model.json` plus meta-model outputs under `artifacts/portfolio_baselines/`
 - `analysis/h178_h175_robustness_stress.py`: `artifacts/run_summaries/latest_portfolio_activation_h175_robustness_stress.json` plus stress outputs under `artifacts/portfolio_baselines/`
-- `analysis/h179_live_activation_overlay.py`: `artifacts/run_summaries/latest_portfolio_live_activation_overlay.json` plus live-overlay daily/detail outputs under `artifacts/portfolio_baselines/`
+- `analysis/h179_live_activation_overlay.py`: `artifacts/run_summaries/latest_portfolio_live_activation_overlay.json` plus completed-execution and next-open live-overlay outputs under `artifacts/portfolio_baselines/`
 - `analysis/h180_h175_small_augmentations.py`: `artifacts/run_summaries/latest_portfolio_activation_h175_small_augmentations.json` plus local-augmentation outputs under `artifacts/portfolio_baselines/`
 - `analysis/h207_rank_decay_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_rank_decay.json` plus exit-rule results under `artifacts/portfolio_baselines/`
 - `analysis/h208_time_plus_decay_exit.py`: `artifacts/run_summaries/latest_portfolio_exit_time_plus_decay.json` plus exit-rule results under `artifacts/portfolio_baselines/`

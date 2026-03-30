@@ -37,6 +37,97 @@ def latest_execution_window(daily: pd.DataFrame, execution_days: int) -> pd.Data
     return work.loc[work["execution_date"].isin(keep_dates)].reset_index(drop=True)
 
 
+def summarize_latest_recommendation(
+    daily: pd.DataFrame,
+    blotter: pd.DataFrame | None = None,
+) -> dict[str, object]:
+    if daily.empty:
+        return {}
+
+    work = daily.copy()
+    work["signal_date"] = pd.to_datetime(work["signal_date"])
+    work["execution_date"] = pd.to_datetime(work["execution_date"])
+    latest = work.sort_values("execution_date").tail(1).iloc[0]
+
+    summary = {
+        "signal_date": str(pd.Timestamp(latest["signal_date"]).date()),
+        "execution_date": str(pd.Timestamp(latest["execution_date"]).date()),
+        "activation_on": bool(latest["activation_on"]) if "activation_on" in latest else None,
+        "rebalance_triggered": bool(latest["rebalance_triggered"]) if "rebalance_triggered" in latest else None,
+        "requested_tickers": jsonable(latest.get("requested_tickers", [])),
+        "held_tickers_after_execution": jsonable(latest.get("held_tickers", [])),
+        "cash_weight_after_execution": (
+            float(latest["cash_weight"]) if "cash_weight" in latest and pd.notna(latest["cash_weight"]) else None
+        ),
+        "num_holdings_after_execution": (
+            int(latest["num_holdings"]) if "num_holdings" in latest and pd.notna(latest["num_holdings"]) else None
+        ),
+        "avg_holding_age_after_execution": (
+            float(latest["avg_holding_age"])
+            if "avg_holding_age" in latest and pd.notna(latest["avg_holding_age"])
+            else None
+        ),
+        "orders": [],
+        "positions_after_execution": [],
+    }
+    if blotter is None or blotter.empty or "execution_date" not in blotter.columns:
+        return summary
+
+    detail = blotter.copy()
+    detail["execution_date"] = pd.to_datetime(detail["execution_date"])
+    detail = detail.loc[detail["execution_date"] == pd.Timestamp(latest["execution_date"])].copy()
+    if detail.empty:
+        return summary
+
+    cols = [
+        "ticker",
+        "requested_action",
+        "executed_action",
+        "current_weight",
+        "desired_weight",
+        "executed_weight",
+        "current_notional_vnd",
+        "target_notional_vnd",
+        "executed_notional_vnd",
+        "buy_blocked",
+        "sell_blocked",
+        "capacity_clipped",
+        "holding_age_before",
+        "signal_score",
+        "score_rank",
+    ]
+    existing_cols = [col for col in cols if col in detail.columns]
+    detail = detail.sort_values(
+        ["executed_weight", "desired_weight", "ticker"],
+        ascending=[False, False, True],
+    )
+    positions = detail.loc[detail["executed_weight"] > 1e-12, existing_cols].copy()
+    orders = detail.loc[
+        (detail["requested_action"] != "hold") | (detail["executed_action"] != "hold"),
+        existing_cols,
+    ].copy()
+
+    numeric_cols = [
+        "current_weight",
+        "desired_weight",
+        "executed_weight",
+        "current_notional_vnd",
+        "target_notional_vnd",
+        "executed_notional_vnd",
+        "signal_score",
+        "score_rank",
+    ]
+    for frame in (orders, positions):
+        if frame.empty:
+            continue
+        for col in [col for col in numeric_cols if col in frame.columns]:
+            frame[col] = pd.to_numeric(frame[col], errors="coerce")
+
+    summary["orders"] = jsonable(orders.to_dict(orient="records"))
+    summary["positions_after_execution"] = jsonable(positions.to_dict(orient="records"))
+    return summary
+
+
 def summarize_daily_slice(daily: pd.DataFrame) -> dict[str, object]:
     if daily.empty:
         return {

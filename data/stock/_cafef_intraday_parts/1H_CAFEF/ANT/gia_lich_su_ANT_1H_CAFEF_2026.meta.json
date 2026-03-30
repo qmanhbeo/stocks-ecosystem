@@ -1,0 +1,15 @@
+{
+  "bar_dates": 50,
+  "bars": 227,
+  "first_bar_time": "2026-01-05T10:00:00",
+  "first_requested_date": "2026-01-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T14:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "5dbe0d9a39d1b2dee72d30f6af76c5b4e1b2a182",
+  "requested_trading_days": 50,
+  "ticker": "ANT",
+  "written_at_utc": "2026-03-30T00:10:24Z",
+  "year": 2026
+}
