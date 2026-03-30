@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shared-recommendation"
+version = "0.1.0"
+description = "Shared model-agnostic recommendation contracts for the stocks workspace."
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.0.0",
+    "pyarrow>=12.0.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["shared_recommendation*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra"

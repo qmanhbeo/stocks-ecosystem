@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2011-09-06",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2011-12-30",
+  "observed_empty": true,
+  "requested_dates_signature": "2ad82b12589af135b8d16f386dd78ed6bf7b058c",
+  "requested_trading_days": 84,
+  "ticker": "BIC",
+  "written_at_utc": "2026-03-30T10:39:23Z",
+  "year": 2011
+}

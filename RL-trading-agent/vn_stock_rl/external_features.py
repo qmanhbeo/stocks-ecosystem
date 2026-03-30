@@ -4,9 +4,26 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import sys
 from typing import Iterable, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+WORKSPACE_ROOT = REPO_ROOT.parent.parent
+SHARED_RECOMMENDATION_ROOT = WORKSPACE_ROOT / "shared-recommendation"
+if str(SHARED_RECOMMENDATION_ROOT) not in sys.path:
+    sys.path.insert(0, str(SHARED_RECOMMENDATION_ROOT))
+
+from shared_recommendation.artifacts import (
+    default_help_assets_dir as shared_default_help_assets_dir,
+    default_lab_signal_matrix_path as shared_default_lab_signal_matrix_path,
+    default_lab_signal_prediction_dir as shared_default_lab_signal_prediction_dir,
+    default_market_data_dir as shared_default_market_data_dir,
+    default_news_prediction_dir as shared_default_news_prediction_dir,
+    default_signal_prediction_dir as shared_default_signal_prediction_dir,
+    default_stock_data_dir as shared_default_stock_data_dir,
+    shared_data_root as shared_shared_data_root,
+)
+
 DEFAULT_NEWS_ROLLING_WINDOWS = (3, 5)
 DEFAULT_NEWS_EMBEDDING_DIM = 16
 SIGNAL_MISSING_FILL_VALUE = 0.5
@@ -17,38 +34,35 @@ SIGNAL_LABEL_COLUMN = "signal_pred_label"
 
 
 def shared_data_root() -> Path:
-    configured = os.environ.get("STOCKS_DATA_ROOT")
-    if configured:
-        return Path(configured).expanduser().resolve()
-    return (REPO_ROOT.parent / "data").resolve()
+    return shared_shared_data_root()
 
 
 def default_stock_data_dir() -> Path:
-    return shared_data_root() / "stock"
+    return shared_default_stock_data_dir()
 
 
 def default_market_data_dir() -> Path:
-    return default_stock_data_dir()
+    return shared_default_market_data_dir()
 
 
 def default_help_assets_dir() -> Path:
-    return shared_data_root() / "fx-commodities"
+    return shared_default_help_assets_dir()
 
 
 def default_news_prediction_dir() -> Path:
-    return shared_data_root() / "features" / "news" / "predictions"
+    return shared_default_news_prediction_dir()
 
 
 def default_signal_prediction_dir() -> Path:
-    return shared_data_root() / "features" / "signals" / "predictions" / "auto"
+    return shared_default_signal_prediction_dir()
 
 
 def default_lab_signal_matrix_path() -> Path:
-    return shared_data_root() / "features" / "xs_rl_signal_matrix.parquet"
+    return shared_default_lab_signal_matrix_path()
 
 
 def default_lab_signal_prediction_dir() -> Path:
-    return shared_data_root() / "features" / "signals" / "predictions" / "rl_lab_matrix"
+    return shared_default_lab_signal_prediction_dir()
 
 
 def default_news_feature_columns() -> List[str]:

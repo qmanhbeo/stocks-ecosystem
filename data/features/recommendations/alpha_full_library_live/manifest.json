@@ -1,0 +1,18 @@
+{
+  "adapter_id": "signal_blend",
+  "as_of_date": "2026-03-27",
+  "candidate_count": 351,
+  "eligible_count": 0,
+  "generated_at_utc": "2026-03-30T12:58:08Z",
+  "model_id": "signal_blend__full_library",
+  "policies": [
+    "tradability_daily",
+    "alpha_latest_live_overlay"
+  ],
+  "profile_name": "alpha_full_library_live",
+  "source_artifacts": {
+    "lab_signal_matrix": "/home/manh/stocks/data/features/xs_rl_signal_matrix.parquet",
+    "tradability_daily": "/home/manh/stocks/data/features/execution/tradability_daily.parquet"
+  },
+  "top_eligible_tickers": []
+}

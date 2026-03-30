@@ -1,0 +1,15 @@
+{
+  "bar_dates": 43,
+  "bars": 182,
+  "first_bar_time": "2014-10-29T10:00:00",
+  "first_requested_date": "2014-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2014-12-31T14:00:00",
+  "last_requested_date": "2014-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "2695f8cbc47b51073e13c68259d2d2ed190cd214",
+  "requested_trading_days": 243,
+  "ticker": "CHP",
+  "written_at_utc": "2026-03-30T12:44:14Z",
+  "year": 2014
+}

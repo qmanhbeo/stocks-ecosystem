@@ -1,0 +1,15 @@
+{
+  "bar_dates": 1,
+  "bars": 1,
+  "first_bar_time": "2020-12-31T10:00:00",
+  "first_requested_date": "2020-12-31",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2020-12-31T10:00:00",
+  "last_requested_date": "2020-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "d3ce8699519cd17a733c5cfaa99390dcd6e5db92",
+  "requested_trading_days": 1,
+  "ticker": "BKG",
+  "written_at_utc": "2026-03-30T10:52:19Z",
+  "year": 2020
+}

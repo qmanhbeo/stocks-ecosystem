@@ -1,0 +1,59 @@
+"""Shared recommendation contracts for the stocks workspace."""
+
+from shared_recommendation.artifacts import (
+    ArtifactKey,
+    ArtifactSpec,
+    artifact_spec,
+    default_activation_meta_path,
+    default_activation_state_path,
+    default_help_assets_dir,
+    default_lab_signal_matrix_path,
+    default_lab_signal_prediction_dir,
+    default_market_data_dir,
+    default_news_prediction_dir,
+    default_recommendation_candidates_path,
+    default_recommendation_dir,
+    default_recommendation_manifest_path,
+    default_signal_prediction_dir,
+    default_stock_data_dir,
+    default_tradability_path,
+    resolve_artifact_path,
+    shared_data_root,
+)
+from shared_recommendation.contracts import (
+    RecommendationContext,
+    RecommendationModelAdapter,
+    RecommendationPolicy,
+    RecommendationRequest,
+    RecommendationResult,
+)
+from shared_recommendation.engine import RecommendationEngine
+from shared_recommendation.policies import TradabilityPolicy
+
+__all__ = [
+    "ArtifactKey",
+    "ArtifactSpec",
+    "RecommendationContext",
+    "RecommendationEngine",
+    "RecommendationModelAdapter",
+    "RecommendationPolicy",
+    "RecommendationRequest",
+    "RecommendationResult",
+    "TradabilityPolicy",
+    "artifact_spec",
+    "default_activation_meta_path",
+    "default_activation_state_path",
+    "default_help_assets_dir",
+    "default_lab_signal_matrix_path",
+    "default_lab_signal_prediction_dir",
+    "default_market_data_dir",
+    "default_news_prediction_dir",
+    "default_recommendation_candidates_path",
+    "default_recommendation_dir",
+    "default_recommendation_manifest_path",
+    "default_signal_prediction_dir",
+    "default_stock_data_dir",
+    "default_tradability_path",
+    "resolve_artifact_path",
+    "shared_data_root",
+]

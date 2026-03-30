@@ -15,7 +15,7 @@ conda activate stocks
 pip install -r requirements.txt
 ```
 
-The RL runtime now depends on the workspace-shared `shared-market-rules` package.
+The RL runtime now depends on the workspace-shared `shared-market-rules` and `shared-recommendation` packages.
 
 ## Run test suite first to make sure everything is ok
 
@@ -50,6 +50,7 @@ python -m manual_label_factory.manual_label
 ```
 
 RL defaults to shared `data/features/news/predictions/` and `data/features/signals/predictions/auto/` when `--news-prediction-dir` / `--signal-prediction-dir` are omitted.
+Those default paths are now resolved through the shared artifact registry in `../shared-recommendation/`, so alpha and RL consume the same workspace path contract.
 
 ## Consume the lab RL signal matrix
 
@@ -75,6 +76,15 @@ Current workspace direction:
 - H153 comparator command: `python -m vn_stock_rl.evaluation.portfolio_baseline`
 - first H154 ladder result on seed `1208`: `S1`-only RL is currently best, conditioned sub-core is secondary, full matrix failed
 - H155 multi-seed result: `S1`-only RL is mixed high-variance across seeds, so RL should be treated as exploratory until the design changes or the result stabilizes
+
+Shared recommendation artifacts also live at the workspace level:
+
+- package: `../shared-recommendation/`
+- candidate root: `../data/features/recommendations/<profile>/`
+- default candidate artifact: `../data/features/recommendations/<profile>/latest_candidates.parquet`
+- default manifest: `../data/features/recommendations/<profile>/manifest.json`
+
+RL does not yet train directly from that candidate artifact, but it now shares the same artifact registry defaults for matrix, news, signal, help-asset, and stock/market data resolution.
 
 Execution realism is shared with the research lab:
 

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 190,
+  "bars": 497,
+  "first_bar_time": "2025-01-02T11:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T14:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "71fb861c0bfe6e591268e2a10f7cc947dd6bb5c0",
+  "requested_trading_days": 242,
+  "ticker": "BHN",
+  "written_at_utc": "2026-03-30T10:39:08Z",
+  "year": 2025
+}

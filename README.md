@@ -7,6 +7,7 @@ This is no longer a set of fully self-contained repos. The projects below now op
 - `data/`: canonical shared data root
 - `alpha-research-lab/`: alpha research, feature generation, auto-labelling, supervised signal pipeline
 - `manual-label-factory/`: manual buy-zone labelling UI
+- `shared-recommendation/`: shared model-agnostic recommendation contracts, artifact registry, and candidate writer
 - `RL-trading-agent/`: RL training, evaluation, and feature consumption
 - `media-output/signal-xs-momentum/`: older signal-specific project kept alongside the ecosystem
 
@@ -15,6 +16,7 @@ This is no longer a set of fully self-contained repos. The projects below now op
 - Raw and published research data live under `data/`
 - Research producer code lives under `alpha-research-lab/`
 - Manual label UI code lives under `manual-label-factory/`
+- Shared recommendation contracts live under `shared-recommendation/`
 - RL consumer/runtime code lives under `RL-trading-agent/`
 - `alpha-research-lab/data` is a symlink back to root `data/` so lab scripts can be run from inside the lab without duplicating files
 
@@ -26,6 +28,7 @@ Shared `data/` currently contains both raw inputs and processed research outputs
 - `data/news/`
 - `data/fx-commodities/`
 - `data/features/`
+- `data/features/recommendations/`
 - `data/labels/`
 - `data/dividend_cache/`
 - `data/fundamentals_cache/`
@@ -42,7 +45,8 @@ This means the root data directory is the canonical dataset surface for the whol
 4. The lab publishes a consolidated RL signal matrix at `data/features/xs_rl_signal_matrix.parquet`
 5. The lab publishes shared execution tradability flags at `data/features/execution/tradability_daily.parquet`
 6. The lab now also publishes the canonical corporate-event surface at `data/features/event_surface_daily.parquet`
-7. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
+7. The lab can publish canonical model-agnostic recommendation candidates at `data/features/recommendations/<profile>/latest_candidates.parquet`
+8. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 
 ## Fresh Start
 
@@ -96,7 +100,7 @@ conda activate stocks
 pip install -r requirements.txt
 ```
 
-This installs the shared `shared-market-rules` package, `RL-trading-agent` in editable mode, and the extra research/UI packages used by `alpha-research-lab` and `manual-label-factory`.
+This installs the shared `shared-market-rules` and `shared-recommendation` packages, `RL-trading-agent` in editable mode, and the extra research/UI packages used by `alpha-research-lab` and `manual-label-factory`.
 
 For a stricter pinned install focused on reproducibility, use:
 
@@ -125,6 +129,18 @@ Current strict-core defaults:
 - zero-volume blocks both sides
 - ceiling blocks buys
 - floor blocks sells
+
+## Shared Recommendation Contract
+
+Recommendation generation is now a workspace-level contract, not a repo-local helper.
+
+- Shared package: `shared-recommendation/shared_recommendation/`
+- Canonical artifact root: `data/features/recommendations/<profile>/`
+- Default candidate artifact: `data/features/recommendations/<profile>/latest_candidates.parquet`
+- Default manifest: `data/features/recommendations/<profile>/manifest.json`
+- Alpha producer entrypoint: `cd alpha-research-lab && python analysis/live_recommendation.py`
+
+This layer standardizes artifact resolution, adapter scoring, policy gating, and candidate-table writing across alpha and RL-adjacent consumers. It does not own model training or portfolio backtesting.
 
 ## Current Reality
 

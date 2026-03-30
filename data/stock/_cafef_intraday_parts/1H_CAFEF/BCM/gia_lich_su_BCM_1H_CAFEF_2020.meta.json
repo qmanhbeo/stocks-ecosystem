@@ -1,0 +1,15 @@
+{
+  "bar_dates": 219,
+  "bars": 564,
+  "first_bar_time": "2020-01-02T12:00:00",
+  "first_requested_date": "2020-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2020-12-31T14:00:00",
+  "last_requested_date": "2020-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "3d16d78dd029fd6f4b35dde8c45f584bf7443232",
+  "requested_trading_days": 245,
+  "ticker": "BCM",
+  "written_at_utc": "2026-03-30T10:27:36Z",
+  "year": 2020
+}

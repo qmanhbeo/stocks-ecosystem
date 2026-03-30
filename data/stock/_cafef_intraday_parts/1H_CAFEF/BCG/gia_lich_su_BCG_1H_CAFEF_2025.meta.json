@@ -1,0 +1,15 @@
+{
+  "bar_dates": 158,
+  "bars": 775,
+  "first_bar_time": "2025-01-02T10:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-10-08T14:00:00",
+  "last_requested_date": "2025-10-08",
+  "observed_empty": false,
+  "requested_dates_signature": "275dc0b8ad0ffe8298b8ccc1015e20794d3b93ae",
+  "requested_trading_days": 189,
+  "ticker": "BCG",
+  "written_at_utc": "2026-03-30T10:26:19Z",
+  "year": 2025
+}

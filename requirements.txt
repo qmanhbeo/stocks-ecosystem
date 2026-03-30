@@ -10,6 +10,7 @@
 # packages used by the lab and manual-label tools.
 
 -e ./shared-market-rules
+-e ./shared-recommendation
 -e ./RL-trading-agent
 
 # RL dev/test tooling not pulled in by the base editable install.

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2011-07-19",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2011-12-30",
+  "observed_empty": true,
+  "requested_dates_signature": "b22805111b213e5e119f11cfb86f5e8b9e7885ca",
+  "requested_trading_days": 118,
+  "ticker": "CIG",
+  "written_at_utc": "2026-03-30T12:49:35Z",
+  "year": 2011
+}

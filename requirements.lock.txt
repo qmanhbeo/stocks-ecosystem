@@ -22,6 +22,7 @@
 #   Python 3.10 env with pip-tools after this surface has been validated.
 
 ./shared-market-rules
+./shared-recommendation
 ./RL-trading-agent
 
 # Build / packaging toolchain

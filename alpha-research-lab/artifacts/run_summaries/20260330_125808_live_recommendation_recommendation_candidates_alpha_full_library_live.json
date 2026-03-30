@@ -1,0 +1,31 @@
+{
+  "artifacts": {
+    "candidates": "/home/manh/stocks/data/features/recommendations/alpha_full_library_live/latest_candidates.parquet",
+    "manifest": "/home/manh/stocks/data/features/recommendations/alpha_full_library_live/manifest.json"
+  },
+  "metadata": {
+    "allow_overlay_signal_date_mismatch": false,
+    "allow_stale_inputs": false,
+    "allow_stale_overlay": false,
+    "live_overlay_gate_enabled": true,
+    "matrix": "data/features/xs_rl_signal_matrix.parquet",
+    "overlay_summary": "artifacts/run_summaries/latest_portfolio_live_activation_overlay.json",
+    "strategy": "full_library",
+    "tradability": "data/features/execution/tradability_daily.parquet"
+  },
+  "mode": "recommendation_candidates_alpha_full_library_live",
+  "name": "live_recommendation",
+  "summary": {
+    "adapter_id": "signal_blend",
+    "as_of_date": "2026-03-27",
+    "blocked_count": 351,
+    "candidate_count": 351,
+    "candidate_path": "/home/manh/stocks/data/features/recommendations/alpha_full_library_live/latest_candidates.parquet",
+    "eligible_count": 0,
+    "manifest_path": "/home/manh/stocks/data/features/recommendations/alpha_full_library_live/manifest.json",
+    "model_id": "signal_blend__full_library",
+    "profile_name": "alpha_full_library_live",
+    "top_eligible": []
+  },
+  "ts": "20260330_125808"
+}

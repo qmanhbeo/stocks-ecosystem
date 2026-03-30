@@ -1,0 +1,15 @@
+{
+  "bar_dates": 20,
+  "bars": 68,
+  "first_bar_time": "2021-12-03T10:00:00",
+  "first_requested_date": "2021-12-03",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2021-12-31T14:00:00",
+  "last_requested_date": "2021-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "460c3f7db5a8b03dec577e4978c469c8d6b71cbc",
+  "requested_trading_days": 21,
+  "ticker": "BAF",
+  "written_at_utc": "2026-03-30T10:11:44Z",
+  "year": 2021
+}

@@ -8,6 +8,7 @@ Read these first:
 
 - `README.md`
 - `alpha-research-lab/README.md`
+- `shared-recommendation/README.md` when changing shared recommendation contracts or candidate artifacts
 - `RL-trading-agent/README.md`
 - `RL-trading-agent/AGENTS.md` when changing RL runtime code
 
@@ -20,6 +21,7 @@ Current responsibilities:
 - `data/` is the canonical shared data root for the entire workspace
 - `alpha-research-lab/` owns research pipelines and research outputs
 - `manual-label-factory/` owns the manual buy-zone labelling UI
+- `shared-recommendation/` owns shared model-agnostic recommendation contracts and artifact resolution
 - `RL-trading-agent/` owns RL runtime logic and consumes artifacts from root `data/`
 - `alpha-research-lab/data` is a symlink to root `data/` so research scripts can be run from inside the lab without duplicating data
 
@@ -28,6 +30,7 @@ Current responsibilities:
 - Shared raw + published data: `/home/manh/stocks/data`
 - Research lab: `/home/manh/stocks/alpha-research-lab`
 - Manual label factory: `/home/manh/stocks/manual-label-factory`
+- Shared recommendation package: `/home/manh/stocks/shared-recommendation`
 - RL runtime: `/home/manh/stocks/RL-trading-agent`
 
 ## Default Assumptions
@@ -36,6 +39,7 @@ Current responsibilities:
 - Inside `alpha-research-lab/`, `data/` resolves to the shared root via symlink
 - Do not reintroduce duplicate data stores inside child repos unless explicitly requested
 - Treat cross-project path contracts as ecosystem-level contracts
+- Treat `data/features/recommendations/` as a shared published surface, not an alpha-only private output
 - When changing producer/consumer boundaries, update docs in both the producer and consumer project
 
 ## Change Map
@@ -53,6 +57,13 @@ If changing RL feature consumption, defaults, or merge behavior:
 
 - work in `RL-trading-agent/vn_stock_rl/`
 - also read `RL-trading-agent/AGENTS.md`
+
+If changing shared recommendation contracts, artifact registry defaults, or candidate-table schema:
+
+- work in `shared-recommendation/`
+- update this root file
+- update root `README.md`
+- update both alpha and RL docs if producer or consumer expectations change
 
 If changing shared dataset conventions:
 

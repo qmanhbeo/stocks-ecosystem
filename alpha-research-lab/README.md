@@ -74,7 +74,10 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - The lab publishes the date-level activation surface at `data/features/activation_state_daily.parquet`
 - The lab publishes the selector-efficacy activation-meta surface at `data/features/activation_meta_daily.parquet`
 - The lab now also publishes the ticker-day corporate-event surface at `data/features/event_surface_daily.parquet`
+- The lab can publish canonical recommendation candidate tables at `data/features/recommendations/<profile>/latest_candidates.parquet`
+- The lab can publish stock-specific entry-alpha research artifacts under `data/features/entry_alpha/`
 - RL consumes that matrix through `../RL-trading-agent` via `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
+- Recommendation contracts are shared with RL-adjacent consumers via `../shared-recommendation/`
 - Execution reality is shared with RL via `../docs/execution_reality.md` and `../shared-market-rules/`
 
 ## Current Best RL Signal
@@ -270,6 +273,7 @@ python setup_data.py
 
 All commands above are intended to be run from `alpha-research-lab/`.
 The environment also installs the workspace-shared `shared-market-rules` package.
+It also installs the workspace-shared `shared-recommendation` package used for candidate generation and artifact resolution.
 
 ## Main Experiment Modes
 
@@ -338,6 +342,8 @@ The environment also installs the workspace-shared `shared-market-rules` package
 - `analysis/h204_third_wave_tradability_conditioned_search.py`: fresh-family tradability-conditioned signal search after the H203/H205 pair branch dies
 - `analysis/h205_state_scoped_pairwise_bakeoff.py`: state-scoped pairwise selector bakeoff for promoted H203 pair candidates
 - `analysis/h206_pair_selector_activation_compatibility.py`: sticky-activation compatibility test for a promoted H205 pair-selector winner
+- `analysis/h238_entry_alpha_candidate_panel.py`: candidate-panel and cycle-label artifact builder for the stock-specific entry-alpha branch
+- `analysis/h239_entry_alpha_sparse_breadth_baseline.py`: sparse-breadth threshold baseline for the stock-specific entry-alpha branch
 
 ## Live Paper-Trade Prerequisite
 
@@ -351,6 +357,31 @@ Live `full_library` paper trades require intact long-history raw stock files.
   - `data_tools/build_rl_signal_matrix.py`
   - `data_tools/build_activation_state_features.py`
   - `data_tools/build_activation_meta_features.py`
+
+## Shared Live Recommendation Export
+
+The lab now has a canonical recommendation export path built on the shared recommendation engine.
+
+Use:
+
+```bash
+cd /home/manh/stocks/alpha-research-lab
+python analysis/live_recommendation.py --strategy full_library --profile-name alpha_full_library_live
+```
+
+This reads:
+
+- `data/features/xs_rl_signal_matrix.parquet`
+- `data/features/execution/tradability_daily.parquet`
+- `artifacts/run_summaries/latest_portfolio_live_activation_overlay.json` by default for the sticky live overlay gate
+
+And writes:
+
+- `data/features/recommendations/<profile>/latest_candidates.parquet`
+- `data/features/recommendations/<profile>/manifest.json`
+- `artifacts/run_summaries/latest_recommendation_candidates_<profile>.json`
+
+The shared candidate table is inference-only. Training, selector discovery, and portfolio backtests remain owned by the existing lab scripts.
 
 ## Saved Result Artifacts
 
@@ -400,6 +431,7 @@ Main experiment runners write compact JSON summaries to `artifacts/run_summaries
 - Portfolio activation meta-model: `latest_portfolio_activation_meta_model.json`
 - Portfolio activation H175 robustness stress: `latest_portfolio_activation_h175_robustness_stress.json`
 - Portfolio live activation overlay: `latest_portfolio_live_activation_overlay.json`
+- Recommendation candidates by profile: `latest_recommendation_candidates_<profile>.json`
 - Portfolio activation H175 small augmentations: `latest_portfolio_activation_h175_small_augmentations.json`
 - Portfolio live activation scoreboard: `latest_portfolio_live_activation_scoreboard.json`
 

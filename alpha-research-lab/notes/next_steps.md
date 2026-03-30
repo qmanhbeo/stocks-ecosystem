@@ -31,6 +31,9 @@ Use `notes/session_74_log.md` for the latest full session detail.
      - intraday / auction acquisition first
      - richer company-event source second
      - otherwise stop timing research and wait for more forward live evidence
+   - do not confuse that branch with the separate parked architecture idea in `notes/entry_alpha_research_design.md`
+     - that note is a future stock-specific entry-alpha design
+     - it is **not** the active branch while acquisition-first timing work remains policy
 6. Treat the live branch as operationally current:
    - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-27`
    - `data/features/activation_state_daily.parquet` is now current through `2026-03-27`
@@ -102,7 +105,15 @@ Use `notes/session_74_log.md` for the latest full session detail.
      - branch decision:
        - rollback the active live branch to sticky
        - do **not** run `H194/H195` on the failed blocked-buy family unless the branch is intentionally reopened later
-9. Session 66 selection-side first pass:
+9. Parked future architecture branch:
+   - if the repo intentionally reopens architecture work around "buy this stock now even if the rest are weak", start from:
+     - `notes/entry_alpha_research_design.md`
+   - branch thesis:
+     - keep selection alpha as the cross-sectional prior
+     - reinterpret activation alpha as a soft exposure prior
+     - add stock-specific entry alpha so breadth can vary from `0..K`
+   - this is a future branch design only, not a current priority over H230-H237
+10. Session 66 selection-side first pass:
    - locked protocol is now codified in code:
      - dev `2015-2022`
      - validation `2023-2024`
@@ -119,7 +130,7 @@ Use `notes/session_74_log.md` for the latest full session detail.
        - `h152_breakout_volume_quality`
      - none showed naive always-on selector relevance
      - treat them as candidate atoms, not promoted selectors
-10. Session 67 additive follow-through:
+11. Session 67 additive follow-through:
    - `H196`: **FAIL**
      - no `H152` atom cleared the locked additive promotion rule on top of `full_library`
      - nearest miss:
@@ -147,7 +158,7 @@ Use `notes/session_74_log.md` for the latest full session detail.
        - naive validation selector relevance `+3.70%`
      - branch effect:
        - carry exactly this atom into the next additive test
-11. Session 68 H199 follow-through:
+12. Session 68 H199 follow-through:
    - `H200`: **PASS**
      - `full_library + h199_sector_laggard_gap_absorb`
      - validation relative `+68.21%` vs baseline `+43.45%`
@@ -174,7 +185,7 @@ Use `notes/session_74_log.md` for the latest full session detail.
      - branch effect:
        - do not replace the live branch
        - keep the H201 winner as offline-only research evidence
-12. Session 69 selector follow-through:
+13. Session 69 selector follow-through:
    - `H203`: **PASS**
      - one pair candidate survived the always-on additive gate:
        - `full_library_pair__h199_sector_laggard_gap_absorb__h199_breakout_after_compression`
@@ -209,7 +220,7 @@ Use `notes/session_74_log.md` for the latest full session detail.
      - branch effect:
        - stop the current selector-discovery ladder here
        - do not keep recombining H199/H204 atoms against the same locked protocol window
-13. Session 70 exit-alpha ladder:
+14. Session 70 exit-alpha ladder:
    - objective:
      - test whether the missing edge is post-entry exit timing rather than more selection or activation complexity
    - `H207`: **PASS**
@@ -247,7 +258,7 @@ Use `notes/session_74_log.md` for the latest full session detail.
        - keep the live sticky branch unchanged
        - close the current exit ladder
        - do not retune H207-H213 thresholds against `2025`
-14. Session 71 genuinely new exit-family follow-through:
+15. Session 71 genuinely new exit-family follow-through:
    - objective:
      - reopen exit research only with genuinely different post-entry families, not H207-H213 threshold tuning
    - `H214`: **FAIL**

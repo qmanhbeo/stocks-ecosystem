@@ -82,6 +82,10 @@ Operationally important summary:
   - selection alpha = choose the right names
   - activation alpha = decide when the selector should be on
   - exit alpha = decide when to stop holding a bought name after entry
+- current live implementation uses activation mostly as a **date-level global gate**
+- if architecture work is intentionally reopened around ticker-specific buy timing, start from:
+  - `notes/entry_alpha_research_design.md`
+  - that branch treats activation as a soft exposure prior and adds stock-specific entry alpha
 - `H157-H162` tested deterministic binary activation and did not beat the always-on `full_library + k5_r5_eq` selector
 - `H163-H174` then revisited activation with materially different designs and found the first real winner:
   - `H170` `recentsm__rel3_gt0` on `full_library + k5_r5_eq`
@@ -351,6 +355,8 @@ Mode-specific durable outputs:
 - `analysis/h144_entry_slicing_simulation.py`: `artifacts/run_summaries/latest_portfolio_entry_slicing_simulation.json` plus sliced vs unsliced outputs under `artifacts/portfolio_baselines/`
 - `analysis/h145_volume_confirmed_entry_filter.py`: `artifacts/run_summaries/latest_portfolio_volume_confirmed_entry_filter.json` plus entry-gate outputs under `artifacts/portfolio_baselines/`
 - `analysis/h146_variable_breadth_portfolio.py`: `artifacts/run_summaries/latest_portfolio_variable_breadth.json` plus variable-breadth sweep outputs under `artifacts/portfolio_baselines/`
+- `analysis/h238_entry_alpha_candidate_panel.py`: `artifacts/run_summaries/latest_entry_alpha_candidate_panel.json` plus canonical candidate-panel artifacts under `data/features/entry_alpha/`
+- `analysis/h239_entry_alpha_sparse_breadth_baseline.py`: `artifacts/run_summaries/latest_entry_alpha_sparse_breadth_baseline.json` plus sparse-breadth baseline outputs under `artifacts/entry_alpha/`
 - `analysis/h147_liquidity_state_opportunity_audit.py`: `artifacts/run_summaries/latest_portfolio_liquidity_state_opportunity_audit.json` plus daily opportunity-count outputs under `artifacts/portfolio_baselines/`
 - `analysis/h148_local_liquidity_gate_refinement.py`: `artifacts/run_summaries/latest_portfolio_local_liquidity_gate_refinement.json` plus local-gate refinement outputs under `artifacts/portfolio_baselines/`
 - `analysis/h149_soft_activation_score.py`: `artifacts/run_summaries/latest_portfolio_soft_activation_score.json` plus soft-activation outputs under `artifacts/portfolio_baselines/`

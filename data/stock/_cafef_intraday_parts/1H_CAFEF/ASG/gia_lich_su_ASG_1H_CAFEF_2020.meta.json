@@ -1,0 +1,15 @@
+{
+  "bar_dates": 58,
+  "bars": 165,
+  "first_bar_time": "2020-09-24T12:00:00",
+  "first_requested_date": "2020-09-24",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2020-12-31T14:00:00",
+  "last_requested_date": "2020-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "2b5b3aeaf053b0e83671fd46e2eb6451044d77ca",
+  "requested_trading_days": 71,
+  "ticker": "ASG",
+  "written_at_utc": "2026-03-30T09:50:04Z",
+  "year": 2020
+}

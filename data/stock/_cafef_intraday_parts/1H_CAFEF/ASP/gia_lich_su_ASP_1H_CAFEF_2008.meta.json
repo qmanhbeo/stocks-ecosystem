@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2008-02-15",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2008-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "2ac121544ddcd96148c14b7984fe17f47db2dcf9",
+  "requested_trading_days": 219,
+  "ticker": "ASP",
+  "written_at_utc": "2026-03-30T10:00:17Z",
+  "year": 2008
+}

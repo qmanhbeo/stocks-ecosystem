@@ -1,0 +1,15 @@
+{
+  "bar_dates": 54,
+  "bars": 208,
+  "first_bar_time": "2026-01-05T10:00:00",
+  "first_requested_date": "2026-01-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T14:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "fa728c9f4919d6d9b7c620612a6422fee20fa0af",
+  "requested_trading_days": 54,
+  "ticker": "C32",
+  "written_at_utc": "2026-03-30T12:13:54Z",
+  "year": 2026
+}
