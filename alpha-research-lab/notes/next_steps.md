@@ -1,13 +1,14 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_74_log.md` for the latest full session detail.
+Use `notes/session_75_log.md` for the latest full session detail.
+Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Current State
 
-**Session status:** Session 74 did not reopen modeling. It codified the active acquisition-first branch after Session 73 closed timing research on the current local data stack. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. Exit alpha is still established only in the earlier H211 always-on exhaustion family; the newer H214-H216 families, the H218-H220 continuation family, and the new-data H221-H229 branch are all closed offline. The current offline lead selector candidate remains `state_blend__h199_sector_laggard_gap_absorb__30`, not a live-branch replacement. ADV / capacity remains parked for the current-account branch, and RL remains exploratory. (2026-03-29)
+**Session status:** Session 75 executed the first stock-specific entry-alpha ladder (`H238-H244`) offline. It published canonical entry-alpha artifacts and tested sparse breadth, single-family screens, compact models, soft exposure priors, live compatibility, and an honest dev-selected sparse-breadth protocol. The result was informative but not promotable: sparse breadth is real enough to keep as offline evidence, but no stock-specific entry-alpha rule or model is ready to replace or overlay the frozen sticky live branch. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. The active non-live priority still remains acquisition-first timing data work, not more local timing-model tuning on the current data stack. (2026-03-30)
 
 ### Start next session here
 
@@ -31,9 +32,13 @@ Use `notes/session_74_log.md` for the latest full session detail.
      - intraday / auction acquisition first
      - richer company-event source second
      - otherwise stop timing research and wait for more forward live evidence
-   - do not confuse that branch with the separate parked architecture idea in `notes/entry_alpha_research_design.md`
-     - that note is a future stock-specific entry-alpha design
-     - it is **not** the active branch while acquisition-first timing work remains policy
+   - do not confuse that branch with the separate parked stock-specific entry-alpha architecture branch documented in `README.md`, `README_for_AGENTS.md`, and `notes/session_75_log.md`
+     - Session 75 already ran the first offline ladder (`H238-H244`)
+     - current conclusion:
+       - useful sparse-book evidence exists
+       - no promotable live-ready winner exists
+       - if reopened, the next step is `H245`, not a live-branch swap
+     - it is still **not** the active branch while acquisition-first timing work remains policy
 6. Treat the live branch as operationally current:
    - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-27`
    - `data/features/activation_state_daily.parquet` is now current through `2026-03-27`
@@ -106,13 +111,25 @@ Use `notes/session_74_log.md` for the latest full session detail.
        - rollback the active live branch to sticky
        - do **not** run `H194/H195` on the failed blocked-buy family unless the branch is intentionally reopened later
 9. Parked future architecture branch:
-   - if the repo intentionally reopens architecture work around "buy this stock now even if the rest are weak", start from:
-     - `notes/entry_alpha_research_design.md`
+   - if the repo intentionally continues architecture work around "buy this stock now even if the rest are weak", start from:
+     - `README.md`
+     - `README_for_AGENTS.md`
+     - `notes/session_75_log.md`
    - branch thesis:
      - keep selection alpha as the cross-sectional prior
      - reinterpret activation alpha as a soft exposure prior
      - add stock-specific entry alpha so breadth can vary from `0..K`
-   - this is a future branch design only, not a current priority over H230-H237
+   - canonical offline artifacts:
+     - `data/features/entry_alpha/candidate_panel_daily.parquet`
+     - `data/features/entry_alpha/entry_labels_cycle5.parquet`
+     - `data/features/entry_alpha/entry_scores_daily.parquet`
+   - Session 75 branch outcome:
+     - `H239` sparse breadth was the only strong structural pass
+     - `H240-H243` did not produce a promotable rule or model
+     - `H244` showed the dev-selected sparse-breadth winner did not survive validation cleanly enough to promote
+   - next architecture hypothesis if intentionally reopened:
+     - `H245`: test whether the real contract is `top1/top2` sparse books rather than `top5` timing overlays
+   - this remains lower priority than H230-H237 acquisition-first work
 10. Session 66 selection-side first pass:
    - locked protocol is now codified in code:
      - dev `2015-2022`

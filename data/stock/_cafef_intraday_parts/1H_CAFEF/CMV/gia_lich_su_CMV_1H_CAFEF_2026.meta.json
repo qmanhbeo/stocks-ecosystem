@@ -1,0 +1,15 @@
+{
+  "bar_dates": 37,
+  "bars": 79,
+  "first_bar_time": "2026-01-09T11:00:00",
+  "first_requested_date": "2026-01-09",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T13:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "c8c1091304b4648d12c4e67bd96952545f439aec",
+  "requested_trading_days": 37,
+  "ticker": "CMV",
+  "written_at_utc": "2026-03-30T13:42:57Z",
+  "year": 2026
+}

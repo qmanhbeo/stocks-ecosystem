@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2010-01-20",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2010-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "ce4f40e0fa29c274e383cba9b7e8598c01e3f443",
+  "requested_trading_days": 238,
+  "ticker": "CTD",
+  "written_at_utc": "2026-03-30T14:25:32Z",
+  "year": 2010
+}

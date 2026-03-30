@@ -26,6 +26,52 @@ This lab now defaults to sequential hypothesis ladders.
 - one result should determine whether the next experiment is needed, narrowed, or rejected
 - prefer decision trees over broad unordered sweeps
 - when a live branch is active, freeze it and run new hypotheses offline under a separate protocol
+- classify finished branch outcomes explicitly instead of treating every branch as a binary live winner vs failure
+
+## Branch Result Classification
+
+Keep live-promotion standards strict, but do not throw away useful offline evidence.
+
+Every finished branch should be classified into exactly one of these buckets:
+
+### 1. Live promotion
+
+Use this only when a branch is strong enough to change an active live or pseudo-live workflow.
+
+Required standard:
+- honest locked protocol for that branch
+- result stayed strong enough on validation and confirmation
+- pseudo-live / forward compatibility did not materially break the edge
+- rule is operationally implementable with current artifacts and execution assumptions
+
+Typical action:
+- update `notes/next_steps.md` and the active branch description
+
+### 2. Offline evidence promotion
+
+Use this when a branch is not live-ready but still found something structurally real enough to anchor the next hypothesis.
+
+Typical signs:
+- a simpler baseline improved before later steps failed
+- the branch narrowed the right portfolio contract
+- the branch produced a durable negative result that should constrain future work
+
+Typical action:
+- record it in the session log and findings
+- state clearly that it is offline evidence, not a live candidate
+
+### 3. Branch kill / park
+
+Use this when the current local path should not continue under the present data or contract.
+
+Typical signs:
+- repeated honest failures with no remaining narrowed path
+- the branch only survives by local retuning after failing the stronger gate
+- the branch depends on data the workspace does not currently have
+
+Typical action:
+- mark the branch closed or parked in `notes/next_steps.md`
+- record what would need to change before reopening it
 
 ## Hard Trading Rule
 
@@ -142,6 +188,31 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
   - research track: reopen alpha discovery under the locked protocol
     - dev `2015-2022`
     - validation `2023-2024`
+
+## Parked Entry-Alpha Branch
+
+This is a parked architecture branch, not the active research priority.
+
+Thesis:
+- keep selection alpha as the cross-sectional prior
+- reinterpret activation alpha as a soft exposure prior, not a hard global veto
+- add stock-specific entry alpha so portfolio breadth can vary from `0..K`
+
+Current status:
+- Session 75 executed `H238-H244` offline
+- strongest result was `H239` sparse breadth
+- no single-family rule, compact model, soft-prior overlay, or live-compatibility variant is promotable
+- classify the branch as offline evidence, not a live replacement candidate
+
+Canonical offline artifacts:
+- `data/features/entry_alpha/candidate_panel_daily.parquet`
+- `data/features/entry_alpha/entry_labels_cycle5.parquet`
+- `data/features/entry_alpha/entry_scores_daily.parquet`
+
+If intentionally reopened:
+- start from `notes/session_75_log.md` and `notes/next_steps.md`
+- next honest continuation is `H245`: test whether the real contract is `top1/top2` sparse books rather than `top5` timing overlays
+- keep it lower priority than the active timing-data acquisition branch
     - one-shot confirmation `2025`
     - forward lockbox `2026+`
 - Session 57 tested deterministic binary activation (`H157-H162`) and did **not** beat the always-on `full_library + k5_r5_eq` selector
@@ -344,6 +415,11 @@ It also installs the workspace-shared `shared-recommendation` package used for c
 - `analysis/h206_pair_selector_activation_compatibility.py`: sticky-activation compatibility test for a promoted H205 pair-selector winner
 - `analysis/h238_entry_alpha_candidate_panel.py`: candidate-panel and cycle-label artifact builder for the stock-specific entry-alpha branch
 - `analysis/h239_entry_alpha_sparse_breadth_baseline.py`: sparse-breadth threshold baseline for the stock-specific entry-alpha branch
+- `analysis/h240_entry_alpha_single_family_screens.py`: simple implementation-context and price-state entry-screen sweep for the stock-specific entry-alpha branch
+- `analysis/h241_entry_alpha_compact_model.py`: compact candidate-level logistic entry model and thresholded portfolio evaluation
+- `analysis/h242_entry_alpha_soft_exposure_prior.py`: soft exposure-prior integration that reuses activation alpha as threshold, breadth, or weight modulation
+- `analysis/h243_entry_alpha_live_compatibility.py`: pseudo-live compatibility audit against the frozen sticky live branch
+- `analysis/h244_entry_alpha_sparse_breadth_protocol.py`: honest dev/validation/confirmation/forward protocol for the H239 sparse-breadth branch
 
 ## Live Paper-Trade Prerequisite
 

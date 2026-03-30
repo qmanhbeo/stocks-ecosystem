@@ -1,0 +1,15 @@
+{
+  "bar_dates": 28,
+  "bars": 33,
+  "first_bar_time": "2026-01-06T10:00:00",
+  "first_requested_date": "2026-01-06",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T12:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "595ccde9ebf32ed6019bea8af529b281f2458084",
+  "requested_trading_days": 28,
+  "ticker": "CLW",
+  "written_at_utc": "2026-03-30T13:28:50Z",
+  "year": 2026
+}

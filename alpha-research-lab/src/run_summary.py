@@ -3,6 +3,9 @@ import re
 from pathlib import Path
 from typing import Optional
 
+import numpy as np
+import pandas as pd
+
 
 RUN_SUMMARY_DIR = Path("artifacts/run_summaries")
 
@@ -10,6 +13,28 @@ RUN_SUMMARY_DIR = Path("artifacts/run_summaries")
 def _slugify(value: str) -> str:
     slug = re.sub(r"[^A-Za-z0-9._-]+", "_", value.strip())
     return slug.strip("._") or "run"
+
+
+def _json_safe(value):
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, Path):
+        return str(value)
+    if isinstance(value, pd.Timestamp):
+        return value.isoformat()
+    if value is pd.NaT:
+        return None
+    if isinstance(value, np.ndarray):
+        return [_json_safe(item) for item in value.tolist()]
+    if isinstance(value, np.generic):
+        if pd.isna(value):
+            return None
+        return value.item()
+    if isinstance(value, float) and pd.isna(value):
+        return None
+    return value
 
 
 def write_run_summary(*, ts: str, mode: str, name: str,
@@ -27,9 +52,9 @@ def write_run_summary(*, ts: str, mode: str, name: str,
         "ts": ts,
         "mode": mode,
         "name": name,
-        "summary": summary or {},
-        "artifacts": artifacts or {},
-        "metadata": metadata or {},
+        "summary": _json_safe(summary or {}),
+        "artifacts": _json_safe(artifacts or {}),
+        "metadata": _json_safe(metadata or {}),
     }
 
     out_path = RUN_SUMMARY_DIR / f"{ts}_{_slugify(name)}_{mode}.json"

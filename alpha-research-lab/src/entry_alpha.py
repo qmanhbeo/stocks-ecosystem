@@ -18,6 +18,7 @@ from src.activation_meta import ACTIVATION_META_PATH, load_or_build_activation_m
 from src.activation_meta_experiment_utils import selector_recent_relative_ewm_from_prev
 from src.deterministic_portfolio import load_benchmark_open, simulate_strategy
 from src.portfolio_friction_features import build_boolean_matrix, build_friction_feature_frame
+from src.tradability_conditioned_research import build_candidate_signal_frame, load_research_bundle
 
 
 ENTRY_ALPHA_DIR = Path("data/features/entry_alpha")
@@ -97,6 +98,34 @@ def load_entry_alpha_inputs(
         how="left",
         validate="one_to_one",
     )
+    try:
+        research_bundle = load_research_bundle(
+            matrix_path=matrix_path,
+            tradability_path=tradability_path,
+            stock_dir=stock_dir,
+            benchmark_path=benchmark_path,
+            start_year=int(start_year),
+            end_year=int(end_year),
+        )
+        candidate_signal_frame = build_candidate_signal_frame(
+            research_bundle,
+            start_year=int(start_year),
+            end_year=int(end_year),
+        )
+        extra_columns = [
+            column
+            for column in candidate_signal_frame.columns
+            if column not in {"time", "ticker"} and column not in feature_frame.columns
+        ]
+        if extra_columns:
+            feature_frame = feature_frame.merge(
+                candidate_signal_frame[["time", "ticker"] + extra_columns],
+                on=["time", "ticker"],
+                how="left",
+                validate="one_to_one",
+            )
+    except FileNotFoundError:
+        pass
 
     activation_meta, meta_source = load_or_build_activation_meta(
         out_path=activation_meta_path,

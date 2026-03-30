@@ -33,6 +33,42 @@ Execution reality is shared at the workspace level:
 
 `notes/next_steps.md` is the live small-brain state source. This file is the working manual.
 
+## Result Classification
+
+Do not treat every branch as a binary `live winner` vs `failed branch`.
+
+Every finished branch should be classified into exactly one bucket:
+
+### 1. Live promotion
+
+Use this only when the result is strong enough to change an active live or pseudo-live workflow.
+
+Required standard:
+- honest locked protocol
+- strong enough validation and confirmation
+- pseudo-live / forward compatibility is still acceptable
+- operationally implementable with current artifacts and execution assumptions
+
+### 2. Offline evidence promotion
+
+Use this when the branch is not live-ready but still found something durable enough to shape the next honest hypothesis.
+
+Use this when:
+- a simpler baseline improved before later steps failed
+- the branch narrowed the right portfolio contract
+- the branch produced a durable negative result that should constrain future work
+
+This bucket matters. It is the guardrail against being too binary.
+
+### 3. Branch kill / park
+
+Use this when the current local path should not continue under the present data or contract.
+
+Use this when:
+- repeated honest failures leave no narrowed next step
+- the branch only survives by local retuning after failing the stronger gate
+- the branch needs data the workspace does not currently have
+
 ## Hard Rule
 
 This lab is permanently long-only.
@@ -84,9 +120,26 @@ Operationally important summary:
   - exit alpha = decide when to stop holding a bought name after entry
 - current live implementation uses activation mostly as a **date-level global gate**
 - if architecture work is intentionally reopened around ticker-specific buy timing, start from:
-  - `notes/entry_alpha_research_design.md`
-  - that branch treats activation as a soft exposure prior and adds stock-specific entry alpha
+  - this file
+  - `README.md`
+  - `notes/next_steps.md`
+  - `notes/session_75_log.md`
+  - branch thesis:
+    - keep selection alpha as the cross-sectional prior
+    - reinterpret activation alpha as a soft exposure prior
+    - add stock-specific entry alpha so breadth can vary from `0..K`
+  - canonical offline artifacts:
+    - `data/features/entry_alpha/candidate_panel_daily.parquet`
+    - `data/features/entry_alpha/entry_labels_cycle5.parquet`
+    - `data/features/entry_alpha/entry_scores_daily.parquet`
 - `H157-H162` tested deterministic binary activation and did not beat the always-on `full_library + k5_r5_eq` selector
+- Session 75 executed the first offline stock-specific entry-alpha ladder:
+  - `H238-H244`
+  - outcome:
+    - sparse breadth is real enough to keep as offline evidence
+    - no single-family rule, compact model, soft-prior overlay, or live-compatibility variant is promotable
+    - do not treat the entry-alpha branch as a live replacement candidate yet
+    - if it is intentionally reopened, start from `H245` rather than re-running `H240-H244`
 - `H163-H174` then revisited activation with materially different designs and found the first real winner:
   - `H170` `recentsm__rel3_gt0` on `full_library + k5_r5_eq`
   - `+841.14%` total
@@ -357,6 +410,11 @@ Mode-specific durable outputs:
 - `analysis/h146_variable_breadth_portfolio.py`: `artifacts/run_summaries/latest_portfolio_variable_breadth.json` plus variable-breadth sweep outputs under `artifacts/portfolio_baselines/`
 - `analysis/h238_entry_alpha_candidate_panel.py`: `artifacts/run_summaries/latest_entry_alpha_candidate_panel.json` plus canonical candidate-panel artifacts under `data/features/entry_alpha/`
 - `analysis/h239_entry_alpha_sparse_breadth_baseline.py`: `artifacts/run_summaries/latest_entry_alpha_sparse_breadth_baseline.json` plus sparse-breadth baseline outputs under `artifacts/entry_alpha/`
+- `analysis/h240_entry_alpha_single_family_screens.py`: `artifacts/run_summaries/latest_entry_alpha_single_family_screens.json` plus screen results and enriched candidate-panel outputs under `artifacts/entry_alpha/`
+- `analysis/h241_entry_alpha_compact_model.py`: `artifacts/run_summaries/latest_entry_alpha_compact_model.json` plus compact-model results under `artifacts/entry_alpha/` and canonical score artifact `data/features/entry_alpha/entry_scores_daily.parquet`
+- `analysis/h242_entry_alpha_soft_exposure_prior.py`: `artifacts/run_summaries/latest_entry_alpha_soft_exposure_prior.json` plus soft-prior portfolio results under `artifacts/entry_alpha/`
+- `analysis/h243_entry_alpha_live_compatibility.py`: `artifacts/run_summaries/latest_entry_alpha_live_compatibility.json` plus pseudo-live compatibility outputs under `artifacts/entry_alpha/`
+- `analysis/h244_entry_alpha_sparse_breadth_protocol.py`: `artifacts/run_summaries/latest_entry_alpha_sparse_breadth_protocol.json` plus dev-selected winner and protocol results under `artifacts/entry_alpha/`
 - `analysis/h147_liquidity_state_opportunity_audit.py`: `artifacts/run_summaries/latest_portfolio_liquidity_state_opportunity_audit.json` plus daily opportunity-count outputs under `artifacts/portfolio_baselines/`
 - `analysis/h148_local_liquidity_gate_refinement.py`: `artifacts/run_summaries/latest_portfolio_local_liquidity_gate_refinement.json` plus local-gate refinement outputs under `artifacts/portfolio_baselines/`
 - `analysis/h149_soft_activation_score.py`: `artifacts/run_summaries/latest_portfolio_soft_activation_score.json` plus soft-activation outputs under `artifacts/portfolio_baselines/`
@@ -425,6 +483,7 @@ one compact summary JSON under `artifacts/run_summaries/`.
 - The experiment has a compact saved summary artifact.
 - The permanent output path is recorded.
 - The session log states the hypothesis, result, and verdict.
+- The verdict is classified using the branch-result buckets in this file and `README.md`.
 - Durable conclusions are promoted to the current `notes/findings-*.md` chunk.
 - `notes/next_steps.md` is updated if the champion system or next priority changed.
 - `notes/signal_library.md` is updated if a signal was confirmed, promoted, or newly rejected.

@@ -1,0 +1,40 @@
+{
+  "artifacts": {
+    "candidate_panel": "data/features/entry_alpha/candidate_panel_daily.parquet",
+    "labels": "data/features/entry_alpha/entry_labels_cycle5.parquet"
+  },
+  "metadata": {
+    "activation_meta": "data/features/activation_meta_daily.parquet",
+    "benchmark": "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+    "end_year": 2025,
+    "initial_notional_vnd": 100000000.0,
+    "label_edge_buffer": 0.0,
+    "matrix": "data/features/xs_rl_signal_matrix.parquet",
+    "required_holding_age": 3,
+    "round_trip_cost": 0.003,
+    "start_year": 2019,
+    "stock_dir": "data/stock",
+    "strategy": "full_library",
+    "tradability": "data/features/execution/tradability_daily.parquet"
+  },
+  "mode": "entry_alpha_candidate_panel",
+  "name": "h238_entry_alpha_candidate_panel",
+  "summary": {
+    "activation_meta_source": "artifact",
+    "buy_now_positive_rate": 0.48595465153130313,
+    "candidate_panel_path": "data/features/entry_alpha/candidate_panel_daily.parquet",
+    "candidate_rows": 34980,
+    "dates": 1749,
+    "label_rows": 34980,
+    "labeled_rows": 34709,
+    "labels_path": "data/features/entry_alpha/entry_labels_cycle5.parquet",
+    "rebalance_every": 5,
+    "selector_name": "full_library_k5_r5_eq",
+    "strategy_name": "full_library",
+    "tickers": 394,
+    "top_k": 5,
+    "top_m_max": 20,
+    "unlabeled_rows": 271
+  },
+  "ts": "20260330_135353"
+}
