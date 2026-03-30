@@ -1,0 +1,15 @@
+{
+  "bar_dates": 186,
+  "bars": 837,
+  "first_bar_time": "2015-03-31T10:00:00",
+  "first_requested_date": "2015-03-31",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2015-12-31T14:00:00",
+  "last_requested_date": "2015-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "92acc689f8a8f03e92d14fe6d85d43018eca1864",
+  "requested_trading_days": 193,
+  "ticker": "DCM",
+  "written_at_utc": "2026-03-30T16:08:19Z",
+  "year": 2015
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 40,
+  "bars": 178,
+  "first_bar_time": "2017-10-31T10:00:00",
+  "first_requested_date": "2017-10-31",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2017-12-29T14:00:00",
+  "last_requested_date": "2017-12-29",
+  "observed_empty": false,
+  "requested_dates_signature": "7fffc3e96428fed7c8aae07ce3313924973654dd",
+  "requested_trading_days": 44,
+  "ticker": "CTR",
+  "written_at_utc": "2026-03-30T14:53:29Z",
+  "year": 2017
+}

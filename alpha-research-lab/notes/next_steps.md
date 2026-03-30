@@ -1,14 +1,14 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_75_log.md` for the latest full session detail.
+Use `notes/session_76_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Current State
 
-**Session status:** Session 75 executed the first stock-specific entry-alpha ladder (`H238-H244`) offline. It published canonical entry-alpha artifacts and tested sparse breadth, single-family screens, compact models, soft exposure priors, live compatibility, and an honest dev-selected sparse-breadth protocol. The result was informative but not promotable: sparse breadth is real enough to keep as offline evidence, but no stock-specific entry-alpha rule or model is ready to replace or overlay the frozen sticky live branch. The active live branch remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`. The active non-live priority still remains acquisition-first timing data work, not more local timing-model tuning on the current data stack. (2026-03-30)
+**Session status:** Session 76 ran `H245`, the small-book contract audit for the stock-specific entry-alpha branch. It found that the branch behaves more like a historical `top1` contract than a `top5` timing overlay, but no audited `top_k` contract survives the honest forward gate cleanly enough to promote. Entry alpha therefore remains offline evidence only. The active live branch still remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`, and the active non-live priority still remains acquisition-first timing data work rather than more local timing-model tuning on the current data stack. (2026-03-30)
 
 ### Start next session here
 
@@ -32,12 +32,13 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
      - intraday / auction acquisition first
      - richer company-event source second
      - otherwise stop timing research and wait for more forward live evidence
-   - do not confuse that branch with the separate parked stock-specific entry-alpha architecture branch documented in `README.md`, `README_for_AGENTS.md`, and `notes/session_75_log.md`
-     - Session 75 already ran the first offline ladder (`H238-H244`)
+   - do not confuse that branch with the separate parked stock-specific entry-alpha architecture branch documented in `README.md`, `README_for_AGENTS.md`, and `notes/session_75_log.md` plus `notes/session_76_log.md`
+     - Sessions 75-76 already ran the first offline ladder plus the small-book contract audit (`H238-H245`)
      - current conclusion:
        - useful sparse-book evidence exists
+       - historically the branch looks more like `top1/top2` than `top5`
        - no promotable live-ready winner exists
-       - if reopened, the next step is `H245`, not a live-branch swap
+       - if reopened, the next step is `H246`, not a live-branch swap
      - it is still **not** the active branch while acquisition-first timing work remains policy
 6. Treat the live branch as operationally current:
    - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-27`
@@ -115,6 +116,7 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
      - `README.md`
      - `README_for_AGENTS.md`
      - `notes/session_75_log.md`
+     - `notes/session_76_log.md`
    - branch thesis:
      - keep selection alpha as the cross-sectional prior
      - reinterpret activation alpha as a soft exposure prior
@@ -127,8 +129,11 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
      - `H239` sparse breadth was the only strong structural pass
      - `H240-H243` did not produce a promotable rule or model
      - `H244` showed the dev-selected sparse-breadth winner did not survive validation cleanly enough to promote
+   - Session 76 branch outcome:
+     - `H245` showed the branch behaves more like a historical `top1` contract than a `top5` timing overlay
+     - but no audited `top_k` contract survives the honest forward gate cleanly enough to promote
    - next architecture hypothesis if intentionally reopened:
-     - `H245`: test whether the real contract is `top1/top2` sparse books rather than `top5` timing overlays
+     - `H246`: keep the branch small-book and test a light confirmation / calibration overlay on top of the `top1/top2` contract
    - this remains lower priority than H230-H237 acquisition-first work
 10. Session 66 selection-side first pass:
    - locked protocol is now codified in code:
@@ -1432,6 +1437,10 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 | 70 | 2026-03-29 | H207-H213 exit-alpha ladder: rank-decay and strength-exhaustion exits win offline, but the promoted exit winner fails frozen sticky compatibility; live branch remains unchanged | H93 + C4-C14 |
 | 71 | 2026-03-29 | H214-H217 genuinely new exit-family follow-through: thesis inconsistency, failed follow-through, and time-under-water do not beat the H211 winner; new-family sticky compatibility is skipped | H93 + C4-C14 |
 | 72 | 2026-03-29 | H218-H220 continuation / hold-vs-exit hazard branch: no dev-trained continuation model clears the predictive gate, so exit bands and sticky compatibility are skipped | H93 + C4-C14 |
+| 73 | 2026-03-29 | H221-H229: event surface builds but fails predictive screening; intraday / order-book follow-through fails locally; exit-side research is blocked by missing data, not more rule ideas | H93 + C4-C14 |
+| 74 | 2026-03-29 | Timing-data acquisition branch formalized: next honest timing work is source acquisition first, with explicit viability gates before modeling can reopen | H93 + C4-C14 |
+| 75 | 2026-03-30 | H238-H244 entry-alpha ladder: sparse breadth is real offline evidence, but no rule/model/soft-prior/live-compatibility variant is promotable | H93 + C4-C14 |
+| 76 | 2026-03-30 | H245 entry-alpha contract audit: branch looks historically like a small-book `top1` contract, but no audited `top_k` survives the honest forward gate; branch remains offline-only | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 

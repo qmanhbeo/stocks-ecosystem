@@ -1,0 +1,15 @@
+{
+  "bar_dates": 38,
+  "bars": 172,
+  "first_bar_time": "2015-11-05T10:00:00",
+  "first_requested_date": "2015-11-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2015-12-31T14:00:00",
+  "last_requested_date": "2015-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "5d9f02c87c8c44fe8cf10da69f83b4382308015e",
+  "requested_trading_days": 41,
+  "ticker": "DAT",
+  "written_at_utc": "2026-03-30T15:24:14Z",
+  "year": 2015
+}

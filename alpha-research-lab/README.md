@@ -199,9 +199,10 @@ Thesis:
 - add stock-specific entry alpha so portfolio breadth can vary from `0..K`
 
 Current status:
-- Session 75 executed `H238-H244` offline
-- strongest result was `H239` sparse breadth
-- no single-family rule, compact model, soft-prior overlay, or live-compatibility variant is promotable
+- Sessions 75-76 executed `H238-H245` offline
+- strongest structural results were `H239` sparse breadth and the `H245` small-book contract audit
+- `H245` says the branch behaves more like a historical `top1` contract than a `top5` timing overlay
+- no rule, model, soft-prior overlay, or audited `top_k` contract is promotable
 - classify the branch as offline evidence, not a live replacement candidate
 
 Canonical offline artifacts:
@@ -210,8 +211,8 @@ Canonical offline artifacts:
 - `data/features/entry_alpha/entry_scores_daily.parquet`
 
 If intentionally reopened:
-- start from `notes/session_75_log.md` and `notes/next_steps.md`
-- next honest continuation is `H245`: test whether the real contract is `top1/top2` sparse books rather than `top5` timing overlays
+- start from `notes/session_75_log.md`, `notes/session_76_log.md`, and `notes/next_steps.md`
+- next honest continuation is `H246`: keep the branch small-book and test a light confirmation / calibration overlay on top of the `top1/top2` contract
 - keep it lower priority than the active timing-data acquisition branch
     - one-shot confirmation `2025`
     - forward lockbox `2026+`
@@ -420,6 +421,7 @@ It also installs the workspace-shared `shared-recommendation` package used for c
 - `analysis/h242_entry_alpha_soft_exposure_prior.py`: soft exposure-prior integration that reuses activation alpha as threshold, breadth, or weight modulation
 - `analysis/h243_entry_alpha_live_compatibility.py`: pseudo-live compatibility audit against the frozen sticky live branch
 - `analysis/h244_entry_alpha_sparse_breadth_protocol.py`: honest dev/validation/confirmation/forward protocol for the H239 sparse-breadth branch
+- `analysis/h245_entry_alpha_topk_contract_audit.py`: contract audit for whether the entry-alpha branch really wants `top1/top2` sparse books instead of `top5` timing overlays
 
 ## Live Paper-Trade Prerequisite
 

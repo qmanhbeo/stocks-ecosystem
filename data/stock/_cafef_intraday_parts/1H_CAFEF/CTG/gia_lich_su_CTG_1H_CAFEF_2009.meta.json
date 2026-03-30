@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2009-07-16",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2009-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "df682f1876ccdbeb62435aca925baa455c987210",
+  "requested_trading_days": 120,
+  "ticker": "CTG",
+  "written_at_utc": "2026-03-30T14:37:00Z",
+  "year": 2009
+}

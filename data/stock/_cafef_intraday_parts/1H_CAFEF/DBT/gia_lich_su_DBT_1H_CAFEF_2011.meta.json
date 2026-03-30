@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2011-01-04",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2011-12-30",
+  "observed_empty": true,
+  "requested_dates_signature": "2d4836c5a647a17da41f5ba9c1bb6d3a57de3f90",
+  "requested_trading_days": 248,
+  "ticker": "DBT",
+  "written_at_utc": "2026-03-30T15:42:41Z",
+  "year": 2011
+}

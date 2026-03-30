@@ -1,0 +1,15 @@
+{
+  "bar_dates": 238,
+  "bars": 679,
+  "first_bar_time": "2020-01-02T12:00:00",
+  "first_requested_date": "2020-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2020-12-31T14:00:00",
+  "last_requested_date": "2020-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "45765932d33bff5381a8e313f294894a74d3137c",
+  "requested_trading_days": 252,
+  "ticker": "CVT",
+  "written_at_utc": "2026-03-30T15:10:16Z",
+  "year": 2020
+}

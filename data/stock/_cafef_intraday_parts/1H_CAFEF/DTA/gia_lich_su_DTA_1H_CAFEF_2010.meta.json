@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2010-07-16",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2010-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "3f7c433d425433fdc1922ca820b16d75ab55cf43",
+  "requested_trading_days": 119,
+  "ticker": "DTA",
+  "written_at_utc": "2026-03-30T18:30:48Z",
+  "year": 2010
+}

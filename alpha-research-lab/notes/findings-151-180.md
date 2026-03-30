@@ -211,3 +211,83 @@ For a richer company-event source to count as usable, it must satisfy:
 - the source is not leak-prone or retrospectively backfilled
 
 **Key finding:** new data access is not enough by itself. A new source only reopens timing research after it clears explicit viability gates first.
+
+## F157: The Entry-Alpha Branch Looks More Like A Small-Book `Top1` Contract Than A `Top5` Timing Overlay, But No Audited Contract Survives The Honest Forward Gate (2026-03-30, Session 76)
+
+Session 76 ran `H245`, the first honest contract audit after the Session 75 entry-alpha ladder.
+
+The question was not:
+- "can another `top5` threshold be tuned?"
+
+It was:
+- "does this branch actually want a smaller book, such as `top1` or `top2`?"
+
+### Audited contract winners
+
+#### `top_k = 1`
+Winner:
+- `topk1__topm5__score_0p6__gap_none`
+
+Metrics:
+- validation relative `+67.91%`
+- confirmation (`2025`) relative `+48.14%`
+- forward (`2026+`) relative `-15.20%`
+
+Matched fixed-`top1` baseline:
+- validation relative `-73.98%`
+- confirmation relative `-29.34%`
+- forward relative `-14.56%`
+
+Interpretation:
+- historically this is the strongest audited contract by far
+- but the forward result is still bad, and the forward IR deterioration breaks the honest gate
+
+#### `top_k = 2`
+Winner:
+- `topk2__topm5__score_0p65__gap_0p03`
+
+Metrics:
+- validation relative `+20.27%`
+- confirmation relative `-14.60%`
+- forward relative `-3.30%`
+
+This did not beat its own fixed-`top2` baseline cleanly enough.
+
+#### `top_k = 3`
+Winner:
+- `topk3__topm5__score_0p7__gap_0p03`
+
+Metrics:
+- validation relative `+2.21%`
+- confirmation relative `-4.79%`
+- forward relative `+11.44%`
+
+This had the best forward result, but validation was too weak for it to be the right historical contract.
+
+#### `top_k = 5`
+Winner:
+- `topk5__topm5__score_0p65__gap_0p03`
+
+Metrics:
+- validation relative `+28.04%`
+- confirmation relative `-22.13%`
+- forward relative `-2.75%`
+
+This reproduces the Session 75 `H244` result.
+
+### Contract-level conclusion
+
+Against the audited `top5` winner, the audited `top1` winner improved:
+- validation by `+39.87%`
+- confirmation by `+70.27%`
+
+But it was worse in `2026+` by:
+- `-12.44%`
+
+So the branch thesis is now sharper:
+- the entry-alpha family behaves more like a **small-book historical contract** than a `top5` timing overlay
+- but no audited `top_k` contract is honestly promotable
+
+**Key finding:** `H245` strengthens the offline architectural conclusion without changing live policy. The right offline interpretation is "small-book structure is real," not "entry alpha is ready."
+
+**Implication:** if the branch is intentionally reopened, the next honest continuation should be a small-book follow-through such as `H246`, not another generic `top5` timing sweep.

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 227,
+  "bars": 988,
+  "first_bar_time": "2021-01-04T10:00:00",
+  "first_requested_date": "2021-01-04",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2021-12-31T14:00:00",
+  "last_requested_date": "2021-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "7a4677fcf4541a1bcd852a46cf580982a6ab8fea",
+  "requested_trading_days": 250,
+  "ticker": "DBT",
+  "written_at_utc": "2026-03-30T15:47:08Z",
+  "year": 2021
+}

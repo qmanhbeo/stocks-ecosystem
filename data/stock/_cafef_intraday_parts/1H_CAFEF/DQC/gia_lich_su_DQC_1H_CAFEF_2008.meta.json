@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2008-02-21",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2008-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "2cd769322c5fb3b5e703232810898a556e44e809",
+  "requested_trading_days": 215,
+  "ticker": "DQC",
+  "written_at_utc": "2026-03-30T17:48:58Z",
+  "year": 2008
+}

@@ -139,7 +139,12 @@ Operationally important summary:
     - sparse breadth is real enough to keep as offline evidence
     - no single-family rule, compact model, soft-prior overlay, or live-compatibility variant is promotable
     - do not treat the entry-alpha branch as a live replacement candidate yet
-    - if it is intentionally reopened, start from `H245` rather than re-running `H240-H244`
+- Session 76 then ran the first explicit contract audit:
+  - `H245`
+  - outcome:
+    - the branch looks historically more like a `top1` contract than a `top5` timing overlay
+    - but no audited `top_k` contract survives the honest forward gate
+    - if the branch is intentionally reopened, start from `H246`, not another generic `top5` sweep
 - `H163-H174` then revisited activation with materially different designs and found the first real winner:
   - `H170` `recentsm__rel3_gt0` on `full_library + k5_r5_eq`
   - `+841.14%` total
@@ -415,6 +420,7 @@ Mode-specific durable outputs:
 - `analysis/h242_entry_alpha_soft_exposure_prior.py`: `artifacts/run_summaries/latest_entry_alpha_soft_exposure_prior.json` plus soft-prior portfolio results under `artifacts/entry_alpha/`
 - `analysis/h243_entry_alpha_live_compatibility.py`: `artifacts/run_summaries/latest_entry_alpha_live_compatibility.json` plus pseudo-live compatibility outputs under `artifacts/entry_alpha/`
 - `analysis/h244_entry_alpha_sparse_breadth_protocol.py`: `artifacts/run_summaries/latest_entry_alpha_sparse_breadth_protocol.json` plus dev-selected winner and protocol results under `artifacts/entry_alpha/`
+- `analysis/h245_entry_alpha_topk_contract_audit.py`: `artifacts/run_summaries/latest_entry_alpha_topk_contract_audit.json` plus per-contract winners and selected-contract daily outputs under `artifacts/entry_alpha/`
 - `analysis/h147_liquidity_state_opportunity_audit.py`: `artifacts/run_summaries/latest_portfolio_liquidity_state_opportunity_audit.json` plus daily opportunity-count outputs under `artifacts/portfolio_baselines/`
 - `analysis/h148_local_liquidity_gate_refinement.py`: `artifacts/run_summaries/latest_portfolio_local_liquidity_gate_refinement.json` plus local-gate refinement outputs under `artifacts/portfolio_baselines/`
 - `analysis/h149_soft_activation_score.py`: `artifacts/run_summaries/latest_portfolio_soft_activation_score.json` plus soft-activation outputs under `artifacts/portfolio_baselines/`

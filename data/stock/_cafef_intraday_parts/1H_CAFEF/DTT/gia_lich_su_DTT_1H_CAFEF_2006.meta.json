@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2006-12-22",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2006-12-29",
+  "observed_empty": true,
+  "requested_dates_signature": "08e78453aa7f7b8de749ce2d0f526b847d70fd69",
+  "requested_trading_days": 6,
+  "ticker": "DTT",
+  "written_at_utc": "2026-03-30T18:44:34Z",
+  "year": 2006
+}

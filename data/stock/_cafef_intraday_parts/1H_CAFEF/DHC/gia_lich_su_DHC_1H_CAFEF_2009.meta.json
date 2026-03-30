@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2009-07-23",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2009-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "7ef034122c7be7151bfa486b797799fdf51a76e7",
+  "requested_trading_days": 115,
+  "ticker": "DHC",
+  "written_at_utc": "2026-03-30T16:40:22Z",
+  "year": 2009
+}

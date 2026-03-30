@@ -1,0 +1,15 @@
+{
+  "bar_dates": 237,
+  "bars": 985,
+  "first_bar_time": "2017-01-12T11:00:00",
+  "first_requested_date": "2017-01-12",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2017-12-29T14:00:00",
+  "last_requested_date": "2017-12-29",
+  "observed_empty": false,
+  "requested_dates_signature": "2826f317d7a7547116df0efae383578be1f96601",
+  "requested_trading_days": 243,
+  "ticker": "DPG",
+  "written_at_utc": "2026-03-30T17:27:28Z",
+  "year": 2017
+}
