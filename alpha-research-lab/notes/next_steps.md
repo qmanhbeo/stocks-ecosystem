@@ -1,14 +1,14 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_77_log.md` for the latest full session detail.
+Use `notes/session_80_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Current State
 
-**Session status:** Session 77 ran `H246`, the small-book confirmation / calibration overlay follow-through for the stock-specific entry-alpha branch. It showed that `top1` overlays are effectively a no-op on the current contract, while `top2` soft-consensus overlays overfit validation and fail badly afterwards. Entry alpha therefore remains offline evidence only. The active live branch still remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`, and the active non-live priority still remains acquisition-first timing data work rather than more local timing-model tuning on the current data stack. (2026-03-30)
+**Session status:** Session 80 ran `H249`, the selector-relative activation follow-through for the `H201` offline selector lead, on `2015-2025` only so the `2026+` lockbox stayed untouched. Rebuilding the sticky gate around the winner's own `rel2` did not rescue compatibility: the control rerun with the incumbent `full_library` gate reproduced the original `H202` failure, while the selector-relative gate ran at similar exposure (`53.82%` vs `54.26%`) with only `72.63%` agreement and collapsed confirmation to `-19.10%` versus incumbent `+18.80%`. `state_blend__h199_sector_laggard_gap_absorb__30` therefore remains selector-only offline evidence, and if model-side queue work is intentionally continued later the next materially different item is `H250`, not more local `H249` variants. The active live branch still remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`, and the active non-live priority still remains acquisition-first timing data work rather than more local timing-model tuning on the current data stack. (2026-03-31)
 
 ### Start next session here
 
@@ -32,14 +32,18 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
      - intraday / auction acquisition first
      - richer company-event source second
      - otherwise stop timing research and wait for more forward live evidence
-   - do not confuse that branch with the separate parked stock-specific entry-alpha architecture branch documented in `README.md`, `README_for_AGENTS.md`, and `notes/session_75_log.md` plus `notes/session_76_log.md` plus `notes/session_77_log.md`
-     - Sessions 75-77 already ran the first offline ladder plus the small-book follow-through (`H238-H246`)
+   - do not confuse that branch with the separate parked stock-specific entry-alpha architecture branch documented in `README.md`, `README_for_AGENTS.md`, and `notes/session_75_log.md` plus `notes/session_76_log.md` plus `notes/session_77_log.md` plus `notes/session_78_log.md` plus `notes/session_79_log.md`
+     - Sessions 75-79 already ran the first offline ladder plus the small-book follow-through (`H238-H248`)
      - current conclusion:
        - useful sparse-book evidence exists
        - historically the branch looks more like `top1/top2` than `top5`
        - local confirmation overlays do not turn that into a live-ready rule
+       - `H247` did not rescue the branch by sharpening the label
+       - `H248` did not rescue the branch by conditioning on sparse catalyst concentration
+       - the only narrow side result still worth remembering is the unsharpened `top2` compact `price_state` model against the `H245` anchor on `2019-2025`
+       - because `2026+` stayed locked, that remains offline evidence only
        - no promotable live-ready winner exists
-       - if reopened, the next step is `H247`, not a live-branch swap
+       - Family A (`H247-H248`) is now closed on the current local data stack
      - it is still **not** the active branch while acquisition-first timing work remains policy
 6. Treat the live branch as operationally current:
    - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-27`
@@ -119,6 +123,8 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
      - `notes/session_75_log.md`
      - `notes/session_76_log.md`
      - `notes/session_77_log.md`
+     - `notes/session_78_log.md`
+     - `notes/session_79_log.md`
    - branch thesis:
      - keep selection alpha as the cross-sectional prior
      - reinterpret activation alpha as a soft exposure prior
@@ -137,9 +143,117 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
    - Session 77 branch outcome:
      - `H246` showed top1 confirmation overlays are effectively a no-op on the current contract
      - top2 soft-consensus overlays overfit validation and fail badly in confirmation / forward
-   - next architecture hypothesis if intentionally reopened:
-     - `H247`: keep the branch small-book but stop testing more local confirmation overlays on the current label; sharpen the label / target for the compact entry-model branch instead
+   - Session 78 branch outcome:
+     - `H247` showed the current label-sharpening path does not rescue the branch on `2019-2025`
+     - no `label_edge_buffer > 0` candidate beat the carried `H245` `top1/top2` anchors honestly
+     - the only surviving side result is the unsharpened `top2` compact `price_state` model, which still needs a future `2026+` lockbox check before it can count as more than offline evidence
+   - Session 79 branch outcome:
+     - `H248` showed sparse catalyst concentration does not rescue the carried small-book contracts on the current data stack
+     - the strongest `top1` gate was a large validation overfit and the best `top2` gate still failed the `2025` floor
+     - gated versions of the `H247` `top2` `price_state` side result were uniformly worse
    - this remains lower priority than H230-H237 acquisition-first work
+
+### Hypothesis Queue If Model-Side Research Is Intentionally Reopened
+
+This queue is subordinate to `H230-H237` acquisition-first timing work and to the frozen live sticky branch.
+Use it only if the acquisition branch is intentionally paused, blocked, or resolved.
+Keep the locked protocol:
+- dev `2015-2022`
+- validation `2023-2024`
+- one-shot confirmation `2025`
+- forward lockbox `2026+`
+
+Priority order:
+- first: small-book / breadth architecture (`H247-H248`)
+- second: selector / activation compatibility (`H249-H250`)
+- third: current-data event-surface reuse (`H251`)
+
+Family A — small-book / breadth architecture
+
+- `H247`: dynamic breadth target / label-sharpen audit
+  - status:
+    - completed in Session 78 on `2019-2025` only
+    - failed for the sharpened-label thesis
+    - do **not** advance to `H248` from this result alone
+  - claim:
+    - the parked entry-alpha branch may really be a date-level optimal breadth problem (`K in {0,1,2,3,5}`), not a ticker-local confirmation-overlay problem
+  - smallest honest test:
+    - reuse:
+      - `data/features/entry_alpha/candidate_panel_daily.parquet`
+      - `data/features/entry_alpha/entry_labels_cycle5.parquet`
+      - `data/features/entry_alpha/entry_scores_daily.parquet`
+    - audit whether a sharpened small-book target or discrete-breadth target beats the current `H245/H246` `top1/top2` anchors under the locked protocol
+  - pass:
+    - continue to `H248`
+  - mixed:
+    - narrow the branch to `{1,2}` or `{1,5}` breadth contracts only
+  - fail:
+    - close the current small-book target-sharpening path on the existing label stack
+
+- `H248`: catalyst-concentrated small-book audit
+  - status:
+    - completed in Session 79 on `2019-2025` only
+    - failed for the sparse-catalyst thesis
+    - park Family A small-book continuation on the current data stack
+  - claim:
+    - small-book structure may matter only on catalyst-dense days rather than on all dates
+  - smallest honest test:
+    - condition the `H247/H245` small-book contract on sparse catalyst concentration from news / insider / event surfaces
+    - do **not** reopen local confirmation overlays
+  - pass:
+    - keep the catalyst-conditioned small-book branch alive as offline evidence
+  - mixed:
+    - keep it as narrow offline evidence only
+  - fail:
+    - park sparse-catalyst small-book work until genuinely new timing data arrives
+
+Family B — selector / activation compatibility
+
+- `H249`: selector-relative activation audit
+  - status:
+    - completed in Session 80 on `2015-2025` only
+    - failed to rescue selector-relative activation compatibility
+    - keep `H201` as selector-only offline evidence
+  - claim:
+    - `state_blend__h199_sector_laggard_gap_absorb__30` may fail only because `h175` is calibrated to `full_library`, not because the offline selector lead is wrong
+  - smallest honest test:
+    - rebuild activation-meta-style features around the `H201` selector lead
+    - rerun an `H202`-style compatibility ladder offline without touching `2026+`
+  - pass:
+    - continue to `H250`
+  - mixed:
+    - keep the selector as offline evidence and test only mild trust modifiers later
+  - fail:
+    - keep `H201` as selector-only offline evidence
+    - do **not** keep tuning local `rel_span` / `rel_threshold` variants on the same locked windows
+
+- `H250`: contradiction-state router
+  - claim:
+    - the next selector edge may live in disagreement states between `S1`, `C9`, `C12`, `C13`, `C14`, and the `H199` atom rather than in another additive atom
+  - smallest honest test:
+    - screen sparse interaction / veto states first
+    - carry at most one promoted router into a locked selector audit
+  - pass:
+    - compare it directly against the `H201` offline lead
+  - mixed:
+    - keep it as RL-state-only or offline-only evidence
+  - fail:
+    - close the current interaction-state family
+
+Family C — current-data event-surface reuse
+
+- `H251`: event-surface trust modulator
+  - claim:
+    - `data/features/event_surface_daily.parquet` may fail as exit alpha but still be useful as a selection / activation trust variable
+  - smallest honest test:
+    - run a conditional IC / selector-efficacy decomposition by event regime before any deterministic integration
+  - pass:
+    - open a light offline trust-modifier audit
+  - mixed:
+    - keep event surface v1 as an explanatory diagnostic only
+  - fail:
+    - leave event-surface reuse parked until `event_surface_v2` or richer acquisition passes
+
 10. Session 66 selection-side first pass:
    - locked protocol is now codified in code:
      - dev `2015-2022`
@@ -209,6 +323,26 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
        - incumbent `full_library + sticky` validation relative `+29.65%`
        - winner + sticky confirmation relative `+24.70%`
        - incumbent confirmation relative `+18.80%`
+13. Session 80 selector-relative activation follow-through:
+   - `H249`: **FAIL**
+     - carried selector:
+       - `state_blend__h199_sector_laggard_gap_absorb__30`
+     - control rerun with the incumbent sticky gate reproduced the `H202` failure:
+       - validation relative `+16.64%`
+       - validation delta vs incumbent `-13.01%`
+       - confirmation relative `+24.70%`
+       - confirmation delta vs incumbent `+5.90%`
+     - selector-relative gate candidate:
+       - overall gate share `53.82%`
+       - gate agreement vs incumbent `72.63%`
+       - validation relative `+16.18%`
+       - validation delta vs incumbent `-13.47%`
+       - confirmation relative `-19.10%`
+       - confirmation delta vs incumbent `-37.90%`
+     - branch effect:
+       - rebuilding `rel2 > 0` on the selector's own history does **not** rescue compatibility
+       - keep `H201` as selector-only offline evidence
+       - if model-side queue work is intentionally continued later, move to `H250`
      - branch effect:
        - do not replace the live branch
        - keep the H201 winner as offline-only research evidence

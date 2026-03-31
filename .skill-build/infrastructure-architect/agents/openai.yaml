@@ -1,0 +1,4 @@
+interface:
+  display_name: "Infrastructure Architect"
+  short_description: "Change workspace contracts without path drift"
+  default_prompt: "Use $infrastructure-architect to plan or implement an infrastructure change across the shared data root, alpha producers, artifact registry, and RL consumers."

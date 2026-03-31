@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bright Mind"
+  short_description: "Invent bold alpha hypotheses from lab evidence"
+  default_prompt: "Use $bright-mind to inspect the lab history, findings, branches, and data, then propose unusually strong new research hypotheses."

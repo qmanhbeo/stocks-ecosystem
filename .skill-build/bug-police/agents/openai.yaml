@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bug Police"
+  short_description: "Investigate, confirm, and patch real bugs"
+  default_prompt: "Use $bug-police to run a careful bug sweep, confirm real defects, plan fixes, and implement verified patches."

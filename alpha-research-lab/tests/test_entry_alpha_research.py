@@ -5,6 +5,7 @@ import pandas as pd
 
 from src.entry_alpha_research import (
     EntryModelSpec,
+    apply_date_gate_to_entry_allowed_matrix,
     build_entry_row_mask,
     build_entry_allowed_matrix_from_score,
     build_small_book_confirmation_overlay_frame,
@@ -224,6 +225,32 @@ def test_build_entry_allowed_matrix_from_score_uses_dynamic_thresholds():
 
     assert matrix.shape == (2, 2)
     assert matrix.tolist() == [[True, False], [True, False]]
+
+
+def test_apply_date_gate_to_entry_allowed_matrix_zeroes_blocked_dates():
+    matrix = np.array(
+        [
+            [True, False, True],
+            [True, True, False],
+            [False, True, True],
+        ],
+        dtype=bool,
+    )
+    gated = apply_date_gate_to_entry_allowed_matrix(
+        matrix,
+        dates=pd.to_datetime(["2023-01-03", "2023-01-04", "2023-01-05"]),
+        allowed_by_date={
+            pd.Timestamp("2023-01-03"): True,
+            pd.Timestamp("2023-01-04"): False,
+            pd.Timestamp("2023-01-05"): True,
+        },
+    )
+
+    assert gated.tolist() == [
+        [True, False, True],
+        [False, False, False],
+        [False, True, True],
+    ]
 
 
 def test_load_or_build_entry_artifacts_rebuilds_when_requested_dates_extend_existing_cache(tmp_path, monkeypatch):

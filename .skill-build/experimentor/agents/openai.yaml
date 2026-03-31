@@ -1,0 +1,4 @@
+interface:
+  display_name: "Experimentor"
+  short_description: "Run honest lab experiments and log each pass"
+  default_prompt: "Use $experimentor to test a lab hypothesis with the smallest valid experiment, read the saved artifact, and record the result in the repo note stack."

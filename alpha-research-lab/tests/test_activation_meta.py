@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from src.activation_meta import _forward_gross_returns
+from src.activation_meta import _forward_gross_returns, selector_meta_from_daily
 from src.activation_meta_experiment_utils import (
     hysteresis_schedule,
     selector_recent_hit_rate_ewm,
@@ -92,3 +92,26 @@ def test_selector_recent_hit_rate_ewm_reads_requested_span():
     frame = pd.DataFrame({"full_recent_hit_rate_ewm5": [0.2, 0.4, 0.6]})
     out = selector_recent_hit_rate_ewm(frame, prefix="full", span=5)
     assert out.tolist() == [0.2, 0.4, 0.6]
+
+
+def test_selector_meta_from_daily_builds_prev_cycle_relative_features():
+    daily = pd.DataFrame(
+        {
+            "signal_date": pd.to_datetime(
+                ["2020-01-01", "2020-01-02", "2020-01-03", "2020-01-06"]
+            ),
+            "portfolio_return": [0.10, 0.00, -0.05, 0.05],
+            "relative_return": [0.03, -0.01, 0.02, -0.02],
+            "turnover": [0.10, 0.20, 0.30, 0.40],
+            "cash_weight": [0.00, 0.10, 0.20, 0.30],
+            "blocked_buy_count": [0, 1, 0, 2],
+            "avg_holding_age": [1.0, 2.0, 3.0, 4.0],
+            "portfolio_value_vnd": [100.0, 102.0, 101.0, 103.0],
+        }
+    )
+    out = selector_meta_from_daily(daily, prefix="winner", rebalance_every=2)
+    assert out["time"].tolist() == daily["signal_date"].tolist()
+    assert pd.isna(out.loc[0, "winner_prev_cycle_relative_return"])
+    assert round(float(out.loc[1, "winner_prev_cycle_relative_return"]), 6) == 0.0197
+    assert round(float(out.loc[2, "winner_recent_cycle_relative_return_ewm3"]), 6) > 0.0
+    assert round(float(out.loc[3, "winner_selector_drawdown"]), 6) == 0.0

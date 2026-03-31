@@ -348,6 +348,29 @@ def build_entry_allowed_matrix_from_mask(
     )
 
 
+def apply_date_gate_to_entry_allowed_matrix(
+    entry_allowed_matrix: np.ndarray,
+    *,
+    dates: Sequence[pd.Timestamp],
+    allowed_by_date: Mapping[pd.Timestamp, bool],
+) -> np.ndarray:
+    matrix = np.asarray(entry_allowed_matrix, dtype=bool).copy()
+    date_index = pd.Index(pd.to_datetime(list(dates)))
+    if matrix.ndim != 2:
+        raise ValueError("entry_allowed_matrix must be 2D")
+    if matrix.shape[0] != len(date_index):
+        raise ValueError(
+            "entry_allowed_matrix row count must match dates "
+            f"({len(date_index)}); got {matrix.shape[0]}"
+        )
+    gate = np.asarray(
+        [bool(allowed_by_date.get(pd.Timestamp(value), False)) for value in date_index],
+        dtype=bool,
+    )
+    matrix &= gate[:, None]
+    return matrix
+
+
 def build_entry_row_mask(
     panel: pd.DataFrame,
     *,

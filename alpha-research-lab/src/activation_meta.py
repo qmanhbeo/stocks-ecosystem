@@ -57,7 +57,7 @@ def _days_since_reset(reset_mask: pd.Series) -> pd.Series:
     return pd.Series(out, index=reset_mask.index, dtype=float)
 
 
-def _selector_meta_from_daily(
+def selector_meta_from_daily(
     daily: pd.DataFrame,
     *,
     prefix: str,
@@ -163,7 +163,7 @@ def build_activation_meta_frame(
             capital_gains_tax_rate=0.0,
         )
         selector_meta_parts.append(
-            _selector_meta_from_daily(
+            selector_meta_from_daily(
                 result.daily,
                 prefix=prefix,
                 rebalance_every=int(selector.rebalance_every),

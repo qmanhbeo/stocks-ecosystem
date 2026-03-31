@@ -359,3 +359,188 @@ These showed small forward improvements over the base sparse `top2` contract, bu
 **Key finding:** local confirmation / calibration overlays are not the missing ingredient on the current small-book entry-alpha label contract. For `top1`, they do nothing. For `top2`, the strongest overlay overfits validation badly.
 
 **Implication:** close the local-overlay sub-branch. If the entry-alpha branch is intentionally reopened, the next honest continuation should be `H247`: keep it small-book, but stop testing more local overlays on the same target and instead sharpen the label / target for the compact-model branch.
+
+## F159: Sharpening The Small-Book Entry Label Does Not Rescue The Parked Entry-Alpha Branch; The Only Surviving Improvement Is An Unsharpened `top2` Compact Model Side Result (2026-03-31, Session 78)
+
+Session 78 ran `H247`, the first label-sharpen follow-through after `H246`.
+
+The branch stayed disciplined:
+- no live-branch change
+- no new broad model family
+- no `2026+` lockbox read
+- only `top1/top2`
+- only compact-model variants against sharper `buy_now_label` definitions
+
+Audited label buffers:
+- `0.00`
+- `0.01`
+- `0.02`
+- `0.03`
+
+The key branch question was:
+- does sharpening the small-book target fix the compact-model branch?
+
+### What failed
+
+No sharpened candidate (`label_edge_buffer > 0`) cleared the validation-plus-`2025` gate.
+
+Best sharpened `top2` candidate:
+- `topk2__blend__label_0p03__threshold_0p55`
+
+Metrics vs the carried `H245` `top2` anchor:
+- validation AUC `0.549`
+- confirmation AUC `0.574`
+- validation delta `+85.80%`
+- confirmation delta `-33.94%`
+
+This is still a validation-heavy overfit, not a rescue.
+
+Best sharpened `top1` candidate:
+- `topk1__blend__label_0p03__threshold_0p55`
+
+Metrics vs the carried `H245` `top1` anchor:
+- validation delta `+38.16%`
+- confirmation delta `-96.68%`
+
+So the specific `H247` thesis is rejected:
+- the current branch is **not** fixed by simply making the label stricter
+
+### What survived as offline evidence
+
+The best overall `top2` candidate in the run was **not** sharpened:
+- `topk2__price_state__label_0__threshold_0p55`
+
+Metrics vs the `H245` `top2` anchor:
+- validation relative `+93.79%`
+- validation delta `+73.52%`
+- confirmation relative `-12.12%`
+- confirmation delta `+2.47%`
+
+This matters, but only narrowly:
+- it says the current compact-model branch may have a real `top2` contract on the existing label
+- it does **not** count as support for the sharpened-label path
+- because Session 78 intentionally did not read `2026+`, it also does **not** become an honest promoted winner
+
+**Key finding:** the current small-book entry-alpha branch is not rescued by label sharpening. The only meaningful survivor from `H247` is a narrower side result: the unsharpened `top2` `price_state` compact model is stronger than the carried `H245` anchor on `2019-2025`.
+
+**Implication:** close the current label-sharpening path on the existing data stack. Do **not** advance to `H248` from `H247` alone. If this architecture is intentionally reopened later, the only honest leftover is a future `2026+` lockbox check on the unsharpened `top2` compact-model side result.
+
+## F160: Sparse Catalyst Gating Does Not Rescue The Current Small-Book Entry-Alpha Branch; Family A Closes On The Existing Data Stack (2026-03-31, Session 79)
+
+Session 79 ran `H248`, the queued catalyst-concentrated follow-through after `H247`.
+
+The branch stayed disciplined:
+- no live-branch change
+- no new model family
+- no `2026+` lockbox read
+- only carried small-book contracts
+- only date-level gates built from sparse catalyst families
+
+Carried contracts:
+- `H245` `top1` anchor
+- `H245` `top2` anchor
+- the `H247` unsharpened `top2` `price_state` side result
+
+Catalyst families used:
+- rolling news presence
+- insider relative-size support
+- event / filing support from the published event surface
+
+Tested gate family:
+- `highconv_ge1`
+- `highconv_ge2`
+- `multisource_ge1`
+- `news_or_insider_ge1`
+
+### What failed
+
+Best `top1` result:
+- `h245_top1_anchor__highconv_ge1`
+
+Metrics vs its always-on anchor:
+- validation delta `+332.33%`
+- confirmation delta `-81.90%`
+
+This is a clean validation overfit.
+
+Best `top2` anchor result:
+- `h245_top2_anchor__highconv_ge2`
+
+Metrics vs its always-on anchor:
+- validation delta `+38.82%`
+- confirmation delta `-16.22%`
+
+This is closer, but it still fails the offline gate.
+
+For the `H247` `top2` `price_state` side result, every tested gate made the contract worse.
+
+### Branch consequence
+
+So the catalyst thesis is rejected on the current stack:
+- sparse catalyst concentration does **not** rescue the carried small-book contracts
+- the current `H247` side result does **not** want these date-level gates
+
+**Key finding:** Family A now fails both ways on current data:
+- sharpening the small-book label fails (`H247`)
+- catalyst-concentrated date gating fails (`H248`)
+
+**Implication:** close `H247-H248` on the existing local data stack. Do **not** keep tuning small-book catalyst gates locally. If the model-side queue is intentionally continued later, move to the next materially different family (`H249`) rather than adding more `H247/H248` variants.
+
+## F161: Selector-Relative `rel2` Does Not Rescue The `H201` Offline Winner; The H199 Selector Lead Remains Offline-Only Evidence (2026-03-31, Session 80)
+
+Session 80 ran `H249`, the queued selector-relative activation follow-through for the `H201` winner:
+- `state_blend__h199_sector_laggard_gap_absorb__30`
+
+The branch stayed disciplined:
+- no live-branch change
+- no new selector family
+- no `2026+` lockbox read
+- same sticky displacement rule as `H202`
+- only the activation gate source changed
+
+Compared variants:
+- `winner_always_on`
+- `winner_plus_full_rel2_sticky`
+  - control rerun of the frozen `H202` logic
+- `winner_plus_selector_rel2_sticky`
+  - gate rebuilt from the winner's own prior-cycle relative returns
+- incumbent:
+  - `full_library_plus_sticky`
+
+### What failed
+
+Incumbent sticky branch:
+- validation relative `+29.65%`
+- validation IR `0.61`
+- confirmation relative `+18.80%`
+
+Control rerun:
+- `winner_plus_full_rel2_sticky`
+- validation relative `+16.64%`
+- validation delta vs incumbent `-13.01%`
+- confirmation relative `+24.70%`
+- confirmation delta vs incumbent `+5.90%`
+
+This confirms the original `H202` failure mode still reproduces cleanly.
+
+Selector-relative candidate:
+- `winner_plus_selector_rel2_sticky`
+- overall gate share `53.82%`
+- validation gate share `55.51%`
+- confirmation gate share `42.57%`
+- gate agreement vs incumbent `72.63%`
+- validation relative `+16.18%`
+- validation delta vs incumbent `-13.47%`
+- validation IR delta `-0.21`
+- confirmation relative `-19.10%`
+- confirmation delta vs incumbent `-37.90%`
+
+So the selector-relative gate is not just “basically the same rule,” but it still does **not** help:
+- validation remains well below the incumbent sticky branch
+- confirmation becomes materially worse than both the incumbent and the `H202` control
+
+### Branch consequence
+
+**Key finding:** the `H201` winner is not blocked merely by using `full_library` as the `rel2` calibration source. Rebuilding `rel2 > 0` on the selector's own return history does not rescue activation compatibility.
+
+**Implication:** keep `state_blend__h199_sector_laggard_gap_absorb__30` as selector-only offline evidence. Do **not** keep tuning local `rel_span` / `rel_threshold` variants of this same gate on the current locked windows. If model-side queue work is intentionally continued later, move to the next materially different family (`H250`).

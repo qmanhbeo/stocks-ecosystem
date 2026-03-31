@@ -107,6 +107,51 @@ def test_build_entry_labels_aligns_cycle_dates_and_returns():
     assert pd.isna(second["buy_now_label"])
 
 
+def test_build_entry_labels_respects_label_edge_buffer():
+    candidate_panel = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2024-01-02"]),
+            "ticker": ["AAA"],
+        }
+    )
+    price_panel = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2024-01-02", "2024-01-03", "2024-01-04"]),
+            "ticker": ["AAA", "AAA", "AAA"],
+            "open": [10.0, 10.0, 10.12],
+        }
+    )
+    benchmark_open = pd.Series(
+        [100.0, 100.0, 100.0],
+        index=pd.to_datetime(["2024-01-02", "2024-01-03", "2024-01-04"]),
+        dtype=float,
+    )
+
+    loose = build_entry_labels(
+        candidate_panel,
+        price_panel=price_panel,
+        benchmark_open=benchmark_open,
+        horizon_signal_steps=1,
+        signal_dates=pd.to_datetime(["2024-01-02", "2024-01-03", "2024-01-04"]),
+        round_trip_cost=0.003,
+        label_edge_buffer=0.0,
+    )
+    strict = build_entry_labels(
+        candidate_panel,
+        price_panel=price_panel,
+        benchmark_open=benchmark_open,
+        horizon_signal_steps=1,
+        signal_dates=pd.to_datetime(["2024-01-02", "2024-01-03", "2024-01-04"]),
+        round_trip_cost=0.003,
+        label_edge_buffer=0.01,
+    )
+
+    assert float(loose.loc[0, "cycle_return_net"]) > 0.0
+    assert float(loose.loc[0, "cycle_return_net"]) < 0.01
+    assert int(loose.loc[0, "buy_now_label"]) == 1
+    assert int(strict.loc[0, "buy_now_label"]) == 0
+
+
 def test_build_entry_allowed_matrix_respects_rank_score_and_gap():
     candidate_panel = pd.DataFrame(
         {

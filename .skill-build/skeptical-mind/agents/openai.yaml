@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skeptical Mind"
+  short_description: "Challenge lab conclusions and find blind spots"
+  default_prompt: "Use $skeptical-mind to review past hypotheses, findings, and experiments, then surface overlooked questions with exact reasoning and a corrective plan."
