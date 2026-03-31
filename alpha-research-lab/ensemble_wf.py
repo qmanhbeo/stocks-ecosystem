@@ -76,6 +76,7 @@ def save_single_stock_proba(config_path: str, out_csv: str, min_train_years: int
         train_df = df[train_mask].copy()
         test_df  = df[test_mask].copy()
         if len(train_df) < 200 or len(test_df) < 20:
+            print(f"  [SKIP] {test_year}: train={len(train_df)}, test={len(test_df)}")
             continue
 
         X_train = train_df[feature_cols]

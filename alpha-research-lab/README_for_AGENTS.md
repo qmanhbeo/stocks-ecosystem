@@ -33,6 +33,8 @@ Execution reality is shared at the workspace level:
 
 `notes/next_steps.md` is the live small-brain state source. This file is the working manual.
 
+Artifact writes are anchored to `alpha-research-lab/artifacts/` regardless of launch directory. Do not treat workspace-root `artifacts/` as the canonical lab output location.
+
 ## Result Classification
 
 Do not treat every branch as a binary `live winner` vs `failed branch`.

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from datetime import datetime
 from pathlib import Path
+
 import sys
 
 import numpy as np
@@ -26,7 +27,7 @@ from src.champion_branch_experiment_utils import (
 from src.deterministic_portfolio import simulate_strategy
 from src.run_summary import write_run_summary
 
-OUT_DIR = Path("artifacts/portfolio_baselines")
+OUT_DIR = ROOT / "artifacts/portfolio_baselines"
 
 
 def _monitor_window(daily: pd.DataFrame, *, days: int) -> pd.DataFrame:

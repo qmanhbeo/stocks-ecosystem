@@ -9,6 +9,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,7 +34,7 @@ DIVIDEND_CACHE_DIR = Path("data/dividend_cache")
 EARNINGS_CALENDAR_PATH = Path("data/features/xs_earnings_calendar_daily.parquet")
 INSIDER_RAW_PATH = Path("data/features/xs_insider_deals_raw.parquet")
 EVENT_SURFACE_PATH = Path("data/features/event_surface_daily.parquet")
-OUT_DIR = Path("artifacts/portfolio_baselines")
+OUT_DIR = ROOT / "artifacts/portfolio_baselines"
 COVERAGE_GATE = 0.60
 
 

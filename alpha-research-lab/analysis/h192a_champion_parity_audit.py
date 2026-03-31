@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from datetime import datetime
 from pathlib import Path
+
 import sys
 
 import pandas as pd
@@ -25,9 +26,9 @@ from src.champion_branch_experiment_utils import (
 )
 from src.run_summary import write_run_summary
 
-OUT_DIR = Path("artifacts/portfolio_baselines")
-OVERLAY_SUMMARY_PATH = Path("artifacts/run_summaries/latest_portfolio_live_activation_overlay.json")
-SCOREBOARD_SUMMARY_PATH = Path("artifacts/run_summaries/latest_portfolio_live_activation_scoreboard.json")
+OUT_DIR = ROOT / "artifacts/portfolio_baselines"
+OVERLAY_SUMMARY_PATH = ROOT / "artifacts/run_summaries/latest_portfolio_live_activation_overlay.json"
+SCOREBOARD_SUMMARY_PATH = ROOT / "artifacts/run_summaries/latest_portfolio_live_activation_scoreboard.json"
 
 
 def _load_json(path: Path) -> dict:

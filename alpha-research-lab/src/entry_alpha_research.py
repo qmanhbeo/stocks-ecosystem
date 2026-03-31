@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+
+from src.repo_paths import artifact_path
 from typing import Mapping, Sequence
 
 import numpy as np
@@ -30,12 +32,12 @@ from src.tradability_conditioned_research import compute_phase_portfolio_summary
 
 
 ENTRY_ALPHA_SCORES_PATH = ENTRY_ALPHA_DIR / "entry_scores_daily.parquet"
-ENTRY_ALPHA_OUT_DIR = Path("artifacts/entry_alpha")
+ENTRY_ALPHA_OUT_DIR = artifact_path("entry_alpha")
 
-LATEST_H240_SUMMARY_PATH = Path("artifacts/run_summaries/latest_entry_alpha_single_family_screens.json")
-LATEST_H241_SUMMARY_PATH = Path("artifacts/run_summaries/latest_entry_alpha_compact_model.json")
-LATEST_H242_SUMMARY_PATH = Path("artifacts/run_summaries/latest_entry_alpha_soft_exposure_prior.json")
-LATEST_H244_SUMMARY_PATH = Path("artifacts/run_summaries/latest_entry_alpha_sparse_breadth_protocol.json")
+LATEST_H240_SUMMARY_PATH = artifact_path("run_summaries/latest_entry_alpha_single_family_screens.json")
+LATEST_H241_SUMMARY_PATH = artifact_path("run_summaries/latest_entry_alpha_compact_model.json")
+LATEST_H242_SUMMARY_PATH = artifact_path("run_summaries/latest_entry_alpha_soft_exposure_prior.json")
+LATEST_H244_SUMMARY_PATH = artifact_path("run_summaries/latest_entry_alpha_sparse_breadth_protocol.json")
 
 
 @dataclass(frozen=True)

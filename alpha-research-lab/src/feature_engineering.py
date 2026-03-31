@@ -167,8 +167,9 @@ def _add_bb(df, cfg):
     std  = df["close"].rolling(p).std()
     upper = ma + nstd * std
     lower = ma - nstd * std
+    band_width = (upper - lower).replace(0, np.nan)
     df["bb_width"] = (upper - lower) / ma          # vol proxy
-    df["bb_pct"]   = (df["close"] - lower) / (upper - lower)  # 0=at lower, 1=at upper
+    df["bb_pct"]   = (df["close"] - lower) / band_width  # 0=at lower, 1=at upper
     return df
 
 
@@ -185,7 +186,8 @@ def _add_atr(df, cfg):
 
 def _add_volume_signals(df, cfg):
     vol_ma = cfg.get("vol_ma_period", 20)
-    df["vol_ratio"] = df["volume"] / df["volume"].rolling(vol_ma).mean()
+    vol_ma_mean = df["volume"].rolling(vol_ma).mean().replace(0, np.nan)
+    df["vol_ratio"] = df["volume"] / vol_ma_mean
     price_dir = df["close"].diff().apply(lambda x: 1 if x > 0 else (-1 if x < 0 else 0))
     obv = (df["volume"] * price_dir).cumsum()
     obv_ma = obv.rolling(vol_ma).mean()
@@ -198,8 +200,7 @@ def _add_volume_signals(df, cfg):
     df["vwap_dev_5d"] = df["close"] / vwap_5d - 1
     # H90: volume trend — 5d avg vs 20d avg (acceleration)
     vol_5d  = df["volume"].rolling(5).mean()
-    vol_20d = df["volume"].rolling(vol_ma).mean().replace(0, np.nan)
-    df["vol_trend"] = vol_5d / vol_20d - 1
+    df["vol_trend"] = vol_5d / vol_ma_mean - 1
     return df
 
 

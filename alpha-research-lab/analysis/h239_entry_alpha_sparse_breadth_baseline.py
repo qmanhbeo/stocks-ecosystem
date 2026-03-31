@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime
 from pathlib import Path
+
 import sys
 
 import pandas as pd
@@ -22,7 +23,7 @@ from src.run_summary import write_run_summary
 from src.deterministic_portfolio import simulate_strategy
 
 
-OUT_DIR = Path("artifacts/entry_alpha")
+OUT_DIR = ROOT / "artifacts/entry_alpha"
 
 
 def _parse_optional_float_grid(values: list[str]) -> list[float | None]:

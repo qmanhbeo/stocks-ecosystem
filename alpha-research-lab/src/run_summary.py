@@ -6,8 +6,10 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
+from src.repo_paths import artifact_path, lab_relative_path
 
-RUN_SUMMARY_DIR = Path("artifacts/run_summaries")
+
+RUN_SUMMARY_DIR = artifact_path("run_summaries")
 
 
 def _slugify(value: str) -> str:
@@ -21,7 +23,9 @@ def _json_safe(value):
     if isinstance(value, (list, tuple, set)):
         return [_json_safe(item) for item in value]
     if isinstance(value, Path):
-        return str(value)
+        return lab_relative_path(value)
+    if isinstance(value, str):
+        return lab_relative_path(value)
     if isinstance(value, pd.Timestamp):
         return value.isoformat()
     if value is pd.NaT:
@@ -43,7 +47,8 @@ def write_run_summary(*, ts: str, mode: str, name: str,
     """
     Persist a compact machine-readable summary for a single run.
 
-    A permanent per-run JSON file is written under artifacts/run_summaries/,
+    A permanent per-run JSON file is written under the lab repo's
+    artifacts/run_summaries/,
     and a convenience latest_<mode>.json pointer is refreshed for quick lookup.
     """
     RUN_SUMMARY_DIR.mkdir(parents=True, exist_ok=True)

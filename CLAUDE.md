@@ -109,7 +109,7 @@ Policy architectures are registered in `vn_stock_rl/policies/registry.py`. Avail
 
 ### Research Experiment Artifacts
 
-- `artifacts/run_summaries/latest_*.json` — read first for quick metrics
+- `alpha-research-lab/artifacts/run_summaries/latest_*.json` — read first for quick metrics
 - `results_summary.jsonl`, `wf_results.jsonl`, `xs_wf_results.jsonl` — permanent append-only logs
 - `experiments/<timestamp>/metrics.json` — per-experiment detail
 - Never delete failed experiments; the record is append-only.

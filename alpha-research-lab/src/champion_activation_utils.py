@@ -25,11 +25,12 @@ from src.activation_meta_experiment_utils import (
     selector_recent_relative_ewm_from_prev,
 )
 from src.deterministic_portfolio import MarketInputs, simulate_strategy
+from src.repo_paths import artifact_path
 
 
 SECTOR_PATH = Path("data/features/sector_classification.parquet")
-CURRENT_CHAMPION_REFERENCE_SUMMARY_PATH = Path(
-    "artifacts/run_summaries/latest_portfolio_activation_impl_pain_sector_combo.json"
+CURRENT_CHAMPION_REFERENCE_SUMMARY_PATH = artifact_path(
+    "run_summaries/latest_portfolio_activation_impl_pain_sector_combo.json"
 )
 
 

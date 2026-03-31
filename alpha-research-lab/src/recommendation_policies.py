@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
+
+from src.repo_paths import artifact_path
 import sys
 
 import pandas as pd
@@ -17,7 +19,7 @@ from shared_recommendation.contracts import RecommendationContext
 from shared_recommendation.policies import append_block_reason, ensure_candidate_columns
 
 
-LATEST_LIVE_OVERLAY_SUMMARY = Path("artifacts/run_summaries/latest_portfolio_live_activation_overlay.json")
+LATEST_LIVE_OVERLAY_SUMMARY = artifact_path("run_summaries/latest_portfolio_live_activation_overlay.json")
 
 
 @dataclass(frozen=True)

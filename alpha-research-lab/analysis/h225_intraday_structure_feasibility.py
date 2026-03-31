@@ -9,6 +9,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,7 +30,7 @@ TRADABILITY_PATH = Path("data/features/execution/tradability_daily.parquet")
 STOCK_DIR = Path("data/stock")
 BENCHMARK_PATH = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
 FPT_INTRADAY_DAILY_PATH = Path("data/features/fpt_intraday_daily.parquet")
-OUT_DIR = Path("artifacts/portfolio_baselines")
+OUT_DIR = ROOT / "artifacts/portfolio_baselines"
 COVERAGE_GATE = 0.50
 
 

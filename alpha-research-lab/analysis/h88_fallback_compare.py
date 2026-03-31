@@ -23,12 +23,8 @@ if str(ROOT) not in sys.path:
 from src.run_summary import write_run_summary
 
 
-H54_SUMMARY = Path(
-    "artifacts/run_summaries/20260319_160504_h63_cost_stress_xs_barrier_all_probas_hose_full_cost_stress.json"
-)
-H87_SUMMARY = Path(
-    "artifacts/run_summaries/20260319_162004_h63_cost_stress_xs_blend_h87_alpha0.7_cost_stress.json"
-)
+H54_SUMMARY = ROOT / "artifacts/run_summaries/20260319_160504_h63_cost_stress_xs_barrier_all_probas_hose_full_cost_stress.json"
+H87_SUMMARY = ROOT / "artifacts/run_summaries/20260319_162004_h63_cost_stress_xs_blend_h87_alpha0.7_cost_stress.json"
 
 COST_POINTS = [0.003, 0.005, 0.007]
 

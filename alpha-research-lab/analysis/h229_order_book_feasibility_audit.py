@@ -9,6 +9,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -17,7 +18,7 @@ from src.run_summary import write_run_summary
 from src.research_protocol import DEFAULT_PROTOCOL
 
 
-OUT_DIR = Path("artifacts/portfolio_baselines")
+OUT_DIR = ROOT / "artifacts/portfolio_baselines"
 PROBE_PATH = Path("analysis/probe_vnstock2_output.txt")
 
 

@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 from src import run_summary
+from src.repo_paths import artifact_path
 
 
 def test_write_run_summary_serializes_numpy_and_timestamp_types(tmp_path: Path, monkeypatch) -> None:
@@ -22,7 +23,10 @@ def test_write_run_summary_serializes_numpy_and_timestamp_types(tmp_path: Path, 
             "ts": pd.Timestamp("2026-03-30"),
             "missing": np.nan,
         },
-        artifacts={"path": Path("data/foo.parquet")},
+        artifacts={
+            "path": Path("data/foo.parquet"),
+            "repo_path": artifact_path("portfolio_baselines/sample.parquet"),
+        },
         metadata={"flags": np.asarray([True, False])},
     )
 
@@ -32,4 +36,5 @@ def test_write_run_summary_serializes_numpy_and_timestamp_types(tmp_path: Path, 
     assert payload["summary"]["ts"] == "2026-03-30T00:00:00"
     assert payload["summary"]["missing"] is None
     assert payload["artifacts"]["path"] == "data/foo.parquet"
+    assert payload["artifacts"]["repo_path"] == "artifacts/portfolio_baselines/sample.parquet"
     assert payload["metadata"]["flags"] == [True, False]

@@ -64,6 +64,7 @@ def run_walk_forward(config_path: str, min_train_years: int = 3):
         test_df  = df[test_mask].copy()
 
         if len(train_df) < 200 or len(test_df) < 20:
+            print(f"  [SKIP] {test_year}: train={len(train_df)}, test={len(test_df)}")
             continue
 
         X_train = train_df[feature_cols]

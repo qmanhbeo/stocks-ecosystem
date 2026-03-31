@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime
 from pathlib import Path
+
 import sys
 
 import pandas as pd
@@ -42,7 +43,7 @@ from src.champion_branch_experiment_utils import jsonable, slice_execution_year,
 from src.deterministic_portfolio import simulate_strategy
 from src.run_summary import write_run_summary
 
-OUT_DIR = Path("artifacts/portfolio_baselines")
+OUT_DIR = ROOT / "artifacts/portfolio_baselines"
 
 
 def parse_args() -> argparse.Namespace:

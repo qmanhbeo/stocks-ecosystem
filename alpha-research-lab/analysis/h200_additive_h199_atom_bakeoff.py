@@ -17,6 +17,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,8 +52,8 @@ RL_MATRIX_PATH = Path("data/features/xs_rl_signal_matrix.parquet")
 TRADABILITY_PATH = Path("data/features/execution/tradability_daily.parquet")
 STOCK_DIR = Path("data/stock")
 BENCHMARK_PATH = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
-H199_SUMMARY_PATH = Path("artifacts/run_summaries/latest_tradability_conditioned_signal_search_v2.json")
-OUT_DIR = Path("artifacts/portfolio_baselines")
+H199_SUMMARY_PATH = ROOT / "artifacts/run_summaries/latest_tradability_conditioned_signal_search_v2.json"
+OUT_DIR = ROOT / "artifacts/portfolio_baselines"
 
 
 def parse_args() -> argparse.Namespace:

@@ -9,6 +9,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE_ROOT = ROOT.parent
 SHARED_MARKET_RULES_ROOT = WORKSPACE_ROOT / "shared-market-rules"
@@ -31,9 +32,9 @@ TRADABILITY_PATH = Path("data/features/execution/tradability_daily.parquet")
 STOCK_DIR = Path("data/stock")
 BENCHMARK_PATH = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
 EVENT_SURFACE_PATH = Path("data/features/event_surface_daily.parquet")
-H211_SUMMARY_PATH = Path("artifacts/run_summaries/latest_portfolio_exit_strength_exhaustion.json")
-H222_SUMMARY_PATH = Path("artifacts/run_summaries/latest_portfolio_exit_event_surface_predictive_screen.json")
-OUT_DIR = Path("artifacts/portfolio_baselines")
+H211_SUMMARY_PATH = ROOT / "artifacts/run_summaries/latest_portfolio_exit_strength_exhaustion.json"
+H222_SUMMARY_PATH = ROOT / "artifacts/run_summaries/latest_portfolio_exit_event_surface_predictive_screen.json"
+OUT_DIR = ROOT / "artifacts/portfolio_baselines"
 
 
 def parse_args() -> argparse.Namespace:

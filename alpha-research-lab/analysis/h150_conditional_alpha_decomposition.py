@@ -18,6 +18,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+
 import numpy as np
 import pandas as pd
 
@@ -36,7 +37,7 @@ from src.run_summary import write_run_summary
 RL_MATRIX_PATH = Path("data/features/xs_rl_signal_matrix.parquet")
 TRADABILITY_PATH = Path("data/features/execution/tradability_daily.parquet")
 STOCK_DIR = Path("data/stock")
-OUT_DIR = Path("artifacts/portfolio_baselines")
+OUT_DIR = ROOT / "artifacts/portfolio_baselines"
 
 
 STATE_DEFS = [

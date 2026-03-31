@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+
 import json
 import sys
 
@@ -17,7 +18,7 @@ if str(ROOT) not in sys.path:
 from src.run_summary import write_run_summary
 from src.research_protocol import DEFAULT_PROTOCOL
 
-H225_SUMMARY_PATH = Path("artifacts/run_summaries/latest_portfolio_exit_intraday_structure_feasibility.json")
+H225_SUMMARY_PATH = ROOT / "artifacts/run_summaries/latest_portfolio_exit_intraday_structure_feasibility.json"
 
 
 def main() -> None:

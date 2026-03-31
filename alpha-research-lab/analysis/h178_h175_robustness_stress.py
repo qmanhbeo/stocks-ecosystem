@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime
 from pathlib import Path
+
 import sys
 
 import numpy as np
@@ -41,8 +42,8 @@ from src.deterministic_portfolio import StrategyRunResult, simulate_strategy
 from src.run_summary import write_run_summary
 from shared_market_rules import required_holding_age_for_sell
 
-OUT_DIR = Path("artifacts/portfolio_baselines")
-META_OUT_DIR = Path("artifacts/activation_meta")
+OUT_DIR = ROOT / "artifacts/portfolio_baselines"
+META_OUT_DIR = ROOT / "artifacts/activation_meta"
 
 
 def _parse_int_list(text: str) -> list[int]:

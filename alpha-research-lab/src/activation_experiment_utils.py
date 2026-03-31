@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 from pathlib import Path
+
+from src.repo_paths import artifact_path
 from typing import Mapping
 
 import pandas as pd
 
 
-OUT_DIR = Path("artifacts/portfolio_baselines")
+OUT_DIR = artifact_path("portfolio_baselines")
 
 
 def print_top_activation_results(results: pd.DataFrame, *, title: str, top_n: int = 20) -> None:

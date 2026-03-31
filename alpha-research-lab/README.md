@@ -114,6 +114,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - Run research scripts from inside `alpha-research-lab/`
 - Canonical data lives in the workspace root at `../data/`
 - The repo-local `data/` path is a symlink to that shared root so existing lab scripts can keep using `data/...`
+- Artifact outputs are anchored to `alpha-research-lab/artifacts/` regardless of launch directory
 - No research data is duplicated inside `alpha-research-lab/`
 - The lab publishes the consolidated RL feature surface at `data/features/xs_rl_signal_matrix.parquet`
 - The lab publishes the shared execution tradability artifact at `data/features/execution/tradability_daily.parquet`
@@ -468,6 +469,7 @@ The shared candidate table is inference-only. Training, selector discovery, and 
 ## Saved Result Artifacts
 
 Main experiment runners write compact JSON summaries to `artifacts/run_summaries/`.
+These artifact paths are repo-anchored, so running a lab script from the workspace root should still write into `alpha-research-lab/artifacts/`.
 
 - One-shot: `latest_one_shot.json`
 - Walk-forward: `latest_walk_forward.json`

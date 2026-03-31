@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+
 import sys
 
 import pandas as pd
@@ -14,7 +15,7 @@ from src.champion_activation_utils import align_series_to_market_dates, load_cha
 from src.deterministic_portfolio import simulate_strategy
 from src.run_summary import write_run_summary
 
-OUT_DIR = Path("artifacts/portfolio_baselines")
+OUT_DIR = ROOT / "artifacts/portfolio_baselines"
 
 
 def _pct_rank(series: pd.Series) -> pd.Series:
