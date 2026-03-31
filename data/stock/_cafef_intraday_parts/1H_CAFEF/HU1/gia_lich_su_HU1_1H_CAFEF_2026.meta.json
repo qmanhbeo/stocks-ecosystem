@@ -1,0 +1,15 @@
+{
+  "bar_dates": 31,
+  "bars": 48,
+  "first_bar_time": "2026-01-05T12:00:00",
+  "first_requested_date": "2026-01-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T14:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "6373e8be32e15a99ed15c19938dae32f07871fd6",
+  "requested_trading_days": 32,
+  "ticker": "HU1",
+  "written_at_utc": "2026-03-31T10:38:35Z",
+  "year": 2026
+}

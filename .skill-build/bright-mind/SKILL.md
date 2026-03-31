@@ -75,6 +75,16 @@ Read the smallest set that gives a faithful picture of the lab before proposing 
   - the cheapest honest first test
   - what result would advance, narrow, or kill the branch
 
+6. Record the ideas in the repo immediately.
+- After producing a non-trivial hypothesis set, update `alpha-research-lab/notes/next_steps.md`.
+- Add a concise queue, not the full dossier:
+  - short branch names
+  - one-line claim or connection
+  - the smallest honest next test
+- Keep the new queue subordinate to the repo's active priorities.
+- Do **not** assign `H` numbers unless the branch is intentionally being activated.
+- Skip this only if the user explicitly asks for a dry ideation pass with no file changes.
+
 ## Idea Standards
 
 Prefer ideas with these properties:
@@ -128,6 +138,8 @@ Then rank ideas by:
 - novelty
 - feasibility with current data
 - honesty of the test path
+
+After presenting the dossier, leave a condensed version in `alpha-research-lab/notes/next_steps.md` unless the user explicitly asked not to modify files.
 
 ## Working Style
 

@@ -544,3 +544,190 @@ So the selector-relative gate is not just “basically the same rule,” but it 
 **Key finding:** the `H201` winner is not blocked merely by using `full_library` as the `rel2` calibration source. Rebuilding `rel2 > 0` on the selector's own return history does not rescue activation compatibility.
 
 **Implication:** keep `state_blend__h199_sector_laggard_gap_absorb__30` as selector-only offline evidence. Do **not** keep tuning local `rel_span` / `rel_threshold` variants of this same gate on the current locked windows. If model-side queue work is intentionally continued later, move to the next materially different family (`H250`).
+
+## F162: H250 Finds One Real Contradiction-State Router, But It Does Not Dislodge `H201` As The Current Offline Lead (2026-03-31, Session 81)
+
+Session 81 ran `H250`, the queued contradiction-state router branch built from disagreement states between:
+- continuation family:
+  - `S1`
+  - `C12`
+  - `C14`
+  - `H199`
+- reversal / veto family:
+  - `C9`
+  - `C13`
+
+The branch stayed disciplined:
+- no live-branch change
+- no `2026+` lockbox read
+- one sparse router family only
+- at most one promoted winner carried into direct selector audit
+
+### What passed
+
+Promoted router:
+- `h250_disagreement_balance`
+- active share `13.35%`
+- dev IC `+0.0184`
+- corr with `S1` `+0.0905`
+- validation IC `+0.0159`
+- confirmation IC `+0.0184`
+- validation selector relevance `+33.27%`
+
+So the contradiction-state idea is not empty:
+- there is a real sparse router state in the current data stack
+- it is not just another highly correlated restatement of `S1`
+
+Direct audit against the selector backbone:
+- `full_library_plus__h250_disagreement_balance`
+- validation relative `+78.16%`
+- validation delta vs baseline `+34.71%`
+- validation IR delta vs baseline `+0.53`
+- confirmation relative `-20.80%`
+- confirmation delta vs baseline `-0.78%`
+
+That is strong enough to clear the baseline additive gate.
+
+### What failed
+
+Direct comparison vs the current `H201` offline lead:
+- `state_blend__h199_sector_laggard_gap_absorb__30`
+- `H250` validation delta vs `H201`: `+31.99%`
+- `H250` confirmation delta vs `H201`: `-7.36%`
+
+So the new router improves validation dramatically, but it still gives back too much on confirmation.
+
+### Branch consequence
+
+**Key finding:** contradiction-state routing is a real selector family on the current stack, but the best current router does not yet beat `H201` where it matters most. `h250_disagreement_balance` is stronger than the baseline and worth keeping, but it is not the new offline leader.
+
+**Implication:** keep `h250_disagreement_balance` as offline-only / RL-state evidence. Keep `state_blend__h199_sector_laggard_gap_absorb__30` as the current offline lead selector. If the model-side queue is intentionally continued later, move to the next materially different family (`H251`) rather than tuning more local `H250` variants immediately.
+
+## F163: H251 Reopens Event Surface v1 As A Narrow Trust Modulator For `H201`, Not As A New Standalone Predictor (2026-03-31, Session 82)
+
+Session 82 ran `H251`, the queued event-surface reuse test. The question was deliberately narrow:
+- do **not** reopen the event surface as exit alpha
+- do **not** touch the live branch
+- do **not** read `2026+`
+- test only whether the already-published event surface can tell us when to trust the strongest current offline selector
+
+Carried selector backbones:
+- `full_library_baseline`
+- `state_blend__h199_sector_laggard_gap_absorb__30`
+- `full_library_plus__h250_disagreement_balance`
+
+Pre-specified event regimes screened:
+- `top5_any_event_ge1`
+- `top5_recent_filing_ge1`
+- `top5_report_window_ge2`
+
+### What passed
+
+Only the `H201` winner showed clean, repeated benefit from the event surface as trust context.
+
+Best candidate:
+- `state_blend__h199_sector_laggard_gap_absorb__30 + top5_report_window_ge2`
+- overall gate share `49.21%`
+- validation IC delta `+0.0104`
+- confirmation IC delta `+0.0134`
+- validation top-5 edge delta `+0.0174`
+- confirmation top-5 edge delta `+0.0146`
+
+Second promoted regime:
+- `state_blend__h199_sector_laggard_gap_absorb__30 + top5_recent_filing_ge1`
+- overall gate share `58.99%`
+- validation IC delta `+0.0038`
+- confirmation IC delta `+0.0198`
+- validation top-5 edge delta `+0.0016`
+- confirmation top-5 edge delta `+0.0043`
+
+That result is important because it says the published event surface is not dead everywhere:
+- it failed as an exit / continuation predictive family
+- but it still contains useful context about when the current offline selector is more trustworthy
+
+### What did not generalize
+
+The same regimes did **not** behave like a general-purpose selector upgrade.
+
+Mixed only:
+- `full_library_baseline + top5_report_window_ge2`
+  - edge improves in validation and confirmation
+  - IC deteriorates in both windows
+- `full_library_plus__h250_disagreement_balance + top5_report_window_ge2`
+  - edge improves in validation and confirmation
+  - IC deteriorates in both windows
+- `full_library_plus__h250_disagreement_balance + top5_recent_filing_ge1`
+  - confirmation improves
+  - validation edge turns negative
+
+So the branch should stay narrow:
+- this is not evidence that event surface v1 rescues every selector
+- this is not evidence that `H250` becomes the new leader under event conditioning
+- this is not a reason to reopen the old exit-side event search
+
+### Branch consequence
+
+**Key finding:** event surface v1 is still closed as an exit predictor on the current local stack, but it passes as a narrow trust modulator for the current `H201` offline selector. The cleanest reusable regime is `top5_report_window_ge2`, with `top5_recent_filing_ge1` as a weaker secondary carry.
+
+**Implication:** keep `state_blend__h199_sector_laggard_gap_absorb__30` as the current offline lead. Reopen the event branch only as a light offline trust-audit (`H252`) on `H201`, not as a broader event-family search and not as a live-branch change.
+
+## F164: H252 Confirms The Event Reuse Edge Only As A Hard Report-Window Gate Around `H201`, Not As A Soft Trust Dial (2026-03-31, Session 83)
+
+Session 83 ran `H252`, the follow-through that `H251` explicitly asked for.
+
+The contract stayed narrow:
+- same `H201` selector:
+  - `state_blend__h199_sector_laggard_gap_absorb__30`
+- same locked years:
+  - dev `2015-2022`
+  - validation `2023-2024`
+  - confirmation `2025`
+- no `2026+` read
+- no reopening of the old exit-side event family
+- only one primary regime and one secondary carry:
+  - `top5_report_window_ge2`
+  - `top5_recent_filing_ge1`
+
+### What passed
+
+The promoted winner is not a soft schedule. It is a real hard gate:
+- `winner_report_window_gate`
+- regime:
+  - `top5_report_window_ge2`
+- overall gate share `49.34%`
+- validation relative `+59.57%`
+- validation delta vs `H201` always-on `+13.40%`
+- validation IR delta `+0.33`
+- confirmation relative `-10.98%`
+- confirmation delta vs `H201` always-on `+2.45%`
+- confirmation IR delta `+0.10`
+
+That is enough to count as a real offline improvement over always-on `H201`.
+
+### What did not survive
+
+The softer variants do not carry the branch.
+
+Mixed only:
+- `winner_report_window_half_off`
+- validation relative delta `-7.13%`
+- validation IR delta `-0.01`
+- confirmation relative delta `+0.26%`
+- confirmation IR delta `-0.09`
+
+Failed cleanly:
+- `winner_recent_filing_half_off`
+- validation relative delta `-25.97%`
+- validation IR delta `-0.39`
+- confirmation relative delta `-12.43%`
+
+So the lesson is precise:
+- the report-window signal is real enough to matter
+- but only as a stronger exposure decision
+- the current data does **not** support the broader idea that event surface v1 is a generic soft trust dial around `H201`
+
+### Branch consequence
+
+**Key finding:** the current-data event reuse branch survives only as `H201 + top5_report_window_ge2` with a hard on/off exposure gate. The weaker partial-exposure version is not the winner, and the recent-filing carry is not promotable.
+
+**Implication:** keep `winner_report_window_gate` as offline evidence only. Do not broaden the event family again. If the model-side queue is intentionally continued later, the next honest question is `H253`: whether this hard-gated offline winner survives a frozen compatibility audit against the incumbent sticky branch.

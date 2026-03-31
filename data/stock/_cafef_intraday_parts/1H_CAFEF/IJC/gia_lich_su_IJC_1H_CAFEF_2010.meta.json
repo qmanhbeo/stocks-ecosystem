@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2010-04-19",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2010-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "293df1d01365694fb2ecbc99261a7048c0d4d44a",
+  "requested_trading_days": 180,
+  "ticker": "IJC",
+  "written_at_utc": "2026-03-31T10:49:38Z",
+  "year": 2010
+}

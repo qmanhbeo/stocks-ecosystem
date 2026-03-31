@@ -1,14 +1,14 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_80_log.md` for the latest full session detail.
+Use `notes/session_83_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Current State
 
-**Session status:** Session 80 ran `H249`, the selector-relative activation follow-through for the `H201` offline selector lead, on `2015-2025` only so the `2026+` lockbox stayed untouched. Rebuilding the sticky gate around the winner's own `rel2` did not rescue compatibility: the control rerun with the incumbent `full_library` gate reproduced the original `H202` failure, while the selector-relative gate ran at similar exposure (`53.82%` vs `54.26%`) with only `72.63%` agreement and collapsed confirmation to `-19.10%` versus incumbent `+18.80%`. `state_blend__h199_sector_laggard_gap_absorb__30` therefore remains selector-only offline evidence, and if model-side queue work is intentionally continued later the next materially different item is `H250`, not more local `H249` variants. The active live branch still remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`, and the active non-live priority still remains acquisition-first timing data work rather than more local timing-model tuning on the current data stack. (2026-03-31)
+**Session status:** Session 83 ran `H252`, the light event-surface trust audit around the current `H201` offline lead, on `2015-2025` only so the `2026+` lockbox stayed untouched. The result is more specific than `H251`: the event surface works only as a real hard report-window exposure gate, not as a general soft trust dial. `winner_report_window_gate` (`top5_report_window_ge2`, off-scale `0.0`) beat always-on `H201` with validation relative `+59.57%` vs baseline `+46.17%`, validation delta `+13.40%`, validation IR delta `+0.33`, confirmation relative `-10.98%` vs baseline `-13.43%`, and confirmation delta `+2.45%`. The milder `report_window_half_off` schedule was only mixed, and the `recent_filing_half_off` carry failed cleanly. Branch consequence: keep `H201 + top5_report_window_ge2` as offline evidence only, keep `H250` as secondary offline evidence, and if model-side queue work is intentionally continued later move to a narrow `H253` compatibility audit rather than broadening the event branch. The active live branch still remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`, and the active non-live priority still remains acquisition-first timing data work rather than more local timing-model tuning on the current data stack. (2026-03-31)
 
 ### Start next session here
 
@@ -23,7 +23,8 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 3. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
 4. Keep the Session 73 branch closure explicit:
    - do **not** reopen `H221-H229` on the current local data stack
-   - event surface is now published, but it failed the predictive gate
+   - event surface v1 failed the continuation / exit predictive gate
+   - `H251/H252` only reopen that same published surface as narrow selector trust context around `H201`
    - intraday / order-book work now requires new data acquisition, not more local rule tuning
 5. Start any new timing-data work from the acquisition plan, not from model scripts:
    - read `notes/timing_data_acquisition_plan.md`
@@ -228,6 +229,10 @@ Family B — selector / activation compatibility
     - do **not** keep tuning local `rel_span` / `rel_threshold` variants on the same locked windows
 
 - `H250`: contradiction-state router
+  - status:
+    - completed in Session 81 on `2015-2025` only
+    - mixed: `h250_disagreement_balance` promoted to selector audit and cleared the baseline additive gate
+    - it did **not** beat `H201`, so keep it as offline-only evidence
   - claim:
     - the next selector edge may live in disagreement states between `S1`, `C9`, `C12`, `C13`, `C14`, and the `H199` atom rather than in another additive atom
   - smallest honest test:
@@ -243,16 +248,91 @@ Family B — selector / activation compatibility
 Family C — current-data event-surface reuse
 
 - `H251`: event-surface trust modulator
+  - status:
+    - completed in Session 82 on `2015-2025` only
+    - pass: event-surface regimes improved `H201` only as selector trust context
+    - promoted regimes:
+      - `top5_report_window_ge2`
+      - `top5_recent_filing_ge1`
   - claim:
     - `data/features/event_surface_daily.parquet` may fail as exit alpha but still be useful as a selection / activation trust variable
   - smallest honest test:
     - run a conditional IC / selector-efficacy decomposition by event regime before any deterministic integration
   - pass:
-    - open a light offline trust-modifier audit
+    - open `H252`, a light offline trust-modifier audit on `H201` only
   - mixed:
     - keep event surface v1 as an explanatory diagnostic only
   - fail:
     - leave event-surface reuse parked until `event_surface_v2` or richer acquisition passes
+
+- `H252`: H201 event-surface trust audit
+  - status:
+    - completed in Session 83 on `2015-2025` only
+    - pass: `top5_report_window_ge2` survives as a real hard gate around `H201`
+    - mixed: the milder `report_window_half_off` variant
+    - fail: the `recent_filing_half_off` carry
+  - claim:
+    - a light deterministic trust modifier around `H201` can convert the `H251` event regimes into cleaner offline selector efficacy without reopening a broad event search
+  - smallest honest test:
+    - audit mild gating or trust-weighting around `state_blend__h199_sector_laggard_gap_absorb__30`
+    - start from `top5_report_window_ge2`
+    - keep `top5_recent_filing_ge1` as the only secondary carry
+  - pass:
+    - keep the hard report-window gate as offline evidence
+    - then open `H253`, a narrow frozen-compatibility audit
+  - mixed:
+    - keep the event regimes as explanatory diagnostics only
+  - fail:
+    - close current-data event-surface reuse on the present data stack
+
+- `H253`: H252 frozen-compatibility audit
+  - claim:
+    - the `H252` hard report-window gate may be a real offline improvement, but it still has to survive a frozen compatibility audit before it becomes a serious live-adjacent branch
+  - smallest honest test:
+    - compare `winner_report_window_gate` directly against the frozen sticky incumbent on `2015-2025`
+    - do not touch `2026+`
+    - do not broaden the event family beyond `top5_report_window_ge2`
+  - pass:
+    - keep it as serious offline evidence and only then decide whether a live-monitor branch is justified later
+  - mixed:
+    - keep it as selector-only offline evidence
+  - fail:
+    - keep `H252` as an explanatory offline result, not a compatibility winner
+
+### Recent Synthesis Queue
+
+These are branch-worthy synthesis hypotheses from the recent `H249-H252` chain.
+Keep them subordinate to acquisition-first timing work and to `H253`.
+Do **not** assign new `H` numbers until one is intentionally chosen as the next active branch.
+
+- `selector switchboard`
+  - claim:
+    - `H201` may be a report-window specialist rather than a universal selector winner
+  - connection:
+    - `H249` says selector-relative `rel2` does not rescue compatibility
+    - `H251/H252` say `top5_report_window_ge2` does
+  - cheapest honest test:
+    - only after `H253`, compare a hybrid switchboard:
+      - incumbent sticky off-regime
+      - `H252` hard-gated `H201` on-regime
+
+- `report-window contradiction expert`
+  - claim:
+    - `H250` may be globally mixed but locally useful inside the `H252` on-dates
+  - connection:
+    - `H250` proves contradiction routing is real
+    - `H251/H252` prove the useful event regime is specific to `H201`
+  - cheapest honest test:
+    - on `H252` on-dates only, compare plain `H201` vs `H201` plus one contradiction-state overlay
+
+- `event-driven dynamic breadth`
+  - claim:
+    - the parked small-book evidence and the `H252` report-window gate may be the same concentration regime viewed from two different branches
+  - connection:
+    - the entry-alpha branch historically wants `top1/top2`
+    - `H252` fires when the top-5 already contains concentrated report-window support
+  - cheapest honest test:
+    - on `H252` on-dates only, audit `H201` at `K in {1,2,5}`
 
 10. Session 66 selection-side first pass:
    - locked protocol is now codified in code:
@@ -346,6 +426,69 @@ Family C — current-data event-surface reuse
      - branch effect:
        - do not replace the live branch
        - keep the H201 winner as offline-only research evidence
+14. Session 81 contradiction-state router follow-through:
+   - `H250`: **MIXED**
+     - promoted router:
+       - `h250_disagreement_balance`
+       - active share `13.35%`
+       - dev IC `+0.0184`
+       - validation IC `+0.0159`
+       - confirmation IC `+0.0184`
+     - direct selector audit:
+       - `full_library_plus__h250_disagreement_balance`
+       - validation relative `+78.16%`
+       - validation delta vs baseline `+34.71%`
+       - confirmation relative `-20.80%`
+       - confirmation delta vs baseline `-0.78%`
+     - direct comparison vs `H201`:
+       - validation delta `+31.99%`
+       - confirmation delta `-7.36%`
+     - branch effect:
+       - contradiction-state routing is real enough to keep as offline-only evidence
+       - `h250_disagreement_balance` does **not** replace `state_blend__h199_sector_laggard_gap_absorb__30`
+       - if model-side queue work is intentionally continued later, move to `H251`
+15. Session 82 event-surface trust-modulator follow-through:
+   - `H251`: **PASS**
+     - promoted trust regimes on the `H201` winner:
+       - `top5_report_window_ge2`
+         - overall gate share `49.21%`
+         - validation IC delta `+0.0104`
+         - confirmation IC delta `+0.0134`
+         - validation top-5 edge delta `+0.0174`
+         - confirmation top-5 edge delta `+0.0146`
+       - `top5_recent_filing_ge1`
+         - overall gate share `58.99%`
+         - validation IC delta `+0.0038`
+         - confirmation IC delta `+0.0198`
+         - validation top-5 edge delta `+0.0016`
+         - confirmation top-5 edge delta `+0.0043`
+     - branch effect:
+       - event surface v1 remains closed as an exit predictor on the current stack
+       - it does reopen narrowly as selector trust context for `state_blend__h199_sector_laggard_gap_absorb__30`
+       - baseline and `H250`-augmented selectors are mixed only under the same regimes
+       - if model-side queue work is intentionally continued later, move to `H252`
+16. Session 83 H201 event-surface trust audit:
+   - `H252`: **PASS**
+     - promoted winner:
+       - `winner_report_window_gate`
+       - regime `top5_report_window_ge2`
+       - overall gate share `49.34%`
+       - validation relative `+59.57%`
+       - validation delta vs `H201` always-on `+13.40%`
+       - validation IR delta `+0.33`
+       - confirmation relative `-10.98%`
+       - confirmation delta vs `H201` always-on `+2.45%`
+     - mixed only:
+       - `winner_report_window_half_off`
+       - confirmation improves slightly, but validation deteriorates
+     - failed carry:
+       - `winner_recent_filing_half_off`
+       - degrades both validation and confirmation materially
+     - branch effect:
+       - event surface v1 still does **not** reopen as a broad family
+       - the only surviving H252 implementation is a hard `top5_report_window_ge2` gate around `H201`
+       - keep that as offline evidence only
+       - if model-side queue work is intentionally continued later, move to `H253`
 13. Session 69 selector follow-through:
    - `H203`: **PASS**
      - one pair candidate survived the always-on additive gate:
@@ -1581,6 +1724,12 @@ Family C — current-data event-surface reuse
 | 75 | 2026-03-30 | H238-H244 entry-alpha ladder: sparse breadth is real offline evidence, but no rule/model/soft-prior/live-compatibility variant is promotable | H93 + C4-C14 |
 | 76 | 2026-03-30 | H245 entry-alpha contract audit: branch looks historically like a small-book `top1` contract, but no audited `top_k` survives the honest forward gate; branch remains offline-only | H93 + C4-C14 |
 | 77 | 2026-03-30 | H246 small-book overlay follow-through: top1 confirmation overlays are a no-op and top2 soft-consensus overlays overfit validation; branch remains offline-only | H93 + C4-C14 |
+| 78 | 2026-03-31 | H247 label-sharpen audit fails; sharpened labels do not rescue the small-book branch, and one unsharpened `top2` price-state side result remains offline-only | H93 + C4-C14 |
+| 79 | 2026-03-31 | H248 catalyst-concentrated small-book follow-through fails; sparse catalyst concentration does not rescue the branch, and Family A closes on the current data stack | H93 + C4-C14 |
+| 80 | 2026-03-31 | H249 selector-relative activation audit fails; rebuilding sticky activation from the H201 winner's own `rel2` history does not rescue compatibility | H93 + C4-C14 |
+| 81 | 2026-03-31 | H250 contradiction-state router follow-through is mixed: one real routed selector survives as offline evidence, but it does not dislodge `H201` | H93 + C4-C14 |
+| 82 | 2026-03-31 | H251 event-surface trust-modulator follow-through passes narrowly: report-window and recent-filing regimes improve `H201` offline and justify a light trust-audit follow-through | H93 + C4-C14 |
+| 83 | 2026-03-31 | H252 trust audit passes only as a hard report-window gate around `H201`; soft trust schedules do not survive cleanly, so the next narrow follow-through is frozen compatibility, not broader event search | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 

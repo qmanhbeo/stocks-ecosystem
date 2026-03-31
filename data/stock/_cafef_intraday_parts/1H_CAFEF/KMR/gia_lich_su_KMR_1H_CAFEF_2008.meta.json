@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2008-06-30",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2008-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "f60f63839c078c934d4158ab63f6084647be3455",
+  "requested_trading_days": 131,
+  "ticker": "KMR",
+  "written_at_utc": "2026-03-31T11:31:11Z",
+  "year": 2008
+}

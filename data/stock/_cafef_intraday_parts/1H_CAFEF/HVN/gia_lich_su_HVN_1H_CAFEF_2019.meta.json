@@ -1,0 +1,15 @@
+{
+  "bar_dates": 217,
+  "bars": 741,
+  "first_bar_time": "2019-01-02T10:00:00",
+  "first_requested_date": "2019-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2019-12-31T12:00:00",
+  "last_requested_date": "2019-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "34ba4108cc5854837b31a09610934c2e01cf2406",
+  "requested_trading_days": 243,
+  "ticker": "HVN",
+  "written_at_utc": "2026-03-31T10:42:43Z",
+  "year": 2019
+}
