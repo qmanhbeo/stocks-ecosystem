@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2004-09-21",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2004-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "376846e2848848e4c2256bc1b060443d5d0f4dcd",
+  "requested_trading_days": 74,
+  "ticker": "SFC",
+  "written_at_utc": "2026-03-31T16:38:08Z",
+  "year": 2004
+}

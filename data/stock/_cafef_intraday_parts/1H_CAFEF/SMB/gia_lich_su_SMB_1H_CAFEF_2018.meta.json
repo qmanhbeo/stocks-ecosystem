@@ -1,0 +1,15 @@
+{
+  "bar_dates": 232,
+  "bars": 805,
+  "first_bar_time": "2018-01-02T10:00:00",
+  "first_requested_date": "2018-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2018-12-28T14:00:00",
+  "last_requested_date": "2018-12-28",
+  "observed_empty": false,
+  "requested_dates_signature": "03e90ab24909971d6f5789313ab55fed29bab3e4",
+  "requested_trading_days": 236,
+  "ticker": "SMB",
+  "written_at_utc": "2026-03-31T17:32:47Z",
+  "year": 2018
+}

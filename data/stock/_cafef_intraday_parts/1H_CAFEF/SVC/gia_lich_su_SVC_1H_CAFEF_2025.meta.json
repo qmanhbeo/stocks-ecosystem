@@ -1,0 +1,15 @@
+{
+  "bar_dates": 192,
+  "bars": 551,
+  "first_bar_time": "2025-01-02T13:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T14:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "a32e6ad68d62d1f4ccf5b1a60419a095a29bdb48",
+  "requested_trading_days": 246,
+  "ticker": "SVC",
+  "written_at_utc": "2026-03-31T18:22:34Z",
+  "year": 2025
+}

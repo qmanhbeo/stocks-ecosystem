@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2006-12-29",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2006-12-29",
+  "observed_empty": true,
+  "requested_dates_signature": "267d4595abb6cfae5f478ff573b8d464144f9977",
+  "requested_trading_days": 1,
+  "ticker": "SFI",
+  "written_at_utc": "2026-03-31T16:45:29Z",
+  "year": 2006
+}

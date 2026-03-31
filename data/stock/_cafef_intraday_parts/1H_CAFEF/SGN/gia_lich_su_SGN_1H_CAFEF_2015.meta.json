@@ -1,0 +1,15 @@
+{
+  "bar_dates": 15,
+  "bars": 37,
+  "first_bar_time": "2015-12-10T10:00:00",
+  "first_requested_date": "2015-12-10",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2015-12-31T12:00:00",
+  "last_requested_date": "2015-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "e74a5eb1e9f012e3fdd0b88336a8dad73af473f3",
+  "requested_trading_days": 16,
+  "ticker": "SGN",
+  "written_at_utc": "2026-03-31T16:49:51Z",
+  "year": 2015
+}

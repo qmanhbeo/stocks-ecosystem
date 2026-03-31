@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2005-01-04",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2005-12-30",
+  "observed_empty": true,
+  "requested_dates_signature": "ab4e95850f9c3085fce399f16e040d47f91f54bc",
+  "requested_trading_days": 251,
+  "ticker": "SAM",
+  "written_at_utc": "2026-03-31T16:07:24Z",
+  "year": 2005
+}

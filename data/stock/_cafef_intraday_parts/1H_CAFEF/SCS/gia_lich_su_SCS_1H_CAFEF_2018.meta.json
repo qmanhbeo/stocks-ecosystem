@@ -1,0 +1,15 @@
+{
+  "bar_dates": 239,
+  "bars": 987,
+  "first_bar_time": "2018-01-02T10:00:00",
+  "first_requested_date": "2018-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2018-12-28T14:00:00",
+  "last_requested_date": "2018-12-28",
+  "observed_empty": false,
+  "requested_dates_signature": "cee731029adafd6b7aec648d9fd51edd553d2f2a",
+  "requested_trading_days": 244,
+  "ticker": "SCS",
+  "written_at_utc": "2026-03-31T16:36:22Z",
+  "year": 2018
+}

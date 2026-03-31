@@ -1,0 +1,15 @@
+{
+  "bar_dates": 217,
+  "bars": 819,
+  "first_bar_time": "2025-01-02T10:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T13:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "d06cd0dbe5e0327fd94d27fb3a478ab31fdc4290",
+  "requested_trading_days": 248,
+  "ticker": "PGV",
+  "written_at_utc": "2026-03-31T14:42:16Z",
+  "year": 2025
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2006-12-15",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2006-12-29",
+  "observed_empty": true,
+  "requested_dates_signature": "d3a17fbdfcae861aa4bfe2988e4b32805ca490dd",
+  "requested_trading_days": 11,
+  "ticker": "SSI",
+  "written_at_utc": "2026-03-31T17:56:19Z",
+  "year": 2006
+}

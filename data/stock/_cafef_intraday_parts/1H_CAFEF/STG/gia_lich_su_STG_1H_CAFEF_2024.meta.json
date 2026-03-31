@@ -1,0 +1,15 @@
+{
+  "bar_dates": 130,
+  "bars": 187,
+  "first_bar_time": "2024-01-03T10:00:00",
+  "first_requested_date": "2024-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2024-12-31T10:00:00",
+  "last_requested_date": "2024-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "3804fa013483338814d3cb4d7c4e04e23ea1b17f",
+  "requested_trading_days": 199,
+  "ticker": "STG",
+  "written_at_utc": "2026-03-31T18:15:30Z",
+  "year": 2024
+}

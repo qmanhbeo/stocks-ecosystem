@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2008-01-18",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2008-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "3869d18f9bedf411ef3427c1c968881c0984434f",
+  "requested_trading_days": 233,
+  "ticker": "SGT",
+  "written_at_utc": "2026-03-31T16:54:57Z",
+  "year": 2008
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2009-03-23",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2009-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "27fde33a63b73c528d18e635882d23236647021c",
+  "requested_trading_days": 200,
+  "ticker": "PNJ",
+  "written_at_utc": "2026-03-31T15:09:32Z",
+  "year": 2009
+}

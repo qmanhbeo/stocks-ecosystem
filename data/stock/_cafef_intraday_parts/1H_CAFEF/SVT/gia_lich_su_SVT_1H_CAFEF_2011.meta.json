@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2011-10-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2011-12-30",
+  "observed_empty": true,
+  "requested_dates_signature": "563ed3cafe82abd1ab65050b9da01efef3087a35",
+  "requested_trading_days": 63,
+  "ticker": "SVT",
+  "written_at_utc": "2026-03-31T18:23:54Z",
+  "year": 2011
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 141,
+  "bars": 298,
+  "first_bar_time": "2019-06-06T10:00:00",
+  "first_requested_date": "2019-06-06",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2019-12-31T12:00:00",
+  "last_requested_date": "2019-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "f131c65820787436a97c6c53ed571ffe776948ae",
+  "requested_trading_days": 148,
+  "ticker": "SIP",
+  "written_at_utc": "2026-03-31T17:14:10Z",
+  "year": 2019
+}

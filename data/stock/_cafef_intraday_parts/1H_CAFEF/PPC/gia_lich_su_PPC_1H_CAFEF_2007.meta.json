@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2007-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2007-12-28",
+  "observed_empty": true,
+  "requested_dates_signature": "c24ddfcff301f1c12a264c51f606e1b122a5be50",
+  "requested_trading_days": 238,
+  "ticker": "PPC",
+  "written_at_utc": "2026-03-31T15:16:23Z",
+  "year": 2007
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 207,
+  "bars": 784,
+  "first_bar_time": "2025-01-02T10:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T14:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "0aebf199b068f78f8e86d297c762ef8ab9d0f594",
+  "requested_trading_days": 239,
+  "ticker": "RYG",
+  "written_at_utc": "2026-03-31T16:01:39Z",
+  "year": 2025
+}

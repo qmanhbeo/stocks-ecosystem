@@ -1,0 +1,15 @@
+{
+  "bar_dates": 113,
+  "bars": 172,
+  "first_bar_time": "2025-01-07T12:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T11:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "2d0b5c17f217584d6c231c6db24a20984d920b32",
+  "requested_trading_days": 196,
+  "ticker": "SSC",
+  "written_at_utc": "2026-03-31T17:56:16Z",
+  "year": 2025
+}

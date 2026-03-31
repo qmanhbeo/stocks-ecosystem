@@ -1,0 +1,15 @@
+{
+  "bar_dates": 171,
+  "bars": 376,
+  "first_bar_time": "2025-01-06T11:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T13:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "6b13f1348bc1ed217d76fa71d48a9f95087a4446",
+  "requested_trading_days": 229,
+  "ticker": "PGI",
+  "written_at_utc": "2026-03-31T14:40:25Z",
+  "year": 2025
+}

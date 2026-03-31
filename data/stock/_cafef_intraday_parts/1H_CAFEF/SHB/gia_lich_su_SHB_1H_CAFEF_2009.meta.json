@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2009-04-20",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2009-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "d74414a6e6a5e01eae5a8480a96127d37f311dfe",
+  "requested_trading_days": 181,
+  "ticker": "SHB",
+  "written_at_utc": "2026-03-31T17:02:05Z",
+  "year": 2009
+}

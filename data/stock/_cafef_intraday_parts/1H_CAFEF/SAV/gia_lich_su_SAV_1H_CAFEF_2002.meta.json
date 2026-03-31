@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2002-05-09",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2002-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "5a871ae8cd541b86a1be31e5292f2ece1d25a519",
+  "requested_trading_days": 168,
+  "ticker": "SAV",
+  "written_at_utc": "2026-03-31T16:12:13Z",
+  "year": 2002
+}

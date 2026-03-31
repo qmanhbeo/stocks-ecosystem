@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2008-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2008-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "5f156240092d574e6203807e9f1f9bfcb7df80f1",
+  "requested_trading_days": 230,
+  "ticker": "PTC",
+  "written_at_utc": "2026-03-31T15:24:24Z",
+  "year": 2008
+}

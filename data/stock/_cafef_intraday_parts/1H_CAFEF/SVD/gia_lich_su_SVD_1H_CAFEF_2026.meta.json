@@ -1,0 +1,15 @@
+{
+  "bar_dates": 50,
+  "bars": 148,
+  "first_bar_time": "2026-01-05T10:00:00",
+  "first_requested_date": "2026-01-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T13:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "9f4f124b77e77665e16e12c05cd50992202b74f1",
+  "requested_trading_days": 50,
+  "ticker": "SVD",
+  "written_at_utc": "2026-03-31T18:23:51Z",
+  "year": 2026
+}

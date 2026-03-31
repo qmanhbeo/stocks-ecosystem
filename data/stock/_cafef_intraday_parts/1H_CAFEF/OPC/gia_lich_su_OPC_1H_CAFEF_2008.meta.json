@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2008-10-30",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2008-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "0d33c4893ba0cde064bf3393a53a1cf6fba33924",
+  "requested_trading_days": 45,
+  "ticker": "OPC",
+  "written_at_utc": "2026-03-31T13:56:33Z",
+  "year": 2008
+}

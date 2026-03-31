@@ -1,0 +1,15 @@
+{
+  "bar_dates": 46,
+  "bars": 121,
+  "first_bar_time": "2026-01-06T11:00:00",
+  "first_requested_date": "2026-01-06",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T14:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "3c6622aaaafef84036e9761e3316c5ee25a6d9ef",
+  "requested_trading_days": 46,
+  "ticker": "SRC",
+  "written_at_utc": "2026-03-31T17:46:28Z",
+  "year": 2026
+}

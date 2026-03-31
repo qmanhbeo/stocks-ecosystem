@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2010-09-08",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2010-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "b1a2d5ba49bc88d1ba3d22a2bf956ddbdbaec083",
+  "requested_trading_days": 83,
+  "ticker": "SMB",
+  "written_at_utc": "2026-03-31T17:30:58Z",
+  "year": 2010
+}

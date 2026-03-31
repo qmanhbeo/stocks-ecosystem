@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2007-10-18",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2007-12-28",
+  "observed_empty": true,
+  "requested_dates_signature": "6179907419cb16d67350948952899b01b70540e7",
+  "requested_trading_days": 52,
+  "ticker": "SC5",
+  "written_at_utc": "2026-03-31T16:28:04Z",
+  "year": 2007
+}

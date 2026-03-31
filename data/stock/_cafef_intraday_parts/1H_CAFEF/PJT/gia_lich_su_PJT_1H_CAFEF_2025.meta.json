@@ -1,0 +1,15 @@
+{
+  "bar_dates": 151,
+  "bars": 328,
+  "first_bar_time": "2025-01-08T14:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T13:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "c435511f4a0a26e926934625354f66c55d9715f8",
+  "requested_trading_days": 225,
+  "ticker": "PJT",
+  "written_at_utc": "2026-03-31T14:58:30Z",
+  "year": 2025
+}

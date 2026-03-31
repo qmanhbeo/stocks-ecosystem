@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2010-08-09",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2010-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "2a32a9f554043617a53052887260fa751c2fcfad",
+  "requested_trading_days": 103,
+  "ticker": "QCG",
+  "written_at_utc": "2026-03-31T15:47:05Z",
+  "year": 2010
+}

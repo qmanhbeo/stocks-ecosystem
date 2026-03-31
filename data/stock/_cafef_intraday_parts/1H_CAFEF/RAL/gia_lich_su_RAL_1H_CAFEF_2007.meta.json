@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2007-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2007-12-28",
+  "observed_empty": true,
+  "requested_dates_signature": "b51b1209274051a34e80a48c1adc6d45512b8016",
+  "requested_trading_days": 248,
+  "ticker": "RAL",
+  "written_at_utc": "2026-03-31T15:51:27Z",
+  "year": 2007
+}
