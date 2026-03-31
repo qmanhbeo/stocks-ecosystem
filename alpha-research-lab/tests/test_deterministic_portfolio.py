@@ -258,6 +258,52 @@ def test_simulate_strategy_capture_blotter_emits_per_ticker_rows():
     assert {"ticker", "target_notional_vnd", "target_pct_adv20", "buy_blocked"}.issubset(result.blotter.columns)
 
 
+def test_simulate_strategy_supports_date_varying_incumbent_score_bonus():
+    scores = np.array(
+        [
+            [0.9, 0.1],
+            [0.9, 0.1],
+            [0.9, 0.1],
+            [0.5, 0.55],
+            [0.1, 0.9],
+            [0.1, 0.9],
+        ],
+        dtype=np.float64,
+    )
+    base = simulate_strategy(
+        strategy_name="test",
+        signal_columns=["mock_signal"],
+        market_inputs=_market_inputs(scores),
+        top_k=1,
+        rebalance_every=1,
+        weighting="equal",
+        initial_notional_vnd=1.0,
+        max_adv_participation=1.0,
+        required_holding_age=3,
+        buy_fee_rate=0.0,
+        sell_fee_rate=0.0,
+        capital_gains_tax_rate=0.0,
+    )
+    scheduled = simulate_strategy(
+        strategy_name="test",
+        signal_columns=["mock_signal"],
+        market_inputs=_market_inputs(scores),
+        top_k=1,
+        rebalance_every=1,
+        weighting="equal",
+        initial_notional_vnd=1.0,
+        max_adv_participation=1.0,
+        required_holding_age=3,
+        buy_fee_rate=0.0,
+        sell_fee_rate=0.0,
+        capital_gains_tax_rate=0.0,
+        incumbent_score_bonus=np.array([0.0, 0.0, 0.0, 0.1, 0.0, 0.0], dtype=np.float64),
+    )
+
+    assert base.daily.loc[3, "held_tickers"] == ["T001"]
+    assert scheduled.daily.loc[3, "held_tickers"] == ["T000"]
+
+
 def test_entry_filter_only_blocks_new_buys_not_existing_holdings():
     scores = np.array(
         [

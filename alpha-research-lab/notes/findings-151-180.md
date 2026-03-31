@@ -731,3 +731,398 @@ So the lesson is precise:
 **Key finding:** the current-data event reuse branch survives only as `H201 + top5_report_window_ge2` with a hard on/off exposure gate. The weaker partial-exposure version is not the winner, and the recent-filing carry is not promotable.
 
 **Implication:** keep `winner_report_window_gate` as offline evidence only. Do not broaden the event family again. If the model-side queue is intentionally continued later, the next honest question is `H253`: whether this hard-gated offline winner survives a frozen compatibility audit against the incumbent sticky branch.
+
+## F165: H253 Shows The Hard Report-Window Gate Is Real Offline Evidence But Not A Frozen-Compatibility Winner (2026-03-31, Session 84)
+
+Session 84 ran `H253`, the direct follow-through that `H252` asked for.
+
+The contract stayed narrow:
+- same carried selector:
+  - `state_blend__h199_sector_laggard_gap_absorb__30`
+- same carried regime:
+  - `top5_report_window_ge2`
+- same locked years:
+  - dev `2015-2022`
+  - validation `2023-2024`
+  - confirmation `2025`
+- no `2026+` read
+- no broader event-family reopen
+- direct comparison only against the frozen sticky incumbent
+
+### What survived
+
+The `H252` winner stays informative, but it is not promotable against the real benchmark:
+- `winner_report_window_gate`
+- validation relative `+59.57%`
+- validation delta vs incumbent sticky `+29.91%`
+- validation IR delta `+0.62`
+- confirmation relative `-10.98%`
+- confirmation delta vs incumbent sticky `-29.78%`
+- confirmation IR delta `-1.17`
+
+That means the report-window gate is still capturing something real.
+It improves `H201` materially on validation.
+But it does **not** survive the only comparison that matters for live-adjacent credibility: the frozen sticky incumbent still wins confirmation by a large margin.
+
+The comparison against always-on `H201` sharpens the conclusion:
+- always-on `H201` was also worse than incumbent sticky in confirmation
+- so the gate helps `H201` locally
+- but not enough to turn the branch into a compatibility winner
+
+### Branch consequence
+
+**Key finding:** event-conditioned `H201` is a regime-specific offline clue, not a deployable frozen-compatibility winner on the current stack. The hard report-window gate improves `H201` relative to its own always-on version, but frozen sticky remains the stronger live-adjacent benchmark.
+
+**Implication:** keep `winner_report_window_gate` as offline regime evidence only, keep the live branch unchanged, and do not broaden the event branch again. If the model-side queue is intentionally continued later, the next honest follow-through is `H254`: a hybrid switchboard audit that keeps incumbent sticky off-regime and uses the `H252` hard-gated `H201` path only on-regime.
+
+## F166: H254 Closes The Report-Window Selector Switchboard Branch On The Current Stack (2026-03-31, Session 85)
+
+Session 85 ran `H254`, the direct hybrid follow-through that `F165` asked for.
+
+The contract stayed exact and narrow:
+- same carried selector:
+  - `state_blend__h199_sector_laggard_gap_absorb__30`
+- same carried regime:
+  - `top5_report_window_ge2`
+- same locked years:
+  - dev `2015-2022`
+  - validation `2023-2024`
+  - confirmation `2025`
+- no `2026+` read
+- no new event-family or contradiction-family search
+- off-regime behavior kept the incumbent sticky branch intact
+- on-regime behavior used the hard-gated `H201` leg only
+
+### What failed
+
+The hybrid switchboard does not survive the incumbent benchmark:
+- `switchboard_h201_on_regime`
+- validation relative `+23.51%`
+- validation delta vs incumbent sticky `-6.14%`
+- validation IR delta `-0.08`
+- confirmation relative `+5.72%`
+- confirmation delta vs incumbent sticky `-13.08%`
+- confirmation IR delta `-0.43`
+
+That is the key result.
+The switchboard helps the bad confirmation behavior of the naked `H201` paths.
+But it still loses to the frozen sticky incumbent in both phases that matter.
+
+The comparison also clarifies where the branch dies:
+- `winner_report_window_gate` had stronger validation but catastrophic confirmation
+- the switchboard softens that confirmation damage
+- yet the validation giveback is large enough that the hybrid still fails cleanly overall
+
+So the lab now has a precise negative result:
+- `H201` may carry regime-specific information
+- but current-data report-window specialization is not enough to justify selector switching around the frozen sticky incumbent
+
+### Branch consequence
+
+**Key finding:** the current stack does not support a report-window selector switchboard around `H201`. The hybrid is better than the naked `H201` confirmation paths, but still materially worse than frozen sticky in both validation and confirmation.
+
+**Implication:** close the current-data switchboard branch, keep `H252/H253` as offline regime evidence only, keep the live branch unchanged, and if the model-side queue is intentionally continued later move to `H255`: the report-window contradiction expert.
+
+## F167: H255 Shows The Contradiction Overlay Helps Confirmation A Bit Inside The Report-Window Gate, But Validation Collapses Too Hard To Promote (2026-03-31, Session 86)
+
+Session 86 ran `H255`, the narrow nested-regime follow-through after the switchboard failure.
+
+The contract stayed disciplined:
+- same carried selector:
+  - `state_blend__h199_sector_laggard_gap_absorb__30`
+- same carried `H250` router:
+  - `h250_disagreement_balance`
+- same carried `H252` regime:
+  - `top5_report_window_ge2`
+- same locked years:
+  - dev `2015-2022`
+  - validation `2023-2024`
+  - confirmation `2025`
+- no `2026+` read
+- no broader event-family reopen
+- no switchboard revisit
+
+### What happened
+
+The nested contradiction overlay is not dead noise, but it is not a winner either:
+- `winner_plus_router_report_window_gate`
+- validation relative `+5.65%`
+- validation delta vs `H252` baseline `-53.92%`
+- validation IR delta vs `H252` baseline `-1.04`
+- confirmation relative `-8.20%`
+- confirmation delta vs `H252` baseline `+2.78%`
+- confirmation IR delta vs `H252` baseline `+0.04`
+
+That means the overlay does exactly one useful thing:
+- it softens confirmation a bit inside the gated regime
+
+But the cost is too large:
+- the validation collapse is overwhelming
+- so the branch does **not** satisfy the honest nested-regime gate
+
+This matters because it clarifies the earlier synthesis story:
+- `H250` is a real family globally
+- `H252` is a real regime gate
+- but simply nesting the promoted contradiction router inside the promoted report-window regime does not combine into a stronger selector branch on the current stack
+
+### Branch consequence
+
+**Key finding:** report-window contradiction routing is only a weak near-miss on the current stack. It modestly improves confirmation versus the `H252` hard-gated baseline, but validation degrades far too much for promotion.
+
+**Implication:** keep `H255` as synthesis-only offline evidence, do not reopen the failed switchboard from it, keep the live branch unchanged, and if the model-side queue is intentionally continued later move to `H256`: the event-driven dynamic breadth audit.
+
+## F168: H256 Closes The Current Daily-Data Synthesis Queue; Report-Window Dynamic Breadth Improves Validation But Breaks Confirmation (2026-03-31, Session 87)
+
+Session 87 ran `H256`, the last remaining synthesis follow-through on the current daily-data stack.
+
+The contract stayed exact:
+- same carried selector:
+  - `state_blend__h199_sector_laggard_gap_absorb__30`
+- same carried regime:
+  - `top5_report_window_ge2`
+- same locked years:
+  - dev `2015-2022`
+  - validation `2023-2024`
+  - confirmation `2025`
+- no `2026+` read
+- no switchboard reopen
+- no entry-label reopen
+- breadth audit only:
+  - `K in {1,2,5}`
+
+### What happened
+
+The small-book intuition is real on validation:
+- `K=1`
+  - validation relative `+74.44%`
+  - validation delta vs gated `K=5` baseline `+14.87%`
+- `K=2`
+  - validation relative `+69.33%`
+  - validation delta vs gated `K=5` baseline `+9.76%`
+
+But both candidates fail violently on confirmation:
+- `K=1`
+  - confirmation relative `-50.07%`
+  - confirmation delta vs gated `K=5` baseline `-39.08%`
+- `K=2`
+  - confirmation relative `-42.63%`
+  - confirmation delta vs gated `K=5` baseline `-31.65%`
+
+So the branch says something useful but not deployable:
+- the report-window dates do look like concentrated opportunity states in validation
+- but the current stack cannot turn that into a robust smaller-breadth contract
+
+This closes the interpretation loop on the recent synthesis queue:
+- report-window gating is real
+- contradiction routing is locally real
+- smaller breadth is locally real
+- but none of the recombinations survive the locked confirmation test well enough to become the next branch winner
+
+### Branch consequence
+
+**Key finding:** the current daily-data synthesis queue is exhausted. Event-driven dynamic breadth improves validation inside the report-window regime, but the confirmation damage is too large, so no smaller-breadth candidate is promotable.
+
+**Implication:** keep `H256` as synthesis-only offline evidence, close the current local model-side synthesis queue on this branch family, keep the live branch unchanged, and shift non-live effort back to acquisition-first timing-data work or forward live monitoring rather than further recombination on the same stack.
+
+## F169: H231 Shows The Partial CafeF Intraday Surface Normalizes Cleanly, But Full-Session Completeness Is Not Yet Honest Enough To Publish As A Universal Artifact (2026-03-31, Session 88)
+
+Session 88 ran `H231`, the first acquisition-side pass on the current multi-ticker CafeF fetch, and kept it deliberately narrow:
+- analysis window:
+  - `2023-2025`
+- no `2026+` read
+- no timing-alpha claim
+- no attempt to publish `data/features/intraday_structure_daily.parquet`
+- only:
+  - representative normalization
+  - first-pass feature extraction
+  - a provisional `H232` lower-bound coverage / continuity estimate
+
+### What happened
+
+The normalization part is real:
+- all `20` representative pilot tickers normalized cleanly onto the VCI daily backbone
+- first-hour feature share on the pilot:
+  - `1.00`
+- close-hour feature share on the pilot:
+  - `1.00`
+- current partial fetch already overlaps meaningfully with the continuation panel:
+  - `207` raw tickers
+  - held-row coverage lower bound `46.57%`
+  - missing-session rate in-window `6.61%`
+
+But the broader full-session artifact claim does **not** survive the same pass:
+- pilot complete-day share:
+  - `72.32%`
+- current all-available complete-day share among present sessions:
+  - `72.11%`
+- held-row complete-day lower bound:
+  - `31.71%`
+
+The failure is highly structured, not random:
+- liquid banks:
+  - about `97%` complete-day share
+- liquid fill names:
+  - about `97%`
+- liquid industrials:
+  - about `86%`
+- small illiquid tail:
+  - about `1%`
+  - median bars per day only `1.25`
+
+That means the source has cleared one important bar and failed another:
+- cleared:
+  - the VCI bridge works
+  - open / first-hour / close-hour structure can be extracted honestly on a representative subset
+- failed:
+  - the current partial surface does **not** justify a universal five-bar intraday artifact for the full long-only universe
+
+### Branch consequence
+
+**Key finding:** the partial CafeF intraday source is viable enough to keep the intraday acquisition branch open, but only as a reduced-shape / provisional surface right now. It is not honest yet to publish a universal full-session intraday artifact or to use this pass as a timing-alpha verdict.
+
+**Implication:** keep `H231` as a mixed acquisition result, keep `H232` explicitly provisional while the fetch remains partial, keep the live branch unchanged, and if intraday work continues before fetch completion focus on open-gap / first-hour / close-hour structure rather than a universal five-bar session representation. `H234` remains the valid parallel fallback branch.
+
+## F170: H234 Passes The Richer Event-Source Audit; The Local CafeF Company-News Archive Is A Real Company-Event Candidate, But The Conservative Seed Is Still Too Sparse To Skip H235 (2026-03-31, Session 89)
+
+Session 89 ran `H234`, the richer company-event source audit, and kept it deliberately conservative:
+- source audited:
+  - local CafeF company-news archive
+- extraction rule:
+  - title-ticker seed only
+  - exact `published_at` timestamps only
+- analysis window:
+  - `2023-2025`
+- no predictive screen
+- no `2026+` read
+
+### What happened
+
+The source passes as a richer company-event candidate than event surface v1.
+
+At the source-identification level, the result is strong:
+- total articles scanned:
+  - `312,488`
+- title-ticker company articles:
+  - `1,257`
+- timestamp coverage on those title-ticker articles:
+  - `100%`
+- family-qualified company-event articles:
+  - `1,072`
+- candidate ticker coverage:
+  - `190`
+
+The recovered company-specific families are exactly the kinds of information v1 is missing broadly:
+- `earnings_company`
+  - `176` tickers
+- `board_management`
+  - `120` tickers
+- `shareholder_meeting`
+  - `107` tickers
+- `rights_issuance`
+  - `97` tickers
+
+So `H234` resolves the acquisition question cleanly:
+- yes, a richer, timestamped company-event source is already locally available
+- yes, it clears the meaningful-subset bar
+- yes, it adds company-specific event timing that the current event surface does not broadly contain
+
+But the same audit also exposes the next bottleneck:
+- the conservative title-ticker seed is sparse on held rows
+- recent-any company-event coverage on the held-position panel is only:
+  - `1d` `0.22%`
+  - `5d` `0.75%`
+  - `20d` `1.15%`
+
+That does **not** fail `H234`, because source identification and operational coverage are different questions.
+It does tell the lab exactly what `H235` must do:
+- test whether a richer extraction pass can improve usable coverage or information content
+- preserve first-public timestamps
+- avoid leakage while expanding beyond the conservative seed
+
+### Branch consequence
+
+**Key finding:** the local CafeF company-news archive is a real richer event-source candidate. It should replace source hunting as the active event-data question.
+
+**Implication:** mark `H234` as passed, keep the live branch unchanged, and move directly to `H235`: a sample audit of the news-derived event surface. Do not jump straight to event surface v2, and do not confuse source availability with predictive validation.
+
+## F171: H235 Is Mixed; Strict Title-Alias Expansion Is High-Precision And Highly Novel Versus Event Surface v1, But Operational Coverage Is Still Far Too Thin To Open H236 (2026-03-31, Session 90)
+
+Session 90 ran `H235`, the event-source sample audit and coverage gate, on top of the passed `H234` source.
+
+The branch question was no longer whether the CafeF company-news archive is real.
+`H234` had already answered that.
+The real question in `H235` was:
+- can the source be expanded beyond the conservative title-ticker seed without leaking?
+- does that expansion improve information content or usable coverage enough to justify event-surface publication work?
+
+### What happened
+
+The strict title-alias audit came back much cleaner than the conservative expectation on linkage quality.
+
+Using a train-only alias lexicon learned from `2023-2024` title-ticker event articles:
+- learned alias rows:
+  - `105`
+- learned tickers:
+  - `57`
+
+On the masked `2025` title-ticker holdout:
+- holdout rows:
+  - `194`
+- assigned rows:
+  - `85`
+- assigned share:
+  - `43.81%`
+- assigned precision:
+  - `98.82%`
+
+That is a real result.
+It means the richer source is not failing because title expansion is hopelessly noisy.
+
+The expansion also added a lot of company-specific article inventory:
+- seed unique qualified articles:
+  - `1,072`
+- added alias-linked unique articles:
+  - `2,861`
+- expanded candidate daily rows:
+  - `3,429`
+
+And most of those expanded daily rows are genuinely new relative to the current company-specific proxy surface in `event_surface_daily.parquet`:
+- novel rows versus v1:
+  - `2,554`
+- novel share versus v1:
+  - `74.48%`
+
+So the source still matters.
+It is not merely re-encoding what v1 already has.
+
+But the operational gate still fails clearly.
+
+Held-row recent-any company-event coverage improves, but only from a very small base:
+- seed `5d` coverage:
+  - `0.75%`
+- expanded `5d` coverage:
+  - `2.30%`
+- delta:
+  - `+1.55` percentage points
+
+At `20d`, the source is still sparse:
+- seed `20d` coverage:
+  - `1.15%`
+- expanded `20d` coverage:
+  - `3.54%`
+
+Those numbers are directionally better but nowhere near the `H235` operational bar.
+
+### Branch consequence
+
+**Key finding:** the richer event source is real, and strict title-alias expansion can recover a lot of novel company-specific information without obvious leakage, but the source is still too sparse operationally to justify `event_surface_v2` publication on the current archive / mapping contract.
+
+**Implication:** mark `H235` as mixed, keep `H236` closed, preserve `H234-H235` as acquisition evidence, and route active non-live effort back to the provisional intraday branch (`H232`) or live monitoring. Do not keep spending local model effort on this event-source branch unless the company-identity mapping contract or the source breadth materially improves.
+
+## F172: H257 Event-Density Router Fails; Alias-Expanded Density Never Covers Enough Held Rows To Gate `H201` (2026-03-31, Session 91)
+
+Session 91 ran `H257`, the event-density router audit, which attempted to gate `H201` by alias-expanded event counts (`≥2` events over the trailing 5 days) on top of the previously validated `H235` surface.
+
+The gating threshold only touched 14 held rows out of 2,261 total (coverage 0.62%, gating share 0.62%), so a router built from this signal simply leaves almost the entire continuation panel empty.
+
+**Implication:** the router idea is closed on the current stack. Keep the richer event source as acquisition evidence, focus on continuing the partial intraday branch (`H232`), and revisit the gate only if a materially different mapping/coverage contract arrives.

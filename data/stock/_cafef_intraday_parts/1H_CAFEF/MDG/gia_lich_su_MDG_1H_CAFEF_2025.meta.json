@@ -1,0 +1,15 @@
+{
+  "bar_dates": 68,
+  "bars": 102,
+  "first_bar_time": "2025-01-07T11:00:00",
+  "first_requested_date": "2025-01-07",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-29T14:00:00",
+  "last_requested_date": "2025-12-29",
+  "observed_empty": false,
+  "requested_dates_signature": "7c208ea4d855b446439521e7a43f5678ceda38de",
+  "requested_trading_days": 87,
+  "ticker": "MDG",
+  "written_at_utc": "2026-03-31T12:37:46Z",
+  "year": 2025
+}

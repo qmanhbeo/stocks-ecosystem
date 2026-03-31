@@ -1,0 +1,15 @@
+{
+  "bar_dates": 171,
+  "bars": 369,
+  "first_bar_time": "2025-01-02T13:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T13:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "8e7e9925505a253bb983aa3b5f9f76f2a1cd7643",
+  "requested_trading_days": 200,
+  "ticker": "NVT",
+  "written_at_utc": "2026-03-31T13:51:17Z",
+  "year": 2025
+}

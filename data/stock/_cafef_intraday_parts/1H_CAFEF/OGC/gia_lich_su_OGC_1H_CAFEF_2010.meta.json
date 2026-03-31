@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2010-05-04",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2010-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "56d66950f59e8f48f2295619ae804368baedf52a",
+  "requested_trading_days": 172,
+  "ticker": "OGC",
+  "written_at_utc": "2026-03-31T13:52:52Z",
+  "year": 2010
+}

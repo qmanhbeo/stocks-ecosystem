@@ -8,7 +8,7 @@ import sys
 from typing import Iterable, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-WORKSPACE_ROOT = REPO_ROOT.parent.parent
+WORKSPACE_ROOT = REPO_ROOT.parent
 SHARED_RECOMMENDATION_ROOT = WORKSPACE_ROOT / "shared-recommendation"
 if str(SHARED_RECOMMENDATION_ROOT) not in sys.path:
     sys.path.insert(0, str(SHARED_RECOMMENDATION_ROOT))

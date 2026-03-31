@@ -1,0 +1,15 @@
+{
+  "bar_dates": 243,
+  "bars": 1118,
+  "first_bar_time": "2018-01-02T10:00:00",
+  "first_requested_date": "2018-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2018-12-28T14:00:00",
+  "last_requested_date": "2018-12-28",
+  "observed_empty": false,
+  "requested_dates_signature": "5b43dbde75e50aa9462ca212ae3293783685b77a",
+  "requested_trading_days": 250,
+  "ticker": "NCT",
+  "written_at_utc": "2026-03-31T13:09:00Z",
+  "year": 2018
+}

@@ -19,3 +19,9 @@ def test_rl_external_feature_defaults_delegate_to_shared_registry():
     assert external_features.default_news_prediction_dir() == shared_news_dir()
     assert external_features.default_signal_prediction_dir() == shared_signal_dir()
     assert external_features.default_lab_signal_matrix_path() == shared_lab_matrix_path()
+
+
+def test_rl_external_feature_fallback_paths_point_at_workspace_children():
+    assert external_features.WORKSPACE_ROOT == external_features.REPO_ROOT.parent
+    assert external_features.SHARED_RECOMMENDATION_ROOT == external_features.WORKSPACE_ROOT / "shared-recommendation"
+    assert external_features.SHARED_RECOMMENDATION_ROOT.exists()

@@ -1,0 +1,226 @@
+{
+  "artifacts": {
+    "alias_assignments": "artifacts/timing_data/20260331_133946_h235_event_source_sample_audit_alias_assignments.parquet",
+    "alias_holdout": "artifacts/timing_data/20260331_133946_h235_event_source_sample_audit_alias_holdout.parquet",
+    "alias_map": "artifacts/timing_data/20260331_133946_h235_event_source_sample_audit_alias_map.parquet",
+    "expanded_article_events": "artifacts/timing_data/20260331_133946_h235_event_source_sample_audit_expanded_articles.parquet",
+    "expanded_daily_flags": "artifacts/timing_data/20260331_133946_h235_event_source_sample_audit_expanded_daily_flags.parquet"
+  },
+  "metadata": {
+    "branch_contract": "H235 must prove operational improvement beyond event surface v1 without losing first-public timestamp integrity; only PASSED may open H236.",
+    "decision_inputs": {
+      "alias_precision": 0.9882352941176471,
+      "alias_unique_articles": 2861,
+      "coverage_delta_5d": 0.015479876160990714,
+      "expanded_coverage_5d": 0.022998673153471916,
+      "expanded_novel_share": 0.7448235637212015,
+      "seed_coverage_5d": 0.007518796992481203
+    }
+  },
+  "mode": "timing_event_source_sample_audit",
+  "name": "h235_event_source_sample_audit",
+  "summary": {
+    "alias_holdout_summary": {
+      "assigned_precision": 0.9882352941176471,
+      "assigned_rows": 85,
+      "assigned_share": 0.4381443298969072,
+      "holdout_rows": 194
+    },
+    "alias_map_summary": {
+      "alias_rows": 105,
+      "alias_unique_tickers": 57,
+      "max_support": 33
+    },
+    "analysis_window": {
+      "end_date": "2025-12-31",
+      "start_date": "2023-01-01"
+    },
+    "candidate_source": "cafef_company_news_archive_strict_alias_sample_audit",
+    "coverage_delta": {
+      "recent_board_management_1d": 0.003980539584254755,
+      "recent_board_management_20d": 0.023883237505528523,
+      "recent_board_management_5d": 0.01547987616099071,
+      "recent_buyback_1d": 0.0,
+      "recent_buyback_20d": 0.0,
+      "recent_buyback_5d": 0.0,
+      "recent_earnings_company_1d": 0.0022114108801415304,
+      "recent_earnings_company_20d": 0.013268465280849183,
+      "recent_earnings_company_5d": 0.00796107916850951,
+      "recent_has_company_event_article_1d": 0.003980539584254755,
+      "recent_has_company_event_article_20d": 0.02388323750552853,
+      "recent_has_company_event_article_5d": 0.015479876160990714,
+      "recent_rights_issuance_1d": 0.0004422821760283061,
+      "recent_rights_issuance_20d": 0.0026536930561698365,
+      "recent_rights_issuance_5d": 0.0022114108801415304,
+      "recent_shareholder_meeting_1d": 0.0022114108801415304,
+      "recent_shareholder_meeting_20d": 0.01547987616099071,
+      "recent_shareholder_meeting_5d": 0.007518796992481203
+    },
+    "decision": "MIXED",
+    "expanded_held_window_coverage": {
+      "recent_board_management_1d": 0.005307386112339673,
+      "recent_board_management_20d": 0.03007518796992481,
+      "recent_board_management_5d": 0.020344980097302078,
+      "recent_buyback_1d": 0.0,
+      "recent_buyback_20d": 0.0,
+      "recent_buyback_5d": 0.0,
+      "recent_earnings_company_1d": 0.004422821760283061,
+      "recent_earnings_company_20d": 0.02476780185758514,
+      "recent_earnings_company_5d": 0.015479876160990712,
+      "recent_has_company_event_article_1d": 0.006191950464396285,
+      "recent_has_company_event_article_20d": 0.03538257408226449,
+      "recent_has_company_event_article_5d": 0.022998673153471916,
+      "recent_rights_issuance_1d": 0.0008845643520566122,
+      "recent_rights_issuance_20d": 0.0035382574082264487,
+      "recent_rights_issuance_5d": 0.0030959752321981426,
+      "recent_shareholder_meeting_1d": 0.0026536930561698365,
+      "recent_shareholder_meeting_20d": 0.017249004865103935,
+      "recent_shareholder_meeting_5d": 0.009287925696594427
+    },
+    "expanded_novelty_vs_v1": {
+      "candidate_daily_rows": 3429,
+      "family_novelty": {
+        "board_management": {
+          "novel_rows": 1367,
+          "novel_share": 0.7236633139227104,
+          "rows": 1889
+        },
+        "buyback": {
+          "novel_rows": 26,
+          "novel_share": 0.6190476190476191,
+          "rows": 42
+        },
+        "earnings_company": {
+          "novel_rows": 1496,
+          "novel_share": 0.7559373420919656,
+          "rows": 1979
+        },
+        "rights_issuance": {
+          "novel_rows": 437,
+          "novel_share": 0.6743827160493827,
+          "rows": 648
+        },
+        "shareholder_meeting": {
+          "novel_rows": 462,
+          "novel_share": 0.7463651050080775,
+          "rows": 619
+        }
+      },
+      "novel_daily_rows_vs_v1": 2554,
+      "novel_daily_share_vs_v1": 0.7448235637212015,
+      "rows_with_v1_company_proxy": 875
+    },
+    "expanded_summary": {
+      "archive_window": {
+        "end_date": "2025-12-31",
+        "start_date": "2023-01-01"
+      },
+      "candidate_article_rows": 5692,
+      "candidate_unique_articles": 3933,
+      "candidate_unique_tickers": 190,
+      "family_qualified_article_share": 0.8528241845664281,
+      "linkage_modes": {
+        "title_alias_rows": 3958,
+        "title_alias_unique_articles": 2861,
+        "title_alias_unique_tickers": 57,
+        "title_ticker_rows": 1734
+      },
+      "timestamp_coverage": 1.0,
+      "timestamped_title_ticker_articles": 1257,
+      "title_ticker_articles": 1257,
+      "total_articles_scanned": 312488
+    },
+    "limitations": [
+      "Alias expansion is evaluated only as a strict title-level audit; no body-text entity linking or external company-name map is introduced here.",
+      "A high novelty share versus event surface v1 does not by itself imply operational coverage or predictive value.",
+      "No 2026+ data is used."
+    ],
+    "next_action": "Do not open H236 yet; keep the richer source as acquisition evidence only and require a cleaner mapping contract before publication.",
+    "pass": false,
+    "pass_contract": {
+      "alias_holdout_window": {
+        "end_date": "2025-12-31",
+        "start_date": "2025-01-01"
+      },
+      "alias_min_dominance": 0.9,
+      "alias_min_support": 3,
+      "alias_train_window": {
+        "end_date": "2024-12-31",
+        "start_date": "2023-01-01"
+      },
+      "mixed_alias_precision": 0.85,
+      "mixed_min_added_articles": 50,
+      "mixed_min_novel_share": 0.5,
+      "pass_alias_precision": 0.95,
+      "pass_held_row_coverage_5d": 0.4
+    },
+    "seed_held_window_coverage": {
+      "recent_board_management_1d": 0.0013268465280849183,
+      "recent_board_management_20d": 0.006191950464396285,
+      "recent_board_management_5d": 0.004865103936311367,
+      "recent_buyback_1d": 0.0,
+      "recent_buyback_20d": 0.0,
+      "recent_buyback_5d": 0.0,
+      "recent_earnings_company_1d": 0.0022114108801415304,
+      "recent_earnings_company_20d": 0.011499336576735958,
+      "recent_earnings_company_5d": 0.007518796992481203,
+      "recent_has_company_event_article_1d": 0.0022114108801415304,
+      "recent_has_company_event_article_20d": 0.011499336576735958,
+      "recent_has_company_event_article_5d": 0.007518796992481203,
+      "recent_rights_issuance_1d": 0.0004422821760283061,
+      "recent_rights_issuance_20d": 0.0008845643520566122,
+      "recent_rights_issuance_5d": 0.0008845643520566122,
+      "recent_shareholder_meeting_1d": 0.0004422821760283061,
+      "recent_shareholder_meeting_20d": 0.0017691287041132243,
+      "recent_shareholder_meeting_5d": 0.0017691287041132243
+    },
+    "seed_novelty_vs_v1": {
+      "candidate_daily_rows": 1066,
+      "family_novelty": {
+        "board_management": {
+          "novel_rows": 289,
+          "novel_share": 0.7118226600985221,
+          "rows": 406
+        },
+        "buyback": {
+          "novel_rows": 6,
+          "novel_share": 0.5454545454545454,
+          "rows": 11
+        },
+        "earnings_company": {
+          "novel_rows": 605,
+          "novel_share": 0.7553058676654182,
+          "rows": 801
+        },
+        "rights_issuance": {
+          "novel_rows": 146,
+          "novel_share": 0.6606334841628959,
+          "rows": 221
+        },
+        "shareholder_meeting": {
+          "novel_rows": 210,
+          "novel_share": 0.7608695652173914,
+          "rows": 276
+        }
+      },
+      "novel_daily_rows_vs_v1": 782,
+      "novel_daily_share_vs_v1": 0.7335834896810507,
+      "rows_with_v1_company_proxy": 284
+    },
+    "seed_summary": {
+      "archive_window": {
+        "end_date": "2025-12-31",
+        "start_date": "2023-01-01"
+      },
+      "candidate_article_rows": 1734,
+      "candidate_unique_articles": 1072,
+      "candidate_unique_tickers": 190,
+      "family_qualified_article_share": 0.8528241845664281,
+      "timestamp_coverage": 1.0,
+      "timestamped_title_ticker_articles": 1257,
+      "title_ticker_articles": 1257,
+      "total_articles_scanned": 312488
+    }
+  },
+  "ts": "20260331_133946"
+}

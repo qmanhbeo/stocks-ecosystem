@@ -1,0 +1,15 @@
+{
+  "bar_dates": 16,
+  "bars": 52,
+  "first_bar_time": "2017-12-08T10:00:00",
+  "first_requested_date": "2017-12-01",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2017-12-29T14:00:00",
+  "last_requested_date": "2017-12-29",
+  "observed_empty": false,
+  "requested_dates_signature": "ec4ae442aca4b2867f3c92773f97b673eb718c22",
+  "requested_trading_days": 21,
+  "ticker": "NHT",
+  "written_at_utc": "2026-03-31T13:16:22Z",
+  "year": 2017
+}

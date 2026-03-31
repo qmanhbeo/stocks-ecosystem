@@ -1,0 +1,15 @@
+{
+  "bar_dates": 3,
+  "bars": 15,
+  "first_bar_time": "2016-12-28T10:00:00",
+  "first_requested_date": "2016-12-28",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2016-12-30T14:00:00",
+  "last_requested_date": "2016-12-30",
+  "observed_empty": false,
+  "requested_dates_signature": "da38435b4ef2f51b31a6088e7cedecd15893c80b",
+  "requested_trading_days": 3,
+  "ticker": "NVL",
+  "written_at_utc": "2026-03-31T13:44:56Z",
+  "year": 2016
+}

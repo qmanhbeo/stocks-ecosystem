@@ -1,0 +1,15 @@
+{
+  "bar_dates": 48,
+  "bars": 118,
+  "first_bar_time": "2026-01-05T13:00:00",
+  "first_requested_date": "2026-01-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T14:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "d47d81a4ce51b58bf07a671b457b21122c00de9a",
+  "requested_trading_days": 52,
+  "ticker": "NSC",
+  "written_at_utc": "2026-03-31T13:34:28Z",
+  "year": 2026
+}

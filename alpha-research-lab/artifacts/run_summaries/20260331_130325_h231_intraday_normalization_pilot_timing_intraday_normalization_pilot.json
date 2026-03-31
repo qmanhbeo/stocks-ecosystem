@@ -1,0 +1,152 @@
+{
+  "artifacts": {
+    "coverage_frame": "artifacts/timing_data/20260331_130325_h231_intraday_normalization_pilot_coverage.parquet",
+    "coverage_ticker_summary": "artifacts/timing_data/20260331_130325_h231_intraday_normalization_pilot_coverage_summary.parquet",
+    "pilot_factors": "artifacts/timing_data/20260331_130325_h231_intraday_normalization_pilot_factors.parquet",
+    "pilot_features": "artifacts/timing_data/20260331_130325_h231_intraday_normalization_pilot_features.parquet",
+    "pilot_ticker_summary": "artifacts/timing_data/20260331_130325_h231_intraday_normalization_pilot_ticker_summary.parquet"
+  },
+  "metadata": {
+    "branch_contract": "H231 pilot only; H232 lower-bound estimate is provisional while fetch remains partial"
+  },
+  "mode": "timing_intraday_normalization_pilot",
+  "name": "h231_intraday_normalization_pilot",
+  "summary": {
+    "analysis_window": {
+      "end_date": "2025-12-31",
+      "start_date": "2023-01-01"
+    },
+    "early_h232_lower_bound": {
+      "available_raw_tickers": 207,
+      "complete_day_share_present": 0.721131610239351,
+      "final_gate_deferred": true,
+      "held_row_complete_day_coverage_lower_bound": 0.31711632021229547,
+      "held_row_coverage_lower_bound": 0.4657231313578063,
+      "missing_session_rate_in_window": 0.06606665939935684,
+      "no_volume_missing_share": 0.029261068762850475,
+      "prefix_gap_share": 0.00029750295850164285,
+      "tail_gap_share": 7.933412226710476e-05,
+      "tickers_with_60_overlap_days": 206,
+      "tickers_with_any_overlap": 207
+    },
+    "h231_pilot": {
+      "close_hour_feature_share": 1.0,
+      "complete_day_gate": 0.9,
+      "complete_day_share": 0.7232395007743464,
+      "feature_share_gate": 0.95,
+      "first_60m_feature_share": 1.0,
+      "midday_window_share": 0.7584039355015031,
+      "passed": false,
+      "pilot_day_rows": 10977,
+      "sample_size": 20,
+      "selected_count": 20,
+      "selected_roles": [
+        {
+          "pilot_role": "liquid_bank",
+          "ticker": "MBB"
+        },
+        {
+          "pilot_role": "liquid_bank",
+          "ticker": "HDB"
+        },
+        {
+          "pilot_role": "liquid_bank",
+          "ticker": "CTG"
+        },
+        {
+          "pilot_role": "liquid_bank",
+          "ticker": "ACB"
+        },
+        {
+          "pilot_role": "liquid_industrial",
+          "ticker": "GEX"
+        },
+        {
+          "pilot_role": "liquid_industrial",
+          "ticker": "GMD"
+        },
+        {
+          "pilot_role": "liquid_industrial",
+          "ticker": "HAH"
+        },
+        {
+          "pilot_role": "liquid_industrial",
+          "ticker": "GEE"
+        },
+        {
+          "pilot_role": "small_tail",
+          "ticker": "LGC"
+        },
+        {
+          "pilot_role": "small_tail",
+          "ticker": "BTT"
+        },
+        {
+          "pilot_role": "small_tail",
+          "ticker": "CLW"
+        },
+        {
+          "pilot_role": "small_tail",
+          "ticker": "DTT"
+        },
+        {
+          "pilot_role": "small_tail",
+          "ticker": "HAS"
+        },
+        {
+          "pilot_role": "small_tail",
+          "ticker": "LM8"
+        },
+        {
+          "pilot_role": "small_tail",
+          "ticker": "L10"
+        },
+        {
+          "pilot_role": "small_tail",
+          "ticker": "GTA"
+        },
+        {
+          "pilot_role": "liquid_fill",
+          "ticker": "HPG"
+        },
+        {
+          "pilot_role": "liquid_fill",
+          "ticker": "FPT"
+        },
+        {
+          "pilot_role": "liquid_fill",
+          "ticker": "MWG"
+        },
+        {
+          "pilot_role": "liquid_fill",
+          "ticker": "MSN"
+        }
+      ],
+      "selected_tickers": [
+        "MBB",
+        "HDB",
+        "CTG",
+        "ACB",
+        "GEX",
+        "GMD",
+        "HAH",
+        "GEE",
+        "LGC",
+        "BTT",
+        "CLW",
+        "DTT",
+        "HAS",
+        "LM8",
+        "L10",
+        "GTA",
+        "HPG",
+        "FPT",
+        "MWG",
+        "MSN"
+      ],
+      "successful_tickers": 20
+    },
+    "no_alpha_claim": true
+  },
+  "ts": "20260331_130325"
+}

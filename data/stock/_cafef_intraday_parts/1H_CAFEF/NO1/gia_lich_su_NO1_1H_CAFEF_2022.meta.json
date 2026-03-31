@@ -1,0 +1,15 @@
+{
+  "bar_dates": 25,
+  "bars": 108,
+  "first_bar_time": "2022-11-28T10:00:00",
+  "first_requested_date": "2022-11-28",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2022-12-30T14:00:00",
+  "last_requested_date": "2022-12-30",
+  "observed_empty": false,
+  "requested_dates_signature": "5a1a577685c106361f62d418ea6d956ecce7b869",
+  "requested_trading_days": 25,
+  "ticker": "NO1",
+  "written_at_utc": "2026-03-31T13:29:19Z",
+  "year": 2022
+}

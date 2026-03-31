@@ -1,0 +1,15 @@
+{
+  "bar_dates": 57,
+  "bars": 151,
+  "first_bar_time": "2020-10-09T12:00:00",
+  "first_requested_date": "2020-10-09",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2020-12-31T14:00:00",
+  "last_requested_date": "2020-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "5caaba8a5a151f45e668efa74e18d6b1e5efedf0",
+  "requested_trading_days": 60,
+  "ticker": "NAB",
+  "written_at_utc": "2026-03-31T12:56:02Z",
+  "year": 2020
+}

@@ -1,8 +1,8 @@
 {
-  "date_max": "2025-12-31",
+  "date_max": "2026-03-27",
   "date_min": "2015-01-05",
   "files_written": 394,
-  "generated_at_utc": "2026-03-28T13:13:27Z",
+  "generated_at_utc": "2026-03-31T11:48:38Z",
   "matrix_path": "/home/manh/stocks/data/features/xs_rl_signal_matrix.parquet",
   "output_dir": "/home/manh/stocks/data/features/signals/predictions/rl_lab_matrix",
   "reserved_columns_excluded": [
@@ -10,7 +10,7 @@
     "ticker",
     "time"
   ],
-  "rows_written": 826404,
+  "rows_written": 845646,
   "signal_columns": [
     "s1_proba",
     "c4_oc_asym_5d",
@@ -26,6 +26,7 @@
     "c13_compress_blowoff_2",
     "c14_clv_volconf_resid_rank"
   ],
+  "stale_files_removed": [],
   "ticker_count": 394,
   "tickers_exported": [
     "AAA",

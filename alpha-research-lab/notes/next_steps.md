@@ -1,14 +1,14 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_83_log.md` for the latest full session detail.
+Use `notes/session_90_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Current State
 
-**Session status:** Session 83 ran `H252`, the light event-surface trust audit around the current `H201` offline lead, on `2015-2025` only so the `2026+` lockbox stayed untouched. The result is more specific than `H251`: the event surface works only as a real hard report-window exposure gate, not as a general soft trust dial. `winner_report_window_gate` (`top5_report_window_ge2`, off-scale `0.0`) beat always-on `H201` with validation relative `+59.57%` vs baseline `+46.17%`, validation delta `+13.40%`, validation IR delta `+0.33`, confirmation relative `-10.98%` vs baseline `-13.43%`, and confirmation delta `+2.45%`. The milder `report_window_half_off` schedule was only mixed, and the `recent_filing_half_off` carry failed cleanly. Branch consequence: keep `H201 + top5_report_window_ge2` as offline evidence only, keep `H250` as secondary offline evidence, and if model-side queue work is intentionally continued later move to a narrow `H253` compatibility audit rather than broadening the event branch. The active live branch still remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`, and the active non-live priority still remains acquisition-first timing data work rather than more local timing-model tuning on the current data stack. (2026-03-31)
+**Session status:** Session 90 ran `H235`, the event-source sample audit and coverage gate, on `2023-2025` only so the `2026+` lockbox stayed untouched. The result is `MIXED`. A strict multi-word title-alias expansion on the passed CafeF company-news archive held up well on the masked `2025` holdout (`85 / 194` assigned, `98.82%` assigned precision), added `2,861` alias-linked unique articles, and stayed highly novel versus event surface v1 (`74.48%` of candidate daily rows were outside the current company-specific proxy surface). But the operational gate still failed cleanly: held-row recent-any company-event coverage only improved from `0.75%` to `2.30%` over `5d`, far below the `H235` promotion bar. Branch consequence: keep `H234` as real acquisition evidence, keep `H236` closed, keep `H232` provisional while the intraday fetch remains partial, and route active non-live effort back to intraday coverage progress or live monitoring rather than more local event-surface publication work. The active live branch still remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`, and the active non-live priority still remains acquisition-first timing data work. (2026-03-31)
 
 ### Start next session here
 
@@ -24,15 +24,61 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 4. Keep the Session 73 branch closure explicit:
    - do **not** reopen `H221-H229` on the current local data stack
    - event surface v1 failed the continuation / exit predictive gate
-   - `H251/H252` only reopen that same published surface as narrow selector trust context around `H201`
+   - `H251-H256` only reopened that same published surface as narrow selector trust context / compatibility / switchboard / nested-overlay / dynamic-breadth audit around `H201`
    - intraday / order-book work now requires new data acquisition, not more local rule tuning
-5. Start any new timing-data work from the acquisition plan, not from model scripts:
+5. Treat the current daily-data synthesis queue as exhausted:
+   - `H253-H256` closed the remaining recombination ideas on the current stack
+   - do **not** keep inventing local model-side branches on this family without:
+     - genuinely new data
+     - a materially new label / contract
+     - or more forward live evidence
+   - default back to acquisition-first timing work or live monitoring
+6. Start any new timing-data work from the acquisition plan, not from model scripts:
    - read `notes/timing_data_acquisition_plan.md`
    - check `notes/timing_data_source_scorecard.csv`
    - branch order is:
      - intraday / auction acquisition first
      - richer company-event source second
      - otherwise stop timing research and wait for more forward live evidence
+   - current acquisition-side practical note:
+     - Session 88 already ran the first honest partial-data pass:
+       - `H231` representative pilot normalized all `20` selected tickers cleanly
+       - liquid banks and liquid fill names show about `97%` complete-day share
+       - liquid industrials are weaker but still materially usable at about `86%`
+       - the small illiquid tail collapses to about `1%` complete-day share and `1.25` median bars per day
+     - the current `H232` lower-bound read is informative but **not final**:
+       - current raw overlap: `207` tickers
+       - held-row coverage lower bound: `46.57%`
+       - missing-session rate in-window: `6.61%`
+       - held-row complete-day lower bound: `31.71%`
+     - do **not** use this partial read to confirm or reject timing alpha or to close the source branch outright
+     - Sessions 89-90 also resolved the parallel event-source search:
+       - `H234` passed using the local CafeF company-news archive with exact `published_at` timestamps and conservative title-ticker linkage
+       - recovered family coverage already includes:
+         - `176` earnings tickers
+         - `120` board / management tickers
+         - `107` shareholder-meeting tickers
+         - `97` rights / issuance tickers
+       - `H235` then tested one strict title-alias expansion mode:
+         - masked-holdout precision `98.82%`
+         - `2,861` added alias-linked unique articles
+         - expanded `5d` held-row recent-any coverage `2.30%`
+       - branch decision:
+         - the richer source is real
+         - do **not** open `H236`
+         - keep event-surface publication work parked until the mapping / source contract is materially better
+   - preferred acquisition-side order from here:
+     - first: let the CafeF fetch continue and rerun the `H232` lower-bound read when coverage materially changes
+     - second: if intraday work continues before fetch completion, keep it reduced-shape only:
+       - open gap
+       - first hour
+       - close hour
+       - do **not** force a universal full-session artifact yet
+     - third: keep the richer event-source branch parked as acquisition evidence only:
+       - `H234` passed source identification
+       - `H235` is mixed but non-promoting
+       - do **not** spend more local effort trying to publish event surface v2 from the current archive alone
+     - fourth: if neither is being worked, just keep live monitoring and let fetch continue
    - do not confuse that branch with the separate parked stock-specific entry-alpha architecture branch documented in `README.md`, `README_for_AGENTS.md`, and `notes/session_75_log.md` plus `notes/session_76_log.md` plus `notes/session_77_log.md` plus `notes/session_78_log.md` plus `notes/session_79_log.md`
      - Sessions 75-79 already ran the first offline ladder plus the small-book follow-through (`H238-H248`)
      - current conclusion:
@@ -286,6 +332,9 @@ Family C — current-data event-surface reuse
     - close current-data event-surface reuse on the present data stack
 
 - `H253`: H252 frozen-compatibility audit
+  - status:
+    - completed in Session 84 on `2015-2025` only
+    - mixed: the hard report-window gate beats frozen sticky on validation, but fails badly against it in `2025` confirmation
   - claim:
     - the `H252` hard report-window gate may be a real offline improvement, but it still has to survive a frozen compatibility audit before it becomes a serious live-adjacent branch
   - smallest honest test:
@@ -296,43 +345,151 @@ Family C — current-data event-surface reuse
     - keep it as serious offline evidence and only then decide whether a live-monitor branch is justified later
   - mixed:
     - keep it as selector-only offline evidence
+    - then open `H254`, a hybrid selector switchboard audit
   - fail:
     - keep `H252` as an explanatory offline result, not a compatibility winner
 
-### Recent Synthesis Queue
-
-These are branch-worthy synthesis hypotheses from the recent `H249-H252` chain.
-Keep them subordinate to acquisition-first timing work and to `H253`.
-Do **not** assign new `H` numbers until one is intentionally chosen as the next active branch.
-
-- `selector switchboard`
+- `H254`: report-window selector switchboard audit
+  - status:
+    - completed in Session 85 on `2015-2025` only
+    - failed: the exact hybrid switchboard underperforms frozen sticky in both validation and confirmation
   - claim:
-    - `H201` may be a report-window specialist rather than a universal selector winner
-  - connection:
-    - `H249` says selector-relative `rel2` does not rescue compatibility
-    - `H251/H252` say `top5_report_window_ge2` does
-  - cheapest honest test:
-    - only after `H253`, compare a hybrid switchboard:
+    - `H201` may be a report-window specialist rather than a universal selector winner, so the right architecture may be incumbent sticky off-regime and hard-gated `H201` on-regime
+  - smallest honest test:
+    - compare a two-arm switchboard on `2015-2025` only:
       - incumbent sticky off-regime
       - `H252` hard-gated `H201` on-regime
+    - do not touch `2026+`
+    - do not broaden the event family or contradiction family yet
+  - pass:
+    - keep it as serious offline hybrid evidence and only then decide whether a live-monitor branch is justified later
+  - mixed:
+    - keep it as synthesis-only offline evidence
+  - fail:
+    - close the current-data report-window selector-switchboard branch
 
-- `report-window contradiction expert`
+- `H255`: report-window contradiction expert
+  - status:
+    - completed in Session 86 on `2015-2025` only
+    - mixed: confirmation improves slightly inside the gate, but validation collapses too hard to promote
   - claim:
-    - `H250` may be globally mixed but locally useful inside the `H252` on-dates
-  - connection:
-    - `H250` proves contradiction routing is real
-    - `H251/H252` prove the useful event regime is specific to `H201`
-  - cheapest honest test:
+    - `H250` may be globally mixed but locally useful inside the `H252` on-dates even though the broader switchboard failed
+  - smallest honest test:
     - on `H252` on-dates only, compare plain `H201` vs `H201` plus one contradiction-state overlay
+    - do not touch `2026+`
+    - do not broaden the event family or reopen the failed switchboard
+  - pass:
+    - keep it as serious nested-regime offline evidence and only then decide whether any hybrid revisit is justified later
+  - mixed:
+    - keep it as synthesis-only offline evidence
+    - then move to `H256`
+  - fail:
+    - close the current-data report-window x contradiction branch
 
-- `event-driven dynamic breadth`
+- `H256`: event-driven dynamic breadth
+  - status:
+    - completed in Session 87 on `2015-2025` only
+    - mixed: smaller breadth improves validation inside the gate, but confirmation fails catastrophically
   - claim:
-    - the parked small-book evidence and the `H252` report-window gate may be the same concentration regime viewed from two different branches
-  - connection:
-    - the entry-alpha branch historically wants `top1/top2`
-    - `H252` fires when the top-5 already contains concentrated report-window support
-  - cheapest honest test:
+    - the parked small-book evidence and the `H252` report-window gate may still represent the same opportunity-concentration regime even though the selector switchboard failed
+  - smallest honest test:
     - on `H252` on-dates only, audit `H201` at `K in {1,2,5}`
+    - do not touch `2026+`
+    - do not reopen the entry-label branch or the failed switchboard
+  - pass:
+    - keep it as serious offline architecture evidence and only then decide whether any hybrid revisit is justified later
+  - mixed:
+    - keep it as synthesis-only offline evidence
+    - close the current daily-data synthesis queue on this branch family
+  - fail:
+    - close the current-data event-driven dynamic breadth branch
+
+### Remaining Synthesis Queue
+
+No current daily-data synthesis hypotheses remain open after `H256`.
+If this family is intentionally reopened later, require genuinely new data, a materially new label / contract, or more forward live evidence first.
+
+### Post-H256 Options
+
+These are the honest next moves after the current daily-data synthesis queue closed.
+Keep them subordinate to the frozen live branch and to acquisition-first timing policy.
+
+- `partial intraday viability check`
+  - claim:
+    - the current CafeF fetch is already large enough to keep refining the source contract without pretending the final branch gate is closed
+  - smallest honest next test:
+    - let the fetch continue, then rerun the `H232` lower-bound read and only carry forward reduced-shape open / first-hour / close-hour structure if the partial surface remains the same shape
+
+- `richer event-source branch is parked as acquisition evidence`
+  - claim:
+    - the local CafeF company-news archive cleared `H234` and the strict title-alias follow-through in `H235` was informative, but the branch still does not have the coverage to justify publication work
+  - smallest honest next test:
+    - do not open `H236` on the current archive alone
+    - only reopen this branch if the company-identity mapping contract improves materially or the source itself gets broader / cleaner
+  - status:
+    - `H257` event-density router audit failed: alias-expanded event density >2 over 5 days only covers `0.62%` of continuation rows, so gating `H201` by this signal is not sufficient and the router idea is closed on the current stack
+
+- `wait and monitor only`
+  - claim:
+    - if no acquisition-side work is being done, the honest move is to stop inventing branches and only monitor the live sticky book while fetch continues
+  - smallest honest next test:
+    - update `H179/H183`, record forward cycles, and let the data-acquisition branch continue untouched
+
+### Partial Intraday Hypothesis Queue
+
+Use this queue only while the CafeF intraday fetch is still partial.
+Do not use partial coverage to confirm or reject timing alpha outright.
+Use it to learn whether the intraday surface is structurally publishable and what reduced artifact shape is honest.
+
+- `representation stability before alpha`
+  - claim:
+    - the first valid intraday win may be a stable daily structure representation rather than an immediate predictive timing rule
+  - smallest honest next test:
+    - on a representative pilot subset, audit whether normalized open / first-hour / close-structure features recur with stable distributions across ticker cohorts after the VCI daily-close bridge
+
+- `open-close surface may survive before full-session surface`
+  - claim:
+    - the usable intraday artifact may initially be restricted to opening and closing windows even if midday continuity remains too weak
+  - smallest honest next test:
+    - compare completeness and continuity of open-gap, first-30m / first-60m, and close-auction proxies against midday / VWAP-style fields on the fetched subset
+
+- `missingness taxonomy before modeling`
+  - claim:
+    - partial intraday gaps must be separated into source-empty prefixes, within-coverage outages, and likely illiquidity / halt days before any predictive work is credible
+  - smallest honest next test:
+    - build a day-ticker missingness taxonomy against daily tradability states and keep it as a QC mask, not a signal
+
+- `liquidity-normalized transferability`
+  - claim:
+    - relative intraday features scaled by daily range / liquidity may transfer across names even when raw path levels do not
+  - smallest honest next test:
+    - audit cross-ticker stability of normalized first-hour reversal, range-expansion, and close-repair features on the current pilot subset
+
+- `event-aligned intraday response later`
+  - claim:
+    - partial intraday can support response-shape mapping, but only once richer company-event timestamps exist
+  - smallest honest next test:
+    - keep this parked until `H234` identifies a better event source, then intersect event windows with the pilot intraday coverage before any predictive claim
+
+### Bright-mind hypothesis queue
+
+- `event-density router`
+  - claim:
+    - alias-expanded event density sequences are the state variable that shifts `H201` between sticky offline coverage and live deployability, echoing the `H252/H254` evidence that `H201` works best during discrete information-absorption windows.
+  - smallest honest next test:
+    - gate `H201` so it only fires when the `H235` alias-expanded event count per ticker over 5 days exceeds a threshold; if held-row coverage stays below 0.4% with that gate, treat the router as killed for the current stack.
+
+- `alias-backed v2 contract`
+  - claim:
+    - the strict alias map yields 57 tickers at 98%+ precision; publish a mini `event_surface_v2_subset.parquet` for that slice before attempting a universal release, then know your coverage increases meaningfully for that subset.
+  - smallest honest next test:
+    - compile and publish the subset artifact, rerun `H252` / coverage checks on those tickers, and advance only if held-row coverage exceeds 5%.
+
+- `reduced-shape intraday regime`
+  - claim:
+    - the remaining illiquid tail days are the reason `H232` coverage is stuck; align reduced-shape intraday signatures (open gap, first-hour range, close auction metrics) with alias-expanded event-density spikes and focus `H232` only on those windows.
+  - smallest honest next test:
+    - label days where both the reduced-shape profile and alias density are high, measure coverage on that subset, and keep going only if it exceeds 60%; otherwise keep the intraday repo focused on general data acquisition.
 
 10. Session 66 selection-side first pass:
    - locked protocol is now codified in code:
@@ -489,6 +646,63 @@ Do **not** assign new `H` numbers until one is intentionally chosen as the next 
        - the only surviving H252 implementation is a hard `top5_report_window_ge2` gate around `H201`
        - keep that as offline evidence only
        - if model-side queue work is intentionally continued later, move to `H253`
+17. Session 84 frozen compatibility audit:
+   - `H253`: **MIXED**
+     - `winner_report_window_gate`
+       - validation relative `+59.57%`
+       - validation delta vs incumbent sticky `+29.91%`
+       - validation IR delta `+0.62`
+       - confirmation relative `-10.98%`
+       - confirmation delta vs incumbent sticky `-29.78%`
+       - confirmation IR delta `-1.17`
+     - `winner_always_on`
+       - also fails compatibility in confirmation against frozen sticky
+     - branch effect:
+       - the hard report-window gate remains offline regime evidence only
+       - frozen sticky remains the live-adjacent benchmark
+       - if model-side queue work is intentionally continued later, move to `H254`
+18. Session 85 report-window selector switchboard audit:
+   - `H254`: **FAIL**
+     - `switchboard_h201_on_regime`
+       - validation relative `+23.51%`
+       - validation delta vs incumbent sticky `-6.14%`
+       - validation IR delta `-0.08`
+       - confirmation relative `+5.72%`
+       - confirmation delta vs incumbent sticky `-13.08%`
+       - confirmation IR delta `-0.43`
+     - branch effect:
+       - close the current-data report-window selector-switchboard branch
+       - keep `H252/H253` as offline regime evidence only
+       - if model-side queue work is intentionally continued later, move to `H255`
+19. Session 86 report-window contradiction expert:
+   - `H255`: **MIXED**
+     - `winner_plus_router_report_window_gate`
+       - validation relative `+5.65%`
+       - validation delta vs `H252` baseline `-53.92%`
+       - validation IR delta vs `H252` baseline `-1.04`
+       - confirmation relative `-8.20%`
+       - confirmation delta vs `H252` baseline `+2.78%`
+       - confirmation IR delta vs `H252` baseline `+0.04`
+     - branch effect:
+       - keep the nested contradiction branch as synthesis-only offline evidence
+       - do not reopen the failed switchboard from it
+       - if model-side queue work is intentionally continued later, move to `H256`
+20. Session 87 event-driven dynamic breadth:
+   - `H256`: **MIXED**
+     - `winner_report_window_gate_k1`
+       - validation relative `+74.44%`
+       - validation delta vs gated `K=5` baseline `+14.87%`
+       - confirmation relative `-50.07%`
+       - confirmation delta vs gated `K=5` baseline `-39.08%`
+     - `winner_report_window_gate_k2`
+       - validation relative `+69.33%`
+       - validation delta vs gated `K=5` baseline `+9.76%`
+       - confirmation relative `-42.63%`
+       - confirmation delta vs gated `K=5` baseline `-31.65%`
+     - branch effect:
+       - smaller breadth is only validation-side structure on the current stack
+       - the current daily-data synthesis queue is now closed
+       - return non-live focus to acquisition-first timing work or live monitoring
 13. Session 69 selector follow-through:
    - `H203`: **PASS**
      - one pair candidate survived the always-on additive gate:
@@ -1730,6 +1944,13 @@ Do **not** assign new `H` numbers until one is intentionally chosen as the next 
 | 81 | 2026-03-31 | H250 contradiction-state router follow-through is mixed: one real routed selector survives as offline evidence, but it does not dislodge `H201` | H93 + C4-C14 |
 | 82 | 2026-03-31 | H251 event-surface trust-modulator follow-through passes narrowly: report-window and recent-filing regimes improve `H201` offline and justify a light trust-audit follow-through | H93 + C4-C14 |
 | 83 | 2026-03-31 | H252 trust audit passes only as a hard report-window gate around `H201`; soft trust schedules do not survive cleanly, so the next narrow follow-through is frozen compatibility, not broader event search | H93 + C4-C14 |
+| 84 | 2026-03-31 | H253 frozen compatibility audit is mixed: the hard report-window gate strengthens `H201` on validation but fails badly versus frozen sticky in `2025`, so the branch remains offline-only and the next synthesis follow-through is a hybrid switchboard audit | H93 + C4-C14 |
+| 85 | 2026-03-31 | H254 report-window selector switchboard fails: the exact hybrid improves naked `H201` confirmation behavior but still loses to frozen sticky in both validation and confirmation, so the switchboard branch closes and the next synthesis follow-through becomes the contradiction expert | H93 + C4-C14 |
+| 86 | 2026-03-31 | H255 report-window contradiction expert is mixed: the nested contradiction overlay softens confirmation inside the gate but validation collapses far too hard to promote, so the branch stays synthesis-only and the next follow-through becomes dynamic breadth | H93 + C4-C14 |
+| 87 | 2026-03-31 | H256 event-driven dynamic breadth is mixed: smaller breadth helps validation inside the report-window gate but fails catastrophically in confirmation, so the current daily-data synthesis queue closes and effort should shift back to acquisition-first timing work or live monitoring | H93 + C4-C14 |
+| 88 | 2026-03-31 | H231 intraday normalization pilot is mixed: the VCI bridge works and reduced-shape intraday structure looks viable on a representative subset, but full-session completeness is still too weak to close H232 while the fetch remains partial | H93 + C4-C14 |
+| 89 | 2026-03-31 | H234 richer event-source audit passes: the local CafeF company-news archive is a real richer company-event source candidate with exact publish timestamps and broad company-specific families, but the conservative seed stays too sparse to skip H235 | H93 + C4-C14 |
+| 90 | 2026-03-31 | H235 event-source sample audit is mixed: strict title-alias expansion is high-precision and highly novel versus event surface v1, but held-row coverage only rises to 2.30%, so H236 stays closed and active effort returns to intraday/H232 or live monitoring | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 

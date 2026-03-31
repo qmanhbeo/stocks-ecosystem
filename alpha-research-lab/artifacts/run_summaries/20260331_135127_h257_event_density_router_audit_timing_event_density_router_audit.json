@@ -1,0 +1,41 @@
+{
+  "artifacts": {
+    "alias_map": "artifacts/timing_data/20260331_135127_h257_event_density_router_audit_alias_map.parquet",
+    "expanded_daily_flags": "artifacts/timing_data/20260331_135127_h257_event_density_router_audit_expanded_daily_flags.parquet",
+    "gate_summary": "artifacts/timing_data/20260331_135127_h257_event_density_router_audit_gate.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Gate `H201` by alias-expanded event density; only PASSED enables a gated router.",
+    "decision_inputs": {
+      "candidate_rows": 2261,
+      "coverage": 0.006191950464396285,
+      "gating_rows": 14,
+      "gating_share": 0.006191950464396285,
+      "threshold": 2,
+      "window": 5
+    }
+  },
+  "mode": "timing_event_density_router_audit",
+  "name": "h257_event_density_router_audit",
+  "summary": {
+    "analysis_window": {
+      "end_date": "2025-12-31",
+      "start_date": "2023-01-01"
+    },
+    "candidate_source": "cafef_company_news_archive_alias_expanded",
+    "coverage": 0.006191950464396285,
+    "coverage_rows": 14,
+    "decision": "FAILED",
+    "gating_share": 0.006191950464396285,
+    "limitations": [
+      "This audit only covers alias-expanded event rows available through H235.",
+      "No predictive screening or live gating was executed.",
+      "2026+ data remains untouched."
+    ],
+    "next_action": "Kill the router idea on this stack; route effort back to intraday acquisition.",
+    "threshold": 2,
+    "total_rows": 2261,
+    "window": 5
+  },
+  "ts": "20260331_135127"
+}

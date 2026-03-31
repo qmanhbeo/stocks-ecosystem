@@ -1,0 +1,15 @@
+{
+  "bar_dates": 74,
+  "bars": 226,
+  "first_bar_time": "2017-09-08T10:00:00",
+  "first_requested_date": "2017-09-08",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2017-12-29T14:00:00",
+  "last_requested_date": "2017-12-29",
+  "observed_empty": false,
+  "requested_dates_signature": "0f0e9fe4786f9125719fba9ee1d8efd64f65eef9",
+  "requested_trading_days": 81,
+  "ticker": "NHH",
+  "written_at_utc": "2026-03-31T13:14:24Z",
+  "year": 2017
+}

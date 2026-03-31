@@ -1047,7 +1047,7 @@ def simulate_strategy(
     capture_blotter: bool = False,
     activation_mask: np.ndarray | None = None,
     activation_scale: np.ndarray | None = None,
-    incumbent_score_bonus: float = 0.0,
+    incumbent_score_bonus: float | np.ndarray = 0.0,
     sector_labels: tuple[str | None, ...] | None = None,
     max_names_per_sector: int | None = None,
     exit_rule_name: str | None = None,
@@ -1114,6 +1114,16 @@ def simulate_strategy(
         activation_schedule = activation_allowed.astype(np.float64)
     else:
         activation_schedule = np.ones(n_dates, dtype=np.float64)
+    if np.isscalar(incumbent_score_bonus):
+        incumbent_bonus_schedule = np.full(n_dates, float(incumbent_score_bonus), dtype=np.float64)
+    else:
+        incumbent_bonus_schedule = np.asarray(incumbent_score_bonus, dtype=np.float64)
+        if incumbent_bonus_schedule.shape != (n_dates,):
+            raise ValueError(
+                "incumbent_score_bonus must be scalar or match dates shape "
+                f"({n_dates},); got {incumbent_bonus_schedule.shape}"
+            )
+        incumbent_bonus_schedule = np.nan_to_num(incumbent_bonus_schedule, nan=0.0)
     if sector_labels is not None and len(sector_labels) != n_tickers:
         raise ValueError(
             "sector_labels must align with tickers "
@@ -1241,9 +1251,10 @@ def simulate_strategy(
                 ranked_pool = np.flatnonzero(eligible)
                 ranked_scores = scores[ranked_pool]
                 effective_scores = ranked_scores.copy()
-                if incumbent_score_bonus > 0.0:
+                current_incumbent_bonus = float(incumbent_bonus_schedule[step])
+                if current_incumbent_bonus > 0.0:
                     incumbent_mask = drifted_weights[ranked_pool] > 1e-12
-                    effective_scores[incumbent_mask] += float(incumbent_score_bonus)
+                    effective_scores[incumbent_mask] += current_incumbent_bonus
                 order = np.lexsort((ranked_pool, -ranked_scores, -effective_scores))
                 selection_cap = int(top_k)
                 if max_names_if_liquidity_thin is not None and len(ranked_pool) < top_k:

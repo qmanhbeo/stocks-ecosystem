@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2010-03-23",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2010-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "7130901f8b3a8d1f38a766521493e7fefe6d95c4",
+  "requested_trading_days": 199,
+  "ticker": "LHG",
+  "written_at_utc": "2026-03-31T12:07:21Z",
+  "year": 2010
+}

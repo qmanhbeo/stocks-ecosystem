@@ -1,0 +1,15 @@
+{
+  "bar_dates": 30,
+  "bars": 57,
+  "first_bar_time": "2026-01-06T12:00:00",
+  "first_requested_date": "2026-01-06",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-23T13:00:00",
+  "last_requested_date": "2026-03-23",
+  "observed_empty": false,
+  "requested_dates_signature": "0a582dfbbf612fd1c098e8359c8dc8e2dba584d4",
+  "requested_trading_days": 34,
+  "ticker": "NHT",
+  "written_at_utc": "2026-03-31T13:18:09Z",
+  "year": 2026
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 45,
+  "bars": 84,
+  "first_bar_time": "2026-01-07T14:00:00",
+  "first_requested_date": "2026-01-07",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T14:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "f8d518c5361a05c4a0d6865184ceda759f133908",
+  "requested_trading_days": 45,
+  "ticker": "NAV",
+  "written_at_utc": "2026-03-31T13:04:07Z",
+  "year": 2026
+}
