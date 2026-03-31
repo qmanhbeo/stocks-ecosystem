@@ -1,0 +1,15 @@
+{
+  "bar_dates": 51,
+  "bars": 142,
+  "first_bar_time": "2026-01-06T14:00:00",
+  "first_requested_date": "2026-01-06",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T14:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "aa2d42884d93944c4b72df3621bf026123057ad0",
+  "requested_trading_days": 52,
+  "ticker": "VMD",
+  "written_at_utc": "2026-03-31T22:30:25Z",
+  "year": 2026
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 52,
+  "bars": 260,
+  "first_bar_time": "2025-10-21T10:00:00",
+  "first_requested_date": "2025-10-21",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T14:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "fda65f2524a01373a517fc571cae1527ef7655ac",
+  "requested_trading_days": 52,
+  "ticker": "TCX",
+  "written_at_utc": "2026-03-31T19:06:30Z",
+  "year": 2025
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2007-08-22",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2007-12-28",
+  "observed_empty": true,
+  "requested_dates_signature": "2d82483c0c91e35b02d2ad69d4652a4fd789610d",
+  "requested_trading_days": 92,
+  "ticker": "TNC",
+  "written_at_utc": "2026-03-31T20:00:00Z",
+  "year": 2007
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 46,
+  "bars": 104,
+  "first_bar_time": "2026-01-07T10:00:00",
+  "first_requested_date": "2026-01-07",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-26T10:00:00",
+  "last_requested_date": "2026-03-26",
+  "observed_empty": false,
+  "requested_dates_signature": "1917d161b8703551bd0bb8652408f0380526ada6",
+  "requested_trading_days": 52,
+  "ticker": "TDW",
+  "written_at_utc": "2026-03-31T19:24:11Z",
+  "year": 2026
+}

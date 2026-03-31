@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2011-07-28",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2011-12-30",
+  "observed_empty": true,
+  "requested_dates_signature": "5b439edd8675cf6162f370205b49ac2841b2589b",
+  "requested_trading_days": 111,
+  "ticker": "THG",
+  "written_at_utc": "2026-03-31T19:26:40Z",
+  "year": 2011
+}

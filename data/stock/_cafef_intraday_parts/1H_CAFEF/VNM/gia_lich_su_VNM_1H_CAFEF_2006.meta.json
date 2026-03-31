@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2006-01-19",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2006-12-29",
+  "observed_empty": true,
+  "requested_dates_signature": "64899c54be24fdbaf86398f4b6c2230c50646f9b",
+  "requested_trading_days": 239,
+  "ticker": "VNM",
+  "written_at_utc": "2026-03-31T22:47:19Z",
+  "year": 2006
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 142,
+  "bars": 705,
+  "first_bar_time": "2017-05-29T10:00:00",
+  "first_requested_date": "2017-05-29",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2017-12-29T14:00:00",
+  "last_requested_date": "2017-12-29",
+  "observed_empty": false,
+  "requested_dates_signature": "ee2989f0948fca715ea8a3d341c89402eff3f854",
+  "requested_trading_days": 154,
+  "ticker": "TNI",
+  "written_at_utc": "2026-03-31T20:05:35Z",
+  "year": 2017
+}

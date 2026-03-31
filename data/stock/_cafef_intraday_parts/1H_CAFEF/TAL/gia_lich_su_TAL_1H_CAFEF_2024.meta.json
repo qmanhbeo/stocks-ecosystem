@@ -1,0 +1,15 @@
+{
+  "bar_dates": 242,
+  "bars": 1140,
+  "first_bar_time": "2024-01-09T10:00:00",
+  "first_requested_date": "2024-01-09",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2024-12-31T14:00:00",
+  "last_requested_date": "2024-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "f9f2595ad41047199649e7b94e972a6fa0768908",
+  "requested_trading_days": 245,
+  "ticker": "TAL",
+  "written_at_utc": "2026-03-31T18:33:34Z",
+  "year": 2024
+}

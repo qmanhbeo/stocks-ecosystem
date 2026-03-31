@@ -1,0 +1,15 @@
+{
+  "bar_dates": 202,
+  "bars": 486,
+  "first_bar_time": "2025-01-02T11:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T11:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "fa000a436faa71b13c0a4192367ff8b02038d7a9",
+  "requested_trading_days": 247,
+  "ticker": "VCF",
+  "written_at_utc": "2026-03-31T21:24:05Z",
+  "year": 2025
+}

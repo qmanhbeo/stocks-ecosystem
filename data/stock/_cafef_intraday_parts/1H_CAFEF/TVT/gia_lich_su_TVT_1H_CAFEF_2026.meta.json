@@ -1,0 +1,15 @@
+{
+  "bar_dates": 47,
+  "bars": 104,
+  "first_bar_time": "2026-01-05T10:00:00",
+  "first_requested_date": "2026-01-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T10:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "5e0279c6a27ec2328f0535a2e200a45f35f7ea11",
+  "requested_trading_days": 48,
+  "ticker": "TVT",
+  "written_at_utc": "2026-03-31T20:50:57Z",
+  "year": 2026
+}

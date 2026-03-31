@@ -1,0 +1,15 @@
+{
+  "bar_dates": 46,
+  "bars": 95,
+  "first_bar_time": "2026-01-05T10:00:00",
+  "first_requested_date": "2026-01-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T14:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "e912b9491b2c54e3ef15633375ff0084c4ac275a",
+  "requested_trading_days": 47,
+  "ticker": "TBC",
+  "written_at_utc": "2026-03-31T18:37:39Z",
+  "year": 2026
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2008-02-18",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2008-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "e5ede72c705dd64b1450a44157d302c0efd5df91",
+  "requested_trading_days": 218,
+  "ticker": "TTF",
+  "written_at_utc": "2026-03-31T20:33:24Z",
+  "year": 2008
+}

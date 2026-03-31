@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2011-11-10",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2011-12-30",
+  "observed_empty": true,
+  "requested_dates_signature": "46b2274678953a253af83efef102c344574dfd6c",
+  "requested_trading_days": 37,
+  "ticker": "VHM",
+  "written_at_utc": "2026-03-31T21:56:53Z",
+  "year": 2011
+}

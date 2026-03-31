@@ -1,0 +1,15 @@
+{
+  "bar_dates": 140,
+  "bars": 686,
+  "first_bar_time": "2017-06-15T10:00:00",
+  "first_requested_date": "2017-06-15",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2017-12-29T14:00:00",
+  "last_requested_date": "2017-12-29",
+  "observed_empty": false,
+  "requested_dates_signature": "83596ed887687eae00ff9771763e58f9e04d457c",
+  "requested_trading_days": 141,
+  "ticker": "TDG",
+  "written_at_utc": "2026-03-31T19:10:24Z",
+  "year": 2017
+}

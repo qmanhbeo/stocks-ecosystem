@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2005-07-14",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2005-12-30",
+  "observed_empty": true,
+  "requested_dates_signature": "2e2260553cd0cf435f29953657f62023f32095c0",
+  "requested_trading_days": 71,
+  "ticker": "VSH",
+  "written_at_utc": "2026-03-31T23:26:34Z",
+  "year": 2005
+}

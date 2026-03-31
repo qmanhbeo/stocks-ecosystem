@@ -1,0 +1,15 @@
+{
+  "bar_dates": 15,
+  "bars": 75,
+  "first_bar_time": "2025-12-11T10:00:00",
+  "first_requested_date": "2025-12-11",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T14:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "45f6b077cb4d371dafe28f5e798b599d4d5d9624",
+  "requested_trading_days": 15,
+  "ticker": "VPX",
+  "written_at_utc": "2026-03-31T23:15:49Z",
+  "year": 2025
+}

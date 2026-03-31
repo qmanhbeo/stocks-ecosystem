@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2010-05-25",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2010-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "62d8479688783c805a12a3da69503658be7127d0",
+  "requested_trading_days": 157,
+  "ticker": "VDS",
+  "written_at_utc": "2026-03-31T21:36:53Z",
+  "year": 2010
+}

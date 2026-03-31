@@ -1,0 +1,15 @@
+{
+  "bar_dates": 242,
+  "bars": 1137,
+  "first_bar_time": "2018-01-02T10:00:00",
+  "first_requested_date": "2018-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2018-12-28T14:00:00",
+  "last_requested_date": "2018-12-28",
+  "observed_empty": false,
+  "requested_dates_signature": "1c6ddad2b1048548c5d43f4f877dbf68a667df02",
+  "requested_trading_days": 243,
+  "ticker": "VPI",
+  "written_at_utc": "2026-03-31T23:11:22Z",
+  "year": 2018
+}

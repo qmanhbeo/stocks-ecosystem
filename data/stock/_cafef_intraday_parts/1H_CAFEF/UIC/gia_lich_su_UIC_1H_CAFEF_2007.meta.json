@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2007-11-12",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2007-12-28",
+  "observed_empty": true,
+  "requested_dates_signature": "bbc82ab82740cce0f9ef7407e031894b1ecfc0f9",
+  "requested_trading_days": 35,
+  "ticker": "UIC",
+  "written_at_utc": "2026-03-31T20:57:03Z",
+  "year": 2007
+}

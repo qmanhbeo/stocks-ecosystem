@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2007-12-24",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2007-12-28",
+  "observed_empty": true,
+  "requested_dates_signature": "27d38b7f7835d1d99d5239e5417596684490be32",
+  "requested_trading_days": 5,
+  "ticker": "VHC",
+  "written_at_utc": "2026-03-31T21:50:49Z",
+  "year": 2007
+}

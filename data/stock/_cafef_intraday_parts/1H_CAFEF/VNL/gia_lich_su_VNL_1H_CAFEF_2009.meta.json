@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2009-08-17",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2009-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "b2e7def34a237ee17382a41d4d2abca7db548e96",
+  "requested_trading_days": 98,
+  "ticker": "VNL",
+  "written_at_utc": "2026-03-31T22:43:25Z",
+  "year": 2009
+}

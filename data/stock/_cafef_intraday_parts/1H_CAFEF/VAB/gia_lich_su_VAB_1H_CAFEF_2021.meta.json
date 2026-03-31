@@ -1,0 +1,15 @@
+{
+  "bar_dates": 117,
+  "bars": 576,
+  "first_bar_time": "2021-07-20T10:00:00",
+  "first_requested_date": "2021-07-20",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2021-12-31T14:00:00",
+  "last_requested_date": "2021-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "975d4a781c1e1f60300acffc6a72ad1b53ca09b2",
+  "requested_trading_days": 117,
+  "ticker": "VAB",
+  "written_at_utc": "2026-03-31T21:03:16Z",
+  "year": 2021
+}

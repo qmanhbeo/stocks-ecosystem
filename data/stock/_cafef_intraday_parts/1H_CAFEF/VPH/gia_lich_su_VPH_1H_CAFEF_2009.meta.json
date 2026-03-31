@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2009-09-09",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2009-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "17eba4d6f13cbe80fe1f327b757487dfbf9735bc",
+  "requested_trading_days": 82,
+  "ticker": "VPH",
+  "written_at_utc": "2026-03-31T23:07:23Z",
+  "year": 2009
+}

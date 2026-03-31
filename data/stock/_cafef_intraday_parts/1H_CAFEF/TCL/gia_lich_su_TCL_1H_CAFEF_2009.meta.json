@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2009-12-24",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2009-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "3dfc049ceb5a50d43490f2321114704b1fbba2bc",
+  "requested_trading_days": 6,
+  "ticker": "TCL",
+  "written_at_utc": "2026-03-31T18:47:01Z",
+  "year": 2009
+}

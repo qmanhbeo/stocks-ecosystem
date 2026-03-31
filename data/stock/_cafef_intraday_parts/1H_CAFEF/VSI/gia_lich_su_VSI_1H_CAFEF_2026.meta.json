@@ -1,0 +1,15 @@
+{
+  "bar_dates": 35,
+  "bars": 82,
+  "first_bar_time": "2026-01-05T11:00:00",
+  "first_requested_date": "2026-01-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T11:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "99c1346abc3ce7fcce335918672feffa8080b797",
+  "requested_trading_days": 38,
+  "ticker": "VSI",
+  "written_at_utc": "2026-03-31T23:34:37Z",
+  "year": 2026
+}

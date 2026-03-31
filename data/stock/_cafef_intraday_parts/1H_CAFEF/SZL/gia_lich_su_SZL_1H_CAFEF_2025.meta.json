@@ -1,0 +1,15 @@
+{
+  "bar_dates": 210,
+  "bars": 742,
+  "first_bar_time": "2025-01-02T10:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T14:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "85abeae6fd5b9caaac764c27eca404ffbd6e10d8",
+  "requested_trading_days": 244,
+  "ticker": "SZL",
+  "written_at_utc": "2026-03-31T18:33:16Z",
+  "year": 2025
+}

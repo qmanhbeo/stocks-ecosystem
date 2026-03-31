@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2008-11-26",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2008-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "688e238e408470c6bd65e075c8480dc2bf6076aa",
+  "requested_trading_days": 26,
+  "ticker": "TRA",
+  "written_at_utc": "2026-03-31T20:17:36Z",
+  "year": 2008
+}

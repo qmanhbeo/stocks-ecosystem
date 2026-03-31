@@ -1,0 +1,15 @@
+{
+  "bar_dates": 0,
+  "bars": 0,
+  "first_bar_time": null,
+  "first_requested_date": "2010-01-22",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": null,
+  "last_requested_date": "2010-12-31",
+  "observed_empty": true,
+  "requested_dates_signature": "b7d02dfd5673e04a3e1b74ff758132742e08905c",
+  "requested_trading_days": 236,
+  "ticker": "TMT",
+  "written_at_utc": "2026-03-31T19:54:52Z",
+  "year": 2010
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 4,
+  "bars": 6,
+  "first_bar_time": "2026-02-02T11:00:00",
+  "first_requested_date": "2026-02-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-19T14:00:00",
+  "last_requested_date": "2026-03-19",
+  "observed_empty": false,
+  "requested_dates_signature": "faa5d4e540d37b8daeab1786602c7904e30d1293",
+  "requested_trading_days": 4,
+  "ticker": "TTE",
+  "written_at_utc": "2026-03-31T20:33:12Z",
+  "year": 2026
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 167,
+  "bars": 365,
+  "first_bar_time": "2025-01-02T11:00:00",
+  "first_requested_date": "2025-01-02",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T11:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "bc86f4b3551636e2789838a8a603bd44f842ffc5",
+  "requested_trading_days": 230,
+  "ticker": "VAF",
+  "written_at_utc": "2026-03-31T21:08:26Z",
+  "year": 2025
+}

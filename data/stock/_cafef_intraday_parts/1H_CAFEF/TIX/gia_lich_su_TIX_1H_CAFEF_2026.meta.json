@@ -1,0 +1,15 @@
+{
+  "bar_dates": 6,
+  "bars": 9,
+  "first_bar_time": "2026-01-07T11:00:00",
+  "first_requested_date": "2026-01-07",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-11T14:00:00",
+  "last_requested_date": "2026-03-11",
+  "observed_empty": false,
+  "requested_dates_signature": "5be77d2144f35db7042e37f31420af2141d89f07",
+  "requested_trading_days": 6,
+  "ticker": "TIX",
+  "written_at_utc": "2026-03-31T19:35:50Z",
+  "year": 2026
+}

@@ -1,0 +1,15 @@
+{
+  "bar_dates": 141,
+  "bars": 685,
+  "first_bar_time": "2025-05-29T11:00:00",
+  "first_requested_date": "2025-05-13",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2025-12-31T14:00:00",
+  "last_requested_date": "2025-12-31",
+  "observed_empty": false,
+  "requested_dates_signature": "79037067a3634ad2097d1a2ec2429a06e59f1b9e",
+  "requested_trading_days": 165,
+  "ticker": "VPL",
+  "written_at_utc": "2026-03-31T23:13:15Z",
+  "year": 2025
+}
