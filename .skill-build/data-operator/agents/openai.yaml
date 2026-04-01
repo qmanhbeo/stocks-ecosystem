@@ -1,0 +1,4 @@
+interface:
+  display_name: "Data Operator"
+  short_description: "Operate the shared data root and lab pipelines"
+  default_prompt: "Use $data-operator to inspect, refresh, backfill, rebuild, or repair shared data under the root data store and alpha-research-lab data tools."
