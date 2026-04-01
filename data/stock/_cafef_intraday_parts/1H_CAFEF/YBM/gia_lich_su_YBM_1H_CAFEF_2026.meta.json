@@ -1,0 +1,15 @@
+{
+  "bar_dates": 54,
+  "bars": 174,
+  "first_bar_time": "2026-01-05T11:00:00",
+  "first_requested_date": "2026-01-05",
+  "interval_label": "1H_CAFEF",
+  "last_bar_time": "2026-03-27T12:00:00",
+  "last_requested_date": "2026-03-27",
+  "observed_empty": false,
+  "requested_dates_signature": "2deb4a31e902317bc09246cc7dafc90438aae40b",
+  "requested_trading_days": 54,
+  "ticker": "YBM",
+  "written_at_utc": "2026-04-01T12:55:29Z",
+  "year": 2026
+}
