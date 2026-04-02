@@ -20,6 +20,8 @@ from src.activation_alpha import (
     RL_MATRIX_PATH,
     STOCK_DIR,
     TRADABILITY_PATH,
+    _frame_covers_time_bounds,
+    _requested_matrix_time_bounds,
     load_activation_experiment_inputs,
     load_or_build_activation_state,
     selector_definitions,
@@ -279,10 +281,19 @@ def load_or_build_activation_meta(
         "selector_confidence_combo",
         "selector_entry_quality_combo",
     }
+    required_start, required_end = _requested_matrix_time_bounds(
+        matrix_path=matrix_path,
+        start_year=int(start_year),
+        end_year=int(end_year),
+    )
     if out_path.exists():
         frame = pd.read_parquet(out_path)
         frame["time"] = pd.to_datetime(frame["time"])
-        if required_columns.issubset(frame.columns):
+        if required_columns.issubset(frame.columns) and _frame_covers_time_bounds(
+            frame,
+            required_start=required_start,
+            required_end=required_end,
+        ):
             return frame, "artifact"
     frame = persist_activation_meta(
         out_path=out_path,

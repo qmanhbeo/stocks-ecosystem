@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import pandas as pd
 
+from src import activation_meta
 from src.activation_meta import _forward_gross_returns, selector_meta_from_daily
 from src.activation_meta_experiment_utils import (
     hysteresis_schedule,
+    load_or_build_activation_meta,
     selector_recent_hit_rate_ewm,
     selector_recent_relative_ewm_from_prev,
     subperiod_relative_return,
@@ -115,3 +117,50 @@ def test_selector_meta_from_daily_builds_prev_cycle_relative_features():
     assert round(float(out.loc[1, "winner_prev_cycle_relative_return"]), 6) == 0.0197
     assert round(float(out.loc[2, "winner_recent_cycle_relative_return_ewm3"]), 6) > 0.0
     assert round(float(out.loc[3, "winner_selector_drawdown"]), 6) == 0.0
+
+
+def test_load_or_build_activation_meta_rebuilds_when_cached_range_is_stale(tmp_path, monkeypatch):
+    matrix_path = tmp_path / "matrix.parquet"
+    pd.DataFrame({"time": pd.to_datetime(["2025-12-31", "2026-01-02"])}).to_parquet(matrix_path, index=False)
+
+    cached_path = tmp_path / "activation_meta.parquet"
+    cached = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2025-12-31"]),
+            "full_future_cycle_relative_return": [0.0],
+            "s1_future_cycle_relative_return": [0.0],
+            "full_recent_cycle_relative_return_ewm3": [0.0],
+            "s1_recent_cycle_relative_return_ewm3": [0.0],
+            "full_selector_drawdown": [0.0],
+            "s1_selector_drawdown": [0.0],
+            "delta_liq_open_breadth_all_1d": [0.0],
+            "selector_confidence_combo": [0.0],
+            "selector_entry_quality_combo": [0.0],
+        }
+    )
+    cached.to_parquet(cached_path, index=False)
+
+    rebuilt = cached.copy()
+    rebuilt.loc[:, "time"] = pd.to_datetime(["2026-01-02"])
+    calls: list[tuple[int, int]] = []
+
+    def fake_persist_activation_meta(**kwargs):
+        calls.append((int(kwargs["start_year"]), int(kwargs["end_year"])))
+        return rebuilt
+
+    monkeypatch.setattr(activation_meta, "persist_activation_meta", fake_persist_activation_meta)
+
+    frame, source = load_or_build_activation_meta(
+        out_path=cached_path,
+        matrix_path=matrix_path,
+        tradability_path=tmp_path / "tradability.parquet",
+        stock_dir=tmp_path,
+        benchmark_path=tmp_path / "benchmark.parquet",
+        activation_state_path=tmp_path / "activation_state.parquet",
+        start_year=2015,
+        end_year=2026,
+    )
+
+    assert source == "built"
+    assert calls == [(2015, 2026)]
+    assert pd.Timestamp(frame["time"].max()) == pd.Timestamp("2026-01-02")

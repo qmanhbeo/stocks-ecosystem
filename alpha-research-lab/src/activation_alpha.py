@@ -35,6 +35,20 @@ DISPERSION_PATH = data_path("features/xs_dispersion_regime_daily.parquet")
 MACRO_PATH = data_path("features/macro_regime_daily.parquet")
 SECTOR_ROTATION_PATH = data_path("features/xs_sector_rotation_daily.parquet")
 ACTIVATION_STATE_PATH = data_path("features/activation_state_daily.parquet")
+DENSE_SIGNAL_COLUMNS = (
+    "c4_oc_asym_5d",
+    "c5_ins_relative_size_5d",
+    "c5_signal_present",
+    "c6_contrarian_intra_5d",
+    "c7_ceiling_count_5d",
+    "c8_vol_zscore_5d",
+    "c9_reversal_1d",
+    "c10_illiq_level_rank",
+    "c11_ret_60d_lag_rank",
+    "c12_gap_absorb_3",
+    "c13_compress_blowoff_2",
+    "c14_clv_volconf_resid_rank",
+)
 
 
 @dataclass(frozen=True)
@@ -80,6 +94,75 @@ def selector_definitions(matrix_columns: Sequence[str]) -> tuple[SelectorDefinit
     )
 
 
+def _requested_matrix_time_bounds(
+    *,
+    matrix_path: Path,
+    start_year: int,
+    end_year: int,
+) -> tuple[pd.Timestamp | None, pd.Timestamp | None]:
+    matrix = pd.read_parquet(matrix_path, columns=["time"])
+    times = pd.to_datetime(matrix["time"], errors="coerce").dropna()
+    if times.empty:
+        return None, None
+    in_window = times[(times.dt.year >= int(start_year)) & (times.dt.year <= int(end_year))]
+    if in_window.empty:
+        return None, None
+    return pd.Timestamp(in_window.min()), pd.Timestamp(in_window.max())
+
+
+def _frame_covers_time_bounds(
+    frame: pd.DataFrame,
+    *,
+    required_start: pd.Timestamp | None,
+    required_end: pd.Timestamp | None,
+) -> bool:
+    if required_start is None or required_end is None or frame.empty:
+        return False
+    times = pd.to_datetime(frame["time"], errors="coerce").dropna()
+    if times.empty:
+        return False
+    return pd.Timestamp(times.min()) <= required_start and pd.Timestamp(times.max()) >= required_end
+
+
+def _validate_matrix_signal_coverage(matrix: pd.DataFrame) -> None:
+    if matrix.empty:
+        return
+    latest_time = pd.Timestamp(pd.to_datetime(matrix["time"], errors="coerce").max())
+    latest_rows = matrix.loc[pd.to_datetime(matrix["time"], errors="coerce") == latest_time]
+    stale_columns = [
+        column
+        for column in DENSE_SIGNAL_COLUMNS
+        if column in latest_rows.columns and latest_rows[column].notna().sum() == 0
+    ]
+    if stale_columns:
+        quoted = ", ".join(stale_columns)
+        raise ValueError(
+            "RL signal matrix latest date "
+            f"{latest_time.date()} has zero coverage for dense signal columns: {quoted}. "
+            "This usually means stale feature artifacts were merged into a newer S1 spine. "
+            "Rebuild the dense source artifacts and regenerate xs_rl_signal_matrix.parquet "
+            "before running activation or entry experiments."
+        )
+
+
+def _validate_benchmark_date_coverage(
+    *,
+    benchmark_path: Path,
+    required_end: pd.Timestamp,
+) -> None:
+    benchmark = pd.read_parquet(benchmark_path, columns=["time"])
+    times = pd.to_datetime(benchmark["time"], errors="coerce").dropna()
+    if times.empty:
+        raise ValueError(f"Benchmark file {benchmark_path} has no valid time values")
+    benchmark_end = pd.Timestamp(times.max())
+    if benchmark_end < pd.Timestamp(required_end):
+        raise ValueError(
+            f"Benchmark data at {benchmark_path} ends on {benchmark_end.date()} "
+            f"but the experiment matrix reaches {pd.Timestamp(required_end).date()}. "
+            "Refresh benchmark/index data before running experiments."
+        )
+
+
 def load_activation_experiment_inputs(
     *,
     matrix_path: Path = RL_MATRIX_PATH,
@@ -94,6 +177,11 @@ def load_activation_experiment_inputs(
     matrix = matrix[(matrix["time"].dt.year >= start_year) & (matrix["time"].dt.year <= end_year)].copy()
     if matrix.empty:
         raise ValueError(f"No matrix rows in year range {start_year}-{end_year}")
+    _validate_matrix_signal_coverage(matrix)
+    _validate_benchmark_date_coverage(
+        benchmark_path=benchmark_path,
+        required_end=pd.Timestamp(matrix["time"].max()),
+    )
 
     selectors = selector_definitions(matrix.columns.tolist())
     strategy_map = {selector.strategy_name: list(selector.signal_columns) for selector in selectors}
@@ -369,10 +457,19 @@ def load_or_build_activation_state(
         "full_top1_prev_same",
         "s1_top1_prev_same",
     }
+    required_start, required_end = _requested_matrix_time_bounds(
+        matrix_path=matrix_path,
+        start_year=int(start_year),
+        end_year=int(end_year),
+    )
     if out_path.exists():
         frame = pd.read_parquet(out_path)
         frame["time"] = pd.to_datetime(frame["time"])
-        if required_columns.issubset(frame.columns):
+        if required_columns.issubset(frame.columns) and _frame_covers_time_bounds(
+            frame,
+            required_start=required_start,
+            required_end=required_end,
+        ):
             return frame, "artifact"
     frame = persist_activation_state(
         matrix_path=matrix_path,

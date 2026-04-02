@@ -271,6 +271,9 @@ def build_entry_candidate_panel(
     panel["strategy_name"] = inputs.strategy_name
     panel["top_k"] = int(effective_top_k)
     panel["rebalance_every"] = int(effective_rebalance)
+    panel["candidate_round_trip_cost"] = float(round_trip_cost)
+    panel["candidate_required_holding_age"] = int(required_holding_age)
+    panel["candidate_initial_notional_vnd"] = float(initial_notional_vnd)
 
     preferred = [
         "time",
@@ -291,6 +294,9 @@ def build_entry_candidate_panel(
         "activation_rel2",
         "top_k",
         "rebalance_every",
+        "candidate_round_trip_cost",
+        "candidate_required_holding_age",
+        "candidate_initial_notional_vnd",
         "actual",
     ]
     ordered = preferred + [column for column in panel.columns if column not in preferred]
@@ -397,6 +403,8 @@ def build_entry_labels(
         pd.to_numeric(work.loc[valid_label, "cycle_return_net"], errors="coerce") > float(label_edge_buffer)
     ).astype(int)
     work["buy_now_label"] = label
+    work["horizon_signal_steps"] = int(horizon_signal_steps)
+    work["round_trip_cost"] = float(round_trip_cost)
     work["label_edge_buffer"] = float(label_edge_buffer)
 
     preferred = [
@@ -411,6 +419,8 @@ def build_entry_labels(
         "cycle_relative_return_vs_vnindex",
         "cycle_relative_return_vs_cash",
         "buy_now_label",
+        "horizon_signal_steps",
+        "round_trip_cost",
         "label_edge_buffer",
     ]
     ordered = preferred + [column for column in work.columns if column not in preferred and column != "_row_id"]

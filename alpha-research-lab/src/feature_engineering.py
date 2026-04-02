@@ -21,6 +21,13 @@ TET_DATES = pd.to_datetime([
 # Target creation
 # ---------------------------------------------------------------------------
 
+def _binary_target(ret: pd.Series) -> pd.Series:
+    labels = pd.Series(np.nan, index=ret.index, dtype=float)
+    valid = ret.notna()
+    labels.loc[valid] = (ret.loc[valid] > 0).astype(float)
+    return labels
+
+
 def _make_target(df: pd.DataFrame, target_col: str, config: Dict[str, Any]) -> pd.DataFrame:
     """
     Compute the target column.
@@ -93,14 +100,14 @@ def _make_target(df: pd.DataFrame, target_col: str, config: Dict[str, Any]) -> p
         df[f"future_rel_return_{horizon}d"] = rel_ret
 
         if "future_rel_dir_" in target_col:
-            df[target_col] = (rel_ret > 0).astype(int)
+            df[target_col] = _binary_target(rel_ret)
         else:
             df[target_col] = rel_ret
 
     elif "future_dir_" in target_col:
         ret = df["close"].shift(-horizon) / df["close"] - 1
         df[f"future_return_{horizon}d"] = ret
-        df[target_col] = (ret > 0).astype(int)
+        df[target_col] = _binary_target(ret)
 
     elif "future_vol_" in target_col:
         df[target_col] = (df["close"].shift(-horizon) / df["close"] - 1).abs()
@@ -854,6 +861,7 @@ def get_feature_columns(df: pd.DataFrame, config: Dict[str, Any]) -> List[str]:
         _add(["xs_rank_1d", "xs_rank_5d", "xs_rank_20d",
               "xs_univ_mean_1d", "xs_univ_mean_5d", "xs_univ_std_5d",
               "xs_above_median_5d"])
+        _add([f"xs_breadth_{lag}d" for lag in feat_cfg.get("xs_lag_days", [1, 5, 20])])
     if feat_cfg.get("use_news", False):
         _add(["fpt_mentions_lag1", "fpt_sentiment_lag1", "news_surge_lag1",
               "fpt_title_mentions_lag1", "fpt_mentions_ma_lag1"])

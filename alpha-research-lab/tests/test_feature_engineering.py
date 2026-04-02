@@ -33,3 +33,39 @@ def test_volume_ratio_uses_nan_when_rolling_volume_is_zero() -> None:
     vol_ratio = df["vol_ratio"].iloc[19:]
     assert not np.isinf(vol_ratio.to_numpy(dtype=float)).any()
     assert vol_ratio.isna().all()
+
+
+def test_future_dir_target_keeps_unknown_future_rows_as_nan() -> None:
+    frame = pd.DataFrame(
+        {
+            "time": pd.date_range("2020-01-01", periods=3, freq="D"),
+            "close": [10.0, 11.0, 9.0],
+        }
+    )
+
+    targeted = feature_engineering._make_target(frame, "future_dir_1d", {})
+
+    assert targeted["future_dir_1d"].tolist()[:2] == [1.0, 0.0]
+    assert np.isnan(float(targeted["future_return_1d"].iloc[-1]))
+    assert np.isnan(float(targeted["future_dir_1d"].iloc[-1]))
+
+
+def test_cross_sectional_feature_columns_include_market_breadth() -> None:
+    frame = pd.DataFrame(
+        {
+            "xs_rank_1d": [0.2],
+            "xs_breadth_1d": [0.3],
+            "xs_breadth_5d": [0.4],
+            "xs_breadth_20d": [0.5],
+        }
+    )
+
+    cols = feature_engineering.get_feature_columns(
+        frame,
+        {"features": {"use_cross_sectional": True, "xs_lag_days": [1, 5, 20]}},
+    )
+
+    assert "xs_rank_1d" in cols
+    assert "xs_breadth_1d" in cols
+    assert "xs_breadth_5d" in cols
+    assert "xs_breadth_20d" in cols

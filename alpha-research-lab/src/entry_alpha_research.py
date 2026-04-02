@@ -96,6 +96,64 @@ def _safe_bool(frame: pd.DataFrame, column: str) -> pd.Series:
     return frame[column].fillna(False).astype(bool)
 
 
+def _cached_constant_matches(frame: pd.DataFrame, column: str, expected: object) -> bool:
+    if column not in frame.columns:
+        return False
+    series = frame[column].dropna()
+    if series.empty:
+        return False
+    if isinstance(expected, str):
+        return {str(value) for value in series.astype(str).unique()} == {str(expected)}
+    numeric = pd.to_numeric(series, errors="coerce")
+    if numeric.isna().any():
+        return False
+    return bool(np.allclose(numeric.to_numpy(dtype=float), float(expected), rtol=0.0, atol=1e-12))
+
+
+def _existing_mtime(path_like: str | Path) -> float | None:
+    path = Path(path_like)
+    if not path.exists():
+        return None
+    return float(path.stat().st_mtime)
+
+
+def _entry_artifact_source_fingerprint(
+    entry_inputs: EntryAlphaInputs,
+    *,
+    matrix_path: Path,
+    tradability_path: Path,
+    stock_dir: Path,
+    benchmark_path: Path,
+) -> dict[str, float]:
+    fingerprint: dict[str, float] = {}
+    for column, path in [
+        ("source_matrix_mtime", matrix_path),
+        ("source_tradability_mtime", tradability_path),
+        ("source_benchmark_mtime", benchmark_path),
+    ]:
+        mtime = _existing_mtime(path)
+        if mtime is not None:
+            fingerprint[column] = mtime
+
+    activation_meta_source = str(getattr(entry_inputs, "activation_meta_source", "")).strip()
+    if activation_meta_source:
+        activation_mtime = _existing_mtime(activation_meta_source)
+        if activation_mtime is not None:
+            fingerprint["source_activation_meta_mtime"] = activation_mtime
+
+    matrix = getattr(entry_inputs, "matrix", None)
+    if isinstance(matrix, pd.DataFrame) and "ticker" in matrix.columns:
+        stock_mtimes = []
+        for ticker in pd.Index(matrix["ticker"]).dropna().unique():
+            mtime = _existing_mtime(Path(stock_dir) / f"gia_lich_su_{ticker}_1D.parquet")
+            if mtime is not None:
+                stock_mtimes.append(mtime)
+        if stock_mtimes:
+            fingerprint["source_stock_max_mtime"] = max(stock_mtimes)
+
+    return fingerprint
+
+
 def load_or_build_entry_artifacts(
     *,
     inputs: EntryAlphaInputs | None = None,
@@ -131,6 +189,14 @@ def load_or_build_entry_artifacts(
             initial_notional_vnd=float(initial_notional_vnd),
         )
 
+    source_fingerprint = _entry_artifact_source_fingerprint(
+        entry_inputs,
+        matrix_path=matrix_path,
+        tradability_path=tradability_path,
+        stock_dir=stock_dir,
+        benchmark_path=benchmark_path,
+    )
+
     rebuild = True
     if candidate_panel_path.exists() and labels_path.exists():
         candidate_panel = pd.read_parquet(candidate_panel_path)
@@ -145,6 +211,19 @@ def load_or_build_entry_artifacts(
             max_rank < int(top_m_max)
             or not candidate_dates.equals(requested_dates)
             or not label_dates.equals(requested_dates)
+            or not _cached_constant_matches(candidate_panel, "strategy_name", str(strategy_name))
+            or not _cached_constant_matches(candidate_panel, "top_k", int(top_k))
+            or not _cached_constant_matches(candidate_panel, "rebalance_every", int(rebalance_every))
+            or not _cached_constant_matches(candidate_panel, "candidate_round_trip_cost", float(round_trip_cost))
+            or not _cached_constant_matches(candidate_panel, "candidate_required_holding_age", int(required_holding_age))
+            or not _cached_constant_matches(candidate_panel, "candidate_initial_notional_vnd", float(initial_notional_vnd))
+            or not _cached_constant_matches(labels, "horizon_signal_steps", int(rebalance_every))
+            or not _cached_constant_matches(labels, "round_trip_cost", float(round_trip_cost))
+            or not _cached_constant_matches(labels, "label_edge_buffer", float(label_edge_buffer))
+            or any(
+                not _cached_constant_matches(candidate_panel, column, value)
+                for column, value in source_fingerprint.items()
+            )
         )
         if not rebuild:
             return entry_inputs, candidate_panel, labels
@@ -167,6 +246,8 @@ def load_or_build_entry_artifacts(
         round_trip_cost=float(round_trip_cost),
         label_edge_buffer=float(label_edge_buffer),
     )
+    for column, value in source_fingerprint.items():
+        candidate_panel[column] = float(value)
     persist_entry_alpha_artifacts(
         candidate_panel,
         labels,

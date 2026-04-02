@@ -2,8 +2,16 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import pytest
 
-from src.activation_alpha import compute_cycle_metrics, selector_definitions
+from src import activation_alpha
+from src.activation_alpha import (
+    _validate_benchmark_date_coverage,
+    _validate_matrix_signal_coverage,
+    compute_cycle_metrics,
+    load_or_build_activation_state,
+    selector_definitions,
+)
 from src.deterministic_portfolio import MarketInputs, simulate_strategy
 
 
@@ -125,3 +133,69 @@ def test_compute_cycle_metrics_summarizes_active_cycles():
     assert metrics["active_cycle_hit_rate"] == 1.0
     assert metrics["activation_on_rate"] == 0.5
     assert metrics["avg_activation_scale"] == 0.5
+
+
+def test_load_or_build_activation_state_rebuilds_when_cached_range_is_stale(tmp_path, monkeypatch):
+    matrix_path = tmp_path / "matrix.parquet"
+    pd.DataFrame({"time": pd.to_datetime(["2025-12-31", "2026-01-02"])}).to_parquet(matrix_path, index=False)
+
+    cached_path = tmp_path / "activation_state.parquet"
+    cached = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2025-12-31"]),
+            "full_top5_mean_clv": [0.5],
+            "s1_top5_mean_clv": [0.5],
+            "full_top5_prev_overlap_ratio": [0.0],
+            "s1_top5_prev_overlap_ratio": [0.0],
+            "full_top1_prev_same": [0.0],
+            "s1_top1_prev_same": [0.0],
+        }
+    )
+    cached.to_parquet(cached_path, index=False)
+
+    rebuilt = cached.copy()
+    rebuilt.loc[:, "time"] = pd.to_datetime(["2026-01-02"])
+    calls: list[tuple[int, int]] = []
+
+    def fake_persist_activation_state(**kwargs):
+        calls.append((int(kwargs["start_year"]), int(kwargs["end_year"])))
+        return rebuilt
+
+    monkeypatch.setattr(activation_alpha, "persist_activation_state", fake_persist_activation_state)
+
+    frame, source = load_or_build_activation_state(
+        out_path=cached_path,
+        matrix_path=matrix_path,
+        tradability_path=tmp_path / "tradability.parquet",
+        stock_dir=tmp_path,
+        benchmark_path=tmp_path / "benchmark.parquet",
+        start_year=2015,
+        end_year=2026,
+    )
+
+    assert source == "built"
+    assert calls == [(2015, 2026)]
+    assert pd.Timestamp(frame["time"].max()) == pd.Timestamp("2026-01-02")
+
+
+def test_validate_matrix_signal_coverage_rejects_latest_date_with_missing_dense_signal():
+    matrix = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2026-03-30", "2026-03-31"]),
+            "c4_oc_asym_5d": [0.2, np.nan],
+        }
+    )
+
+    with pytest.raises(ValueError, match="2026-03-31"):
+        _validate_matrix_signal_coverage(matrix)
+
+
+def test_validate_benchmark_date_coverage_rejects_lagging_index(tmp_path):
+    benchmark_path = tmp_path / "benchmark.parquet"
+    pd.DataFrame({"time": pd.to_datetime(["2026-03-27"])}).to_parquet(benchmark_path, index=False)
+
+    with pytest.raises(ValueError, match="2026-03-27"):
+        _validate_benchmark_date_coverage(
+            benchmark_path=benchmark_path,
+            required_end=pd.Timestamp("2026-03-31"),
+        )

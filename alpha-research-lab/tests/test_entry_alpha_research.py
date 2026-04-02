@@ -316,3 +316,189 @@ def test_load_or_build_entry_artifacts_rebuilds_when_requested_dates_extend_exis
 
     assert pd.Timestamp(candidate_panel["time"].max()) == pd.Timestamp("2026-01-02")
     assert pd.Timestamp(labels["time"].max()) == pd.Timestamp("2026-01-02")
+
+
+def test_load_or_build_entry_artifacts_rebuilds_when_cached_metadata_mismatches_request(tmp_path, monkeypatch):
+    candidate_panel_path = tmp_path / "candidate_panel.parquet"
+    labels_path = tmp_path / "labels.parquet"
+    stale_candidate_panel = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2025-12-31", "2026-01-02"]),
+            "ticker": ["AAA", "AAA"],
+            "candidate_pool_rank": [1, 1],
+            "strategy_name": ["full_library", "full_library"],
+            "top_k": [5, 5],
+            "rebalance_every": [5, 5],
+            "candidate_round_trip_cost": [0.003, 0.003],
+            "candidate_required_holding_age": [3, 3],
+            "candidate_initial_notional_vnd": [100_000_000.0, 100_000_000.0],
+        }
+    )
+    stale_labels = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2025-12-31", "2026-01-02"]),
+            "ticker": ["AAA", "AAA"],
+            "horizon_signal_steps": [5, 5],
+            "round_trip_cost": [0.003, 0.003],
+            "label_edge_buffer": [0.0, 0.0],
+        }
+    )
+    stale_candidate_panel.to_parquet(candidate_panel_path, index=False)
+    stale_labels.to_parquet(labels_path, index=False)
+
+    inputs = type(
+        "DummyEntryAlphaInputs",
+        (),
+        {
+            "matrix": pd.DataFrame({"time": pd.to_datetime(["2025-12-31", "2026-01-02"])}),
+            "price_panel": pd.DataFrame({"time": pd.to_datetime(["2025-12-31", "2026-01-02"]), "ticker": ["AAA", "AAA"], "open": [10.0, 11.0]}),
+            "benchmark_open": pd.Series([100.0, 101.0], index=pd.to_datetime(["2025-12-31", "2026-01-02"]), dtype=float),
+        },
+    )()
+
+    rebuilt_panel = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2025-12-31", "2026-01-02"]),
+            "ticker": ["AAA", "AAA"],
+            "candidate_pool_rank": [1, 1],
+            "strategy_name": ["full_library", "full_library"],
+            "top_k": [2, 2],
+            "rebalance_every": [1, 1],
+            "candidate_round_trip_cost": [0.004, 0.004],
+            "candidate_required_holding_age": [4, 4],
+            "candidate_initial_notional_vnd": [50_000_000.0, 50_000_000.0],
+        }
+    )
+    rebuilt_labels = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2025-12-31", "2026-01-02"]),
+            "ticker": ["AAA", "AAA"],
+            "horizon_signal_steps": [1, 1],
+            "round_trip_cost": [0.004, 0.004],
+            "label_edge_buffer": [0.01, 0.01],
+        }
+    )
+
+    def _fake_build_panel(*args, **kwargs):
+        return rebuilt_panel.copy()
+
+    def _fake_build_labels(*args, **kwargs):
+        return rebuilt_labels.copy()
+
+    monkeypatch.setattr("src.entry_alpha_research.build_entry_candidate_panel", _fake_build_panel)
+    monkeypatch.setattr("src.entry_alpha_research.build_entry_labels", _fake_build_labels)
+
+    _, candidate_panel, labels = load_or_build_entry_artifacts(
+        inputs=inputs,
+        candidate_panel_path=candidate_panel_path,
+        labels_path=labels_path,
+        top_m_max=1,
+        top_k=2,
+        rebalance_every=1,
+        round_trip_cost=0.004,
+        required_holding_age=4,
+        initial_notional_vnd=50_000_000.0,
+        label_edge_buffer=0.01,
+    )
+
+    assert candidate_panel["top_k"].tolist() == [2, 2]
+    assert candidate_panel["rebalance_every"].tolist() == [1, 1]
+    assert np.allclose(candidate_panel["candidate_round_trip_cost"].to_numpy(dtype=float), 0.004)
+    assert labels["horizon_signal_steps"].tolist() == [1, 1]
+    assert np.allclose(labels["round_trip_cost"].to_numpy(dtype=float), 0.004)
+    assert np.allclose(labels["label_edge_buffer"].to_numpy(dtype=float), 0.01)
+
+
+def test_load_or_build_entry_artifacts_rebuilds_when_source_files_are_newer(tmp_path, monkeypatch):
+    matrix_path = tmp_path / "matrix.parquet"
+    tradability_path = tmp_path / "tradability.parquet"
+    benchmark_path = tmp_path / "benchmark.parquet"
+    stock_dir = tmp_path / "stock"
+    stock_dir.mkdir()
+    for path in [matrix_path, tradability_path, benchmark_path, stock_dir / "gia_lich_su_AAA_1D.parquet"]:
+        path.write_text("fresh")
+
+    current_matrix_mtime = float(matrix_path.stat().st_mtime)
+    current_tradability_mtime = float(tradability_path.stat().st_mtime)
+    current_benchmark_mtime = float(benchmark_path.stat().st_mtime)
+    current_stock_mtime = float((stock_dir / "gia_lich_su_AAA_1D.parquet").stat().st_mtime)
+
+    candidate_panel_path = tmp_path / "candidate_panel.parquet"
+    labels_path = tmp_path / "labels.parquet"
+    stale_candidate_panel = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2025-12-31", "2026-01-02"]),
+            "ticker": ["AAA", "AAA"],
+            "candidate_pool_rank": [1, 1],
+            "strategy_name": ["full_library", "full_library"],
+            "top_k": [5, 5],
+            "rebalance_every": [5, 5],
+            "candidate_round_trip_cost": [0.003, 0.003],
+            "candidate_required_holding_age": [3, 3],
+            "candidate_initial_notional_vnd": [100_000_000.0, 100_000_000.0],
+            "source_matrix_mtime": [current_matrix_mtime - 10.0, current_matrix_mtime - 10.0],
+            "source_tradability_mtime": [current_tradability_mtime - 10.0, current_tradability_mtime - 10.0],
+            "source_benchmark_mtime": [current_benchmark_mtime - 10.0, current_benchmark_mtime - 10.0],
+            "source_stock_max_mtime": [current_stock_mtime - 10.0, current_stock_mtime - 10.0],
+        }
+    )
+    stale_labels = pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2025-12-31", "2026-01-02"]),
+            "ticker": ["AAA", "AAA"],
+            "horizon_signal_steps": [5, 5],
+            "round_trip_cost": [0.003, 0.003],
+            "label_edge_buffer": [0.0, 0.0],
+        }
+    )
+    stale_candidate_panel.to_parquet(candidate_panel_path, index=False)
+    stale_labels.to_parquet(labels_path, index=False)
+
+    inputs = type(
+        "DummyEntryAlphaInputs",
+        (),
+        {
+            "matrix": pd.DataFrame(
+                {
+                    "time": pd.to_datetime(["2025-12-31", "2026-01-02"]),
+                    "ticker": ["AAA", "AAA"],
+                }
+            ),
+            "price_panel": pd.DataFrame({"time": pd.to_datetime(["2025-12-31", "2026-01-02"]), "ticker": ["AAA", "AAA"], "open": [10.0, 11.0]}),
+            "benchmark_open": pd.Series([100.0, 101.0], index=pd.to_datetime(["2025-12-31", "2026-01-02"]), dtype=float),
+            "activation_meta_source": "",
+        },
+    )()
+
+    rebuilt_panel = stale_candidate_panel.copy()
+    rebuilt_panel["source_matrix_mtime"] = current_matrix_mtime
+    rebuilt_panel["source_tradability_mtime"] = current_tradability_mtime
+    rebuilt_panel["source_benchmark_mtime"] = current_benchmark_mtime
+    rebuilt_panel["source_stock_max_mtime"] = current_stock_mtime
+
+    def _fake_build_panel(*args, **kwargs):
+        return rebuilt_panel.drop(columns=["source_matrix_mtime", "source_tradability_mtime", "source_benchmark_mtime", "source_stock_max_mtime"]).copy()
+
+    def _fake_build_labels(*args, **kwargs):
+        return stale_labels.copy()
+
+    monkeypatch.setattr("src.entry_alpha_research.build_entry_candidate_panel", _fake_build_panel)
+    monkeypatch.setattr("src.entry_alpha_research.build_entry_labels", _fake_build_labels)
+
+    _, candidate_panel, _ = load_or_build_entry_artifacts(
+        inputs=inputs,
+        candidate_panel_path=candidate_panel_path,
+        labels_path=labels_path,
+        matrix_path=matrix_path,
+        tradability_path=tradability_path,
+        stock_dir=stock_dir,
+        benchmark_path=benchmark_path,
+        top_m_max=1,
+        top_k=5,
+        rebalance_every=5,
+    )
+
+    assert np.allclose(candidate_panel["source_matrix_mtime"].to_numpy(dtype=float), current_matrix_mtime)
+    assert np.allclose(candidate_panel["source_tradability_mtime"].to_numpy(dtype=float), current_tradability_mtime)
+    assert np.allclose(candidate_panel["source_benchmark_mtime"].to_numpy(dtype=float), current_benchmark_mtime)
+    assert np.allclose(candidate_panel["source_stock_max_mtime"].to_numpy(dtype=float), current_stock_mtime)

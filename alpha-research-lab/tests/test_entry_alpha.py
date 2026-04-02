@@ -62,6 +62,9 @@ def test_build_entry_candidate_panel_assigns_ranks_and_hold_flags():
     held_row = panel.loc[(panel["time"] == pd.Timestamp("2024-01-03")) & (panel["ticker"] == "BBB")].iloc[0]
     assert bool(held_row["is_held_prev_close"]) is True
     assert held_row["activation_state"] == "on"
+    assert np.isclose(float(held_row["candidate_round_trip_cost"]), 0.003)
+    assert int(held_row["candidate_required_holding_age"]) == 3
+    assert np.isclose(float(held_row["candidate_initial_notional_vnd"]), 100_000_000.0)
 
 
 def test_build_entry_labels_aligns_cycle_dates_and_returns():
@@ -101,6 +104,8 @@ def test_build_entry_labels_aligns_cycle_dates_and_returns():
     assert np.isclose(float(first["cycle_exit_open"]), 12.0)
     assert np.isclose(float(first["cycle_return_gross"]), 12.0 / 11.0 - 1.0)
     assert np.isclose(float(first["cycle_return_net"]), 12.0 / 11.0 - 1.0 - 0.003)
+    assert int(first["horizon_signal_steps"]) == 1
+    assert np.isclose(float(first["round_trip_cost"]), 0.003)
     assert int(first["buy_now_label"]) == 1
     second = labels.iloc[1]
     assert pd.isna(second["cycle_exit_date"])
