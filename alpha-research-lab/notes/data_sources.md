@@ -25,7 +25,7 @@ For the active timing-data acquisition branch, also read:
 | `data/fx-commodities/` — 20 global files | YES | `fetch_fx_commodities.py` + `fetch_global_macro.py` |
 | `data/insider_cache/` — 394 ticker parquets | YES | `fetch_insider_deals.py` |
 | `data/news/cafef/raw/*.jsonl` | NO (3.6 GB) | `python data_tools/fetch_news_archive.py` |
-| Full `data/` snapshot (legacy) | NO | `python setup_data.py` (GDrive backup, may be stale) |
+| Full `data/` snapshot (legacy) | NO | `python setup_data.py` (restores `data-snapshot-2026-04-02.tar.zst` after SHA256 verification) |
 
 ---
 

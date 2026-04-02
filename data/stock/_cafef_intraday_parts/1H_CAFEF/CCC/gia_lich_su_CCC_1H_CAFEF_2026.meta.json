@@ -1,15 +1,15 @@
 {
-  "bar_dates": 54,
-  "bars": 210,
+  "bar_dates": 56,
+  "bars": 219,
   "first_bar_time": "2026-01-05T11:00:00",
   "first_requested_date": "2026-01-05",
   "interval_label": "1H_CAFEF",
-  "last_bar_time": "2026-03-27T14:00:00",
-  "last_requested_date": "2026-03-27",
+  "last_bar_time": "2026-03-31T14:00:00",
+  "last_requested_date": "2026-03-31",
   "observed_empty": false,
-  "requested_dates_signature": "55a88bfef0c13008bf2d3c8270a7d50880ed5d2b",
-  "requested_trading_days": 54,
+  "requested_dates_signature": "ec3df850ff321c1d50c72657a28aecc58820204a",
+  "requested_trading_days": 56,
   "ticker": "CCC",
-  "written_at_utc": "2026-03-30T12:21:20Z",
+  "written_at_utc": "2026-04-02T11:35:29Z",
   "year": 2026
 }

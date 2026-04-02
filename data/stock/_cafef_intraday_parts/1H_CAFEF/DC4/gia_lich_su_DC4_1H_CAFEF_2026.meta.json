@@ -1,15 +1,15 @@
 {
-  "bar_dates": 55,
-  "bars": 272,
+  "bar_dates": 57,
+  "bars": 282,
   "first_bar_time": "2026-01-05T10:00:00",
   "first_requested_date": "2026-01-05",
   "interval_label": "1H_CAFEF",
-  "last_bar_time": "2026-03-27T14:00:00",
-  "last_requested_date": "2026-03-27",
+  "last_bar_time": "2026-03-31T14:00:00",
+  "last_requested_date": "2026-03-31",
   "observed_empty": false,
-  "requested_dates_signature": "a2ab0bb4d5ce6d915140616f3ea5364dfd456a9e",
-  "requested_trading_days": 55,
+  "requested_dates_signature": "a786e9cf156108c8ca08cdf3851d37a629174547",
+  "requested_trading_days": 57,
   "ticker": "DC4",
-  "written_at_utc": "2026-03-30T15:57:41Z",
+  "written_at_utc": "2026-04-02T11:37:51Z",
   "year": 2026
 }

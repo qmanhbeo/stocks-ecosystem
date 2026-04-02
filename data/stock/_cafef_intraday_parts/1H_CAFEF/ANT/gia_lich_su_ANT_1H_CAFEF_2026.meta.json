@@ -1,15 +1,15 @@
 {
-  "bar_dates": 50,
-  "bars": 227,
+  "bar_dates": 52,
+  "bars": 234,
   "first_bar_time": "2026-01-05T10:00:00",
   "first_requested_date": "2026-01-05",
   "interval_label": "1H_CAFEF",
-  "last_bar_time": "2026-03-27T14:00:00",
-  "last_requested_date": "2026-03-27",
+  "last_bar_time": "2026-03-31T14:00:00",
+  "last_requested_date": "2026-03-31",
   "observed_empty": false,
-  "requested_dates_signature": "5dbe0d9a39d1b2dee72d30f6af76c5b4e1b2a182",
-  "requested_trading_days": 50,
+  "requested_dates_signature": "bbcf5f34fc3fe9360e053fc1da4079884d5343a3",
+  "requested_trading_days": 52,
   "ticker": "ANT",
-  "written_at_utc": "2026-03-30T00:10:24Z",
+  "written_at_utc": "2026-04-02T11:33:23Z",
   "year": 2026
 }

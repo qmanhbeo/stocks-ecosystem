@@ -1,15 +1,15 @@
 {
-  "bar_dates": 49,
-  "bars": 245,
+  "bar_dates": 51,
+  "bars": 255,
   "first_bar_time": "2026-01-05T10:00:00",
   "first_requested_date": "2026-01-05",
   "interval_label": "1H_CAFEF",
-  "last_bar_time": "2026-03-27T14:00:00",
-  "last_requested_date": "2026-03-27",
+  "last_bar_time": "2026-03-31T14:00:00",
+  "last_requested_date": "2026-03-31",
   "observed_empty": false,
-  "requested_dates_signature": "f4b81348cac07f35e7b9ec337303952b68b5e353",
-  "requested_trading_days": 49,
+  "requested_dates_signature": "a3453ee5dcfe930b4f0d0222aba56737239f4c63",
+  "requested_trading_days": 51,
   "ticker": "KLB",
-  "written_at_utc": "2026-03-31T11:31:04Z",
+  "written_at_utc": "2026-04-02T11:52:02Z",
   "year": 2026
 }

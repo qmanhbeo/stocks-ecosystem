@@ -19,6 +19,7 @@ dependencies:
     - vnstock          # Vietnamese stock data (HOSE)
     - yfinance         # global market data (VIX, indices, FX)
     - gdown            # Google Drive download for setup_data.py
+    - zstandard        # .tar.zst extraction for setup_data.py
     - matplotlib
     - seaborn
     - plotly

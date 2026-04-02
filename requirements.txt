@@ -22,6 +22,7 @@ hmmlearn
 xgboost
 lightgbm
 gdown
+zstandard
 scipy
 seaborn
 tqdm

@@ -1,15 +1,15 @@
 {
-  "bar_dates": 54,
-  "bars": 122,
+  "bar_dates": 56,
+  "bars": 128,
   "first_bar_time": "2026-01-05T10:00:00",
   "first_requested_date": "2026-01-05",
   "interval_label": "1H_CAFEF",
-  "last_bar_time": "2026-03-27T11:00:00",
-  "last_requested_date": "2026-03-27",
+  "last_bar_time": "2026-03-31T14:00:00",
+  "last_requested_date": "2026-03-31",
   "observed_empty": false,
-  "requested_dates_signature": "70d29ff96b0a7033e75f502283566feeb026c944",
-  "requested_trading_days": 54,
+  "requested_dates_signature": "0638a7d70dbfa0dbe01e62232ee14ea03ced98b4",
+  "requested_trading_days": 56,
   "ticker": "DTL",
-  "written_at_utc": "2026-03-30T18:44:33Z",
+  "written_at_utc": "2026-04-02T11:39:46Z",
   "year": 2026
 }

@@ -1,15 +1,15 @@
 {
-  "bar_dates": 4,
-  "bars": 5,
+  "bar_dates": 5,
+  "bars": 6,
   "first_bar_time": "2026-01-21T11:00:00",
   "first_requested_date": "2026-01-21",
   "interval_label": "1H_CAFEF",
-  "last_bar_time": "2026-03-17T11:00:00",
-  "last_requested_date": "2026-03-17",
+  "last_bar_time": "2026-03-30T13:00:00",
+  "last_requested_date": "2026-03-30",
   "observed_empty": false,
-  "requested_dates_signature": "1be3d04aae82755b4ce430aaa94f97cda7c5499e",
-  "requested_trading_days": 4,
+  "requested_dates_signature": "ffeceb4806cd8fabf59b55ae09a2b6010b90cbe6",
+  "requested_trading_days": 5,
   "ticker": "BTT",
-  "written_at_utc": "2026-03-30T11:55:41Z",
+  "written_at_utc": "2026-04-02T11:35:08Z",
   "year": 2026
 }

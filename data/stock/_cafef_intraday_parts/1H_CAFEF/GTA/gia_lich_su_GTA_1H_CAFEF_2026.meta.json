@@ -1,15 +1,15 @@
 {
-  "bar_dates": 25,
-  "bars": 37,
+  "bar_dates": 26,
+  "bars": 39,
   "first_bar_time": "2026-01-13T10:00:00",
   "first_requested_date": "2026-01-13",
   "interval_label": "1H_CAFEF",
-  "last_bar_time": "2026-03-20T11:00:00",
-  "last_requested_date": "2026-03-20",
+  "last_bar_time": "2026-03-30T12:00:00",
+  "last_requested_date": "2026-03-30",
   "observed_empty": false,
-  "requested_dates_signature": "6ddaee470e42e07cb1a36bcd18fbdda75bdf289b",
-  "requested_trading_days": 25,
+  "requested_dates_signature": "a97e05461777bc7d47d29ce6af256bb245e3348e",
+  "requested_trading_days": 26,
   "ticker": "GTA",
-  "written_at_utc": "2026-03-30T20:48:44Z",
+  "written_at_utc": "2026-04-02T11:42:15Z",
   "year": 2026
 }

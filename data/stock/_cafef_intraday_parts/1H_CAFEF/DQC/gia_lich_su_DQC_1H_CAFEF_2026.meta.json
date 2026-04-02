@@ -1,15 +1,15 @@
 {
-  "bar_dates": 54,
-  "bars": 183,
+  "bar_dates": 56,
+  "bars": 190,
   "first_bar_time": "2026-01-05T11:00:00",
   "first_requested_date": "2026-01-05",
   "interval_label": "1H_CAFEF",
-  "last_bar_time": "2026-03-27T14:00:00",
-  "last_requested_date": "2026-03-27",
+  "last_bar_time": "2026-03-31T13:00:00",
+  "last_requested_date": "2026-03-31",
   "observed_empty": false,
-  "requested_dates_signature": "a3b6d88e373b21b0f99ff1a3c6f90912e4a122e3",
-  "requested_trading_days": 54,
+  "requested_dates_signature": "837b19d3ba0220785a5e029bc4d3fbd68e70b482",
+  "requested_trading_days": 56,
   "ticker": "DQC",
-  "written_at_utc": "2026-03-30T17:57:05Z",
+  "written_at_utc": "2026-04-02T11:39:14Z",
   "year": 2026
 }
