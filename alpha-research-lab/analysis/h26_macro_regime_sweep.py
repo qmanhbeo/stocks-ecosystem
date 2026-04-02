@@ -13,13 +13,14 @@ import numpy as np
 import pandas as pd
 from scipy.stats import binomtest
 from pathlib import Path
+from path_utils import data_path
 
 
-MACRO_PATH    = "data/features/macro_regime_daily.parquet"
-XS_BARRIER    = "data/features/xs_barrier_fpt_proba.csv"
-SS_E32        = "data/features/ss_fpt_proba_e32.csv"
-VIX_PATH      = "data/fx-commodities/fx_commodities_vix_1D.parquet"
-ALL_PROBAS    = "data/features/xs_barrier_all_probas.parquet"
+MACRO_PATH = str(data_path("features/macro_regime_daily.parquet"))
+XS_BARRIER = str(data_path("features/xs_barrier_fpt_proba.csv"))
+SS_E32 = str(data_path("features/ss_fpt_proba_e32.csv"))
+VIX_PATH = str(data_path("fx-commodities/fx_commodities_vix_1D.parquet"))
+ALL_PROBAS = str(data_path("features/xs_barrier_all_probas.parquet"))
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────

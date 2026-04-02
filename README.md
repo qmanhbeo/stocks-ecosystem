@@ -18,7 +18,7 @@ This is no longer a set of fully self-contained repos. The projects below now op
 - Manual label UI code lives under `manual-label-factory/`
 - Shared recommendation contracts live under `shared-recommendation/`
 - RL consumer/runtime code lives under `RL-trading-agent/`
-- `alpha-research-lab/data` is a symlink back to root `data/` so lab scripts can be run from inside the lab without duplicating files
+- `alpha-research-lab/` resolves shared datasets from the root `data/` directory directly; a local `alpha-research-lab/data` symlink is optional compatibility only
 
 ## Data Layout
 

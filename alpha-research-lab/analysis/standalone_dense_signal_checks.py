@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+from path_utils import data_path
 from datetime import datetime
 
 import numpy as np
@@ -26,11 +27,11 @@ from src.data_loader import load_data
 from src.feature_engineering import generate_features
 from src.run_summary import write_run_summary
 
-STOCK_DIR = REPO_ROOT / "data" / "stock"
-S1_PATH = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
-OC_PATH = REPO_ROOT / "data" / "features" / "xs_open_close_asymmetry.parquet"
-SKEW_PATH = REPO_ROOT / "data" / "features" / "xs_return_skewness.parquet"
-DISP_PATH = REPO_ROOT / "data" / "features" / "xs_dispersion_regime_daily.parquet"
+STOCK_DIR = data_path("stock")
+S1_PATH = data_path("features/xs_barrier_vol_1d_hose_full.parquet")
+OC_PATH = data_path("features/xs_open_close_asymmetry.parquet")
+SKEW_PATH = data_path("features/xs_return_skewness.parquet")
+DISP_PATH = data_path("features/xs_dispersion_regime_daily.parquet")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 

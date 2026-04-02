@@ -17,6 +17,7 @@ Usage:
 import argparse
 import sys
 from pathlib import Path
+from path_utils import data_path
 
 import numpy as np
 import pandas as pd
@@ -28,9 +29,9 @@ if str(ROOT) not in sys.path:
 from src.run_summary import write_run_summary
 
 
-ALL_PROBAS = Path("data/features/xs_barrier_all_probas_hose_full.parquet")
-VIX_PATH = Path("data/fx-commodities/fx_commodities_vix_1D.parquet")
-STOCK_DIR = Path("data/stock")
+ALL_PROBAS = data_path("features/xs_barrier_all_probas_hose_full.parquet")
+VIX_PATH = data_path("fx-commodities/fx_commodities_vix_1D.parquet")
+STOCK_DIR = data_path("stock")
 VNI_FILE = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
 
 TOP_N = 5

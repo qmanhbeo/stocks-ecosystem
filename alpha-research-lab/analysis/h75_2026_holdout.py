@@ -22,6 +22,7 @@ import json
 import sys
 import warnings
 from pathlib import Path
+from path_utils import data_path
 
 import numpy as np
 import pandas as pd
@@ -39,8 +40,8 @@ from src.run_summary import write_run_summary
 warnings.filterwarnings("ignore")
 
 
-STOCK_DIR = Path("data/stock")
-VIX_PATH = Path("data/fx-commodities/fx_commodities_vix_1D.parquet")
+STOCK_DIR = data_path("stock")
+VIX_PATH = data_path("fx-commodities/fx_commodities_vix_1D.parquet")
 VNI_FILE = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
 EXCLUDE = {"VNINDEX", "VN30"}
 
@@ -54,8 +55,8 @@ MIN_PROBA = 0.55
 VIX_MIN = 15.0
 VIX_MAX = 30.0
 
-DEFAULT_SAVE_PROBAS = Path("data/features/xs_live_validation_h54_2026.parquet")
-PRIOR_PROBAS_PATH = Path("data/features/xs_barrier_all_probas_hose_full.parquet")
+DEFAULT_SAVE_PROBAS = data_path("features/xs_live_validation_h54_2026.parquet")
+PRIOR_PROBAS_PATH = data_path("features/xs_barrier_all_probas_hose_full.parquet")
 
 MODEL_CONFIG = {
     "data": {

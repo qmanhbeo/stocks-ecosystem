@@ -26,12 +26,13 @@ import unicodedata
 import urllib.request
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 from typing import Iterable
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-RAW_DIR = REPO_ROOT / "data" / "news" / "cafef" / "raw"
-CACHE_DIR = REPO_ROOT / "data" / "llm_cache"
+RAW_DIR = data_path("news/cafef/raw")
+CACHE_DIR = data_path("llm_cache")
 
 EVENT_TYPES = {
     "earnings_beat", "earnings_miss", "earnings_neutral", "revenue_growth",

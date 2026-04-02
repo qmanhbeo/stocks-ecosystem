@@ -1,7 +1,9 @@
 from pathlib import Path
+from path_utils import data_path
 import argparse
 import time
 import yfinance as yf
+import yfinance.shared as yf_shared
 import pandas as pd
 import re
 
@@ -11,7 +13,9 @@ try:
         build_probe_cache_entry,
         build_probe_cache_path,
         combine_frames,
+        error_message_indicates_rate_limit,
         format_probe_cache_skip_message,
+        latest_value_covers_requested_end,
         load_existing_frame,
         load_probe_cache,
         plan_refresh,
@@ -24,7 +28,9 @@ except ModuleNotFoundError:
         build_probe_cache_entry,
         build_probe_cache_path,
         combine_frames,
+        error_message_indicates_rate_limit,
         format_probe_cache_skip_message,
+        latest_value_covers_requested_end,
         load_existing_frame,
         load_probe_cache,
         plan_refresh,
@@ -34,17 +40,68 @@ except ModuleNotFoundError:
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-OUT_DIR = REPO_ROOT / "data" / "fx-commodities"
+OUT_DIR = data_path("fx-commodities")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
+YF_CACHE_DIR = OUT_DIR / "_cache" / "yfinance"
+YF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+yf.set_tz_cache_location(str(YF_CACHE_DIR))
 DEFAULT_END = pd.Timestamp.today().normalize().date().isoformat()
+DEFAULT_TICKERS = [
+    "VND=X",
+    "GC=F",
+    "CL=F",
+    "HG=F",
+    "CNY=X",
+    "^VIX",
+    "^GSPC",
+    "^HSI",
+    "000001.SS",
+    "^KS11",
+    "^TWII",
+    "^N225",
+    "EEM",
+    "EWH",
+    "VNM",
+    "HYG",
+    "TLT",
+    "^TNX",
+    "^IRX",
+    "BTC-USD",
+    "DX-Y.NYB",
+]
 
 # Default human-readable aliases
 DEFAULT_ALIASES = {
     "VND=X": "fx_vnd_usd",
     "GC=F": "gold",
     "CL=F": "oil",
+    "HG=F": "hg_f",
+    "CNY=X": "cny_x",
+    "^VIX": "vix",
+    "^GSPC": "sp500",
+    "000001.SS": "shanghai",
+    "^KS11": "kospi",
+    "TWII": "taiex",
+    "^TWII": "taiex",
+    "N225": "nikkei",
+    "^N225": "nikkei",
+    "VNM": "vnm_etf",
+    "^TNX": "us10y",
+    "^IRX": "us3m",
+    "BTC-USD": "btc",
+    "DX-Y.NYB": "dxy",
 }
-PROBE_CACHE_STATUS_SKIP_ELIGIBLE = {"unchanged", "partial"}
+PROBE_CACHE_STATUS_SKIP_ELIGIBLE = {"unchanged"}
+PROBE_CACHE_MAX_LAG_DAYS = 3
+FETCH_STATUS_FETCHED = "fetched"
+FETCH_STATUS_SKIPPED = "skipped"
+FETCH_STATUS_RETRYABLE = "retryable"
+FETCH_STATUS_RATE_LIMITED = "rate_limited"
+FETCH_STATUS_FAILED = "failed"
+YAHOO_TICKER_CANONICAL = {
+    "TWII": "^TWII",
+    "N225": "^N225",
+}
 
 
 def _sanitize_ticker(ticker: str) -> str:
@@ -54,6 +111,10 @@ def _sanitize_ticker(ticker: str) -> str:
 
 def _alias_for_ticker(ticker: str, alias_map: dict) -> str:
     return alias_map.get(ticker.upper(), _sanitize_ticker(ticker))
+
+
+def _ticker_for_yahoo(ticker: str) -> str:
+    return YAHOO_TICKER_CANONICAL.get(ticker.upper(), ticker.upper())
 
 
 def probe_cache_path(interval: str) -> Path:
@@ -96,6 +157,45 @@ def _exclusive_yf_end(end: str) -> str:
     return (pd.Timestamp(end).normalize() + pd.Timedelta(days=1)).date().isoformat()
 
 
+def _download_with_rate_limit_retry(
+    ticker: str,
+    *,
+    start: str,
+    end: str,
+    interval: str,
+    auto_adjust: bool,
+    rate_limit_retries: int,
+    rate_limit_backoff_seconds: float,
+) -> tuple[pd.DataFrame, bool]:
+    yahoo_ticker = _ticker_for_yahoo(ticker)
+    attempts = max(rate_limit_retries, 0) + 1
+    for attempt in range(attempts):
+        df = yf.download(
+            yahoo_ticker,
+            start=start,
+            end=end,
+            interval=interval,
+            progress=False,
+            auto_adjust=auto_adjust,
+        )
+        error_message = getattr(yf_shared, "_ERRORS", {}).get(yahoo_ticker.upper())
+        if not error_message_indicates_rate_limit(error_message):
+            return df, False
+        if attempt == attempts - 1:
+            print(
+                f"⚠️  Yahoo rate limited {yahoo_ticker}; exhausted {attempts} attempt(s)",
+                flush=True,
+            )
+            return pd.DataFrame(), True
+        wait_seconds = rate_limit_backoff_seconds * (attempt + 1)
+        print(
+            f"⚠️  Yahoo rate limited {yahoo_ticker}; retrying in {wait_seconds:.1f}s...",
+            flush=True,
+        )
+        time.sleep(wait_seconds)
+    return pd.DataFrame(), False
+
+
 def fetch_ticker(
     ticker: str,
     interval: str,
@@ -106,7 +206,9 @@ def fetch_ticker(
     overwrite: bool = False,
     probe_cache: dict[str, dict[str, object]],
     probe_cache_ttl_hours: float,
-) -> tuple[bool, dict[str, object] | None]:
+    rate_limit_retries: int = 1,
+    rate_limit_backoff_seconds: float = 30.0,
+) -> tuple[str, dict[str, object] | None]:
     alias = _alias_for_ticker(ticker, alias_map)
     file_path = OUT_DIR / f"fx_commodities_{alias}_{interval}.parquet"
     existing = load_existing_frame(file_path)
@@ -119,41 +221,53 @@ def fetch_ticker(
             end,
             full_refresh=overwrite,
         )
-        if plan.mode == "incremental" and probe_cache_record_is_fresh(
-            probe_cache.get(alias),
-            requested_end=end,
-            path=file_path,
-            latest_value=plan.existing_last_time,
-            ttl_hours=probe_cache_ttl_hours,
-            eligible_statuses=PROBE_CACHE_STATUS_SKIP_ELIGIBLE,
-        ):
-            print(f"⏭️  {ticker} ({alias}): {format_probe_cache_skip_message(probe_cache[alias])}")
-            return True, None
+        current_tail_covers_end = latest_value_covers_requested_end(
+            plan.existing_last_time,
+            end,
+            max_lag_days=PROBE_CACHE_MAX_LAG_DAYS,
+        )
+        if plan.mode == "incremental" and current_tail_covers_end:
+            if probe_cache_record_is_fresh(
+                probe_cache.get(alias),
+                requested_end=end,
+                path=file_path,
+                latest_value=plan.existing_last_time,
+                ttl_hours=probe_cache_ttl_hours,
+                eligible_statuses=PROBE_CACHE_STATUS_SKIP_ELIGIBLE,
+            ):
+                print(f"⏭️  {ticker} ({alias}): {format_probe_cache_skip_message(probe_cache[alias])}")
+                return FETCH_STATUS_SKIPPED, None
         if plan.mode == "skip":
             print(f"⏭️  {ticker} ({alias}): {plan.message}")
-            return True, None
+            return FETCH_STATUS_SKIPPED, None
 
         print(f"📥 Fetching {ticker} ({alias}, {plan.message})...", end=" ", flush=True)
-        df = yf.download(
+        df, rate_limited = _download_with_rate_limit_retry(
             ticker,
             start=plan.fetch_start,
             end=_exclusive_yf_end(end),
             interval=interval,
-            progress=False,
             auto_adjust=False,
+            rate_limit_retries=rate_limit_retries,
+            rate_limit_backoff_seconds=rate_limit_backoff_seconds,
         )
+        if rate_limited:
+            return FETCH_STATUS_RATE_LIMITED, None
         df = _normalize_yf_df(df)
         if df.empty:
             if existing is not None:
-                print("⏭️  No new data returned, keeping existing file")
-                return True, build_probe_cache_entry(
-                    status="unchanged",
-                    checked_end=end,
-                    path=file_path,
-                    latest_value=plan.existing_last_time,
-                )
+                if current_tail_covers_end:
+                    print("⏭️  No new data returned, keeping existing file")
+                    return FETCH_STATUS_SKIPPED, build_probe_cache_entry(
+                        status="unchanged",
+                        checked_end=end,
+                        path=file_path,
+                        latest_value=plan.existing_last_time,
+                    )
+                print("⚠️  No new data returned; existing file is still behind requested end, so probe cache remains retryable")
+                return FETCH_STATUS_RETRYABLE, None
             print("❌ No data returned")
-            return False, None
+            return FETCH_STATUS_FAILED, None
         df["ticker"] = ticker.upper()
         df["alias"] = alias
         base = existing if plan.mode == "incremental" else None
@@ -161,9 +275,15 @@ def fetch_ticker(
         combined = combine_frames(base, df)
         atomic_write_parquet(combined, file_path)
         latest_time = pd.to_datetime(combined["time"], errors="coerce").dropna().max()
-        cache_status = "current"
-        if latest_time.normalize().date() < pd.Timestamp(end).normalize().date():
-            cache_status = "partial" if len(combined) - before_rows > 0 else "unchanged"
+        latest_covers_end = latest_value_covers_requested_end(
+            latest_time,
+            end,
+            max_lag_days=PROBE_CACHE_MAX_LAG_DAYS,
+        )
+        if latest_covers_end:
+            cache_status = "unchanged" if len(combined) == before_rows else "current"
+        else:
+            cache_status = "partial"
         cache_entry = build_probe_cache_entry(
             status=cache_status,
             checked_end=end,
@@ -178,10 +298,10 @@ def fetch_ticker(
                 print(f"✅ Refreshed overlap window (latest {latest_time})")
         else:
             print(f"✅ Saved ({len(combined)} rows)")
-        return True, cache_entry
+        return FETCH_STATUS_FETCHED, cache_entry
     except Exception as e:
         print(f"❌ Error: {e}")
-        return False, None
+        return FETCH_STATUS_FAILED, None
 
 
 def main():
@@ -189,8 +309,8 @@ def main():
     parser.add_argument(
         "--tickers",
         type=str,
-        default="VND=X,GC=F,CL=F",
-        help="Comma-separated list of tickers (e.g., VND=X,GC=F,CL=F)"
+        default=",".join(DEFAULT_TICKERS),
+        help="Comma-separated list of tickers (default: canonical shared macro basket)"
     )
     parser.add_argument(
         "--aliases",
@@ -225,7 +345,7 @@ def main():
         "--probe-cache-ttl-hours",
         type=float,
         default=24.0,
-        help="Trust cached no-change/partial probes for this many hours (default: 24; 0 disables)",
+        help="Trust cached fully current no-change probes for this many hours (default: 24; 0 disables)",
     )
     parser.add_argument(
         "--delay",
@@ -233,10 +353,26 @@ def main():
         default=1.0,
         help="Delay between requests in seconds (default: 1.0)"
     )
+    parser.add_argument(
+        "--rate-limit-retries",
+        type=int,
+        default=1,
+        help="Extra retries after Yahoo rate limits a ticker (default: 1)",
+    )
+    parser.add_argument(
+        "--rate-limit-backoff-seconds",
+        type=float,
+        default=30.0,
+        help="Base cooldown before retrying a rate-limited ticker (default: 30)",
+    )
     
     args = parser.parse_args()
     if args.probe_cache_ttl_hours < 0:
         raise ValueError("--probe-cache-ttl-hours must be non-negative")
+    if args.rate_limit_retries < 0:
+        raise ValueError("--rate-limit-retries must be non-negative")
+    if args.rate_limit_backoff_seconds < 0:
+        raise ValueError("--rate-limit-backoff-seconds must be non-negative")
     tickers = [t.strip().upper() for t in args.tickers.split(",") if t.strip()]
     args.interval = args.interval.upper()
     probe_cache_enabled = args.probe_cache_ttl_hours > 0
@@ -262,11 +398,15 @@ def main():
     print(f"Output: {OUT_DIR}")
     print("=" * 60 + "\n")
     
-    success_count = 0
+    fetched_count = 0
+    skipped_count = 0
+    retryable = []
+    rate_limited = []
     failed = []
-    
+    not_attempted = []
+
     for i, ticker in enumerate(tickers):
-        ok, cache_entry = fetch_ticker(
+        status, cache_entry = fetch_ticker(
             ticker,
             args.interval,
             args.start,
@@ -275,6 +415,8 @@ def main():
             overwrite=args.overwrite,
             probe_cache=probe_cache,
             probe_cache_ttl_hours=args.probe_cache_ttl_hours,
+            rate_limit_retries=args.rate_limit_retries,
+            rate_limit_backoff_seconds=args.rate_limit_backoff_seconds,
         )
         update_probe_cache_state(
             probe_cache_path(args.interval) if probe_cache_enabled else None,
@@ -283,8 +425,17 @@ def main():
             entry=cache_entry,
             metadata=probe_cache_metadata(args.interval),
         )
-        if ok:
-            success_count += 1
+        if status == FETCH_STATUS_FETCHED:
+            fetched_count += 1
+        elif status == FETCH_STATUS_SKIPPED:
+            skipped_count += 1
+        elif status == FETCH_STATUS_RETRYABLE:
+            retryable.append(ticker)
+        elif status == FETCH_STATUS_RATE_LIMITED:
+            rate_limited.append(ticker)
+            not_attempted = tickers[i + 1 :]
+            print("🛑 Yahoo rate limit persisted; stopping remaining tickers to avoid wasting requests.")
+            break
         else:
             failed.append(ticker)
         if i < len(tickers) - 1:
@@ -293,7 +444,14 @@ def main():
     print("\n" + "=" * 60)
     print("Summary")
     print("=" * 60)
-    print(f"✅ Successfully fetched: {success_count}/{len(tickers)}")
+    print(f"✅ Fetched/refreshed: {fetched_count}/{len(tickers)}")
+    print(f"⏭️  Already current: {skipped_count}/{len(tickers)}")
+    if retryable:
+        print(f"⚠️  Retryable but still stale: {', '.join(retryable)}")
+    if rate_limited:
+        print(f"🚫 Rate limited: {', '.join(rate_limited)}")
+    if not_attempted:
+        print(f"⏸️  Not attempted after rate limit: {', '.join(not_attempted)}")
     if failed:
         print(f"❌ Failed: {', '.join(failed)}")
     print("=" * 60)

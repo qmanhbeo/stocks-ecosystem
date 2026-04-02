@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import glob
 from pathlib import Path
+from path_utils import data_path
 import sys
 
 import pandas as pd
@@ -34,8 +35,8 @@ if str(SHARED_MARKET_RULES_ROOT) not in sys.path:
 
 from shared_market_rules import compute_tradability_flags
 
-STOCK_DIR = REPO_ROOT / "data" / "stock"
-OUT_DIR = REPO_ROOT / "data" / "features" / "execution"
+STOCK_DIR = data_path("stock")
+OUT_DIR = data_path("features/execution")
 OUT_PATH = OUT_DIR / "tradability_daily.parquet"
 EXCLUDE = {"VNINDEX", "VN30"}
 

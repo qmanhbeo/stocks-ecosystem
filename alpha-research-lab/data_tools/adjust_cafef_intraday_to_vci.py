@@ -32,13 +32,14 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+from path_utils import data_path
 
 import numpy as np
 import pandas as pd
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = REPO_ROOT / "data" / "stock"
+DATA_DIR = data_path("stock")
 FACTOR_DIR = DATA_DIR / "_cafef_adjustment_factors"
 FACTOR_DIR.mkdir(parents=True, exist_ok=True)
 

@@ -44,13 +44,14 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+from path_utils import data_path
 
 import numpy as np
 import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FEAT_DIR = REPO_ROOT / "data" / "features"
-STOCK_DIR = REPO_ROOT / "data" / "stock"
+FEAT_DIR = data_path("features")
+STOCK_DIR = data_path("stock")
 OUT_PATH = FEAT_DIR / "xs_rl_signal_matrix.parquet"
 
 S1_PATH       = FEAT_DIR / "xs_barrier_vol_1d_hose_full.parquet"

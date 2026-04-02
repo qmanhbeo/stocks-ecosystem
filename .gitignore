@@ -37,3 +37,5 @@ Thumbs.db
 
 # Large restorable archive data
 data/
+data-snapshot-2026-04-02.tar.zst
+data-snapshot-2026-04-02.tar.zst.sha256

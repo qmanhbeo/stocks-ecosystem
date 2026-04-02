@@ -17,6 +17,7 @@ import json
 import sys
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 
 
 import numpy as np
@@ -34,9 +35,9 @@ from src.deterministic_portfolio import RESERVED_COLUMNS, load_or_build_tradabil
 from src.portfolio_friction_features import build_friction_feature_frame
 from src.run_summary import write_run_summary
 
-RL_MATRIX_PATH = Path("data/features/xs_rl_signal_matrix.parquet")
-TRADABILITY_PATH = Path("data/features/execution/tradability_daily.parquet")
-STOCK_DIR = Path("data/stock")
+RL_MATRIX_PATH = data_path("features/xs_rl_signal_matrix.parquet")
+TRADABILITY_PATH = data_path("features/execution/tradability_daily.parquet")
+STOCK_DIR = data_path("stock")
 OUT_DIR = ROOT / "artifacts/portfolio_baselines"
 
 

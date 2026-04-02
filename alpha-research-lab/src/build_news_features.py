@@ -20,13 +20,14 @@ import json
 import glob
 import os
 from pathlib import Path
+from src.repo_paths import data_path
 from datetime import datetime
 import pandas as pd
 import numpy as np
 
 
-NEWS_DIR = Path("data/news/cafef/raw")
-OUT_DIR  = Path("data/features")
+NEWS_DIR = data_path("news/cafef/raw")
+OUT_DIR  = data_path("features")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 OUT_FILE = OUT_DIR / "fpt_news_daily.parquet"
 

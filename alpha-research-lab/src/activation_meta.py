@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from src.repo_paths import data_path
 import sys
 
 import numpy as np
@@ -25,7 +26,7 @@ from src.activation_alpha import (
 )
 from src.deterministic_portfolio import simulate_strategy
 
-ACTIVATION_META_PATH = Path("data/features/activation_meta_daily.parquet")
+ACTIVATION_META_PATH = data_path("features/activation_meta_daily.parquet")
 
 
 def _forward_gross_returns(series: pd.Series, window: int) -> pd.Series:

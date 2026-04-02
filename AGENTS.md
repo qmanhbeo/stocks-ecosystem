@@ -23,7 +23,7 @@ Current responsibilities:
 - `manual-label-factory/` owns the manual buy-zone labelling UI
 - `shared-recommendation/` owns shared model-agnostic recommendation contracts and artifact resolution
 - `RL-trading-agent/` owns RL runtime logic and consumes artifacts from root `data/`
-- `alpha-research-lab/data` is a symlink to root `data/` so research scripts can be run from inside the lab without duplicating data
+- `alpha-research-lab/` resolves shared datasets from root `data/` directly; a repo-local `alpha-research-lab/data` symlink is compatibility-only
 
 ## Important Paths
 
@@ -36,7 +36,7 @@ Current responsibilities:
 ## Default Assumptions
 
 - Prefer root `data/` over repo-local `data/` paths
-- Inside `alpha-research-lab/`, `data/` resolves to the shared root via symlink
+- Inside `alpha-research-lab/`, scripts should resolve the canonical shared root `data/` directly
 - Do not reintroduce duplicate data stores inside child repos unless explicitly requested
 - Treat cross-project path contracts as ecosystem-level contracts
 - Treat `data/features/recommendations/` as a shared published surface, not an alpha-only private output

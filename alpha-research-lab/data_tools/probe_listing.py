@@ -6,12 +6,13 @@ import sys
 import io
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 from vnstock import Listing
 
 # Force UTF-8 output to avoid cp1252 encoding errors on Windows
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-DATA_DIR = Path("data/stock")
+DATA_DIR = data_path("stock")
 
 def main():
     listing = Listing()

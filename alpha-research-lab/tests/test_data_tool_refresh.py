@@ -80,6 +80,15 @@ def test_fetch_fx_commodities_incremental_append(monkeypatch, tmp_path):
     assert saved["time"].dt.strftime("%Y-%m-%d").tolist() == ["2024-01-01", "2024-01-02"]
 
 
+def test_fetch_fx_commodities_default_macro_basket_aliases():
+    assert "DX-Y.NYB" in fx.DEFAULT_TICKERS
+    assert "BTC-USD" in fx.DEFAULT_TICKERS
+    assert "000001.SS" in fx.DEFAULT_TICKERS
+    assert fx.DEFAULT_ALIASES["DX-Y.NYB"] == "dxy"
+    assert fx.DEFAULT_ALIASES["TWII"] == "taiex"
+    assert fx.DEFAULT_ALIASES["N225"] == "nikkei"
+
+
 def test_fetch_global_macro_incremental_append(monkeypatch, tmp_path):
     monkeypatch.setattr(macro, "OUT_DIR", tmp_path)
     output_path = tmp_path / "fx_commodities_dxy_1D.parquet"

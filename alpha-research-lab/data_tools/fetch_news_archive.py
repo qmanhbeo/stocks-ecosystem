@@ -23,6 +23,7 @@ import subprocess
 import sys
 import zipfile
 from pathlib import Path
+from path_utils import data_path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
@@ -32,7 +33,7 @@ WORKSPACE_ROOT = REPO_ROOT.parent
 # Archive contains: data/news/cafef/raw/*.jsonl (3,734 files)
 GDRIVE_FILE_ID = "1uzE57O1TTb7pMsQuTNtSiTKDgDt723-l"
 ARCHIVE_NAME = WORKSPACE_ROOT / "data_news_archive.zip"
-NEWS_DIR = WORKSPACE_ROOT / "data" / "news"
+NEWS_DIR = data_path("news")
 
 
 def ensure_gdown():

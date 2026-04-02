@@ -33,6 +33,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
+from path_utils import data_path
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -42,11 +43,11 @@ from src.data_loader import load_data
 from src.feature_engineering import generate_features
 from src.run_summary import write_run_summary
 
-QUALITY_PATH = ROOT / "data" / "features" / "xs_insider_quality_features.parquet"
-BASELINE_PATH = ROOT / "data" / "features" / "xs_insider_features.parquet"
-S1_PATH = ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
-STOCK_DIR = ROOT / "data" / "stock"
-INDEX_FILE = ROOT / "data" / "stock" / "gia_lich_su_VNINDEX_1D.parquet"
+QUALITY_PATH = data_path("features/xs_insider_quality_features.parquet")
+BASELINE_PATH = data_path("features/xs_insider_features.parquet")
+S1_PATH = data_path("features/xs_barrier_vol_1d_hose_full.parquet")
+STOCK_DIR = data_path("stock")
+INDEX_FILE = data_path("stock/gia_lich_su_VNINDEX_1D.parquet")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 QUALITY_FEATURES = [

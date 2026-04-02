@@ -113,7 +113,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 
 - Run research scripts from inside `alpha-research-lab/`
 - Canonical data lives in the workspace root at `../data/`
-- The repo-local `data/` path is a symlink to that shared root so existing lab scripts can keep using `data/...`
+- Lab scripts now resolve the workspace-root `data/` directory directly; a repo-local `data/` symlink is optional compatibility only
 - Artifact outputs are anchored to `alpha-research-lab/artifacts/` regardless of launch directory
 - No research data is duplicated inside `alpha-research-lab/`
 - The lab publishes the consolidated RL feature surface at `data/features/xs_rl_signal_matrix.parquet`

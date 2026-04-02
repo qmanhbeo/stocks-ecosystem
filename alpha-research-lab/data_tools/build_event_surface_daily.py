@@ -6,15 +6,16 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+from path_utils import data_path
 
 from src.event_surface_research import build_event_surface, load_matrix_spine
 
 
-RL_MATRIX_PATH = Path("data/features/xs_rl_signal_matrix.parquet")
-DIVIDEND_CACHE_DIR = Path("data/dividend_cache")
-EARNINGS_CALENDAR_PATH = Path("data/features/xs_earnings_calendar_daily.parquet")
-INSIDER_RAW_PATH = Path("data/features/xs_insider_deals_raw.parquet")
-OUT_PATH = Path("data/features/event_surface_daily.parquet")
+RL_MATRIX_PATH = data_path("features/xs_rl_signal_matrix.parquet")
+DIVIDEND_CACHE_DIR = data_path("dividend_cache")
+EARNINGS_CALENDAR_PATH = data_path("features/xs_earnings_calendar_daily.parquet")
+INSIDER_RAW_PATH = data_path("features/xs_insider_deals_raw.parquet")
+OUT_PATH = data_path("features/event_surface_daily.parquet")
 
 
 def parse_args() -> argparse.Namespace:

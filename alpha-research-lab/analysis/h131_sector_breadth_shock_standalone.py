@@ -19,6 +19,7 @@ import json
 import sys
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 
 import pandas as pd
 
@@ -29,7 +30,7 @@ if str(REPO_ROOT) not in sys.path:
 from src.run_summary import write_run_summary
 from src.standalone_signal_utils import annotate_redundancy, evaluate_features, load_s1_frame
 
-SECTOR_PATH = REPO_ROOT / "data" / "features" / "xs_sector_rotation_daily.parquet"
+SECTOR_PATH = data_path("features/xs_sector_rotation_daily.parquet")
 
 
 def build_features() -> pd.DataFrame:

@@ -19,10 +19,11 @@ import argparse
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 from scipy.special import softmax as scipy_softmax
 
-ALL_PROBAS = Path("data/features/xs_barrier_all_probas.parquet")
-VIX_PATH   = Path("data/fx-commodities/fx_commodities_vix_1D.parquet")
+ALL_PROBAS = data_path("features/xs_barrier_all_probas.parquet")
+VIX_PATH   = data_path("fx-commodities/fx_commodities_vix_1D.parquet")
 START_YEAR = 2015
 
 

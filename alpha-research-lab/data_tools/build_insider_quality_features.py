@@ -25,6 +25,7 @@ Usage:
 from __future__ import annotations
 
 from pathlib import Path
+from path_utils import data_path
 import sys
 import numpy as np
 import pandas as pd
@@ -35,9 +36,9 @@ if str(REPO_ROOT) not in sys.path:
 
 from src.stock_day_grid import build_stock_day_grid
 
-RAW_PATH = REPO_ROOT / "data" / "features" / "xs_insider_deals_raw.parquet"
-OUT_PATH = REPO_ROOT / "data" / "features" / "xs_insider_quality_features.parquet"
-STOCK_DIR = REPO_ROOT / "data" / "stock"
+RAW_PATH = data_path("features/xs_insider_deals_raw.parquet")
+OUT_PATH = data_path("features/xs_insider_quality_features.parquet")
+STOCK_DIR = data_path("stock")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 # Vietnamese position titles → tier weights (higher = more informative)

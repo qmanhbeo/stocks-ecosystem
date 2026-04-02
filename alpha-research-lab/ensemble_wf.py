@@ -26,6 +26,7 @@ import json
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from src.repo_paths import data_path
 from datetime import datetime
 from scipy.stats import binomtest
 
@@ -180,7 +181,7 @@ def run_ensemble(xs_proba_csv: str, ss_proba_csv: str,
 
     # VIX filter: only trade within VIX band [vix_min, vix_max]
     if vix_min > 0 or vix_max > 0:
-        vix_path = Path("data/fx-commodities/fx_commodities_vix_1D.parquet")
+        vix_path = data_path("fx-commodities/fx_commodities_vix_1D.parquet")
         if vix_path.exists():
             vix_df = pd.read_parquet(vix_path)[["time", "close"]].copy()
             vix_df["time"] = pd.to_datetime(vix_df["time"])
@@ -198,7 +199,7 @@ def run_ensemble(xs_proba_csv: str, ss_proba_csv: str,
 
     # VNINDEX trend filter: skip trades when broad market is in sustained decline
     # Supports two windows simultaneously (AND logic) for stronger discrimination
-    vni_path = "data/stock/gia_lich_su_VNINDEX_1D.parquet"
+    vni_path = str(data_path("stock/gia_lich_su_VNINDEX_1D.parquet"))
     for _w, _thr in [(vn_trend_window, vn_trend_min), (vn_trend_window2, vn_trend_min2)]:
         if _thr == 0.0:
             continue
@@ -214,8 +215,8 @@ def run_ensemble(xs_proba_csv: str, ss_proba_csv: str,
     if trend_filter > 0:
         try:
             rel60 = _load_rel_return(
-                "data/stock/gia_lich_su_FPT_1D.parquet",
-                "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+                str(data_path("stock/gia_lich_su_FPT_1D.parquet")),
+                str(data_path("stock/gia_lich_su_VNINDEX_1D.parquet")),
                 window=60
             )
             rel60_aligned = rel60.reindex(merged["time"].values, method="ffill")

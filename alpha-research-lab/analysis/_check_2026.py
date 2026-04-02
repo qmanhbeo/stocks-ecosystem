@@ -1,5 +1,7 @@
 import pandas as pd
-probas = pd.read_parquet('data/features/xs_barrier_all_probas_hose_full.parquet')
+from path_utils import data_path
+
+probas = pd.read_parquet(data_path("features/xs_barrier_all_probas_hose_full.parquet"))
 probas['time'] = pd.to_datetime(probas['time'])
 years = sorted(probas['time'].dt.year.unique())
 print('Years in probas:', years)

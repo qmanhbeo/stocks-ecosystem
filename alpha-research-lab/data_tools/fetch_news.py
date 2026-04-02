@@ -6,7 +6,9 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import re
+import sys
 import threading
+from pathlib import Path
 from time import sleep
 from typing import Iterable, List, Optional
 from urllib.parse import urljoin
@@ -16,6 +18,10 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from requests import Response
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from research_pipelines.news_features.config import DEFAULT_MARKET_TIMEZONE, get_default_config
 from research_pipelines.news_features.io_utils import (

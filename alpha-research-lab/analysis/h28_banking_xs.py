@@ -17,6 +17,7 @@ import glob
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 from datetime import datetime
 from scipy.stats import binomtest
 
@@ -27,7 +28,7 @@ from src.model_factory import get_model
 # Banking sector tickers in our universe
 BANKING = ["ACB", "BID", "CTG", "EIB", "HDB", "MBB", "SHB", "STB", "TCB", "TPB", "VCB", "VPB"]
 
-DATA_DIR = Path("data/stock")
+DATA_DIR = data_path("stock")
 OUT_FILE = "xs_wf_results.jsonl"
 
 BASE_CONFIG = {
@@ -185,7 +186,7 @@ def run():
     if all_ticker_probas:
         all_proba_df = pd.DataFrame(all_ticker_probas)
         all_proba_df["time"] = pd.to_datetime(all_proba_df["time"])
-        out_path = "data/features/xs_banking_barrier_all_probas.parquet"
+        out_path = str(data_path("features/xs_banking_barrier_all_probas.parquet"))
         all_proba_df.to_parquet(out_path, index=False)
         n_t = all_proba_df["ticker"].nunique()
         print(f"\n  Banking XS probas saved: {out_path} ({len(all_proba_df):,} rows, {n_t} tickers)")

@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+from path_utils import data_path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,9 +27,9 @@ if str(ROOT) not in sys.path:
 from src.activation_alpha import ACTIVATION_STATE_PATH, persist_activation_state
 
 
-RL_MATRIX_PATH = Path("data/features/xs_rl_signal_matrix.parquet")
-TRADABILITY_PATH = Path("data/features/execution/tradability_daily.parquet")
-STOCK_DIR = Path("data/stock")
+RL_MATRIX_PATH = data_path("features/xs_rl_signal_matrix.parquet")
+TRADABILITY_PATH = data_path("features/execution/tradability_daily.parquet")
+STOCK_DIR = data_path("stock")
 BENCHMARK_PATH = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
 
 

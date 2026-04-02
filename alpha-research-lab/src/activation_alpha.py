@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from src.repo_paths import data_path
 from typing import Callable, Iterable, Mapping, Sequence
 import sys
 
@@ -26,14 +27,14 @@ from src.deterministic_portfolio import (
 )
 from src.portfolio_friction_features import build_friction_feature_frame
 
-RL_MATRIX_PATH = Path("data/features/xs_rl_signal_matrix.parquet")
-TRADABILITY_PATH = Path("data/features/execution/tradability_daily.parquet")
-STOCK_DIR = Path("data/stock")
+RL_MATRIX_PATH = data_path("features/xs_rl_signal_matrix.parquet")
+TRADABILITY_PATH = data_path("features/execution/tradability_daily.parquet")
+STOCK_DIR = data_path("stock")
 BENCHMARK_PATH = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
-DISPERSION_PATH = Path("data/features/xs_dispersion_regime_daily.parquet")
-MACRO_PATH = Path("data/features/macro_regime_daily.parquet")
-SECTOR_ROTATION_PATH = Path("data/features/xs_sector_rotation_daily.parquet")
-ACTIVATION_STATE_PATH = Path("data/features/activation_state_daily.parquet")
+DISPERSION_PATH = data_path("features/xs_dispersion_regime_daily.parquet")
+MACRO_PATH = data_path("features/macro_regime_daily.parquet")
+SECTOR_ROTATION_PATH = data_path("features/xs_sector_rotation_daily.parquet")
+ACTIVATION_STATE_PATH = data_path("features/activation_state_daily.parquet")
 
 
 @dataclass(frozen=True)

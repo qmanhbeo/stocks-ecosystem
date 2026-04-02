@@ -24,6 +24,7 @@ import time
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from pathlib import Path
+from path_utils import data_path
 from typing import Iterable
 from zoneinfo import ZoneInfo
 
@@ -61,7 +62,7 @@ except ModuleNotFoundError:
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = REPO_ROOT / "data" / "stock"
+DATA_DIR = data_path("stock")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 BASE_URL = "https://fc-data.ssi.com.vn"

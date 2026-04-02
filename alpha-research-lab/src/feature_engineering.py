@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from typing import List, Dict, Any
+from src.repo_paths import resolve_data_path
 
 
 # ---------------------------------------------------------------------------
@@ -42,7 +43,7 @@ def _make_target(df: pd.DataFrame, target_col: str, config: Dict[str, Any]) -> p
         # Triple barrier: hit profit_pct above VNINDEX before hitting -profit_pct,
         # or use fixed-time horizon as timeout
         feat_cfg   = config.get("features", {})
-        index_file = feat_cfg.get("index_file", "data/stock/gia_lich_su_VNINDEX_1D.parquet")
+        index_file = resolve_data_path(feat_cfg.get("index_file", "data/stock/gia_lich_su_VNINDEX_1D.parquet"))
         barrier_pct = feat_cfg.get("barrier_pct", 0.015)  # 1.5% relative gain/loss threshold
 
         idx = pd.read_parquet(index_file)[["time", "close"]].rename(columns={"close": "_idx_close"})
@@ -81,7 +82,7 @@ def _make_target(df: pd.DataFrame, target_col: str, config: Dict[str, Any]) -> p
     elif "future_rel_" in target_col:
         # Load market index for relative target — removes absolute drift bias
         feat_cfg   = config.get("features", {})
-        index_file = feat_cfg.get("index_file", "data/stock/gia_lich_su_VNINDEX_1D.parquet")
+        index_file = resolve_data_path(feat_cfg.get("index_file", "data/stock/gia_lich_su_VNINDEX_1D.parquet"))
         idx = pd.read_parquet(index_file)[["time", "close"]].rename(columns={"close": "_idx_close"})
         df  = df.merge(idx, on="time", how="left")
         df["_idx_close"] = df["_idx_close"].ffill()
@@ -305,7 +306,7 @@ def _add_market_relative(df, cfg):
     Idiosyncratic returns = FPT_return - market_return. May be more predictable.
     Also includes raw market returns as features (market context).
     """
-    index_file = cfg.get("index_file", "data/stock/gia_lich_su_VNINDEX_1D.parquet")
+    index_file = resolve_data_path(cfg.get("index_file", "data/stock/gia_lich_su_VNINDEX_1D.parquet"))
     lags = cfg.get("rel_lag_days", [1, 2, 3, 5, 10, 20])
 
     idx = pd.read_parquet(index_file)[["time", "close"]].rename(columns={"close": "idx_close"})
@@ -331,7 +332,7 @@ def _add_macro(df, cfg):
     lag_days = cfg.get("macro_lag_days", [1, 5])
 
     for mf in macro_files:
-        path  = mf["path"]
+        path  = resolve_data_path(mf["path"])
         alias = mf["alias"]
         try:
             ext = pd.read_parquet(path)[["time", "close"]].rename(columns={"close": f"{alias}_close"})
@@ -362,9 +363,9 @@ def _add_sector_peers(df, cfg):
       index_file   : VNINDEX parquet for relative return computation
     """
     peers     = cfg.get("peer_tickers", [])
-    data_dir  = cfg.get("peer_data_dir", "data/stock")
+    data_dir  = resolve_data_path(cfg.get("peer_data_dir", "data/stock"))
     lags      = cfg.get("peer_lag_days", [1, 5, 10, 20])
-    idx_file  = cfg.get("index_file", "data/stock/gia_lich_su_VNINDEX_1D.parquet")
+    idx_file  = resolve_data_path(cfg.get("index_file", "data/stock/gia_lich_su_VNINDEX_1D.parquet"))
 
     try:
         idx = pd.read_parquet(idx_file)[["time", "close"]].rename(columns={"close": "_idx_close"})
@@ -373,7 +374,7 @@ def _add_sector_peers(df, cfg):
         return df
 
     for ticker in peers:
-        peer_file = f"{data_dir}/gia_lich_su_{ticker}_1D.parquet"
+        peer_file = data_dir / f"gia_lich_su_{ticker}_1D.parquet"
         try:
             peer = pd.read_parquet(peer_file)[["time", "close"]].rename(columns={"close": f"_{ticker}_close"})
             peer["time"] = pd.to_datetime(peer["time"])
@@ -403,7 +404,7 @@ def _add_vol_regime(df, cfg):
     vnindex_vol_pct  : rolling 252d percentile rank of that vol (0=calm, 1=crisis)
     high_vol_regime  : 1 if vnindex_vol_pct > 0.70
     """
-    index_file = cfg.get("index_file", "data/stock/gia_lich_su_VNINDEX_1D.parquet")
+    index_file = resolve_data_path(cfg.get("index_file", "data/stock/gia_lich_su_VNINDEX_1D.parquet"))
     vol_window = cfg.get("vol_regime_window", 20)
     pct_window = cfg.get("vol_pct_window", 252)
 
@@ -596,7 +597,7 @@ def _add_cross_sectional(df, cfg):
     xs_univ_std_5d  : universe 5d return dispersion (cross-sectional vol)
     xs_above_median_5d : 1 if stock is top half of market this week
     """
-    xs_file = cfg.get("xs_file", "data/features/xs_features_daily.parquet")
+    xs_file = resolve_data_path(cfg.get("xs_file", "data/features/xs_features_daily.parquet"))
     ticker  = cfg.get("xs_ticker", "FPT")
     lags    = cfg.get("xs_lag_days", [1, 5, 20])
 
@@ -632,7 +633,7 @@ def _add_intraday(df, cfg):
     pm_vs_am  : pm_ret - am_ret (is afternoon reversing morning?)
     vol_am_frac: fraction of daily volume in morning
     """
-    intraday_file = cfg.get("intraday_file", "data/features/fpt_intraday_daily.parquet")
+    intraday_file = resolve_data_path(cfg.get("intraday_file", "data/features/fpt_intraday_daily.parquet"))
     try:
         intra = pd.read_parquet(intraday_file)
         intra = intra.rename(columns={"date": "time"})
@@ -656,7 +657,7 @@ def _add_news(df, cfg):
     news_surge_lag1     : 1 if yesterday was abnormally high news volume
     fpt_mentions_ma     : 20-day rolling avg FPT mentions
     """
-    news_file = cfg.get("news_file", "data/features/fpt_news_daily.parquet")
+    news_file = resolve_data_path(cfg.get("news_file", "data/features/fpt_news_daily.parquet"))
     try:
         news = pd.read_parquet(news_file)
         news = news.rename(columns={"date": "time"})
@@ -691,8 +692,7 @@ def _add_fundamental_features(df, cfg):
       roe_qoq     : ROE quarter-over-quarter change (business quality momentum)
       npm_qoq     : Net profit margin QoQ change
     """
-    from pathlib import Path
-    fund_path = Path(cfg.get("fundamentals_path", "data/features/fpt_fundamentals.parquet"))
+    fund_path = resolve_data_path(cfg.get("fundamentals_path", "data/features/fpt_fundamentals.parquet"))
     if not fund_path.exists():
         raise FileNotFoundError(
             f"Fundamentals parquet not found at {fund_path}. "

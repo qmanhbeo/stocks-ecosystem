@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from src.repo_paths import data_path
 from typing import Mapping, Sequence
 
 import numpy as np
@@ -21,7 +22,7 @@ from src.portfolio_friction_features import build_boolean_matrix, build_friction
 from src.tradability_conditioned_research import build_candidate_signal_frame, load_research_bundle
 
 
-ENTRY_ALPHA_DIR = Path("data/features/entry_alpha")
+ENTRY_ALPHA_DIR = data_path("features/entry_alpha")
 ENTRY_ALPHA_CANDIDATE_PANEL_PATH = ENTRY_ALPHA_DIR / "candidate_panel_daily.parquet"
 ENTRY_ALPHA_LABELS_CYCLE5_PATH = ENTRY_ALPHA_DIR / "entry_labels_cycle5.parquet"
 

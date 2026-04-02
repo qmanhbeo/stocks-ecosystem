@@ -20,6 +20,7 @@ import numpy as np
 import pandas as pd
 import sys
 from pathlib import Path
+from path_utils import data_path
 from datetime import datetime
 from scipy.stats import binomtest, spearmanr
 
@@ -29,9 +30,9 @@ if str(ROOT) not in sys.path:
 
 from src.run_summary import write_run_summary
 
-ALL_PROBAS = Path("data/features/xs_barrier_all_probas.parquet")
-VIX_PATH   = Path("data/fx-commodities/fx_commodities_vix_1D.parquet")
-MACRO_PATH = Path("data/features/macro_regime_daily.parquet")
+ALL_PROBAS = data_path("features/xs_barrier_all_probas.parquet")
+VIX_PATH   = data_path("fx-commodities/fx_commodities_vix_1D.parquet")
+MACRO_PATH = data_path("features/macro_regime_daily.parquet")
 
 TOP_N       = 5       # long top-N stocks each day
 MIN_PROBA   = 0.55    # only count days where top stock has proba >= this

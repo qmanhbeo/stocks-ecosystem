@@ -20,6 +20,7 @@ import json
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -34,8 +35,8 @@ from src.model_factory import get_model
 
 warnings.filterwarnings("ignore")
 
-STOCK_DIR = Path("data/stock")
-VIX_PATH  = Path("data/fx-commodities/fx_commodities_vix_1D.parquet")
+STOCK_DIR = data_path("stock")
+VIX_PATH  = data_path("fx-commodities/fx_commodities_vix_1D.parquet")
 VNI_FILE  = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
 EXCLUDE   = {"VNINDEX", "VN30"}
 

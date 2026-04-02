@@ -2,16 +2,17 @@ from __future__ import annotations
 
 import glob
 from pathlib import Path
+from src.repo_paths import data_path
 
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-S1_PATH = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
-STOCK_DIR = REPO_ROOT / "data" / "stock"
-RL_MATRIX_PATH = REPO_ROOT / "data" / "features" / "xs_rl_signal_matrix.parquet"
-SECTOR_CLASS_PATH = REPO_ROOT / "data" / "features" / "sector_classification.parquet"
+S1_PATH = data_path("features/xs_barrier_vol_1d_hose_full.parquet")
+STOCK_DIR = data_path("stock")
+RL_MATRIX_PATH = data_path("features/xs_rl_signal_matrix.parquet")
+SECTOR_CLASS_PATH = data_path("features/sector_classification.parquet")
 
 EXCLUDE = {"VNINDEX", "VN30"}
 PASS_IC = 0.01

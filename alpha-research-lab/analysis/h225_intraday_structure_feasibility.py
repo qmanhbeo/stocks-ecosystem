@@ -8,6 +8,7 @@ import argparse
 import sys
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 
 
 import pandas as pd
@@ -25,11 +26,11 @@ from src.research_protocol import DEFAULT_PROTOCOL
 from src.run_summary import write_run_summary
 
 
-RL_MATRIX_PATH = Path("data/features/xs_rl_signal_matrix.parquet")
-TRADABILITY_PATH = Path("data/features/execution/tradability_daily.parquet")
-STOCK_DIR = Path("data/stock")
+RL_MATRIX_PATH = data_path("features/xs_rl_signal_matrix.parquet")
+TRADABILITY_PATH = data_path("features/execution/tradability_daily.parquet")
+STOCK_DIR = data_path("stock")
 BENCHMARK_PATH = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
-FPT_INTRADAY_DAILY_PATH = Path("data/features/fpt_intraday_daily.parquet")
+FPT_INTRADAY_DAILY_PATH = data_path("features/fpt_intraday_daily.parquet")
 OUT_DIR = ROOT / "artifacts/portfolio_baselines"
 COVERAGE_GATE = 0.50
 

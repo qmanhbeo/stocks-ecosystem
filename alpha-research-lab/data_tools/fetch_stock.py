@@ -1,4 +1,5 @@
 from pathlib import Path
+from path_utils import data_path
 import argparse
 import time
 
@@ -19,7 +20,7 @@ from stock_refresh_utils import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = REPO_ROOT / "data" / "stock"
+DATA_DIR = data_path("stock")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 PROBE_CACHE_STATUS_SKIP_ELIGIBLE = {"unchanged", "partial"}
 DEFAULT_END = pd.Timestamp.today().normalize().date().isoformat()

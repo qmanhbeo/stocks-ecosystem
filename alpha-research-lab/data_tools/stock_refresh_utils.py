@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 import json
 from pathlib import Path
 import re
+import warnings
 
 import pandas as pd
 
@@ -113,10 +114,21 @@ def combine_frames(existing: pd.DataFrame | None, incoming: pd.DataFrame) -> pd.
                 existing_aligned[column] = pd.NA
             if column not in incoming_aligned.columns:
                 incoming_aligned[column] = pd.NA
-        combined = pd.concat(
-            [existing_aligned[columns], incoming_aligned[columns]],
-            ignore_index=True,
-        )
+        # Missing columns are intentionally padded with all-NA placeholders so
+        # older files can merge with newer schemas without rewriting history.
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "ignore",
+                message=(
+                    "The behavior of DataFrame concatenation with empty or all-NA "
+                    "entries is deprecated"
+                ),
+                category=FutureWarning,
+            )
+            combined = pd.concat(
+                [existing_aligned[columns], incoming_aligned[columns]],
+                ignore_index=True,
+            )
 
     combined[TIME_COL] = pd.to_datetime(combined[TIME_COL], errors="coerce")
     combined = combined.dropna(subset=[TIME_COL])
@@ -207,6 +219,29 @@ def serialize_probe_cache_value(value: object | None) -> str | None:
         except Exception:
             pass
     return str(value)
+
+
+def latest_value_covers_requested_end(
+    latest_value: object | None,
+    requested_end: str,
+    *,
+    max_lag_days: int = 0,
+) -> bool:
+    if latest_value is None:
+        return False
+    try:
+        latest_ts = pd.Timestamp(latest_value).normalize()
+        requested_end_ts = pd.Timestamp(requested_end).normalize()
+    except Exception:
+        return False
+    return latest_ts >= (requested_end_ts - pd.Timedelta(days=max_lag_days))
+
+
+def error_message_indicates_rate_limit(error_message: object | None) -> bool:
+    if error_message is None:
+        return False
+    text = str(error_message)
+    return "YFRateLimitError" in text or "Too Many Requests" in text
 
 
 def build_probe_cache_entry(

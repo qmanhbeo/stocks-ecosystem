@@ -36,12 +36,13 @@ Usage:
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from path_utils import data_path
 
-FX_DIR   = Path("data/fx-commodities")
-FEAT_DIR = Path("data/features")
+FX_DIR   = data_path("fx-commodities")
+FEAT_DIR = data_path("features")
 OUT_PATH = FEAT_DIR / "macro_regime_daily.parquet"
 
-VNI_PATH = Path("data/stock/gia_lich_su_VNINDEX_1D.parquet")
+VNI_PATH = data_path("stock/gia_lich_su_VNINDEX_1D.parquet")
 
 NEW_TICKERS = {
     "fx_commodities_sp500_1D.parquet":  "sp500",

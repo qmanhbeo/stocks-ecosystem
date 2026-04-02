@@ -18,6 +18,7 @@ import json
 import sys
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 
 import numpy as np
 import pandas as pd
@@ -35,7 +36,7 @@ from src.standalone_signal_utils import (
     rank_frame,
 )
 
-C8_PATH = REPO_ROOT / "data" / "features" / "xs_volume_zscore_daily.parquet"
+C8_PATH = data_path("features/xs_volume_zscore_daily.parquet")
 
 
 def build_features() -> pd.DataFrame:

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 from pathlib import Path
+from src.repo_paths import data_path
 import sys
 
 import numpy as np
@@ -28,7 +29,7 @@ from src.deterministic_portfolio import MarketInputs, simulate_strategy
 from src.repo_paths import artifact_path
 
 
-SECTOR_PATH = Path("data/features/sector_classification.parquet")
+SECTOR_PATH = data_path("features/sector_classification.parquet")
 CURRENT_CHAMPION_REFERENCE_SUMMARY_PATH = artifact_path(
     "run_summaries/latest_portfolio_activation_impl_pain_sector_combo.json"
 )

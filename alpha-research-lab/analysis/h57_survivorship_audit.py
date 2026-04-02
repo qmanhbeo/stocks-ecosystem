@@ -18,9 +18,10 @@ Usage:
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 
-PROBAS_PATH = Path("data/features/xs_barrier_all_probas_hose_full.parquet")
-VIX_PATH    = Path("data/fx-commodities/fx_commodities_vix_1D.parquet")
+PROBAS_PATH = data_path("features/xs_barrier_all_probas_hose_full.parquet")
+VIX_PATH    = data_path("fx-commodities/fx_commodities_vix_1D.parquet")
 
 TOP_N     = 5
 MIN_PROBA = 0.55

@@ -14,12 +14,13 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='repla
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from path_utils import data_path
 
 
 def main():
     # Load XS and SS probas
-    xs = pd.read_csv("data/features/xs_fpt_proba.csv", parse_dates=["time"])
-    ss = pd.read_csv("data/features/ss_fpt_proba.csv", parse_dates=["time"])
+    xs = pd.read_csv(data_path("features/xs_fpt_proba.csv"), parse_dates=["time"])
+    ss = pd.read_csv(data_path("features/ss_fpt_proba.csv"), parse_dates=["time"])
     merged = xs.merge(ss[["time", "ss_proba"]], on="time", how="inner")
     merged["ens_proba"] = (merged["xs_proba"] + merged["ss_proba"]) / 2
     merged["ens_pred"]  = (merged["ens_proba"] > 0.5).astype(int)
@@ -45,11 +46,11 @@ def main():
         return df[["time", alias]].dropna()
 
     # VIX level
-    vix = load_series("data/fx-commodities/fx_commodities_vix_1D.parquet", "close", "vix_level")
-    vix_ret = pct_change_series("data/fx-commodities/fx_commodities_vix_1D.parquet", "close", "vix_ret_5d", 5)
+    vix = load_series(data_path("fx-commodities/fx_commodities_vix_1D.parquet"), "close", "vix_level")
+    vix_ret = pct_change_series(data_path("fx-commodities/fx_commodities_vix_1D.parquet"), "close", "vix_ret_5d", 5)
 
     # VNINDEX realized vol
-    vni = pd.read_parquet("data/stock/gia_lich_su_VNINDEX_1D.parquet")[["time", "close"]].copy()
+    vni = pd.read_parquet(data_path("stock/gia_lich_su_VNINDEX_1D.parquet"))[["time", "close"]].copy()
     vni["time"] = pd.to_datetime(vni["time"])
     vni = vni.sort_values("time")
     vni["vni_ret"] = vni["close"].pct_change()
@@ -58,7 +59,7 @@ def main():
     vni_vol = vni[["time", "vol20", "vol_pct"]].dropna()
 
     # FPT 60d relative return vs VNINDEX
-    fpt = pd.read_parquet("data/stock/gia_lich_su_FPT_1D.parquet")[["time", "close"]].copy()
+    fpt = pd.read_parquet(data_path("stock/gia_lich_su_FPT_1D.parquet"))[["time", "close"]].copy()
     fpt["time"] = pd.to_datetime(fpt["time"])
     fpt = fpt.sort_values("time")
     vni_merge = vni[["time", "close"]].rename(columns={"close": "vni_close"})

@@ -25,6 +25,7 @@ import socket
 import time
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 import os
 
 import pandas as pd
@@ -48,7 +49,7 @@ from stock_refresh_utils import (
 socket.setdefaulttimeout(30)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR  = REPO_ROOT / "data" / "stock"
+DATA_DIR  = data_path("stock")
 EXCLUDE   = {"VNINDEX", "VN30"}
 UNIVERSE_INTERVAL = "1D"
 PROBE_CACHE_STATUS_SKIP_ELIGIBLE = {"unchanged", "partial"}

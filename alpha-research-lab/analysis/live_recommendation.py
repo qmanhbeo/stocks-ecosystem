@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 import sys
 
 import pandas as pd
@@ -17,8 +18,8 @@ from src.recommendation_policies import LATEST_LIVE_OVERLAY_SUMMARY
 from src.run_summary import write_run_summary
 
 
-RL_MATRIX_PATH = Path("data/features/xs_rl_signal_matrix.parquet")
-TRADABILITY_PATH = Path("data/features/execution/tradability_daily.parquet")
+RL_MATRIX_PATH = data_path("features/xs_rl_signal_matrix.parquet")
+TRADABILITY_PATH = data_path("features/execution/tradability_daily.parquet")
 
 
 def parse_args() -> argparse.Namespace:

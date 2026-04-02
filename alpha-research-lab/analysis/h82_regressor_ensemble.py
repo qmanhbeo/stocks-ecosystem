@@ -26,6 +26,7 @@ import pandas as pd
 import sys
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -33,8 +34,8 @@ if str(ROOT) not in sys.path:
 
 from src.run_summary import write_run_summary
 
-CLASSIFIER_PROBAS = Path("data/features/xs_barrier_all_probas_hose_full.parquet")
-REGRESSOR_SCORES  = Path("data/features/xs_regressor_scores_hose_full.parquet")
+CLASSIFIER_PROBAS = data_path("features/xs_barrier_all_probas_hose_full.parquet")
+REGRESSOR_SCORES  = data_path("features/xs_regressor_scores_hose_full.parquet")
 
 TOP_N     = 5
 MIN_PROBA = 0.55

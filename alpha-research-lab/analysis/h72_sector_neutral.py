@@ -26,11 +26,12 @@ import warnings
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 from scipy.stats import spearmanr
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-DEFAULT_PROBAS = Path("data/features/xs_barrier_all_probas_hose_full.parquet")
+DEFAULT_PROBAS = data_path("features/xs_barrier_all_probas_hose_full.parquet")
 START_YEAR = 2015
 
 # Sector mapping for HOSE tickers (based on HOSE industry classification).

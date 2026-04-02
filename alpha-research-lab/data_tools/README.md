@@ -194,10 +194,11 @@ Operational interpretation:
 Fetch FX rates, commodity prices, and global indices via yfinance.
 - **Status:** Active
 - **Output:** `data/fx-commodities/fx_commodities_<NAME>_1D.parquet`
+- **Default behavior:** running without `--tickers` now fetches the canonical shared macro basket directly
 - **Refresh behavior:** reruns append missing dates and rewrite atomically; `--overwrite` forces a full rebuild without deleting the last good file first
 - **Probe cache:** no-change and partial-advance yfinance probes now persist under `data/fx-commodities/_refresh_metadata/`
 - **Probe cache control:** `--probe-cache-ttl-hours` defaults to `24`; set it to `0` to disable the probe cache entirely
-- **Available files (20):**
+- **Available files (21):**
   - `vix_1D` — CBOE VIX (fear index)
   - `sp500_1D` — S&P 500
   - `gold_1D`, `oil_1D`, `hg_f_1D` — Gold, Crude Oil, Copper
@@ -207,6 +208,7 @@ Fetch FX rates, commodity prices, and global indices via yfinance.
   - `fx_vnd_usd_1D`, `cny_x_1D` — USD/VND and CNY
   - `us10y_1D`, `us3m_1D` — US yield curve
   - `btc_1D` — Bitcoin
+  - `dxy_1D` — US Dollar Index
 
 ### `fetch_fred_macro.py`
 Fetch Vietnam macroeconomic data from FRED (330+ series). Used for macro regime features.

@@ -22,6 +22,7 @@ import io
 import sys
 import time
 from pathlib import Path
+from path_utils import data_path
 
 import pandas as pd
 from vnstock import Listing, Vnstock
@@ -51,8 +52,8 @@ except ModuleNotFoundError:
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-OUT_PATH = REPO_ROOT / "data" / "features" / "sector_classification.parquet"
-STOCK_DIR = REPO_ROOT / "data" / "stock"
+OUT_PATH = data_path("features/sector_classification.parquet")
+STOCK_DIR = data_path("stock")
 REQUIRED_COLUMNS = ["symbol", "icb_name2", "icb_name3", "icb_name4"]
 PROBE_CACHE_STATUS_SKIP_ELIGIBLE = {"unchanged", "partial"}
 SECTOR_PROBE_TARGET = "9999-12-31"

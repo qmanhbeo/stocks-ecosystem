@@ -33,6 +33,7 @@ import time
 from collections import defaultdict
 from datetime import date, datetime
 from pathlib import Path
+from path_utils import data_path
 from typing import Callable, Iterable
 
 import pandas as pd
@@ -42,7 +43,7 @@ from urllib3.util.retry import Retry
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = REPO_ROOT / "data" / "stock"
+DATA_DIR = data_path("stock")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 MATCH_PRICE_URL = "https://msh-appdata.cafef.vn/rest-api/api/v1/MatchPrice"

@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import glob
 from pathlib import Path
+from path_utils import data_path
 import sys
 
 import numpy as np
@@ -45,8 +46,8 @@ if str(SHARED_MARKET_RULES_ROOT) not in sys.path:
 
 from shared_market_rules import compute_price_limit_flags
 
-STOCK_DIR = REPO_ROOT / "data" / "stock"
-OUT_PATH = REPO_ROOT / "data" / "features" / "xs_price_limit_daily.parquet"
+STOCK_DIR = data_path("stock")
+OUT_PATH = data_path("features/xs_price_limit_daily.parquet")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 

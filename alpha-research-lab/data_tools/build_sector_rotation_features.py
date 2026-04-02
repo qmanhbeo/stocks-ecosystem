@@ -27,14 +27,15 @@ Usage:
 from __future__ import annotations
 
 from pathlib import Path
+from path_utils import data_path
 import glob
 import numpy as np
 import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STOCK_DIR = REPO_ROOT / "data" / "stock"
-SECTOR_PATH = REPO_ROOT / "data" / "features" / "sector_classification.parquet"
-OUT_PATH = REPO_ROOT / "data" / "features" / "xs_sector_rotation_daily.parquet"
+STOCK_DIR = data_path("stock")
+SECTOR_PATH = data_path("features/sector_classification.parquet")
+OUT_PATH = data_path("features/xs_sector_rotation_daily.parquet")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 

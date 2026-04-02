@@ -25,6 +25,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
+from path_utils import data_path
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -34,9 +35,9 @@ from src.data_loader import load_data
 from src.feature_engineering import generate_features
 from src.run_summary import write_run_summary
 
-INSIDER_PATH = ROOT / "data" / "features" / "xs_insider_features.parquet"
-STOCK_DIR = ROOT / "data" / "stock"
-INDEX_FILE = ROOT / "data" / "stock" / "gia_lich_su_VNINDEX_1D.parquet"
+INSIDER_PATH = data_path("features/xs_insider_features.parquet")
+STOCK_DIR = data_path("stock")
+INDEX_FILE = data_path("stock/gia_lich_su_VNINDEX_1D.parquet")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 

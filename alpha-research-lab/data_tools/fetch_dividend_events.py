@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import time
 from pathlib import Path
+from path_utils import data_path
 
 import numpy as np
 import pandas as pd
@@ -42,9 +43,9 @@ except ModuleNotFoundError:
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-CACHE_DIR = REPO_ROOT / "data" / "dividend_cache"
-OUT_PATH = REPO_ROOT / "data" / "features" / "xs_dividend_calendar.parquet"
-VNI_PATH = REPO_ROOT / "data" / "stock" / "gia_lich_su_VNINDEX_1D.parquet"
+CACHE_DIR = data_path("dividend_cache")
+OUT_PATH = data_path("features/xs_dividend_calendar.parquet")
+VNI_PATH = data_path("stock/gia_lich_su_VNINDEX_1D.parquet")
 
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 

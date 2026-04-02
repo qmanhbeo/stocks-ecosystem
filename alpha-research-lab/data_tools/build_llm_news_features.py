@@ -14,14 +14,15 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+from path_utils import data_path
 
 import numpy as np
 import pandas as pd
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-CACHE_DIR = REPO_ROOT / "data" / "llm_cache"
-FEATURE_DIR = REPO_ROOT / "data" / "features"
+CACHE_DIR = data_path("llm_cache")
+FEATURE_DIR = data_path("features")
 GRID_PATH = FEATURE_DIR / "xs_barrier_vol_1d_hose_full.parquet"
 SECTOR_PATH = FEATURE_DIR / "sector_classification.parquet"
 

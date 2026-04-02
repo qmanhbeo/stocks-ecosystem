@@ -27,12 +27,13 @@ import warnings
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 from scipy.stats import spearmanr
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
-DEFAULT_PROBAS = Path("data/features/xs_barrier_all_probas_hose_full.parquet")
-STOCK_DIR      = Path("data/stock")
+DEFAULT_PROBAS = data_path("features/xs_barrier_all_probas_hose_full.parquet")
+STOCK_DIR      = data_path("stock")
 VNI_FILE       = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
 
 START_YEAR = 2015

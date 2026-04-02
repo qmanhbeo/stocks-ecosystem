@@ -21,6 +21,7 @@ import re
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
+from path_utils import data_path
 
 import pandas as pd
 import requests
@@ -48,9 +49,9 @@ except ModuleNotFoundError:
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-CACHE_DIR = REPO_ROOT / "data" / "insider_cache"
-OUT_PATH = REPO_ROOT / "data" / "features" / "xs_insider_deals_raw.parquet"
-FEAT_SRC = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
+CACHE_DIR = data_path("insider_cache")
+OUT_PATH = data_path("features/xs_insider_deals_raw.parquet")
+FEAT_SRC = data_path("features/xs_barrier_vol_1d_hose_full.parquet")
 
 URL = "https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx"
 HEADERS = {"User-Agent": "Mozilla/5.0", "Referer": "https://cafef.vn/"}

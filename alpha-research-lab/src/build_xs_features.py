@@ -17,10 +17,11 @@ import glob
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from src.repo_paths import data_path
 
 
-DATA_DIR  = Path("data/stock")
-OUT_DIR   = Path("data/features")
+DATA_DIR  = data_path("stock")
+OUT_DIR   = data_path("features")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 OUT_FILE  = OUT_DIR / "xs_features_daily.parquet"
 VNI_FILE  = DATA_DIR / "gia_lich_su_VNINDEX_1D.parquet"

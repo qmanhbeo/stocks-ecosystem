@@ -1,14 +1,15 @@
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 
 # VIX data coverage
-vix = pd.read_parquet('data/fx-commodities/fx_commodities_vix_1D.parquet')
+vix = pd.read_parquet(data_path("fx-commodities/fx_commodities_vix_1D.parquet"))
 vix['time'] = pd.to_datetime(vix['time'])
 print('VIX last date:', vix['time'].max())
 print('VIX 2026 rows:', len(vix[vix['time'].dt.year == 2026]))
 
 # Stock 2026 coverage
-stock_dir = Path('data/stock')
+stock_dir = data_path("stock")
 stocks_2026 = []
 for f in sorted(stock_dir.glob('gia_lich_su_*_1D.parquet')):
     ticker = f.name.replace('gia_lich_su_', '').replace('_1D.parquet', '')

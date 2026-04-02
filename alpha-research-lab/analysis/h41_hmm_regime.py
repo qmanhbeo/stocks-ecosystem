@@ -18,6 +18,7 @@ Usage:
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 from scipy.stats import binomtest
 
 try:
@@ -27,10 +28,10 @@ except ImportError:
     HMM_AVAILABLE = False
     print("[WARN] hmmlearn not installed. Run: conda install -c conda-forge hmmlearn")
 
-MACRO_PATH = Path("data/features/macro_regime_daily.parquet")
-XS_PROBA   = Path("data/features/xs_barrier_fpt_proba.csv")
-SS_PROBA   = Path("data/features/ss_fpt_proba_e32.csv")
-VIX_PATH   = Path("data/fx-commodities/fx_commodities_vix_1D.parquet")
+MACRO_PATH = data_path("features/macro_regime_daily.parquet")
+XS_PROBA   = data_path("features/xs_barrier_fpt_proba.csv")
+SS_PROBA   = data_path("features/ss_fpt_proba_e32.csv")
+VIX_PATH   = data_path("fx-commodities/fx_commodities_vix_1D.parquet")
 
 # Features for HMM — all standardized before fitting
 HMM_FEATURES = [
@@ -165,7 +166,7 @@ def hmm_vs_vix_filter(df: pd.DataFrame, macro_with_states: pd.DataFrame, best_st
     df = df.merge(macro_with_states[["time", "hmm_state"]], on="time", how="left")
     df["hmm_state"] = df["hmm_state"].fillna(-1).astype(int)
 
-    VIX_PATH2 = Path("data/fx-commodities/fx_commodities_vix_1D.parquet")
+    VIX_PATH2 = data_path("fx-commodities/fx_commodities_vix_1D.parquet")
     vix = pd.read_parquet(VIX_PATH2)[["time","close"]].rename(columns={"close":"vix"})
     vix["time"] = pd.to_datetime(vix["time"])
     df = df.merge(vix, on="time", how="left")

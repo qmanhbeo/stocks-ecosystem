@@ -10,13 +10,14 @@ Output:
 """
 
 from pathlib import Path
+from path_utils import data_path
 import numpy as np
 import pandas as pd
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-GRID_SRC = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
-OUT_PATH = REPO_ROOT / "data" / "features" / "xs_earnings_calendar_daily.parquet"
+GRID_SRC = data_path("features/xs_barrier_vol_1d_hose_full.parquet")
+OUT_PATH = data_path("features/xs_earnings_calendar_daily.parquet")
 
 
 def _quarter_end(ts: pd.Timestamp) -> pd.Timestamp:

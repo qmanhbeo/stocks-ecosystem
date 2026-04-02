@@ -18,6 +18,7 @@ import re
 import json
 import argparse
 from pathlib import Path
+from path_utils import data_path
 from collections import defaultdict
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
@@ -26,9 +27,9 @@ import pandas as pd
 import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-NEWS_DIR  = REPO_ROOT / "data" / "news" / "cafef" / "raw"
-STOCK_DIR = REPO_ROOT / "data" / "stock"
-OUT_PATH  = REPO_ROOT / "data" / "features" / "xs_news_sentiment_daily.parquet"
+NEWS_DIR  = data_path("news/cafef/raw")
+STOCK_DIR = data_path("stock")
+OUT_PATH  = data_path("features/xs_news_sentiment_daily.parquet")
 
 # ── Vietnamese financial sentiment lexicon ─────────────────────────────────────
 # Positive terms: higher score = more bullish signal

@@ -38,6 +38,7 @@ import json
 import sys
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 
 import numpy as np
 import pandas as pd
@@ -49,8 +50,8 @@ if str(REPO_ROOT) not in sys.path:
 
 from src.run_summary import write_run_summary
 
-S1_PATH = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
-STOCK_DIR = REPO_ROOT / "data" / "stock"
+S1_PATH = data_path("features/xs_barrier_vol_1d_hose_full.parquet")
+STOCK_DIR = data_path("stock")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 PASS_IC = 0.01

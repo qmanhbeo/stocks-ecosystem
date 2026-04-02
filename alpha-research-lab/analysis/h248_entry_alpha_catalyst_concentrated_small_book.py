@@ -4,6 +4,7 @@ import argparse
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 import sys
 
 import numpy as np
@@ -31,8 +32,8 @@ from src.research_protocol import DEFAULT_PROTOCOL, PHASE_ORDER, assign_research
 from src.run_summary import write_run_summary
 
 
-NEWS_ROLLING_PATH = Path("data/features/xs_news_sentiment_rolling.parquet")
-EVENT_SURFACE_PATH = Path("data/features/event_surface_daily.parquet")
+NEWS_ROLLING_PATH = data_path("features/xs_news_sentiment_rolling.parquet")
+EVENT_SURFACE_PATH = data_path("features/event_surface_daily.parquet")
 
 
 @dataclass(frozen=True)

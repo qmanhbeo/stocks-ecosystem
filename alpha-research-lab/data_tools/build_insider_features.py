@@ -26,15 +26,16 @@ Usage:
 """
 
 from pathlib import Path
+from path_utils import data_path
 import numpy as np
 import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-RAW_PATH  = REPO_ROOT / "data" / "features" / "xs_insider_deals_raw.parquet"
-OUT_PATH  = REPO_ROOT / "data" / "features" / "xs_insider_features.parquet"
+RAW_PATH  = data_path("features/xs_insider_deals_raw.parquet")
+OUT_PATH  = data_path("features/xs_insider_features.parquet")
 
 # Reference grid: (trading_day, ticker) universe from existing features
-GRID_SRC  = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
+GRID_SRC  = data_path("features/xs_barrier_vol_1d_hose_full.parquet")
 
 
 def build_features() -> pd.DataFrame:

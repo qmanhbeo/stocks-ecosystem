@@ -33,16 +33,17 @@ import argparse
 import glob
 import time
 from pathlib import Path
+from path_utils import data_path
 
 import numpy as np
 import pandas as pd
 from vnstock import Vnstock
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-CACHE_DIR = REPO_ROOT / "data" / "fundamentals_cache"
-OUT_PATH = REPO_ROOT / "data" / "features" / "xs_earnings_quality_daily.parquet"
-VNI_PATH = REPO_ROOT / "data" / "stock" / "gia_lich_su_VNINDEX_1D.parquet"
-STOCK_DIR = REPO_ROOT / "data" / "stock"
+CACHE_DIR = data_path("fundamentals_cache")
+OUT_PATH = data_path("features/xs_earnings_quality_daily.parquet")
+VNI_PATH = data_path("stock/gia_lich_su_VNINDEX_1D.parquet")
+STOCK_DIR = data_path("stock")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 CACHE_DIR.mkdir(parents=True, exist_ok=True)

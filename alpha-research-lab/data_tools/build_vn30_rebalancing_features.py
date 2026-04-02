@@ -28,13 +28,14 @@ from __future__ import annotations
 
 import glob
 from pathlib import Path
+from path_utils import data_path
 
 import numpy as np
 import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STOCK_DIR = REPO_ROOT / "data" / "stock"
-OUT_PATH = REPO_ROOT / "data" / "features" / "xs_vn30_rebalancing.parquet"
+STOCK_DIR = data_path("stock")
+OUT_PATH = data_path("features/xs_vn30_rebalancing.parquet")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 VALUE_WINDOW = 60   # rolling window for avg daily value

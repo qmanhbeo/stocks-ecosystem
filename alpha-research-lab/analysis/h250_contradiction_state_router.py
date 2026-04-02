@@ -17,6 +17,7 @@ import argparse
 import sys
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 
 import pandas as pd
 
@@ -52,9 +53,9 @@ from src.tradability_conditioned_research import (
 )
 
 
-RL_MATRIX_PATH = Path("data/features/xs_rl_signal_matrix.parquet")
-TRADABILITY_PATH = Path("data/features/execution/tradability_daily.parquet")
-STOCK_DIR = Path("data/stock")
+RL_MATRIX_PATH = data_path("features/xs_rl_signal_matrix.parquet")
+TRADABILITY_PATH = data_path("features/execution/tradability_daily.parquet")
+STOCK_DIR = data_path("stock")
 BENCHMARK_PATH = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
 H201_SUMMARY_PATH = artifact_path("run_summaries/latest_portfolio_state_scoped_h199_atom_bakeoff.json")
 OUT_DIR = artifact_path("portfolio_baselines")

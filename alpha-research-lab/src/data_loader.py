@@ -1,9 +1,11 @@
 import pandas as pd
 import numpy as np
 from typing import Tuple
+from src.repo_paths import resolve_data_path
 
 def load_data(file_path: str, start_date: str = "2016-01-01") -> pd.DataFrame:
     """Loads the parquet file and filters by date."""
+    file_path = resolve_data_path(file_path)
     df = pd.read_parquet(file_path)
     df = df.sort_values("time").reset_index(drop=True)
     df = df[df["time"] >= start_date].copy()

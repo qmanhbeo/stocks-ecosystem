@@ -24,10 +24,11 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='repla
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from path_utils import data_path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-OUT_PATH  = REPO_ROOT / "data" / "features" / "xs_news_sentiment_rolling.parquet"
-SENT_PATH = REPO_ROOT / "data" / "features" / "xs_news_sentiment_daily.parquet"
+OUT_PATH  = data_path("features/xs_news_sentiment_rolling.parquet")
+SENT_PATH = data_path("features/xs_news_sentiment_daily.parquet")
 
 
 def build_rolling_features():

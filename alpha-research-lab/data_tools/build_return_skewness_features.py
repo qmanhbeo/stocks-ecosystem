@@ -6,14 +6,15 @@ Output:
 """
 
 from pathlib import Path
+from path_utils import data_path
 import numpy as np
 import pandas as pd
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STOCK_DIR = REPO_ROOT / "data" / "stock"
-GRID_SRC = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
-OUT_PATH = REPO_ROOT / "data" / "features" / "xs_return_skewness.parquet"
+STOCK_DIR = data_path("stock")
+GRID_SRC = data_path("features/xs_barrier_vol_1d_hose_full.parquet")
+OUT_PATH = data_path("features/xs_return_skewness.parquet")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 

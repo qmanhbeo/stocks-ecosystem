@@ -34,17 +34,18 @@ Usage:
 from __future__ import annotations
 
 from pathlib import Path
+from path_utils import data_path
 import glob
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-STOCK_DIR = REPO_ROOT / "data" / "stock"
-VNM_PATH = REPO_ROOT / "data" / "fx-commodities" / "fx_commodities_vnm_etf_1D.parquet"
-VNI_PATH = REPO_ROOT / "data" / "stock" / "gia_lich_su_VNINDEX_1D.parquet"
-OUT_PATH = REPO_ROOT / "data" / "features" / "xs_foreign_demand_daily.parquet"
-GRID_SRC = REPO_ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_full.parquet"
+STOCK_DIR = data_path("stock")
+VNM_PATH = data_path("fx-commodities/fx_commodities_vnm_etf_1D.parquet")
+VNI_PATH = data_path("stock/gia_lich_su_VNINDEX_1D.parquet")
+OUT_PATH = data_path("features/xs_foreign_demand_daily.parquet")
+GRID_SRC = data_path("features/xs_barrier_vol_1d_hose_full.parquet")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 AFFINITY_WINDOW_LONG = 120   # ~6 months of trading days

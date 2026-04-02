@@ -21,6 +21,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import binomtest
 from pathlib import Path
+from path_utils import data_path
 
 
 def analyze_ticker(df_ticker: pd.DataFrame, threshold: float) -> dict:
@@ -135,7 +136,7 @@ def run(probas_path: str, threshold: float, top_n: int, min_years: int):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--probas", default="data/features/xs_barrier_all_probas.parquet",
+    parser.add_argument("--probas", default=str(data_path("features/xs_barrier_all_probas.parquet")),
                         help="Path to all-ticker proba parquet (from --save-all-probas)")
     parser.add_argument("--threshold", type=float, default=0.05,
                         help="Confidence threshold: |prob-0.5| > threshold (default 0.05 = min 55%%)")

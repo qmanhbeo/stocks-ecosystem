@@ -1,6 +1,7 @@
 import pandas as pd, numpy as np
+from path_utils import data_path
 
-df = pd.read_parquet('data/stock/gia_lich_su_VNINDEX_1D.parquet')
+df = pd.read_parquet(data_path("stock/gia_lich_su_VNINDEX_1D.parquet"))
 df['time'] = pd.to_datetime(df['time'])
 df = df.sort_values('time')
 df['ret'] = df['close'].pct_change()

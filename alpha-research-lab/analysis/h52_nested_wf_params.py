@@ -16,10 +16,11 @@ import argparse
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 from itertools import product
 
-ALL_PROBAS  = Path("data/features/xs_barrier_all_probas.parquet")
-VIX_PATH    = Path("data/fx-commodities/fx_commodities_vix_1D.parquet")
+ALL_PROBAS  = data_path("features/xs_barrier_all_probas.parquet")
+VIX_PATH    = data_path("fx-commodities/fx_commodities_vix_1D.parquet")
 START_YEAR  = 2015
 META_WINDOW = 3     # years used for parameter selection
 MIN_TRADES_PER_YEAR = 5   # skip param combos with too few trades (avoid pathological Sharpe)

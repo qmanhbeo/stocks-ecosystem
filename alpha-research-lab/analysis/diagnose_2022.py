@@ -4,12 +4,13 @@ Helps understand why the X9 ensemble is wrong in 2022 regardless of VNINDEX tren
 """
 import pandas as pd
 import numpy as np
+from path_utils import data_path
 
-xs  = pd.read_csv('data/features/xs_fpt_proba.csv', parse_dates=['time'])
-ss  = pd.read_csv('data/features/ss_fpt_proba_e32.csv', parse_dates=['time'])
-vix_df = pd.read_parquet('data/fx-commodities/fx_commodities_vix_1D.parquet')[['time','close']].rename(columns={'close':'vix'})
+xs = pd.read_csv(data_path("features/xs_fpt_proba.csv"), parse_dates=["time"])
+ss = pd.read_csv(data_path("features/ss_fpt_proba_e32.csv"), parse_dates=["time"])
+vix_df = pd.read_parquet(data_path("fx-commodities/fx_commodities_vix_1D.parquet"))[["time", "close"]].rename(columns={"close": "vix"})
 vix_df['time'] = pd.to_datetime(vix_df['time'])
-vni_df = pd.read_parquet('data/stock/gia_lich_su_VNINDEX_1D.parquet')[['time','close']].rename(columns={'close':'vni'})
+vni_df = pd.read_parquet(data_path("stock/gia_lich_su_VNINDEX_1D.parquet"))[["time", "close"]].rename(columns={"close": "vni"})
 vni_df['time'] = pd.to_datetime(vni_df['time'])
 
 m = xs.merge(ss[['time','ss_proba']], on='time')

@@ -9,12 +9,13 @@ import json
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 from xgboost import XGBClassifier
 
 from src.data_loader import load_data
 from src.feature_engineering import generate_features, get_feature_columns
 
-DATA_DIR = Path("data/stock")
+DATA_DIR = data_path("stock")
 EXCLUDE  = {"VNINDEX", "VN30"}
 
 BASE_CONFIG = {

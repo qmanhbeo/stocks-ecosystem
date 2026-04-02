@@ -20,8 +20,9 @@ import pandas as pd
 import numpy as np
 from vnstock import Vnstock
 from pathlib import Path
+from path_utils import data_path
 
-OUTPUT = Path("data/features/fpt_fundamentals.parquet")
+OUTPUT = data_path("features/fpt_fundamentals.parquet")
 
 QUARTER_END_MONTH = {1: 3, 2: 6, 3: 9, 4: 12}
 LAG_DAYS = 45  # conservative release delay

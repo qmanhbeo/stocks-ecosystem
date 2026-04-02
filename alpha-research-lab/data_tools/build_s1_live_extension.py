@@ -46,9 +46,10 @@ from src.feature_engineering import (
     get_feature_columns,
 )
 from src.model_factory import get_model
+from src.repo_paths import data_path
 
-STOCK_DIR = ROOT / "data" / "stock"
-OUT_PATH = ROOT / "data" / "features" / "xs_barrier_vol_1d_hose_live_current.parquet"
+STOCK_DIR = data_path("stock")
+OUT_PATH = data_path("features/xs_barrier_vol_1d_hose_live_current.parquet")
 VNI_FILE = STOCK_DIR / "gia_lich_su_VNINDEX_1D.parquet"
 EXCLUDE = {"VNINDEX", "VN30"}
 START_DATE = "2012-01-01"

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from src.repo_paths import data_path
 from typing import Callable, Mapping
 
 import numpy as np
@@ -20,9 +21,9 @@ from src.research_protocol import DEFAULT_PROTOCOL, PHASE_ORDER, ResearchProtoco
 from src.standalone_signal_utils import spearman_stat, summarize_ic, yearly_ic
 
 
-SECTOR_ROTATION_PATH = Path("data/features/xs_sector_rotation_daily.parquet")
-PRICE_LIMIT_PATH = Path("data/features/xs_price_limit_daily.parquet")
-DISPERSION_PATH = Path("data/features/xs_dispersion_regime_daily.parquet")
+SECTOR_ROTATION_PATH = data_path("features/xs_sector_rotation_daily.parquet")
+PRICE_LIMIT_PATH = data_path("features/xs_price_limit_daily.parquet")
+DISPERSION_PATH = data_path("features/xs_dispersion_regime_daily.parquet")
 
 
 TRADABLE_STATE_BUILDERS: dict[str, Callable[[pd.DataFrame], pd.Series]] = {

@@ -22,6 +22,7 @@ import glob
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from src.repo_paths import data_path
 from datetime import datetime
 from scipy.stats import binomtest
 
@@ -32,7 +33,7 @@ from src.evaluator import evaluate_model
 from src.run_summary import write_run_summary
 
 
-DATA_DIR = Path("data/stock")
+DATA_DIR = data_path("stock")
 EXCLUDE  = {"VNINDEX", "VN30"}
 
 
@@ -52,7 +53,7 @@ BASE_CONFIG = {
         "use_hist_vol": True, "hist_vol_windows": [5, 10, 20],
         "use_cci": False, "use_volume_signals": False,
         "use_market_relative": True,
-        "index_file": "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+        "index_file": str(data_path("stock/gia_lich_su_VNINDEX_1D.parquet")),
         "rel_lag_days": [1, 2, 3, 5, 10, 20],
         "use_macro": False,
         "use_cross_sectional": False,  # off by default (optional)
@@ -96,13 +97,13 @@ def load_all_stocks(start_date: str = "2012-01-01") -> pd.DataFrame:
 
 
 GLOBAL_MACRO_FILES = [
-    {"path": "data/fx-commodities/fx_commodities_vix_1D.parquet",      "alias": "vix"},
-    {"path": "data/fx-commodities/fx_commodities_us10y_1D.parquet",     "alias": "us10y"},
-    {"path": "data/fx-commodities/fx_commodities_shanghai_1D.parquet",  "alias": "shanghai"},
-    {"path": "data/fx-commodities/fx_commodities_hsi_1D.parquet",       "alias": "hsi"},
-    {"path": "data/fx-commodities/fx_commodities_gold_1D.parquet",      "alias": "gold"},
-    {"path": "data/fx-commodities/fx_commodities_oil_1D.parquet",       "alias": "oil"},
-    {"path": "data/fx-commodities/fx_commodities_cny_x_1D.parquet",     "alias": "cny"},
+    {"path": str(data_path("fx-commodities/fx_commodities_vix_1D.parquet")), "alias": "vix"},
+    {"path": str(data_path("fx-commodities/fx_commodities_us10y_1D.parquet")), "alias": "us10y"},
+    {"path": str(data_path("fx-commodities/fx_commodities_shanghai_1D.parquet")), "alias": "shanghai"},
+    {"path": str(data_path("fx-commodities/fx_commodities_hsi_1D.parquet")), "alias": "hsi"},
+    {"path": str(data_path("fx-commodities/fx_commodities_gold_1D.parquet")), "alias": "gold"},
+    {"path": str(data_path("fx-commodities/fx_commodities_oil_1D.parquet")), "alias": "oil"},
+    {"path": str(data_path("fx-commodities/fx_commodities_cny_x_1D.parquet")), "alias": "cny"},
 ]
 
 
@@ -237,7 +238,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
             s = str(s).replace('đ', 'd').replace('Đ', 'D')
             return unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii').lower()
 
-        sec_path = Path("data/features/sector_classification.parquet")
+        sec_path = data_path("features/sector_classification.parquet")
         if sec_path.exists():
             sec_df = pd.read_parquet(sec_path)
             # Match against icb_name2/3/4 after stripping diacritical marks on both sides
@@ -264,7 +265,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
     # H29: merge cross-sectional quarterly fundamentals (P/E rank, EPS YoY rank, ROE rank, etc.)
     XS_FUND_COLS = ["pe_ratio_rank", "eps_yoy_rank", "roe_rank", "npm_rank", "debt_eq_rank"]
     if use_xs_fundamentals:
-        fund_path = Path("data/features/xs_fundamentals_daily.parquet")
+        fund_path = data_path("features/xs_fundamentals_daily.parquet")
         if fund_path.exists():
             fund = pd.read_parquet(fund_path)
             fund["time"] = pd.to_datetime(fund["time"])
@@ -281,7 +282,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
     # H31: merge dividend calendar features (pre/post ex-dividend windows)
     XS_DIV_COLS = ["pre_div_window", "post_div_window", "days_to_ex_div", "days_since_ex_div", "div_count_30d"]
     if use_dividend_calendar:
-        div_path = Path("data/features/xs_dividend_calendar.parquet")
+        div_path = data_path("features/xs_dividend_calendar.parquet")
         if div_path.exists():
             div_cal = pd.read_parquet(div_path)
             div_cal["time"] = pd.to_datetime(div_cal["time"])
@@ -301,7 +302,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
     # H89/H99: merge news sentiment features (per-ticker daily)
     NEWS_SENT_COLS = ["sentiment_score", "sentiment_cs_z", "positive_ratio", "article_count"]
     if use_news:
-        sent_path = Path(news_path) if news_path else Path("data/features/xs_news_sentiment_daily.parquet")
+        sent_path = Path(news_path) if news_path else data_path("features/xs_news_sentiment_daily.parquet")
         if sent_path.exists():
             sent_df = pd.read_parquet(sent_path)
             sent_df["time"] = pd.to_datetime(sent_df["time"])
@@ -327,7 +328,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
         "positive_ratio_5d",  "has_news_5d", "has_news_30d",
     ]
     if use_rolling_news:
-        rn_path = Path("data/features/xs_news_sentiment_rolling.parquet")
+        rn_path = data_path("features/xs_news_sentiment_rolling.parquet")
         if rn_path.exists():
             rn_df = pd.read_parquet(rn_path)
             rn_df["time"] = pd.to_datetime(rn_df["time"])
@@ -353,7 +354,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
         "large_sh_net_plan_5d", "large_sh_net_plan_30d",
     ]
     if use_insider:
-        ins_path = Path("data/features/xs_insider_features.parquet")
+        ins_path = data_path("features/xs_insider_features.parquet")
         if ins_path.exists():
             ins_df = pd.read_parquet(ins_path)
             ins_df = ins_df.rename(columns={"trading_day": "time"})
@@ -380,7 +381,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
         "llm_earnings_event_5d", "llm_is_forward_looking", "llm_magnitude_5d",
     ]
     if use_llm_news:
-        llm_news_path = Path("data/features/xs_llm_news_ticker_day.parquet")
+        llm_news_path = data_path("features/xs_llm_news_ticker_day.parquet")
         if llm_news_path.exists():
             llm_df = pd.read_parquet(llm_news_path)
             llm_df["time"] = pd.to_datetime(llm_df["time"])
@@ -407,7 +408,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
         "sector_tech_tone", "event_diversity", "avg_magnitude",
     ]
     if use_llm_market:
-        llm_mkt_path = Path("data/features/xs_llm_news_market_daily.parquet")
+        llm_mkt_path = data_path("features/xs_llm_news_market_daily.parquet")
         if llm_mkt_path.exists():
             llm_mkt = pd.read_parquet(llm_mkt_path)
             llm_mkt["time"] = pd.to_datetime(llm_mkt["time"])
@@ -434,7 +435,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
         "oc_asym_5d", "oc_asym_20d", "gap_abs_5d",
     ]
     if use_oc_asymmetry:
-        oc_path = Path("data/features/xs_open_close_asymmetry.parquet")
+        oc_path = data_path("features/xs_open_close_asymmetry.parquet")
         if oc_path.exists():
             oc_df = pd.read_parquet(oc_path)
             oc_df["time"] = pd.to_datetime(oc_df["time"])
@@ -459,7 +460,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
         "xs_breadth_up_5d", "xs_breadth_up_20d", "xs_dispersion_z20",
     ]
     if use_dispersion_regime:
-        disp_path = Path("data/features/xs_dispersion_regime_daily.parquet")
+        disp_path = data_path("features/xs_dispersion_regime_daily.parquet")
         if disp_path.exists():
             disp_df = pd.read_parquet(disp_path)
             disp_df["time"] = pd.to_datetime(disp_df["time"])
@@ -483,7 +484,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
         "left_tail_frac_20d", "ret_skew_z20",
     ]
     if use_return_skewness:
-        skew_path = Path("data/features/xs_return_skewness.parquet")
+        skew_path = data_path("features/xs_return_skewness.parquet")
         if skew_path.exists():
             skew_df = pd.read_parquet(skew_path)
             skew_df["time"] = pd.to_datetime(skew_df["time"])
@@ -509,7 +510,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
         "q1_flag", "q2_flag", "q3_flag", "q4_flag",
     ]
     if use_earnings_calendar:
-        ec_path = Path("data/features/xs_earnings_calendar_daily.parquet")
+        ec_path = data_path("features/xs_earnings_calendar_daily.parquet")
         if ec_path.exists():
             ec_df = pd.read_parquet(ec_path)
             ec_df["time"] = pd.to_datetime(ec_df["time"])
@@ -537,7 +538,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
         "breadth_score", "breadth_score_ext", "credit_risk_on",
     ]
     if use_macro_regime:
-        macro_path = Path("data/features/macro_regime_daily.parquet")
+        macro_path = data_path("features/macro_regime_daily.parquet")
         if macro_path.exists():
             macro_df = pd.read_parquet(macro_path)
             macro_df["time"] = pd.to_datetime(macro_df["time"])
@@ -558,7 +559,7 @@ def run_cross_sectional_wf(min_train_years: int = 3, start_date: str = "2012-01-
     # Distinct from H32 (full macro regime) — just VIX alone.
     VIX_FEATURE_COLS = ["vix_level", "vix_mom_5d", "vix_mom_20d"]
     if use_vix_feature:
-        vix_fpath = Path("data/fx-commodities/fx_commodities_vix_1D.parquet")
+        vix_fpath = data_path("fx-commodities/fx_commodities_vix_1D.parquet")
         if vix_fpath.exists():
             vix_df = pd.read_parquet(vix_fpath)[["time", "close"]].copy()
             vix_df["time"] = pd.to_datetime(vix_df["time"])

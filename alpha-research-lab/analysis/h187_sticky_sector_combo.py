@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+from path_utils import data_path
 
 import sys
 
@@ -16,7 +17,7 @@ from src.deterministic_portfolio import simulate_strategy
 from src.run_summary import write_run_summary
 
 OUT_DIR = ROOT / "artifacts/portfolio_baselines"
-SECTOR_PATH = Path("data/features/sector_classification.parquet")
+SECTOR_PATH = data_path("features/sector_classification.parquet")
 
 
 def main() -> None:

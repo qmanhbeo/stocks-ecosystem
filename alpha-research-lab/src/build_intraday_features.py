@@ -19,10 +19,11 @@ Run: conda run -n stocks python src/build_intraday_features.py
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from src.repo_paths import data_path
 
 
-FPT_1H_FILE = Path("data/stock/gia_lich_su_FPT_1H.parquet")
-OUT_DIR  = Path("data/features")
+FPT_1H_FILE = data_path("stock/gia_lich_su_FPT_1H.parquet")
+OUT_DIR  = data_path("features")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 OUT_FILE = OUT_DIR / "fpt_intraday_daily.parquet"
 

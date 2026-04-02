@@ -25,8 +25,9 @@ Usage:
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from path_utils import data_path
 
-DEFAULT_PROBAS = Path("data/features/xs_barrier_all_probas_hose_full.parquet")
+DEFAULT_PROBAS = data_path("features/xs_barrier_all_probas_hose_full.parquet")
 
 START_YEAR = 2015
 END_YEAR   = 2025

@@ -18,6 +18,7 @@ Columns:
 """
 
 from pathlib import Path
+from path_utils import data_path
 import sys
 import numpy as np
 import pandas as pd
@@ -29,8 +30,8 @@ if str(REPO_ROOT) not in sys.path:
 
 from src.stock_day_grid import build_stock_day_grid
 
-STOCK_DIR = REPO_ROOT / "data" / "stock"
-OUT_PATH = REPO_ROOT / "data" / "features" / "xs_open_close_asymmetry.parquet"
+STOCK_DIR = data_path("stock")
+OUT_PATH = data_path("features/xs_open_close_asymmetry.parquet")
 EXCLUDE = {"VNINDEX", "VN30"}
 
 

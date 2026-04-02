@@ -20,9 +20,11 @@ Usage:
 import argparse
 import time
 from pathlib import Path
+from path_utils import data_path
 
 import pandas as pd
 import yfinance as yf
+import yfinance.shared as yf_shared
 
 try:
     from stock_refresh_utils import (
@@ -30,7 +32,9 @@ try:
         build_probe_cache_entry,
         build_probe_cache_path,
         combine_frames,
+        error_message_indicates_rate_limit,
         format_probe_cache_skip_message,
+        latest_value_covers_requested_end,
         load_existing_frame,
         load_probe_cache,
         plan_refresh,
@@ -43,7 +47,9 @@ except ModuleNotFoundError:
         build_probe_cache_entry,
         build_probe_cache_path,
         combine_frames,
+        error_message_indicates_rate_limit,
         format_probe_cache_skip_message,
+        latest_value_covers_requested_end,
         load_existing_frame,
         load_probe_cache,
         plan_refresh,
@@ -52,8 +58,11 @@ except ModuleNotFoundError:
     )
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-OUT_DIR   = REPO_ROOT / "data" / "fx-commodities"
+OUT_DIR   = data_path("fx-commodities")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
+YF_CACHE_DIR = OUT_DIR / "_cache" / "yfinance"
+YF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+yf.set_tz_cache_location(str(YF_CACHE_DIR))
 
 TICKERS = {
     "^GSPC":     "sp500",
@@ -70,11 +79,53 @@ TICKERS = {
 
 DEFAULT_START = "2000-01-01"
 DEFAULT_END = pd.Timestamp.today().normalize().date().isoformat()
-PROBE_CACHE_STATUS_SKIP_ELIGIBLE = {"unchanged", "partial"}
+PROBE_CACHE_STATUS_SKIP_ELIGIBLE = {"unchanged"}
+PROBE_CACHE_MAX_LAG_DAYS = 3
+FETCH_STATUS_FETCHED = "fetched"
+FETCH_STATUS_SKIPPED = "skipped"
+FETCH_STATUS_RETRYABLE = "retryable"
+FETCH_STATUS_RATE_LIMITED = "rate_limited"
+FETCH_STATUS_FAILED = "failed"
 
 
 def exclusive_yf_end(end: str) -> str:
     return (pd.Timestamp(end).normalize() + pd.Timedelta(days=1)).date().isoformat()
+
+
+def _download_with_rate_limit_retry(
+    ticker: str,
+    *,
+    start: str,
+    end: str,
+    auto_adjust: bool,
+    rate_limit_retries: int,
+    rate_limit_backoff_seconds: float,
+) -> tuple[pd.DataFrame, bool]:
+    attempts = max(rate_limit_retries, 0) + 1
+    for attempt in range(attempts):
+        df = yf.download(
+            ticker,
+            start=start,
+            end=end,
+            progress=False,
+            auto_adjust=auto_adjust,
+        )
+        error_message = getattr(yf_shared, "_ERRORS", {}).get(ticker.upper())
+        if not error_message_indicates_rate_limit(error_message):
+            return df, False
+        if attempt == attempts - 1:
+            print(
+                f"YAHOO RATE LIMITED {ticker}; exhausted {attempts} attempt(s)",
+                flush=True,
+            )
+            return pd.DataFrame(), True
+        wait_seconds = rate_limit_backoff_seconds * (attempt + 1)
+        print(
+            f"YAHOO RATE LIMITED {ticker}; retrying in {wait_seconds:.1f}s...",
+            flush=True,
+        )
+        time.sleep(wait_seconds)
+    return pd.DataFrame(), False
 
 
 def probe_cache_path() -> Path:
@@ -98,44 +149,58 @@ def fetch_one(
     end: str,
     probe_cache: dict[str, dict[str, object]],
     probe_cache_ttl_hours: float,
-) -> tuple[bool, dict[str, object] | None]:
+    rate_limit_retries: int = 1,
+    rate_limit_backoff_seconds: float = 30.0,
+) -> tuple[str, dict[str, object] | None]:
     out = OUT_DIR / f"fx_commodities_{alias}_1D.parquet"
     existing = load_existing_frame(out)
     try:
         plan = plan_refresh(out, "1D", start, end, full_refresh=overwrite)
-        if plan.mode == "incremental" and probe_cache_record_is_fresh(
-            probe_cache.get(alias),
-            requested_end=end,
-            path=out,
-            latest_value=plan.existing_last_time,
-            ttl_hours=probe_cache_ttl_hours,
-            eligible_statuses=PROBE_CACHE_STATUS_SKIP_ELIGIBLE,
-        ):
-            print(f"  SKIP {alias} ({format_probe_cache_skip_message(probe_cache[alias])})")
-            return True, None
+        current_tail_covers_end = latest_value_covers_requested_end(
+            plan.existing_last_time,
+            end,
+            max_lag_days=PROBE_CACHE_MAX_LAG_DAYS,
+        )
+        if plan.mode == "incremental" and current_tail_covers_end:
+            if probe_cache_record_is_fresh(
+                probe_cache.get(alias),
+                requested_end=end,
+                path=out,
+                latest_value=plan.existing_last_time,
+                ttl_hours=probe_cache_ttl_hours,
+                eligible_statuses=PROBE_CACHE_STATUS_SKIP_ELIGIBLE,
+            ):
+                print(f"  SKIP {alias} ({format_probe_cache_skip_message(probe_cache[alias])})")
+                return FETCH_STATUS_SKIPPED, None
         if plan.mode == "skip":
             print(f"  SKIP {alias} ({plan.message})")
-            return True, None
+            return FETCH_STATUS_SKIPPED, None
 
         print(f"  Fetching {ticker} ({alias}, {plan.message})...", end=" ", flush=True)
-        df = yf.download(
+        df, rate_limited = _download_with_rate_limit_retry(
             ticker,
             start=plan.fetch_start,
             end=exclusive_yf_end(end),
-            progress=False,
             auto_adjust=True,
+            rate_limit_retries=rate_limit_retries,
+            rate_limit_backoff_seconds=rate_limit_backoff_seconds,
         )
+        if rate_limited:
+            return FETCH_STATUS_RATE_LIMITED, None
         if df.empty:
             if existing is not None:
-                print("NO NEW DATA (keeping existing file)")
-                return True, build_probe_cache_entry(
-                    status="unchanged",
-                    checked_end=end,
-                    path=out,
-                    latest_value=plan.existing_last_time,
-                )
+                if current_tail_covers_end:
+                    print("NO NEW DATA (keeping existing file)")
+                    return FETCH_STATUS_SKIPPED, build_probe_cache_entry(
+                        status="unchanged",
+                        checked_end=end,
+                        path=out,
+                        latest_value=plan.existing_last_time,
+                    )
+                print("NO NEW DATA (existing file still behind requested end; probe cache remains retryable)")
+                return FETCH_STATUS_RETRYABLE, None
             print("NO DATA")
-            return False, None
+            return FETCH_STATUS_FAILED, None
         df = df.reset_index()
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = [c[0].lower() if c[1] == "" or c[1] == ticker else c[0].lower()
@@ -153,9 +218,15 @@ def fetch_one(
         combined = combine_frames(base, df)
         atomic_write_parquet(combined, out)
         latest_time = pd.to_datetime(combined["time"], errors="coerce").dropna().max()
-        cache_status = "current"
-        if latest_time.normalize().date() < pd.Timestamp(end).normalize().date():
-            cache_status = "partial" if len(combined) - before_rows > 0 else "unchanged"
+        latest_covers_end = latest_value_covers_requested_end(
+            latest_time,
+            end,
+            max_lag_days=PROBE_CACHE_MAX_LAG_DAYS,
+        )
+        if latest_covers_end:
+            cache_status = "unchanged" if len(combined) == before_rows else "current"
+        else:
+            cache_status = "partial"
         cache_entry = build_probe_cache_entry(
             status=cache_status,
             checked_end=end,
@@ -170,10 +241,10 @@ def fetch_one(
                 print(f"OK (refreshed overlap window, latest {latest_time})")
         else:
             print(f"OK ({len(combined)} rows)")
-        return True, cache_entry
+        return FETCH_STATUS_FETCHED, cache_entry
     except Exception as e:
         print(f"ERROR: {e}")
-        return False, None
+        return FETCH_STATUS_FAILED, None
 
 
 def main():
@@ -185,11 +256,27 @@ def main():
         "--probe-cache-ttl-hours",
         type=float,
         default=24.0,
-        help="Trust cached no-change/partial probes for this many hours (default: 24; 0 disables)",
+        help="Trust cached fully current no-change probes for this many hours (default: 24; 0 disables)",
+    )
+    parser.add_argument(
+        "--rate-limit-retries",
+        type=int,
+        default=1,
+        help="Extra retries after Yahoo rate limits a ticker (default: 1)",
+    )
+    parser.add_argument(
+        "--rate-limit-backoff-seconds",
+        type=float,
+        default=30.0,
+        help="Base cooldown before retrying a rate-limited ticker (default: 30)",
     )
     args = parser.parse_args()
     if args.probe_cache_ttl_hours < 0:
         raise ValueError("--probe-cache-ttl-hours must be non-negative")
+    if args.rate_limit_retries < 0:
+        raise ValueError("--rate-limit-retries must be non-negative")
+    if args.rate_limit_backoff_seconds < 0:
+        raise ValueError("--rate-limit-backoff-seconds must be non-negative")
     if pd.Timestamp(args.start).normalize() > pd.Timestamp(args.end).normalize():
         raise ValueError("--start must be on or before --end")
     probe_cache_enabled = args.probe_cache_ttl_hours > 0
@@ -200,9 +287,14 @@ def main():
     print("=" * 55)
     print(f"Date range      : {args.start} -> {args.end}")
     print(f"Probe cache TTL: {args.probe_cache_ttl_hours}h")
-    ok = err = 0
-    for ticker, alias in TICKERS.items():
-        fetch_ok, cache_entry = fetch_one(
+    fetched = skipped = 0
+    retryable = 0
+    rate_limited = 0
+    err = 0
+    tickers = list(TICKERS.items())
+    not_attempted = []
+    for index, (ticker, alias) in enumerate(tickers):
+        status, cache_entry = fetch_one(
             ticker,
             alias,
             args.overwrite,
@@ -210,6 +302,8 @@ def main():
             end=args.end,
             probe_cache=probe_cache,
             probe_cache_ttl_hours=args.probe_cache_ttl_hours,
+            rate_limit_retries=args.rate_limit_retries,
+            rate_limit_backoff_seconds=args.rate_limit_backoff_seconds,
         )
         update_probe_cache_state(
             probe_cache_path() if probe_cache_enabled else None,
@@ -218,13 +312,27 @@ def main():
             entry=cache_entry,
             metadata=probe_cache_metadata(),
         )
-        if fetch_ok:
-            ok += 1
+        if status == FETCH_STATUS_FETCHED:
+            fetched += 1
+        elif status == FETCH_STATUS_SKIPPED:
+            skipped += 1
+        elif status == FETCH_STATUS_RETRYABLE:
+            retryable += 1
+        elif status == FETCH_STATUS_RATE_LIMITED:
+            rate_limited += 1
+            not_attempted = [alias_name for _, alias_name in tickers[index + 1 :]]
+            print("Stopping remaining tickers because Yahoo rate limiting persisted.")
+            break
         else:
             err += 1
         time.sleep(0.5)
 
-    print(f"\nDone: {ok} OK, {err} failed")
+    print(
+        f"\nDone: {fetched} fetched/refreshed, {skipped} already current, "
+        f"{retryable} retryable stale, {rate_limited} rate limited, {err} failed"
+    )
+    if not_attempted:
+        print(f"Not attempted after rate limit: {', '.join(not_attempted)}")
     print(f"Output: {OUT_DIR}")
 
 
