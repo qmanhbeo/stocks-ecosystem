@@ -35,16 +35,28 @@ from urllib3.util.retry import Retry
 try:
     from stock_refresh_utils import (
         atomic_write_parquet,
+        build_probe_cache_entry,
+        build_probe_cache_path,
         combine_frames,
+        format_probe_cache_skip_message,
         load_existing_frame,
+        load_probe_cache,
         plan_refresh,
+        probe_cache_record_is_fresh,
+        update_probe_cache_state,
     )
 except ModuleNotFoundError:
     from data_tools.stock_refresh_utils import (
         atomic_write_parquet,
+        build_probe_cache_entry,
+        build_probe_cache_path,
         combine_frames,
+        format_probe_cache_skip_message,
         load_existing_frame,
+        load_probe_cache,
         plan_refresh,
+        probe_cache_record_is_fresh,
+        update_probe_cache_state,
     )
 
 
@@ -62,6 +74,7 @@ DEFAULT_PAGE_SIZE = 1000
 DEFAULT_MAX_PAGES = 10
 EXCHANGE_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
 TRADING_MINUTES_PER_DAY = 255
+PROBE_CACHE_STATUS_SKIP_ELIGIBLE = {"unchanged", "partial"}
 
 
 @dataclass
@@ -255,6 +268,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--chunk-delay", type=float, default=0.0, help="Delay between chunk fetches in seconds")
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT, help="HTTP timeout in seconds")
     parser.add_argument("--overwrite", action="store_true", help="Overwrite existing output files")
+    parser.add_argument(
+        "--probe-cache-ttl-hours",
+        type=float,
+        default=24.0,
+        help="Trust cached no-change/partial probes for this many hours (default: 24; 0 disables)",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Print what would be fetched without calling SSI")
     parser.add_argument("--base-url", type=str, default=BASE_URL, help="SSI API base URL")
     parser.add_argument("--consumer-id", type=str, help="SSI FastConnect consumer ID")
@@ -335,6 +354,19 @@ def load_credentials(args: argparse.Namespace) -> Credentials:
 
 def build_output_path(ticker: str, interval_label: str) -> Path:
     return DATA_DIR / f"gia_lich_su_{ticker}_{interval_label}.parquet"
+
+
+def probe_cache_path(interval_label: str) -> Path:
+    safe_interval = interval_label.upper().replace("/", "_")
+    return build_probe_cache_path(DATA_DIR, f"fetch_ssi_intraday_{safe_interval}_probe_cache")
+
+
+def probe_cache_metadata(interval_label: str) -> dict[str, object]:
+    return {
+        "tool": "fetch_ssi_intraday",
+        "source": "SSI FastConnect",
+        "interval": interval_label.upper(),
+    }
 
 
 def choose_time_candidate(
@@ -449,7 +481,9 @@ def fetch_one_ticker(
     ascending: bool,
     chunk_delay: float,
     overwrite: bool,
-) -> tuple[bool, str]:
+    probe_cache: dict[str, dict[str, object]],
+    probe_cache_ttl_hours: float,
+) -> tuple[bool, str, dict[str, object] | None]:
     output_path = build_output_path(ticker, interval_label)
     existing = load_existing_frame(output_path)
     refresh_plan = plan_refresh(
@@ -459,8 +493,17 @@ def fetch_one_ticker(
         end_date.isoformat(),
         full_refresh=overwrite,
     )
+    if refresh_plan.mode == "incremental" and probe_cache_record_is_fresh(
+        probe_cache.get(ticker),
+        requested_end=end_date.isoformat(),
+        path=output_path,
+        latest_value=refresh_plan.existing_last_time,
+        ttl_hours=probe_cache_ttl_hours,
+        eligible_statuses=PROBE_CACHE_STATUS_SKIP_ELIGIBLE,
+    ):
+        return True, f"{ticker}: {format_probe_cache_skip_message(probe_cache[ticker])}", None
     if refresh_plan.mode == "skip":
-        return True, f"{ticker}: {refresh_plan.message}"
+        return True, f"{ticker}: {refresh_plan.message}", None
 
     fetch_start = parse_iso_date(refresh_plan.fetch_start)
 
@@ -488,8 +531,17 @@ def fetch_one_ticker(
 
     if not all_chunks:
         if existing is not None:
-            return True, f"{ticker}: no new intraday data returned, keeping existing file"
-        return False, f"{ticker}: no intraday data returned"
+            return (
+                True,
+                f"{ticker}: no new intraday data returned, keeping existing file",
+                build_probe_cache_entry(
+                    status="unchanged",
+                    checked_end=end_date.isoformat(),
+                    path=output_path,
+                    latest_value=refresh_plan.existing_last_time,
+                ),
+            )
+        return False, f"{ticker}: no intraday data returned", None
 
     incoming = (
         pd.concat(all_chunks, ignore_index=True)
@@ -503,12 +555,21 @@ def fetch_one_ticker(
     atomic_write_parquet(out, output_path)
     min_time = out["time"].min()
     max_time = out["time"].max()
+    cache_status = "current"
+    if max_time.normalize().date() < end_date:
+        cache_status = "partial" if len(out) - before_rows > 0 else "unchanged"
+    cache_entry = build_probe_cache_entry(
+        status=cache_status,
+        checked_end=end_date.isoformat(),
+        path=output_path,
+        latest_value=max_time,
+    )
     if refresh_plan.mode == "incremental":
         added_rows = len(out) - before_rows
         if added_rows > 0:
-            return True, f"{ticker}: appended {added_rows} bars (latest {max_time})"
-        return True, f"{ticker}: refreshed overlap window (latest {max_time})"
-    return True, f"{ticker}: saved {len(out)} bars ({min_time} -> {max_time})"
+            return True, f"{ticker}: appended {added_rows} bars (latest {max_time})", cache_entry
+        return True, f"{ticker}: refreshed overlap window (latest {max_time})", cache_entry
+    return True, f"{ticker}: saved {len(out)} bars ({min_time} -> {max_time})", cache_entry
 
 
 def main() -> None:
@@ -532,10 +593,14 @@ def main() -> None:
         raise ValueError("--chunk-delay must be non-negative")
     if args.timeout <= 0:
         raise ValueError("--timeout must be positive")
+    if args.probe_cache_ttl_hours < 0:
+        raise ValueError("--probe-cache-ttl-hours must be non-negative")
 
     tickers = resolve_tickers(args.tickers)
     interval_label = (args.interval_label or infer_interval_label(args.resolution)).upper()
     chunk_days = args.chunk_days or recommended_chunk_days(args.resolution, args.page_size, args.max_pages)
+    probe_cache_enabled = args.probe_cache_ttl_hours > 0
+    probe_cache = load_probe_cache(probe_cache_path(interval_label)) if probe_cache_enabled else {}
 
     print("=" * 60)
     print("SSI FastConnect Intraday Fetcher")
@@ -547,6 +612,7 @@ def main() -> None:
     print(f"Chunk days    : {chunk_days}")
     print(f"Page size     : {args.page_size}")
     print(f"Max pages     : {args.max_pages}")
+    print(f"Probe cache   : {args.probe_cache_ttl_hours}h")
     print(f"Output dir    : {DATA_DIR}")
     print("=" * 60)
 
@@ -567,7 +633,7 @@ def main() -> None:
     for index, ticker in enumerate(tickers, start=1):
         print(f"[{index}/{len(tickers)}] {ticker}", flush=True)
         try:
-            ok, message = fetch_one_ticker(
+            ok, message, cache_entry = fetch_one_ticker(
                 client,
                 ticker=ticker,
                 start_date=start_date,
@@ -580,12 +646,22 @@ def main() -> None:
                 ascending=bool(args.ascending),
                 chunk_delay=args.chunk_delay,
                 overwrite=args.overwrite,
+                probe_cache=probe_cache,
+                probe_cache_ttl_hours=args.probe_cache_ttl_hours,
             )
         except Exception as exc:
             ok = False
             message = f"{ticker}: ERROR -- {exc}"
+            cache_entry = None
 
         print(f"  {message}", flush=True)
+        update_probe_cache_state(
+            probe_cache_path(interval_label) if probe_cache_enabled else None,
+            probe_cache,
+            item_key=ticker,
+            entry=cache_entry,
+            metadata=probe_cache_metadata(interval_label),
+        )
         if ok:
             success_count += 1
         else:

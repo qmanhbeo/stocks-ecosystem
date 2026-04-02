@@ -16,6 +16,7 @@ Usage:
 
 from __future__ import annotations
 
+import argparse
 import glob
 import json
 from pathlib import Path
@@ -100,6 +101,11 @@ MODEL_CONFIG = {
 }
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build the current-year live S1 extension.")
+    return parser.parse_args()
+
+
 def load_all_stocks() -> pd.DataFrame:
     parts: list[pd.DataFrame] = []
     for file_path in sorted(glob.glob(str(STOCK_DIR / "gia_lich_su_*_1D.parquet"))):
@@ -161,6 +167,7 @@ def build_features_with_live_rows(df: pd.DataFrame, config: dict) -> pd.DataFram
 
 
 def main() -> None:
+    parse_args()
     print("Building current-year S1 live extension...")
     all_df = load_all_stocks()
     all_df["_year"] = pd.to_datetime(all_df["time"]).dt.year

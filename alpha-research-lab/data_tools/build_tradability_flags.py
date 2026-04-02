@@ -19,6 +19,7 @@ Usage:
 
 from __future__ import annotations
 
+import argparse
 import glob
 from pathlib import Path
 import sys
@@ -65,11 +66,17 @@ def build_tradability_frame(stock_dir: Path = STOCK_DIR) -> pd.DataFrame:
                 "can_buy_next_open",
                 "can_sell_next_open",
             ]
-        )
+    )
     return pd.concat(parts, ignore_index=True).sort_values(["time", "ticker"]).reset_index(drop=True)
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build shared tradability flags from daily stock files.")
+    return parser.parse_args()
+
+
 def main() -> None:
+    parse_args()
     print("Building tradability flags from shared execution rules...")
     tradability = build_tradability_frame()
     OUT_DIR.mkdir(parents=True, exist_ok=True)

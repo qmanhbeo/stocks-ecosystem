@@ -68,6 +68,8 @@ Fetch daily OHLCV for one or more HOSE tickers from VCI via vnstock.
 - **Output:** `data/stock/gia_lich_su_<TICKER>_1D.parquet`
 - **Usage:** `python data_tools/fetch_stock.py --tickers FPT`
 - **Default behavior:** if the target parquet already exists, fetch only the missing tail, merge on `time`, and atomically replace the old file
+- **Probe cache:** no-change and partial-advance VCI probes are now persisted under `data/stock/_refresh_metadata/`, so reruns can skip recently rechecked stale tails instead of burning requests again
+- **Probe cache control:** `--probe-cache-ttl-hours` defaults to `24`; set it to `0` to disable probe-cache reads and writes
 - **Full rewrite:** use `--overwrite` to rewrite from the requested `--start/--end` window
 - **Reliability:** failed tickers now get `2` automatic retry rounds after the initial pass by default
 
@@ -82,11 +84,18 @@ Fetch all HOSE-listed stocks not yet in `data/stock/`. Used to expand the univer
 Re-fetch the current stock universe to bring data up to the current date.
 - **Status:** Active
 - **Usage:** `python data_tools/fetch_refresh_all.py`
+- **Usage:** `python data_tools/fetch_refresh_all.py --workers 2 --delay 0.5`
+- **Usage:** `python data_tools/fetch_refresh_all.py --check-workers 12`
+- **Usage:** `python data_tools/fetch_refresh_all.py --probe-cache-ttl-hours 24`
 - **Usage:** `python data_tools/fetch_refresh_all.py --interval 1H --start 2023-09-01`
 - Run this at the start of a new session to update `data/stock/`.
 - Ticker discovery comes from the existing `*_1D.parquet` universe files, even when writing another interval such as `1H`.
 - **Output:** `data/stock/gia_lich_su_<TICKER>_<INTERVAL>.parquet`
 - **Default behavior:** if a parquet already exists, fetch only the missing tail, merge on `time`, and atomically replace the old file
+- **Precheck stage:** a separate local parquet-tail scan now runs before any API calls; it uses `--check-workers` so the script can quickly classify which tickers are already current
+- **Probe cache:** no-change and partial-advance probes are now persisted under `data/stock/_refresh_metadata/`; if the same parquet tail is rechecked against the same or earlier `--end` within the cache TTL, the script skips the API call locally instead of spending rate-limit budget again
+- **Probe cache control:** `--probe-cache-ttl-hours` defaults to `24`; set it to `0` to disable the cache and force every stale tail to be re-probed
+- **Parallelism:** defaults are now tuned to the observed VCI rate limit at about `2` workers plus `0.5s` submission delay, roughly `20` requests/minute; use `--workers 1` for serial behavior or override both flags explicitly if the upstream limit changes
 - **Intraday overlap rule:** non-`1D` intervals refetch the last stored trading date as an overlap window, then dedupe on `time`
 - **Full rewrite:** use `--full-refresh` to rewrite each parquet with the exact requested `--start/--end` window
 - **Reliability:** failed tickers now get `2` automatic retry rounds after the initial pass by default
@@ -104,6 +113,8 @@ Fetch historical intraday OHLCV from SSI FastConnect via the official `IntradayO
   - uses the existing `*_1D.parquet` universe when `--tickers` is omitted
   - chunks long date ranges automatically to stay inside SSI page limits
   - reruns now refetch from the last stored trading date and append new bars atomically instead of freezing after the first successful write
+  - no-change and partial-advance SSI probes now persist under `data/stock/_refresh_metadata/`, so reruns can skip recently rechecked stale tails instead of replaying the same chunk windows
+  - `--probe-cache-ttl-hours` defaults to `24`; set it to `0` to disable the probe cache entirely
   - `--overwrite` still forces a full rebuild, but the old parquet is kept until the replacement file is written successfully
   - intended for the acquisition-first intraday branch; coverage still needs to be validated honestly after fetch
 
@@ -184,6 +195,8 @@ Fetch FX rates, commodity prices, and global indices via yfinance.
 - **Status:** Active
 - **Output:** `data/fx-commodities/fx_commodities_<NAME>_1D.parquet`
 - **Refresh behavior:** reruns append missing dates and rewrite atomically; `--overwrite` forces a full rebuild without deleting the last good file first
+- **Probe cache:** no-change and partial-advance yfinance probes now persist under `data/fx-commodities/_refresh_metadata/`
+- **Probe cache control:** `--probe-cache-ttl-hours` defaults to `24`; set it to `0` to disable the probe cache entirely
 - **Available files (20):**
   - `vix_1D` — CBOE VIX (fear index)
   - `sp500_1D` — S&P 500
@@ -198,13 +211,21 @@ Fetch FX rates, commodity prices, and global indices via yfinance.
 ### `fetch_fred_macro.py`
 Fetch Vietnam macroeconomic data from FRED (330+ series). Used for macro regime features.
 - **Status:** Active
+- **Output:** `data/macro/fred_vietnam_macro.parquet`
+- **Refresh behavior:** reruns now reuse the existing daily parquet, fetch only a buffered tail window by default, forward-fill only through the requested `--end`, and atomically replace the merged output
+- **Full rewrite:** use `--overwrite` to rebuild from the requested `--start/--end` window
+- **Credentials:** set `FRED_API_KEY` or pass `--api-key`
 
 ### `fetch_sector_classification.py`
 Fetch ICB sector/sub-sector labels for all HOSE stocks via `vnstock company.overview()`.
 - **Status:** Active
 - **Output:** `data/features/sector_classification.parquet`
-- **Fields:** `ticker`, `icb_name2`, `icb_name3`, `icb_name4` (industry hierarchy)
+- **Fields:** `symbol`, `icb_name2`, `icb_name3`, `icb_name4` (industry hierarchy)
 - **Coverage:** 398 tickers
+- **Refresh behavior:** reruns now reuse existing rows and fetch only missing symbols or rows with blank sector fields; `--dry-run` no longer writes a sample file
+- **Negative cache:** blank or incomplete sector rows now persist a probe-cache record under `data/features/_refresh_metadata/`, so unchanged failures are not retried every run
+- **Probe cache control:** `--probe-cache-ttl-hours` defaults to `168` hours; set it to `0` to disable the negative cache
+- **Full refetch:** use `--refresh-existing` to refetch all covered symbols
 
 ### `fetch_insider_deals.py`
 Fetch insider + large-shareholder transaction disclosures for all HOSE tickers.
@@ -214,7 +235,11 @@ Fetch insider + large-shareholder transaction disclosures for all HOSE tickers.
 - **Coverage:** 394/394 HOSE tickers, date range 2010–2026
 - **Rate:** 0.2s/ticker, ~80 seconds for full run
 - **No auth required.** Free public API.
-- **Usage:** `python data_tools/fetch_insider_deals.py` (use `--force` to re-fetch)
+- **Refresh behavior:** reruns now reuse tickers already current through the requested `--end-date`; stale caches refresh only a bounded lookback window and merge/dedupe atomically before the combined raw matrix is republished
+- **Probe cache:** no-change and partial-advance per-ticker probes now persist under `data/insider_cache/_refresh_metadata/`, so reruns can skip recently rechecked stale ticker tails
+- **Probe cache control:** `--probe-cache-ttl-hours` defaults to `24`; set it to `0` to disable the probe cache entirely
+- **Usage:** `python data_tools/fetch_insider_deals.py`
+- **Full rewrite:** use `--force` to refetch the full requested window for every ticker
 
 ### `fetch_news.py`
 Crawl raw news articles from cafef.vn into `data/news/cafef/raw/`.
@@ -237,6 +262,8 @@ Fetch additional global macro indicators via yfinance.
 - **Status:** Legacy convenience wrapper
 - **Reason:** fully replaceable by the generic `fetch_fx_commodities.py` ticker/alias interface; kept as a fixed-list shortcut for the original macro basket
 - **Refresh behavior:** reruns now append missing dates instead of permanently skipping any existing output
+- **Probe cache:** no-change and partial-advance yfinance probes now persist under `data/fx-commodities/_refresh_metadata/`
+- **Probe cache control:** `--probe-cache-ttl-hours` defaults to `24`; set it to `0` to disable the probe cache entirely
 
 ### `fetch_dividend_events.py`
 Fetch ex-dividend dates for all HOSE stocks via `vnstock company.events()`.
@@ -244,6 +271,10 @@ Fetch ex-dividend dates for all HOSE stocks via `vnstock company.events()`.
 - **Output:** `data/dividend_cache/<TICKER>_events.parquet` + `data/features/xs_dividend_calendar.parquet`
 - **Coverage:** 52 tickers (original universe; not yet expanded to full 394)
 - **Current limitation:** only covers 52 tickers, not the full HOSE universe
+- **Refresh behavior:** reruns now reuse per-ticker caches already covering the requested `--end`; stale or missing ticker caches are refreshed and merged atomically, and the published calendar rebuilds only a rolling tail unless `--force` is used
+- **Probe cache:** no-change and partial-advance per-ticker probes now persist under `data/dividend_cache/_refresh_metadata/`, so reruns can skip recently rechecked stale ticker tails
+- **Probe cache control:** `--probe-cache-ttl-hours` defaults to `24`; set it to `0` to disable the probe cache entirely
+- **Window control:** `--start` / `--end` now bound the calendar build instead of hard-coding the old 2026 cap
 
 ### `fetch_fundamentals.py`
 Fetch quarterly EPS, P/E, ROE, margins etc. for FPT only.
@@ -257,7 +288,9 @@ Fetch quarterly financial ratios for all 52 stocks in original universe.
 - **Output:** `data/fundamentals_cache/<TICKER>.parquet` + `data/features/xs_fundamentals_daily.parquet`
 - **Coverage:** 52 tickers (not expanded to 394)
 - **Current limitation:** not yet run on the full HOSE universe
-- **Cache behavior:** unreadable per-ticker cache files are now refetched instead of crashing the whole run
+- **Refresh behavior:** reruns now refresh only ticker caches that appear stale for the current quarter, merge/dedupe them atomically, and extend the daily artifact tail when caches are unchanged
+- **Rebuild rule:** if any ticker cache changes, the published daily cross-sectional fundamentals surface is rebuilt from cache to keep historical ranks coherent
+- **Flags:** use `--skip-fetch` to trust the current caches, or `--force` to refresh every ticker cache
 
 ### Utility Fetchers
 

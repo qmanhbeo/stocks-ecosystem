@@ -8,22 +8,35 @@ import re
 try:
     from stock_refresh_utils import (
         atomic_write_parquet,
+        build_probe_cache_entry,
+        build_probe_cache_path,
         combine_frames,
+        format_probe_cache_skip_message,
         load_existing_frame,
+        load_probe_cache,
         plan_refresh,
+        probe_cache_record_is_fresh,
+        update_probe_cache_state,
     )
 except ModuleNotFoundError:
     from data_tools.stock_refresh_utils import (
         atomic_write_parquet,
+        build_probe_cache_entry,
+        build_probe_cache_path,
         combine_frames,
+        format_probe_cache_skip_message,
         load_existing_frame,
+        load_probe_cache,
         plan_refresh,
+        probe_cache_record_is_fresh,
+        update_probe_cache_state,
     )
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = REPO_ROOT / "data" / "fx-commodities"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
+DEFAULT_END = pd.Timestamp.today().normalize().date().isoformat()
 
 # Default human-readable aliases
 DEFAULT_ALIASES = {
@@ -31,6 +44,7 @@ DEFAULT_ALIASES = {
     "GC=F": "gold",
     "CL=F": "oil",
 }
+PROBE_CACHE_STATUS_SKIP_ELIGIBLE = {"unchanged", "partial"}
 
 
 def _sanitize_ticker(ticker: str) -> str:
@@ -40,6 +54,19 @@ def _sanitize_ticker(ticker: str) -> str:
 
 def _alias_for_ticker(ticker: str, alias_map: dict) -> str:
     return alias_map.get(ticker.upper(), _sanitize_ticker(ticker))
+
+
+def probe_cache_path(interval: str) -> Path:
+    safe_interval = interval.upper().replace("/", "_")
+    return build_probe_cache_path(OUT_DIR, f"fetch_fx_commodities_{safe_interval}_probe_cache")
+
+
+def probe_cache_metadata(interval: str) -> dict[str, object]:
+    return {
+        "tool": "fetch_fx_commodities",
+        "source": "yfinance",
+        "interval": interval.upper(),
+    }
 
 
 def _normalize_yf_df(df: pd.DataFrame) -> pd.DataFrame:
@@ -65,6 +92,10 @@ def _normalize_yf_df(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def _exclusive_yf_end(end: str) -> str:
+    return (pd.Timestamp(end).normalize() + pd.Timedelta(days=1)).date().isoformat()
+
+
 def fetch_ticker(
     ticker: str,
     interval: str,
@@ -73,7 +104,9 @@ def fetch_ticker(
     alias_map: dict,
     *,
     overwrite: bool = False,
-) -> bool:
+    probe_cache: dict[str, dict[str, object]],
+    probe_cache_ttl_hours: float,
+) -> tuple[bool, dict[str, object] | None]:
     alias = _alias_for_ticker(ticker, alias_map)
     file_path = OUT_DIR / f"fx_commodities_{alias}_{interval}.parquet"
     existing = load_existing_frame(file_path)
@@ -86,15 +119,25 @@ def fetch_ticker(
             end,
             full_refresh=overwrite,
         )
+        if plan.mode == "incremental" and probe_cache_record_is_fresh(
+            probe_cache.get(alias),
+            requested_end=end,
+            path=file_path,
+            latest_value=plan.existing_last_time,
+            ttl_hours=probe_cache_ttl_hours,
+            eligible_statuses=PROBE_CACHE_STATUS_SKIP_ELIGIBLE,
+        ):
+            print(f"⏭️  {ticker} ({alias}): {format_probe_cache_skip_message(probe_cache[alias])}")
+            return True, None
         if plan.mode == "skip":
             print(f"⏭️  {ticker} ({alias}): {plan.message}")
-            return True
+            return True, None
 
         print(f"📥 Fetching {ticker} ({alias}, {plan.message})...", end=" ", flush=True)
         df = yf.download(
             ticker,
             start=plan.fetch_start,
-            end=end,
+            end=_exclusive_yf_end(end),
             interval=interval,
             progress=False,
             auto_adjust=False,
@@ -103,9 +146,14 @@ def fetch_ticker(
         if df.empty:
             if existing is not None:
                 print("⏭️  No new data returned, keeping existing file")
-                return True
+                return True, build_probe_cache_entry(
+                    status="unchanged",
+                    checked_end=end,
+                    path=file_path,
+                    latest_value=plan.existing_last_time,
+                )
             print("❌ No data returned")
-            return False
+            return False, None
         df["ticker"] = ticker.upper()
         df["alias"] = alias
         base = existing if plan.mode == "incremental" else None
@@ -113,6 +161,15 @@ def fetch_ticker(
         combined = combine_frames(base, df)
         atomic_write_parquet(combined, file_path)
         latest_time = pd.to_datetime(combined["time"], errors="coerce").dropna().max()
+        cache_status = "current"
+        if latest_time.normalize().date() < pd.Timestamp(end).normalize().date():
+            cache_status = "partial" if len(combined) - before_rows > 0 else "unchanged"
+        cache_entry = build_probe_cache_entry(
+            status=cache_status,
+            checked_end=end,
+            path=file_path,
+            latest_value=latest_time,
+        )
         if plan.mode == "incremental":
             added_rows = len(combined) - before_rows
             if added_rows > 0:
@@ -121,10 +178,10 @@ def fetch_ticker(
                 print(f"✅ Refreshed overlap window (latest {latest_time})")
         else:
             print(f"✅ Saved ({len(combined)} rows)")
-        return True
+        return True, cache_entry
     except Exception as e:
         print(f"❌ Error: {e}")
-        return False
+        return False, None
 
 
 def main():
@@ -156,13 +213,19 @@ def main():
     parser.add_argument(
         "--end",
         type=str,
-        default="2026-12-31",
-        help="End date (default: 2026-12-31)"
+        default=DEFAULT_END,
+        help="End date (default: today)"
     )
     parser.add_argument(
         "--overwrite",
         action="store_true",
         help="Overwrite existing files"
+    )
+    parser.add_argument(
+        "--probe-cache-ttl-hours",
+        type=float,
+        default=24.0,
+        help="Trust cached no-change/partial probes for this many hours (default: 24; 0 disables)",
     )
     parser.add_argument(
         "--delay",
@@ -172,7 +235,12 @@ def main():
     )
     
     args = parser.parse_args()
+    if args.probe_cache_ttl_hours < 0:
+        raise ValueError("--probe-cache-ttl-hours must be non-negative")
     tickers = [t.strip().upper() for t in args.tickers.split(",") if t.strip()]
+    args.interval = args.interval.upper()
+    probe_cache_enabled = args.probe_cache_ttl_hours > 0
+    probe_cache = load_probe_cache(probe_cache_path(args.interval)) if probe_cache_enabled else {}
     alias_map = dict(DEFAULT_ALIASES)
     if args.aliases:
         for pair in args.aliases.split(","):
@@ -190,6 +258,7 @@ def main():
     print(f"Tickers: {', '.join(tickers)}")
     print(f"Interval: {args.interval}")
     print(f"Period: {args.start} to {args.end}")
+    print(f"Probe cache TTL: {args.probe_cache_ttl_hours}h")
     print(f"Output: {OUT_DIR}")
     print("=" * 60 + "\n")
     
@@ -197,13 +266,22 @@ def main():
     failed = []
     
     for i, ticker in enumerate(tickers):
-        ok = fetch_ticker(
+        ok, cache_entry = fetch_ticker(
             ticker,
             args.interval,
             args.start,
             args.end,
             alias_map,
             overwrite=args.overwrite,
+            probe_cache=probe_cache,
+            probe_cache_ttl_hours=args.probe_cache_ttl_hours,
+        )
+        update_probe_cache_state(
+            probe_cache_path(args.interval) if probe_cache_enabled else None,
+            probe_cache,
+            item_key=_alias_for_ticker(ticker, alias_map),
+            entry=cache_entry,
+            metadata=probe_cache_metadata(args.interval),
         )
         if ok:
             success_count += 1

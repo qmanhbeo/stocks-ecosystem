@@ -17,6 +17,7 @@ import sys
 import io
 import argparse
 import time
+from datetime import date
 from pathlib import Path
 
 from vnstock import Listing, Vnstock
@@ -24,6 +25,7 @@ from vnstock import Listing, Vnstock
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR  = REPO_ROOT / "data" / "stock"
 EXCLUDE   = {"VNINDEX", "VN30"}
+DEFAULT_END = date.today().isoformat()
 
 
 def get_exchange_tickers(exchange: str = "HOSE") -> list[str]:
@@ -42,7 +44,7 @@ def already_fetched() -> set[str]:
     }
 
 
-def fetch_ticker(ticker: str, start: str = "2000-01-01", end: str = "2025-12-31") -> bool:
+def fetch_ticker(ticker: str, start: str = "2000-01-01", end: str = DEFAULT_END) -> bool:
     fpath = DATA_DIR / f"gia_lich_su_{ticker}_1D.parquet"
     if fpath.exists():
         return True
@@ -91,8 +93,8 @@ def main():
                         help="Seconds between requests (default: 0.8)")
     parser.add_argument("--dry-run", action="store_true",
                         help="List what would be fetched without actually fetching")
-    parser.add_argument("--end", type=str, default="2025-12-31",
-                        help="End date for fetch (default: 2025-12-31, never touch 2026)")
+    parser.add_argument("--end", type=str, default=DEFAULT_END,
+                        help="Inclusive end date for fetch (default: today)")
     parser.add_argument("--retry-rounds", type=int, default=2,
                         help="Automatic retry rounds for failed tickers after the initial pass (default: 2)")
     parser.add_argument("--retry-delay", type=float, default=1.0,

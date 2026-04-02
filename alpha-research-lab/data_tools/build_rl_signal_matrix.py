@@ -42,6 +42,7 @@ Usage:
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import numpy as np
@@ -66,6 +67,11 @@ ILLIQ_MIN_DAYS = 10
 VALUE_SCALE = 1e9
 LOOKBACK_DAYS = 60
 EXCLUDE = {"VNINDEX", "VN30"}
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build the consolidated RL signal matrix.")
+    return parser.parse_args()
 
 
 def load_s1_spine() -> pd.DataFrame:
@@ -309,6 +315,7 @@ def build_clv_resid_features(c8: pd.DataFrame) -> pd.DataFrame:
 
 
 def main():
+    parse_args()
     print("Building RL signal matrix...")
 
     # S1 — primary signal spine (394 tickers, 2015–2025)
