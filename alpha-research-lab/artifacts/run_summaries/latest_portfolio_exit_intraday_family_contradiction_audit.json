@@ -1,0 +1,110 @@
+{
+  "artifacts": {
+    "family_summary": "artifacts/portfolio_baselines/20260403_110021_h262_intraday_family_contradiction_audit_family_summary.parquet",
+    "results": "artifacts/portfolio_baselines/20260403_110021_h262_intraday_family_contradiction_audit_results.parquet",
+    "scored_panel": "artifacts/portfolio_baselines/20260403_110021_h262_intraday_family_contradiction_audit_scored_panel.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Family-scoped reduced-shape contradiction audit on the H259 observed panel only",
+    "h259_summary": "artifacts/run_summaries/latest_portfolio_exit_intraday_reduced_shape_predictive_screen.json"
+  },
+  "mode": "portfolio_exit_intraday_family_contradiction_audit",
+  "name": "h262_intraday_family_contradiction_audit",
+  "summary": {
+    "advance_to_h263": true,
+    "best_family": {
+      "baseline_confirmation_top_quintile_hold_advantage": 0.006261163614887789,
+      "baseline_model_name": "path_core",
+      "baseline_validation_auc": 0.5273224043715847,
+      "baseline_validation_top_quintile_hold_advantage": -0.0096155323913032,
+      "best_candidate_confirmation_top_quintile_hold_advantage": 0.04574311827994027,
+      "best_candidate_decision": "PASSED",
+      "best_candidate_model_name": "intraday_atoms",
+      "best_candidate_validation_auc_delta_vs_path_core": 0.15892531876138438,
+      "best_candidate_validation_top_quintile_delta_vs_path_core": 0.030829834259555912,
+      "entry_thesis_family": "breakout_followthrough",
+      "family_confirmation_count": 103,
+      "family_dev_count": 143,
+      "family_row_count": 343,
+      "family_validation_count": 97,
+      "router_model_name": "intraday_atoms",
+      "router_uses_intraday": true
+    },
+    "decision": "PASSED",
+    "family_count": 3,
+    "family_decisions": [
+      {
+        "baseline_confirmation_top_quintile_hold_advantage": 0.006261163614887789,
+        "baseline_model_name": "path_core",
+        "baseline_validation_auc": 0.5273224043715847,
+        "baseline_validation_top_quintile_hold_advantage": -0.0096155323913032,
+        "best_candidate_confirmation_top_quintile_hold_advantage": 0.04574311827994027,
+        "best_candidate_decision": "PASSED",
+        "best_candidate_model_name": "intraday_atoms",
+        "best_candidate_validation_auc_delta_vs_path_core": 0.15892531876138438,
+        "best_candidate_validation_top_quintile_delta_vs_path_core": 0.030829834259555912,
+        "entry_thesis_family": "breakout_followthrough",
+        "family_confirmation_count": 103,
+        "family_dev_count": 143,
+        "family_row_count": 343,
+        "family_validation_count": 97,
+        "router_model_name": "intraday_atoms",
+        "router_uses_intraday": true
+      },
+      {
+        "baseline_confirmation_top_quintile_hold_advantage": 0.014258713713226538,
+        "baseline_model_name": "path_core",
+        "baseline_validation_auc": 0.5101988781234064,
+        "baseline_validation_top_quintile_hold_advantage": 0.008916945369577468,
+        "best_candidate_confirmation_top_quintile_hold_advantage": 0.016423529193049,
+        "best_candidate_decision": "FAILED",
+        "best_candidate_model_name": "intraday_atoms",
+        "best_candidate_validation_auc_delta_vs_path_core": 0.030086690464049104,
+        "best_candidate_validation_top_quintile_delta_vs_path_core": -0.008956581673864018,
+        "entry_thesis_family": "crowding_pressure",
+        "family_confirmation_count": 84,
+        "family_dev_count": 93,
+        "family_row_count": 304,
+        "family_validation_count": 127,
+        "router_model_name": "path_core",
+        "router_uses_intraday": false
+      },
+      {
+        "baseline_confirmation_top_quintile_hold_advantage": -0.014209587494189687,
+        "baseline_model_name": "path_core",
+        "baseline_validation_auc": 0.5045870137920347,
+        "baseline_validation_top_quintile_hold_advantage": 0.00188700986334396,
+        "best_candidate_confirmation_top_quintile_hold_advantage": -0.018968530134455788,
+        "best_candidate_decision": "FAILED",
+        "best_candidate_model_name": "intraday_atoms_plus_path",
+        "best_candidate_validation_auc_delta_vs_path_core": -0.04605609793894322,
+        "best_candidate_validation_top_quintile_delta_vs_path_core": -0.0038444373204196474,
+        "entry_thesis_family": "momentum_continuation",
+        "family_confirmation_count": 448,
+        "family_dev_count": 498,
+        "family_row_count": 1455,
+        "family_validation_count": 509,
+        "router_model_name": "path_core",
+        "router_uses_intraday": false
+      }
+    ],
+    "mixed_families": [],
+    "observed_row_count": 2102,
+    "passed_families": [
+      "breakout_followthrough"
+    ],
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    }
+  },
+  "ts": "20260403_110021"
+}

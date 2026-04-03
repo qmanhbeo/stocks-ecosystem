@@ -142,6 +142,14 @@ Pass:
 Fail:
 - coverage or continuity is too weak
 
+Practical note from Session 92:
+- the current CafeF `1H` source now clears this gate for a **reduced-shape** open / first-hour / close-hour research contract
+- it still does **not** justify treating `H233` as solved on the current source alone because:
+  - the data is still `1H`, not auction-resolution
+  - complete-day share present is only about `67.5%`
+  - the illiquid tail still collapses badly
+- so if work continues on the current source, keep it reduced-shape and branch-local unless a later pass proves the full artifact shape honest
+
 If H232 passes:
 - go to H233
 
@@ -170,6 +178,10 @@ Required per `(time, ticker)` features:
 Branch effect:
 - reopen the intraday timing ladder on the locked protocol
 - do not change the live branch yet
+
+Honesty guardrail:
+- only publish this artifact if the source granularity and completeness really support the listed fields
+- do not backfill a universal `intraday_structure_daily.parquet` from the current CafeF `1H` surface by silently dropping first-30m / auction semantics the source does not truly contain
 
 ### H234: Richer corporate-event source audit
 Run this only if the intraday branch fails.

@@ -1,0 +1,95 @@
+{
+  "artifacts": {
+    "coverage_frame": "artifacts/timing_data/20260403_103038_h258_reduced_shape_intraday_coverage.parquet",
+    "coverage_ticker_summary": "artifacts/timing_data/20260403_103038_h258_reduced_shape_intraday_coverage_summary.parquet",
+    "pilot_role_summary": "artifacts/timing_data/20260403_103038_h258_reduced_shape_intraday_pilot_role_summary.parquet",
+    "reduced_shape_panel": "artifacts/timing_data/20260403_103038_h258_reduced_shape_intraday_contract_panel.parquet",
+    "ticker_summary": "artifacts/timing_data/20260403_103038_h258_reduced_shape_intraday_ticker_summary.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Reduced-shape intraday contract audit only; universal five-bar / auction publication remains unresolved"
+  },
+  "mode": "timing_reduced_shape_intraday_contract_audit",
+  "name": "h258_reduced_shape_intraday_contract_audit",
+  "summary": {
+    "advance_to_h259": true,
+    "analysis_window": {
+      "end_date": "2025-12-31",
+      "start_date": "2023-01-01"
+    },
+    "coverage_gate": {
+      "held_row_coverage_min": 0.9,
+      "missing_session_rate_max": 0.1,
+      "passed": true
+    },
+    "coverage_summary": {
+      "available_raw_tickers": 402,
+      "complete_day_share_present": 0.6750410321004618,
+      "held_row_complete_day_coverage_lower_bound": 0.5914121292607348,
+      "held_row_coverage_lower_bound": 0.9305002213368747,
+      "missing_session_rate_in_window": 0.06870847685367856,
+      "no_volume_missing_share": 0.032597338319401675,
+      "prefix_gap_share": 0.00040901341838979325,
+      "tail_gap_share": 7.561592608886934e-05,
+      "tickers_with_60_overlap_days": 398,
+      "tickers_with_any_overlap": 402
+    },
+    "decision": "PASSED",
+    "feature_gate": {
+      "core_feature_share_min": 0.98,
+      "liquid_complete_day_share_min": 0.95,
+      "liquid_roles_passed": true,
+      "shape_passed": true
+    },
+    "feature_summary": {
+      "close_hour_feature_share": 0.9999961830604222,
+      "complete_day_share": 0.6750410321004618,
+      "first_60m_feature_share": 0.9998778579335089,
+      "full_session_feature_share": 0.9998778579335089,
+      "midday_window_share": 0.7360586281919157,
+      "observed_rows": 261990,
+      "open_gap_feature_share": 0.9999618306042215,
+      "tickers": 402
+    },
+    "pilot_role_summary": [
+      {
+        "close_hour_feature_share": 1.0,
+        "complete_day_share": 0.971045197740113,
+        "first_60m_feature_share": 0.9996468926553672,
+        "median_bars_per_day": 5.0,
+        "midday_window_share": 0.9911723163841808,
+        "open_gap_feature_share": 1.0,
+        "pilot_role": "liquid_bank"
+      },
+      {
+        "close_hour_feature_share": 1.0,
+        "complete_day_share": 0.9706920903954802,
+        "first_60m_feature_share": 1.0,
+        "median_bars_per_day": 5.0,
+        "midday_window_share": 0.9904661016949152,
+        "open_gap_feature_share": 1.0,
+        "pilot_role": "liquid_fill"
+      },
+      {
+        "close_hour_feature_share": 1.0,
+        "complete_day_share": 0.9671610169491526,
+        "first_60m_feature_share": 0.9996468926553672,
+        "median_bars_per_day": 5.0,
+        "midday_window_share": 0.9876412429378532,
+        "open_gap_feature_share": 1.0,
+        "pilot_role": "liquid_industrial"
+      },
+      {
+        "close_hour_feature_share": 1.0,
+        "complete_day_share": 0.005290554446675693,
+        "first_60m_feature_share": 1.0,
+        "median_bars_per_day": 1.25,
+        "midday_window_share": 0.052082774169657425,
+        "open_gap_feature_share": 1.0,
+        "pilot_role": "small_tail"
+      }
+    ],
+    "universal_full_session_ready": false
+  },
+  "ts": "20260403_103038"
+}

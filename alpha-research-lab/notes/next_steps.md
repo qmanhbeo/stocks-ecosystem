@@ -1,14 +1,14 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_90_log.md` for the latest full session detail.
+Use `notes/session_93_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Current State
 
-**Session status:** Session 90 ran `H235`, the event-source sample audit and coverage gate, on `2023-2025` only so the `2026+` lockbox stayed untouched. The result is `MIXED`. A strict multi-word title-alias expansion on the passed CafeF company-news archive held up well on the masked `2025` holdout (`85 / 194` assigned, `98.82%` assigned precision), added `2,861` alias-linked unique articles, and stayed highly novel versus event surface v1 (`74.48%` of candidate daily rows were outside the current company-specific proxy surface). But the operational gate still failed cleanly: held-row recent-any company-event coverage only improved from `0.75%` to `2.30%` over `5d`, far below the `H235` promotion bar. Branch consequence: keep `H234` as real acquisition evidence, keep `H236` closed, keep `H232` provisional while the intraday fetch remains partial, and route active non-live effort back to intraday coverage progress or live monitoring rather than more local event-surface publication work. The active live branch still remains `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`, and the active non-live priority still remains acquisition-first timing data work. (2026-03-31)
+**Session status:** Session 93 ran the first honest family-aware follow-through on the saved `H259` observed panel only, so the `2026+` lockbox stayed untouched. `H262` **PASSED**: the global `H259` failure was an aggregation failure, not a total mechanism kill. Reduced-shape intraday contradiction survives only inside `breakout_followthrough`, where `intraday_atoms` beat that family's path-core baseline by `+0.1589` validation AUC and `+0.0308` validation top-quintile hold advantage, with confirmation top-quintile hold advantage `+0.0457`. `H263` then **PASSED**: a pooled family-aware router that uses intraday only for `breakout_followthrough` beats the global `H259` path-only observed baseline on validation AUC (`0.4963` vs `0.4895`), validation top-quintile hold advantage (`-0.00024` vs `-0.00078`), and confirmation top-quintile hold advantage (`+0.00159` vs `-0.00848`). Branch consequence: keep the live branch unchanged, keep `H260/H261` closed, keep `H233` unresolved, promote the family-aware router as offline evidence only, and advance the active non-live intraday branch to deterministic family-aware continuation integration (`H264`) rather than back to generic global intraday screens. (2026-04-03)
 
 ### Start next session here
 
@@ -21,11 +21,20 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
    - no parameter changes on `2026+`
    - only update `H179/H183` and record completed forward cycles
 3. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
-4. Keep the Session 73 branch closure explicit:
-   - do **not** reopen `H221-H229` on the current local data stack
-   - event surface v1 failed the continuation / exit predictive gate
-   - `H251-H256` only reopened that same published surface as narrow selector trust context / compatibility / switchboard / nested-overlay / dynamic-breadth audit around `H201`
-   - intraday / order-book work now requires new data acquisition, not more local rule tuning
+4. Keep the timing-branch closure logic explicit:
+   - Session 73's original `H221-H229` closure was correct on the old local stack:
+     - event surface v1 failed the continuation / exit predictive gate
+     - local intraday coverage was effectively absent
+     - local order-book history was absent
+   - Session 92 reopened only the reduced-shape intraday slice because genuinely new data now exists
+   - `H258` passed the reduced-shape contract audit
+   - `H259` failed the first reduced-shape exit predictive screen
+   - Session 93 then reopened a narrower family-aware continuation branch on the same observed subset:
+     - `H262` passed only for `breakout_followthrough`
+     - `H263` passed as a pooled family-aware router
+   - do **not** open `H260/H261` on the dead direct-restart contract
+   - the next honest intraday continuation step is `H264`, deterministic family-aware integration on the observed subset only
+   - order-book / queue work remains blocked
 5. Treat the current daily-data synthesis queue as exhausted:
    - `H253-H256` closed the remaining recombination ideas on the current stack
    - do **not** keep inventing local model-side branches on this family without:
@@ -41,17 +50,28 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
      - richer company-event source second
      - otherwise stop timing research and wait for more forward live evidence
    - current acquisition-side practical note:
-     - Session 88 already ran the first honest partial-data pass:
-       - `H231` representative pilot normalized all `20` selected tickers cleanly
-       - liquid banks and liquid fill names show about `97%` complete-day share
-       - liquid industrials are weaker but still materially usable at about `86%`
-       - the small illiquid tail collapses to about `1%` complete-day share and `1.25` median bars per day
-     - the current `H232` lower-bound read is informative but **not final**:
-       - current raw overlap: `207` tickers
-       - held-row coverage lower bound: `46.57%`
-       - missing-session rate in-window: `6.61%`
-       - held-row complete-day lower bound: `31.71%`
-     - do **not** use this partial read to confirm or reject timing alpha or to close the source branch outright
+     - Session 92 resolved the current intraday source shape honestly:
+       - `H258` passed the reduced-shape contract audit:
+         - `402` raw tickers
+         - `398` tickers with `60+` overlap days
+         - held-row coverage lower bound `93.05%`
+         - missing-session rate `6.87%`
+         - liquid-bank / industrial / fill cohorts all around `97%` complete-day share
+       - the universal artifact is still **not** honest:
+         - complete-day share present `67.50%`
+         - the illiquid tail still collapses badly
+       - `H259` then failed the first reduced-shape exit predictive screen:
+         - no reduced-shape intraday model beat the path-only observed-subset baseline on validation
+         - no candidate is promotable
+     - Session 93 then narrowed the reopened model-side branch honestly:
+       - `H262` passed only for `breakout_followthrough`
+       - `H263` passed as a pooled family-aware router:
+         - validation AUC `0.4963` vs `0.4895` for `path_core_observed`
+         - validation top-quintile hold advantage `-0.00024` vs `-0.00078`
+         - confirmation top-quintile hold advantage `+0.00159` vs `-0.00848`
+       - the intraday branch is still observed-subset and offline-only:
+         - do **not** claim `H233` solved
+         - do **not** change the live branch
      - Sessions 89-90 also resolved the parallel event-source search:
        - `H234` passed using the local CafeF company-news archive with exact `published_at` timestamps and conservative title-ticker linkage
        - recovered family coverage already includes:
@@ -68,17 +88,20 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
          - do **not** open `H236`
          - keep event-surface publication work parked until the mapping / source contract is materially better
    - preferred acquisition-side order from here:
-     - first: let the CafeF fetch continue and rerun the `H232` lower-bound read when coverage materially changes
-     - second: if intraday work continues before fetch completion, keep it reduced-shape only:
-       - open gap
-       - first hour
-       - close hour
-       - do **not** force a universal full-session artifact yet
-     - third: keep the richer event-source branch parked as acquisition evidence only:
+     - first: keep the reduced-shape intraday branch narrow and honest:
+       - do **not** reopen the dead global `H259` formulation
+       - do **not** claim `H233` solved
+     - second: continue the current intraday model-side branch with:
+       - `H264` deterministic family-aware continuation veto integration
+       - and only if that passes, `H265` sticky / frozen compatibility
+     - third: if the family-aware continuation branch stalls, fall back to:
+       - library-grade intraday state atoms
+       - or selector-state / stress summaries
+     - fourth: keep the richer event-source branch parked as acquisition evidence only:
        - `H234` passed source identification
        - `H235` is mixed but non-promoting
        - do **not** spend more local effort trying to publish event surface v2 from the current archive alone
-     - fourth: if neither is being worked, just keep live monitoring and let fetch continue
+     - fifth: if neither is being worked, just keep live monitoring and let fetch continue
    - do not confuse that branch with the separate parked stock-specific entry-alpha architecture branch documented in `README.md`, `README_for_AGENTS.md`, and `notes/session_75_log.md` plus `notes/session_76_log.md` plus `notes/session_77_log.md` plus `notes/session_78_log.md` plus `notes/session_79_log.md`
      - Sessions 75-79 already ran the first offline ladder plus the small-book follow-through (`H238-H248`)
      - current conclusion:
@@ -435,11 +458,11 @@ Keep them subordinate to the frozen live branch and to acquisition-first timing 
   - smallest honest next test:
     - update `H179/H183`, record forward cycles, and let the data-acquisition branch continue untouched
 
-### Partial Intraday Hypothesis Queue
+### Reduced-Shape Intraday Hypothesis Queue
 
-Use this queue only while the CafeF intraday fetch is still partial.
-Do not use partial coverage to confirm or reject timing alpha outright.
-Use it to learn whether the intraday surface is structurally publishable and what reduced artifact shape is honest.
+Use this queue while the CafeF `1H` surface is broad enough for research but still not honest as a universal five-bar / auction artifact.
+Do not use the current `1H` contract to claim full-resolution timing alpha outright.
+Use it to learn whether reduced-shape open / first-hour / close-hour structure is structurally publishable and whether it reopens blocked timing branches honestly.
 
 - `representation stability before alpha`
   - claim:
@@ -473,23 +496,56 @@ Use it to learn whether the intraday surface is structurally publishable and wha
 
 ### Bright-mind hypothesis queue
 
-- `event-density router`
+- `reduced-shape intraday exit restart`
+  - status:
+    - completed in Session 92
+    - `H258` passed the reduced-shape contract audit
+    - `H259` failed the first reduced-shape exit predictive screen
+    - keep the panel as acquisition / offline evidence only
+    - do **not** open `H260/H261`
   - claim:
-    - alias-expanded event density sequences are the state variable that shifts `H201` between sticky offline coverage and live deployability, echoing the `H252/H254` evidence that `H201` works best during discrete information-absorption windows.
+    - the blocked `H225-H228` family is now materially reopened in reduced-shape form: the `2026-04-03` rerun on the current CafeF raw surface shows `402` raw tickers, held-row coverage `93.05%`, and missing-session rate `6.87%`, so coverage is no longer the blocker for an intraday exit screen; the remaining honesty constraint is artifact shape, because complete-day share present is only `67.50%` and the source is still `1H`, not auction-resolution.
   - smallest honest next test:
-    - gate `H201` so it only fires when the `H235` alias-expanded event count per ticker over 5 days exceeds a threshold; if held-row coverage stays below 0.4% with that gate, treat the router as killed for the current stack.
+    - no direct exit follow-through remains open on this contract; if intraday work continues, shift to state-atom or selector-state branches instead.
 
-- `alias-backed v2 contract`
+- `thesis-family intraday contradiction router`
+  - status:
+    - completed in Session 93
+    - `H262` passed:
+      - the mechanism survives only inside `breakout_followthrough`
+    - `H263` passed:
+      - the pooled family-aware router beats the global `H259` path-only observed baseline
+    - keep the result offline-only:
+      - do **not** change the live branch
+      - do **not** reopen `H260/H261`
   - claim:
-    - the strict alias map yields 57 tickers at 98%+ precision; publish a mini `event_surface_v2_subset.parquet` for that slice before attempting a universal release, then know your coverage increases meaningfully for that subset.
+    - the first reduced-shape exit screen failed because it mixed incompatible entry-thesis families; reduced-shape intraday only matters as a contradiction / trust state inside the `breakout_followthrough` family on the current observed subset.
   - smallest honest next test:
-    - compile and publish the subset artifact, rerun `H252` / coverage checks on those tickers, and advance only if held-row coverage exceeds 5%.
+    - run deterministic family-aware continuation veto integration on the observed subset: use the `H263` router contract exactly as audited, keep `crowding_pressure` and `momentum_continuation` on path-core treatment, and continue only if the deterministic path improves validation and confirmation without touching `2026+`.
 
-- `reduced-shape intraday regime`
+- `family-aware deterministic continuation veto integration`
   - claim:
-    - the remaining illiquid tail days are the reason `H232` coverage is stuck; align reduced-shape intraday signatures (open gap, first-hour range, close auction metrics) with alias-expanded event-density spikes and focus `H232` only on those windows.
+    - the `H263` pooled router is strong enough to justify one deterministic follow-through: intraday contradiction should veto or downweight continuation only for `breakout_followthrough`, while the other families remain on path-core handling.
   - smallest honest next test:
-    - label days where both the reduced-shape profile and alias density are high, measure coverage on that subset, and keep going only if it exceeds 60%; otherwise keep the intraday repo focused on general data acquisition.
+    - build a deterministic observed-subset continuation gate from the `H263` family map and compare it against the observed-subset `path_core_observed` baseline; only if that passes should the branch continue to sticky / frozen compatibility.
+
+- `top-k intraday stress router`
+  - claim:
+    - the pseudo-live failure of the daily blocked-buy family may reflect slow implementation-pain proxies rather than a dead mechanism; rebalance-date breadth of first-hour fade, failed breakout, and weak close-repair across the selector's top names may be the missing activation state variable.
+  - smallest honest next test:
+    - compute date-level stress summaries over the selector's top-k candidates and test them as offline gates on top of the frozen sticky branch; kill quickly if they only recreate the old blocked-buy defensiveness without improving the `2023-2025` pseudo-live ladder.
+
+- `library-grade intraday shape atoms`
+  - claim:
+    - the lab already captured daily open/close asymmetry and gap absorption, but the new multi-ticker `1H` history can test intraday shape atoms those daily bars could not see cleanly: opening drive then fade, weak morning then close repair, and first-hour range expansion without follow-through.
+  - smallest honest next test:
+    - build `3-5` reduced-shape cross-sectional atoms and screen them for standalone IC plus correlation vs `S1`, `C4`, and `C12`; kill any feature that collapses onto existing daily gap / close-location axes.
+
+- `small-book close-shape confirmation`
+  - claim:
+    - `H246-H248` killed daily local confirmation overlays on the parked entry-alpha branch, but they did not test signal-day intraday close-shape confirmation available by `T` close; the historical `top1/top2` branch may only survive when candidate leaders absorb weakness into the close before the next open.
+  - smallest honest next test:
+    - on the existing `H245/H247` candidate panel, condition `top1/top2` entry on signal-day close-hour / close-repair proxies that are known at `T` close, and only continue if `2025` confirmation beats the carried small-book anchors without weakening the locked `2026+` barrier.
 
 10. Session 66 selection-side first pass:
    - locked protocol is now codified in code:
@@ -1951,6 +2007,9 @@ Use it to learn whether the intraday surface is structurally publishable and wha
 | 88 | 2026-03-31 | H231 intraday normalization pilot is mixed: the VCI bridge works and reduced-shape intraday structure looks viable on a representative subset, but full-session completeness is still too weak to close H232 while the fetch remains partial | H93 + C4-C14 |
 | 89 | 2026-03-31 | H234 richer event-source audit passes: the local CafeF company-news archive is a real richer company-event source candidate with exact publish timestamps and broad company-specific families, but the conservative seed stays too sparse to skip H235 | H93 + C4-C14 |
 | 90 | 2026-03-31 | H235 event-source sample audit is mixed: strict title-alias expansion is high-precision and highly novel versus event surface v1, but held-row coverage only rises to 2.30%, so H236 stays closed and active effort returns to intraday/H232 or live monitoring | H93 + C4-C14 |
+| 91 | 2026-03-31 | H257 event-density router fails: alias-expanded event density never covers enough held rows to gate `H201`, so the richer event source stays parked and non-live effort returns to intraday or live monitoring | H93 + C4-C14 |
+| 92 | 2026-04-03 | H258-H259 reduced-shape intraday restart: the current CafeF `1H` surface passes as a reduced-shape research contract, but the first reduced-shape exit predictive screen fails, so the panel stays offline-only and `H260/H261` stay closed | H93 + C4-C14 |
+| 93 | 2026-04-03 | H262-H263 family-aware intraday continuation follow-through passes: reduced-shape contradiction survives only inside `breakout_followthrough`, and the pooled family-aware router beats the global H259 baseline on the observed subset, so the next honest step is deterministic family-aware integration, not another generic intraday screen | H93 + C4-C14 |
 
 \* Contaminated: stock selection was post-hoc.
 

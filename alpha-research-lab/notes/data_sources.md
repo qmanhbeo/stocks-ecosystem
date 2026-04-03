@@ -148,7 +148,12 @@ Tried but failed / limited intraday attempts:
 Current branch state:
 - event surface v1 exists and is published at `data/features/event_surface_daily.parquet`
 - it failed the predictive gate for continuation / exit timing
-- legacy published local intraday data is only `FPT` 1H; the new CafeF open fetch + VCI adjustment path exists, but coverage/continuity still needs to be validated honestly before reopening timing research
+- legacy published local intraday data is only `FPT` 1H, but the newer CafeF `1H` + VCI bridge has now cleared a reduced-shape contract audit on `2023-2025`:
+  - `402` raw tickers
+  - `93.05%` held-row coverage lower bound
+  - `6.87%` missing-session rate
+  - universal five-bar completeness still not honest (`67.50%` complete-day share present), so this is a reduced-shape research surface, not a canonical auction-resolution artifact
+  - the first reduced-shape exit predictive screen still failed, so the source reopens research but does not yet prove timing alpha
 - local order-book / queue history is absent
 
 Operational consequence:

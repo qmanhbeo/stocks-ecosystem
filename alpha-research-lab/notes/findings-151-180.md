@@ -1126,3 +1126,224 @@ Session 91 ran `H257`, the event-density router audit, which attempted to gate `
 The gating threshold only touched 14 held rows out of 2,261 total (coverage 0.62%, gating share 0.62%), so a router built from this signal simply leaves almost the entire continuation panel empty.
 
 **Implication:** the router idea is closed on the current stack. Keep the richer event source as acquisition evidence, focus on continuing the partial intraday branch (`H232`), and revisit the gate only if a materially different mapping/coverage contract arrives.
+
+## F173: H258 Shows The Current CafeF `1H` Surface Passes As A Reduced-Shape Research Contract, Even Though A Universal Five-Bar / Auction Artifact Is Still Not Honest (2026-04-03, Session 92)
+
+Session 92 reran the intraday branch on the now-current raw CafeF `1H` surface and asked a narrower question than `H233`:
+- not "can the lab already publish a universal intraday artifact?"
+- but "is the source now strong enough to reopen blocked intraday work as a reduced-shape open / first-hour / close-hour contract?"
+
+The answer was yes.
+
+Coverage / continuity now look materially different from the old `H225` world:
+- raw tickers:
+  - `402`
+- tickers with any overlap:
+  - `402`
+- tickers with at least `60` overlap days:
+  - `398`
+- held-row coverage lower bound:
+  - `93.05%`
+- missing-session rate in-window:
+  - `6.87%`
+
+The reduced-shape feature surface is also structurally dense:
+- observed reduced-shape rows:
+  - `261,990`
+- open-gap feature share:
+  - `99.996%`
+- first-60m feature share:
+  - `99.988%`
+- close-hour feature share:
+  - `99.9996%`
+
+And the liquid cohorts are clean enough to support research honestly:
+- liquid banks complete-day share:
+  - `97.10%`
+- liquid industrials complete-day share:
+  - `96.72%`
+- liquid fill names complete-day share:
+  - `97.07%`
+
+But the universal artifact is still not honest:
+- complete-day share present:
+  - `67.50%`
+- small-tail complete-day share:
+  - `0.53%`
+
+So the result is not:
+- "H233 is done"
+
+It is:
+- the source passes as a reduced-shape research contract
+- the source still fails as a universal five-bar / auction-resolution contract
+
+**Key finding:** the old intraday block was truly a data-availability block, not a hidden modeling verdict. Multi-ticker intraday research can now reopen honestly in reduced-shape form.
+
+**Implication:** treat the current CafeF `1H` source as real offline evidence and a usable reduced-shape panel. Keep universal `H233` publication unresolved, but do allow the first reduced-shape predictive screen to run.
+
+## F174: H259 Fails The First Reduced-Shape Intraday Exit Screen; Better Intraday Coverage Does Not Yet Produce Exit Alpha On The Current Continuation Target (2026-04-03, Session 92)
+
+After `H258` passed the contract audit, Session 92 ran the first real reduced-shape predictive screen instead of stopping at data QA.
+
+The screen stayed narrow:
+- observed subset only
+- custom reduced-shape protocol:
+  - dev `2023`
+  - validation `2024`
+  - confirmation `2025`
+- no `2026+` read
+- no deterministic integration
+
+Observed sample:
+- continuation rows:
+  - `2,259`
+- observed intraday rows:
+  - `2,102`
+- observed share:
+  - `93.05%`
+
+Baseline on the observed subset:
+- `path_core_observed`
+- validation AUC:
+  - `0.4895`
+- validation top-quintile hold advantage:
+  - `-0.00078`
+- confirmation AUC:
+  - `0.4517`
+- confirmation top-quintile hold advantage:
+  - `-0.00848`
+
+Best intraday model:
+- `intraday_shape_core`
+- validation AUC:
+  - `0.4806`
+- validation top-quintile hold advantage:
+  - `-0.00128`
+- confirmation AUC:
+  - `0.5147`
+- confirmation top-quintile hold advantage:
+  - `-0.00518`
+
+Other reduced-shape variants were worse:
+- `intraday_shape_plus_path`
+- `intraday_shape_atoms`
+
+No model was promotable, and the best intraday candidate still lost to the path-only observed-subset baseline on the validation gate that matters most for continuation-family promotion.
+
+**Key finding:** the current CafeF `1H` surface is good enough to reopen research, but the first reduced-shape exit-family predictive screen still fails. Better intraday availability is not, by itself, evidence of exit alpha.
+
+**Implication:** keep `H258` as real acquisition / offline evidence, but close the direct reduced-shape exit restart on the current continuation target. Do **not** open `H260/H261` from this result. If intraday model work continues later, pivot toward library-grade intraday state atoms or selector-state stress summaries rather than immediate exit integration.
+
+## F175: H262 Shows Reduced-Shape Intraday Contradiction Survives Only Inside `breakout_followthrough`; The Global H259 Failure Was An Aggregation Failure, Not A Total Mechanism Kill (2026-04-03, Session 93)
+
+Session 93 reopened the `H259` result the narrow way:
+- no new data fetch
+- no `2026+` read
+- no direct deterministic integration
+- just a family-scoped audit on the saved `H259` observed panel
+
+The key split already existed inside the panel:
+- `momentum_continuation`
+- `breakout_followthrough`
+- `crowding_pressure`
+
+Family sample sizes were still large enough to support an honest local audit:
+- `momentum_continuation`:
+  - dev `498`
+  - validation `509`
+  - confirmation `448`
+- `breakout_followthrough`:
+  - dev `143`
+  - validation `97`
+  - confirmation `103`
+- `crowding_pressure`:
+  - dev `93`
+  - validation `127`
+  - confirmation `84`
+
+Three family-local models were tested:
+- `path_core`
+- `intraday_atoms`
+- `intraday_atoms_plus_path`
+
+Only one family survived:
+- `breakout_followthrough`
+  - family path-core validation AUC:
+    - `0.5273`
+  - best candidate:
+    - `intraday_atoms`
+  - validation AUC delta vs family path-core:
+    - `+0.1589`
+  - validation top-quintile hold-advantage delta vs family path-core:
+    - `+0.0308`
+  - confirmation top-quintile hold advantage:
+    - `+0.0457`
+
+The other families failed cleanly:
+- `crowding_pressure`
+  - best intraday candidate lifted validation AUC modestly
+  - but validation top-quintile hold advantage got worse
+- `momentum_continuation`
+  - best intraday candidate lost on both validation AUC and validation top-quintile hold advantage
+
+**Key finding:** the `H259` failure was not a total rejection of reduced-shape intraday contradiction. The real surviving mechanism is narrow: intraday contradiction survives only inside the `breakout_followthrough` entry-thesis family on the observed `2023-2025` subset.
+
+**Implication:** do not reopen global reduced-shape continuation modeling. Carry forward only the family-aware branch. Keep `momentum_continuation` and `crowding_pressure` on path-only treatment unless a later materially different contract reopens them.
+
+## F176: H263 Shows The Pooled Family-Aware Intraday Router Beats The Global H259 Baseline On The Observed Subset, So The Next Honest Step Is Deterministic Family-Aware Integration (2026-04-03, Session 93)
+
+After `H262` passed, Session 93 ran the smallest honest recombination:
+- use the `H262` family-local winner only where it actually passed
+- leave the failed families on their own path-core baseline
+- compare the pooled router back against the global `H259` benchmarks on the same observed subset
+
+The pooled router was simple:
+- `breakout_followthrough`:
+  - use `intraday_atoms`
+- `crowding_pressure`:
+  - keep `path_core`
+- `momentum_continuation`:
+  - keep `path_core`
+
+Global benchmark from `H259`:
+- `path_core_observed`
+  - validation AUC:
+    - `0.4895`
+  - validation top-quintile hold advantage:
+    - `-0.00078`
+  - confirmation top-quintile hold advantage:
+    - `-0.00848`
+
+Best global intraday benchmark:
+- `intraday_shape_core`
+  - validation AUC:
+    - `0.4806`
+  - validation top-quintile hold advantage:
+    - `-0.00128`
+  - confirmation top-quintile hold advantage:
+    - `-0.00518`
+
+Pooled family-aware router:
+- validation AUC:
+  - `0.4963`
+- validation top-quintile hold advantage:
+  - `-0.00024`
+- confirmation top-quintile hold advantage:
+  - `+0.00159`
+
+Delta vs the global path baseline:
+- validation AUC:
+  - `+0.0067`
+- validation top-quintile hold advantage:
+  - `+0.00054`
+- confirmation top-quintile hold advantage:
+  - `+0.01007`
+
+So the narrow recombination does pass the branch rule:
+- it beats the global path-only observed baseline on both validation gate dimensions
+- and it is no worse than the baseline on confirmation top-quintile hold advantage
+
+**Key finding:** reduced-shape intraday does have continuation value on the current observed subset, but only as a family-aware router. The useful contract is narrow and still offline-only; it is not evidence that the original global `H259` formulation should be revived.
+
+**Implication:** keep the live branch unchanged. Keep `H260/H261` closed. Advance only to a narrow `H264`-style deterministic family-aware continuation veto integration on the observed `2023-2025` subset. If that deterministic follow-through fails, the honest fallback is to keep this as offline evidence only and return to selector-state stress or library-atom work.
