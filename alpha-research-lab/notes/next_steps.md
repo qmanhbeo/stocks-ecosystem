@@ -679,6 +679,43 @@ Use it to learn whether reduced-shape open / first-hour / close-hour structure i
   - smallest honest next test:
     - calibrate a tiny dev-only threshold grid on the `H270` winning score (`entry_prob__intraday_shape_core`) under the `net_soft_survivor` contract, compare it against the ungated observed breakout survivor sleeve, and only advance if validation and confirmation `10d` return remain above the carried survivor baseline.
 
+- `core-plus-surge split`
+  - status:
+    - bold deployment-shape branch if `H271` passes locally but broad reintegration still looks wrong
+  - claim:
+    - the lab may not be making profit yet because it keeps forcing one homogeneous book, while the real structure is barbell:
+      - sticky top-5 core for robust exposure
+      - small capped breakout-survivor surge sleeve for offense
+  - smallest honest next test:
+    - run the frozen sticky branch with a small fixed breakout-survivor sidecar sleeve sourced only from `H270`-qualified rows and compare it against plain sticky on the restarted `2023-2025` ladder.
+
+- `replacement-pressure breadth throttle`
+  - status:
+    - highest-upside broad-book idea if one uniform `top_k=5` is the real bottleneck
+  - claim:
+    - profit may be missing because activation is global while the true state variable is breadth pressure:
+      - how strongly incoming candidates deserve to displace incumbents
+      - whether the book should be `2`, `3`, or `5` names on a given date
+  - smallest honest next test:
+    - build a predeclared date-level replacement-pressure score from candidate gaps, incumbent displacement margin, and breakout-survivor presence, then test a tiny `{2,3,5}` breadth ladder on top of the frozen sticky branch.
+
+- `stress-to-offense inversion`
+  - status:
+    - novel branch if the blocked-buy family is directionally right but functionally misplaced
+  - claim:
+    - blocked-buy / implementation strain may belong as a stock-local offensive filter rather than a global veto:
+      - the best names after queue stress may be the ones with pent-up demand once breakout-survivor quality is present
+  - smallest honest next test:
+    - within the `H270` breakout-survivor sleeve, test whether blocked-buy persistence and related strain features improve ranking or gating instead of suppressing the whole book.
+
+- `event-triggered breakout truth serum`
+  - status:
+    - side branch if the lab wants a more informational variant of the breakout-local work
+  - claim:
+    - reduced-shape intraday may matter only when breakout candidates are actually news- or filing-driven; raw event timing and raw intraday each failed broadly, but their interaction may be the real edge.
+  - smallest honest next test:
+    - intersect the `H270` observed breakout-survivor sleeve with `event_surface_daily.parquet` and compare event-day intraday models against the same sleeve without the event condition.
+
 - `top-k intraday stress router`
   - status:
     - first fallback if the breakout-survivor deterministic follow-through fails
