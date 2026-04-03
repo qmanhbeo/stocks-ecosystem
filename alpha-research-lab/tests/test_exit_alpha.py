@@ -187,6 +187,50 @@ def test_continuation_hazard_supports_generic_feature_coefficients() -> None:
     assert exit_mask.tolist() == [True]
 
 
+def test_continuation_hazard_supports_family_routed_models_with_intraday_fallback() -> None:
+    exit_mask = _compute_exit_signal_mask(
+        exit_rule_name="continuation_hazard",
+        exit_rule_params={
+            "continue_prob_threshold": 0.50,
+            "default_model": {"intercept": 10.0},
+            "family_models": {
+                "breakout_followthrough": {
+                    "primary_model": {
+                        "intercept": 0.0,
+                        "coef__failed_breakout_proxy": -10.0,
+                    },
+                    "fallback_model": {"intercept": 10.0},
+                    "required_feature_name": "intraday_observed",
+                },
+                "momentum_continuation": {"intercept": -10.0},
+            },
+        },
+        scores=pd.Series([0.60, 0.60, 0.60]).to_numpy(),
+        rank_positions=pd.Series([3.0, 3.0, 3.0]).to_numpy(),
+        holding_ages=pd.Series([4, 4, 4]).to_numpy(),
+        held_mask=pd.Series([True, True, True]).to_numpy(),
+        eligible_mask=pd.Series([True, True, True]).to_numpy(),
+        required_holding_age=3,
+        top_k=5,
+        blocked_sell_streaks=pd.Series([0, 0, 0]).to_numpy(),
+        entry_scores=pd.Series([0.62, 0.62, 0.62]).to_numpy(),
+        entry_rank_positions=pd.Series([2.0, 2.0, 2.0]).to_numpy(),
+        return_since_entry=pd.Series([0.01, 0.01, 0.01]).to_numpy(),
+        adv20_current=pd.Series([1.0, 1.0, 1.0]).to_numpy(),
+        entry_adv20_values=pd.Series([1.0, 1.0, 1.0]).to_numpy(),
+        peak_return_since_entry=pd.Series([0.03, 0.03, 0.03]).to_numpy(),
+        underwater_days_since_entry=pd.Series([0, 0, 0]).to_numpy(),
+        entry_thesis_family_codes=pd.Series([1, 1, 0]).to_numpy(),
+        entry_thesis_scores=pd.Series([0.5, 0.5, 0.5]).to_numpy(),
+        current_thesis_scores=None,
+        current_feature_values={
+            "intraday_observed": pd.Series([1.0, 0.0, 0.0]).to_numpy(),
+            "failed_breakout_proxy": pd.Series([1.0, 1.0, 0.0]).to_numpy(),
+        },
+    )
+    assert exit_mask.tolist() == [True, False, True]
+
+
 def test_multi_rule_any_combines_exit_families() -> None:
     exit_mask = _compute_exit_signal_mask(
         exit_rule_name="multi_rule_any",

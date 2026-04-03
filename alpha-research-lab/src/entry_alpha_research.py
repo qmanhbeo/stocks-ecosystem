@@ -15,7 +15,7 @@ from sklearn.preprocessing import StandardScaler
 
 from src.activation_alpha import BENCHMARK_PATH, RL_MATRIX_PATH, STOCK_DIR, TRADABILITY_PATH
 from src.additive_selector_research import additive_candidate_deltas, additive_candidate_passes
-from src.deterministic_portfolio import simulate_strategy
+from src.deterministic_portfolio import THESIS_FAMILY_COMPONENTS, simulate_strategy
 from src.entry_alpha import (
     ENTRY_ALPHA_CANDIDATE_PANEL_PATH,
     ENTRY_ALPHA_DIR,
@@ -94,6 +94,58 @@ def _safe_bool(frame: pd.DataFrame, column: str) -> pd.Series:
     if column not in frame.columns:
         return pd.Series(np.zeros(len(frame), dtype=bool), index=frame.index)
     return frame[column].fillna(False).astype(bool)
+
+
+def assign_entry_thesis_family(
+    panel: pd.DataFrame,
+    *,
+    family_column: str = "entry_thesis_family",
+    family_score_prefix: str = "thesis_family__",
+) -> pd.DataFrame:
+    work = panel.copy()
+    family_score_columns: list[str] = []
+    family_scores: list[np.ndarray] = []
+    family_names = list(THESIS_FAMILY_COMPONENTS.keys())
+
+    for family_name, components in THESIS_FAMILY_COMPONENTS.items():
+        values: list[np.ndarray] = []
+        for column in components:
+            if column not in work.columns:
+                values.append(np.full(len(work), np.nan, dtype=np.float64))
+                continue
+            values.append(pd.to_numeric(work[column], errors="coerce").to_numpy(dtype=np.float64))
+        stacked = np.column_stack(values) if values else np.full((len(work), 0), np.nan, dtype=np.float64)
+        valid_counts = np.sum(np.isfinite(stacked), axis=1)
+        mean_score = np.divide(
+            np.nansum(stacked, axis=1),
+            valid_counts,
+            out=np.full(len(work), np.nan, dtype=np.float64),
+            where=valid_counts > 0,
+        )
+        score_column = f"{family_score_prefix}{family_name}"
+        work[score_column] = mean_score
+        family_score_columns.append(score_column)
+        family_scores.append(mean_score)
+
+    if family_scores:
+        stacked_scores = np.vstack(family_scores)
+        finite_scores = np.where(np.isfinite(stacked_scores), stacked_scores, -np.inf)
+        best_idx = np.argmax(finite_scores, axis=0)
+        any_valid = np.any(np.isfinite(stacked_scores), axis=0)
+        work[family_column] = pd.Series(
+            [family_names[idx] if bool(valid) else None for idx, valid in zip(best_idx, any_valid)],
+            index=work.index,
+            dtype=object,
+        )
+        work["entry_thesis_score"] = pd.Series(
+            [float(stacked_scores[idx, pos]) if bool(valid) else np.nan for pos, (idx, valid) in enumerate(zip(best_idx, any_valid))],
+            index=work.index,
+            dtype=float,
+        )
+    else:
+        work[family_column] = pd.Series([None] * len(work), index=work.index, dtype=object)
+        work["entry_thesis_score"] = pd.Series(np.full(len(work), np.nan), index=work.index, dtype=float)
+    return work
 
 
 def _cached_constant_matches(frame: pd.DataFrame, column: str, expected: object) -> bool:
@@ -506,6 +558,25 @@ def build_entry_allowed_matrix_from_score(
         tickers=tickers,
         mask=mask,
     )
+
+
+def build_survivor_label_series(
+    panel: pd.DataFrame,
+    *,
+    immediate_return_floor: float,
+    extended_floor: float,
+    immediate_return_column: str = "cycle_return_net",
+    extended_column: str = "cycle10_return_net",
+) -> pd.Series:
+    immediate = _safe_get_numeric(panel, immediate_return_column, default=np.nan)
+    extended = _safe_get_numeric(panel, extended_column, default=np.nan)
+    valid = immediate.notna() & extended.notna()
+    labels = pd.Series(pd.array([pd.NA] * len(panel), dtype="Int64"), index=panel.index)
+    labels.loc[valid] = (
+        (immediate.loc[valid] > float(immediate_return_floor))
+        & (extended.loc[valid] > float(extended_floor))
+    ).astype(int)
+    return labels
 
 
 def build_small_book_confirmation_overlay_frame(panel: pd.DataFrame) -> pd.DataFrame:

@@ -1,0 +1,285 @@
+{
+  "artifacts": {
+    "best_daily": "artifacts/portfolio_baselines/20260403_112830_h264_family_aware_continuation_veto_integration_best_daily.parquet",
+    "best_exit_panel": "artifacts/portfolio_baselines/20260403_112830_h264_family_aware_continuation_veto_integration_best_exit_panel.parquet",
+    "family_router_daily": "artifacts/portfolio_baselines/20260403_112830_h264_family_aware_continuation_veto_integration_router_daily.parquet",
+    "family_router_exit_panel": "artifacts/portfolio_baselines/20260403_112830_h264_family_aware_continuation_veto_integration_router_exit_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260403_112830_h264_family_aware_continuation_veto_integration_results.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Deterministic family-aware continuation veto with explicit global and family path-only controls on 2023-2025 only",
+    "h258_summary": "artifacts/run_summaries/latest_timing_reduced_shape_intraday_contract_audit.json",
+    "h262_summary": "artifacts/run_summaries/latest_portfolio_exit_intraday_family_contradiction_audit.json",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_exit_family_aware_continuation_veto_integration",
+  "name": "h264_family_aware_continuation_veto_integration",
+  "summary": {
+    "advance_to_h265": false,
+    "baseline_variant": "always_on_baseline",
+    "decision": "FAILED",
+    "family_path_core_leader": {
+      "avg_exit_signal_count": 0.8782,
+      "confirmation_avg_cash_weight": 0.05723753120313368,
+      "confirmation_avg_daily_turnover": 0.3315145091521368,
+      "confirmation_cash_delta": 0.0043033974085011015,
+      "confirmation_information_ratio_annualized": -0.5331346757566096,
+      "confirmation_ir_delta": 0.21860800784034973,
+      "confirmation_relative_delta": 0.04781673701114075,
+      "confirmation_relative_total_return": -0.15176641070767694,
+      "dev_avg_cash_weight": null,
+      "dev_avg_daily_turnover": null,
+      "dev_information_ratio_annualized": null,
+      "dev_relative_total_return": null,
+      "exit_rule_name": "continuation_hazard",
+      "exit_rule_params": {
+        "continue_prob_threshold": 0.55,
+        "default_model": {
+          "coef__blocked_sell_streak": 0.0,
+          "coef__holding_age_before": 0.013992295326302284,
+          "coef__peak_return_since_entry": -1.2887433684747456,
+          "coef__return_since_entry": -2.2042696909164667,
+          "coef__score_change_since_entry": -0.42852719974304215,
+          "coef__underwater_days_since_entry": -0.1368232955657007,
+          "intercept": 0.11849044738824754
+        },
+        "family_models": {
+          "breakout_followthrough": {
+            "coef__blocked_sell_streak": 0.0,
+            "coef__holding_age_before": -0.025407980421259264,
+            "coef__peak_return_since_entry": 5.74289433362789,
+            "coef__return_since_entry": -2.611494630504727,
+            "coef__score_change_since_entry": 1.257190302689786,
+            "coef__underwater_days_since_entry": -0.05351241373054837,
+            "intercept": 0.27203100833150806
+          },
+          "crowding_pressure": {
+            "coef__blocked_sell_streak": 0.0,
+            "coef__holding_age_before": -0.18546333494396786,
+            "coef__peak_return_since_entry": -2.9426001083953377,
+            "coef__return_since_entry": 0.6142004905929551,
+            "coef__score_change_since_entry": 1.0315200080198363,
+            "coef__underwater_days_since_entry": -0.011965888867553167,
+            "intercept": 1.070633919093955
+          },
+          "momentum_continuation": {
+            "coef__blocked_sell_streak": 0.0,
+            "coef__holding_age_before": 0.09119441352750292,
+            "coef__peak_return_since_entry": -1.226318847732426,
+            "coef__return_since_entry": -2.7662935211459154,
+            "coef__score_change_since_entry": -0.9383459118505779,
+            "coef__underwater_days_since_entry": -0.21549978782367607,
+            "intercept": -0.160400400414688
+          }
+        }
+      },
+      "exit_rule_trigger_events": 656,
+      "overall_information_ratio_annualized": 0.461438,
+      "overall_relative_total_return": 0.330148,
+      "promoted": true,
+      "threshold": 0.55,
+      "usable_cutoff": true,
+      "validation_avg_cash_weight": 0.0306249052840125,
+      "validation_avg_daily_turnover": 0.2991235029186938,
+      "validation_cash_delta": 0.004876056108287119,
+      "validation_information_ratio_annualized": 1.018379243711677,
+      "validation_ir_delta": 0.31800177511612204,
+      "validation_relative_delta": 0.21828838286579066,
+      "validation_relative_total_return": 0.5681389651713187,
+      "variant": "family_path_core__thr_0p55",
+      "variant_group": "family_path_core"
+    },
+    "family_router_leader": {
+      "avg_exit_signal_count": 0.0281,
+      "confirmation_avg_cash_weight": 9.229564903510338e-17,
+      "confirmation_avg_daily_turnover": 0.017788755964604174,
+      "confirmation_cash_delta": -0.052934133794632486,
+      "confirmation_information_ratio_annualized": -1.654974203066759,
+      "confirmation_ir_delta": -0.9032315194697996,
+      "confirmation_relative_delta": -0.0760383184829847,
+      "confirmation_relative_total_return": -0.2756214662018024,
+      "dev_avg_cash_weight": null,
+      "dev_avg_daily_turnover": null,
+      "dev_information_ratio_annualized": null,
+      "dev_relative_total_return": null,
+      "exit_rule_name": "continuation_hazard",
+      "exit_rule_params": {
+        "continue_prob_threshold": 0.4,
+        "default_model": {
+          "coef__blocked_sell_streak": 0.0,
+          "coef__holding_age_before": 0.013992295326302284,
+          "coef__peak_return_since_entry": -1.2887433684747456,
+          "coef__return_since_entry": -2.2042696909164667,
+          "coef__score_change_since_entry": -0.42852719974304215,
+          "coef__underwater_days_since_entry": -0.1368232955657007,
+          "intercept": 0.11849044738824754
+        },
+        "family_models": {
+          "breakout_followthrough": {
+            "fallback_model": {
+              "coef__blocked_sell_streak": 0.0,
+              "coef__holding_age_before": -0.025407980421259264,
+              "coef__peak_return_since_entry": 5.74289433362789,
+              "coef__return_since_entry": -2.611494630504727,
+              "coef__score_change_since_entry": 1.257190302689786,
+              "coef__underwater_days_since_entry": -0.05351241373054837,
+              "intercept": 0.27203100833150806
+            },
+            "primary_model": {
+              "coef__failed_breakout_proxy": 14.29866129428332,
+              "coef__first_hour_fade_proxy": 8.67267511676465,
+              "coef__open_drive_then_fade_proxy": -7.091640545017145,
+              "coef__weak_open_strong_close_proxy": 4.524524831506062,
+              "intercept": -0.4346472291123543
+            },
+            "required_feature_name": "intraday_observed"
+          },
+          "crowding_pressure": {
+            "coef__blocked_sell_streak": 0.0,
+            "coef__holding_age_before": -0.18546333494396786,
+            "coef__peak_return_since_entry": -2.9426001083953377,
+            "coef__return_since_entry": 0.6142004905929551,
+            "coef__score_change_since_entry": 1.0315200080198363,
+            "coef__underwater_days_since_entry": -0.011965888867553167,
+            "intercept": 1.070633919093955
+          },
+          "momentum_continuation": {
+            "coef__blocked_sell_streak": 0.0,
+            "coef__holding_age_before": 0.09119441352750292,
+            "coef__peak_return_since_entry": -1.226318847732426,
+            "coef__return_since_entry": -2.7662935211459154,
+            "coef__score_change_since_entry": -0.9383459118505779,
+            "coef__underwater_days_since_entry": -0.21549978782367607,
+            "intercept": -0.160400400414688
+          }
+        }
+      },
+      "exit_rule_trigger_events": 21,
+      "overall_information_ratio_annualized": 0.274426,
+      "overall_relative_total_return": 0.123102,
+      "promoted": false,
+      "threshold": 0.4,
+      "usable_cutoff": true,
+      "validation_avg_cash_weight": 0.002032141044740866,
+      "validation_avg_daily_turnover": 0.01774952065574077,
+      "validation_cash_delta": -0.023716708130984514,
+      "validation_information_ratio_annualized": 1.3734890134087605,
+      "validation_ir_delta": 0.6731115448132056,
+      "validation_relative_delta": 0.20058423996244334,
+      "validation_relative_total_return": 0.5504348222679714,
+      "variant": "family_router__thr_0p4",
+      "variant_group": "family_router"
+    },
+    "global_path_core_leader": {
+      "avg_exit_signal_count": 0.8541,
+      "confirmation_avg_cash_weight": 0.045141081587658206,
+      "confirmation_avg_daily_turnover": 0.29929052658489913,
+      "confirmation_cash_delta": -0.00779305220697437,
+      "confirmation_information_ratio_annualized": -0.6764290374383946,
+      "confirmation_ir_delta": 0.07531364615856473,
+      "confirmation_relative_delta": 0.024683944651907153,
+      "confirmation_relative_total_return": -0.17489920306691054,
+      "dev_avg_cash_weight": null,
+      "dev_avg_daily_turnover": null,
+      "dev_information_ratio_annualized": null,
+      "dev_relative_total_return": null,
+      "exit_rule_name": "continuation_hazard",
+      "exit_rule_params": {
+        "coef__blocked_sell_streak": 0.0,
+        "coef__holding_age_before": 0.013992295326302284,
+        "coef__peak_return_since_entry": -1.2887433684747456,
+        "coef__return_since_entry": -2.2042696909164667,
+        "coef__score_change_since_entry": -0.42852719974304215,
+        "coef__underwater_days_since_entry": -0.1368232955657007,
+        "continue_prob_threshold": 0.5,
+        "intercept": 0.11849044738824754
+      },
+      "exit_rule_trigger_events": 638,
+      "overall_information_ratio_annualized": 0.455764,
+      "overall_relative_total_return": 0.317135,
+      "promoted": true,
+      "threshold": 0.5,
+      "usable_cutoff": true,
+      "validation_avg_cash_weight": 0.02903765967398784,
+      "validation_avg_daily_turnover": 0.28307433934636944,
+      "validation_cash_delta": 0.003288810498262462,
+      "validation_information_ratio_annualized": 1.0565998723534467,
+      "validation_ir_delta": 0.3562224037578917,
+      "validation_relative_delta": 0.24648146100517843,
+      "validation_relative_total_return": 0.5963320433107064,
+      "variant": "global_path_core__thr_0p5",
+      "variant_group": "global_path_core"
+    },
+    "overall_winner": {
+      "avg_exit_signal_count": 0.8541,
+      "confirmation_avg_cash_weight": 0.045141081587658206,
+      "confirmation_avg_daily_turnover": 0.29929052658489913,
+      "confirmation_cash_delta": -0.00779305220697437,
+      "confirmation_information_ratio_annualized": -0.6764290374383946,
+      "confirmation_ir_delta": 0.07531364615856473,
+      "confirmation_relative_delta": 0.024683944651907153,
+      "confirmation_relative_total_return": -0.17489920306691054,
+      "dev_avg_cash_weight": null,
+      "dev_avg_daily_turnover": null,
+      "dev_information_ratio_annualized": null,
+      "dev_relative_total_return": null,
+      "exit_rule_name": "continuation_hazard",
+      "exit_rule_params": {
+        "coef__blocked_sell_streak": 0.0,
+        "coef__holding_age_before": 0.013992295326302284,
+        "coef__peak_return_since_entry": -1.2887433684747456,
+        "coef__return_since_entry": -2.2042696909164667,
+        "coef__score_change_since_entry": -0.42852719974304215,
+        "coef__underwater_days_since_entry": -0.1368232955657007,
+        "continue_prob_threshold": 0.5,
+        "intercept": 0.11849044738824754
+      },
+      "exit_rule_trigger_events": 638,
+      "overall_information_ratio_annualized": 0.455764,
+      "overall_relative_total_return": 0.317135,
+      "promoted": true,
+      "threshold": 0.5,
+      "usable_cutoff": true,
+      "validation_avg_cash_weight": 0.02903765967398784,
+      "validation_avg_daily_turnover": 0.28307433934636944,
+      "validation_cash_delta": 0.003288810498262462,
+      "validation_information_ratio_annualized": 1.0565998723534467,
+      "validation_ir_delta": 0.3562224037578917,
+      "validation_relative_delta": 0.24648146100517843,
+      "validation_relative_total_return": 0.5963320433107064,
+      "variant": "global_path_core__thr_0p5",
+      "variant_group": "global_path_core"
+    },
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    },
+    "router_intraday_families": [
+      "breakout_followthrough"
+    ],
+    "usable_cutoff_rule": {
+      "max_extra_cash_weight_vs_baseline": 0.15,
+      "requires_positive_exit_events": true
+    }
+  },
+  "ts": "20260403_112830"
+}

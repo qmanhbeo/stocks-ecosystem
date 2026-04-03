@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Mapping
 
 import numpy as np
 import pandas as pd
@@ -176,6 +177,97 @@ def add_intraday_shape_atoms(frame: pd.DataFrame) -> pd.DataFrame:
         work["open_gap_vs_prev_close"] + work["first_60m_return"] - work["full_session_return"]
     )
     return work
+
+
+def build_intraday_router_feature_frame(feature_panel: pd.DataFrame) -> pd.DataFrame:
+    if feature_panel.empty:
+        return pd.DataFrame(columns=["time", "ticker", "intraday_observed", *INTRADAY_SHAPE_ATOM_COLUMNS])
+
+    work = feature_panel.copy()
+    if "session_date" in work.columns and "time" not in work.columns:
+        work = work.rename(columns={"session_date": "time"})
+    work["time"] = pd.to_datetime(work["time"], errors="coerce").dt.normalize()
+    work = add_intraday_shape_atoms(work)
+
+    observed = np.zeros(len(work), dtype=bool)
+    for column in REDUCED_SHAPE_FEATURE_COLUMNS:
+        if column in work.columns:
+            observed |= np.isfinite(pd.to_numeric(work[column], errors="coerce").to_numpy(dtype=float))
+    work["intraday_observed"] = observed.astype(float)
+
+    keep_columns = ["time", "ticker", "intraday_observed", *INTRADAY_SHAPE_ATOM_COLUMNS]
+    available_columns = [column for column in keep_columns if column in work.columns]
+    return work[available_columns].drop_duplicates(["time", "ticker"]).reset_index(drop=True)
+
+
+def continuation_model_params_from_row(row: Mapping[str, object] | pd.Series) -> dict[str, float]:
+    intercept = pd.to_numeric(row.get("intercept"), errors="coerce")
+    params: dict[str, float] = {}
+    if pd.notna(intercept):
+        params["intercept"] = float(intercept)
+    for key, value in row.items():
+        if not str(key).startswith("coef__"):
+            continue
+        coef = pd.to_numeric(value, errors="coerce")
+        if pd.notna(coef):
+            params[str(key)] = float(coef)
+    return params
+
+
+def build_family_aware_continuation_rule_params(
+    router_summary: pd.DataFrame,
+    router_results: pd.DataFrame,
+    fallback_results: pd.DataFrame,
+    *,
+    family_column: str = "entry_thesis_family",
+    fallback_model_name: str = FAMILY_SCOPED_BASELINE_MODEL_NAME,
+    observed_feature_name: str = "intraday_observed",
+    default_model_row: Mapping[str, object] | pd.Series | None = None,
+    continue_prob_threshold: float | None = None,
+) -> dict[str, object]:
+    fallback_frame = fallback_results.copy()
+    if fallback_model_name in fallback_frame.get("model_name", pd.Series(dtype=object)).astype(str).tolist():
+        fallback_frame = fallback_frame.loc[fallback_frame["model_name"].astype(str) == str(fallback_model_name)].copy()
+    fallback_lookup = {
+        str(row[family_column]): continuation_model_params_from_row(row)
+        for _, row in fallback_frame.iterrows()
+        if str(row.get(family_column, "")) != ""
+    }
+    if not fallback_lookup:
+        raise ValueError("Fallback results do not contain any family-scoped continuation models")
+
+    family_models: dict[str, object] = {}
+    for row in router_summary.to_dict(orient="records"):
+        family = str(row.get(family_column, ""))
+        if not family:
+            continue
+        fallback_model = fallback_lookup.get(family)
+        if fallback_model is None:
+            raise ValueError(f"Missing fallback continuation model for family {family!r}")
+        router_model_name = str(row.get("router_model_name", fallback_model_name))
+        uses_intraday = bool(row.get("router_uses_intraday", False))
+        if not uses_intraday or router_model_name == fallback_model_name:
+            family_models[family] = dict(fallback_model)
+            continue
+
+        primary_rows = router_results.loc[
+            (router_results[family_column].astype(str) == family)
+            & (router_results["model_name"].astype(str) == router_model_name)
+        ].copy()
+        if primary_rows.empty:
+            raise ValueError(f"Missing primary continuation model {router_model_name!r} for family {family!r}")
+        family_models[family] = {
+            "primary_model": continuation_model_params_from_row(primary_rows.iloc[0]),
+            "fallback_model": dict(fallback_model),
+            "required_feature_name": str(observed_feature_name),
+        }
+
+    params: dict[str, object] = {"family_models": family_models}
+    if default_model_row is not None:
+        params["default_model"] = continuation_model_params_from_row(default_model_row)
+    if continue_prob_threshold is not None:
+        params["continue_prob_threshold"] = float(continue_prob_threshold)
+    return params
 
 
 def fit_family_scoped_continuation_models(

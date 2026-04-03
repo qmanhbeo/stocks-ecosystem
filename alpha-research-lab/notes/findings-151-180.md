@@ -1347,3 +1347,194 @@ So the narrow recombination does pass the branch rule:
 **Key finding:** reduced-shape intraday does have continuation value on the current observed subset, but only as a family-aware router. The useful contract is narrow and still offline-only; it is not evidence that the original global `H259` formulation should be revived.
 
 **Implication:** keep the live branch unchanged. Keep `H260/H261` closed. Advance only to a narrow `H264`-style deterministic family-aware continuation veto integration on the observed `2023-2025` subset. If that deterministic follow-through fails, the honest fallback is to keep this as offline evidence only and return to selector-state stress or library-atom work.
+
+## F177: H264 Shows The Family-Aware Intraday Router Does Not Survive Deterministic Continuation-Veto Integration; Explicit Path-Only Controls Win The Ladder Cleanly (2026-04-03, Session 94)
+
+Session 94 took the smallest honest deterministic follow-through after `H262/H263`:
+- same restarted `2023-2025` window
+- no `2026+` read
+- no live-branch change
+- no retuning around the final confirmation year after the fact
+
+The deterministic ladder forced three families onto the same cutoff grid:
+- `global_path_core`
+- `family_path_core`
+- `family_router`
+
+All candidates were compared against the always-on baseline.
+
+The session also added the skeptical control that Session 93 still lacked:
+- explicit family-aware `path_core` parity
+- usable-cutoff requirements
+  - positive exit events required
+  - validation and confirmation cash weight had to remain within `+0.15` of the always-on baseline
+
+Cutoff grid:
+- `0.40`
+- `0.45`
+- `0.50`
+- `0.55`
+- `0.60`
+
+The result was not close in branch terms.
+
+Overall deterministic winner:
+- `global_path_core__thr_0p5`
+  - validation relative delta:
+    - `+0.2465`
+  - validation IR delta:
+    - `+0.3562`
+  - confirmation relative delta:
+    - `+0.0247`
+  - exit events:
+    - `638`
+
+Best family-aware path-only control:
+- `family_path_core__thr_0p55`
+  - validation relative delta:
+    - `+0.2183`
+  - validation IR delta:
+    - `+0.3180`
+  - confirmation relative delta:
+    - `+0.0478`
+  - exit events:
+    - `656`
+
+Best family-router cutoff:
+- `family_router__thr_0p4`
+  - validation relative delta:
+    - `+0.2006`
+  - validation IR delta:
+    - `+0.6731`
+  - confirmation relative delta:
+    - `-0.0760`
+  - confirmation IR delta:
+    - `-0.9032`
+  - exit events:
+    - `21`
+
+So the family-router failure mode is clear:
+- validation looked strong
+- but confirmation broke badly
+- and the rule was too sparse to be a convincing deterministic continuation veto
+
+**Key finding:** the Session 93 family-aware intraday contradiction result is real only as observed-subset offline evidence. It does not survive deterministic continuation-veto integration once explicit global and family-aware path-only controls are forced into the same ladder.
+
+**Implication:** close the family-aware continuation-veto branch on the current contract. Do not run `H265`. Keep the live branch unchanged.
+
+## F178: H264's Local Path-Core Winners Are Not A License To Reopen The Generic Continuation-Hazard Exit Branch; The Next Honest Intraday Follow-Through Is Breakout-Entry Trust Relocation (2026-04-03, Session 94)
+
+Session 94 did produce promotable-looking local controls:
+- `global_path_core__thr_0p5`
+- `family_path_core__thr_0p55`
+
+But those are **not** the right branch conclusion.
+
+Why:
+- this session's purpose was incremental intraday verification on a narrow restarted window, not a full historical continuation-branch relaunch
+- the broader continuation-hazard family had already failed the stronger earlier gate
+- the new deterministic path-only wins live only on the restarted `2023-2025` slice and were not tested as a fresh full-history continuation branch
+
+So the honest reading is:
+- intraday continuation integration failed
+- path-only continuation behavior may still be locally useful inside this narrow window
+- but the repo should not reinterpret that as a solved continuation exit family or a live-ready branch
+
+The surviving structural clue is narrower:
+- the only family that ever wanted reduced-shape intraday contradiction was `breakout_followthrough`
+- once continuation integration failed, the remaining high-signal reinterpretation is that the intraday information belongs nearer the entry decision than the hold-vs-exit decision
+
+**Key finding:** the next honest non-live intraday branch is not more continuation tuning. It is `breakout-entry trust relocation`, with selector-state stress and library-grade intraday atoms as secondary fallbacks.
+
+**Implication:** keep the Session 93 family-aware router as offline evidence only, close the continuation-veto follow-through, and pivot the intraday branch away from continuation integration.
+
+## F179: H266 Shows Reduced-Shape Intraday Contradiction Works Better As Breakout Entry Trust Than As Continuation Veto On The Current Restarted Contract (2026-04-03, Session 95)
+
+Session 95 took the smallest honest relocation test after Session 94 closed the continuation-veto branch:
+- same restarted `2023-2025` window
+- no `2026+` read
+- no intraday refetch
+- no live-branch change
+
+The new question was not:
+- "can intraday rescue continuation if tuned differently?"
+
+It was:
+- if reduced-shape intraday only survives inside `breakout_followthrough`, does it belong nearer the entry decision?
+
+The audit rebuilt thesis-family assignment on the entry candidate panel, restricted to:
+- `breakout_followthrough`
+- `can_buy_next_open == True`
+- rows with reduced-shape intraday observed
+
+Result summary:
+- breakout buyable rows:
+  - `6,216`
+- observed breakout rows:
+  - `5,869`
+- observed breakout share:
+  - `94.42%`
+
+Best non-intraday control:
+- `selection_baseline`
+  - validation AUC:
+    - `0.5132`
+  - validation top-quintile cycle return:
+    - `-0.00170`
+  - confirmation top-quintile cycle return:
+    - `-0.00142`
+
+Best intraday model:
+- `intraday_shape_core`
+  - validation AUC:
+    - `0.5151`
+  - validation top-quintile cycle return:
+    - `+0.00233`
+  - confirmation AUC:
+    - `0.5593`
+  - confirmation top-quintile cycle return:
+    - `+0.00410`
+
+Breakout subset mean cycle return:
+- validation:
+  - `+0.00094`
+- confirmation:
+  - `-0.00231`
+
+So the relocation does pass the honest branch gate:
+- best intraday model beats the best non-intraday control on validation AUC
+- validation top-quintile cycle return flips positive and beats the ungated breakout-subset mean
+- confirmation top-quintile cycle return stays positive and beats the breakout-subset mean by a wide margin
+
+**Key finding:** on the current `2023-2025` restarted contract, reduced-shape intraday contradiction is more credible as breakout-entry trust than as a deterministic continuation veto.
+
+**Implication:** keep the result offline-only, keep the live branch frozen, and advance only to deterministic breakout-entry gate integration (`H267`).
+
+## F180: H266 Also Shows The Working Contract Is The Observed Breakout Entry Subset, Not A Universal Entry Surface; Missingness Stops Being The Main Objection There (2026-04-03, Session 95)
+
+One reason to be skeptical of the intraday relocation branch was contract honesty:
+- the universal reduced-shape intraday artifact is still not publishable as a clean shared feature surface
+- complete-day share remains too weak in the illiquid tail
+
+But `H266` makes the narrower usable contract explicit.
+
+On the breakout-entry subset actually under test:
+- buyable breakout rows:
+  - `6,216`
+- observed intraday rows:
+  - `5,869`
+- observed share:
+  - `94.42%`
+
+That is very different from the universal cross-market artifact problem:
+- the branch is no longer dying because intraday is mostly missing on the rows that matter
+- it is now living or dying on whether the score survives deterministic entry integration
+
+So the right next question is also narrower:
+- not "publish reduced-shape intraday everywhere"
+- not "promote an entry model directly to live"
+- but "does a deterministic breakout-entry gate built from the `H266` score beat the ungated breakout subset honestly?"
+
+**Key finding:** the blocker has shifted from acquisition / coverage to deterministic integration on a high-observed-share breakout-entry slice.
+
+**Implication:** `H267` is the next honest test. If it fails, do not keep stretching the same contract; pivot to the breakout-survivor label rewrite or top-k intraday stress routing instead.

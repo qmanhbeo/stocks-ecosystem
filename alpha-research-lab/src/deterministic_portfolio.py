@@ -729,9 +729,11 @@ def _compute_exit_signal_mask(
             "score_rank": np.nan_to_num(rank_arr, nan=0.0),
             "entry_rank": np.nan_to_num(entry_rank_arr, nan=0.0),
         }
+        raw_feature_lookup: dict[str, np.ndarray] = {}
         for feature_name, values in (current_feature_values or {}).items():
-            feature_lookup[str(feature_name)] = np.nan_to_num(np.asarray(values, dtype=np.float64), nan=0.0)
-        linear = float(params.get("intercept", 0.0))
+            raw_values = np.asarray(values, dtype=np.float64)
+            raw_feature_lookup[str(feature_name)] = raw_values
+            feature_lookup[str(feature_name)] = np.nan_to_num(raw_values, nan=0.0)
         legacy_map = {
             "coef_holding_age_before": "holding_age_before",
             "coef_score_change_since_entry": "score_change_since_entry",
@@ -743,19 +745,77 @@ def _compute_exit_signal_mask(
             "coef_score_rank": "score_rank",
             "coef_entry_rank": "entry_rank",
         }
-        for param_name, feature_name in legacy_map.items():
-            coef = float(params.get(param_name, 0.0))
-            if coef != 0.0:
-                linear += coef * feature_lookup[feature_name]
-        for param_name, value in params.items():
-            if not str(param_name).startswith("coef__"):
-                continue
-            feature_name = str(param_name).split("coef__", 1)[1]
-            feature_values = feature_lookup.get(feature_name)
-            if feature_values is None:
-                continue
-            linear += float(value) * feature_values
-        continue_prob = 1.0 / (1.0 + np.exp(-np.clip(linear, -50.0, 50.0)))
+
+        def _safe_float(value: object, default: float = 0.0) -> float:
+            numeric = pd.to_numeric(value, errors="coerce")
+            return float(default) if pd.isna(numeric) else float(numeric)
+
+        def _continue_prob_from_model(model_params: Mapping[str, object]) -> np.ndarray:
+            linear = np.full_like(score_arr, _safe_float(model_params.get("intercept", 0.0)), dtype=np.float64)
+            for param_name, feature_name in legacy_map.items():
+                coef = _safe_float(model_params.get(param_name, 0.0))
+                if coef != 0.0:
+                    linear += coef * feature_lookup[feature_name]
+            for param_name, value in model_params.items():
+                if not str(param_name).startswith("coef__"):
+                    continue
+                feature_name = str(param_name).split("coef__", 1)[1]
+                feature_values = feature_lookup.get(feature_name)
+                if feature_values is None:
+                    continue
+                linear += _safe_float(value) * feature_values
+            return 1.0 / (1.0 + np.exp(-np.clip(linear, -50.0, 50.0)))
+
+        family_models = params.get("family_models")
+        if isinstance(family_models, Mapping) and family_models:
+            default_model = params.get("default_model")
+            continue_prob = (
+                _continue_prob_from_model(default_model)
+                if isinstance(default_model, Mapping)
+                else np.full_like(score_arr, 0.5, dtype=np.float64)
+            )
+            entry_family_codes = np.asarray(entry_thesis_family_codes, dtype=np.int64)
+            family_name_to_code = {name: idx for idx, name in enumerate(THESIS_FAMILY_NAMES)}
+            for family_name, model_config in family_models.items():
+                family_code = family_name_to_code.get(str(family_name))
+                if family_code is None:
+                    continue
+                family_mask = legal_to_exit & (entry_family_codes == family_code)
+                if not np.any(family_mask):
+                    continue
+                if (
+                    isinstance(model_config, Mapping)
+                    and (
+                        "primary_model" in model_config
+                        or "fallback_model" in model_config
+                        or "required_feature_name" in model_config
+                    )
+                ):
+                    primary_model = model_config.get("primary_model")
+                    fallback_model = model_config.get("fallback_model")
+                    required_feature_name = str(model_config.get("required_feature_name") or "")
+                    family_prob = continue_prob[family_mask].copy()
+                    if isinstance(fallback_model, Mapping):
+                        fallback_prob = _continue_prob_from_model(fallback_model)
+                        family_prob = fallback_prob[family_mask]
+                    observed_mask = np.ones_like(score_arr, dtype=bool)
+                    if required_feature_name:
+                        required_values = raw_feature_lookup.get(required_feature_name)
+                        if required_values is None:
+                            observed_mask = np.zeros_like(score_arr, dtype=bool)
+                        else:
+                            observed_mask = np.isfinite(required_values) & (required_values > 0.0)
+                    if isinstance(primary_model, Mapping):
+                        primary_prob = _continue_prob_from_model(primary_model)
+                        use_primary = family_mask & observed_mask
+                        if np.any(use_primary):
+                            family_prob = np.where(use_primary[family_mask], primary_prob[family_mask], family_prob)
+                    continue_prob[family_mask] = family_prob
+                elif isinstance(model_config, Mapping):
+                    family_prob = _continue_prob_from_model(model_config)
+                    continue_prob[family_mask] = family_prob[family_mask]
+        else:
+            continue_prob = _continue_prob_from_model(params)
         exit_mask = legal_to_exit & (continue_prob < continue_prob_threshold)
     else:
         raise ValueError(f"Unknown exit_rule_name {exit_rule_name!r}")

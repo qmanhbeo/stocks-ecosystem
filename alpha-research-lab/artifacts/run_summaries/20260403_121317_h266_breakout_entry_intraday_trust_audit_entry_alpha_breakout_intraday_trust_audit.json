@@ -1,0 +1,155 @@
+{
+  "artifacts": {
+    "results": "artifacts/entry_alpha/20260403_121317_h266_breakout_entry_intraday_trust_audit_results.parquet",
+    "scored_panel": "artifacts/entry_alpha/20260403_121317_h266_breakout_entry_intraday_trust_audit_scored_panel.parquet",
+    "subset_panel": "artifacts/entry_alpha/20260403_121317_h266_breakout_entry_intraday_trust_audit_subset_panel.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Breakout-followthrough-like entry rows only, 2023-2025 only, reduced-shape observed subset only",
+    "candidate_cache": "artifacts/entry_alpha/h266_candidate_panel_2023_2025.parquet",
+    "h258_summary": "artifacts/run_summaries/latest_timing_reduced_shape_intraday_contract_audit.json",
+    "labels_cache": "artifacts/entry_alpha/h266_base_labels_2023_2025.parquet",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    }
+  },
+  "mode": "entry_alpha_breakout_intraday_trust_audit",
+  "name": "h266_breakout_entry_intraday_trust_audit",
+  "summary": {
+    "advance_to_h267": true,
+    "best_intraday_model": {
+      "coef__breakout_20d": null,
+      "coef__c12_gap_absorb_3": null,
+      "coef__c13_compress_blowoff_2": null,
+      "coef__c14_clv_volconf_resid_rank": null,
+      "coef__c8_vol_zscore_5d": null,
+      "coef__candidate_pool_rank": null,
+      "coef__close_hour_return": -0.5486363102538531,
+      "coef__close_repair_return": -3.1833506125758695,
+      "coef__failed_breakout_proxy": null,
+      "coef__first_60m_range_pct": -5.144033181394285,
+      "coef__first_60m_return": -1.6109709656342501,
+      "coef__first_hour_fade_proxy": null,
+      "coef__full_session_return": -3.2603067335939873,
+      "coef__gap_to_prev_close": null,
+      "coef__open_drive_then_fade_proxy": null,
+      "coef__open_gap_vs_prev_close": -3.0819202531162087,
+      "coef__ret_1d": null,
+      "coef__selection_score": null,
+      "coef__weak_open_strong_close_proxy": null,
+      "confirmation_auc": 0.5592916871618298,
+      "confirmation_count": 1699,
+      "confirmation_mean_cycle_return_net": -0.0023127122080183232,
+      "confirmation_positive_rate": 0.44084755738669806,
+      "confirmation_top_quintile_cycle_return_net": 0.004099430198424912,
+      "dev_auc": 0.5358373793682191,
+      "dev_count": 2068,
+      "dev_mean_cycle_return_net": 0.0008133542618520406,
+      "dev_positive_rate": 0.4816247582205029,
+      "dev_top_quintile_cycle_return_net": 0.006237945072284991,
+      "feature_columns": [
+        "open_gap_vs_prev_close",
+        "first_60m_return",
+        "first_60m_range_pct",
+        "close_hour_return",
+        "close_repair_return",
+        "full_session_return"
+      ],
+      "forward_auc": null,
+      "forward_count": 0,
+      "forward_mean_cycle_return_net": null,
+      "forward_positive_rate": null,
+      "forward_top_quintile_cycle_return_net": null,
+      "intercept": 0.07035866237782847,
+      "model_group": "intraday",
+      "model_name": "intraday_shape_core",
+      "promoted_label_only": false,
+      "validation_auc": 0.5150972669769662,
+      "validation_count": 2020,
+      "validation_mean_cycle_return_net": 0.0009444083150886549,
+      "validation_positive_rate": 0.4608910891089109,
+      "validation_top_quintile_cycle_return_net": 0.0023278220011552263
+    },
+    "best_path_model": {
+      "coef__breakout_20d": null,
+      "coef__c12_gap_absorb_3": null,
+      "coef__c13_compress_blowoff_2": null,
+      "coef__c14_clv_volconf_resid_rank": null,
+      "coef__c8_vol_zscore_5d": null,
+      "coef__candidate_pool_rank": -0.0466845481050813,
+      "coef__close_hour_return": null,
+      "coef__close_repair_return": null,
+      "coef__failed_breakout_proxy": null,
+      "coef__first_60m_range_pct": null,
+      "coef__first_60m_return": null,
+      "coef__first_hour_fade_proxy": null,
+      "coef__full_session_return": null,
+      "coef__gap_to_prev_close": null,
+      "coef__open_drive_then_fade_proxy": null,
+      "coef__open_gap_vs_prev_close": null,
+      "coef__ret_1d": null,
+      "coef__selection_score": -7.463469559218238,
+      "coef__weak_open_strong_close_proxy": null,
+      "confirmation_auc": 0.5366734593493079,
+      "confirmation_count": 1699,
+      "confirmation_mean_cycle_return_net": -0.0023127122080183232,
+      "confirmation_positive_rate": 0.44084755738669806,
+      "confirmation_top_quintile_cycle_return_net": -0.001420743129326139,
+      "dev_auc": 0.5456518237127614,
+      "dev_count": 2068,
+      "dev_mean_cycle_return_net": 0.0008133542618520406,
+      "dev_positive_rate": 0.4816247582205029,
+      "dev_top_quintile_cycle_return_net": 0.014684859631627545,
+      "feature_columns": [
+        "selection_score",
+        "candidate_pool_rank"
+      ],
+      "forward_auc": null,
+      "forward_count": 0,
+      "forward_mean_cycle_return_net": null,
+      "forward_positive_rate": null,
+      "forward_top_quintile_cycle_return_net": null,
+      "intercept": 5.065099573098853,
+      "model_group": "control",
+      "model_name": "selection_baseline",
+      "promoted_label_only": false,
+      "validation_auc": 0.5131798405892732,
+      "validation_count": 2020,
+      "validation_mean_cycle_return_net": 0.0009444083150886549,
+      "validation_positive_rate": 0.4608910891089109,
+      "validation_top_quintile_cycle_return_net": -0.00170491627719647
+    },
+    "breakout_buyable_row_count": 6216,
+    "breakout_family": "breakout_followthrough",
+    "decision": "PASSED",
+    "observed_breakout_row_count": 5869,
+    "observed_breakout_share": 0.9441763191763192,
+    "phase_breakout_mean_cycle_return_net": {
+      "confirmation": -0.0023127122080183232,
+      "dev": 0.0008133542618520406,
+      "validation": 0.0009444083150886549
+    },
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    }
+  },
+  "ts": "20260403_121317"
+}

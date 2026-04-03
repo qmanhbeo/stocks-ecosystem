@@ -1,14 +1,14 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_93_log.md` for the latest full session detail.
+Use `notes/session_99_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Current State
 
-**Session status:** Session 93 ran the first honest family-aware follow-through on the saved `H259` observed panel only, so the `2026+` lockbox stayed untouched. `H262` **PASSED**: the global `H259` failure was an aggregation failure, not a total mechanism kill. Reduced-shape intraday contradiction survives only inside `breakout_followthrough`, where `intraday_atoms` beat that family's path-core baseline by `+0.1589` validation AUC and `+0.0308` validation top-quintile hold advantage, with confirmation top-quintile hold advantage `+0.0457`. `H263` then **PASSED**: a pooled family-aware router that uses intraday only for `breakout_followthrough` beats the global `H259` path-only observed baseline on validation AUC (`0.4963` vs `0.4895`), validation top-quintile hold advantage (`-0.00024` vs `-0.00078`), and confirmation top-quintile hold advantage (`+0.00159` vs `-0.00848`). Branch consequence: keep the live branch unchanged, keep `H260/H261` closed, keep `H233` unresolved, promote the family-aware router as offline evidence only, and advance the active non-live intraday branch to deterministic family-aware continuation integration (`H264`) rather than back to generic global intraday screens. (2026-04-03)
+**Session status:** Session 99 ran the next materially different fallback after the `H269` current-account failure, still without touching the `2026+` lockbox. `H270` **PASSED**: rewriting the breakout target from generic `buy_now` into fixed breakout-survivor contracts revived the reduced-shape intraday branch on the observed breakout sleeve. The winning contract was `net_soft_survivor` (`5d cycle_return_net > -0.01` and `10d cycle_return_net > 0.00`), where `intraday_shape_core` beat `breakout_path_core` on validation AUC (`0.5168` vs `0.5074`) and delivered positive above-mean top-quintile `10d` returns in both validation (`+0.87%` vs phase mean `+0.18%`) and confirmation (`+0.89%` vs phase mean `+0.59%`). Branch consequence: keep the live branch unchanged, promote `H270` as offline evidence only, and advance the exact branch to deterministic breakout-survivor gate integration (`H271`). (2026-04-03)
 
 ### Start next session here
 
@@ -33,7 +33,68 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
      - `H262` passed only for `breakout_followthrough`
      - `H263` passed as a pooled family-aware router
    - do **not** open `H260/H261` on the dead direct-restart contract
-   - the next honest intraday continuation step is `H264`, deterministic family-aware integration on the observed subset only
+   - Session 94 then ran that deterministic follow-through honestly:
+     - `H264` failed
+     - the best family-router cutoff looked good on validation but broke on confirmation and triggered only `21` exits
+     - both global and family-aware `path_core` controls beat it
+   - do **not** run `H265`
+   - do **not** keep tuning continuation on this intraday branch
+   - Session 95 then relocated the surviving breakout-specific intraday information to entry honestly:
+     - `H266` passed
+     - best intraday model:
+       - `intraday_shape_core`
+       - validation AUC `0.5151`
+       - validation top-quintile cycle return `+0.00233`
+       - confirmation top-quintile cycle return `+0.00410`
+     - best non-intraday control:
+       - `selection_baseline`
+       - validation AUC `0.5132`
+       - validation top-quintile cycle return `-0.00170`
+       - confirmation top-quintile cycle return `-0.00142`
+     - observed breakout share:
+       - `94.42%`
+   - do **not** change the live branch yet
+   - Session 96 then completed the first deterministic entry-side follow-through honestly:
+     - `H267` passed
+     - winning gate:
+       - `dev_q90`
+       - threshold `0.5198`
+   - Session 97 then tested reintegration into the carried broader book honestly:
+     - `H268` passed narrowly
+   - Session 98 then ran the last narrow current-account compatibility check:
+     - `H269` failed
+     - candidate `h268_overlay_plus_sticky`:
+       - validation relative return `-0.5635`
+       - confirmation relative return `-0.3364`
+       - overall relative return `-0.5495`
+     - operational sticky baseline:
+       - validation relative return `-0.0873`
+       - confirmation relative return `+0.1880`
+       - overall relative return `+0.4660`
+     - the candidate also lost to the carried sparse control
+     - narrowness cost dominated:
+       - `VC` sparse-book rate `0.9800`
+       - `VC` avg holdings `0.7014`
+   - do **not** change the live branch yet
+   - close this exact breakout-trust continuation family on the current contract
+   - Session 99 then reopened a materially different breakout-local branch honestly:
+     - `H270` passed the breakout survivor label rewrite audit
+     - winning contract:
+       - `net_soft_survivor`
+       - `5d cycle_return_net > -0.01`
+       - `10d cycle_return_net > 0.00`
+     - winning intraday model:
+       - `intraday_shape_core`
+       - validation AUC `0.5168` vs `0.5074` for `breakout_path_core`
+       - validation top-quintile `10d` return `+0.87%` vs phase mean `+0.18%`
+       - confirmation top-quintile `10d` return `+0.89%` vs phase mean `+0.59%`
+     - best path control still had the stronger confirmation top-quintile `10d` return:
+       - `breakout_path_core`
+       - `+1.24%`
+   - do **not** change the live branch yet
+   - keep `H270` as offline evidence only until deterministic follow-through is tested
+   - the next exact branch is:
+     - `H271` deterministic breakout-survivor gate integration
    - order-book / queue work remains blocked
 5. Treat the current daily-data synthesis queue as exhausted:
    - `H253-H256` closed the remaining recombination ideas on the current stack
@@ -72,6 +133,21 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
        - the intraday branch is still observed-subset and offline-only:
          - do **not** claim `H233` solved
          - do **not** change the live branch
+     - Session 94 then completed the deterministic follow-through:
+       - `H264` failed
+       - best family-router cutoff:
+         - `family_router__thr_0p4`
+         - validation relative delta `+0.2006`
+         - confirmation relative delta `-0.0760`
+         - exit events `21`
+       - overall deterministic winner:
+         - `global_path_core__thr_0p5`
+       - family-aware path-only control also beat the router:
+         - `family_path_core__thr_0p55`
+       - branch consequence:
+         - keep the Session 93 router as offline evidence only
+         - do **not** run `H265`
+         - pivot away from continuation integration
      - Sessions 89-90 also resolved the parallel event-source search:
        - `H234` passed using the local CafeF company-news archive with exact `published_at` timestamps and conservative title-ticker linkage
        - recovered family coverage already includes:
@@ -91,17 +167,24 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
      - first: keep the reduced-shape intraday branch narrow and honest:
        - do **not** reopen the dead global `H259` formulation
        - do **not** claim `H233` solved
-     - second: continue the current intraday model-side branch with:
-       - `H264` deterministic family-aware continuation veto integration
-       - and only if that passes, `H265` sticky / frozen compatibility
-     - third: if the family-aware continuation branch stalls, fall back to:
+     - second: the current continuation-veto follow-through is now closed:
+       - `H264` failed
+       - do **not** run `H265`
+       - do **not** keep tuning continuation on this contract
+     - third: the breakout-trust continuation family is now closed on this contract:
+       - `H269` failed
+     - fourth: the breakout-survivor label rewrite is now live as the exact narrow follow-through:
+       - `H270` passed
+       - next exact step is `H271`
+     - fifth: if that stalls further, fall back to:
+       - selector-state / stress summaries
+     - sixth: if that stalls further, fall back to:
        - library-grade intraday state atoms
-       - or selector-state / stress summaries
-     - fourth: keep the richer event-source branch parked as acquisition evidence only:
+     - seventh: keep the richer event-source branch parked as acquisition evidence only:
        - `H234` passed source identification
        - `H235` is mixed but non-promoting
        - do **not** spend more local effort trying to publish event surface v2 from the current archive alone
-     - fifth: if neither is being worked, just keep live monitoring and let fetch continue
+     - eighth: if neither is being worked, just keep live monitoring and let fetch continue
    - do not confuse that branch with the separate parked stock-specific entry-alpha architecture branch documented in `README.md`, `README_for_AGENTS.md`, and `notes/session_75_log.md` plus `notes/session_76_log.md` plus `notes/session_77_log.md` plus `notes/session_78_log.md` plus `notes/session_79_log.md`
      - Sessions 75-79 already ran the first offline ladder plus the small-book follow-through (`H238-H248`)
      - current conclusion:
@@ -510,32 +593,111 @@ Use it to learn whether reduced-shape open / first-hour / close-hour structure i
 
 - `thesis-family intraday contradiction router`
   - status:
-    - completed in Session 93
+    - completed in Sessions 93-94
     - `H262` passed:
       - the mechanism survives only inside `breakout_followthrough`
     - `H263` passed:
       - the pooled family-aware router beats the global `H259` path-only observed baseline
+    - `H264` failed:
+      - the router does not survive deterministic continuation-veto integration
+      - explicit global and family-aware path-only controls both beat it
     - keep the result offline-only:
       - do **not** change the live branch
       - do **not** reopen `H260/H261`
+      - do **not** run `H265`
   - claim:
     - the first reduced-shape exit screen failed because it mixed incompatible entry-thesis families; reduced-shape intraday only matters as a contradiction / trust state inside the `breakout_followthrough` family on the current observed subset.
   - smallest honest next test:
-    - run deterministic family-aware continuation veto integration on the observed subset: use the `H263` router contract exactly as audited, keep `crowding_pressure` and `momentum_continuation` on path-core treatment, and continue only if the deterministic path improves validation and confirmation without touching `2026+`.
+    - no further continuation-veto follow-through remains open on this contract; if intraday work continues, relocate the surviving breakout signal closer to entry or selector-state work.
 
 - `family-aware deterministic continuation veto integration`
+  - status:
+    - completed in Session 94
+    - `H264` failed
+    - overall deterministic winner:
+      - `global_path_core__thr_0p5`
+    - best family-aware path-only control:
+      - `family_path_core__thr_0p55`
+    - best family-router cutoff:
+      - `family_router__thr_0p4`
+      - strong validation, broken confirmation, only `21` exit events
+    - branch consequence:
+      - close the continuation-veto follow-through
+      - do **not** run `H265`
   - claim:
     - the `H263` pooled router is strong enough to justify one deterministic follow-through: intraday contradiction should veto or downweight continuation only for `breakout_followthrough`, while the other families remain on path-core handling.
   - smallest honest next test:
-    - build a deterministic observed-subset continuation gate from the `H263` family map and compare it against the observed-subset `path_core_observed` baseline; only if that passes should the branch continue to sticky / frozen compatibility.
+    - no continuation follow-through remains honest here; the next branch should move the surviving breakout-specific intraday information away from hold-vs-exit and toward entry trust or selector-state use.
+
+- `breakout-entry trust relocation`
+  - status:
+    - completed in Sessions 95-98
+    - `H266` passed the predictive audit on the observed breakout-entry subset
+    - `H267` passed the deterministic breakout-sleeve gate follow-through
+    - `H268` passed narrow reintegration
+    - `H269` failed current-account compatibility
+    - keep the result offline-only:
+      - do **not** change the live branch
+  - claim:
+    - the surviving reduced-shape intraday mechanism may belong at entry rather than continuation: if only `breakout_followthrough` wants intraday contradiction, the real edge may be in deciding which breakout entries deserve to be taken or trusted the next day.
+  - smallest honest next test:
+    - no further breakout-sleeve-only follow-through is honest here; the next step is reintegration:
+      - apply the `H267` winner only to `breakout_followthrough` rows inside the broader entry ladder and compare that mixed-family book against the ungated broader baseline
+
+- `family-local breakout trust compatibility integration`
+  - status:
+    - completed in Sessions 97-98
+    - `H268` passed narrowly on the carried sparse-breadth contract
+    - `H269` failed in the operational / current-account framing
+    - keep the result offline-only:
+      - do **not** change the live branch
+  - claim:
+    - if the `H267` high-conviction gate is real, it should still help when applied only to `breakout_followthrough` rows inside the broader entry book, while leaving the other families unchanged.
+  - smallest honest next test:
+    - none on the current contract:
+      - `H269` already failed the final current-account compatibility check
+      - park the branch as offline evidence only
+
+- `breakout survivor label rewrite`
+  - status:
+    - completed in Session 99
+    - `H270` passed on the observed breakout sleeve
+    - keep the result offline-only:
+      - do **not** change the live branch
+  - claim:
+    - the intraday contradiction signal may be failing because the branch keeps asking a generic `buy_now` or `hold_vs_exit` question; the real target may be narrower: whether a breakout candidate survives the next `1-2` cycles without immediate failure.
+  - smallest honest next test:
+    - no more label-contract tuning on this pass:
+      - carry the `H270` winner forward to deterministic integration (`H271`)
+
+- `breakout survivor gate integration`
+  - status:
+    - active next branch after Session 99
+    - `H270` passed the label rewrite audit on the observed breakout sleeve
+  - claim:
+    - if the `H270` survivor-target winner is structurally real, a simple deterministic gate on the observed breakout sleeve should improve realized `10d` breakout-survivor economics without needing broad-book reintegration yet.
+  - smallest honest next test:
+    - calibrate a tiny dev-only threshold grid on the `H270` winning score (`entry_prob__intraday_shape_core`) under the `net_soft_survivor` contract, compare it against the ungated observed breakout survivor sleeve, and only advance if validation and confirmation `10d` return remain above the carried survivor baseline.
 
 - `top-k intraday stress router`
+  - status:
+    - first fallback if the breakout-survivor deterministic follow-through fails
   - claim:
     - the pseudo-live failure of the daily blocked-buy family may reflect slow implementation-pain proxies rather than a dead mechanism; rebalance-date breadth of first-hour fade, failed breakout, and weak close-repair across the selector's top names may be the missing activation state variable.
   - smallest honest next test:
     - compute date-level stress summaries over the selector's top-k candidates and test them as offline gates on top of the frozen sticky branch; kill quickly if they only recreate the old blocked-buy defensiveness without improving the `2023-2025` pseudo-live ladder.
 
+- `event-to-intraday state transition`
+  - status:
+    - novel side branch if the lab wants one more materially different timing experiment before waiting for new data
+  - claim:
+    - the event branch may have failed because raw event timing is too weak alone, while intraday contradiction may only matter on event-driven repricing days; the real state could be event-triggered intraday truth serum, not raw event features or raw intraday features separately.
+  - smallest honest next test:
+    - intersect `data/features/event_surface_daily.parquet` with the reduced-shape intraday panel on the `breakout_followthrough`-like candidate subset and test whether event-day intraday contradiction gates outperform the same breakout subset without the event condition.
+
 - `library-grade intraday shape atoms`
+  - status:
+    - best signal-library fallback if branch-level timing work stalls
   - claim:
     - the lab already captured daily open/close asymmetry and gap absorption, but the new multi-ticker `1H` history can test intraday shape atoms those daily bars could not see cleanly: opening drive then fade, weak morning then close repair, and first-hour range expansion without follow-through.
   - smallest honest next test:

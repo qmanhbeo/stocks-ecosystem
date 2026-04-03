@@ -6,11 +6,13 @@ import pandas as pd
 from src.entry_alpha_research import (
     EntryModelSpec,
     apply_date_gate_to_entry_allowed_matrix,
+    assign_entry_thesis_family,
     build_entry_row_mask,
     build_entry_allowed_matrix_from_score,
     build_small_book_confirmation_overlay_frame,
     build_small_book_threshold_series,
     build_entry_score_panel,
+    build_survivor_label_series,
     build_single_family_screen_frame,
     build_soft_exposure_scale,
     build_soft_threshold_by_date,
@@ -55,6 +57,26 @@ def test_prepare_entry_research_panel_adds_phase_release_and_ranks():
     assert "entry_gap_down_rank" in panel.columns
     assert "entry_low_ceiling_rank" in panel.columns
     assert float(panel.loc[panel["time"] == pd.Timestamp("2023-01-03"), "entry_gap_down_rank"].iloc[0]) >= 0.5
+
+
+def test_assign_entry_thesis_family_prefers_breakout_components():
+    panel = pd.DataFrame(
+        {
+            "s1_proba": [0.20, 0.90],
+            "c11_ret_60d_lag_rank": [0.15, 0.85],
+            "c8_vol_zscore_5d": [0.95, 0.10],
+            "c12_gap_absorb_3": [0.90, 0.15],
+            "c13_compress_blowoff_2": [0.92, 0.10],
+            "c14_clv_volconf_resid_rank": [0.88, 0.12],
+            "c7_ceiling_count_5d": [0.05, 0.30],
+            "c10_illiq_level_rank": [0.10, 0.25],
+        }
+    )
+
+    enriched = assign_entry_thesis_family(panel)
+
+    assert enriched["entry_thesis_family"].tolist() == ["breakout_followthrough", "momentum_continuation"]
+    assert float(enriched.loc[0, "entry_thesis_score"]) > float(enriched.loc[1, "entry_thesis_score"])
 
 
 def test_build_single_family_screen_frame_flags_expected_rows():
@@ -134,6 +156,24 @@ def test_build_entry_row_mask_applies_rank_score_gap_and_buyability():
     )
 
     assert mask.tolist() == [True, True, False, False]
+
+
+def test_build_survivor_label_series_applies_dual_floors_and_missingness():
+    panel = pd.DataFrame(
+        {
+            "cycle_return_net": [-0.005, -0.015, 0.010, np.nan],
+            "cycle10_relative_return_vs_vnindex": [-0.005, 0.020, 0.015, 0.010],
+        }
+    )
+
+    labels = build_survivor_label_series(
+        panel,
+        immediate_return_floor=-0.01,
+        extended_floor=0.00,
+        extended_column="cycle10_relative_return_vs_vnindex",
+    )
+
+    assert labels.astype("object").tolist() == [0, 0, 1, pd.NA]
 
 
 def test_fit_entry_model_scores_dataset_and_builds_score_panel():

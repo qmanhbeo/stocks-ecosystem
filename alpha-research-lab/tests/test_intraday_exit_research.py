@@ -11,8 +11,11 @@ from src.intraday_exit_research import (
     REDUCED_SHAPE_FEATURE_COLUMNS,
     add_intraday_shape_atoms,
     annotate_family_contradiction_results,
+    build_family_aware_continuation_rule_params,
     build_family_aware_router_scores,
+    build_intraday_router_feature_frame,
     build_reduced_shape_feature_panel,
+    continuation_model_params_from_row,
     family_score_column,
     fit_family_scoped_continuation_models,
     merge_reduced_shape_panel,
@@ -243,3 +246,81 @@ def test_family_router_summary_uses_intraday_only_for_passing_family():
     routed = build_family_aware_router_scores(scored_panel, family_summary)
     assert np.isclose(routed.loc[0, "family_router_prob"], 0.90)
     assert np.isclose(routed.loc[1, "family_router_prob"], 0.20)
+
+
+def test_build_intraday_router_feature_frame_marks_observed_rows():
+    feature_panel = pd.DataFrame(
+        {
+            "session_date": pd.to_datetime(["2023-01-02", "2023-01-03"]),
+            "ticker": ["AAA", "BBB"],
+            "open_gap_vs_prev_close": [0.01, np.nan],
+            "first_60m_return": [0.02, np.nan],
+            "first_60m_range_pct": [0.03, np.nan],
+            "close_hour_return": [0.01, np.nan],
+            "close_repair_return": [0.00, np.nan],
+            "full_session_return": [0.02, np.nan],
+        }
+    )
+
+    frame = build_intraday_router_feature_frame(feature_panel)
+
+    assert set(["time", "ticker", "intraday_observed", *INTRADAY_SHAPE_ATOM_COLUMNS]).issubset(frame.columns)
+    assert frame["intraday_observed"].tolist() == [1.0, 0.0]
+
+
+def test_build_family_aware_continuation_rule_params_uses_intraday_fallback():
+    router_summary = pd.DataFrame(
+        {
+            "entry_thesis_family": ["breakout_followthrough", "momentum_continuation"],
+            "router_model_name": ["intraday_atoms", "path_core"],
+            "router_uses_intraday": [True, False],
+        }
+    )
+    router_results = pd.DataFrame(
+        {
+            "entry_thesis_family": ["breakout_followthrough"],
+            "model_name": ["intraday_atoms"],
+            "intercept": [0.25],
+            "coef__failed_breakout_proxy": [-2.0],
+        }
+    )
+    fallback_results = pd.DataFrame(
+        {
+            "entry_thesis_family": ["breakout_followthrough", "momentum_continuation"],
+            "model_name": ["path_core", "path_core"],
+            "intercept": [0.50, -0.25],
+            "coef__holding_age_before": [1.0, -1.0],
+        }
+    )
+
+    params = build_family_aware_continuation_rule_params(
+        router_summary,
+        router_results,
+        fallback_results,
+        default_model_row={"intercept": 0.1, "coef__holding_age_before": 0.3},
+        continue_prob_threshold=0.45,
+    )
+
+    breakout = params["family_models"]["breakout_followthrough"]
+    momentum = params["family_models"]["momentum_continuation"]
+    assert np.isclose(params["continue_prob_threshold"], 0.45)
+    assert breakout["required_feature_name"] == "intraday_observed"
+    assert np.isclose(breakout["primary_model"]["coef__failed_breakout_proxy"], -2.0)
+    assert np.isclose(breakout["fallback_model"]["coef__holding_age_before"], 1.0)
+    assert np.isclose(momentum["coef__holding_age_before"], -1.0)
+    assert np.isclose(params["default_model"]["coef__holding_age_before"], 0.3)
+
+
+def test_continuation_model_params_from_row_drops_nan_coefficients():
+    row = {
+        "intercept": 0.2,
+        "coef__holding_age_before": 1.5,
+        "coef__first_hour_fade_proxy": np.nan,
+        "model_name": "path_core",
+    }
+
+    params = continuation_model_params_from_row(row)
+
+    assert np.isclose(params["intercept"], 0.2)
+    assert np.isclose(params["coef__holding_age_before"], 1.5)
+    assert "coef__first_hour_fade_proxy" not in params
