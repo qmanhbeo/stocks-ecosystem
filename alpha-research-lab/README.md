@@ -168,12 +168,13 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
 - Session 65 validated that the complex `blocked5 + sector_cap_3` winner is reproducible
 - but `H193` rejected it on the expanding-train / next-year pseudo-live ladder
 - the sticky branch beat all blocked-buy variants on mean relative return and mean IR over `2023-2025`
-- current live overlay state from the `2026-03-26` signal / `2026-03-27` execution:
-  - `ON`
-  - holdings: `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
+- current live overlay state from the `2026-03-30` signal / `2026-03-31` execution:
+  - `OFF`
+  - holdings: none
+  - cash: `100.00%`
 - current `2026` YTD scoreboard:
-  - activated sticky: `-3.33%` relative vs VNINDEX
-  - sticky always-on: `-11.22%` relative
+  - activated sticky: `+3.28%` relative vs VNINDEX
+  - sticky always-on: `-12.71%` relative
 
 ## Current Active Branch
 

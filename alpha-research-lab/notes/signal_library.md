@@ -365,6 +365,50 @@ that volume alone does not explain.
 
 ---
 
+### I1 — Reduced-Shape Intraday Disagreement Atoms (H275)
+**Status: CANDIDATE — observed-subset intraday state family, offline only**
+
+- **Observed subset:** `243,763` rows from the `2023-2025` matrix
+- **Observed share:** `94.34%` of audited `2023-2025` matrix rows
+- **Breadth:** `394` tickers across `718` dates
+- **Scope:** reduced-shape `1H` history only; not a dense full-history library promotion
+
+**What passed:**
+- `fade_tension_disagreement`
+  - dev / validation / confirmation IC:
+    - `+0.0323 / +0.0367 / +0.0202`
+  - max dev correlation vs `S1`, `C4`, `C12`:
+    - `0.0667`
+- `intraday_shape_core_disagreement`
+  - dev / validation / confirmation IC:
+    - `+0.0330 / +0.0259 / +0.0160`
+  - max dev correlation vs `S1`, `C4`, `C12`:
+    - `0.0751`
+
+**What they capture:** The surviving intraday information is not the raw reduced-shape axis.
+It is the cross-sectional disagreement between reduced-shape intraday behavior and the existing
+daily continuation / gap / close-location library. Concretely:
+- `fade_tension_disagreement` = residual of daily `rank(first_hour_fade_proxy)` after removing
+  `S1`, `C4`, and `C12`
+- `intraday_shape_core_disagreement` = residual of the reduced-shape core
+  (`fade + failed breakout + drive/fade`) after removing `S1`, `C4`, and `C12`
+
+**Why only offline / observed-subset for now:**
+- this is `2023-2025` only because the reduced-shape intraday source does not extend across the
+  full historical library window
+- the branch did **not** survive as a live gate in `H274`
+- these atoms are therefore candidate RL state features, not activation or deployment rules
+
+**Important constraint:** the raw reduced-shape atoms were predictive but failed the orthogonality
+bar:
+- `fade_tension_rank`: strong IC, but corr vs `S1` = `+0.319`
+- `intraday_shape_core_rank`: strong IC, but corr vs `C4` = `+0.316`
+- `failed_breakout_rank`: weaker IC, but corr vs `C4` = `+0.318`
+
+So the disagreement residual is the promotable part, not the raw atom itself.
+
+---
+
 ### ~~C3 — Cross-Sectional Dispersion Regime (H101)~~ REJECTED (Session 37)
 
 **Status: REJECTED — regime-conditional IC analysis decisive (2026-03-27)**

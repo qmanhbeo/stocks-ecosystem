@@ -1,0 +1,24 @@
+{
+  "verdict": "MIXED",
+  "stats": {
+    "shape_threshold": 0.020657276995305153,
+    "breadth_gap_min": 0.0,
+    "router_count": 13356.0,
+    "router_mean_adv": 0.0003975268883575039,
+    "router_positive_rate": 0.46630727762803237,
+    "shape_only_mean_adv": -0.00011959081705565557,
+    "shape_only_positive_rate": 0.4628384941139904,
+    "baseline_mean_adv": 0.0002781311245205215,
+    "router_vs_shape_delta": 0.0005171177054131595
+  },
+  "group_columns": "20260404_151950_h279_shape_breadth_router_results.parquet",
+  "best_feature": {
+    "shape_score": 0.5521526853084776,
+    "breadth_gap": 0.125,
+    "future_hold_advantage": 0.06696155937591497
+  },
+  "start_year": 2023,
+  "end_year": 2025,
+  "future_horizon": 5,
+  "shape_quantile": 0.9
+}

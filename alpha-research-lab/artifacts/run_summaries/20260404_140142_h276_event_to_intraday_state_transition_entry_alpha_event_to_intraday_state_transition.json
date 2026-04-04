@@ -1,0 +1,222 @@
+{
+  "artifacts": {
+    "audit_panel": "artifacts/portfolio_baselines/20260404_140142_h276_event_to_intraday_state_transition_audit_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260404_140142_h276_event_to_intraday_state_transition_results.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Breakout-followthrough buyable candidate subset only, 2023-2025 only, row-level event regimes intersected with H275 disagreement states from the observed reduced-shape matrix.",
+    "event_surface": "/home/manh/stocks-ecosystem/data/features/event_surface_daily.parquet",
+    "intraday_source": "artifacts/timing_data/20260403_103038_h258_reduced_shape_intraday_contract_panel.parquet",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    }
+  },
+  "mode": "entry_alpha_event_to_intraday_state_transition",
+  "name": "h276_event_to_intraday_state_transition",
+  "summary": {
+    "advance_to_h277": false,
+    "all_rows_baselines": [
+      {
+        "confirmation_auc": 0.5071624784094457,
+        "confirmation_top_quintile_cycle_return_net": -0.007073657877417886,
+        "model_name": "fade_tension_disagreement",
+        "regime_name": "all_rows",
+        "validation_auc": 0.4979250594332209,
+        "validation_top_quintile_cycle_return_net": -0.0007669086823910126
+      },
+      {
+        "confirmation_auc": 0.49538542182858747,
+        "confirmation_top_quintile_cycle_return_net": -0.003786693433558934,
+        "model_name": "intraday_shape_core_disagreement",
+        "regime_name": "all_rows",
+        "validation_auc": 0.5008922443376802,
+        "validation_top_quintile_cycle_return_net": 0.0034469116130065695
+      },
+      {
+        "confirmation_auc": 0.5075334206026163,
+        "confirmation_top_quintile_cycle_return_net": -0.007104369428949306,
+        "model_name": "disagreement_combo",
+        "regime_name": "all_rows",
+        "validation_auc": 0.49796484736355234,
+        "validation_top_quintile_cycle_return_net": -0.0010046246447456778
+      }
+    ],
+    "best_candidate": {
+      "candidate_decision": "MIXED",
+      "coef__fade_tension_disagreement": -0.1078127292360418,
+      "coef__intraday_shape_core_disagreement": 0.1060680946689566,
+      "confirmation_auc": 0.49400733368255634,
+      "confirmation_auc_delta_vs_all_rows": -0.013526086920059965,
+      "confirmation_count": 875,
+      "confirmation_dates": 167,
+      "confirmation_mean_cycle_return_net": 0.0037126059649111942,
+      "confirmation_positive_rate": 0.4742857142857143,
+      "confirmation_rows": 886,
+      "confirmation_tickers": 274,
+      "confirmation_top_quintile_cycle_return_net": 0.004926966470137945,
+      "confirmation_top_quintile_cycle_return_net_delta_vs_all_rows": 0.01203133589908725,
+      "dev_auc": 0.5103387696542032,
+      "dev_count": 1169,
+      "dev_dates": 194,
+      "dev_mean_cycle_return_net": 0.003309214322836751,
+      "dev_positive_rate": 0.49101796407185627,
+      "dev_rows": 1169,
+      "dev_tickers": 292,
+      "dev_top_quintile_cycle_return_net": 0.006385318625505122,
+      "feature_columns": [
+        "fade_tension_disagreement",
+        "intraday_shape_core_disagreement"
+      ],
+      "forward_auc": null,
+      "forward_count": 0,
+      "forward_mean_cycle_return_net": null,
+      "forward_positive_rate": null,
+      "forward_top_quintile_cycle_return_net": null,
+      "intercept": -0.038862257892187585,
+      "model_name": "disagreement_combo",
+      "promoted_event_condition": false,
+      "promoted_label_only": false,
+      "regime_description": "Ticker-day is either inside a report window or has a recent filing",
+      "regime_name": "event_transition_any",
+      "regime_share_overall": 0.5443837487196995,
+      "validation_auc": 0.47842444333249945,
+      "validation_auc_delta_vs_all_rows": -0.019540404031052894,
+      "validation_count": 1131,
+      "validation_dates": 202,
+      "validation_mean_cycle_return_net": 0.003569770840578852,
+      "validation_positive_rate": 0.5048629531388152,
+      "validation_rows": 1134,
+      "validation_tickers": 303,
+      "validation_top_quintile_cycle_return_net": 0.0037636268155524432,
+      "validation_top_quintile_cycle_return_net_delta_vs_all_rows": 0.004768251460298121
+    },
+    "breakout_dates": 711,
+    "breakout_rows": 5858,
+    "breakout_tickers": 379,
+    "decision": "MIXED",
+    "mixed_candidates": [
+      {
+        "confirmation_auc_delta_vs_all_rows": -0.013526086920059965,
+        "confirmation_top_quintile_cycle_return_net": 0.004926966470137945,
+        "confirmation_top_quintile_cycle_return_net_delta_vs_all_rows": 0.01203133589908725,
+        "model_name": "disagreement_combo",
+        "regime_name": "event_transition_any",
+        "validation_auc_delta_vs_all_rows": -0.019540404031052894,
+        "validation_top_quintile_cycle_return_net": 0.0037636268155524432,
+        "validation_top_quintile_cycle_return_net_delta_vs_all_rows": 0.004768251460298121
+      },
+      {
+        "confirmation_auc_delta_vs_all_rows": 0.015557480214366981,
+        "confirmation_top_quintile_cycle_return_net": 0.009943591455739255,
+        "confirmation_top_quintile_cycle_return_net_delta_vs_all_rows": 0.01373028488929819,
+        "model_name": "intraday_shape_core_disagreement",
+        "regime_name": "event_transition_any",
+        "validation_auc_delta_vs_all_rows": -0.005500387945385987,
+        "validation_top_quintile_cycle_return_net": 0.007718118092460578,
+        "validation_top_quintile_cycle_return_net_delta_vs_all_rows": 0.004271206479454008
+      },
+      {
+        "confirmation_auc_delta_vs_all_rows": -0.0021959550378780612,
+        "confirmation_top_quintile_cycle_return_net": 0.0017045058882113177,
+        "confirmation_top_quintile_cycle_return_net_delta_vs_all_rows": 0.008808875317160623,
+        "model_name": "disagreement_combo",
+        "regime_name": "recent_filing_any",
+        "validation_auc_delta_vs_all_rows": -0.04895536075640944,
+        "validation_top_quintile_cycle_return_net": 0.003009601045383742,
+        "validation_top_quintile_cycle_return_net_delta_vs_all_rows": 0.00401422569012942
+      },
+      {
+        "confirmation_auc_delta_vs_all_rows": 0.010468572661770703,
+        "confirmation_top_quintile_cycle_return_net": 0.0025514994756713556,
+        "confirmation_top_quintile_cycle_return_net_delta_vs_all_rows": 0.0063381929092302895,
+        "model_name": "intraday_shape_core_disagreement",
+        "regime_name": "recent_filing_any",
+        "validation_auc_delta_vs_all_rows": -0.049441351480537354,
+        "validation_top_quintile_cycle_return_net": 0.005002451631211165,
+        "validation_top_quintile_cycle_return_net_delta_vs_all_rows": 0.0015555400182045952
+      }
+    ],
+    "pause_timing_model_invention": false,
+    "promoted_candidates": [],
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    },
+    "regime_coverage": [
+      {
+        "confirmation_dates": 218,
+        "confirmation_rows": 1762,
+        "confirmation_tickers": 336,
+        "description": "Ungated breakout-followthrough observed subset",
+        "dev_dates": 249,
+        "dev_rows": 2079,
+        "dev_tickers": 331,
+        "regime_name": "all_rows",
+        "share_overall": 1.0,
+        "validation_dates": 244,
+        "validation_rows": 2017,
+        "validation_tickers": 334
+      },
+      {
+        "confirmation_dates": 96,
+        "confirmation_rows": 761,
+        "confirmation_tickers": 266,
+        "description": "Ticker-day is inside either report-window regime",
+        "dev_dates": 122,
+        "dev_rows": 1054,
+        "dev_tickers": 280,
+        "regime_name": "report_window_any",
+        "share_overall": 0.4825879139638102,
+        "validation_dates": 121,
+        "validation_rows": 1012,
+        "validation_tickers": 290
+      },
+      {
+        "confirmation_dates": 131,
+        "confirmation_rows": 220,
+        "confirmation_tickers": 90,
+        "description": "Ticker-day has any filing in the trailing 5 days",
+        "dev_dates": 134,
+        "dev_rows": 201,
+        "dev_tickers": 91,
+        "regime_name": "recent_filing_any",
+        "share_overall": 0.11300785250938887,
+        "validation_dates": 150,
+        "validation_rows": 241,
+        "validation_tickers": 103
+      },
+      {
+        "confirmation_dates": 167,
+        "confirmation_rows": 886,
+        "confirmation_tickers": 274,
+        "description": "Ticker-day is either inside a report window or has a recent filing",
+        "dev_dates": 194,
+        "dev_rows": 1169,
+        "dev_tickers": 292,
+        "regime_name": "event_transition_any",
+        "share_overall": 0.5443837487196995,
+        "validation_dates": 202,
+        "validation_rows": 1134,
+        "validation_tickers": 303
+      }
+    ]
+  },
+  "ts": "20260404_140142"
+}

@@ -1,0 +1,63 @@
+{
+  "artifacts": {
+    "details_json": "artifacts/run_summaries/20260404_161051_h278_upward_w_price_shape_audit_details.json",
+    "panel": "artifacts/portfolio_baselines/20260404_161051_h278_upward_w_price_shape_audit_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260404_161051_h278_upward_w_price_shape_audit_results.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "future_horizon_days": 5,
+    "session": 107,
+    "signal_family": "upward_w_price_shape",
+    "start_year": 2015
+  },
+  "mode": "standalone_signal_upward_w_price_shape",
+  "name": "h278_upward_w_price_shape_audit",
+  "summary": {
+    "best_feature": {
+      "canonical_avg_ic": -0.0002717804106943462,
+      "canonical_corr_with_s1": 0.02475227734021057,
+      "canonical_final_pass": false,
+      "canonical_gate_pass": false,
+      "canonical_pct_years_positive": 0.45454545454545453,
+      "canonical_pos_years": 5,
+      "canonical_redundant_with": null,
+      "canonical_years": 11,
+      "decision": "MIXED",
+      "formula": "rank(band(drawdown,0.12,0.18) * band(higher_low,0.02,0.05) * band(reclaim_ratio,0.85,0.35) * band(breakout,0.005,0.025))",
+      "future5_avg_ic": 0.017089989452481722,
+      "future5_corr_with_s1": 0.024752277340210505,
+      "future5_final_pass": true,
+      "future5_gate_pass": true,
+      "future5_pct_years_positive": 1.0,
+      "future5_pos_years": 11,
+      "future5_years": 11,
+      "max_candidate_corr": 0.29603925305939244,
+      "max_candidate_corr_with": "c8_vol_zscore_5d",
+      "signal_name": "xs_upward_w_reclaim_12d"
+    },
+    "canonical_passing_features": [],
+    "close_daily_queue_reopen": false,
+    "end_year": 2025,
+    "future5_only_signal_family": true,
+    "future5_supporting_features": [
+      "xs_upward_w_reclaim_12d",
+      "xs_upward_w_reclaim_15d",
+      "xs_upward_w_moderate_12d"
+    ],
+    "future_horizon_days": 5,
+    "pass_corr_threshold": 0.3,
+    "pass_ic_threshold": 0.01,
+    "pass_pct_years_threshold": 0.6,
+    "reason": "No explicit upward-W feature passes the canonical next-day gate, but slower reclaim-style variants pass the 5-day excess-return diagnostic.",
+    "signal_formulas": {
+      "xs_upward_w_base_12d": "rank(drawdown_12d * rebound_12d * higher_low_margin_12d * breakout_margin_12d)",
+      "xs_upward_w_moderate_12d": "rank(band(drawdown,0.15,0.20) * band(higher_low,0.02,0.04) * band(breakout,0.01,0.03) * band(distance_below_pre_peak,0.04,0.10))",
+      "xs_upward_w_reclaim_12d": "rank(band(drawdown,0.12,0.18) * band(higher_low,0.02,0.05) * band(reclaim_ratio,0.85,0.35) * band(breakout,0.005,0.025))",
+      "xs_upward_w_reclaim_15d": "rank(band(drawdown,0.12,0.18) * band(higher_low,0.02,0.05) * band(reclaim_ratio,0.85,0.35) * band(breakout,0.005,0.025)) on 15d shape window"
+    },
+    "start_year": 2015,
+    "verdict": "MIXED"
+  },
+  "ts": "20260404_161051"
+}

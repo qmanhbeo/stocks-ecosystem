@@ -1,25 +1,29 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_102_log.md` for the latest full session detail.
+Use `notes/session_107_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Current State
 
-**Session status:** Session 102 ran the last narrow operational follow-through after the `H272` survivor-gate reintegration pass, still without touching the `2026+` lockbox. `H273` **FAILED**: the `net_soft_survivor` breakout-survivor overlay did not survive current-account / sticky operational compatibility. The candidate `h272_overlay_plus_sticky` lost to both the operational sticky baseline and the carried sparse control, with validation relative return `-56.35%`, confirmation relative return `-16.50%`, overall relative return `-43.40%`, sparse-book rate `0.9800`, and average holdings `0.7315`. Branch consequence: keep the live branch unchanged, keep `H270-H272` as offline evidence only, close this exact continuation family, and pivot the queue to `top-k intraday stress router` or `library-grade intraday shape atoms`. (2026-04-04)
+**Session status:** Session 107 ran a user-forced `H278` audit of explicit close-only `upward W / double-bottom reclaim` geometry on `2015-2025` only. No feature survived the canonical next-day signal-library gate, so the current daily next-day queue remains closed. The best reclaim variant, `xs_upward_w_reclaim_12d`, still showed real slower-horizon evidence on a forward `5`-day excess-return diagnostic with IC `+0.0171`, `11 / 11` positive years, corr vs `S1` `+0.0248`, and max candidate corr `0.2960` versus `C8`. Branch consequence: keep the live branch unchanged, keep the official live-monitoring state from Session 106 (`OFF`, `100.00%` cash on `2026-03-31`) unchanged, and only revisit this family as alternative-horizon offline label work rather than as a new daily `T+1` branch. (2026-04-04)
 
 ### Start next session here
 
 1. Record the next market-session outcome against the **rollback sticky activated** paper-trade book:
-   - current active live branch from the `2026-03-26` signal / `2026-03-27` execution:
-     - held names: `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
-     - cash `0.00%`
-   - current activation state: `ON`
+   - current active live branch from the `2026-03-30` signal / `2026-03-31` execution:
+     - held names: none
+     - cash `100.00%`
+   - current activation state: `OFF`
+   - narrow one-off forward note after the user-authorized raw-data refresh:
+     - through `2026-04-03`, cash lagged VNINDEX by `0.5703%`
+     - but cash beat the stale always-on `ANV/PGV/PTB/PTL/VSI` basket by `1.1736%`
 2. Keep the live sticky branch frozen:
    - no parameter changes on `2026+`
    - only update `H179/H183` and record completed forward cycles
+   - do **not** treat the `2026-04-03` one-off checkpoint as a license to reopen `2026+` research
 3. Keep ADV / capacity work parked unless the explicit goal is scale research. Do not reopen it as the active blocker for the small-account branch.
 4. Keep the timing-branch closure logic explicit:
    - Session 73's original `H221-H229` closure was correct on the old local stack:
@@ -140,20 +144,121 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
        - `VC` sparse-book rate `0.9800`
        - `VC` avg holdings `0.7315`
    - close this exact breakout-survivor continuation family on the current contract
-   - condensed research queue after `H273`:
-     - `top-k intraday stress router`
-       - claim: after both breakout-trust and breakout-survivor operational compatibility failures, the surviving intraday information may belong at the selector-state / breadth-pressure layer rather than the row-level gate
-       - next honest test: summarize whether intraday conviction predicts sparse-book stress, replacement pressure, or breadth collapse on the restarted `2023-2025` branch before opening any new backtest
-     - `library-grade intraday shape atoms`
-       - claim: if the survivor rewrite remains structurally useful but non-transportable, the reduced-shape intraday signal may be more useful as publishable state features than as a deterministic overlay
-       - next honest test: audit whether the `intraday_shape_core` and breakout-path disagreement atoms are stable enough to publish as offline state features without claiming a live-ready gate
+   - Session 103 then ran the selector-state fallback honestly:
+     - `H274` failed
+     - reduced-shape coverage stayed strong on the actual activated rebalance dates:
+       - overall observed share `0.9747`
+       - validation observed share `0.9697`
+       - confirmation observed share `0.9571`
+     - but no intraday summary survived as a router:
+       - best intraday candidate `stress_weak_close_repair` had validation hits `0`, confirmation hits `1`
+       - best intraday candidate cycle delta stayed too weak:
+         - validation `+0.0037`
+         - confirmation `-0.0021`
+     - the older slow proxy remained stronger on the same audit:
+       - `full_recent_blocked_buy_ewm5`
+       - validation hits `2`
+       - confirmation hits `4`
+       - validation cycle delta `-0.0201`
+       - confirmation cycle delta `-0.0073`
+   - close the `top-k intraday stress router` branch on the current contract
+   - Session 104 then ran the signal-library fallback honestly:
+     - `H275` passed as offline evidence
+     - observed subset coverage on the `2023-2025` matrix stayed broad:
+       - observed row share `0.9434`
+       - `394` tickers
+       - `718` dates
+     - two disagreement atoms survived the full standalone gate:
+       - `fade_tension_disagreement`
+         - dev / validation / confirmation IC:
+           - `+0.0323 / +0.0367 / +0.0202`
+         - max dev anchor corr:
+           - `0.0667`
+       - `intraday_shape_core_disagreement`
+         - dev / validation / confirmation IC:
+           - `+0.0330 / +0.0259 / +0.0160`
+         - max dev anchor corr:
+           - `0.0751`
+     - the raw reduced-shape atoms stayed predictive but failed the redundancy gate:
+       - `fade_tension_rank`
+       - `failed_breakout_rank`
+       - `intraday_shape_core_rank`
+   - promote the disagreement atoms as observed-subset offline signal-library candidates
+   - Session 105 then ran the next materially different timing side branch honestly:
+     - `H276` mixed
+     - observed breakout-followthrough audit coverage stayed broad enough for a real test:
+       - `5,858` rows
+       - `711` dates
+       - `379` tickers
+     - no event-conditioned disagreement regime earned deterministic promotion:
+       - promoted candidates:
+         - `0`
+     - best mixed candidate:
+       - `event_transition_any + disagreement_combo`
+       - validation top-quintile cycle return delta vs `all_rows`:
+         - `+0.0048`
+       - confirmation top-quintile cycle return delta vs `all_rows`:
+         - `+0.0120`
+       - validation AUC delta vs `all_rows`:
+         - `-0.0195`
+       - confirmation AUC delta vs `all_rows`:
+         - `-0.0135`
+     - stronger directional clue inside the mixed set:
+       - `event_transition_any + intraday_shape_core_disagreement`
+       - validation top-quintile cycle return delta vs `all_rows`:
+         - `+0.0043`
+       - confirmation top-quintile cycle return delta vs `all_rows`:
+         - `+0.0137`
+       - validation AUC delta vs `all_rows`:
+         - `-0.0055`
+       - confirmation AUC delta vs `all_rows`:
+         - `+0.0156`
+     - `report_window_any` failed outright
+   - keep event-conditioned disagreement as narrow offline context only
+   - do **not** open `H277`
+   - active timing queue after `H276`:
+     - stop timing-model invention on the current stack
+     - wait for new data or more forward evidence
+   - retrospective idea parking lot from the Session 104 milestone note:
+     - `book-shape compatibility atoms`
+       - claim: the repeated transport failures may be ex-ante book-geometry failures, not missing return signal, so candidate-pool breadth / score-gap / blocked-buy geometry may predict whether a local edge can survive the carried book
+       - smallest honest test: use `data/features/entry_alpha/candidate_panel_daily.parquet` plus activation state surfaces to test whether ex-ante basket geometry predicts next-cycle sparse-book / holdings-collapse states better than the current slow blocked-buy proxy
+     - `marginal slot value label`
+       - claim: entry alpha may fail because `buy_now` is the wrong target; the real question is whether swapping a candidate into the weakest active slot improves the actual top-5 book net of implementation cost
+       - smallest honest test: relabel activated rebalance candidates by marginal cycle contribution versus the carried bottom slot and test whether compact entry-alpha features predict that replacement value
+     - `residualized event trust`
+       - status: partly audited by `H276` as mixed offline evidence only
+       - claim: if event timing is real only as a regime clue and intraday is real only as disagreement, the transportable transition state may be event-conditioned disagreement rather than raw event density or raw intraday shape
+       - smallest honest next test:
+         - none on the current contract:
+           - `H276` already showed `event_transition_any` and `recent_filing_any` can improve top-quintile realized return while still weakening validation ranking
+           - `report_window_any` failed outright
+           - only reopen with materially better event data, a different label / contract, or more forward evidence
    - order-book / queue work remains blocked
 5. Treat the current daily-data synthesis queue as exhausted:
    - `H253-H256` closed the remaining recombination ideas on the current stack
-   - do **not** keep inventing local model-side branches on this family without:
-     - genuinely new data
-     - a materially new label / contract
-     - or more forward live evidence
+   - Session 107 user-forced chart-pattern audit:
+     - `H278` is mixed
+     - no explicit `upward W` variant passed the canonical next-day gate
+     - strongest slower-horizon survivor:
+       - `xs_upward_w_reclaim_12d`
+       - forward `5`-day IC `+0.0171`
+       - positive years `11 / 11`
+       - corr vs `S1` `+0.0248`
+       - max candidate corr `0.2960` vs `C8`
+    - do **not** reinterpret that as permission to reopen the current daily next-day branch
+    - if this family is revisited, do it only as alternative-horizon offline label work or future swing / entry research
+  - do **not** keep inventing local model-side branches on this family without:
+    - genuinely new data
+    - a materially new label / contract
+    - or more forward live evidence
+  - Session 108 router experiment:
+    - `H279` is mixed: the gated rows beat the baseline (+0.00040 vs +0.00028 5d hold adv) while the shape-only set is negative
+    - keep the data in `artifacts/portfolio_baselines/20260404_151950_h279_shape_breadth_router_panel.parquet` ready for a future router recheck
+    - do **not** treat it as a live gate until a confirmation run on `2026` shows consistent improvement
+    - Do not forget these new shape-frontier ideas (parked):
+      - `shape-state intra-activation atoms`: straight-line inter-day path measures (higher lows, breakout retrace) plus live activation drawdown stats to predict whether a selector gate will stay on; test by scoring 2023-2025 intraday-reduced shape rows inside the existing activation state panel.
+      - `intraday disagreement + breadth gap router`: use the disparity between local W/fade shapes and sector breadth compression to gate continuation vs waiting; start with a simple gate comparing `fade_disagreement` to `sector_breadth_5d` change on the observed breakout subset and audit 5-day hold advantage.
    - default back to acquisition-first timing work or live monitoring
 6. Start any new timing-data work from the acquisition plan, not from model scripts:
    - read `notes/timing_data_acquisition_plan.md`
@@ -254,10 +359,14 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
        - Family A (`H247-H248`) is now closed on the current local data stack
      - it is still **not** the active branch while acquisition-first timing work remains policy
 6. Treat the live branch as operationally current:
-   - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-27`
-   - `data/features/activation_state_daily.parquet` is now current through `2026-03-27`
-   - `data/features/activation_meta_daily.parquet` is now current through `2026-03-27`
-   - `H179` no longer reports a stale matrix
+   - `data/features/xs_rl_signal_matrix.parquet` is now current through `2026-03-31`
+   - `data/features/activation_state_daily.parquet` is now current through `2026-03-31`
+   - `data/features/activation_meta_daily.parquet` is now current through `2026-03-31`
+   - official `H179/H183` monitoring is current through the `2026-03-31` execution
+   - after the user-authorized specific-ticker / `VNINDEX` raw-data refresh:
+     - those six daily files now extend to `2026-04-03`
+     - `H179` correctly reports a stale matrix again for anything beyond `2026-03-31`
+     - treat the `2026-04-03` forward note as monitoring-only until the full live chain is rebuilt
 7. Keep the architecture split and the branch decision clear:
    - historical max-return system:
      - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015 + impl__blocked5_q80 + sector_cap_3`
@@ -773,27 +882,39 @@ Use it to learn whether reduced-shape open / first-hour / close-hour structure i
 
 - `top-k intraday stress router`
   - status:
-    - first fallback if the breakout-survivor deterministic follow-through fails
+    - failed on the frozen sticky contract in Session 103
   - claim:
     - the pseudo-live failure of the daily blocked-buy family may reflect slow implementation-pain proxies rather than a dead mechanism; rebalance-date breadth of first-hour fade, failed breakout, and weak close-repair across the selector's top names may be the missing activation state variable.
   - smallest honest next test:
-    - compute date-level stress summaries over the selector's top-k candidates and test them as offline gates on top of the frozen sticky branch; kill quickly if they only recreate the old blocked-buy defensiveness without improving the `2023-2025` pseudo-live ladder.
+    - none on this exact contract:
+      - `H274` already ran the frozen sticky audit and failed
+      - reduced-shape coverage stayed high, but no intraday summary beat the slow blocked-buy proxy or showed stable negative next-cycle direction
+      - only reopen if the contract changes materially or new intraday state variables exist
 
 - `event-to-intraday state transition`
   - status:
-    - novel side branch if the lab wants one more materially different timing experiment before waiting for new data
+    - mixed offline evidence only after Session 105
   - claim:
     - the event branch may have failed because raw event timing is too weak alone, while intraday contradiction may only matter on event-driven repricing days; the real state could be event-triggered intraday truth serum, not raw event features or raw intraday features separately.
   - smallest honest next test:
-    - intersect `data/features/event_surface_daily.parquet` with the reduced-shape intraday panel on the `breakout_followthrough`-like candidate subset and test whether event-day intraday contradiction gates outperform the same breakout subset without the event condition.
+    - none on this exact contract:
+      - `H276` already ran the observed `breakout_followthrough` audit
+      - `event_transition_any` and `recent_filing_any` improved top-quintile realized return for disagreement models
+      - but no candidate beat the same-model ungated baseline cleanly enough on validation ranking to earn `H277`
+      - `report_window_any` failed outright
+      - only reopen if new event data, a different label / operational contract, or more forward evidence changes the branch conditions
 
 - `library-grade intraday shape atoms`
   - status:
-    - best signal-library fallback if branch-level timing work stalls
+    - passed as offline evidence in Session 104
   - claim:
     - the lab already captured daily open/close asymmetry and gap absorption, but the new multi-ticker `1H` history can test intraday shape atoms those daily bars could not see cleanly: opening drive then fade, weak morning then close repair, and first-hour range expansion without follow-through.
   - smallest honest next test:
-    - build `3-5` reduced-shape cross-sectional atoms and screen them for standalone IC plus correlation vs `S1`, `C4`, and `C12`; kill any feature that collapses onto existing daily gap / close-location axes.
+    - none on this exact audit contract:
+      - `H275` already promoted the surviving transportable part
+      - raw atoms were predictive but redundant with `S1` / `C4`
+      - the disagreement atoms are the surviving offline state-feature candidates
+      - do not reinterpret them as a live gate without a separate operational follow-through
 
 - `small-book close-shape confirmation`
   - claim:

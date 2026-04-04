@@ -175,8 +175,22 @@ def build_activation_meta_frame(
 
     meta = activation_state.copy()
     meta["time"] = pd.to_datetime(meta["time"])
+    meta = meta.sort_values("time").reset_index(drop=True)
     for part in selector_meta_parts:
         meta = meta.merge(part, on="time", how="left", validate="one_to_one")
+
+    # Selector daily paths end at the latest completed execution window, while the
+    # activation surface can still carry one more signal date. Carry backward-looking
+    # selector state forward onto that latest signal date, but leave true future-cycle
+    # labels missing because they are not known yet.
+    for prefix in ("full", "s1"):
+        carry_columns = [
+            column
+            for column in meta.columns
+            if column.startswith(f"{prefix}_") and "future_cycle_" not in column
+        ]
+        if carry_columns:
+            meta[carry_columns] = meta[carry_columns].ffill()
 
     delta_columns = [
         "full_top10_buyable_count",

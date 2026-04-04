@@ -1,0 +1,39 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260404_151950_h279_shape_breadth_router_summary.json",
+    "panel": "artifacts/portfolio_baselines/20260404_151950_h279_shape_breadth_router_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260404_151950_h279_shape_breadth_router_results.parquet"
+  },
+  "metadata": {
+    "future_horizon": 5,
+    "session": 108,
+    "shape_quantile": 0.9
+  },
+  "mode": "portfolio_router_shape_breadth",
+  "name": "h279_shape_breadth_disagreement_router",
+  "summary": {
+    "best_feature": {
+      "breadth_gap": 0.125,
+      "future_hold_advantage": 0.06696155937591497,
+      "shape_score": 0.5521526853084776
+    },
+    "end_year": 2025,
+    "future_horizon": 5,
+    "group_columns": "20260404_151950_h279_shape_breadth_router_results.parquet",
+    "shape_quantile": 0.9,
+    "start_year": 2023,
+    "stats": {
+      "baseline_mean_adv": 0.0002781311245205215,
+      "breadth_gap_min": 0.0,
+      "router_count": 13356.0,
+      "router_mean_adv": 0.0003975268883575039,
+      "router_positive_rate": 0.46630727762803237,
+      "router_vs_shape_delta": 0.0005171177054131595,
+      "shape_only_mean_adv": -0.00011959081705565557,
+      "shape_only_positive_rate": 0.4628384941139904,
+      "shape_threshold": 0.020657276995305153
+    },
+    "verdict": "MIXED"
+  },
+  "ts": "20260404_151950"
+}

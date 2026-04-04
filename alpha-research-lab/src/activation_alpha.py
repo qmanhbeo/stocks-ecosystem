@@ -110,6 +110,14 @@ def _requested_matrix_time_bounds(
     return pd.Timestamp(in_window.min()), pd.Timestamp(in_window.max())
 
 
+def latest_matrix_year(matrix_path: Path = RL_MATRIX_PATH) -> int:
+    matrix = pd.read_parquet(matrix_path, columns=["time"])
+    times = pd.to_datetime(matrix["time"], errors="coerce").dropna()
+    if times.empty:
+        raise ValueError(f"No valid time values found in {matrix_path}")
+    return int(times.dt.year.max())
+
+
 def _frame_covers_time_bounds(
     frame: pd.DataFrame,
     *,

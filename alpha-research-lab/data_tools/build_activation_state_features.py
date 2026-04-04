@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from src.activation_alpha import ACTIVATION_STATE_PATH, persist_activation_state
+from src.activation_alpha import ACTIVATION_STATE_PATH, latest_matrix_year, persist_activation_state
 
 
 RL_MATRIX_PATH = data_path("features/xs_rl_signal_matrix.parquet")
@@ -41,21 +41,28 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--benchmark", type=str, default=str(BENCHMARK_PATH))
     parser.add_argument("--out", type=str, default=str(ACTIVATION_STATE_PATH))
     parser.add_argument("--start-year", type=int, default=2015)
-    parser.add_argument("--end-year", type=int, default=2025)
+    parser.add_argument(
+        "--end-year",
+        type=int,
+        default=None,
+        help="Defaults to the latest year present in the RL matrix.",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
     out = Path(args.out)
+    matrix_path = Path(args.matrix)
+    end_year = latest_matrix_year(matrix_path) if args.end_year is None else int(args.end_year)
     frame = persist_activation_state(
-        matrix_path=Path(args.matrix),
+        matrix_path=matrix_path,
         tradability_path=Path(args.tradability),
         stock_dir=Path(args.stock_dir),
         benchmark_path=Path(args.benchmark),
         out_path=out,
         start_year=int(args.start_year),
-        end_year=int(args.end_year),
+        end_year=end_year,
     )
     print(f"saved {len(frame):,} rows -> {out}")
     print(f"date range: {frame['time'].min().date()} -> {frame['time'].max().date()}")

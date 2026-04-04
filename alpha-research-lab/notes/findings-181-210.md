@@ -674,3 +674,303 @@ This is the same structural failure mode that killed the earlier breakout-trust 
 **Key finding:** the breakout-survivor rewrite changes the local label contract, but it does not change the operational failure mode; narrowness still dominates.
 
 **Implication:** `H270-H272` remain offline evidence only. The next honest queue is `top-k intraday stress router` or `library-grade intraday shape atoms`, not more survivor-gate continuation tuning on the current contract.
+
+## F195: H274 Shows The Top-K Intraday Stress Router Does Not Survive The Frozen Sticky Branch Audit Even With High Reduced-Shape Coverage (2026-04-04, Session 103)
+
+Session 103 took the first fallback after `H273`:
+- exact frozen live branch:
+  - `sticky_bonus_0p015`
+- replay history:
+  - `2019-2025`
+- evaluation window:
+  - activated rebalance dates in `2023-2025` only
+- reduced-shape intraday source:
+  - the passed `H258` contract panel
+
+Coverage was not the problem:
+- overall observed share across requested top-k names:
+  - `0.9747`
+- validation observed share:
+  - `0.9697`
+- confirmation observed share:
+  - `0.9571`
+
+The predeclared intraday summaries were:
+- `stress_fade`
+- `stress_failed_breakout`
+- `stress_weak_close_repair`
+- `stress_composite_mean`
+- `stress_name_share_q70`
+
+None survived the selector-state audit.
+
+Best intraday candidate:
+- `stress_weak_close_repair`
+  - validation directional hits:
+    - `0`
+  - confirmation directional hits:
+    - `1`
+  - validation high-minus-low cycle delta:
+    - `+0.0037`
+  - confirmation high-minus-low cycle delta:
+    - `-0.0021`
+
+That is not a near-pass:
+- no intraday summary produced even one validation directional hit
+- most intraday candidates pointed the wrong way on next-cycle relative return
+- high-stress intraday dates were often flat-to-better, not reliably worse
+
+**Key finding:** the reduced-shape intraday summaries do not survive as a top-k selector-state router on the current frozen sticky contract.
+
+**Implication:** close the `top-k intraday stress router` branch on the current contract and do not open a deterministic gate follow-through from this line.
+
+## F196: H274 Also Shows The Older Slow Blocked-Buy Proxy Still Dominates The Same Audit; Intraday Stress Is Not A Cleaner Operational State Variable Here (2026-04-04, Session 103)
+
+`H274` was not just an empty or underpowered audit.
+
+The old slow proxy stayed materially stronger on the exact same rebalance dates:
+- baseline:
+  - `full_recent_blocked_buy_ewm5`
+- validation directional hits:
+  - `2`
+- confirmation directional hits:
+  - `4`
+- validation high-minus-low cycle delta:
+  - `-0.0201`
+- confirmation high-minus-low cycle delta:
+  - `-0.0073`
+
+So the selector-state audit says:
+- reduced-shape intraday is not simply recreating the blocked-buy family
+- but it also is not replacing it with a better activation variable on the current contract
+- the slower blocked-buy state still carries more operationally useful direction than any intraday top-k summary tested here
+
+**Key finding:** if the reduced-shape intraday branch is useful, it is more likely to belong as library-grade state atoms than as an activation router on the frozen sticky branch.
+
+**Implication:** move the queue to `library-grade intraday shape atoms`, not to more selector-state intraday gate tuning on the current contract.
+
+## F197: H275 Shows The Surviving Library-Grade Part Of The Reduced-Shape Intraday Branch Is The Disagreement Component, Not The Raw Atom (2026-04-04, Session 104)
+
+Session 104 took the next exact queue item after `H274`:
+- do not open another gate
+- instead test whether reduced-shape intraday atoms survive as offline signal-library state features
+- use only the observed `2023-2025` reduced-shape subset
+- gate every candidate against:
+  - standalone IC `> 0.01`
+  - positive years `>= 60%`
+  - max dev correlation `< 0.30` versus `S1`, `C4`, and `C12`
+
+Coverage stayed broad enough for an honest signal audit:
+- observed row count:
+  - `243,763`
+- observed row share of the `2023-2025` matrix:
+  - `0.9434`
+- observed dates:
+  - `718`
+- observed tickers:
+  - `394`
+
+Two disagreement atoms passed cleanly:
+- `fade_tension_disagreement`
+  - dev / validation / confirmation IC:
+    - `+0.0323 / +0.0367 / +0.0202`
+  - max dev anchor corr:
+    - `0.0667`
+- `intraday_shape_core_disagreement`
+  - dev / validation / confirmation IC:
+    - `+0.0330 / +0.0259 / +0.0160`
+  - max dev anchor corr:
+    - `0.0751`
+
+So the reduced-shape intraday branch does survive as offline state evidence.
+But what survives is not the raw reduced-shape axis.
+It is the cross-sectional disagreement left after removing the existing daily continuation / gap / close-location library.
+
+**Key finding:** the transportable library-grade intraday signal is disagreement with `S1/C4/C12`, not raw reduced-shape direction itself.
+
+**Implication:** promote the disagreement atoms as observed-subset offline signal-library candidates, not as a live timing gate.
+
+## F198: H275 Also Shows The Raw Reduced-Shape Atoms Are Real But Redundant; They Collapse Onto Existing Daily Axes Despite Strong IC (2026-04-04, Session 104)
+
+`H275` did not say the raw intraday atoms are useless.
+It said they are not orthogonal enough to deserve separate library status on the current contract.
+
+Raw atoms that stayed predictive:
+- `fade_tension_rank`
+  - dev / validation / confirmation IC:
+    - `+0.0701 / +0.0821 / +0.0568`
+  - but max dev anchor corr:
+    - `0.3189`
+- `intraday_shape_core_rank`
+  - dev / validation / confirmation IC:
+    - `+0.0694 / +0.0657 / +0.0469`
+  - but max dev anchor corr:
+    - `0.3157`
+- `failed_breakout_rank`
+  - dev / validation / confirmation IC:
+    - `+0.0294 / +0.0144 / +0.0160`
+  - but max dev anchor corr:
+    - `0.3184`
+
+So the queue instruction was exactly right:
+- the raw atoms are not dead
+- but they collapse onto the existing daily continuation / close-location axes closely enough that they fail the library orthogonality bar
+
+The disagreement residual is what makes them useful:
+- once residualized against `S1`, `C4`, and `C12`, the surviving IC remains while the redundancy drops sharply
+
+**Key finding:** the raw reduced-shape intraday atoms are predictive but redundant; disagreement residualization is what makes them library-grade on the current observed subset.
+
+**Implication:** update the signal registry with the disagreement atoms only, and keep the raw atoms out of the promoted library list.
+
+## F199: H276 Shows Event-Conditioned Intraday Disagreement Does Not Earn Deterministic Follow-Through; No Regime Beats The Ungated Baseline Cleanly Enough To Justify H277 (2026-04-04, Session 105)
+
+Session 105 took the next exact queue item after `H275`:
+- same restarted `2023-2025` window
+- no `2026+` read
+- same observed `breakout_followthrough` entry subset
+- same reduced-shape disagreement construction against `S1`, `C4`, and `C12`
+- no live-branch change
+
+Coverage was broad enough for a real audit:
+- breakout rows:
+  - `5,858`
+- breakout dates:
+  - `711`
+- breakout tickers:
+  - `379`
+
+The question was:
+- if raw event timing and raw intraday disagreement each fail alone, does event-conditioned disagreement beat the same-model ungated baseline strongly enough to earn a deterministic follow-through?
+
+No candidate passed.
+
+Best mixed result:
+- `event_transition_any + disagreement_combo`
+  - validation top-quintile cycle return delta vs `all_rows`:
+    - `+0.0048`
+  - confirmation top-quintile cycle return delta vs `all_rows`:
+    - `+0.0120`
+  - validation AUC delta vs `all_rows`:
+    - `-0.0195`
+  - confirmation AUC delta vs `all_rows`:
+    - `-0.0135`
+
+Cleaner directional clue:
+- `event_transition_any + intraday_shape_core_disagreement`
+  - validation top-quintile cycle return delta vs `all_rows`:
+    - `+0.0043`
+  - confirmation top-quintile cycle return delta vs `all_rows`:
+    - `+0.0137`
+  - validation AUC delta vs `all_rows`:
+    - `-0.0055`
+  - confirmation AUC delta vs `all_rows`:
+    - `+0.0156`
+
+Smaller event slice:
+- `recent_filing_any` also produced mixed-only top-quintile improvement
+
+Hard failure inside the same audit:
+- `report_window_any` failed outright across all tested models
+
+So `H276` did not earn `H277`:
+- promoted candidates:
+  - `0`
+
+**Key finding:** event-conditioned disagreement improves realized high-score tails on the observed breakout subset, but it does not beat the ungated same-model baseline cleanly enough to justify deterministic follow-through on the current contract.
+
+**Implication:** keep `H276` as narrow offline evidence only, do **not** open `H277`, and stop timing-model invention on the current stack until new data or more forward evidence arrives.
+
+## F200: H276 Also Narrows The Surviving Event Thesis; The Useful Context Looks Closer To Broad Event Transition Than Pure Report Window, And More Like Conviction Concentration Than Universal Ranking Improvement (2026-04-04, Session 105)
+
+`H276` did not kill every version of the event idea equally.
+
+What failed hardest:
+- pure `report_window_any`
+  - all tested models failed
+
+What survived partially:
+- `event_transition_any`
+  - report-window or recent-filing context
+- `recent_filing_any`
+  - smaller but still directionally useful slice
+
+The shape of the evidence matters.
+
+The mixed candidates improved:
+- validation top-quintile realized return
+- confirmation top-quintile realized return
+
+But they did **not** improve validation ranking cleanly enough to pass.
+
+That means the surviving event clue is not:
+- "event days make the disagreement model a universally better classifier"
+
+It is closer to:
+- "event transition context concentrates the payoff in the highest-disagreement tail, even when whole-slice ranking quality is not reliably better"
+
+So the surviving state is narrower than "report window trust":
+- it looks more like broad transition / repricing context than pure scheduled-report context
+- and it looks more like conviction concentration than a new general gate
+
+**Key finding:** on the current observed breakout contract, the surviving event clue is broad event-transition context that sharpens the realized disagreement tail, not a pure report-window ranking upgrade.
+
+**Implication:** if the event branch is ever reopened, start from a materially different label, operational contract, or richer event data rather than from another report-window gate tweak on the current stack.
+
+## F202: H279 Shows Breadth-Aware Intraday Shape Routing Beats The Ungated Baseline Even Though The Raw Shape Score Is Weak (2026-04-04, Session 108)
+
+`H279` fused the `first_hour_fade_proxy / weak_open_strong_close_proxy / failed_breakout_proxy` shape proxies with a simple breadth gap gate (`xs_sector_breadth_5d` lagged five days).
+
+### Router result
+- gate: shape score in the top 10% + `breadth_gap >= 0`
+- router rows: `13,356`
+- router 5-day hold advantage: `+0.000398` (vs baseline `+0.000278`)
+- router positive rate: `46.6%` (vs baseline `45.2%`)
+- shape-only set: mean adv `-0.000120`
+
+### Key finding
+The shape proxies by themselves are too weak / anti-predictive, but applying them inside a breadth-gap router lifts the 5-day hold advantage enough to be noteworthy.
+
+**Implication:** keep the router logic offline for now; if it ever moves toward a live gate, do it through the saved panel/summary so you can reproduce the same gate structure rather than starting from scratch again.
+
+## F201: Explicit Upward-W Close Geometry Does Not Survive The Canonical Next-Day Signal Gate; The Only Surviving Evidence Is A Slower 5-Day Reclaim Effect (2026-04-04, Session 107)
+
+Session 107 formalized the user-observed `upward W / double-bottom reclaim` chart pattern into an explicit close-only signal family instead of leaving it as eyeballing.
+
+`H278` tested four daily variants:
+- `xs_upward_w_base_12d`
+- `xs_upward_w_moderate_12d`
+- `xs_upward_w_reclaim_12d`
+- `xs_upward_w_reclaim_15d`
+
+### Canonical next-day result
+No variant survived the standard next-day standalone gate.
+
+Best canonical row:
+- `xs_upward_w_reclaim_12d`
+- next-day IC `-0.0003`
+- positive years `5 / 11`
+- corr vs `S1` `+0.0248`
+
+The naive monotonic interpretation was outright wrong:
+- `xs_upward_w_base_12d`
+- next-day IC `-0.0060`
+- `5d` IC `-0.0104`
+
+### Slower-horizon result
+Three reclaim-style variants did pass a forward `5`-day excess-return diagnostic on `2015-2025`:
+- `xs_upward_w_reclaim_12d`
+  - `5d` IC `+0.0171`
+  - positive years `11 / 11`
+  - corr vs `S1` `+0.0248`
+  - max candidate corr `0.2960` vs `C8`
+- `xs_upward_w_reclaim_15d`
+  - `5d` IC `+0.0138`
+  - positive years `10 / 11`
+- `xs_upward_w_moderate_12d`
+  - `5d` IC `+0.0117`
+  - positive years `9 / 11`
+
+**Key finding:** the eyeballed pattern is not fiction, but it is not a transportable `T+1` daily alpha on the current contract. The real information, if any, sits in a slower reclaim / short-swing horizon, not in the canonical next-day library target.
+
+**Implication:** do not reopen the current daily next-day synthesis queue because of the `upward W` idea. If this family is revisited, do it only as alternative-horizon offline label work or as a future swing / entry contract, not as a live-branch or signal-library continuation.

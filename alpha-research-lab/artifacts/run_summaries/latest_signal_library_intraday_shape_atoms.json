@@ -1,0 +1,142 @@
+{
+  "artifacts": {
+    "results": "artifacts/portfolio_baselines/20260404_131509_h275_library_grade_intraday_shape_atoms_results.parquet",
+    "scored_panel": "artifacts/portfolio_baselines/20260404_131509_h275_library_grade_intraday_shape_atoms_scored_panel.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Observed reduced-shape intraday subset only, 2023-2025 only, standalone signal-library audit vs S1/C4/C12 anchors",
+    "intraday_source": "artifacts/timing_data/20260403_103038_h258_reduced_shape_intraday_contract_panel.parquet",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    }
+  },
+  "mode": "signal_library_intraday_shape_atoms",
+  "name": "h275_library_grade_intraday_shape_atoms",
+  "summary": {
+    "advance_to_signal_library_promotion": true,
+    "best_candidate": {
+      "candidate_decision": "PASSED",
+      "confirmation_avg_ic": 0.020243246183145696,
+      "confirmation_corr_with_c12_gap_absorb_3": 0.008538228300951297,
+      "confirmation_corr_with_c4_oc_asym_5d": -0.0013890480558490952,
+      "confirmation_corr_with_s1_proba": 0.05861705249697876,
+      "confirmation_dates": 219,
+      "confirmation_rows": 75930,
+      "dev_avg_ic": 0.03234070612064138,
+      "dev_corr_with_c12_gap_absorb_3": 0.008820102453809826,
+      "dev_corr_with_c4_oc_asym_5d": -0.00478497169272522,
+      "dev_corr_with_s1_proba": 0.06673666081281533,
+      "dev_dates": 249,
+      "dev_gate_pass": true,
+      "dev_max_anchor_corr": 0.06673666081281533,
+      "dev_pct_years_positive": 1.0,
+      "dev_rows": 84164,
+      "formula": "residual(rank(first_hour_fade_proxy) | S1,C4,C12)",
+      "pass_corr_threshold": 0.3,
+      "pass_ic_threshold": 0.01,
+      "pass_pct_years_threshold": 0.6,
+      "signal_name": "fade_tension_disagreement",
+      "signal_type": "disagreement",
+      "validation_avg_ic": 0.03669359893648337,
+      "validation_corr_with_c12_gap_absorb_3": 0.009359175407139472,
+      "validation_corr_with_c4_oc_asym_5d": -0.0006959364660227287,
+      "validation_corr_with_s1_proba": 0.07911736345647703,
+      "validation_dates": 250,
+      "validation_rows": 83669
+    },
+    "close_library_grade_intraday_shape_atoms_branch": false,
+    "decision": "PASSED",
+    "matrix_row_count": 258375,
+    "observed_dates": 718,
+    "observed_row_count": 243763,
+    "observed_row_share": 0.9434465408805032,
+    "observed_tickers": 394,
+    "promoted_offline_state_atoms": [
+      {
+        "confirmation_avg_ic": 0.020243246183145696,
+        "dev_avg_ic": 0.03234070612064138,
+        "dev_max_anchor_corr": 0.06673666081281533,
+        "signal_name": "fade_tension_disagreement",
+        "signal_type": "disagreement",
+        "validation_avg_ic": 0.03669359893648337
+      },
+      {
+        "confirmation_avg_ic": 0.016036876677688213,
+        "dev_avg_ic": 0.03303404182861942,
+        "dev_max_anchor_corr": 0.07508253192645374,
+        "signal_name": "intraday_shape_core_disagreement",
+        "signal_type": "disagreement",
+        "validation_avg_ic": 0.025937511862947217
+      }
+    ],
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    },
+    "tested_atoms": [
+      {
+        "candidate_decision": "PASSED",
+        "confirmation_avg_ic": 0.020243246183145696,
+        "dev_avg_ic": 0.03234070612064138,
+        "dev_max_anchor_corr": 0.06673666081281533,
+        "signal_name": "fade_tension_disagreement",
+        "signal_type": "disagreement",
+        "validation_avg_ic": 0.03669359893648337
+      },
+      {
+        "candidate_decision": "PASSED",
+        "confirmation_avg_ic": 0.016036876677688213,
+        "dev_avg_ic": 0.03303404182861942,
+        "dev_max_anchor_corr": 0.07508253192645374,
+        "signal_name": "intraday_shape_core_disagreement",
+        "signal_type": "disagreement",
+        "validation_avg_ic": 0.025937511862947217
+      },
+      {
+        "candidate_decision": "FAILED",
+        "confirmation_avg_ic": 0.05675781252207072,
+        "dev_avg_ic": 0.07005360605280443,
+        "dev_max_anchor_corr": 0.3189113519948594,
+        "signal_name": "fade_tension_rank",
+        "signal_type": "raw",
+        "validation_avg_ic": 0.08205728236832564
+      },
+      {
+        "candidate_decision": "FAILED",
+        "confirmation_avg_ic": 0.046918599964321385,
+        "dev_avg_ic": 0.06936711924430379,
+        "dev_max_anchor_corr": 0.3157425625147541,
+        "signal_name": "intraday_shape_core_rank",
+        "signal_type": "raw",
+        "validation_avg_ic": 0.06570288901688769
+      },
+      {
+        "candidate_decision": "FAILED",
+        "confirmation_avg_ic": 0.01598966017771362,
+        "dev_avg_ic": 0.02941591614843079,
+        "dev_max_anchor_corr": 0.3184290048214681,
+        "signal_name": "failed_breakout_rank",
+        "signal_type": "raw",
+        "validation_avg_ic": 0.014427913429554236
+      }
+    ]
+  },
+  "ts": "20260404_131509"
+}
