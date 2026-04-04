@@ -320,16 +320,25 @@ Extract per-ticker daily sentiment from cafef JSONL files using a keyword lexico
 - **Coverage:** ~0.8% of (day, ticker) pairs (very sparse; this is the raw base table, not a dense feature surface)
 
 ### `extract_llm_news_features.py`
-Extract structured per-article features from CafeF JSONL with Google AI Studio, NVIDIA hosted chat LLMs, or local Ollama.
+Extract structured per-article features from CafeF JSONL with a cross-provider hosted LLM pool or local Ollama.
 - **Status:** Active
 - **Input:** `data/news/cafef/raw/YYYY-MM-DD.jsonl`
 - **Output:** `data/llm_cache/YYYY-MM-DD.jsonl` (resume-safe, atomic write)
-- **Usage:** `python data_tools/extract_llm_news_features.py --date-from 2023-01-01 --date-to 2023-01-03 --provider google`
-- **Credentials:** pass `--api-key`, export the provider key (`GOOGLE_API_KEY` or `NVIDIA_API_KEY`), or place it in `.env`
-- **Provider notes:** `--provider google` uses the built-in Google model pool; `--provider nvidia` uses a curated text-LLM pool by default and also accepts explicit `owner/model` ids or comma-separated model lists via `--model`
+- **Usage:** `python data_tools/extract_llm_news_features.py --date-from 2023-01-01 --date-to 2023-01-03`
+- **Provider notes:** the default `--provider auto` builds one hosted pool across configured `google`, `nvidia`, `mistral`, `huggingface`, and `vercel` models, then ranks them by persisted observed latency and recent failures
+- **Explicit provider notes:** `--provider google`, `nvidia`, `mistral`, `huggingface`, and `vercel` still work for debugging or benchmarking; `--provider ollama` stays local-only
+- **Model override notes:** hosted providers accept comma-separated model lists via `--model`; auto mode expects `provider:model` entries such as `google:gemini-2.5-flash-lite,nvidia:deepseek-v3.2`
+- **Credentials:** provider keys resolve from shell env or `.env`. Supported names are `GOOGLE_API_KEY`, `NVIDIA_API_KEY` / `NGC_API_KEY`, `MISTRAL_API_KEY`, `MISTRAL_COSTRAL_API_KEY`, `HUGGINGFACE_FINEGRAINED`, and `VERCEL_AI_GATEWAY_API_KEY`
+- **Runtime stats:** observed hosted latency / failure ranking persists to `alpha-research-lab/artifacts/llm_runtime/hosted_model_stats.json` and is reused on later runs
 - **Speed knobs:** `--workers`, `--batch-size`, `--num-predict`, `--max-summary-chars`
 - **Progress logs:** timestamped day/batch progress, rates, ETA, error counts
-- **Reliability:** auto-retries failed or partial batches with smaller slices before writing blank fallback rows, and reprocesses existing error-only cache days automatically
+- **Reliability:** auto-retries failed or partial batches with smaller slices, falls through to alternate hosted models on single-item failures, and reprocesses existing error-only cache days automatically
+
+### `test_model_pool.py`
+Probe hosted model pools without writing cache outputs.
+- **Status:** Utility
+- **Usage:** `python data_tools/test_model_pool.py --provider auto --max-models 6`
+- **Stats mode:** add `--record-stats` to update `alpha-research-lab/artifacts/llm_runtime/hosted_model_stats.json`
 
 ### `build_llm_news_features.py`
 Build ticker-day and dense market-daily LLM features from `data/llm_cache/`.

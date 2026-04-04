@@ -8,13 +8,13 @@ Output:
 - data/llm_cache/YYYY-MM-DD.jsonl (one JSON object per filtered article)
 
 Providers:
-- ollama  : local Ollama server (default model: qwen3.5:4b)
-- google  : Google AI Studio / Gemini API (default model: gemini-2.5-flash-lite)
-            Set GOOGLE_API_KEY env var or pass --api-key.
-            Uses JSON mode for zero-parse-fail guarantee.
-- nvidia  : NVIDIA hosted LLM API (default pool: curated text-only chat models)
-            Set NVIDIA_API_KEY env var or pass --api-key.
-            Uses OpenAI-compatible chat completions.
+- auto         : hosted auto-pool across configured providers, ranked by observed latency
+- ollama       : local Ollama server (default model: qwen3.5:4b)
+- google       : Google AI Studio / Gemini API
+- nvidia       : NVIDIA hosted LLM API
+- mistral      : Mistral chat completions API
+- huggingface  : Hugging Face router chat completions API
+- vercel       : Vercel AI Gateway OpenAI-compatible chat completions API
 
 Schema (all LLM-unique fields):
 - id                 : article id
@@ -45,20 +45,28 @@ import json
 import math
 import os
 import re
+import statistics
 import threading
 import time
 import unicodedata
+import urllib.error
 import urllib.request
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from path_utils import data_path, workspace_path
 from typing import Iterable
+from src.repo_paths import artifact_path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = data_path("news/cafef/raw")
 CACHE_DIR = data_path("llm_cache")
+HOSTED_MODEL_STATS_PATH = artifact_path("llm_runtime", "hosted_model_stats.json")
 NVIDIA_CHAT_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
+MISTRAL_CHAT_URL = "https://api.mistral.ai/v1/chat/completions"
+HUGGINGFACE_CHAT_URL = "https://router.huggingface.co/v1/chat/completions"
+VERCEL_CHAT_URL = "https://ai-gateway.vercel.sh/v1/chat/completions"
 
 EVENT_TYPES = {
     "earnings_beat", "earnings_miss", "earnings_neutral", "revenue_growth",
@@ -151,23 +159,24 @@ def _load_env_file(path: Path) -> dict[str, str]:
 def _resolve_api_key(cli_value: str, env_var_names: list[str]) -> str:
     if cli_value:
         return cli_value
-    for env_var_name in env_var_names:
-        env_value = os.environ.get(env_var_name, "").strip()
-        if env_value:
-            return env_value
     candidates = [
         Path.cwd() / ".env",
         REPO_ROOT / ".env",
         workspace_path(".env"),
     ]
     seen: set[Path] = set()
+    env_maps: list[dict[str, str]] = []
     for candidate in candidates:
         candidate = candidate.resolve()
         if candidate in seen or not candidate.exists():
             continue
         seen.add(candidate)
-        env_map = _load_env_file(candidate)
-        for env_var_name in env_var_names:
+        env_maps.append(_load_env_file(candidate))
+    for env_var_name in env_var_names:
+        env_value = os.environ.get(env_var_name, "").strip()
+        if env_value:
+            return env_value
+        for env_map in env_maps:
             value = env_map.get(env_var_name, "").strip()
             if value:
                 os.environ[env_var_name] = value
@@ -181,6 +190,32 @@ def _resolve_google_api_key(cli_value: str) -> str:
 
 def _resolve_nvidia_api_key(cli_value: str) -> str:
     return _resolve_api_key(cli_value, ["NVIDIA_API_KEY", "NGC_API_KEY"])
+
+
+def _resolve_mistral_api_key(cli_value: str, model_name: str = "") -> str:
+    return _resolve_api_key(cli_value, _mistral_api_env_names(model_name))
+
+
+def _resolve_huggingface_api_key(cli_value: str) -> str:
+    return _resolve_api_key(cli_value, ["HUGGINGFACE_FINEGRAINED", "HF_TOKEN", "HUGGINGFACEHUB_API_TOKEN"])
+
+
+def _resolve_vercel_api_key(cli_value: str) -> str:
+    return _resolve_api_key(cli_value, ["VERCEL_AI_GATEWAY_API_KEY", "AI_GATEWAY_API_KEY", "VERCEL_OIDC_TOKEN"])
+
+
+def _resolve_provider_api_key(provider: str, cli_value: str = "", model_name: str = "") -> str:
+    if provider == "google":
+        return _resolve_google_api_key(cli_value)
+    if provider == "nvidia":
+        return _resolve_nvidia_api_key(cli_value)
+    if provider == "mistral":
+        return _resolve_mistral_api_key(cli_value, model_name=model_name)
+    if provider == "huggingface":
+        return _resolve_huggingface_api_key(cli_value)
+    if provider == "vercel":
+        return _resolve_vercel_api_key(cli_value)
+    return ""
 
 
 def _cache_has_successful_rows(path: Path) -> bool:
@@ -265,142 +300,396 @@ def _build_prompt(batch: list[dict], max_summary_chars: int) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Model pool & rate limiter (multi-model Google provider)
+# Hosted model pools, credentials, and scheduler
 # ---------------------------------------------------------------------------
 
-# Free-tier limits (Google AI Studio).
-# Models are tried in order — Gemini first (better quality), Gemma as bulk fallback.
+HOSTED_PROVIDERS = {"auto", "google", "nvidia", "mistral", "huggingface", "vercel"}
+HOSTED_PROVIDER_NAMES = {"google", "nvidia", "mistral", "huggingface", "vercel"}
+
+# Free-tier limits (Google AI Studio) are enforced in-process. Other providers
+# run unbounded unless their APIs explicitly throttle us.
 GOOGLE_MODEL_POOL = [
-    {"name": "gemini-3-flash-preview",       "rpm": 5,  "rpd": 20},
-    {"name": "gemini-3.1-flash-lite-preview", "rpm": 15, "rpd": 500},
-    {"name": "gemini-2.5-flash",             "rpm": 5,  "rpd": 20},
-    {"name": "gemini-2.5-flash-lite",        "rpm": 10, "rpd": 20},
-    {"name": "gemma-3-27b-it",               "rpm": 30, "rpd": 14400},
-    {"name": "gemma-3-12b-it",               "rpm": 30, "rpd": 14400},
+    {"name": "gemini-2.5-flash-lite", "rpm": 10, "rpd": 20, "seed_latency": 2.0},
+    {"name": "gemini-3.1-flash-lite-preview", "rpm": 15, "rpd": 500, "seed_latency": 3.4},
+    {"name": "gemini-3-flash-preview", "rpm": 5, "rpd": 20, "seed_latency": 9.6},
+    {"name": "gemini-2.5-flash", "rpm": 5, "rpd": 20, "seed_latency": 12.6},
+    {"name": "gemma-3-27b-it", "rpm": 30, "rpd": 14400, "seed_latency": 12.6},
+    {"name": "gemma-3-12b-it", "rpm": 30, "rpd": 14400, "seed_latency": 42.0},
 ]
 
-# Supported NVIDIA provider models are any text-chat model ids accepted by the
-# hosted catalog. This curated pool is the default order used when --provider
-# nvidia is selected without an explicit --model override.
 NVIDIA_MODEL_POOL = [
-    {"name": "deepseek-ai/deepseek-v3.2"},
-    {"name": "moonshotai/kimi-k2-instruct-0905"},
-    {"name": "moonshotai/kimi-k2-instruct"},
-    {"name": "z-ai/glm-4.7"},
-    {"name": "deepseek-ai/deepseek-v3.1"},
-    {"name": "deepseek-ai/deepseek-v3.1-terminus"},
-    {"name": "stepfun-ai/step-3.5-flash"},
-    {"name": "meta/llama-4-maverick-17b-128e-instruct"},
-    {"name": "mistralai/mistral-large-3-675b-instruct-2512"},
-    {"name": "mistralai/mistral-medium-3-instruct"},
-    {"name": "google/gemma-3-27b-it"},
-    {"name": "microsoft/phi-3.5-mini-instruct"},
-    {"name": "nvidia/nemotron-mini-4b-instruct"},
+    {"name": "stepfun-ai/step-3.5-flash", "seed_latency": 2.8},
+    {"name": "nvidia/nemotron-mini-4b-instruct", "seed_latency": 3.1},
+    {"name": "microsoft/phi-3.5-mini-instruct", "seed_latency": 3.5},
+    {"name": "moonshotai/kimi-k2-instruct", "seed_latency": 4.5},
+    {"name": "moonshotai/kimi-k2-instruct-0905", "seed_latency": 4.8},
+    {"name": "deepseek-ai/deepseek-v3.2", "seed_latency": 5.2},
+    {"name": "z-ai/glm-4.7", "seed_latency": 5.5},
+    {"name": "deepseek-ai/deepseek-v3.1", "seed_latency": 6.0},
+    {"name": "deepseek-ai/deepseek-v3.1-terminus", "seed_latency": 6.2},
+    {"name": "google/gemma-3-27b-it", "seed_latency": 7.0},
+    {"name": "mistralai/mistral-medium-3-instruct", "seed_latency": 7.5},
+    {"name": "meta/llama-4-maverick-17b-128e-instruct", "seed_latency": 8.0},
+    {"name": "mistralai/mistral-large-3-675b-instruct-2512", "seed_latency": 10.0},
 ]
 
-NVIDIA_MODEL_ALIASES = {cfg["name"].split("/", 1)[1]: cfg["name"] for cfg in NVIDIA_MODEL_POOL}
+MISTRAL_MODEL_POOL = [
+    {"name": "mistral-small-latest", "seed_latency": 2.5},
+    {"name": "codestral-latest", "seed_latency": 3.1},
+    {"name": "mistral-medium-latest", "seed_latency": 4.8},
+    {"name": "mistral-large-latest", "seed_latency": 7.5},
+]
+
+HUGGINGFACE_MODEL_POOL = [
+    {"name": "microsoft/Phi-4-mini-instruct", "seed_latency": 3.0},
+    {"name": "meta-llama/Llama-3.3-70B-Instruct", "seed_latency": 4.8},
+    {"name": "Qwen/Qwen2.5-72B-Instruct", "seed_latency": 5.0},
+    {"name": "mistralai/Mistral-Small-3.1-24B-Instruct-2503", "seed_latency": 5.5},
+]
+
+VERCEL_MODEL_POOL = [
+    {"name": "google/gemini-2.5-flash-lite", "seed_latency": 2.6},
+    {"name": "mistral/mistral-small-latest", "seed_latency": 3.1},
+    {"name": "moonshotai/kimi-k2-instruct", "seed_latency": 4.8},
+    {"name": "deepseek-ai/deepseek-v3.2", "seed_latency": 5.2},
+]
+
 PROVIDER_MODEL_POOLS = {
     "google": GOOGLE_MODEL_POOL,
     "nvidia": NVIDIA_MODEL_POOL,
+    "mistral": MISTRAL_MODEL_POOL,
+    "huggingface": HUGGINGFACE_MODEL_POOL,
+    "vercel": VERCEL_MODEL_POOL,
 }
 DEFAULT_MODELS = {
-    "google": "gemini-2.5-flash-lite",
+    "auto": "",
+    "google": GOOGLE_MODEL_POOL[0]["name"],
     "nvidia": NVIDIA_MODEL_POOL[0]["name"],
+    "mistral": MISTRAL_MODEL_POOL[0]["name"],
+    "huggingface": HUGGINGFACE_MODEL_POOL[0]["name"],
+    "vercel": VERCEL_MODEL_POOL[0]["name"],
     "ollama": "qwen3.5:4b",
 }
 
 # Backward-compatible alias used by the smoke test.
 MODEL_POOL = GOOGLE_MODEL_POOL
+NVIDIA_MODEL_ALIASES = {cfg["name"].split("/", 1)[1]: cfg["name"] for cfg in NVIDIA_MODEL_POOL}
 
 
-class ModelRateLimiter:
-    """Thread-safe per-model rate limiter (RPM + RPD).
+@dataclass(frozen=True)
+class HostedModelSpec:
+    provider: str
+    name: str
+    api_key_envs: tuple[str, ...]
+    rpm: int | None = None
+    rpd: int | None = None
+    seed_latency: float = 10.0
 
-    Iterates models in order and returns the first one with available capacity.
-    Blocks (sleeping 1 s between checks) until a slot opens or acquire_timeout
-    is exceeded.  Day counters reset automatically at midnight.
-    """
+    @property
+    def key(self) -> str:
+        return f"{self.provider}:{self.name}"
 
-    def __init__(self, models: list[dict]) -> None:
+
+def _provider_error_prefix(provider: str) -> str:
+    return {
+        "google": "google_error",
+        "nvidia": "nvidia_error",
+        "mistral": "mistral_error",
+        "huggingface": "huggingface_error",
+        "vercel": "vercel_error",
+    }.get(provider, "ollama_error")
+
+
+def _mistral_api_env_names(model_name: str = "") -> list[str]:
+    lowered = model_name.lower()
+    if "codestral" in lowered or "devstral" in lowered or "costral" in lowered:
+        return ["MISTRAL_COSTRAL_API_KEY", "MISTRAL_CODESTRAL_API_KEY", "MISTRAL_API_KEY"]
+    return ["MISTRAL_API_KEY", "MISTRAL_COSTRAL_API_KEY", "MISTRAL_CODESTRAL_API_KEY"]
+
+
+def _api_env_names_for_provider(provider: str, model_name: str = "") -> list[str]:
+    if provider == "google":
+        return ["GOOGLE_API_KEY"]
+    if provider == "nvidia":
+        return ["NVIDIA_API_KEY", "NGC_API_KEY"]
+    if provider == "mistral":
+        return _mistral_api_env_names(model_name)
+    if provider == "huggingface":
+        return ["HUGGINGFACE_FINEGRAINED", "HF_TOKEN", "HUGGINGFACEHUB_API_TOKEN"]
+    if provider == "vercel":
+        return ["VERCEL_AI_GATEWAY_API_KEY", "AI_GATEWAY_API_KEY", "VERCEL_OIDC_TOKEN"]
+    return []
+
+
+def _build_hosted_spec(provider: str, cfg: dict) -> HostedModelSpec:
+    return HostedModelSpec(
+        provider=provider,
+        name=str(cfg["name"]),
+        api_key_envs=tuple(_api_env_names_for_provider(provider, str(cfg["name"]))),
+        rpm=cfg.get("rpm"),
+        rpd=cfg.get("rpd"),
+        seed_latency=float(cfg.get("seed_latency", 10.0)),
+    )
+
+
+def _coerce_hosted_spec(item: HostedModelSpec | dict | str, default_provider: str = "hosted") -> HostedModelSpec:
+    if isinstance(item, HostedModelSpec):
+        return item
+    if isinstance(item, str):
+        return HostedModelSpec(
+            provider=default_provider,
+            name=item,
+            api_key_envs=tuple(_api_env_names_for_provider(default_provider, item)),
+        )
+    provider = str(item.get("provider", default_provider))
+    return HostedModelSpec(
+        provider=provider,
+        name=str(item["name"]),
+        api_key_envs=tuple(item.get("api_key_envs") or _api_env_names_for_provider(provider, str(item["name"]))),
+        rpm=item.get("rpm"),
+        rpd=item.get("rpd"),
+        seed_latency=float(item.get("seed_latency", 10.0)),
+    )
+
+
+class HostedModelScheduler:
+    """Thread-safe hosted scheduler with latency ranking, quotas, and cooldowns."""
+
+    def __init__(self, models: list[HostedModelSpec | dict | str], stats_path: Path | None = None) -> None:
         self._lock = threading.Lock()
-        self._models = models
-        self._rpm_windows: dict[str, list[float]] = {m["name"]: [] for m in models}
-        self._rpd_counts: dict[str, int] = {m["name"]: 0 for m in models}
-        self._cooldown_until: dict[str, float] = {m["name"]: 0.0 for m in models}
+        self._models = [_coerce_hosted_spec(model) for model in models]
+        self._models_by_key = {model.key: model for model in self._models}
+        self._models_by_name = {model.name: model for model in self._models}
+        self._rpm_windows: dict[str, list[float]] = {model.key: [] for model in self._models}
+        self._rpd_counts: dict[str, int] = {model.key: 0 for model in self._models}
+        self._cooldown_until: dict[str, float] = {model.key: 0.0 for model in self._models}
         self._current_day: int = datetime.now().toordinal()
+        self._stats_path = Path(stats_path or HOSTED_MODEL_STATS_PATH)
+        self._stats = self._load_stats()
+        self._seed_stats()
 
-    def _maybe_reset_day(self) -> None:
+    def _load_stats(self) -> dict[str, dict]:
+        try:
+            payload = json.loads(self._stats_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return {}
+        models = payload.get("models", payload) if isinstance(payload, dict) else {}
+        if not isinstance(models, dict):
+            return {}
+        out: dict[str, dict] = {}
+        for key, raw in models.items():
+            if not isinstance(raw, dict):
+                continue
+            recent_latencies = [
+                float(value)
+                for value in raw.get("recent_latencies", [])
+                if isinstance(value, (int, float)) and float(value) > 0
+            ][-20:]
+            out[str(key)] = {
+                "success_count": int(raw.get("success_count", 0) or 0),
+                "failure_count": int(raw.get("failure_count", 0) or 0),
+                "failure_streak": int(raw.get("failure_streak", 0) or 0),
+                "recent_latencies": recent_latencies,
+                "last_success": str(raw.get("last_success", "") or ""),
+                "last_failure": str(raw.get("last_failure", "") or ""),
+                "cooldown_until": float(raw.get("cooldown_until", 0.0) or 0.0),
+            }
+        return out
+
+    def _seed_stats(self) -> None:
+        now = time.time()
+        for model in self._models:
+            stats = self._stats.setdefault(
+                model.key,
+                {
+                    "success_count": 0,
+                    "failure_count": 0,
+                    "failure_streak": 0,
+                    "recent_latencies": [],
+                    "last_success": "",
+                    "last_failure": "",
+                    "cooldown_until": 0.0,
+                },
+            )
+            cooldown_until = float(stats.get("cooldown_until", 0.0) or 0.0)
+            self._cooldown_until[model.key] = cooldown_until if cooldown_until > now else 0.0
+
+    def _save_stats_locked(self) -> None:
+        self._stats_path.parent.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "version": 1,
+            "updated_at": datetime.utcnow().isoformat(timespec="seconds") + "Z",
+            "models": self._stats,
+        }
+        tmp = self._stats_path.with_suffix(".json.tmp")
+        with tmp.open("w", encoding="utf-8") as handle:
+            json.dump(payload, handle, ensure_ascii=False, indent=2, sort_keys=True)
+        tmp.replace(self._stats_path)
+
+    def _resolve_key(self, model_name_or_key: str) -> str:
+        if model_name_or_key in self._models_by_key:
+            return model_name_or_key
+        if model_name_or_key in self._models_by_name:
+            return self._models_by_name[model_name_or_key].key
+        raise KeyError(model_name_or_key)
+
+    def _maybe_reset_day_locked(self) -> None:
         today = datetime.now().toordinal()
         if today != self._current_day:
             self._current_day = today
-            for m in self._models:
-                self._rpd_counts[m["name"]] = 0
+            for model in self._models:
+                self._rpd_counts[model.key] = 0
 
-    def acquire(self, acquire_timeout: float = 300.0) -> str | None:
-        """Return the first model with capacity, blocking until one is free.
+    def _prune_rpm_locked(self, now: float) -> None:
+        for key, timestamps in self._rpm_windows.items():
+            self._rpm_windows[key] = [ts for ts in timestamps if now - ts < 60.0]
 
-        Returns None immediately if every model has hit its daily limit (RPD).
-        Returns None after acquire_timeout if all models are only RPM-throttled.
-        """
+    def _latency_score_locked(self, model: HostedModelSpec) -> float:
+        stats = self._stats.get(model.key, {})
+        latencies = stats.get("recent_latencies") or []
+        if latencies:
+            return float(statistics.median(latencies))
+        return model.seed_latency
+
+    def _failure_penalty_locked(self, model: HostedModelSpec) -> float:
+        stats = self._stats.get(model.key, {})
+        streak = int(stats.get("failure_streak", 0) or 0)
+        return min(60.0, streak * 10.0)
+
+    def _score_locked(self, model: HostedModelSpec, index: int) -> float:
+        return self._latency_score_locked(model) + self._failure_penalty_locked(model) + (index / 1000.0)
+
+    def acquire_spec(self, acquire_timeout: float = 300.0) -> HostedModelSpec | None:
         deadline = time.time() + acquire_timeout
         while True:
             with self._lock:
-                self._maybe_reset_day()
+                self._maybe_reset_day_locked()
                 now = time.time()
+                self._prune_rpm_locked(now)
+                candidates: list[tuple[float, HostedModelSpec]] = []
                 any_rpd_left = False
-                for m in self._models:
-                    name = m["name"]
-                    rpm_limit = m.get("rpm")
-                    rpd_limit = m.get("rpd")
-                    self._rpm_windows[name] = [t for t in self._rpm_windows[name] if now - t < 60.0]
-                    if rpd_limit is None or self._rpd_counts[name] < rpd_limit:
+                for index, model in enumerate(self._models):
+                    key = model.key
+                    rpm_limit = model.rpm
+                    rpd_limit = model.rpd
+                    if rpd_limit is None or self._rpd_counts[key] < rpd_limit:
                         any_rpd_left = True
-                    if now < self._cooldown_until[name]:
+                    if now < self._cooldown_until[key]:
                         continue
-                    if rpd_limit is None or self._rpd_counts[name] < rpd_limit:
-                        if rpm_limit is None or len(self._rpm_windows[name]) < rpm_limit:
-                            self._rpm_windows[name].append(now)
-                            self._rpd_counts[name] += 1
-                            return name
+                    if rpd_limit is not None and self._rpd_counts[key] >= rpd_limit:
+                        continue
+                    if rpm_limit is not None and len(self._rpm_windows[key]) >= rpm_limit:
+                        continue
+                    candidates.append((self._score_locked(model, index), model))
+                if candidates:
+                    _, chosen = min(candidates, key=lambda item: item[0])
+                    self._rpm_windows[chosen.key].append(now)
+                    self._rpd_counts[chosen.key] += 1
+                    return chosen
                 if not any_rpd_left:
-                    return None  # All daily limits exhausted — no point waiting
+                    return None
             if time.time() >= deadline:
                 return None
             time.sleep(1.0)
 
+    def acquire(self, acquire_timeout: float = 300.0) -> str | None:
+        model = self.acquire_spec(acquire_timeout=acquire_timeout)
+        return model.name if model else None
+
+    def specs(self) -> list[HostedModelSpec]:
+        return list(self._models)
+
     def all_daily_exhausted(self) -> bool:
         with self._lock:
-            self._maybe_reset_day()
+            self._maybe_reset_day_locked()
             return all(
-                m.get("rpd") is not None and self._rpd_counts[m["name"]] >= m["rpd"]
-                for m in self._models
+                model.rpd is not None and self._rpd_counts[model.key] >= model.rpd
+                for model in self._models
             )
 
-    def cooldown(self, model_name: str, seconds: float) -> None:
+    def cooldown(self, model_name_or_key: str, seconds: float) -> None:
         if seconds <= 0:
             return
         with self._lock:
+            key = self._resolve_key(model_name_or_key)
             until = time.time() + seconds
-            current = self._cooldown_until.get(model_name, 0.0)
+            current = self._cooldown_until.get(key, 0.0)
             if until > current:
-                self._cooldown_until[model_name] = until
+                self._cooldown_until[key] = until
+                self._stats.setdefault(key, {})["cooldown_until"] = until
+                self._save_stats_locked()
+
+    def record_success(self, model_name_or_key: str, latency_sec: float) -> None:
+        with self._lock:
+            key = self._resolve_key(model_name_or_key)
+            stats = self._stats.setdefault(
+                key,
+                {
+                    "success_count": 0,
+                    "failure_count": 0,
+                    "failure_streak": 0,
+                    "recent_latencies": [],
+                    "last_success": "",
+                    "last_failure": "",
+                    "cooldown_until": 0.0,
+                },
+            )
+            latencies = list(stats.get("recent_latencies") or [])
+            if latency_sec > 0:
+                latencies.append(float(latency_sec))
+            stats["recent_latencies"] = latencies[-20:]
+            stats["success_count"] = int(stats.get("success_count", 0) or 0) + 1
+            stats["failure_streak"] = 0
+            stats["last_success"] = datetime.utcnow().isoformat(timespec="seconds") + "Z"
+            stats["cooldown_until"] = 0.0
+            self._cooldown_until[key] = 0.0
+            self._save_stats_locked()
+
+    def record_failure(self, model_name_or_key: str, cooldown_seconds: float = 0.0) -> None:
+        with self._lock:
+            key = self._resolve_key(model_name_or_key)
+            stats = self._stats.setdefault(
+                key,
+                {
+                    "success_count": 0,
+                    "failure_count": 0,
+                    "failure_streak": 0,
+                    "recent_latencies": [],
+                    "last_success": "",
+                    "last_failure": "",
+                    "cooldown_until": 0.0,
+                },
+            )
+            stats["failure_count"] = int(stats.get("failure_count", 0) or 0) + 1
+            stats["failure_streak"] = int(stats.get("failure_streak", 0) or 0) + 1
+            stats["last_failure"] = datetime.utcnow().isoformat(timespec="seconds") + "Z"
+            if cooldown_seconds > 0:
+                until = time.time() + cooldown_seconds
+                if until > self._cooldown_until.get(key, 0.0):
+                    self._cooldown_until[key] = until
+                    stats["cooldown_until"] = until
+            self._save_stats_locked()
 
     def status(self) -> str:
         with self._lock:
             now = time.time()
+            self._prune_rpm_locked(now)
             parts = []
-            for m in self._models:
-                name = m["name"]
-                rpm_limit = m.get("rpm")
-                rpd_limit = m.get("rpd")
-                rpm_used = sum(1 for t in self._rpm_windows[name] if now - t < 60.0)
-                cooldown_left = max(0.0, self._cooldown_until[name] - now)
+            for model in self._models:
+                key = model.key
+                stats = self._stats.get(key, {})
+                cooldown_left = max(0.0, self._cooldown_until.get(key, 0.0) - now)
                 cooldown_label = f" cooldown={cooldown_left:.0f}s" if cooldown_left > 0 else ""
                 parts.append(
-                    f"{name}(rpm={rpm_used}/{rpm_limit if rpm_limit is not None else '-'} "
-                    f"rpd={self._rpd_counts[name]}/{rpd_limit if rpd_limit is not None else '-'}{cooldown_label})"
+                    f"{key}(rpm={len(self._rpm_windows[key])}/{model.rpm if model.rpm is not None else '-'} "
+                    f"rpd={self._rpd_counts[key]}/{model.rpd if model.rpd is not None else '-'} "
+                    f"lat={self._latency_score_locked(model):.1f}s fail_streak={int(stats.get('failure_streak', 0) or 0)}{cooldown_label})"
                 )
             return " | ".join(parts)
+
+
+# Backward-compatible alias kept for older tests and callers.
+ModelRateLimiter = HostedModelScheduler
 
 
 def _remote_cooldown_seconds(exc: Exception) -> float:
@@ -517,7 +806,6 @@ def _call_google(prompt: str, model: str, api_key: str, timeout: int, max_output
 
     Gemini models (gemini-*): use JSON mode for zero-parse-fail guarantee.
     Gemma models (gemma-*): use plain text + JSON extraction fallback.
-    Retries on 429 with exponential backoff (up to 3 attempts).
     """
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     use_json_mode = model.startswith("gemini-")
@@ -531,29 +819,20 @@ def _call_google(prompt: str, model: str, api_key: str, timeout: int, max_output
     }
     data = json.dumps(payload).encode("utf-8")
 
-    for attempt in range(3):
-        req = urllib.request.Request(
-            url, data=data,
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
-        try:
-            with urllib.request.urlopen(req, timeout=timeout) as resp:
-                body = json.loads(resp.read().decode("utf-8", errors="replace"))
-            break
-        except urllib.error.HTTPError as e:
-            if e.code == 429 and attempt < 2:
-                wait = 30 * (2 ** attempt)  # 30s, 60s
-                _log(f"[google] 429 rate limit, waiting {wait}s (attempt {attempt+1}/3)")
-                time.sleep(wait)
-            else:
-                raise
+    req = urllib.request.Request(
+        url,
+        data=data,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        body = json.loads(resp.read().decode("utf-8", errors="replace"))
 
     return _parse_google_array(body, use_json_mode=use_json_mode)
 
 
 # ---------------------------------------------------------------------------
-# NVIDIA hosted LLM backend
+# OpenAI-compatible hosted backends
 # ---------------------------------------------------------------------------
 
 def _normalize_nvidia_model_name(model: str) -> str:
@@ -563,6 +842,13 @@ def _normalize_nvidia_model_name(model: str) -> str:
     if "/" in model:
         return model
     return NVIDIA_MODEL_ALIASES.get(model, model)
+
+
+def _normalize_provider_model_name(provider: str, model: str) -> str:
+    model = model.strip()
+    if provider == "nvidia":
+        return _normalize_nvidia_model_name(model)
+    return model
 
 
 def _extract_openai_chat_text(body: dict) -> str:
@@ -591,9 +877,18 @@ def _parse_openai_chat_array(body: dict) -> list[dict]:
     return _extract_json_array(_extract_openai_chat_text(body)) or []
 
 
-def _call_nvidia(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+def _call_openai_compatible(
+    *,
+    prompt: str,
+    model: str,
+    api_key: str,
+    timeout: int,
+    max_output_tokens: int,
+    url: str,
+    provider: str,
+) -> list[dict]:
     payload = {
-        "model": _normalize_nvidia_model_name(model),
+        "model": model,
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0,
         "max_tokens": max_output_tokens,
@@ -601,29 +896,118 @@ def _call_nvidia(prompt: str, model: str, api_key: str, timeout: int, max_output
     }
     data = json.dumps(payload).encode("utf-8")
 
-    for attempt in range(3):
-        req = urllib.request.Request(
-            NVIDIA_CHAT_URL,
-            data=data,
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-            },
-            method="POST",
-        )
-        try:
-            with urllib.request.urlopen(req, timeout=timeout) as resp:
-                body = json.loads(resp.read().decode("utf-8", errors="replace"))
-            break
-        except urllib.error.HTTPError as e:
-            if e.code == 429 and attempt < 2:
-                wait = 30 * (2 ** attempt)
-                _log(f"[nvidia] 429 rate limit, waiting {wait}s (attempt {attempt+1}/3)")
-                time.sleep(wait)
-            else:
-                raise
+    req = urllib.request.Request(
+        url,
+        data=data,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        body = json.loads(resp.read().decode("utf-8", errors="replace"))
 
     return _parse_openai_chat_array(body)
+
+
+def _call_nvidia(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+    return _call_openai_compatible(
+        prompt=prompt,
+        model=_normalize_nvidia_model_name(model),
+        api_key=api_key,
+        timeout=timeout,
+        max_output_tokens=max_output_tokens,
+        url=NVIDIA_CHAT_URL,
+        provider="nvidia",
+    )
+
+
+def _call_mistral(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+    return _call_openai_compatible(
+        prompt=prompt,
+        model=model,
+        api_key=api_key,
+        timeout=timeout,
+        max_output_tokens=max_output_tokens,
+        url=MISTRAL_CHAT_URL,
+        provider="mistral",
+    )
+
+
+def _call_huggingface(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+    return _call_openai_compatible(
+        prompt=prompt,
+        model=model,
+        api_key=api_key,
+        timeout=timeout,
+        max_output_tokens=max_output_tokens,
+        url=HUGGINGFACE_CHAT_URL,
+        provider="huggingface",
+    )
+
+
+def _call_vercel(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+    return _call_openai_compatible(
+        prompt=prompt,
+        model=model,
+        api_key=api_key,
+        timeout=timeout,
+        max_output_tokens=max_output_tokens,
+        url=VERCEL_CHAT_URL,
+        provider="vercel",
+    )
+
+
+def _call_hosted_model(
+    *,
+    prompt: str,
+    spec: HostedModelSpec,
+    api_key: str,
+    timeout: int,
+    max_output_tokens: int,
+) -> list[dict]:
+    if spec.provider == "google":
+        return _call_google(
+            prompt,
+            model=spec.name,
+            api_key=api_key,
+            timeout=timeout,
+            max_output_tokens=max_output_tokens,
+        )
+    if spec.provider == "nvidia":
+        return _call_nvidia(
+            prompt,
+            model=spec.name,
+            api_key=api_key,
+            timeout=timeout,
+            max_output_tokens=max_output_tokens,
+        )
+    if spec.provider == "mistral":
+        return _call_mistral(
+            prompt,
+            model=spec.name,
+            api_key=api_key,
+            timeout=timeout,
+            max_output_tokens=max_output_tokens,
+        )
+    if spec.provider == "huggingface":
+        return _call_huggingface(
+            prompt,
+            model=spec.name,
+            api_key=api_key,
+            timeout=timeout,
+            max_output_tokens=max_output_tokens,
+        )
+    if spec.provider == "vercel":
+        return _call_vercel(
+            prompt,
+            model=spec.name,
+            api_key=api_key,
+            timeout=timeout,
+            max_output_tokens=max_output_tokens,
+        )
+    raise ValueError(f"unsupported_hosted_provider:{spec.provider}")
 
 
 # ---------------------------------------------------------------------------
@@ -720,6 +1104,84 @@ def _blank_record(article: dict, err: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Hosted pool resolution
+# ---------------------------------------------------------------------------
+
+def _split_model_arg(model_arg: str) -> list[str]:
+    return [part.strip() for part in str(model_arg or "").split(",") if part.strip()]
+
+
+def _spec_from_name(provider: str, model_name: str) -> HostedModelSpec:
+    normalized = _normalize_provider_model_name(provider, model_name)
+    for cfg in PROVIDER_MODEL_POOLS.get(provider, []):
+        if cfg["name"] == normalized:
+            return _build_hosted_spec(provider, cfg)
+    return HostedModelSpec(
+        provider=provider,
+        name=normalized,
+        api_key_envs=tuple(_api_env_names_for_provider(provider, normalized)),
+    )
+
+
+def _resolve_auto_model_token(token: str) -> HostedModelSpec:
+    if ":" in token:
+        provider, model_name = token.split(":", 1)
+        if provider in HOSTED_PROVIDER_NAMES:
+            return _spec_from_name(provider, model_name)
+    matches: list[HostedModelSpec] = []
+    for provider in HOSTED_PROVIDER_NAMES:
+        normalized = _normalize_provider_model_name(provider, token)
+        for cfg in PROVIDER_MODEL_POOLS.get(provider, []):
+            cfg_name = str(cfg["name"])
+            short_name = cfg_name.split("/", 1)[-1]
+            if cfg_name == normalized or short_name == token:
+                matches.append(_build_hosted_spec(provider, cfg))
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        raise ValueError(f"ambiguous auto model token '{token}'")
+    raise ValueError(
+        f"auto model token '{token}' must be fully qualified as provider:model "
+        f"or match a unique curated model"
+    )
+
+
+def _select_hosted_model_pool(provider: str, model_arg: str) -> list[HostedModelSpec]:
+    if provider == "auto":
+        requested = _split_model_arg(model_arg)
+        if requested:
+            return [_resolve_auto_model_token(token) for token in requested]
+        specs: list[HostedModelSpec] = []
+        for hosted_provider in HOSTED_PROVIDER_NAMES:
+            for cfg in PROVIDER_MODEL_POOLS.get(hosted_provider, []):
+                spec = _build_hosted_spec(hosted_provider, cfg)
+                if _resolve_provider_api_key(hosted_provider, model_name=spec.name):
+                    specs.append(spec)
+        return specs
+    requested = _split_model_arg(model_arg)
+    if requested:
+        return [_spec_from_name(provider, token) for token in requested]
+    return [_build_hosted_spec(provider, cfg) for cfg in PROVIDER_MODEL_POOLS.get(provider, [])]
+
+
+def _resolve_api_keys_for_specs(
+    specs: list[HostedModelSpec],
+    provider: str,
+    cli_api_key: str,
+) -> dict[str, str]:
+    keys: dict[str, str] = {}
+    for spec in specs:
+        resolved = _resolve_provider_api_key(
+            spec.provider,
+            cli_api_key if provider == spec.provider and provider != "auto" else "",
+            model_name=spec.name,
+        )
+        if resolved:
+            keys[spec.key] = resolved
+    return keys
+
+
+# ---------------------------------------------------------------------------
 # Per-day processing
 # ---------------------------------------------------------------------------
 
@@ -733,7 +1195,8 @@ def process_day(
     num_predict: int,
     max_summary_chars: int,
     log_every_batches: int,
-    rate_limiter: "ModelRateLimiter | None" = None,
+    rate_limiter: "HostedModelScheduler | None" = None,
+    api_keys: dict[str, str] | None = None,
 ) -> dict:
     date = path.stem
     day_t0 = time.time()
@@ -751,47 +1214,59 @@ def process_day(
     rows: list[dict] = []
     n_batches = max(1, math.ceil(len(filtered) / batch_size)) if filtered else 0
     done_batches = 0
+    hosted_mode = provider in HOSTED_PROVIDERS
 
     def _run_batch(batch: list[dict], depth: int = 0) -> tuple[list[dict], int, int, int, bool]:
         prompt = _build_prompt(batch, max_summary_chars=max_summary_chars)
         by_id = {a["id"]: a for a in batch}
         model_used = model
+        provider_used = provider
+        spec_used: HostedModelSpec | None = None
+        max_hosted_retries = len(rate_limiter.specs()) if rate_limiter is not None else 0
 
         try:
-            if provider == "google":
+            if hosted_mode:
                 if rate_limiter is not None:
-                    model_used = rate_limiter.acquire(acquire_timeout=300.0)
-                    if model_used is None:
+                    spec_used = rate_limiter.acquire_spec(acquire_timeout=300.0)
+                    if spec_used is None:
                         return ([_blank_record(a, "pool_exhausted") for a in batch], 0, 0, 0, True)
-                arr = _call_google(
-                    prompt,
-                    model=model_used,
-                    api_key=api_key,
+                else:
+                    if provider == "auto":
+                        raise ValueError("provider=auto requires a hosted scheduler")
+                    spec_used = _spec_from_name(provider, model)
+                provider_used = spec_used.provider
+                model_used = spec_used.name
+                resolved_api_key = (api_keys or {}).get(spec_used.key, "")
+                if not resolved_api_key:
+                    resolved_api_key = _resolve_provider_api_key(provider_used, api_key, model_name=model_used)
+                if not resolved_api_key:
+                    raise ValueError(f"missing_api_key:{provider_used}")
+                call_t0 = time.time()
+                arr = _call_hosted_model(
+                    prompt=prompt,
+                    spec=spec_used,
+                    api_key=resolved_api_key,
                     timeout=timeout,
                     max_output_tokens=num_predict,
                 )
-            elif provider == "nvidia":
-                if rate_limiter is not None:
-                    model_used = rate_limiter.acquire(acquire_timeout=300.0)
-                    if model_used is None:
-                        return ([_blank_record(a, "pool_exhausted") for a in batch], 0, 0, 0, True)
-                arr = _call_nvidia(
-                    prompt,
-                    model=model_used,
-                    api_key=api_key,
-                    timeout=timeout,
-                    max_output_tokens=num_predict,
-                )
+                if rate_limiter is not None and arr:
+                    rate_limiter.record_success(spec_used.key, time.time() - call_t0)
             else:
                 resp = _call_ollama(prompt, model=model, timeout=timeout, num_predict=num_predict)
                 arr = _extract_json_array(resp) or []
         except Exception as e:
-            if provider in {"google", "nvidia"} and rate_limiter is not None:
-                rate_limiter.cooldown(model_used, _remote_cooldown_seconds(e))
+            if hosted_mode and rate_limiter is not None and spec_used is not None:
+                rate_limiter.record_failure(spec_used.key, cooldown_seconds=_remote_cooldown_seconds(e))
+            if hosted_mode and rate_limiter is not None and len(batch) == 1 and depth < max_hosted_retries:
+                _log(
+                    f"[{date}] batch error provider={provider_used} model={model_used} size=1 "
+                    f"depth={depth} err={type(e).__name__}: {e} | retrying alternate model"
+                )
+                return _run_batch(batch, depth=depth + 1)
             if len(batch) > 1:
                 split_at = max(1, len(batch) // 2)
                 _log(
-                    f"[{date}] batch error provider={provider} model={model_used} size={len(batch)} "
+                    f"[{date}] batch error provider={provider_used} model={model_used} size={len(batch)} "
                     f"depth={depth} err={type(e).__name__}: {e} | retrying smaller slices"
                 )
                 left_rows, left_ok, left_pf, left_tf, left_pool = _run_batch(batch[:split_at], depth=depth + 1)
@@ -806,21 +1281,22 @@ def process_day(
                     left_tf + right_tf,
                     right_pool,
                 )
-            if provider == "google":
-                err_prefix = "google_error"
-            elif provider == "nvidia":
-                err_prefix = "nvidia_error"
-            else:
-                err_prefix = "ollama_error"
+            err_prefix = _provider_error_prefix(provider_used)
             return ([_blank_record(batch[0], f"{err_prefix}:{e}")], 0, 0, 1, False)
 
         if not arr:
-            if provider in {"google", "nvidia"} and rate_limiter is not None:
-                rate_limiter.cooldown(model_used, 60.0)
+            if hosted_mode and rate_limiter is not None and spec_used is not None:
+                rate_limiter.record_failure(spec_used.key, cooldown_seconds=60.0)
+            if hosted_mode and rate_limiter is not None and len(batch) == 1 and depth < max_hosted_retries:
+                _log(
+                    f"[{date}] empty/invalid JSON provider={provider_used} model={model_used} size=1 "
+                    f"depth={depth} | retrying alternate model"
+                )
+                return _run_batch(batch, depth=depth + 1)
             if len(batch) > 1:
                 split_at = max(1, len(batch) // 2)
                 _log(
-                    f"[{date}] empty/invalid JSON provider={provider} model={model_used} size={len(batch)} "
+                    f"[{date}] empty/invalid JSON provider={provider_used} model={model_used} size={len(batch)} "
                     f"depth={depth} | retrying smaller slices"
                 )
                 left_rows, left_ok, left_pf, left_tf, left_pool = _run_batch(batch[:split_at], depth=depth + 1)
@@ -852,7 +1328,7 @@ def process_day(
         missing = [a for a in batch if a["id"] not in seen]
         if missing and len(batch) > 1:
             _log(
-                f"[{date}] partial batch response provider={provider} model={model_used} size={len(batch)} "
+                f"[{date}] partial batch response provider={provider_used} model={model_used} size={len(batch)} "
                 f"matched={len(seen)} missing={len(missing)} depth={depth} | retrying missing subset"
             )
             retry_rows, retry_ok, retry_pf, retry_tf, retry_pool = _run_batch(missing, depth=depth + 1)
@@ -864,6 +1340,14 @@ def process_day(
                 retry_pool,
             )
 
+        if missing and hosted_mode and rate_limiter is not None and spec_used is not None:
+            rate_limiter.record_failure(spec_used.key, cooldown_seconds=60.0)
+        if missing and hosted_mode and rate_limiter is not None and len(batch) == 1 and depth < max_hosted_retries:
+            _log(
+                f"[{date}] missing object provider={provider_used} model={model_used} size=1 "
+                f"depth={depth} | retrying alternate model"
+            )
+            return _run_batch(batch, depth=depth + 1)
         for article in missing:
             batch_rows.append(_blank_record(article, "missing_object_in_batch"))
 
@@ -939,12 +1423,26 @@ def main():
     ap.add_argument("--date-from", type=str, default="")
     ap.add_argument("--date-to", type=str, default="")
     ap.add_argument("--batch-size", type=int, default=20)
-    ap.add_argument("--provider", type=str, default="google", choices=["ollama", "google", "nvidia"],
-                    help="LLM provider: 'google' (AI Studio), 'nvidia' (hosted chat LLMs), or 'ollama' (local).")
+    ap.add_argument(
+        "--provider",
+        type=str,
+        default="auto",
+        choices=["auto", "ollama", "google", "nvidia", "mistral", "huggingface", "vercel"],
+        help=(
+            "LLM provider. 'auto' builds one hosted pool across configured providers and "
+            "uses the fastest observed models first."
+        ),
+    )
     ap.add_argument("--model", type=str, default="",
-                    help="Model name. For nvidia, bare short names from the curated pool are accepted and comma-separated lists are allowed.")
+                    help=(
+                        "Optional model override. Supports comma-separated lists. In auto mode, "
+                        "use provider:model entries such as google:gemini-2.5-flash-lite."
+                    ))
     ap.add_argument("--api-key", type=str, default="",
-                    help="Provider API key. For google/nvidia this also resolves from the matching .env variable.")
+                    help=(
+                        "Optional provider API key override. Auto mode ignores this and reads "
+                        "provider-specific keys from the environment or .env."
+                    ))
     ap.add_argument("--timeout", type=int, default=30)
     ap.add_argument("--num-predict", type=int, default=8192,
                     help="Max output tokens per batch (8192 needed for batch-size=20 with full schema).")
@@ -956,44 +1454,59 @@ def main():
     ap.add_argument("--log-every-batches", type=int, default=5,
                     help="Log progress every N batches within each day (default 5).")
     args = ap.parse_args()
-    model_arg_supplied = bool(args.model.strip())
+    if args.provider == "ollama" and not args.model:
+        args.model = DEFAULT_MODELS["ollama"]
 
-    # Resolve model default per provider
-    if not args.model:
-        args.model = DEFAULT_MODELS[args.provider]
-
-    # Resolve API key
-    if args.provider == "google":
-        api_key = _resolve_google_api_key(args.api_key)
-    elif args.provider == "nvidia":
-        api_key = _resolve_nvidia_api_key(args.api_key)
-    else:
-        api_key = ""
-    if args.provider == "google" and not api_key:
-        raise SystemExit("ERROR: --api-key or GOOGLE_API_KEY required for google provider (shell env or .env).")
-    if args.provider == "nvidia" and not api_key:
-        raise SystemExit("ERROR: --api-key or NVIDIA_API_KEY required for nvidia provider (shell env or .env).")
-
-    # Use provider pools for hosted backends.
-    rate_limiter: ModelRateLimiter | None = None
-    if args.provider in PROVIDER_MODEL_POOLS:
-        if args.provider == "google":
-            model_pool = GOOGLE_MODEL_POOL
-        elif model_arg_supplied:
-            model_pool = [{"name": _normalize_nvidia_model_name(name)} for name in args.model.split(",") if name.strip()]
-        else:
-            model_pool = NVIDIA_MODEL_POOL
-        rate_limiter = ModelRateLimiter(model_pool)
-        _log(f"Model pool: {[m['name'] for m in model_pool]}")
+    rate_limiter: HostedModelScheduler | None = None
+    api_keys_by_model: dict[str, str] = {}
+    if args.provider in HOSTED_PROVIDERS:
+        if args.provider == "auto" and args.api_key:
+            _log("Ignoring --api-key in auto mode; using provider-specific env vars from environment/.env.")
+        try:
+            model_pool = _select_hosted_model_pool(args.provider, args.model)
+        except ValueError as exc:
+            raise SystemExit(f"ERROR: {exc}") from exc
+        if not model_pool:
+            if args.provider == "auto":
+                raise SystemExit(
+                    "ERROR: no configured hosted providers found. Add provider API keys to .env "
+                    "or use --provider ollama."
+                )
+            env_names = ", ".join(_api_env_names_for_provider(args.provider, args.model))
+            raise SystemExit(
+                f"ERROR: no models available for provider '{args.provider}'. "
+                f"Set one of: {env_names}"
+            )
+        api_keys_by_model = _resolve_api_keys_for_specs(model_pool, args.provider, args.api_key)
+        missing_keys = [spec.key for spec in model_pool if spec.key not in api_keys_by_model]
+        if missing_keys:
+            if args.model:
+                raise SystemExit(
+                    "ERROR: missing API keys for requested hosted models: "
+                    + ", ".join(missing_keys)
+                )
+            model_pool = [spec for spec in model_pool if spec.key in api_keys_by_model]
+        if not model_pool:
+            raise SystemExit("ERROR: hosted model pool resolved but no models had valid credentials.")
+        rate_limiter = HostedModelScheduler(model_pool, stats_path=HOSTED_MODEL_STATS_PATH)
+        _log(f"Model pool: {[spec.key for spec in rate_limiter.specs()]}")
 
     files = _iter_dates(args.date_from, args.date_to)
     if not files:
         print("No input files matched date filters.")
         return
 
+    if args.model:
+        run_model = args.model
+    elif args.provider == "auto":
+        run_model = "auto_pool"
+    elif args.provider in HOSTED_PROVIDER_NAMES:
+        run_model = f"{args.provider}_pool"
+    else:
+        run_model = DEFAULT_MODELS["ollama"]
     _log(
         f"Run config: files={len(files)} from={args.date_from or '-'} to={args.date_to or '-'} "
-        f"provider={args.provider} model={args.model} batch_size={args.batch_size} workers={args.workers} "
+        f"provider={args.provider} model={run_model} batch_size={args.batch_size} workers={args.workers} "
         f"timeout={args.timeout}s num_predict={args.num_predict} "
         f"max_summary_chars={args.max_summary_chars} overwrite={args.overwrite}"
     )
@@ -1031,12 +1544,13 @@ def main():
                 batch_size=args.batch_size,
                 provider=args.provider,
                 model=args.model,
-                api_key=api_key,
+                api_key=args.api_key,
                 timeout=args.timeout,
                 num_predict=args.num_predict,
                 max_summary_chars=args.max_summary_chars,
                 log_every_batches=args.log_every_batches,
                 rate_limiter=rate_limiter,
+                api_keys=api_keys_by_model,
             )
             total_days += 1
             total_filtered += stats["articles_filtered"]
@@ -1066,12 +1580,13 @@ def main():
                     args.batch_size,
                     args.provider,
                     args.model,
-                    api_key,
+                    args.api_key,
                     args.timeout,
                     args.num_predict,
                     args.max_summary_chars,
                     args.log_every_batches,
                     rate_limiter,
+                    api_keys_by_model,
                 ): p.stem
                 for p in pending
             }

@@ -1,0 +1,300 @@
+{
+  "models": {
+    "google:gemini-2.5-flash": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "google:gemini-2.5-flash-lite": {
+      "cooldown_until": 1775342766.026162,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-04T22:45:06Z",
+      "last_success": "2026-04-04T22:43:35Z",
+      "recent_latencies": [
+        0.7854464054107666,
+        0.6849286556243896,
+        0.6803789138793945,
+        0.7686870098114014
+      ],
+      "success_count": 4
+    },
+    "google:gemini-3-flash-preview": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "google:gemini-3.1-flash-lite-preview": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "2026-04-04T22:46:08Z",
+      "recent_latencies": [
+        1.2483325004577637,
+        1.3538575172424316
+      ],
+      "success_count": 2
+    },
+    "google:gemma-3-12b-it": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "google:gemma-3-27b-it": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "huggingface:Qwen/Qwen2.5-72B-Instruct": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "huggingface:meta-llama/Llama-3.3-70B-Instruct": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "huggingface:microsoft/Phi-4-mini-instruct": {
+      "cooldown_until": 1775342824.0265567,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-04T22:46:04Z",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "huggingface:mistralai/Mistral-Small-3.1-24B-Instruct-2503": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "mistral:codestral-latest": {
+      "cooldown_until": 1775342825.5088933,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-04T22:46:05Z",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "mistral:mistral-large-latest": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "mistral:mistral-medium-latest": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "mistral:mistral-small-latest": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "2026-04-04T22:45:32Z",
+      "recent_latencies": [
+        0.9057590961456299,
+        0.8360393047332764,
+        2.553614854812622,
+        8.357740640640259,
+        8.38297414779663,
+        4.914262771606445
+      ],
+      "success_count": 6
+    },
+    "nvidia:deepseek-ai/deepseek-v3.1": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:deepseek-ai/deepseek-v3.1-terminus": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:deepseek-ai/deepseek-v3.2": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:google/gemma-3-27b-it": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:meta/llama-4-maverick-17b-128e-instruct": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:microsoft/phi-3.5-mini-instruct": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:mistralai/mistral-large-3-675b-instruct-2512": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:mistralai/mistral-medium-3-instruct": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:moonshotai/kimi-k2-instruct": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:moonshotai/kimi-k2-instruct-0905": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:nvidia/nemotron-mini-4b-instruct": {
+      "cooldown_until": 1775342825.6767235,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-04T22:46:05Z",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:stepfun-ai/step-3.5-flash": {
+      "cooldown_until": 1775342943.8663425,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-04T22:46:03Z",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "nvidia:z-ai/glm-4.7": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "vercel:deepseek-ai/deepseek-v3.2": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "vercel:google/gemini-2.5-flash-lite": {
+      "cooldown_until": 1775342793.7571924,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-04T22:45:33Z",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "vercel:mistral/mistral-small-latest": {
+      "cooldown_until": 1775342825.416982,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-04T22:46:05Z",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "vercel:moonshotai/kimi-k2-instruct": {
+      "cooldown_until": 0.0,
+      "failure_count": 0,
+      "failure_streak": 0,
+      "last_failure": "",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    }
+  },
+  "updated_at": "2026-04-04T22:46:08Z",
+  "version": 1
+}
