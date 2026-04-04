@@ -320,13 +320,16 @@ Extract per-ticker daily sentiment from cafef JSONL files using a keyword lexico
 - **Coverage:** ~0.8% of (day, ticker) pairs (very sparse; this is the raw base table, not a dense feature surface)
 
 ### `extract_llm_news_features.py`
-Extract structured per-article features from CafeF JSONL with local Ollama (`/api/generate`).
+Extract structured per-article features from CafeF JSONL with Google AI Studio, NVIDIA hosted chat LLMs, or local Ollama.
 - **Status:** Active
 - **Input:** `data/news/cafef/raw/YYYY-MM-DD.jsonl`
 - **Output:** `data/llm_cache/YYYY-MM-DD.jsonl` (resume-safe, atomic write)
-- **Usage:** `python data_tools/extract_llm_news_features.py --date-from 2023-01-01 --date-to 2023-01-03`
+- **Usage:** `python data_tools/extract_llm_news_features.py --date-from 2023-01-01 --date-to 2023-01-03 --provider google`
+- **Credentials:** pass `--api-key`, export the provider key (`GOOGLE_API_KEY` or `NVIDIA_API_KEY`), or place it in `.env`
+- **Provider notes:** `--provider google` uses the built-in Google model pool; `--provider nvidia` uses a curated text-LLM pool by default and also accepts explicit `owner/model` ids or comma-separated model lists via `--model`
 - **Speed knobs:** `--workers`, `--batch-size`, `--num-predict`, `--max-summary-chars`
 - **Progress logs:** timestamped day/batch progress, rates, ETA, error counts
+- **Reliability:** auto-retries failed or partial batches with smaller slices before writing blank fallback rows, and reprocesses existing error-only cache days automatically
 
 ### `build_llm_news_features.py`
 Build ticker-day and dense market-daily LLM features from `data/llm_cache/`.

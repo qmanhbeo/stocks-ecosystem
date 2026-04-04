@@ -1,5 +1,5 @@
 """
-Smoke-test each model in MODEL_POOL against one real batch of articles.
+Smoke-test each model in a hosted provider pool against one real batch of articles.
 
 For each model:
   - Picks the next uncached day from 2026-03-15..2026-03-20
@@ -8,12 +8,12 @@ For each model:
 
 Usage:
     cd alpha-research-lab
-    conda run -n stocks python data_tools/test_model_pool.py
+    conda run -n stocks python data_tools/test_model_pool.py --provider google
 """
 from __future__ import annotations
 
+import argparse
 import json
-import os
 import re
 import sys
 import time
@@ -23,12 +23,15 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from extract_llm_news_features import (
-    MODEL_POOL,
+    PROVIDER_MODEL_POOLS,
     _build_prompt,
     _call_google,
+    _call_nvidia,
     _is_financial_article,
     _load_articles,
     _normalize_record,
+    _resolve_google_api_key,
+    _resolve_nvidia_api_key,
 )
 from path_utils import data_path
 
@@ -65,7 +68,7 @@ def score_record(norm: dict) -> float:
     return filled / len(SCHEMA_FIELDS)
 
 
-def test_model(model_name: str, day: str, api_key: str, batch_size: int = 5) -> dict:
+def test_model(model_name: str, day: str, api_key: str, provider: str, batch_size: int = 5) -> dict:
     raw_path = RAW_DIR / f"{day}.jsonl"
     if not raw_path.exists():
         return {"model": model_name, "day": day, "status": "no_raw_file"}
@@ -83,7 +86,10 @@ def test_model(model_name: str, day: str, api_key: str, batch_size: int = 5) -> 
 
     t0 = time.time()
     try:
-        arr = _call_google(prompt, model=model_name, api_key=api_key, timeout=60, max_output_tokens=8192)
+        if provider == "google":
+            arr = _call_google(prompt, model=model_name, api_key=api_key, timeout=60, max_output_tokens=8192)
+        else:
+            arr = _call_nvidia(prompt, model=model_name, api_key=api_key, timeout=60, max_output_tokens=8192)
     except Exception as e:
         return {
             "model": model_name, "day": day, "status": "api_error",
@@ -119,18 +125,32 @@ def test_model(model_name: str, day: str, api_key: str, batch_size: int = 5) -> 
 
 
 def main():
-    api_key = os.environ.get("GOOGLE_API_KEY", "")
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--provider", choices=["google", "nvidia"], default="google")
+    ap.add_argument("--max-models", type=int, default=0,
+                    help="Optional limit on how many models from the provider pool to test.")
+    args = ap.parse_args()
+
+    if args.provider == "google":
+        api_key = _resolve_google_api_key("")
+    else:
+        api_key = _resolve_nvidia_api_key("")
     if not api_key:
-        sys.exit("ERROR: set GOOGLE_API_KEY env var")
+        env_name = "GOOGLE_API_KEY" if args.provider == "google" else "NVIDIA_API_KEY"
+        sys.exit(f"ERROR: set {env_name} or add it to .env")
 
-    test_days = _uncached_days(len(MODEL_POOL))
+    model_pool = PROVIDER_MODEL_POOLS[args.provider]
+    if args.max_models > 0:
+        model_pool = model_pool[: args.max_models]
 
-    print(f"Testing {len(MODEL_POOL)} models, one batch each\n{'─'*70}")
+    test_days = _uncached_days(len(model_pool))
+
+    print(f"Testing {len(model_pool)} {args.provider} models, one batch each\n{'─'*70}")
     results = []
-    for model_cfg, day in zip(MODEL_POOL, test_days):
+    for model_cfg, day in zip(model_pool, test_days):
         name = model_cfg["name"]
         print(f"  {name:<30}  day={day}  ...", end="", flush=True)
-        r = test_model(name, day, api_key)
+        r = test_model(name, day, api_key, provider=args.provider)
         results.append(r)
         status = r["status"]
         if status == "ok":

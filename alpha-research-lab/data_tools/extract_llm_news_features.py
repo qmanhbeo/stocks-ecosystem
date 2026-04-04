@@ -12,6 +12,9 @@ Providers:
 - google  : Google AI Studio / Gemini API (default model: gemini-2.5-flash-lite)
             Set GOOGLE_API_KEY env var or pass --api-key.
             Uses JSON mode for zero-parse-fail guarantee.
+- nvidia  : NVIDIA hosted LLM API (default pool: curated text-only chat models)
+            Set NVIDIA_API_KEY env var or pass --api-key.
+            Uses OpenAI-compatible chat completions.
 
 Schema (all LLM-unique fields):
 - id                 : article id
@@ -48,13 +51,14 @@ import unicodedata
 import urllib.request
 from datetime import datetime
 from pathlib import Path
-from path_utils import data_path
+from path_utils import data_path, workspace_path
 from typing import Iterable
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = data_path("news/cafef/raw")
 CACHE_DIR = data_path("llm_cache")
+NVIDIA_CHAT_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
 
 EVENT_TYPES = {
     "earnings_beat", "earnings_miss", "earnings_neutral", "revenue_growth",
@@ -119,6 +123,82 @@ def _load_articles(path: Path) -> list[dict]:
             except json.JSONDecodeError:
                 continue
     return out
+
+
+def _load_env_file(path: Path) -> dict[str, str]:
+    values: dict[str, str] = {}
+    try:
+        with path.open("r", encoding="utf-8", errors="replace") as f:
+            for raw_line in f:
+                line = raw_line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                if line.startswith("export "):
+                    line = line[len("export ") :].strip()
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip()
+                if not key:
+                    continue
+                if value and value[0] == value[-1] and value[0] in {"'", '"'}:
+                    value = value[1:-1]
+                values[key] = value
+    except OSError:
+        return {}
+    return values
+
+
+def _resolve_api_key(cli_value: str, env_var_names: list[str]) -> str:
+    if cli_value:
+        return cli_value
+    for env_var_name in env_var_names:
+        env_value = os.environ.get(env_var_name, "").strip()
+        if env_value:
+            return env_value
+    candidates = [
+        Path.cwd() / ".env",
+        REPO_ROOT / ".env",
+        workspace_path(".env"),
+    ]
+    seen: set[Path] = set()
+    for candidate in candidates:
+        candidate = candidate.resolve()
+        if candidate in seen or not candidate.exists():
+            continue
+        seen.add(candidate)
+        env_map = _load_env_file(candidate)
+        for env_var_name in env_var_names:
+            value = env_map.get(env_var_name, "").strip()
+            if value:
+                os.environ[env_var_name] = value
+                return value
+    return ""
+
+
+def _resolve_google_api_key(cli_value: str) -> str:
+    return _resolve_api_key(cli_value, ["GOOGLE_API_KEY"])
+
+
+def _resolve_nvidia_api_key(cli_value: str) -> str:
+    return _resolve_api_key(cli_value, ["NVIDIA_API_KEY", "NGC_API_KEY"])
+
+
+def _cache_has_successful_rows(path: Path) -> bool:
+    try:
+        with path.open("r", encoding="utf-8", errors="replace") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    row = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if row.get("llm_error") in {None, ""}:
+                    return True
+    except OSError:
+        return False
+    return False
 
 
 def _is_financial_article(article: dict) -> bool:
@@ -190,7 +270,7 @@ def _build_prompt(batch: list[dict], max_summary_chars: int) -> str:
 
 # Free-tier limits (Google AI Studio).
 # Models are tried in order — Gemini first (better quality), Gemma as bulk fallback.
-MODEL_POOL = [
+GOOGLE_MODEL_POOL = [
     {"name": "gemini-3-flash-preview",       "rpm": 5,  "rpd": 20},
     {"name": "gemini-3.1-flash-lite-preview", "rpm": 15, "rpd": 500},
     {"name": "gemini-2.5-flash",             "rpm": 5,  "rpd": 20},
@@ -198,6 +278,39 @@ MODEL_POOL = [
     {"name": "gemma-3-27b-it",               "rpm": 30, "rpd": 14400},
     {"name": "gemma-3-12b-it",               "rpm": 30, "rpd": 14400},
 ]
+
+# Supported NVIDIA provider models are any text-chat model ids accepted by the
+# hosted catalog. This curated pool is the default order used when --provider
+# nvidia is selected without an explicit --model override.
+NVIDIA_MODEL_POOL = [
+    {"name": "deepseek-ai/deepseek-v3.2"},
+    {"name": "moonshotai/kimi-k2-instruct-0905"},
+    {"name": "moonshotai/kimi-k2-instruct"},
+    {"name": "z-ai/glm-4.7"},
+    {"name": "deepseek-ai/deepseek-v3.1"},
+    {"name": "deepseek-ai/deepseek-v3.1-terminus"},
+    {"name": "stepfun-ai/step-3.5-flash"},
+    {"name": "meta/llama-4-maverick-17b-128e-instruct"},
+    {"name": "mistralai/mistral-large-3-675b-instruct-2512"},
+    {"name": "mistralai/mistral-medium-3-instruct"},
+    {"name": "google/gemma-3-27b-it"},
+    {"name": "microsoft/phi-3.5-mini-instruct"},
+    {"name": "nvidia/nemotron-mini-4b-instruct"},
+]
+
+NVIDIA_MODEL_ALIASES = {cfg["name"].split("/", 1)[1]: cfg["name"] for cfg in NVIDIA_MODEL_POOL}
+PROVIDER_MODEL_POOLS = {
+    "google": GOOGLE_MODEL_POOL,
+    "nvidia": NVIDIA_MODEL_POOL,
+}
+DEFAULT_MODELS = {
+    "google": "gemini-2.5-flash-lite",
+    "nvidia": NVIDIA_MODEL_POOL[0]["name"],
+    "ollama": "qwen3.5:4b",
+}
+
+# Backward-compatible alias used by the smoke test.
+MODEL_POOL = GOOGLE_MODEL_POOL
 
 
 class ModelRateLimiter:
@@ -213,6 +326,7 @@ class ModelRateLimiter:
         self._models = models
         self._rpm_windows: dict[str, list[float]] = {m["name"]: [] for m in models}
         self._rpd_counts: dict[str, int] = {m["name"]: 0 for m in models}
+        self._cooldown_until: dict[str, float] = {m["name"]: 0.0 for m in models}
         self._current_day: int = datetime.now().toordinal()
 
     def _maybe_reset_day(self) -> None:
@@ -236,10 +350,15 @@ class ModelRateLimiter:
                 any_rpd_left = False
                 for m in self._models:
                     name = m["name"]
+                    rpm_limit = m.get("rpm")
+                    rpd_limit = m.get("rpd")
                     self._rpm_windows[name] = [t for t in self._rpm_windows[name] if now - t < 60.0]
-                    if self._rpd_counts[name] < m["rpd"]:
+                    if rpd_limit is None or self._rpd_counts[name] < rpd_limit:
                         any_rpd_left = True
-                        if len(self._rpm_windows[name]) < m["rpm"]:
+                    if now < self._cooldown_until[name]:
+                        continue
+                    if rpd_limit is None or self._rpd_counts[name] < rpd_limit:
+                        if rpm_limit is None or len(self._rpm_windows[name]) < rpm_limit:
                             self._rpm_windows[name].append(now)
                             self._rpd_counts[name] += 1
                             return name
@@ -252,7 +371,19 @@ class ModelRateLimiter:
     def all_daily_exhausted(self) -> bool:
         with self._lock:
             self._maybe_reset_day()
-            return all(self._rpd_counts[m["name"]] >= m["rpd"] for m in self._models)
+            return all(
+                m.get("rpd") is not None and self._rpd_counts[m["name"]] >= m["rpd"]
+                for m in self._models
+            )
+
+    def cooldown(self, model_name: str, seconds: float) -> None:
+        if seconds <= 0:
+            return
+        with self._lock:
+            until = time.time() + seconds
+            current = self._cooldown_until.get(model_name, 0.0)
+            if until > current:
+                self._cooldown_until[model_name] = until
 
     def status(self) -> str:
         with self._lock:
@@ -260,9 +391,28 @@ class ModelRateLimiter:
             parts = []
             for m in self._models:
                 name = m["name"]
+                rpm_limit = m.get("rpm")
+                rpd_limit = m.get("rpd")
                 rpm_used = sum(1 for t in self._rpm_windows[name] if now - t < 60.0)
-                parts.append(f"{name}(rpm={rpm_used}/{m['rpm']} rpd={self._rpd_counts[name]}/{m['rpd']})")
+                cooldown_left = max(0.0, self._cooldown_until[name] - now)
+                cooldown_label = f" cooldown={cooldown_left:.0f}s" if cooldown_left > 0 else ""
+                parts.append(
+                    f"{name}(rpm={rpm_used}/{rpm_limit if rpm_limit is not None else '-'} "
+                    f"rpd={self._rpd_counts[name]}/{rpd_limit if rpd_limit is not None else '-'}{cooldown_label})"
+                )
             return " | ".join(parts)
+
+
+def _remote_cooldown_seconds(exc: Exception) -> float:
+    if isinstance(exc, TimeoutError):
+        return 180.0
+    if isinstance(exc, urllib.error.HTTPError):
+        if exc.code in {500, 502, 503, 504}:
+            return 180.0
+        return 60.0
+    if isinstance(exc, urllib.error.URLError):
+        return 180.0
+    return 60.0
 
 
 # ---------------------------------------------------------------------------
@@ -328,6 +478,40 @@ def _extract_json_array(text: str) -> list[dict] | None:
 # Google AI Studio backend
 # ---------------------------------------------------------------------------
 
+def _extract_google_text(body: dict) -> str:
+    candidates = body.get("candidates")
+    if not isinstance(candidates, list) or not candidates:
+        raise ValueError("google_response_missing_candidates")
+    content = candidates[0].get("content")
+    if not isinstance(content, dict):
+        raise ValueError("google_response_missing_content")
+    parts = content.get("parts")
+    if not isinstance(parts, list) or not parts:
+        raise ValueError("google_response_missing_parts")
+    text_parts = [
+        part["text"]
+        for part in parts
+        if isinstance(part, dict) and isinstance(part.get("text"), str)
+    ]
+    if not text_parts:
+        raise ValueError("google_response_missing_text")
+    return "".join(text_parts)
+
+
+def _parse_google_array(body: dict, use_json_mode: bool) -> list[dict]:
+    text = _extract_google_text(body)
+    if use_json_mode:
+        try:
+            arr = json.loads(text)
+        except json.JSONDecodeError:
+            arr = _extract_json_array(text)
+    else:
+        arr = _extract_json_array(text)
+    if isinstance(arr, list):
+        return [x for x in arr if isinstance(x, dict)]
+    return []
+
+
 def _call_google(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
     """Call Gemini/Gemma API. Returns parsed list of dicts.
 
@@ -365,16 +549,81 @@ def _call_google(prompt: str, model: str, api_key: str, timeout: int, max_output
             else:
                 raise
 
-    text = body["candidates"][0]["content"]["parts"][0]["text"]
+    return _parse_google_array(body, use_json_mode=use_json_mode)
 
-    if use_json_mode:
-        arr = json.loads(text)
-    else:
-        arr = _extract_json_array(text)
 
-    if isinstance(arr, list):
-        return [x for x in arr if isinstance(x, dict)]
-    return arr or []
+# ---------------------------------------------------------------------------
+# NVIDIA hosted LLM backend
+# ---------------------------------------------------------------------------
+
+def _normalize_nvidia_model_name(model: str) -> str:
+    model = model.strip()
+    if not model:
+        return model
+    if "/" in model:
+        return model
+    return NVIDIA_MODEL_ALIASES.get(model, model)
+
+
+def _extract_openai_chat_text(body: dict) -> str:
+    choices = body.get("choices")
+    if not isinstance(choices, list) or not choices:
+        raise ValueError("openai_chat_missing_choices")
+    message = choices[0].get("message")
+    if not isinstance(message, dict):
+        raise ValueError("openai_chat_missing_message")
+    content = message.get("content")
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        text_parts = []
+        for part in content:
+            if isinstance(part, str):
+                text_parts.append(part)
+            elif isinstance(part, dict) and isinstance(part.get("text"), str):
+                text_parts.append(part["text"])
+        if text_parts:
+            return "".join(text_parts)
+    raise ValueError("openai_chat_missing_content")
+
+
+def _parse_openai_chat_array(body: dict) -> list[dict]:
+    return _extract_json_array(_extract_openai_chat_text(body)) or []
+
+
+def _call_nvidia(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+    payload = {
+        "model": _normalize_nvidia_model_name(model),
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0,
+        "max_tokens": max_output_tokens,
+        "stream": False,
+    }
+    data = json.dumps(payload).encode("utf-8")
+
+    for attempt in range(3):
+        req = urllib.request.Request(
+            NVIDIA_CHAT_URL,
+            data=data,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                body = json.loads(resp.read().decode("utf-8", errors="replace"))
+            break
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < 2:
+                wait = 30 * (2 ** attempt)
+                _log(f"[nvidia] 429 rate limit, waiting {wait}s (attempt {attempt+1}/3)")
+                time.sleep(wait)
+            else:
+                raise
+
+    return _parse_openai_chat_array(body)
 
 
 # ---------------------------------------------------------------------------
@@ -503,61 +752,136 @@ def process_day(
     n_batches = max(1, math.ceil(len(filtered) / batch_size)) if filtered else 0
     done_batches = 0
 
-    for batch in _chunk(filtered, batch_size):
-        b_t0 = time.time()
+    def _run_batch(batch: list[dict], depth: int = 0) -> tuple[list[dict], int, int, int, bool]:
         prompt = _build_prompt(batch, max_summary_chars=max_summary_chars)
         by_id = {a["id"]: a for a in batch}
+        model_used = model
 
-        arr: list[dict] | None = None
-
-        if provider == "google":
-            if rate_limiter is not None:
-                model_used = rate_limiter.acquire(acquire_timeout=300.0)
-                if model_used is None:
-                    pool_exhausted = True
-                    _log(f"[{date}] all model daily limits exhausted — stopping | {rate_limiter.status()}")
-                    rows.extend(_blank_record(a, "pool_exhausted") for a in batch)
-                    break
+        try:
+            if provider == "google":
+                if rate_limiter is not None:
+                    model_used = rate_limiter.acquire(acquire_timeout=300.0)
+                    if model_used is None:
+                        return ([_blank_record(a, "pool_exhausted") for a in batch], 0, 0, 0, True)
+                arr = _call_google(
+                    prompt,
+                    model=model_used,
+                    api_key=api_key,
+                    timeout=timeout,
+                    max_output_tokens=num_predict,
+                )
+            elif provider == "nvidia":
+                if rate_limiter is not None:
+                    model_used = rate_limiter.acquire(acquire_timeout=300.0)
+                    if model_used is None:
+                        return ([_blank_record(a, "pool_exhausted") for a in batch], 0, 0, 0, True)
+                arr = _call_nvidia(
+                    prompt,
+                    model=model_used,
+                    api_key=api_key,
+                    timeout=timeout,
+                    max_output_tokens=num_predict,
+                )
             else:
-                model_used = model
-            try:
-                arr = _call_google(prompt, model=model_used, api_key=api_key, timeout=timeout, max_output_tokens=num_predict)
-            except Exception as e:
-                timeout_fail += len(batch)
-                rows.extend(_blank_record(a, f"google_error:{e}") for a in batch)
-                done_batches += 1
-                continue
-        else:  # ollama
-            try:
                 resp = _call_ollama(prompt, model=model, timeout=timeout, num_predict=num_predict)
-            except Exception:
-                timeout_fail += len(batch)
-                rows.extend(_blank_record(a, "ollama_timeout_or_error") for a in batch)
-                done_batches += 1
-                continue
-            arr = _extract_json_array(resp)
+                arr = _extract_json_array(resp) or []
+        except Exception as e:
+            if provider in {"google", "nvidia"} and rate_limiter is not None:
+                rate_limiter.cooldown(model_used, _remote_cooldown_seconds(e))
+            if len(batch) > 1:
+                split_at = max(1, len(batch) // 2)
+                _log(
+                    f"[{date}] batch error provider={provider} model={model_used} size={len(batch)} "
+                    f"depth={depth} err={type(e).__name__}: {e} | retrying smaller slices"
+                )
+                left_rows, left_ok, left_pf, left_tf, left_pool = _run_batch(batch[:split_at], depth=depth + 1)
+                if left_pool:
+                    remaining = [_blank_record(a, "pool_exhausted") for a in batch[split_at:]]
+                    return (left_rows + remaining, left_ok, left_pf, left_tf, True)
+                right_rows, right_ok, right_pf, right_tf, right_pool = _run_batch(batch[split_at:], depth=depth + 1)
+                return (
+                    left_rows + right_rows,
+                    left_ok + right_ok,
+                    left_pf + right_pf,
+                    left_tf + right_tf,
+                    right_pool,
+                )
+            if provider == "google":
+                err_prefix = "google_error"
+            elif provider == "nvidia":
+                err_prefix = "nvidia_error"
+            else:
+                err_prefix = "ollama_error"
+            return ([_blank_record(batch[0], f"{err_prefix}:{e}")], 0, 0, 1, False)
 
         if not arr:
-            parse_fail += len(batch)
-            rows.extend(_blank_record(a, "json_parse_fail") for a in batch)
-            done_batches += 1
-            continue
+            if provider in {"google", "nvidia"} and rate_limiter is not None:
+                rate_limiter.cooldown(model_used, 60.0)
+            if len(batch) > 1:
+                split_at = max(1, len(batch) // 2)
+                _log(
+                    f"[{date}] empty/invalid JSON provider={provider} model={model_used} size={len(batch)} "
+                    f"depth={depth} | retrying smaller slices"
+                )
+                left_rows, left_ok, left_pf, left_tf, left_pool = _run_batch(batch[:split_at], depth=depth + 1)
+                if left_pool:
+                    remaining = [_blank_record(a, "pool_exhausted") for a in batch[split_at:]]
+                    return (left_rows + remaining, left_ok, left_pf, left_tf, True)
+                right_rows, right_ok, right_pf, right_tf, right_pool = _run_batch(batch[split_at:], depth=depth + 1)
+                return (
+                    left_rows + right_rows,
+                    left_ok + right_ok,
+                    left_pf + right_pf,
+                    left_tf + right_tf,
+                    right_pool,
+                )
+            return ([_blank_record(batch[0], "json_parse_fail")], 0, 1, 0, False)
 
-        seen = set()
+        batch_rows: list[dict] = []
+        seen: set[str] = set()
+        batch_ok = 0
         for obj in arr:
             rid = str(obj.get("id", "") or "").strip()
-            if rid in by_id:
+            if rid in by_id and rid not in seen:
                 norm = _normalize_record(obj, rid)
                 norm["llm_error"] = None
-                rows.append(norm)
+                batch_rows.append(norm)
                 seen.add(rid)
-                parsed_ok += 1
-        for a in batch:
-            if a["id"] not in seen:
-                parse_fail += 1
-                rows.append(_blank_record(a, "missing_object_in_batch"))
+                batch_ok += 1
 
+        missing = [a for a in batch if a["id"] not in seen]
+        if missing and len(batch) > 1:
+            _log(
+                f"[{date}] partial batch response provider={provider} model={model_used} size={len(batch)} "
+                f"matched={len(seen)} missing={len(missing)} depth={depth} | retrying missing subset"
+            )
+            retry_rows, retry_ok, retry_pf, retry_tf, retry_pool = _run_batch(missing, depth=depth + 1)
+            return (
+                batch_rows + retry_rows,
+                batch_ok + retry_ok,
+                retry_pf,
+                retry_tf,
+                retry_pool,
+            )
+
+        for article in missing:
+            batch_rows.append(_blank_record(article, "missing_object_in_batch"))
+
+        return (batch_rows, batch_ok, len(missing), 0, False)
+
+    for batch in _chunk(filtered, batch_size):
+        b_t0 = time.time()
+        batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted = _run_batch(batch)
+        rows.extend(batch_rows)
+        parsed_ok += batch_ok
+        parse_fail += batch_pf
+        timeout_fail += batch_tf
         done_batches += 1
+        if batch_pool_exhausted:
+            pool_exhausted = True
+            if rate_limiter is not None:
+                _log(f"[{date}] all model daily limits exhausted — stopping | {rate_limiter.status()}")
+            break
         if log_every_batches > 0 and (
             done_batches == 1
             or done_batches % log_every_batches == 0
@@ -615,12 +939,12 @@ def main():
     ap.add_argument("--date-from", type=str, default="")
     ap.add_argument("--date-to", type=str, default="")
     ap.add_argument("--batch-size", type=int, default=20)
-    ap.add_argument("--provider", type=str, default="google", choices=["ollama", "google"],
-                    help="LLM provider: 'google' (AI Studio) or 'ollama' (local).")
+    ap.add_argument("--provider", type=str, default="google", choices=["ollama", "google", "nvidia"],
+                    help="LLM provider: 'google' (AI Studio), 'nvidia' (hosted chat LLMs), or 'ollama' (local).")
     ap.add_argument("--model", type=str, default="",
-                    help="Model name. Defaults: google=gemini-2.5-flash-lite, ollama=qwen3.5:4b.")
+                    help="Model name. For nvidia, bare short names from the curated pool are accepted and comma-separated lists are allowed.")
     ap.add_argument("--api-key", type=str, default="",
-                    help="Google AI Studio API key (or set GOOGLE_API_KEY env var).")
+                    help="Provider API key. For google/nvidia this also resolves from the matching .env variable.")
     ap.add_argument("--timeout", type=int, default=30)
     ap.add_argument("--num-predict", type=int, default=8192,
                     help="Max output tokens per batch (8192 needed for batch-size=20 with full schema).")
@@ -632,21 +956,35 @@ def main():
     ap.add_argument("--log-every-batches", type=int, default=5,
                     help="Log progress every N batches within each day (default 5).")
     args = ap.parse_args()
+    model_arg_supplied = bool(args.model.strip())
 
     # Resolve model default per provider
     if not args.model:
-        args.model = "gemini-2.5-flash-lite" if args.provider == "google" else "qwen3.5:4b"
+        args.model = DEFAULT_MODELS[args.provider]
 
     # Resolve API key
-    api_key = args.api_key or os.environ.get("GOOGLE_API_KEY", "")
-    if args.provider == "google" and not api_key:
-        raise SystemExit("ERROR: --api-key or GOOGLE_API_KEY required for google provider.")
-
-    # Always use the model pool for google provider
-    rate_limiter: ModelRateLimiter | None = None
     if args.provider == "google":
-        rate_limiter = ModelRateLimiter(MODEL_POOL)
-        _log(f"Model pool: {[m['name'] for m in MODEL_POOL]}")
+        api_key = _resolve_google_api_key(args.api_key)
+    elif args.provider == "nvidia":
+        api_key = _resolve_nvidia_api_key(args.api_key)
+    else:
+        api_key = ""
+    if args.provider == "google" and not api_key:
+        raise SystemExit("ERROR: --api-key or GOOGLE_API_KEY required for google provider (shell env or .env).")
+    if args.provider == "nvidia" and not api_key:
+        raise SystemExit("ERROR: --api-key or NVIDIA_API_KEY required for nvidia provider (shell env or .env).")
+
+    # Use provider pools for hosted backends.
+    rate_limiter: ModelRateLimiter | None = None
+    if args.provider in PROVIDER_MODEL_POOLS:
+        if args.provider == "google":
+            model_pool = GOOGLE_MODEL_POOL
+        elif model_arg_supplied:
+            model_pool = [{"name": _normalize_nvidia_model_name(name)} for name in args.model.split(",") if name.strip()]
+        else:
+            model_pool = NVIDIA_MODEL_POOL
+        rate_limiter = ModelRateLimiter(model_pool)
+        _log(f"Model pool: {[m['name'] for m in model_pool]}")
 
     files = _iter_dates(args.date_from, args.date_to)
     if not files:
@@ -667,15 +1005,23 @@ def main():
     total_timeout = 0
     total_elapsed = 0.0
     skipped = 0
+    retry_error_only = 0
     pending: list[Path] = []
     for p in files:
         out = CACHE_DIR / f"{p.stem}.jsonl"
         if out.exists() and not args.overwrite:
-            skipped += 1
+            if _cache_has_successful_rows(out):
+                skipped += 1
+            else:
+                retry_error_only += 1
+                pending.append(p)
         else:
             pending.append(p)
 
-    _log(f"Days pending={len(pending)} skipped_existing={skipped}")
+    _log(
+        f"Days pending={len(pending)} skipped_existing={skipped} "
+        f"retry_error_only={retry_error_only}"
+    )
 
     start = time.time()
     if args.workers <= 1:
