@@ -1,14 +1,14 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_99_log.md` for the latest full session detail.
+Use `notes/session_102_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Current State
 
-**Session status:** Session 99 ran the next materially different fallback after the `H269` current-account failure, still without touching the `2026+` lockbox. `H270` **PASSED**: rewriting the breakout target from generic `buy_now` into fixed breakout-survivor contracts revived the reduced-shape intraday branch on the observed breakout sleeve. The winning contract was `net_soft_survivor` (`5d cycle_return_net > -0.01` and `10d cycle_return_net > 0.00`), where `intraday_shape_core` beat `breakout_path_core` on validation AUC (`0.5168` vs `0.5074`) and delivered positive above-mean top-quintile `10d` returns in both validation (`+0.87%` vs phase mean `+0.18%`) and confirmation (`+0.89%` vs phase mean `+0.59%`). Branch consequence: keep the live branch unchanged, promote `H270` as offline evidence only, and advance the exact branch to deterministic breakout-survivor gate integration (`H271`). (2026-04-03)
+**Session status:** Session 102 ran the last narrow operational follow-through after the `H272` survivor-gate reintegration pass, still without touching the `2026+` lockbox. `H273` **FAILED**: the `net_soft_survivor` breakout-survivor overlay did not survive current-account / sticky operational compatibility. The candidate `h272_overlay_plus_sticky` lost to both the operational sticky baseline and the carried sparse control, with validation relative return `-56.35%`, confirmation relative return `-16.50%`, overall relative return `-43.40%`, sparse-book rate `0.9800`, and average holdings `0.7315`. Branch consequence: keep the live branch unchanged, keep `H270-H272` as offline evidence only, close this exact continuation family, and pivot the queue to `top-k intraday stress router` or `library-grade intraday shape atoms`. (2026-04-04)
 
 ### Start next session here
 
@@ -92,9 +92,61 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
        - `breakout_path_core`
        - `+1.24%`
    - do **not** change the live branch yet
-   - keep `H270` as offline evidence only until deterministic follow-through is tested
-   - the next exact branch is:
-     - `H271` deterministic breakout-survivor gate integration
+   - Session 100 then completed the deterministic breakout-survivor follow-through honestly:
+     - `H271` passed
+     - winning gate:
+       - `dev_q90`
+       - threshold `0.4572`
+     - validation relative delta vs ungated survivor sleeve:
+       - `+0.2113`
+     - confirmation relative delta vs ungated survivor sleeve:
+       - `+0.0534`
+     - confirmation allowed rows:
+       - `158`
+     - absolute confirmation relative return remained negative:
+       - `-0.2794`
+   - Session 101 then completed the family-local breakout-survivor reintegration honestly:
+     - `H272` passed
+     - winning variant:
+       - `survivor_dev_q90_keep_missing`
+     - winner survivor contract:
+       - `net_soft_survivor`
+     - validation relative delta vs carried sparse baseline:
+       - `+0.0070`
+     - confirmation relative delta vs carried sparse baseline:
+       - `+0.1696`
+     - overall relative delta vs carried sparse baseline:
+       - `+0.4344`
+     - observed breakout rows kept:
+       - `8`
+     - absolute validation / confirmation relative returns remained negative:
+       - validation `-0.1148`
+       - confirmation `-0.0447`
+   - do **not** change the live branch yet
+   - Session 102 then completed the narrow breakout-survivor current-account audit honestly:
+     - `H273` failed
+     - candidate `h272_overlay_plus_sticky`:
+       - validation relative return `-0.5635`
+       - confirmation relative return `-0.1650`
+       - overall relative return `-0.4340`
+     - operational sticky baseline:
+       - validation relative return `-0.0873`
+       - confirmation relative return `+0.1880`
+       - overall relative return `+0.4660`
+     - the candidate also lost to the carried sparse control:
+       - confirmation delta vs sparse `-0.0826`
+       - overall delta vs sparse `-0.2186`
+     - narrowness cost dominated again:
+       - `VC` sparse-book rate `0.9800`
+       - `VC` avg holdings `0.7315`
+   - close this exact breakout-survivor continuation family on the current contract
+   - condensed research queue after `H273`:
+     - `top-k intraday stress router`
+       - claim: after both breakout-trust and breakout-survivor operational compatibility failures, the surviving intraday information may belong at the selector-state / breadth-pressure layer rather than the row-level gate
+       - next honest test: summarize whether intraday conviction predicts sparse-book stress, replacement pressure, or breadth collapse on the restarted `2023-2025` branch before opening any new backtest
+     - `library-grade intraday shape atoms`
+       - claim: if the survivor rewrite remains structurally useful but non-transportable, the reduced-shape intraday signal may be more useful as publishable state features than as a deterministic overlay
+       - next honest test: audit whether the `intraday_shape_core` and breakout-path disagreement atoms are stable enough to publish as offline state features without claiming a live-ready gate
    - order-book / queue work remains blocked
 5. Treat the current daily-data synthesis queue as exhausted:
    - `H253-H256` closed the remaining recombination ideas on the current stack
@@ -173,9 +225,12 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
        - do **not** keep tuning continuation on this contract
      - third: the breakout-trust continuation family is now closed on this contract:
        - `H269` failed
-     - fourth: the breakout-survivor label rewrite is now live as the exact narrow follow-through:
-       - `H270` passed
-       - next exact step is `H271`
+     - fourth: the breakout-survivor branch is now closed on the current operational continuation ladder:
+       - `H270` passed the target rewrite
+       - `H271` passed deterministic sleeve integration
+       - `H272` passed family-local reintegration
+       - `H273` failed current-account compatibility
+       - do **not** continue this exact line further on the current contract
      - fifth: if that stalls further, fall back to:
        - selector-state / stress summaries
      - sixth: if that stalls further, fall back to:

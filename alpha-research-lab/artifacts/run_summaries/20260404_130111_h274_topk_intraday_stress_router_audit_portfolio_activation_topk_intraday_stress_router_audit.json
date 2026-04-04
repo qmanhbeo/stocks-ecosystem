@@ -1,0 +1,112 @@
+{
+  "artifacts": {
+    "audit_frame": "artifacts/portfolio_baselines/20260404_130111_h274_topk_intraday_stress_router_audit_frame.parquet",
+    "results": "artifacts/portfolio_baselines/20260404_130111_h274_topk_intraday_stress_router_audit_results.parquet",
+    "sticky_rebalance_daily": "artifacts/portfolio_baselines/20260404_130111_h274_topk_intraday_stress_router_audit_sticky_daily.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Frozen sticky branch path 2019-2025, evaluated on 2023-2025 activated rebalance dates only",
+    "intraday_source": "artifacts/timing_data/20260403_103038_h258_reduced_shape_intraday_contract_panel.parquet",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    }
+  },
+  "mode": "portfolio_activation_topk_intraday_stress_router_audit",
+  "name": "h274_topk_intraday_stress_router_audit",
+  "summary": {
+    "advance_to_h275": false,
+    "advance_to_library_grade_intraday_shape_atoms": true,
+    "best_intraday_candidate": {
+      "candidate_decision": "FAILED",
+      "confirmation_blocked_buy_count_spearman": -0.0015323443709415303,
+      "confirmation_cash_weight_spearman": 0.12540386597101044,
+      "confirmation_directional_hits": 1,
+      "confirmation_high_minus_low_cycle_delta": -0.002095263132606059,
+      "confirmation_high_stress_cycle_mean": 0.006388158557522664,
+      "confirmation_high_stress_share": 0.2692307692307692,
+      "confirmation_low_stress_cycle_mean": 0.008483421690128723,
+      "confirmation_next_cycle_relative_return_spearman": 0.11247863247863246,
+      "confirmation_replacement_overlap_spearman": 0.016807042229780633,
+      "confirmation_row_count": 28,
+      "confirmation_top5_buyable_count_spearman": -0.0167859915566148,
+      "dev_q80_threshold": 0.664453238172632,
+      "score_column": "topk_weak_close_repair_mean",
+      "validation_blocked_buy_count_spearman": -0.03593280361007398,
+      "validation_cash_weight_spearman": -0.04843403766842592,
+      "validation_directional_hits": 0,
+      "validation_high_minus_low_cycle_delta": 0.0037188993197610136,
+      "validation_high_stress_cycle_mean": 0.0007126893001977542,
+      "validation_high_stress_share": 0.34375,
+      "validation_low_stress_cycle_mean": -0.0030062100195632595,
+      "validation_next_cycle_relative_return_spearman": 0.06818181818181818,
+      "validation_replacement_overlap_spearman": 0.009597017372666323,
+      "validation_row_count": 33,
+      "validation_top5_buyable_count_spearman": 0.03593280361007398,
+      "variant": "stress_weak_close_repair"
+    },
+    "close_topk_intraday_stress_router_branch": true,
+    "confirmation_observed_share": 0.9571428571428572,
+    "confirmation_rebalance_row_count": 28,
+    "decision": "FAILED",
+    "evaluation_years": [
+      2023,
+      2025
+    ],
+    "history_start_year": 2019,
+    "live_variant": "sticky_bonus_0p015",
+    "overall_observed_share": 0.9747368421052631,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    },
+    "rebalance_row_count": 95,
+    "slow_proxy_baseline": {
+      "candidate_decision": "BASELINE",
+      "confirmation_blocked_buy_count_spearman": 0.28137092755654836,
+      "confirmation_cash_weight_spearman": 0.31707512170604363,
+      "confirmation_directional_hits": 4,
+      "confirmation_high_minus_low_cycle_delta": -0.007264704492759597,
+      "confirmation_high_stress_cycle_mean": 0.0018114420201287007,
+      "confirmation_high_stress_share": 0.2962962962962963,
+      "confirmation_low_stress_cycle_mean": 0.009076146512888298,
+      "confirmation_next_cycle_relative_return_spearman": 0.11904761904761904,
+      "confirmation_replacement_overlap_spearman": -0.37666993442672586,
+      "confirmation_row_count": 28,
+      "confirmation_top5_buyable_count_spearman": -0.4212313670988698,
+      "dev_q80_threshold": 0.06639057570145024,
+      "score_column": "full_recent_blocked_buy_ewm5",
+      "validation_blocked_buy_count_spearman": -0.19996958424341776,
+      "validation_cash_weight_spearman": -0.14545186456539613,
+      "validation_directional_hits": 2,
+      "validation_high_minus_low_cycle_delta": -0.02014407231680152,
+      "validation_high_stress_cycle_mean": -0.019356840906897637,
+      "validation_high_stress_share": 0.09090909090909091,
+      "validation_low_stress_cycle_mean": 0.0007872314099038843,
+      "validation_next_cycle_relative_return_spearman": -0.15942513368983957,
+      "validation_replacement_overlap_spearman": -0.23775141491506974,
+      "validation_row_count": 33,
+      "validation_top5_buyable_count_spearman": 0.19996958424341776,
+      "variant": "slow_blocked5_proxy"
+    },
+    "validation_observed_share": 0.9696969696969697,
+    "validation_rebalance_row_count": 33
+  },
+  "ts": "20260404_130111"
+}
