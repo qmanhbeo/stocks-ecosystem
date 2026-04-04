@@ -7,20 +7,20 @@ description: Workspace data-operations skill for the stocks ecosystem that under
 
 ## Overview
 
-Operate the workspace as one shared data system. Treat `/home/manh/stocks/data` as the canonical warehouse, treat `/home/manh/stocks/alpha-research-lab/data_tools/` as the main producer surface, and map each user request to the narrowest safe fetch, rebuild, repair, or audit workflow.
+Operate the workspace as one shared data system. Treat `/home/manh/stocks-ecosystem/data` as the canonical warehouse, treat `/home/manh/stocks-ecosystem/alpha-research-lab/data_tools/` as the main producer surface, and map each user request to the narrowest safe fetch, rebuild, repair, or audit workflow.
 
 ## Read Order
 
 1. Read the workspace contract first.
-- `/home/manh/stocks/AGENTS.md`
-- `/home/manh/stocks/README.md`
+- `/home/manh/stocks-ecosystem/AGENTS.md`
+- `/home/manh/stocks-ecosystem/README.md`
 
 2. Read the research producer contract next.
-- `/home/manh/stocks/alpha-research-lab/README.md`
-- `/home/manh/stocks/alpha-research-lab/data_tools/README.md`
+- `/home/manh/stocks-ecosystem/alpha-research-lab/README.md`
+- `/home/manh/stocks-ecosystem/alpha-research-lab/data_tools/README.md`
 
 3. Read the lab workflow manual when the request touches live/current-date surfaces, published research artifacts, or branch-sensitive rebuilds.
-- `/home/manh/stocks/alpha-research-lab/README_for_AGENTS.md`
+- `/home/manh/stocks-ecosystem/alpha-research-lab/README_for_AGENTS.md`
 
 4. Load bundled references only as needed.
 - `references/data-inventory.md` for the current root `data/` layout and maintained artifacts
@@ -52,7 +52,7 @@ Operate the workspace as one shared data system. Treat `/home/manh/stocks/data` 
 
 ## Operating Rules
 
-- Run data-tool commands from `/home/manh/stocks/alpha-research-lab/`.
+- Run data-tool commands from `/home/manh/stocks-ecosystem/alpha-research-lab/`.
 - Prefer `conda run -n stocks python ...` unless the active shell is already inside the correct environment.
 - After any stock-history change, assume downstream stock-derived artifacts may be stale until verified.
 - Never use a recent `--start` window on stock refresh scripts when the next step needs long lookback history.

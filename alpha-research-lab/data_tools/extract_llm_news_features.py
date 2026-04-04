@@ -7,10 +7,31 @@ Input:
 Output:
 - data/llm_cache/YYYY-MM-DD.jsonl (one JSON object per filtered article)
 
+Providers:
+- ollama  : local Ollama server (default model: qwen3.5:4b)
+- google  : Google AI Studio / Gemini API (default model: gemini-2.5-flash-lite)
+            Set GOOGLE_API_KEY env var or pass --api-key.
+            Uses JSON mode for zero-parse-fail guarantee.
+
+Schema (all LLM-unique fields):
+- id                 : article id
+- tickers            : directly mentioned stock tickers (catches implicit refs)
+- related_tickers    : other tickers implicitly affected by this news
+- sentiment          : -1/0/1 — semantic sentiment for named stocks
+- confidence         : 0/1/2 — how confident/clear is the sentiment signal
+- event_type         : one of EVENT_TYPES taxonomy
+- magnitude          : 0/1/2 — how significant is the event
+- is_forward_looking : bool — discusses future events/guidance vs current/past
+- market_tone        : -1/0/1 — broader market sentiment beyond named stocks
+- is_rumor           : bool — speculation/rumor vs official/confirmed disclosure
+- surprise_direction : -1/0/1 — negative/neutral/positive surprise vs expectations
+- impact_scope       : "stock"/"sector"/"market" — breadth of impact
+- named_persons      : key people mentioned (CEO, CFO, major shareholders)
+
 Design:
 - Resume-safe: skip existing day outputs unless --overwrite
 - Atomic writes: write .tmp then rename
-- Robust parse: accept imperfect LLM outputs, salvage partial objects where possible
+- Robust parse: salvage partial JSON where possible (Ollama); JSON mode for Google
 """
 
 from __future__ import annotations
@@ -19,6 +40,7 @@ import argparse
 import concurrent.futures as cf
 import json
 import math
+import os
 import re
 import threading
 import time
@@ -120,15 +142,29 @@ def _chunk(seq: list[dict], n: int) -> Iterable[list[dict]]:
         yield seq[i : i + n]
 
 
+IMPACT_SCOPES = {"stock", "sector", "market"}
+
+
 def _build_prompt(batch: list[dict], max_summary_chars: int) -> str:
     lines = [
         "You are a Vietnamese financial news analyzer.",
-        "For each numbered article, output a JSON object with fields:",
-        "id, tickers, sentiment (-1/0/1), confidence (0-2), event_type, magnitude (0-2),",
-        "is_forward_looking (bool), market_tone (-1/0/1).",
+        "For each numbered article, output a JSON object with ALL of these fields:",
         "",
-        f"Event types: {PROMPT_TAXONOMY}",
-        "Output ONLY a JSON array of objects, one per article. No explanation.",
+        "  id              : the article id string (copy exactly)",
+        "  tickers         : list of stock ticker symbols directly mentioned (uppercase, 2-6 chars)",
+        "  related_tickers : list of other tickers implicitly affected by this news (upstream/downstream/peers)",
+        "  sentiment       : -1 (negative for named stocks) / 0 (neutral) / 1 (positive)",
+        "  confidence      : 0 (unclear/mixed) / 1 (fairly clear) / 2 (very clear signal)",
+        "  event_type      : one of: " + PROMPT_TAXONOMY,
+        "  magnitude       : 0 (minor) / 1 (moderate) / 2 (major event)",
+        "  is_forward_looking : true if article discusses future events or guidance, false if reporting past/current",
+        "  market_tone     : -1 / 0 / 1 — broader market sentiment beyond named stocks",
+        "  is_rumor        : true if based on speculation/unconfirmed rumor, false if official/confirmed",
+        "  surprise_direction : -1 (worse than expected) / 0 (as expected or no comparison) / 1 (better than expected)",
+        "  impact_scope    : 'stock' (affects one company) / 'sector' (affects an industry) / 'market' (market-wide)",
+        "  named_persons   : list of key people mentioned (CEO, CFO, major shareholders, analysts)",
+        "",
+        "Output ONLY a JSON array of objects, one per article. No explanation, no markdown.",
         "",
     ]
     for i, a in enumerate(batch, start=1):
@@ -147,6 +183,91 @@ def _build_prompt(batch: list[dict], max_summary_chars: int) -> str:
         )
     return "\n".join(lines)
 
+
+# ---------------------------------------------------------------------------
+# Model pool & rate limiter (multi-model Google provider)
+# ---------------------------------------------------------------------------
+
+# Free-tier limits (Google AI Studio).
+# Models are tried in order — Gemini first (better quality), Gemma as bulk fallback.
+MODEL_POOL = [
+    {"name": "gemini-3-flash-preview",       "rpm": 5,  "rpd": 20},
+    {"name": "gemini-3.1-flash-lite-preview", "rpm": 15, "rpd": 500},
+    {"name": "gemini-2.5-flash",             "rpm": 5,  "rpd": 20},
+    {"name": "gemini-2.5-flash-lite",        "rpm": 10, "rpd": 20},
+    {"name": "gemma-3-27b-it",               "rpm": 30, "rpd": 14400},
+    {"name": "gemma-3-12b-it",               "rpm": 30, "rpd": 14400},
+]
+
+
+class ModelRateLimiter:
+    """Thread-safe per-model rate limiter (RPM + RPD).
+
+    Iterates models in order and returns the first one with available capacity.
+    Blocks (sleeping 1 s between checks) until a slot opens or acquire_timeout
+    is exceeded.  Day counters reset automatically at midnight.
+    """
+
+    def __init__(self, models: list[dict]) -> None:
+        self._lock = threading.Lock()
+        self._models = models
+        self._rpm_windows: dict[str, list[float]] = {m["name"]: [] for m in models}
+        self._rpd_counts: dict[str, int] = {m["name"]: 0 for m in models}
+        self._current_day: int = datetime.now().toordinal()
+
+    def _maybe_reset_day(self) -> None:
+        today = datetime.now().toordinal()
+        if today != self._current_day:
+            self._current_day = today
+            for m in self._models:
+                self._rpd_counts[m["name"]] = 0
+
+    def acquire(self, acquire_timeout: float = 300.0) -> str | None:
+        """Return the first model with capacity, blocking until one is free.
+
+        Returns None immediately if every model has hit its daily limit (RPD).
+        Returns None after acquire_timeout if all models are only RPM-throttled.
+        """
+        deadline = time.time() + acquire_timeout
+        while True:
+            with self._lock:
+                self._maybe_reset_day()
+                now = time.time()
+                any_rpd_left = False
+                for m in self._models:
+                    name = m["name"]
+                    self._rpm_windows[name] = [t for t in self._rpm_windows[name] if now - t < 60.0]
+                    if self._rpd_counts[name] < m["rpd"]:
+                        any_rpd_left = True
+                        if len(self._rpm_windows[name]) < m["rpm"]:
+                            self._rpm_windows[name].append(now)
+                            self._rpd_counts[name] += 1
+                            return name
+                if not any_rpd_left:
+                    return None  # All daily limits exhausted — no point waiting
+            if time.time() >= deadline:
+                return None
+            time.sleep(1.0)
+
+    def all_daily_exhausted(self) -> bool:
+        with self._lock:
+            self._maybe_reset_day()
+            return all(self._rpd_counts[m["name"]] >= m["rpd"] for m in self._models)
+
+    def status(self) -> str:
+        with self._lock:
+            now = time.time()
+            parts = []
+            for m in self._models:
+                name = m["name"]
+                rpm_used = sum(1 for t in self._rpm_windows[name] if now - t < 60.0)
+                parts.append(f"{name}(rpm={rpm_used}/{m['rpm']} rpd={self._rpd_counts[name]}/{m['rpd']})")
+            return " | ".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Ollama backend
+# ---------------------------------------------------------------------------
 
 def _call_ollama(prompt: str, model: str, timeout: int, num_predict: int) -> str:
     payload = {
@@ -167,7 +288,8 @@ def _call_ollama(prompt: str, model: str, timeout: int, num_predict: int) -> str
 
 
 def _extract_json_array(text: str) -> list[dict] | None:
-    text = text.strip()
+    # Strip markdown code fences (```json ... ``` or ``` ... ```)
+    text = re.sub(r"```[a-zA-Z]*\n?", "", text).strip()
     start = text.find("[")
     end = text.rfind("]")
     if start == -1 or end == -1 or end <= start:
@@ -201,6 +323,63 @@ def _extract_json_array(text: str) -> list[dict] | None:
                     continue
     return objs or None
 
+
+# ---------------------------------------------------------------------------
+# Google AI Studio backend
+# ---------------------------------------------------------------------------
+
+def _call_google(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+    """Call Gemini/Gemma API. Returns parsed list of dicts.
+
+    Gemini models (gemini-*): use JSON mode for zero-parse-fail guarantee.
+    Gemma models (gemma-*): use plain text + JSON extraction fallback.
+    Retries on 429 with exponential backoff (up to 3 attempts).
+    """
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    use_json_mode = model.startswith("gemini-")
+    gen_cfg: dict = {"temperature": 0, "maxOutputTokens": max_output_tokens}
+    if use_json_mode:
+        gen_cfg["response_mime_type"] = "application/json"
+
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": gen_cfg,
+    }
+    data = json.dumps(payload).encode("utf-8")
+
+    for attempt in range(3):
+        req = urllib.request.Request(
+            url, data=data,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                body = json.loads(resp.read().decode("utf-8", errors="replace"))
+            break
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < 2:
+                wait = 30 * (2 ** attempt)  # 30s, 60s
+                _log(f"[google] 429 rate limit, waiting {wait}s (attempt {attempt+1}/3)")
+                time.sleep(wait)
+            else:
+                raise
+
+    text = body["candidates"][0]["content"]["parts"][0]["text"]
+
+    if use_json_mode:
+        arr = json.loads(text)
+    else:
+        arr = _extract_json_array(text)
+
+    if isinstance(arr, list):
+        return [x for x in arr if isinstance(x, dict)]
+    return arr or []
+
+
+# ---------------------------------------------------------------------------
+# Normalisation
+# ---------------------------------------------------------------------------
 
 def _norm_tickers(v: object) -> list[str]:
     if not isinstance(v, list):
@@ -238,6 +417,18 @@ def _norm_bool(v: object) -> bool | None:
     return None
 
 
+def _norm_impact_scope(v: object) -> str | None:
+    if isinstance(v, str) and v.strip().lower() in IMPACT_SCOPES:
+        return v.strip().lower()
+    return None
+
+
+def _norm_str_list(v: object) -> list[str]:
+    if not isinstance(v, list):
+        return []
+    return [str(x).strip() for x in v if str(x).strip()]
+
+
 def _normalize_record(raw: dict, fallback_id: str) -> dict:
     ev = str(raw.get("event_type", "") or "").strip().lower()
     if ev not in EVENT_TYPES:
@@ -246,12 +437,17 @@ def _normalize_record(raw: dict, fallback_id: str) -> dict:
     return {
         "id": rid,
         "tickers": _norm_tickers(raw.get("tickers")),
+        "related_tickers": _norm_tickers(raw.get("related_tickers")),
         "sentiment": _norm_small_int(raw.get("sentiment"), {-1, 0, 1}),
         "confidence": _norm_small_int(raw.get("confidence"), {0, 1, 2}),
         "event_type": ev,
         "magnitude": _norm_small_int(raw.get("magnitude"), {0, 1, 2}),
         "is_forward_looking": _norm_bool(raw.get("is_forward_looking")),
         "market_tone": _norm_small_int(raw.get("market_tone"), {-1, 0, 1}),
+        "is_rumor": _norm_bool(raw.get("is_rumor")),
+        "surprise_direction": _norm_small_int(raw.get("surprise_direction"), {-1, 0, 1}),
+        "impact_scope": _norm_impact_scope(raw.get("impact_scope")),
+        "named_persons": _norm_str_list(raw.get("named_persons")),
     }
 
 
@@ -259,24 +455,36 @@ def _blank_record(article: dict, err: str) -> dict:
     return {
         "id": article["id"],
         "tickers": [],
+        "related_tickers": [],
         "sentiment": None,
         "confidence": None,
         "event_type": None,
         "magnitude": None,
         "is_forward_looking": None,
         "market_tone": None,
+        "is_rumor": None,
+        "surprise_direction": None,
+        "impact_scope": None,
+        "named_persons": [],
         "llm_error": err,
     }
 
 
+# ---------------------------------------------------------------------------
+# Per-day processing
+# ---------------------------------------------------------------------------
+
 def process_day(
     path: Path,
     batch_size: int,
+    provider: str,
     model: str,
+    api_key: str,
     timeout: int,
     num_predict: int,
     max_summary_chars: int,
     log_every_batches: int,
+    rate_limiter: "ModelRateLimiter | None" = None,
 ) -> dict:
     date = path.stem
     day_t0 = time.time()
@@ -290,6 +498,7 @@ def process_day(
     parsed_ok = 0
     parse_fail = 0
     timeout_fail = 0
+    pool_exhausted = False
     rows: list[dict] = []
     n_batches = max(1, math.ceil(len(filtered) / batch_size)) if filtered else 0
     done_batches = 0
@@ -298,17 +507,40 @@ def process_day(
         b_t0 = time.time()
         prompt = _build_prompt(batch, max_summary_chars=max_summary_chars)
         by_id = {a["id"]: a for a in batch}
-        try:
-            resp = _call_ollama(prompt, model=model, timeout=timeout, num_predict=num_predict)
-        except Exception:
-            timeout_fail += len(batch)
-            rows.extend(_blank_record(a, "ollama_timeout_or_error") for a in batch)
-            continue
 
-        arr = _extract_json_array(resp)
+        arr: list[dict] | None = None
+
+        if provider == "google":
+            if rate_limiter is not None:
+                model_used = rate_limiter.acquire(acquire_timeout=300.0)
+                if model_used is None:
+                    pool_exhausted = True
+                    _log(f"[{date}] all model daily limits exhausted — stopping | {rate_limiter.status()}")
+                    rows.extend(_blank_record(a, "pool_exhausted") for a in batch)
+                    break
+            else:
+                model_used = model
+            try:
+                arr = _call_google(prompt, model=model_used, api_key=api_key, timeout=timeout, max_output_tokens=num_predict)
+            except Exception as e:
+                timeout_fail += len(batch)
+                rows.extend(_blank_record(a, f"google_error:{e}") for a in batch)
+                done_batches += 1
+                continue
+        else:  # ollama
+            try:
+                resp = _call_ollama(prompt, model=model, timeout=timeout, num_predict=num_predict)
+            except Exception:
+                timeout_fail += len(batch)
+                rows.extend(_blank_record(a, "ollama_timeout_or_error") for a in batch)
+                done_batches += 1
+                continue
+            arr = _extract_json_array(resp)
+
         if not arr:
             parse_fail += len(batch)
             rows.extend(_blank_record(a, "json_parse_fail") for a in batch)
+            done_batches += 1
             continue
 
         seen = set()
@@ -324,6 +556,7 @@ def process_day(
             if a["id"] not in seen:
                 parse_fail += 1
                 rows.append(_blank_record(a, "missing_object_in_batch"))
+
         done_batches += 1
         if log_every_batches > 0 and (
             done_batches == 1
@@ -371,6 +604,7 @@ def process_day(
         "parsed_ok": parsed_ok,
         "parse_fail": parse_fail,
         "timeout_fail": timeout_fail,
+        "pool_exhausted": pool_exhausted,
         "out_path": str(out),
         "elapsed_sec": day_elapsed,
     }
@@ -380,18 +614,39 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--date-from", type=str, default="")
     ap.add_argument("--date-to", type=str, default="")
-    ap.add_argument("--batch-size", type=int, default=10)
-    ap.add_argument("--model", type=str, default="qwen2.5-coder:7b")
+    ap.add_argument("--batch-size", type=int, default=20)
+    ap.add_argument("--provider", type=str, default="google", choices=["ollama", "google"],
+                    help="LLM provider: 'google' (AI Studio) or 'ollama' (local).")
+    ap.add_argument("--model", type=str, default="",
+                    help="Model name. Defaults: google=gemini-2.5-flash-lite, ollama=qwen3.5:4b.")
+    ap.add_argument("--api-key", type=str, default="",
+                    help="Google AI Studio API key (or set GOOGLE_API_KEY env var).")
     ap.add_argument("--timeout", type=int, default=30)
-    ap.add_argument("--num-predict", type=int, default=2048)
+    ap.add_argument("--num-predict", type=int, default=8192,
+                    help="Max output tokens per batch (8192 needed for batch-size=20 with full schema).")
     ap.add_argument("--overwrite", action="store_true")
     ap.add_argument("--workers", type=int, default=1,
                     help="Number of parallel day workers (default 1).")
-    ap.add_argument("--max-summary-chars", type=int, default=600,
+    ap.add_argument("--max-summary-chars", type=int, default=400,
                     help="Truncate article summary in prompt to this many chars (0 = no truncation).")
-    ap.add_argument("--log-every-batches", type=int, default=10,
-                    help="Log progress every N batches within each day (default 10).")
+    ap.add_argument("--log-every-batches", type=int, default=5,
+                    help="Log progress every N batches within each day (default 5).")
     args = ap.parse_args()
+
+    # Resolve model default per provider
+    if not args.model:
+        args.model = "gemini-2.5-flash-lite" if args.provider == "google" else "qwen3.5:4b"
+
+    # Resolve API key
+    api_key = args.api_key or os.environ.get("GOOGLE_API_KEY", "")
+    if args.provider == "google" and not api_key:
+        raise SystemExit("ERROR: --api-key or GOOGLE_API_KEY required for google provider.")
+
+    # Always use the model pool for google provider
+    rate_limiter: ModelRateLimiter | None = None
+    if args.provider == "google":
+        rate_limiter = ModelRateLimiter(MODEL_POOL)
+        _log(f"Model pool: {[m['name'] for m in MODEL_POOL]}")
 
     files = _iter_dates(args.date_from, args.date_to)
     if not files:
@@ -400,7 +655,7 @@ def main():
 
     _log(
         f"Run config: files={len(files)} from={args.date_from or '-'} to={args.date_to or '-'} "
-        f"model={args.model} batch_size={args.batch_size} workers={args.workers} "
+        f"provider={args.provider} model={args.model} batch_size={args.batch_size} workers={args.workers} "
         f"timeout={args.timeout}s num_predict={args.num_predict} "
         f"max_summary_chars={args.max_summary_chars} overwrite={args.overwrite}"
     )
@@ -428,11 +683,14 @@ def main():
             stats = process_day(
                 p,
                 batch_size=args.batch_size,
+                provider=args.provider,
                 model=args.model,
+                api_key=api_key,
                 timeout=args.timeout,
                 num_predict=args.num_predict,
                 max_summary_chars=args.max_summary_chars,
                 log_every_batches=args.log_every_batches,
+                rate_limiter=rate_limiter,
             )
             total_days += 1
             total_filtered += stats["articles_filtered"]
@@ -450,6 +708,9 @@ def main():
                 f"filtered={total_filtered:,} ok={total_ok:,} parse_fail={total_fail:,} timeout={total_timeout:,} "
                 f"day_rate={day_rate:.3f} days/s eta={eta_s}"
             )
+            if stats.get("pool_exhausted"):
+                _log(f"All model daily limits exhausted after {total_days} days — stopping early.")
+                break
     else:
         with cf.ThreadPoolExecutor(max_workers=args.workers) as ex:
             futs = {
@@ -457,11 +718,14 @@ def main():
                     process_day,
                     p,
                     args.batch_size,
+                    args.provider,
                     args.model,
+                    api_key,
                     args.timeout,
                     args.num_predict,
                     args.max_summary_chars,
                     args.log_every_batches,
+                    rate_limiter,
                 ): p.stem
                 for p in pending
             }
@@ -487,6 +751,10 @@ def main():
                     f"filtered={total_filtered:,} ok={total_ok:,} parse_fail={total_fail:,} timeout={total_timeout:,} "
                     f"day_rate={day_rate:.3f} days/s eta={eta_s}"
                 )
+                if stats.get("pool_exhausted"):
+                    _log(f"All model daily limits exhausted after {total_days} days — stopping early.")
+                    ex.shutdown(wait=False, cancel_futures=True)
+                    break
 
     wall_total = time.time() - start
     art_rate_wall = total_filtered / wall_total if wall_total > 0 else 0.0

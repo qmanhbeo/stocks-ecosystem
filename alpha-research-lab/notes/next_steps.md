@@ -6,6 +6,27 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 
 ---
 
+## Bright Mind — Hypothesis Queue (2026-04-04)
+
+New branches from Session 108 ideation pass. Do **not** assign H numbers until a branch is activated. Ranked by expected upside vs feasibility.
+
+1. `llm-news-gate` — Run H98 properly: LLM ticker sentiment already built in `xs_llm_news_ticker_day.parquet`. Smallest test: standalone IC vs 1d barrier, compare consistency vs C1. Kill if IC < 0.01 or < 6/8 years positive.
+
+2. `momentum-disagreement` — Build `xs_mom_disagree = xs_proba_rank − xs_reversal_1d_rank` from existing S1 and C9 series. Smallest test: standalone IC vs 1d barrier + corr vs S1 and C9. Free candidate if it passes.
+
+3. `5d-label-contract` — Re-evaluate candidates C4–C14 and W-shape family against a 5d barrier label. Smallest test: IC audit of existing features vs 5d forward excess return; if ordering changes materially, run a 5d WF.
+
+4. `breadth-activation-gate` — Test whether daily cross-sectional breadth score (from `xs_sector_rotation_daily.parquet`) predicts daily IC variation of S1. Smallest test: Spearman corr(breadth_lag1, daily_IC) on 2015–2025. Aim for corr > 0.10, p < 0.05. Gate reformulation only if that passes.
+
+5. `marginal-slot-label` — Relabel activated entry candidates by `candidate_5d_return − weakest_held_5d_return` using `entry_alpha/candidate_panel_daily.parquet` + activation state. Smallest test: monotone quintile separation on marginal label using existing entry-alpha features.
+
+Already queued (near-term, from signal_library.md):
+- H135: gap-failure exhaustion (gap + H133 blow-off interaction) — high priority
+- H136: sector-conditioned blow-off reversal — high priority
+- H137: residual long-horizon reversal (residualize 90d/120d after removing C11) — medium priority
+
+---
+
 ## Current State
 
 **Session status:** Session 107 ran a user-forced `H278` audit of explicit close-only `upward W / double-bottom reclaim` geometry on `2015-2025` only. No feature survived the canonical next-day signal-library gate, so the current daily next-day queue remains closed. The best reclaim variant, `xs_upward_w_reclaim_12d`, still showed real slower-horizon evidence on a forward `5`-day excess-return diagnostic with IC `+0.0171`, `11 / 11` positive years, corr vs `S1` `+0.0248`, and max candidate corr `0.2960` versus `C8`. Branch consequence: keep the live branch unchanged, keep the official live-monitoring state from Session 106 (`OFF`, `100.00%` cash on `2026-03-31`) unchanged, and only revisit this family as alternative-horizon offline label work rather than as a new daily `T+1` branch. (2026-04-04)

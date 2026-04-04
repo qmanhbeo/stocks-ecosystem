@@ -17,6 +17,8 @@ build/
 .venv/
 venv/
 env/
+*.env
+alpha-research-lab/.env
 .env
 !RL-trading-agent/vn_stock_rl/env/
 RL-trading-agent/vn_stock_rl/env/*

@@ -4,9 +4,9 @@ Use this file when you need a compact map of the canonical root `data/` warehous
 
 ## Root Model
 
-- Canonical warehouse: `/home/manh/stocks/data`
-- Lab-local alias: `/home/manh/stocks/alpha-research-lab/data -> ../data`
-- Producer code: `/home/manh/stocks/alpha-research-lab/data_tools/`
+- Canonical warehouse: `/home/manh/stocks-ecosystem/data`
+- Lab-local alias: `/home/manh/stocks-ecosystem/alpha-research-lab/data -> ../data`
+- Producer code: `/home/manh/stocks-ecosystem/alpha-research-lab/data_tools/`
 - Shared published surfaces live under `data/features/`
 
 ## Main Root Directories
@@ -112,4 +112,4 @@ Use this file when you need a compact map of the canonical root `data/` warehous
 - you need coverage caveats or failure notes
 - you need to confirm whether a file is active, limited, legacy, or archive-only
 
-For those cases, read `/home/manh/stocks/alpha-research-lab/data_tools/README.md`.
+For those cases, read `/home/manh/stocks-ecosystem/alpha-research-lab/data_tools/README.md`.

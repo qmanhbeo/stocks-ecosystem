@@ -2,7 +2,7 @@
 
 Use this file when the user asks for an actual data operation instead of just a directory or ownership audit.
 
-Run commands from `/home/manh/stocks/alpha-research-lab/`.
+Run commands from `/home/manh/stocks-ecosystem/alpha-research-lab/`.
 
 ## Safe Defaults
 
@@ -14,8 +14,8 @@ Run commands from `/home/manh/stocks/alpha-research-lab/`.
 
 ## Inspect A Target
 
-1. Inspect the target path under `/home/manh/stocks/data`.
-2. Find the owning script in `/home/manh/stocks/alpha-research-lab/data_tools/README.md`.
+1. Inspect the target path under `/home/manh/stocks-ecosystem/data`.
+2. Find the owning script in `/home/manh/stocks-ecosystem/alpha-research-lab/data_tools/README.md`.
 3. Confirm whether the target is active, limited coverage, legacy, or archive-only.
 4. If the request is a contract change rather than a refresh, update docs and consumers together.
 

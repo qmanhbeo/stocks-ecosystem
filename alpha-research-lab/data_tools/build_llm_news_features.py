@@ -57,24 +57,35 @@ def _load_llm_cache(date_from: str, date_to: str) -> pd.DataFrame:
                         "time": date,
                         "id": obj.get("id"),
                         "tickers": obj.get("tickers") if isinstance(obj.get("tickers"), list) else [],
+                        "related_tickers": obj.get("related_tickers") if isinstance(obj.get("related_tickers"), list) else [],
                         "sentiment": obj.get("sentiment"),
                         "confidence": obj.get("confidence"),
                         "event_type": obj.get("event_type"),
                         "magnitude": obj.get("magnitude"),
                         "is_forward_looking": obj.get("is_forward_looking"),
                         "market_tone": obj.get("market_tone"),
+                        "is_rumor": obj.get("is_rumor"),
+                        "surprise_direction": obj.get("surprise_direction"),
+                        "impact_scope": obj.get("impact_scope"),
+                        "named_persons": obj.get("named_persons") if isinstance(obj.get("named_persons"), list) else [],
                     }
                 )
 
     if not rows:
-        return pd.DataFrame(columns=["time", "id", "tickers", "sentiment", "confidence", "event_type", "magnitude", "is_forward_looking", "market_tone"])
+        return pd.DataFrame(columns=[
+            "time", "id", "tickers", "related_tickers", "sentiment", "confidence",
+            "event_type", "magnitude", "is_forward_looking", "market_tone",
+            "is_rumor", "surprise_direction", "impact_scope", "named_persons",
+        ])
 
     df = pd.DataFrame(rows)
 
-    for c in ["sentiment", "confidence", "magnitude", "market_tone"]:
+    for c in ["sentiment", "confidence", "magnitude", "market_tone", "surprise_direction"]:
         df[c] = pd.to_numeric(df[c], errors="coerce")
     df["is_forward_looking"] = df["is_forward_looking"].map({True: 1.0, False: 0.0})
+    df["is_rumor"] = df["is_rumor"].map({True: 1.0, False: 0.0})
     df["event_type"] = df["event_type"].astype(str).str.strip().str.lower().replace({"none": np.nan, "nan": np.nan, "": np.nan})
+    df["impact_scope"] = df["impact_scope"].astype(str).str.strip().str.lower().replace({"none": np.nan, "nan": np.nan, "": np.nan})
     return df
 
 
@@ -85,27 +96,33 @@ def _load_grid() -> pd.DataFrame:
 
 
 def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
+    ZERO_COLS = [
+        "llm_sentiment_raw", "llm_confidence", "llm_sentiment_conf_weighted",
+        "llm_sentiment_5d", "llm_sentiment_30d",
+        "llm_insider_buy_5d", "llm_insider_sell_5d", "llm_contract_win_5d",
+        "llm_legal_issue_5d", "llm_earnings_event_5d",
+        "llm_is_forward_looking", "llm_magnitude_5d",
+        "llm_surprise_5d", "llm_is_rumor_5d",
+        "llm_related_sentiment_5d",
+        "llm_market_news_5d", "llm_stock_news_5d",
+    ]
     if df.empty:
         out = grid.copy()
-        for c in [
-            "llm_sentiment_raw", "llm_confidence", "llm_sentiment_conf_weighted",
-            "llm_sentiment_5d", "llm_sentiment_30d", "llm_insider_buy_5d",
-            "llm_insider_sell_5d", "llm_contract_win_5d", "llm_legal_issue_5d",
-            "llm_earnings_event_5d", "llm_is_forward_looking", "llm_magnitude_5d",
-        ]:
+        for c in ZERO_COLS:
             out[c] = 0.0
         return out
 
+    # --- Primary tickers ---
     x = df.explode("tickers").rename(columns={"tickers": "ticker"})
     x["ticker"] = x["ticker"].astype(str).str.strip().str.upper()
     x = x[x["ticker"].str.len() > 0].copy()
     if x.empty:
         return _build_ticker_day(pd.DataFrame(), grid)
 
-    x["sent_conf"] = x["sentiment"] * x["confidence"]
+    x["sent_conf"] = x["sentiment"].fillna(0) * x["confidence"].fillna(0)
     x["sent_weighted"] = np.where(
-        x["confidence"] > 0,
-        x["sent_conf"] / x["confidence"],
+        x["confidence"].fillna(0) > 0,
+        x["sent_conf"] / x["confidence"].fillna(1),
         0.0,
     )
     x["evt_insider_buy"] = (x["event_type"] == "insider_buy").astype(float)
@@ -113,6 +130,10 @@ def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
     x["evt_contract_win"] = (x["event_type"] == "contract_win").astype(float)
     x["evt_legal_issue"] = (x["event_type"] == "legal_issue").astype(float)
     x["evt_earnings"] = x["event_type"].isin(EARNINGS_TYPES).astype(float)
+    x["is_market_news"] = (x["impact_scope"] == "market").astype(float)
+    x["is_stock_news"] = (x["impact_scope"] == "stock").astype(float)
+    x["surprise"] = x["surprise_direction"].fillna(0)
+    x["rumor"] = x["is_rumor"].fillna(0)
 
     g = (
         x.groupby(["time", "ticker"], as_index=False)
@@ -122,6 +143,10 @@ def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
             llm_sentiment_conf_weighted=("sent_weighted", "mean"),
             llm_is_forward_looking=("is_forward_looking", "mean"),
             llm_magnitude_daily=("magnitude", "mean"),
+            llm_surprise_daily=("surprise", "mean"),
+            llm_is_rumor_daily=("rumor", "mean"),
+            llm_is_market_daily=("is_market_news", "mean"),
+            llm_is_stock_daily=("is_stock_news", "mean"),
             evt_insider_buy=("evt_insider_buy", "sum"),
             evt_insider_sell=("evt_insider_sell", "sum"),
             evt_contract_win=("evt_contract_win", "sum"),
@@ -130,12 +155,38 @@ def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
         )
     )
 
+    # --- Related tickers (secondary sentiment exposure) ---
+    if "related_tickers" in df.columns:
+        rel = df[["time", "related_tickers", "sentiment", "confidence"]].copy()
+        rel = rel.explode("related_tickers").rename(columns={"related_tickers": "ticker"})
+        rel["ticker"] = rel["ticker"].astype(str).str.strip().str.upper()
+        rel = rel[rel["ticker"].str.len() > 0].copy()
+        if not rel.empty:
+            rel["sent_conf"] = rel["sentiment"].fillna(0) * rel["confidence"].fillna(0)
+            rel["sent_weighted"] = np.where(
+                rel["confidence"].fillna(0) > 0,
+                rel["sent_conf"] / rel["confidence"].fillna(1),
+                0.0,
+            )
+            g_rel = rel.groupby(["time", "ticker"], as_index=False).agg(
+                llm_related_sentiment_daily=("sent_weighted", "mean"),
+            )
+        else:
+            g_rel = pd.DataFrame(columns=["time", "ticker", "llm_related_sentiment_daily"])
+    else:
+        g_rel = pd.DataFrame(columns=["time", "ticker", "llm_related_sentiment_daily"])
+
     out = grid.merge(g, on=["time", "ticker"], how="left")
-    for c in [
+    out = out.merge(g_rel, on=["time", "ticker"], how="left")
+
+    daily_cols = [
         "llm_sentiment_raw", "llm_confidence", "llm_sentiment_conf_weighted",
-        "llm_is_forward_looking", "llm_magnitude_daily",
+        "llm_is_forward_looking", "llm_magnitude_daily", "llm_surprise_daily",
+        "llm_is_rumor_daily", "llm_is_market_daily", "llm_is_stock_daily",
         "evt_insider_buy", "evt_insider_sell", "evt_contract_win", "evt_legal_issue", "evt_earnings",
-    ]:
+        "llm_related_sentiment_daily",
+    ]
+    for c in daily_cols:
         out[c] = out[c].fillna(0.0)
 
     grp = out.groupby("ticker", group_keys=False)
@@ -147,6 +198,11 @@ def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
     out["llm_legal_issue_5d"] = grp["evt_legal_issue"].transform(lambda s: s.rolling(5, min_periods=1).sum())
     out["llm_earnings_event_5d"] = grp["evt_earnings"].transform(lambda s: s.rolling(5, min_periods=1).sum())
     out["llm_magnitude_5d"] = grp["llm_magnitude_daily"].transform(lambda s: s.rolling(5, min_periods=1).mean())
+    out["llm_surprise_5d"] = grp["llm_surprise_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_is_rumor_5d"] = grp["llm_is_rumor_daily"].transform(lambda s: s.rolling(5, min_periods=1).mean())
+    out["llm_related_sentiment_5d"] = grp["llm_related_sentiment_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_market_news_5d"] = grp["llm_is_market_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_stock_news_5d"] = grp["llm_is_stock_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
 
     keep = [
         "time", "ticker",
@@ -162,6 +218,11 @@ def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
         "llm_earnings_event_5d",
         "llm_is_forward_looking",
         "llm_magnitude_5d",
+        "llm_surprise_5d",
+        "llm_is_rumor_5d",
+        "llm_related_sentiment_5d",
+        "llm_market_news_5d",
+        "llm_stock_news_5d",
     ]
     out = out[keep]
     for c in keep[2:]:
@@ -218,6 +279,9 @@ def _build_market_daily(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
     d["is_uncertain"] = (d["confidence"] == 0).astype(float)
     d["is_earnings"] = d["event_type"].isin(EARNINGS_TYPES).astype(float)
     d["is_macro"] = d["event_type"].isin(MACRO_TYPES).astype(float)
+    d["surprise"] = d["surprise_direction"].fillna(0) if "surprise_direction" in d.columns else 0.0
+    d["rumor"] = d["is_rumor"].fillna(0) if "is_rumor" in d.columns else 0.0
+    d["is_market_scope"] = (d["impact_scope"] == "market").astype(float) if "impact_scope" in d.columns else 0.0
 
     daily = (
         d.groupby("time", as_index=False)
@@ -231,6 +295,9 @@ def _build_market_daily(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
             frac_macro_news=("is_macro", "mean"),
             avg_magnitude=("magnitude", "mean"),
             event_diversity=("event_type", lambda s: float(s.dropna().nunique())),
+            avg_surprise=("surprise", "mean"),
+            frac_rumor=("rumor", "mean"),
+            frac_market_scope=("is_market_scope", "mean"),
         )
     )
 
