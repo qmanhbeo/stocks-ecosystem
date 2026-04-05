@@ -1,8 +1,15 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_107_log.md` for the latest full session detail.
+Use `notes/session_120_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
+
+---
+
+## Immediate Follow-Up (2026-04-05)
+
+1. `news-decay-contract` — separate `follow_up` from `recycled` so news half-life is learned, not assumed. Smallest test: compare `new` vs `follow_up` vs `recycled` on 1d / 5d / 30d forward excess return and keep only the horizon where each class survives.
+2. `news-marginal-slot` — use CafeF news to predict replacement value inside the active book, not generic return. Smallest test: join `xs_llm_news_ticker_day.parquet` with `entry_alpha/candidate_panel_daily.parquet` and test whether news state predicts the weakest-held slot's marginal contribution better than standalone `T+1`. This remains blocked until the active-book years have nonzero news coverage.
 
 ---
 
@@ -18,7 +25,7 @@ New branches from Session 108 ideation pass. Do **not** assign H numbers until a
 
 4. `breadth-activation-gate` — Test whether daily cross-sectional breadth score (from `xs_sector_rotation_daily.parquet`) predicts daily IC variation of S1. Smallest test: Spearman corr(breadth_lag1, daily_IC) on 2015–2025. Aim for corr > 0.10, p < 0.05. Gate reformulation only if that passes.
 
-5. `marginal-slot-label` — Relabel activated entry candidates by `candidate_5d_return − weakest_held_5d_return` using `entry_alpha/candidate_panel_daily.parquet` + activation state. Smallest test: monotone quintile separation on marginal label using existing entry-alpha features.
+6. `marginal-slot-label` — Relabel activated entry candidates by `candidate_5d_return − weakest_held_5d_return` using `entry_alpha/candidate_panel_daily.parquet` + activation state. Smallest test: monotone quintile separation on marginal label using existing entry-alpha features.
 
 Already queued (near-term, from signal_library.md):
 - H135: gap-failure exhaustion (gap + H133 blow-off interaction) — high priority
@@ -33,7 +40,7 @@ New branches from the CafeF LLM rebuild. Do **not** assign H numbers until a bra
 
 1. `llm-state-router` — Treat `expectation_alignment + information_novelty + source_authority + event_time_type` as a state gate, not just extra sentiment. Smallest test: bucket 5d IC and hit rate by `{beats, misses} × {new, recycled} × {official, rumor} × {pre_market, intraday, post_market}` on `xs_llm_news_ticker_day.parquet`. Kill if the buckets do not separate cleanly after controlling for raw sentiment.
 
-2. `news-marginal-slot` — Use CafeF news to predict replacement value inside the active book, not generic return. Smallest test: join `xs_llm_news_ticker_day.parquet` with `entry_alpha/candidate_panel_daily.parquet` and test whether news state predicts the weakest-held slot's marginal contribution better than standalone `T+1`.
+2. `news-marginal-slot` — Use CafeF news to predict replacement value inside the active book, not generic return. Smallest test: join `xs_llm_news_ticker_day.parquet` with `entry_alpha/candidate_panel_daily.parquet` and test whether news state predicts the weakest-held slot's marginal contribution better than standalone `T+1`. This is blocked until the active-book years have nonzero news coverage.
 
 3. `macro-theme-router` — Route macro themes into sector / regime response instead of one pooled news factor. Smallest test: aggregate `macro_theme` by day and compare banking / real-estate / regulation themes against `xs_sector_rotation_daily.parquet` and `event_surface_daily.parquet`; look for stronger effects when the theme matches the sector state.
 
@@ -43,9 +50,11 @@ New branches from the CafeF LLM rebuild. Do **not** assign H numbers until a bra
 
 ## Current State
 
-**Session status:** Session 107 ran a user-forced `H278` audit of explicit close-only `upward W / double-bottom reclaim` geometry on `2015-2025` only. No feature survived the canonical next-day signal-library gate, so the current daily next-day queue remains closed. The best reclaim variant, `xs_upward_w_reclaim_12d`, still showed real slower-horizon evidence on a forward `5`-day excess-return diagnostic with IC `+0.0171`, `11 / 11` positive years, corr vs `S1` `+0.0248`, and max candidate corr `0.2960` versus `C8`. Branch consequence: keep the live branch unchanged, keep the official live-monitoring state from Session 106 (`OFF`, `100.00%` cash on `2026-03-31`) unchanged, and only revisit this family as alternative-horizon offline label work rather than as a new daily `T+1` branch. (2026-04-04)
+**Session status:** Session 107 ran a user-forced `H278` audit of explicit close-only `upward W / double-bottom reclaim` geometry on `2015-2025` only. No feature survived the canonical next-day signal-library gate, so the current daily next-day queue remains closed. The best reclaim variant, `xs_upward_w_reclaim_12d`, still showed real slower-horizon evidence on a forward `5`-day excess-return diagnostic with IC `+0.0171`, `11 / 11` positive years, corr vs `S1` `+0.0248`, and max candidate corr `0.2960` versus `C8`. Session 108 then ran `H279`, which was mixed on the full observed panel, and Session 109 rechecked the fixed gate on a strict validation/confirmation split: validation lift existed, but 2025 confirmation fell below baseline and the raw shape score stayed negative. Session 110 then ran `H281` on a stale LLM parquet and initially found constant-zero / undefined sentiment columns. Session 112 rechecked the rebuilt LLM surface from `data/llm_cache`: the surface is real and nonzero, but the simple sentiment-only contract still stays below the standalone gate. Session 111 then ran `H282` and found the momentum-disagreement subtraction has real IC but is too close to S1/C9 to be a new standalone signal. Session 113 then ran `H283` and found the gap-failure exhaustion blend is real and predictive but redundant with `C13`. Session 114 then ran `H284` and found sector conditioning does not rescue H133: hot sectors weaken it and ceiling clusters just repackage `C7`. Session 115 then ran `H285` and found the 5d label contract materially reorders the library: `c6` becomes the top row, `c13` drops, and the W reclaim family becomes more relevant on the slower horizon. Session 116 then ran a 5d WF proxy (`future_rel_barrier_5d`) with the available `extra_trees` backend and it failed to improve the focal edge: overall accuracy was acceptable, but the focal edge was negative and noisy. Session 117 then ran `H287` and found that lagged sector breadth / rotation does not split the library into a fast-versus-slow horizon regime: the fast family still wins in every breadth quintile, the best state correlation is only `+0.0353`, and there is no sign swap. Session 118 then ran `H288` and found that entry-book breadth / pressure does matter but still does not create a horizon router: `candidate_count_lag1` correlates positively with the family gap at `+0.0679`, `pressure_combo_lag1` is `+0.0528`, but the fast family still wins in every quintile. Session 119 then ran `H289` and found that the marginal-slot label is monotone but weak: `selection_score_gap_to_next_candidate` is the best existing proxy with mean daily IC `+0.0090`, `5 / 7` positive years, and a gentle q1-to-q5 rise, but not enough to replace the current contract. Branch consequence: keep the live branch unchanged, park raw LLM sentiment-only gating, park sector-conditioned blow-off, park the 5d WF proxy under the available tree backend, park the breadth-to-horizon router, park the replacement-pressure breadth throttle, park the marginal-slot label as a weak label-rewrite evidence line, and move the queue to `news-marginal-slot`. (2026-04-05)
 
 ### Start next session here
+
+Session 120 then ran `H290` and found that the rebuilt LLM news surface does contain real signal, but only in the right state buckets: pooled sentiment stays weak or negative overall, while follow-up and miss-state news carry the edge in the nonzero `2015-2017` window and the active-book years remain effectively zero-valued for this cache surface. Branch consequence: keep the live branch unchanged, promote the rebuilt LLM news state router only as offline evidence (`C15`), keep `news-marginal-slot` blocked until active-book years have nonzero news coverage, and move the queue to `news-decay-contract`. (2026-04-05)
 
 1. Record the next market-session outcome against the **rollback sticky activated** paper-trade book:
    - current active live branch from the `2026-03-30` signal / `2026-03-31` execution:

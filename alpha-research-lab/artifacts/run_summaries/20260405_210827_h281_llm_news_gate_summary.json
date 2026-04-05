@@ -1,0 +1,122 @@
+{
+  "verdict": "FAILED",
+  "best_candidate": {
+    "feature_name": "llm_sentiment_raw",
+    "avg_ic": NaN,
+    "pct_years_positive": 0.0,
+    "years": 11,
+    "pos_years": 0,
+    "corr_with_s1": NaN,
+    "corr_with_c1": NaN,
+    "compare_rows": 5225,
+    "gate_pass": false
+  },
+  "candidate_table": [
+    {
+      "feature_name": "llm_sentiment_raw",
+      "avg_ic": NaN,
+      "pct_years_positive": 0.0,
+      "years": 11,
+      "pos_years": 0,
+      "corr_with_s1": NaN,
+      "corr_with_c1": NaN,
+      "compare_rows": 5225,
+      "gate_pass": false
+    },
+    {
+      "feature_name": "llm_sentiment_conf_weighted",
+      "avg_ic": NaN,
+      "pct_years_positive": 0.0,
+      "years": 11,
+      "pos_years": 0,
+      "corr_with_s1": NaN,
+      "corr_with_c1": NaN,
+      "compare_rows": 5225,
+      "gate_pass": false
+    },
+    {
+      "feature_name": "llm_sentiment_5d",
+      "avg_ic": NaN,
+      "pct_years_positive": 0.0,
+      "years": 11,
+      "pos_years": 0,
+      "corr_with_s1": NaN,
+      "corr_with_c1": NaN,
+      "compare_rows": 5225,
+      "gate_pass": false
+    },
+    {
+      "feature_name": "llm_sentiment_30d",
+      "avg_ic": NaN,
+      "pct_years_positive": 0.0,
+      "years": 11,
+      "pos_years": 0,
+      "corr_with_s1": NaN,
+      "corr_with_c1": NaN,
+      "compare_rows": 5225,
+      "gate_pass": false
+    },
+    {
+      "feature_name": "llm_magnitude_5d",
+      "avg_ic": NaN,
+      "pct_years_positive": 0.0,
+      "years": 11,
+      "pos_years": 0,
+      "corr_with_s1": NaN,
+      "corr_with_c1": NaN,
+      "compare_rows": 5225,
+      "gate_pass": false
+    }
+  ],
+  "c1_table": [
+    {
+      "feature_name": "sentiment_cs_z",
+      "avg_ic": 0.06883155608134357,
+      "pct_years_positive": 1.0,
+      "years": 3,
+      "pos_years": 3,
+      "corr_with_s1": 0.00727807579936338,
+      "corr_with_c1": null,
+      "compare_rows": 0,
+      "gate_pass": true
+    },
+    {
+      "feature_name": "sentiment_score",
+      "avg_ic": 0.047325139865261524,
+      "pct_years_positive": 0.8,
+      "years": 5,
+      "pos_years": 4,
+      "corr_with_s1": 0.001059756334472996,
+      "corr_with_c1": null,
+      "compare_rows": 0,
+      "gate_pass": true
+    }
+  ],
+  "candidate_rows": 826404,
+  "c1_rows": 5225,
+  "candidate_years": [
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "c1_years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ]
+}

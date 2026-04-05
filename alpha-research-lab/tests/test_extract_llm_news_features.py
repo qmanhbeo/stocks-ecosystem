@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 import json
+import re
+import sys
+import threading
+import time
 import urllib.error
 
 from data_tools import extract_llm_news_features as llm
@@ -150,8 +154,6 @@ def test_resolve_provider_api_keys_read_repo_env(monkeypatch, tmp_path) -> None:
                 'MISTRAL_API_KEY="m-key"',
                 'MISTRAL_COSTRAL_API_KEY="codestral-key"',
                 'HUGGINGFACE_FINEGRAINED="hf-key"',
-                'BASETEN_GLM_47_API_KEY="baseten-glm-key"',
-                'BASETEN_NEMOTRON_API_KEY="baseten-nemotron-key"',
                 'CEREBRAS_API_KEY="cerebras-key"',
                 'FIREWORKS_API_KEY="fireworks-key"',
                 'GROQ_API_KEY="groq-key"',
@@ -174,9 +176,6 @@ def test_resolve_provider_api_keys_read_repo_env(monkeypatch, tmp_path) -> None:
         "HUGGINGFACE_FINEGRAINED",
         "HF_TOKEN",
         "HUGGINGFACEHUB_API_TOKEN",
-        "BASETEN_GLM_47_API_KEY",
-        "BASETEN_NEMOTRON_API_KEY",
-        "BASETEN_API_KEY",
         "CEREBRAS_API_KEY",
         "FIREWORKS_API_KEY",
         "GROQ_API_KEY",
@@ -193,8 +192,9 @@ def test_resolve_provider_api_keys_read_repo_env(monkeypatch, tmp_path) -> None:
     assert llm._resolve_mistral_api_key("") == "m-key"
     assert llm._resolve_mistral_api_key("", model_name="codestral-latest") == "codestral-key"
     assert llm._resolve_huggingface_api_key("") == "hf-key"
-    assert llm._resolve_provider_api_key("baseten", model_name="zai-org/GLM-4.7") == "baseten-glm-key"
-    assert llm._resolve_provider_api_key("baseten", model_name="nvidia/nemotron-mini-4b-instruct") == "baseten-nemotron-key"
+    assert "baseten" not in llm.HOSTED_PROVIDERS
+    assert "baseten" not in llm.HOSTED_PROVIDER_NAMES
+    assert llm._resolve_provider_api_key("baseten", model_name="zai-org/GLM-4.7") == ""
     assert llm._resolve_provider_api_key("cerebras") == "cerebras-key"
     assert llm._resolve_provider_api_key("fireworks") == "fireworks-key"
     assert llm._resolve_provider_api_key("groq") == "groq-key"
@@ -305,7 +305,7 @@ def test_hosted_scheduler_prefers_stable_tier_over_fallback(tmp_path) -> None:
     limiter = llm.HostedModelScheduler(
         [
             llm.HostedModelSpec(provider="google", name="stable-model", api_key_envs=(), seed_latency=10.0, priority_tier=0),
-            llm.HostedModelSpec(provider="baseten", name="fallback-model", api_key_envs=(), seed_latency=1.0, priority_tier=1),
+            llm.HostedModelSpec(provider="fireworks", name="fallback-model", api_key_envs=(), seed_latency=1.0, priority_tier=1),
         ],
         stats_path=stats_path,
     )
@@ -319,7 +319,7 @@ def test_hosted_scheduler_prefers_stable_tier_over_fallback(tmp_path) -> None:
 
     second = limiter.acquire_spec(acquire_timeout=0.01)
     assert second is not None
-    assert second.provider == "baseten"
+    assert second.provider == "fireworks"
 
 
 def test_select_hosted_model_pool_auto_filters_configured_providers(monkeypatch) -> None:
@@ -347,7 +347,7 @@ def test_select_hosted_model_pool_auto_accepts_qualified_subset() -> None:
 
 
 def test_select_hosted_model_pool_auto_includes_new_hosted_providers(monkeypatch) -> None:
-    allowed = {"google", "nvidia", "mistral", "huggingface", "vercel", "baseten", "cerebras", "fireworks", "groq", "opencode"}
+    allowed = {"google", "nvidia", "mistral", "huggingface", "vercel", "cerebras", "fireworks", "groq", "opencode"}
 
     def fake_resolve(provider: str, cli_value: str = "", model_name: str = "") -> str:
         return "key" if provider in allowed else ""
@@ -853,3 +853,138 @@ def test_process_day_auto_falls_back_after_429(monkeypatch, tmp_path) -> None:
 
     assert stats["parsed_ok"] == 1
     assert calls == ["google:fast-model", "nvidia:backup-model"]
+
+
+def test_process_day_uses_batch_workers_within_day(monkeypatch, tmp_path) -> None:
+    raw_path = tmp_path / "raw" / "2026-03-18.jsonl"
+    cache_dir = tmp_path / "cache"
+    _write_jsonl(
+        raw_path,
+        [
+            {
+                "title": "Co phieu FPT tang sau hop dong moi",
+                "summary": "Doanh nghiep cong bo hop dong CNTT gia tri lon.",
+                "url": "https://cafef.vn/fpt-hop-dong-moi.chn",
+            },
+            {
+                "title": "Co phieu VCB duoc ho tro boi loi nhuan tang truong",
+                "summary": "Ngan hang ghi nhan loi nhuan vuot ky vong.",
+                "url": "https://cafef.vn/vcb-loi-nhuan.chn",
+            },
+            {
+                "title": "Co phieu HPG co dong luc tang gia",
+                "summary": "Doanh nghiep thep duoc ho tro boi cau chuyen san xuat.",
+                "url": "https://cafef.vn/hpg-tang-gia.chn",
+            },
+            {
+                "title": "Co phieu SSI doi mat bien dong",
+                "summary": "Cong ty chung khoan cap nhat tin moi ve thi truong.",
+                "url": "https://cafef.vn/ssi-bien-dong.chn",
+            },
+        ],
+    )
+    monkeypatch.setattr(llm, "CACHE_DIR", cache_dir)
+
+    inflight = 0
+    max_inflight = 0
+    lock = threading.Lock()
+
+    def fake_call_ollama(prompt: str, model: str, timeout: int, num_predict: int) -> str:
+        nonlocal inflight, max_inflight
+        match = re.search(r"\d{4}-\d{2}-\d{2}_\d{4}", prompt)
+        assert match is not None
+        rid = match.group(0)
+        with lock:
+            inflight += 1
+            max_inflight = max(max_inflight, inflight)
+        time.sleep(0.1)
+        with lock:
+            inflight -= 1
+        return json.dumps(
+            [
+                {
+                    "id": rid,
+                    "tickers": ["FPT"],
+                    "sentiment": 1,
+                    "confidence": 1,
+                    "event_type": "contract_win",
+                    "impact_scope": "stock",
+                }
+            ]
+        )
+
+    monkeypatch.setattr(llm, "_call_ollama", fake_call_ollama)
+
+    stats = llm.process_day(
+        raw_path,
+        batch_size=1,
+        workers=2,
+        provider="ollama",
+        model="qwen3.5:4b",
+        api_key="",
+        timeout=30,
+        num_predict=256,
+        max_summary_chars=400,
+        log_every_batches=1,
+    )
+
+    saved_rows = [json.loads(line) for line in (cache_dir / "2026-03-18.jsonl").open(encoding="utf-8")]
+    assert stats["parsed_ok"] == 4
+    assert max_inflight == 2
+    assert [row["id"] for row in saved_rows] == [
+        "2026-03-18_0001",
+        "2026-03-18_0002",
+        "2026-03-18_0003",
+        "2026-03-18_0004",
+    ]
+
+
+def test_main_processes_days_serially(monkeypatch, tmp_path) -> None:
+    cache_dir = tmp_path / "cache"
+    days = [tmp_path / "2026-03-18.jsonl", tmp_path / "2026-03-19.jsonl"]
+    monkeypatch.setattr(llm, "CACHE_DIR", cache_dir)
+    monkeypatch.setattr(llm, "_iter_dates", lambda date_from, date_to: days)
+
+    inflight = 0
+    max_inflight = 0
+    seen: list[str] = []
+    lock = threading.Lock()
+
+    def fake_process_day(path, **kwargs):
+        nonlocal inflight, max_inflight
+        with lock:
+            inflight += 1
+            max_inflight = max(max_inflight, inflight)
+        time.sleep(0.1)
+        with lock:
+            inflight -= 1
+        seen.append(path.stem)
+        return {
+            "date": path.stem,
+            "articles_total": 1,
+            "articles_filtered": 1,
+            "parsed_ok": 1,
+            "parse_fail": 0,
+            "timeout_fail": 0,
+            "pool_exhausted": False,
+            "out_path": str(cache_dir / f"{path.stem}.jsonl"),
+            "elapsed_sec": 0.1,
+        }
+
+    monkeypatch.setattr(llm, "process_day", fake_process_day)
+    monkeypatch.setattr(sys, "argv", [
+        "extract_llm_news_features.py",
+        "--provider",
+        "ollama",
+        "--workers",
+        "2",
+        "--date-from",
+        "2026-03-18",
+        "--date-to",
+        "2026-03-19",
+    ])
+
+    llm.main()
+
+    assert max_inflight == 1
+    assert seen == ["2026-03-18", "2026-03-19"]

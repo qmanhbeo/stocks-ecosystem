@@ -1,0 +1,300 @@
+{
+  "artifacts": {
+    "details_json": "artifacts/run_summaries/20260405_222642_h283_gap_failure_exhaustion_details.json"
+  },
+  "metadata": {
+    "signal": "H283"
+  },
+  "mode": "standalone_signal",
+  "name": "h283_gap_failure_exhaustion",
+  "summary": {
+    "features": {
+      "xs_gap_failure_exhaustion_1": {
+        "avg_ic": 0.030500588427277698,
+        "candidate_corrs": {
+          "c10_illiq_level_rank": 0.08898157149210659,
+          "c11_ret_60d_lag_rank": 0.05706564934862207,
+          "c12_gap_absorb_3": -0.1905580129103763,
+          "c13_compress_blowoff_2": 0.9137359515871669,
+          "c14_clv_volconf_resid_rank": 0.017324344793270045,
+          "c4_oc_asym_5d": 0.1335525246795417,
+          "c5_ins_relative_size_5d": -0.005158862791891458,
+          "c6_contrarian_intra_5d": 0.1314216629843793,
+          "c7_ceiling_count_5d": -0.025238279285551713,
+          "c8_vol_zscore_5d": -0.07587600583210319,
+          "c9_reversal_1d": 0.017982683356298386
+        },
+        "corr_with_s1": 0.17517995854085197,
+        "final_pass": false,
+        "gate_pass": true,
+        "max_abs_candidate_corr": 0.9137359515871669,
+        "pct_years_positive": 0.8181818181818182,
+        "pos_years": 9,
+        "redundant_with": "c13_compress_blowoff_2",
+        "yearly": [
+          {
+            "ic": 0.05466832415039138,
+            "n": 51789,
+            "p_value": 1.39866225715836e-35,
+            "year": 2015
+          },
+          {
+            "ic": 0.030518331783432055,
+            "n": 57839,
+            "p_value": 2.1179692694154497e-13,
+            "year": 2016
+          },
+          {
+            "ic": 0.0324889653559473,
+            "n": 64202,
+            "p_value": 1.8090621068760312e-16,
+            "year": 2017
+          },
+          {
+            "ic": 0.03898631366490624,
+            "n": 69327,
+            "p_value": 9.738534812420869e-25,
+            "year": 2018
+          },
+          {
+            "ic": 0.04286248304630327,
+            "n": 72927,
+            "p_value": 5.196322400712074e-31,
+            "year": 2019
+          },
+          {
+            "ic": 0.020467077871910405,
+            "n": 78469,
+            "p_value": 9.819799790458242e-09,
+            "year": 2020
+          },
+          {
+            "ic": -0.007081585461836899,
+            "n": 85700,
+            "p_value": 0.03816307602134137,
+            "year": 2021
+          },
+          {
+            "ic": -0.004899176898728218,
+            "n": 87501,
+            "p_value": 0.14728387487565794,
+            "year": 2022
+          },
+          {
+            "ic": 0.047889253964419225,
+            "n": 84920,
+            "p_value": 2.6131488718739575e-44,
+            "year": 2023
+          },
+          {
+            "ic": 0.04874353195599219,
+            "n": 85953,
+            "p_value": 2.2263333720640403e-46,
+            "year": 2024
+          },
+          {
+            "ic": 0.030862953267317726,
+            "n": 86062,
+            "p_value": 1.3522032372002115e-19,
+            "year": 2025
+          }
+        ],
+        "years": 11
+      },
+      "xs_gap_failure_exhaustion_2": {
+        "avg_ic": 0.03145179863010331,
+        "candidate_corrs": {
+          "c10_illiq_level_rank": 0.03541841760975622,
+          "c11_ret_60d_lag_rank": 0.06059923204937358,
+          "c12_gap_absorb_3": 0.022174798208541062,
+          "c13_compress_blowoff_2": 0.8999560449305755,
+          "c14_clv_volconf_resid_rank": 0.03449839637054548,
+          "c4_oc_asym_5d": 0.2505348845449431,
+          "c5_ins_relative_size_5d": -0.002923170757610985,
+          "c6_contrarian_intra_5d": 0.10217244252462711,
+          "c7_ceiling_count_5d": -0.004934470141293503,
+          "c8_vol_zscore_5d": -0.056279513023758485,
+          "c9_reversal_1d": 0.001999548808278712
+        },
+        "corr_with_s1": 0.1638640454853999,
+        "final_pass": false,
+        "gate_pass": true,
+        "max_abs_candidate_corr": 0.8999560449305755,
+        "pct_years_positive": 0.9090909090909091,
+        "pos_years": 10,
+        "redundant_with": "c13_compress_blowoff_2",
+        "yearly": [
+          {
+            "ic": 0.05566385807838217,
+            "n": 51789,
+            "p_value": 7.92523502463049e-37,
+            "year": 2015
+          },
+          {
+            "ic": 0.03385615017000492,
+            "n": 57839,
+            "p_value": 3.809316082102426e-16,
+            "year": 2016
+          },
+          {
+            "ic": 0.029551096275334643,
+            "n": 64202,
+            "p_value": 6.930524540929282e-14,
+            "year": 2017
+          },
+          {
+            "ic": 0.03915343286040041,
+            "n": 69327,
+            "p_value": 6.1629341373407235e-25,
+            "year": 2018
+          },
+          {
+            "ic": 0.041004532981794434,
+            "n": 72927,
+            "p_value": 1.6087708721856598e-28,
+            "year": 2019
+          },
+          {
+            "ic": 0.025787402061216734,
+            "n": 78469,
+            "p_value": 5.020780435814163e-13,
+            "year": 2020
+          },
+          {
+            "ic": -0.007529548002140791,
+            "n": 85700,
+            "p_value": 0.027507377623635663,
+            "year": 2021
+          },
+          {
+            "ic": 0.0005614934755951502,
+            "n": 87501,
+            "p_value": 0.8680856519934781,
+            "year": 2022
+          },
+          {
+            "ic": 0.049849251720715956,
+            "n": 84920,
+            "p_value": 7.227816800021254e-48,
+            "year": 2023
+          },
+          {
+            "ic": 0.04689665056462101,
+            "n": 85953,
+            "p_value": 4.66119602297098e-43,
+            "year": 2024
+          },
+          {
+            "ic": 0.03117546474521183,
+            "n": 86062,
+            "p_value": 5.809057666378594e-20,
+            "year": 2025
+          }
+        ],
+        "years": 11
+      },
+      "xs_gap_failure_exhaustion_3": {
+        "avg_ic": 0.037050753745240826,
+        "candidate_corrs": {
+          "c10_illiq_level_rank": 0.06606811642430556,
+          "c11_ret_60d_lag_rank": 0.0413912771389606,
+          "c12_gap_absorb_3": -0.20277478545553318,
+          "c13_compress_blowoff_2": 0.7960887042047325,
+          "c14_clv_volconf_resid_rank": -0.004243225226065898,
+          "c4_oc_asym_5d": 0.024484776062281957,
+          "c5_ins_relative_size_5d": -0.0070993673110597766,
+          "c6_contrarian_intra_5d": 0.13923851336418697,
+          "c7_ceiling_count_5d": -0.033945530623092975,
+          "c8_vol_zscore_5d": -0.08247022512826338,
+          "c9_reversal_1d": 0.03882864050945413
+        },
+        "corr_with_s1": 0.23279187029046056,
+        "final_pass": false,
+        "gate_pass": true,
+        "max_abs_candidate_corr": 0.7960887042047325,
+        "pct_years_positive": 0.9090909090909091,
+        "pos_years": 10,
+        "redundant_with": "c13_compress_blowoff_2",
+        "yearly": [
+          {
+            "ic": 0.055210899410742684,
+            "n": 51789,
+            "p_value": 2.9445678242908737e-36,
+            "year": 2015
+          },
+          {
+            "ic": 0.03956565726504929,
+            "n": 57839,
+            "p_value": 1.749222271523267e-21,
+            "year": 2016
+          },
+          {
+            "ic": 0.04582507739670329,
+            "n": 64202,
+            "p_value": 3.3744804776452003e-31,
+            "year": 2017
+          },
+          {
+            "ic": 0.048875377944023975,
+            "n": 69327,
+            "p_value": 6.115205596210163e-38,
+            "year": 2018
+          },
+          {
+            "ic": 0.05108289164142575,
+            "n": 72927,
+            "p_value": 2.4206653733477454e-43,
+            "year": 2019
+          },
+          {
+            "ic": 0.029785012038535622,
+            "n": 78469,
+            "p_value": 7.10989278203011e-17,
+            "year": 2020
+          },
+          {
+            "ic": 0.007105296645355255,
+            "n": 85700,
+            "p_value": 0.03752182656552559,
+            "year": 2021
+          },
+          {
+            "ic": -1.9914552505489723e-05,
+            "n": 87501,
+            "p_value": 0.995299885849199,
+            "year": 2022
+          },
+          {
+            "ic": 0.047008844753532446,
+            "n": 84920,
+            "p_value": 9.316212652635309e-43,
+            "year": 2023
+          },
+          {
+            "ic": 0.04976033157741106,
+            "n": 85953,
+            "p_value": 2.9160687890939266e-48,
+            "year": 2024
+          },
+          {
+            "ic": 0.033358817077375175,
+            "n": 86062,
+            "p_value": 1.2573843141495978e-22,
+            "year": 2025
+          }
+        ],
+        "years": 11
+      }
+    },
+    "final_passing_features": [],
+    "primary_feature": "xs_gap_failure_exhaustion_3",
+    "reason": "Gap-failure exhaustion passes standalone but overlaps existing candidates: xs_gap_failure_exhaustion_1 vs c13_compress_blowoff_2, xs_gap_failure_exhaustion_2 vs c13_compress_blowoff_2, xs_gap_failure_exhaustion_3 vs c13_compress_blowoff_2",
+    "standalone_passing_features": [
+      "xs_gap_failure_exhaustion_1",
+      "xs_gap_failure_exhaustion_2",
+      "xs_gap_failure_exhaustion_3"
+    ],
+    "verdict": "REJECTED_AS_REDUNDANT"
+  },
+  "ts": "20260405_222642"
+}

@@ -16,7 +16,7 @@ This memo records a disciplined follow-up for the shape-driven ideas recently su
 1. Reuse `intraday_shape_core_disagreement` and `fade_tension_disagreement` rows from the reduced-shape panel (`H266/H275` artifacts) and join them with `xs_sector_breadth_5d` (from `data/features/xs_sector_rotation_daily.parquet`) on the observed breakout subset.
 2. Define a logistic or deterministic rule that flags “high disagreement + declining breadth” states and use it as a gate inside `analysis/h264_family_aware_continuation_veto_integration.py`-style audits.
 3. Audit the gate on the `2023-2025` observed breakout subset: measure the 5-day hold advantage and top quintile return vs the ungated `breakout_followthrough` baseline. If the gate passes, promote as a timing router; if it mixes, keep as offline context; if it fails, treat the idea as a documented negative.
-4. **Status:** `H279` mixed: router advantage `+0.000398` vs baseline `+0.000278`; keep the artifacts ready for a confirmation recheck before turning this gate live.
+4. **Status:** `H280` failed: the strict confirmation split reversed the validation lift (`+0.002592` vs `+0.001631` in validation, `-0.004816` vs `-0.002828` in confirmation); keep the artifacts as parked offline evidence only.
 
 ## Documentation / Next Steps
 - Record the outcomes in `notes/next_steps.md` (already updated with parking bullet).

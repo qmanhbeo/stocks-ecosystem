@@ -40,6 +40,7 @@ Design:
 - Resume-safe: skip existing day outputs unless --overwrite
 - Atomic writes: write .tmp then rename
 - Robust parse: salvage partial JSON where possible (Ollama); JSON mode for Google
+- Batch concurrency is per-day; days stay serial so a cancel stops before later days start
 """
 
 from __future__ import annotations
@@ -74,7 +75,6 @@ NVIDIA_CHAT_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
 MISTRAL_CHAT_URL = "https://api.mistral.ai/v1/chat/completions"
 HUGGINGFACE_CHAT_URL = "https://router.huggingface.co/v1/chat/completions"
 VERCEL_CHAT_URL = "https://ai-gateway.vercel.sh/v1/chat/completions"
-BASETEN_CHAT_URL = "https://inference.baseten.co/v1/chat/completions"
 CEREBRAS_CHAT_URL = "https://api.cerebras.ai/v1/chat/completions"
 FIREWORKS_CHAT_URL = "https://api.fireworks.ai/inference/v1/chat/completions"
 GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -221,8 +221,6 @@ def _resolve_provider_api_key(provider: str, cli_value: str = "", model_name: st
         return _resolve_google_api_key(cli_value)
     if provider == "nvidia":
         return _resolve_nvidia_api_key(cli_value)
-    if provider == "baseten":
-        return _resolve_api_key(cli_value, _baseten_api_env_names(model_name))
     if provider == "cerebras":
         return _resolve_api_key(cli_value, ["CEREBRAS_API_KEY"])
     if provider == "fireworks":
@@ -441,7 +439,6 @@ HOSTED_PROVIDERS = {
     "mistral",
     "huggingface",
     "vercel",
-    "baseten",
     "cerebras",
     "fireworks",
     "groq",
@@ -453,7 +450,6 @@ HOSTED_PROVIDER_NAMES = {
     "mistral",
     "huggingface",
     "vercel",
-    "baseten",
     "cerebras",
     "fireworks",
     "groq",
@@ -512,15 +508,6 @@ VERCEL_MODEL_POOL = [
     {"name": "mistral/mistral-large-3", "seed_latency": 7.5},
 ]
 
-BASETEN_MODEL_POOL = [
-    {"name": "zai-org/GLM-4.7", "seed_latency": 3.6},
-    {"name": "deepseek-ai/DeepSeek-V3.1", "seed_latency": 4.2},
-    {"name": "deepseek-ai/DeepSeek-V3-0324", "seed_latency": 4.8},
-    {"name": "moonshotai/Kimi-K2.5", "seed_latency": 5.0},
-    {"name": "MiniMaxAI/MiniMax-M2.5", "seed_latency": 5.2},
-    {"name": "openai/gpt-oss-120b", "seed_latency": 6.0},
-]
-
 CEREBRAS_MODEL_POOL = [
     {"name": "llama3.1-8b", "seed_latency": 2.6},
     {"name": "llama-3.3-70b", "seed_latency": 4.5},
@@ -560,7 +547,6 @@ PROVIDER_MODEL_POOLS = {
     "mistral": MISTRAL_MODEL_POOL,
     "huggingface": HUGGINGFACE_MODEL_POOL,
     "vercel": VERCEL_MODEL_POOL,
-    "baseten": BASETEN_MODEL_POOL,
     "cerebras": CEREBRAS_MODEL_POOL,
     "fireworks": FIREWORKS_MODEL_POOL,
     "groq": GROQ_MODEL_POOL,
@@ -611,21 +597,11 @@ def _provider_error_prefix(provider: str) -> str:
         "mistral": "mistral_error",
         "huggingface": "huggingface_error",
         "vercel": "vercel_error",
-        "baseten": "baseten_error",
         "cerebras": "cerebras_error",
         "fireworks": "fireworks_error",
         "groq": "groq_error",
         "opencode": "opencode_error",
     }.get(provider, "ollama_error")
-
-
-def _baseten_api_env_names(model_name: str = "") -> list[str]:
-    lowered = model_name.lower()
-    if "glm" in lowered:
-        return ["BASETEN_GLM_47_API_KEY", "BASETEN_API_KEY", "BASETEN_NEMOTRON_API_KEY"]
-    if "nemotron" in lowered:
-        return ["BASETEN_NEMOTRON_API_KEY", "BASETEN_API_KEY", "BASETEN_GLM_47_API_KEY"]
-    return ["BASETEN_API_KEY", "BASETEN_GLM_47_API_KEY", "BASETEN_NEMOTRON_API_KEY"]
 
 
 def _mistral_api_env_names(model_name: str = "") -> list[str]:
@@ -640,8 +616,6 @@ def _api_env_names_for_provider(provider: str, model_name: str = "") -> list[str
         return ["GOOGLE_API_KEY"]
     if provider == "nvidia":
         return ["NVIDIA_API_KEY", "NGC_API_KEY"]
-    if provider == "baseten":
-        return _baseten_api_env_names(model_name)
     if provider == "cerebras":
         return ["CEREBRAS_API_KEY"]
     if provider == "fireworks":
@@ -1313,19 +1287,6 @@ def _call_nvidia(prompt: str, model: str, api_key: str, timeout: int, max_output
     )
 
 
-def _call_baseten(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
-    return _call_openai_compatible(
-        prompt=prompt,
-        model=model,
-        api_key=api_key,
-        timeout=timeout,
-        max_output_tokens=max_output_tokens,
-        url=BASETEN_CHAT_URL,
-        provider="baseten",
-        auth_scheme="Api-Key",
-    )
-
-
 def _call_cerebras(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
     return _call_openai_compatible(
         prompt=prompt,
@@ -1428,14 +1389,6 @@ def _call_hosted_model(
         )
     if spec.provider == "nvidia":
         return _call_nvidia(
-            prompt,
-            model=spec.name,
-            api_key=api_key,
-            timeout=timeout,
-            max_output_tokens=max_output_tokens,
-        )
-    if spec.provider == "baseten":
-        return _call_baseten(
             prompt,
             model=spec.name,
             api_key=api_key,
@@ -1767,6 +1720,7 @@ def process_day(
     log_every_batches: int,
     rate_limiter: "HostedModelScheduler | None" = None,
     api_keys: dict[str, str] | None = None,
+    workers: int = 1,
 ) -> dict:
     date = path.stem
     day_t0 = time.time()
@@ -1783,11 +1737,18 @@ def process_day(
     timeout_fail = 0
     pool_exhausted = False
     rows: list[dict] = []
-    n_batches = max(1, math.ceil(len(filtered) / batch_size)) if filtered else 0
+    batches = list(enumerate(_chunk(filtered, batch_size), start=1))
+    n_batches = len(batches)
     done_batches = 0
     hosted_mode = provider in HOSTED_PROVIDERS
+    abort_event = threading.Event()
+
+    def _abort_batch(batch: list[dict], err: str) -> tuple[list[dict], int, int, int, bool]:
+        return ([_blank_record_with_enrichment(a, err) for a in batch], 0, 0, 0, True)
 
     def _run_batch(batch: list[dict], depth: int = 0) -> tuple[list[dict], int, int, int, bool]:
+        if abort_event.is_set():
+            return _abort_batch(batch, "pool_exhausted")
         prompt = _build_prompt(batch, max_summary_chars=max_summary_chars)
         by_id = {a["id"]: a for a in batch}
         model_used = model
@@ -1796,11 +1757,14 @@ def process_day(
         max_hosted_retries = len(rate_limiter.specs()) if rate_limiter is not None else 0
 
         try:
+            if abort_event.is_set():
+                return _abort_batch(batch, "pool_exhausted")
             if hosted_mode:
                 if rate_limiter is not None:
                     spec_used = rate_limiter.acquire_spec(acquire_timeout=300.0)
                     if spec_used is None:
-                        return ([_blank_record_with_enrichment(a, "pool_exhausted") for a in batch], 0, 0, 0, True)
+                        abort_event.set()
+                        return _abort_batch(batch, "pool_exhausted")
                 else:
                     if provider == "auto":
                         raise ValueError("provider=auto requires a hosted scheduler")
@@ -1832,6 +1796,8 @@ def process_day(
                     cooldown_seconds=_remote_cooldown_seconds(e),
                     provider_cooldown_seconds=_provider_cooldown_seconds(e),
                 )
+            if abort_event.is_set():
+                return _abort_batch(batch, "pool_exhausted")
             if hosted_mode and rate_limiter is not None and len(batch) == 1 and depth < max_hosted_retries:
                 _log(
                     f"[{date}] batch error provider={provider_used} model={model_used} size=1 "
@@ -1862,6 +1828,8 @@ def process_day(
         if not arr:
             if hosted_mode and rate_limiter is not None and spec_used is not None:
                 rate_limiter.record_failure(spec_used.key, cooldown_seconds=43200.0)
+            if abort_event.is_set():
+                return _abort_batch(batch, "pool_exhausted")
             if hosted_mode and rate_limiter is not None and len(batch) == 1 and depth < max_hosted_retries:
                 _log(
                     f"[{date}] empty/invalid JSON provider={provider_used} model={model_used} size=1 "
@@ -1903,6 +1871,8 @@ def process_day(
 
         missing = [a for a in batch if a["id"] not in seen]
         if missing and len(batch) > 1:
+            if abort_event.is_set():
+                return _abort_batch(batch, "pool_exhausted")
             _log(
                 f"[{date}] partial batch response provider={provider_used} model={model_used} size={len(batch)} "
                 f"matched={len(seen)} missing={len(missing)} depth={depth} | retrying missing subset"
@@ -1918,6 +1888,8 @@ def process_day(
 
         if missing and hosted_mode and rate_limiter is not None and spec_used is not None:
             rate_limiter.record_failure(spec_used.key, cooldown_seconds=60.0)
+        if abort_event.is_set():
+            return _abort_batch(batch, "pool_exhausted")
         if missing and hosted_mode and rate_limiter is not None and len(batch) == 1 and depth < max_hosted_retries:
             _log(
                 f"[{date}] missing object provider={provider_used} model={model_used} size=1 "
@@ -1931,37 +1903,96 @@ def process_day(
 
         return (batch_rows, batch_ok, len(missing), 0, False)
 
-    for batch in _chunk(filtered, batch_size):
-        b_t0 = time.time()
-        batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted = _run_batch(batch)
-        rows.extend(batch_rows)
-        parsed_ok += batch_ok
-        parse_fail += batch_pf
-        timeout_fail += batch_tf
-        done_batches += 1
-        if batch_pool_exhausted:
-            pool_exhausted = True
-            if rate_limiter is not None:
-                _log(f"[{date}] all model daily limits exhausted — stopping | {rate_limiter.status()}")
-            break
-        if log_every_batches > 0 and (
-            done_batches == 1
-            or done_batches % log_every_batches == 0
-            or done_batches == n_batches
-        ):
-            elapsed = time.time() - day_t0
-            b_elapsed = time.time() - b_t0
-            done_items = parsed_ok + parse_fail + timeout_fail
-            rate = done_items / elapsed if elapsed > 0 else 0.0
-            rem = max(0, len(filtered) - done_items)
-            eta = rem / rate if rate > 0 else float("inf")
-            eta_s = "inf" if not math.isfinite(eta) else f"{eta:.1f}s"
-            _log(
-                f"[{date}] batch {done_batches}/{n_batches} "
-                f"batch_sec={b_elapsed:.2f} elapsed={elapsed:.1f}s "
-                f"done={done_items:,}/{len(filtered):,} rate={rate:.2f} art/s eta={eta_s} "
-                f"ok={parsed_ok:,} parse_fail={parse_fail:,} timeout={timeout_fail:,}"
-            )
+    if workers <= 1 or n_batches <= 1:
+        for batch_idx, batch in batches:
+            b_t0 = time.time()
+            batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted = _run_batch(batch)
+            rows.extend(batch_rows)
+            parsed_ok += batch_ok
+            parse_fail += batch_pf
+            timeout_fail += batch_tf
+            done_batches += 1
+            if batch_pool_exhausted:
+                pool_exhausted = True
+                abort_event.set()
+                if rate_limiter is not None:
+                    _log(f"[{date}] all model daily limits exhausted — stopping | {rate_limiter.status()}")
+                break
+            if log_every_batches > 0 and (
+                done_batches == 1
+                or done_batches % log_every_batches == 0
+                or done_batches == n_batches
+            ):
+                elapsed = time.time() - day_t0
+                b_elapsed = time.time() - b_t0
+                done_items = parsed_ok + parse_fail + timeout_fail
+                rate = done_items / elapsed if elapsed > 0 else 0.0
+                rem = max(0, len(filtered) - done_items)
+                eta = rem / rate if rate > 0 else float("inf")
+                eta_s = "inf" if not math.isfinite(eta) else f"{eta:.1f}s"
+                _log(
+                    f"[{date}] batch {done_batches}/{n_batches} "
+                    f"batch_sec={b_elapsed:.2f} elapsed={elapsed:.1f}s "
+                    f"done={done_items:,}/{len(filtered):,} rate={rate:.2f} art/s eta={eta_s} "
+                    f"ok={parsed_ok:,} parse_fail={parse_fail:,} timeout={timeout_fail:,}"
+                )
+    else:
+        with cf.ThreadPoolExecutor(max_workers=workers, thread_name_prefix=f"llm-{date}-batch") as ex:
+            inflight: dict[cf.Future, tuple[int, list[dict], float]] = {}
+            next_batch = 0
+
+            def _submit_next() -> bool:
+                nonlocal next_batch
+                if abort_event.is_set() or next_batch >= n_batches:
+                    return False
+                batch_idx, batch = batches[next_batch]
+                next_batch += 1
+                inflight[ex.submit(_run_batch, batch)] = (batch_idx, batch, time.time())
+                return True
+
+            for _ in range(min(workers, n_batches)):
+                _submit_next()
+
+            while inflight:
+                done, _ = cf.wait(list(inflight.keys()), return_when=cf.FIRST_COMPLETED)
+                for fut in done:
+                    batch_idx, batch, submit_t0 = inflight.pop(fut)
+                    b_elapsed = time.time() - submit_t0
+                    if fut.cancelled():
+                        batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted = _abort_batch(batch, "pool_exhausted")
+                    else:
+                        batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted = fut.result()
+                    rows.extend(batch_rows)
+                    parsed_ok += batch_ok
+                    parse_fail += batch_pf
+                    timeout_fail += batch_tf
+                    done_batches += 1
+                    if batch_pool_exhausted:
+                        pool_exhausted = True
+                        abort_event.set()
+                        if rate_limiter is not None:
+                            _log(f"[{date}] all model daily limits exhausted — stopping | {rate_limiter.status()}")
+                        for pending_fut in inflight:
+                            pending_fut.cancel()
+                    if log_every_batches > 0 and (
+                        done_batches == 1
+                        or done_batches % log_every_batches == 0
+                        or done_batches == n_batches
+                    ):
+                        elapsed = time.time() - day_t0
+                        done_items = parsed_ok + parse_fail + timeout_fail
+                        rate = done_items / elapsed if elapsed > 0 else 0.0
+                        rem = max(0, len(filtered) - done_items)
+                        eta = rem / rate if rate > 0 else float("inf")
+                        eta_s = "inf" if not math.isfinite(eta) else f"{eta:.1f}s"
+                        _log(
+                            f"[{date}] batch {done_batches}/{n_batches} "
+                            f"batch_sec={b_elapsed:.2f} elapsed={elapsed:.1f}s "
+                            f"done={done_items:,}/{len(filtered):,} rate={rate:.2f} art/s eta={eta_s} "
+                            f"ok={parsed_ok:,} parse_fail={parse_fail:,} timeout={timeout_fail:,}"
+                        )
+                while not abort_event.is_set() and len(inflight) < workers and next_batch < n_batches:
+                    _submit_next()
 
     # Keep deterministic order.
     order = {a["id"]: i for i, a in enumerate(filtered)}
@@ -2026,7 +2057,7 @@ def main():
                     help="Max output tokens per batch (8192 needed for batch-size=20 with full schema).")
     ap.add_argument("--overwrite", action="store_true")
     ap.add_argument("--workers", type=int, default=1,
-                    help="Number of parallel day workers (default 1).")
+                    help="Number of parallel batch workers within each day (default 1).")
     ap.add_argument("--max-summary-chars", type=int, default=400,
                     help="Truncate article summary in prompt to this many chars (0 = no truncation).")
     ap.add_argument("--log-every-batches", type=int, default=5,
@@ -2034,6 +2065,8 @@ def main():
     args = ap.parse_args()
     if args.provider == "ollama" and not args.model:
         args.model = DEFAULT_MODELS["ollama"]
+    if args.workers <= 0:
+        raise SystemExit("ERROR: --workers must be positive")
 
     rate_limiter: HostedModelScheduler | None = None
     api_keys_by_model: dict[str, str] = {}
@@ -2084,7 +2117,7 @@ def main():
         run_model = DEFAULT_MODELS["ollama"]
     _log(
         f"Run config: files={len(files)} from={args.date_from or '-'} to={args.date_to or '-'} "
-        f"provider={args.provider} model={run_model} batch_size={args.batch_size} workers={args.workers} "
+        f"provider={args.provider} model={run_model} batch_size={args.batch_size} batch_workers={args.workers} "
         f"timeout={args.timeout}s num_predict={args.num_predict} "
         f"max_summary_chars={args.max_summary_chars} overwrite={args.overwrite}"
     )
@@ -2115,85 +2148,40 @@ def main():
     )
 
     start = time.time()
-    if args.workers <= 1:
-        for i, p in enumerate(pending, start=1):
-            stats = process_day(
-                p,
-                batch_size=args.batch_size,
-                provider=args.provider,
-                model=args.model,
-                api_key=args.api_key,
-                timeout=args.timeout,
-                num_predict=args.num_predict,
-                max_summary_chars=args.max_summary_chars,
-                log_every_batches=args.log_every_batches,
-                rate_limiter=rate_limiter,
-                api_keys=api_keys_by_model,
-            )
-            total_days += 1
-            total_filtered += stats["articles_filtered"]
-            total_ok += stats["parsed_ok"]
-            total_fail += stats["parse_fail"]
-            total_timeout += stats["timeout_fail"]
-            total_elapsed += stats["elapsed_sec"]
-            wall = time.time() - start
-            day_rate = total_days / wall if wall > 0 else 0.0
-            rem_days = len(pending) - total_days
-            eta_days = rem_days / day_rate if day_rate > 0 else float("inf")
-            eta_s = "inf" if not math.isfinite(eta_days) else f"{eta_days/60:.1f}m"
-            _log(
-                f"[progress] {i}/{len(pending)} days done | "
-                f"filtered={total_filtered:,} ok={total_ok:,} parse_fail={total_fail:,} timeout={total_timeout:,} "
-                f"day_rate={day_rate:.3f} days/s eta={eta_s}"
-            )
-            if stats.get("pool_exhausted"):
-                _log(f"All model daily limits exhausted after {total_days} days — stopping early.")
-                break
-    else:
-        with cf.ThreadPoolExecutor(max_workers=args.workers) as ex:
-            futs = {
-                ex.submit(
-                    process_day,
-                    p,
-                    args.batch_size,
-                    args.provider,
-                    args.model,
-                    args.api_key,
-                    args.timeout,
-                    args.num_predict,
-                    args.max_summary_chars,
-                    args.log_every_batches,
-                    rate_limiter,
-                    api_keys_by_model,
-                ): p.stem
-                for p in pending
-            }
-            for i, fut in enumerate(cf.as_completed(futs), start=1):
-                try:
-                    stats = fut.result()
-                except Exception as e:
-                    _log(f"[{futs[fut]}] worker_error: {e}")
-                    continue
-                total_days += 1
-                total_filtered += stats["articles_filtered"]
-                total_ok += stats["parsed_ok"]
-                total_fail += stats["parse_fail"]
-                total_timeout += stats["timeout_fail"]
-                total_elapsed += stats["elapsed_sec"]
-                wall = time.time() - start
-                day_rate = total_days / wall if wall > 0 else 0.0
-                rem_days = len(pending) - total_days
-                eta_days = rem_days / day_rate if day_rate > 0 else float("inf")
-                eta_s = "inf" if not math.isfinite(eta_days) else f"{eta_days/60:.1f}m"
-                _log(
-                    f"[progress] {i}/{len(pending)} days done | "
-                    f"filtered={total_filtered:,} ok={total_ok:,} parse_fail={total_fail:,} timeout={total_timeout:,} "
-                    f"day_rate={day_rate:.3f} days/s eta={eta_s}"
-                )
-                if stats.get("pool_exhausted"):
-                    _log(f"All model daily limits exhausted after {total_days} days — stopping early.")
-                    ex.shutdown(wait=False, cancel_futures=True)
-                    break
+    for i, p in enumerate(pending, start=1):
+        stats = process_day(
+            p,
+            batch_size=args.batch_size,
+            workers=args.workers,
+            provider=args.provider,
+            model=args.model,
+            api_key=args.api_key,
+            timeout=args.timeout,
+            num_predict=args.num_predict,
+            max_summary_chars=args.max_summary_chars,
+            log_every_batches=args.log_every_batches,
+            rate_limiter=rate_limiter,
+            api_keys=api_keys_by_model,
+        )
+        total_days += 1
+        total_filtered += stats["articles_filtered"]
+        total_ok += stats["parsed_ok"]
+        total_fail += stats["parse_fail"]
+        total_timeout += stats["timeout_fail"]
+        total_elapsed += stats["elapsed_sec"]
+        wall = time.time() - start
+        day_rate = total_days / wall if wall > 0 else 0.0
+        rem_days = len(pending) - total_days
+        eta_days = rem_days / day_rate if day_rate > 0 else float("inf")
+        eta_s = "inf" if not math.isfinite(eta_days) else f"{eta_days/60:.1f}m"
+        _log(
+            f"[progress] {i}/{len(pending)} days done | "
+            f"filtered={total_filtered:,} ok={total_ok:,} parse_fail={total_fail:,} timeout={total_timeout:,} "
+            f"day_rate={day_rate:.3f} days/s eta={eta_s}"
+        )
+        if stats.get("pool_exhausted"):
+            _log(f"All model daily limits exhausted after {total_days} days — stopping early.")
+            break
 
     wall_total = time.time() - start
     art_rate_wall = total_filtered / wall_total if wall_total > 0 else 0.0

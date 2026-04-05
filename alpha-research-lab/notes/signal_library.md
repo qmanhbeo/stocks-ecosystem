@@ -365,6 +365,32 @@ that volume alone does not explain.
 
 ---
 
+### C15 — LLM News State Router (H290)
+**Status: OFFLINE EVIDENCE — state-gated news surface is real in the nonzero 2015-2017 window**
+
+- **Standalone IC:** the pooled news surface is weak or negative, but the routed buckets are much stronger:
+  - `llm_sentiment_30d` overall IC `-0.0121`
+  - `llm_sentiment_30d` in `novelty=follow`: IC `+0.1618`, daily hit rate `0.6296`
+  - `llm_sentiment_30d` in `alignment×novelty=miss__new`: IC `+0.1350`, daily hit rate `0.5283`
+  - `llm_sentiment_5d` in `novelty=follow`: IC `+0.4796`, daily hit rate `0.8667`
+- **Correlation with S1:** `llm_sentiment_30d` corr with S1 `-0.0020`, `llm_sentiment_5d` corr with S1 `-0.0022`, `llm_sentiment_conf_weighted` corr with S1 `+0.0029`
+- **Consistency:** best routed buckets are positive in the available nonzero years, but the usable news window is only `2015-2017`
+- **Coverage:** the nonzero news window is `2015-2017`; the later `2019-2025` active-book window is effectively zero-valued for this cache surface
+
+**What it captures:** LLM news is not a single pooled sentiment factor. The same surface behaves very differently depending on state:
+- expectation misses are better than beats
+- follow-up news is better than new-news in the strongest buckets
+- the state split is materially stronger than the raw pooled feature
+
+**Economic mechanism:** the market seems to pay more attention to news when it is follow-up / miss-state information, not when it is already expected or fresh in the wrong direction.
+
+**Why not live:** the active-book years still do not have useful news coverage in the current cache surface, so this is offline evidence rather than a deployable current-book signal.
+
+**Artifact:** `data/features/xs_llm_news_ticker_day.parquet`
+  - routed on the 2015-2017 nonzero window
+
+---
+
 ### I1 — Reduced-Shape Intraday Disagreement Atoms (H275)
 **Status: CANDIDATE — observed-subset intraday state family, offline only**
 

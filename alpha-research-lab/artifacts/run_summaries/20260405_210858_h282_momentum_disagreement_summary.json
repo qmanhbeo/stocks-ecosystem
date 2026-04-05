@@ -1,0 +1,27 @@
+{
+  "verdict": "MIXED",
+  "best_candidate": {
+    "feature_name": "xs_mom_disagree",
+    "avg_ic": 0.08537792646220163,
+    "pct_years_positive": 1.0,
+    "years": 11,
+    "pos_years": 11,
+    "corr_with_s1": 0.5333151337894261,
+    "corr_with_c9": -0.626010299669979,
+    "gate_pass": false
+  },
+  "candidate_rows": 825481,
+  "candidate_years": [
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "verdict": "MIXED",
+  "best_state": "candidate_count_lag1",
+  "best_abs_rho": 0.06787225876823073,
+  "best_state_metrics": {
+    "rho": 0.06787225876823073,
+    "p_value": 0.0003757549080839213,
+    "q1_gap": -0.026960894262676224,
+    "q5_gap": -0.005178510238045008,
+    "sign_swap": false,
+    "quintile_table": [
+      {
+        "quintile": 1,
+        "n": 549,
+        "state_mean": 220.4153005464481,
+        "fast_mean": 0.03890186766270054,
+        "slow_mean": 0.01194097340002432,
+        "gap_mean": -0.026960894262676224,
+        "winner": "fast"
+      },
+      {
+        "quintile": 2,
+        "n": 548,
+        "state_mean": 273.35036496350364,
+        "fast_mean": 0.03417283426282524,
+        "slow_mean": 0.0208415813450605,
+        "gap_mean": -0.013331252917764743,
+        "winner": "fast"
+      },
+      {
+        "quintile": 3,
+        "n": 548,
+        "state_mean": 312.242700729927,
+        "fast_mean": 0.03327969033667364,
+        "slow_mean": 0.018363718696586116,
+        "gap_mean": -0.014915971640087528,
+        "winner": "fast"
+      },
+      {
+        "quintile": 4,
+        "n": 548,
+        "state_mean": 341.77372262773724,
+        "fast_mean": 0.030998468376903288,
+        "slow_mean": 0.014290579890358696,
+        "gap_mean": -0.01670788848654459,
+        "winner": "fast"
+      },
+      {
+        "quintile": 5,
+        "n": 549,
+        "state_mean": 355.4626593806922,
+        "fast_mean": 0.02295040149144479,
+        "slow_mean": 0.017771891253399782,
+        "gap_mean": -0.005178510238045008,
+        "winner": "fast"
+      }
+    ]
+  },
+  "metrics": {
+    "candidate_count_lag1": {
+      "rho": 0.06787225876823073,
+      "p_value": 0.0003757549080839213,
+      "q1_gap": -0.026960894262676224,
+      "q5_gap": -0.005178510238045008,
+      "sign_swap": false,
+      "quintile_table": [
+        {
+          "quintile": 1,
+          "n": 549,
+          "state_mean": 220.4153005464481,
+          "fast_mean": 0.03890186766270054,
+          "slow_mean": 0.01194097340002432,
+          "gap_mean": -0.026960894262676224,
+          "winner": "fast"
+        },
+        {
+          "quintile": 2,
+          "n": 548,
+          "state_mean": 273.35036496350364,
+          "fast_mean": 0.03417283426282524,
+          "slow_mean": 0.0208415813450605,
+          "gap_mean": -0.013331252917764743,
+          "winner": "fast"
+        },
+        {
+          "quintile": 3,
+          "n": 548,
+          "state_mean": 312.242700729927,
+          "fast_mean": 0.03327969033667364,
+          "slow_mean": 0.018363718696586116,
+          "gap_mean": -0.014915971640087528,
+          "winner": "fast"
+        },
+        {
+          "quintile": 4,
+          "n": 548,
+          "state_mean": 341.77372262773724,
+          "fast_mean": 0.030998468376903288,
+          "slow_mean": 0.014290579890358696,
+          "gap_mean": -0.01670788848654459,
+          "winner": "fast"
+        },
+        {
+          "quintile": 5,
+          "n": 549,
+          "state_mean": 355.4626593806922,
+          "fast_mean": 0.02295040149144479,
+          "slow_mean": 0.017771891253399782,
+          "gap_mean": -0.005178510238045008,
+          "winner": "fast"
+        }
+      ]
+    },
+    "spread_lag1": {
+      "rho": -0.0098086702249915,
+      "p_value": 0.607671238255179,
+      "q1_gap": -0.0140106772810242,
+      "q5_gap": -0.01884469151625194,
+      "sign_swap": false,
+      "quintile_table": [
+        {
+          "quintile": 1,
+          "n": 549,
+          "state_mean": 0.012316801704574222,
+          "fast_mean": 0.033414861715828914,
+          "slow_mean": 0.019404184434804714,
+          "gap_mean": -0.0140106772810242,
+          "winner": "fast"
+        },
+        {
+          "quintile": 2,
+          "n": 548,
+          "state_mean": 0.02143608834876835,
+          "fast_mean": 0.029854218500628728,
+          "slow_mean": 0.015473065647111772,
+          "gap_mean": -0.014381152853516955,
+          "winner": "fast"
+        },
+        {
+          "quintile": 3,
+          "n": 548,
+          "state_mean": 0.030078083317115322,
+          "fast_mean": 0.03105930446734882,
+          "slow_mean": 0.01551524632134134,
+          "gap_mean": -0.015544058146007478,
+          "winner": "fast"
+        },
+        {
+          "quintile": 4,
+          "n": 548,
+          "state_mean": 0.04096548179191085,
+          "fast_mean": 0.033054027955908755,
+          "slow_mean": 0.018741396711782033,
+          "gap_mean": -0.014312631244126722,
+          "winner": "fast"
+        },
+        {
+          "quintile": 5,
+          "n": 549,
+          "state_mean": 0.06711222600723034,
+          "fast_mean": 0.032912682929716594,
+          "slow_mean": 0.014067991413464655,
+          "gap_mean": -0.01884469151625194,
+          "winner": "fast"
+        }
+      ]
+    },
+    "pressure_combo_lag1": {
+      "rho": 0.052770646094945056,
+      "p_value": 0.005710562628739875,
+      "q1_gap": -0.02019952376080419,
+      "q5_gap": -0.004291139568382135,
+      "sign_swap": false,
+      "quintile_table": [
+        {
+          "quintile": 1,
+          "n": 549,
+          "state_mean": 0.4042923749148246,
+          "fast_mean": 0.03643435100946214,
+          "slow_mean": 0.016234827248657952,
+          "gap_mean": -0.02019952376080419,
+          "winner": "fast"
+        },
+        {
+          "quintile": 2,
+          "n": 548,
+          "state_mean": 0.7630758667219159,
+          "fast_mean": 0.03394667582868017,
+          "slow_mean": 0.015334339765557826,
+          "gap_mean": -0.018612336063122348,
+          "winner": "fast"
+        },
+        {
+          "quintile": 3,
+          "n": 548,
+          "state_mean": 1.000914400917987,
+          "fast_mean": 0.03562365814951144,
+          "slow_mean": 0.016387575880710197,
+          "gap_mean": -0.019236082268801243,
+          "winner": "fast"
+        },
+        {
+          "quintile": 4,
+          "n": 548,
+          "state_mean": 1.245625219137475,
+          "fast_mean": 0.03042112657595984,
+          "slow_mean": 0.0156517331350693,
+          "gap_mean": -0.014769393440890535,
+          "winner": "fast"
+        },
+        {
+          "quintile": 5,
+          "n": 549,
+          "state_mean": 1.5860834705419142,
+          "fast_mean": 0.023880256518805952,
+          "slow_mean": 0.019589116950423813,
+          "gap_mean": -0.004291139568382135,
+          "winner": "fast"
+        }
+      ]
+    }
+  },
+  "panel_rows": 2742,
+  "panel_dates": 2742,
+  "fast_1d_mean": 0.032059824914914,
+  "fast_5d_mean": 0.027131395751777903,
+  "slow_1d_mean": 0.006753461461089038,
+  "slow_5d_mean": 0.016640446716801146,
+  "family_gap_mean": -0.01541937819811285,
+  "pass_condition": false,
+  "mixed_condition": true
+}

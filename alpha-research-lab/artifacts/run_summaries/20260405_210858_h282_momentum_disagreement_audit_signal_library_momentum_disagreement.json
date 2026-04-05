@@ -1,0 +1,40 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260405_210858_h282_momentum_disagreement_summary.json",
+    "results": "artifacts/portfolio_baselines/20260405_210858_h282_momentum_disagreement_results.parquet"
+  },
+  "metadata": {
+    "session": 111,
+    "source": "xs_barrier_vol_1d_hose_full + xs_shortterm_reversal"
+  },
+  "mode": "signal_library_momentum_disagreement",
+  "name": "h282_momentum_disagreement_audit",
+  "summary": {
+    "best_candidate": {
+      "avg_ic": 0.08537792646220163,
+      "corr_with_c9": -0.626010299669979,
+      "corr_with_s1": 0.5333151337894261,
+      "feature_name": "xs_mom_disagree",
+      "gate_pass": false,
+      "pct_years_positive": 1.0,
+      "pos_years": 11,
+      "years": 11
+    },
+    "candidate_rows": 825481,
+    "candidate_years": [
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "verdict": "MIXED"
+  },
+  "ts": "20260405_210858"
+}

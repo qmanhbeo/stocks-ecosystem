@@ -933,6 +933,230 @@ The shape proxies by themselves are too weak / anti-predictive, but applying the
 
 **Implication:** keep the router logic offline for now; if it ever moves toward a live gate, do it through the saved panel/summary so you can reproduce the same gate structure rather than starting from scratch again.
 
+## F203: H280 Shows The H279 Shape-Breadth Router Does Not Survive A Strict Confirmation Split; Validation Lift Reverses In 2025 (2026-04-05, Session 109)
+
+`H280` rechecked the frozen H279 router on a strict split:
+- validation years: `2023-2024`
+- confirmation year: `2025`
+- gate: frozen H279 `shape top 10% + breadth_gap >= 0`
+
+### Split result
+- validation router mean adv: `+0.002592`
+- validation baseline mean adv: `+0.001631`
+- validation lift: `+0.000962`
+- validation router positive rate: `49.4%`
+- confirmation router mean adv: `-0.004816`
+- confirmation baseline mean adv: `-0.002828`
+- confirmation lift: `-0.001988`
+- confirmation router positive rate: `40.1%`
+- confirmation shape-only mean adv: `-0.003746`
+
+### Key finding
+The router does produce a validation lift, but the effect does not survive the 2025 confirmation slice. The raw shape score also remains negative on confirmation.
+
+**Implication:** treat `H279` as parked offline evidence only on the current contract. Do not promote the gate, and do not keep tuning the same shape+breadth rule without new data or a materially different label / contract.
+
+## F204: H281 Shows The LLM News Surface Is Real, But The Simple Sentiment Contract Still Does Not Clear The Standalone Gate (2026-04-05, Sessions 110-112)
+
+`xs_news_sentiment_daily.parquet` is the legacy keyword-news table, built by `extract_news_sentiment.py` from CafeF raw JSONL files restored by `fetch_news_archive.py`.
+
+`xs_llm_news_ticker_day.parquet` is the separate LLM surface, built from `data/llm_cache/YYYY-MM-DD.jsonl` by `extract_llm_news_features.py` and `build_llm_news_features.py`.
+
+`H281` rechecked the rebuilt LLM ticker-day surface directly:
+- candidate rows: `826,404`
+- nonzero LLM rows: `17,578`
+- raw cache horizon: `2015-09-21` to `2017-06-04` at the current in-progress checkpoint
+- test window: `2015-2025`
+- compared against legacy keyword-news baseline `C1`
+
+### Result
+The rebuilt LLM surface is populated and real, but the upstream extraction is still in progress at the current checkpoint and the simplest sentiment-style candidates are still weak:
+- best LLM candidate: `llm_sentiment_raw`
+- best LLM avg IC: `+0.0061`
+- best LLM positive years: `2 / 2`
+- best LLM corr vs `S1`: `+0.0014`
+- best LLM corr vs `C1`: `+0.0458`
+
+### Key finding
+The upstream source is not the keyword-news table, and the current LLM extraction contract does produce usable rows, but the raw sentiment-only features still do not beat the gate.
+
+**Implication:** park `H98 / llm-news-gate` for raw sentiment. If this branch is revisited, test a state-router or interaction contract rather than another raw sentiment sweep.
+
+## F206: H283 Shows The Gap-Failure Exhaustion Blend Is Predictive But Still Collapses Onto The Existing Compression Blow-Off Axis (2026-04-05, Session 113)
+
+`H283` tested a narrow combined family built from the H130 gap-absorption logic and the H133 compression blow-off logic:
+- `xs_gap_failure_exhaustion_1`
+- `xs_gap_failure_exhaustion_2`
+- `xs_gap_failure_exhaustion_3`
+
+### Result
+The combined family is real and predictive, but every variant is redundant with the existing compression blow-off candidate:
+- best variant: `xs_gap_failure_exhaustion_3`
+- best IC: `+0.0371`
+- best positive years: `10 / 11`
+- best corr vs `S1`: `+0.233`
+- best max candidate corr: `+0.796`
+- overlap verdict: `dup` against `c13_compress_blowoff_2`
+
+### Key finding
+The gap-failure thesis does not create a new axis under the current contract. It mostly repackages the existing compression blow-off reversal state.
+
+**Implication:** close the generic gap-failure blend on this contract. If this idea is revisited, it needs a materially different conditioning layer, not another small variation of the same compression / gap interaction.
+
+## F207: H284 Shows Sector Conditioning Does Not Rescue The Compression Blow-Off Reversal; Hot Sectors Weaken It And Ceiling Clusters Just Repackage C7 (2026-04-05, Session 114)
+
+`H284` tested a fixed sector-conditioned version of the H133 compression blow-off reversal:
+- `h284_c13_compress_blowoff_2`
+- `h284_c13_hot_sector`
+- `h284_c13_ceiling_cluster`
+- `h284_c13_hot_and_cluster`
+
+### Result
+The base reversal state is real, but the conditioned variants do not create a new axis:
+- base IC: `+0.0350`
+- hot-sector interaction IC: `-0.0010`
+- ceiling-cluster interaction IC: `+0.0137`
+- hot-and-cluster interaction IC: `+0.0095`
+- hot-sector subset c13 IC: `+0.0198`
+- ceiling-cluster subset c13 IC: `-0.0512`
+- hot-and-cluster subset c13 IC: `-0.0542`
+
+### Key finding
+The hot-sector gate weakens the state, and the ceiling-cluster gate is only a restatement of the existing ceiling-count axis. The branch does not produce a new standalone signal.
+
+**Implication:** park `sector-conditioned blow-off`. Move on to the next materially different branch, `5d-label-contract`.
+
+## F208: H285 Shows The 5d Label Contract Materially Reorders The Library; C6 Moves To The Top, C13 Drops, And The W Reclaim Family Gains Relative Relevance (2026-04-05, Session 115)
+
+`H285` compared the current C4-C14 library and the upward-W family under the canonical 1d label versus a 5d forward excess-return label.
+
+### Result
+The ranking is not stable enough to reuse unchanged:
+- rank Spearman between 1d and 5d ordering: `+0.5786`
+- top-3 overlap: `1 / 3`
+- 1d top feature: `c13_compress_blowoff_2`
+- 5d top feature: `c6_contrarian_intra_5d`
+- strongest 5d row: `c6_contrarian_intra_5d` with IC `+0.0393`
+- 5d `c4_oc_asym_5d`: `+0.0269`
+- 5d `c9_reversal_1d`: `+0.0248`
+- 5d `xs_upward_w_reclaim_12d`: `+0.0100`
+
+### Key finding
+The slower horizon changes the relative ordering enough to matter. The core reversal/compression axis remains useful, but the 5d contract elevates `c6` and `c4` and gives the W reclaim family a clearer role than on the 1d target.
+
+**Implication:** do not reuse the current 1d ranking unchanged for the next branch. The next honest step is a 5d workflow / wavefront pass on the horizon-specific ordering.
+
+## F209: H286 Shows The 5d Barrier WF Proxy Does Not Improve The Cross-Sectional Contract Under The Available Extra-Trees Backend (2026-04-05, Session 116)
+
+`H286` ran the existing cross-sectional walk-forward runner on a 5d relative triple-barrier label:
+- `future_rel_barrier_5d`
+- start date `2015-01-01`
+- min-train-years `3`
+- backend `extra_trees_classifier`
+
+### Result
+The proxy is not promotable:
+- avg overall accuracy: `0.5416`
+- focal avg edge: `-0.0218`
+- focal sig years: `4 / 8`
+- focal std edge: `0.1267`
+
+### Key finding
+The available tree backend does not turn the 5d barrier contract into a stronger WF. The focal edge is negative and noisy, so this is a park, not a promotion.
+
+**Implication:** keep the 5d label-contract result as offline evidence only for now. If the branch is revisited, try a supported gradient-boosted backend or a different 5d formulation; otherwise move to the next independent branch.
+
+## F210: H287 Shows Lagged Sector Breadth / Rotation Does Not Split The Library Into Fast-Reversal Versus Slow-Continuation Families; The Fast Family Still Wins In Every Quintile (2026-04-05, Session 117)
+
+`H287` tested whether lagged sector breadth / rotation can route the library between the fast reversal family (`c13/c9/c12`) and the slower continuation / reclaim family (`c6/c4/W`).
+
+### Result
+The router does not work:
+- best state correlation: `+0.0353` on `breadth_level_lag1`
+- sign swap: `false`
+- q1 gap: `-0.0287`
+- q5 gap: `-0.0126`
+- fast 1d mean IC: `+0.0321`
+- slow 5d mean IC: `+0.0166`
+- family gap mean: `-0.0154`
+
+### Key finding
+The breadth state does not create a horizon split. The fast family still dominates in every quintile, so the expected fast-vs-slow router does not emerge from lagged sector breadth / rotation.
+
+**Implication:** park the breadth-to-horizon router. If a horizon allocator is still worth testing, it needs a different state variable, such as entry-book replacement pressure rather than sector breadth.
+
+## F211: H288 Shows Entry-Book Breadth And Pressure Correlate With The Family Gap, But The Fast Family Still Wins In Every Quintile (2026-04-05, Session 118)
+
+`H288` tested whether the entry book's own breadth / score-gap state can act as a horizon allocator between the fast reversal family (`c13/c9/c12`) and the slower continuation / reclaim family (`c6/c4/W`).
+
+### Result
+The state is weakly predictive, but not enough to route:
+- best state correlation: `+0.0679` on `candidate_count_lag1`
+- pressure-combo correlation: `+0.0528`
+- sign swap: `false`
+- q1 gap: `-0.0270`
+- q5 gap: `-0.0052`
+- family gap mean: `-0.0154`
+
+### Key finding
+More candidate breadth does line up with a higher slow-vs-fast family gap, but the fast family still wins in every quintile. That makes this a weak allocator, not a horizon router.
+
+**Implication:** park the breadth-to-horizon router. If this line is revisited, it needs a materially stronger state variable or a different label contract.
+
+## F212: H289 Shows The Marginal-Slot Label Is Monotone But Weak; The Best Existing Proxy Is Selection-Score Gap To Next Candidate (2026-04-05, Session 119)
+
+`H289` relabeled the active-book panel as candidate cycle return minus the weakest held cycle return on the same date, then checked whether existing entry-alpha features still separate the target.
+
+### Result
+The label is directionally sensible, but weak:
+- best feature: `selection_score_gap_to_next_candidate`
+- mean daily IC: `+0.0090`
+- positive years: `5 / 7`
+- q1 label mean: `+0.0300`
+- q5 label mean: `+0.0343`
+
+### Key finding
+The marginal-slot label is monotone in the expected direction, but the existing proxies only separate it slightly. The effect is too weak to replace the current contract on its own.
+
+**Implication:** park the marginal-slot label as a weak evidence line. If it is revisited, it likely needs a stronger candidate-selection surface or a news-state overlay.
+
+## F213: H290 Shows The Rebuilt LLM News Surface Has Real Edge Only In The Right State Buckets; Follow-Up And Miss-State News Beat The Pooled Sentiment Surface (2026-04-05, Session 120)
+
+`H290` audited the rebuilt CafeF LLM news surface on the nonzero `2015-2017` window and bucketed the 5-day forward excess-return response by novelty, alignment, authority, and event-time state.
+
+### Result
+The pooled sentiment surface is weak or negative overall, but the gated buckets are real:
+- nonzero window: `2015-11-13` to `2017-05-31`
+- best feature: `llm_sentiment_5d`
+- best state kind: `novelty`
+- best bucket: `follow`
+- mean daily IC: `+0.4796`
+- daily hit rate: `0.8667`
+- positive years: `1 / 1`
+- pooled `llm_sentiment_30d` IC: `-0.0121`
+- `novelty = follow` on `llm_sentiment_30d`: `+0.1618`
+- `alignment × novelty = miss__new` on `llm_sentiment_30d`: `+0.1350`
+
+### Key finding
+LLM news does contain real signal, but the edge lives in the state gate, not in raw sentiment. Follow-up and miss-state news are the useful buckets; beat/new and pooled sentiment are weak or negative.
+
+**Implication:** keep `C15` as offline evidence only for now. Do not treat the LLM surface as deployable on the current active-book years until those years have nonzero coverage.
+
+## F205: H282 Shows The Simple Momentum-Disagreement Subtraction Is Predictive But Not Orthogonal; It Recombines S1 And C9 Instead Of Adding New Information (2026-04-05, Session 111)
+
+`H282` built `xs_mom_disagree = xs_proba_rank - xs_reversal_1d_rank` from the existing `S1` and `C9` surfaces.
+
+### Result
+- avg IC: `+0.0854`
+- positive years: `11 / 11`
+- corr vs `S1`: `+0.5333`
+- corr vs `C9`: `-0.6260`
+
+### Key finding
+The disagreement feature is strongly predictive, but it fails the orthogonality gate badly. It is best understood as a recombination of existing momentum/reversal information, not as a new independent signal.
+
+**Implication:** do not promote the raw subtraction as a standalone library feature. If revisited, it should be residualized or interaction-only.
+
 ## F201: Explicit Upward-W Close Geometry Does Not Survive The Canonical Next-Day Signal Gate; The Only Surviving Evidence Is A Slower 5-Day Reclaim Effect (2026-04-04, Session 107)
 
 Session 107 formalized the user-observed `upward W / double-bottom reclaim` chart pattern into an explicit close-only signal family instead of leaving it as eyeballing.

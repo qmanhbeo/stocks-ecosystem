@@ -1,0 +1,136 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260405_211622_h281_llm_news_gate_summary.json",
+    "results": "artifacts/portfolio_baselines/20260405_211622_h281_llm_news_gate_results.parquet"
+  },
+  "metadata": {
+    "c1_baseline_count": 2,
+    "candidate_count": 5,
+    "session": 110
+  },
+  "mode": "signal_library_llm_news_gate",
+  "name": "h281_llm_news_gate_audit",
+  "summary": {
+    "best_candidate": {
+      "avg_ic": null,
+      "compare_rows": 5225,
+      "corr_with_c1": 0.04578234356153032,
+      "corr_with_s1": 0.0014424071972463067,
+      "feature_name": "llm_sentiment_raw",
+      "gate_pass": false,
+      "pct_years_positive": 0.18181818181818182,
+      "pos_years": 2,
+      "years": 11
+    },
+    "c1_rows": 5225,
+    "c1_table": [
+      {
+        "avg_ic": 0.06883155608134357,
+        "compare_rows": 0,
+        "corr_with_c1": null,
+        "corr_with_s1": 0.00727807579936338,
+        "feature_name": "sentiment_cs_z",
+        "gate_pass": true,
+        "pct_years_positive": 1.0,
+        "pos_years": 3,
+        "years": 3
+      },
+      {
+        "avg_ic": 0.047325139865261524,
+        "compare_rows": 0,
+        "corr_with_c1": null,
+        "corr_with_s1": 0.001059756334472996,
+        "feature_name": "sentiment_score",
+        "gate_pass": true,
+        "pct_years_positive": 0.8,
+        "pos_years": 4,
+        "years": 5
+      }
+    ],
+    "c1_years": [
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "candidate_rows": 826404,
+    "candidate_table": [
+      {
+        "avg_ic": null,
+        "compare_rows": 5225,
+        "corr_with_c1": 0.04578234356153032,
+        "corr_with_s1": 0.0014424071972463067,
+        "feature_name": "llm_sentiment_raw",
+        "gate_pass": false,
+        "pct_years_positive": 0.18181818181818182,
+        "pos_years": 2,
+        "years": 11
+      },
+      {
+        "avg_ic": null,
+        "compare_rows": 5225,
+        "corr_with_c1": 0.03682010262344475,
+        "corr_with_s1": 0.0030954664307653802,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "gate_pass": false,
+        "pct_years_positive": 0.18181818181818182,
+        "pos_years": 2,
+        "years": 11
+      },
+      {
+        "avg_ic": null,
+        "compare_rows": 5225,
+        "corr_with_c1": 0.03680953364583478,
+        "corr_with_s1": 0.0021300626114709145,
+        "feature_name": "llm_sentiment_5d",
+        "gate_pass": false,
+        "pct_years_positive": 0.09090909090909091,
+        "pos_years": 1,
+        "years": 11
+      },
+      {
+        "avg_ic": null,
+        "compare_rows": 5225,
+        "corr_with_c1": 0.028767151620859566,
+        "corr_with_s1": 0.0058156637570252,
+        "feature_name": "llm_sentiment_30d",
+        "gate_pass": false,
+        "pct_years_positive": 0.09090909090909091,
+        "pos_years": 1,
+        "years": 11
+      },
+      {
+        "avg_ic": null,
+        "compare_rows": 5225,
+        "corr_with_c1": -0.018222535763361733,
+        "corr_with_s1": 0.006977325023116666,
+        "feature_name": "llm_magnitude_5d",
+        "gate_pass": false,
+        "pct_years_positive": 0.09090909090909091,
+        "pos_years": 1,
+        "years": 11
+      }
+    ],
+    "candidate_years": [
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "verdict": "FAILED"
+  },
+  "ts": "20260405_211622"
+}

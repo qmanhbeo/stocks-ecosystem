@@ -1,275 +1,825 @@
 {
   "artifacts": {
-    "details_json": "/home/manh/stocks/alpha-research-lab/artifacts/run_summaries/20260328_125618_h133_compression_blowoff_reversal_details.json"
+    "details_json": "artifacts/run_summaries/20260405_231037_h290_llm_news_state_router_audit_details.json"
   },
   "metadata": {
-    "session": 44,
-    "signal": "H133"
+    "signal": "H290"
   },
   "mode": "standalone_signal",
-  "name": "h133_compression_blowoff_reversal",
+  "name": "h290_llm_news_state_router_audit",
   "summary": {
-    "features": {
-      "xs_compress_blowoff_1": {
-        "avg_ic": 0.05414671325895419,
-        "candidate_corrs": {},
-        "corr_with_s1": 0.32086801761274836,
-        "final_pass": false,
-        "gate_pass": false,
-        "max_abs_candidate_corr": null,
-        "pct_years_positive": 1.0,
-        "pos_years": 11,
-        "redundant_with": null,
-        "yearly": [
-          {
-            "ic": 0.07355145515195957,
-            "n": 51787,
-            "p_value": 4.7681293319415376e-63,
-            "year": 2015
-          },
-          {
-            "ic": 0.06197424738316037,
-            "n": 57835,
-            "p_value": 2.5114599781998526e-50,
-            "year": 2016
-          },
-          {
-            "ic": 0.06344123482594416,
-            "n": 64196,
-            "p_value": 3.0004695041690078e-58,
-            "year": 2017
-          },
-          {
-            "ic": 0.06276614362777327,
-            "n": 69330,
-            "p_value": 1.8070683136765502e-61,
-            "year": 2018
-          },
-          {
-            "ic": 0.06193353022157061,
-            "n": 72926,
-            "p_value": 6.60720727677798e-63,
-            "year": 2019
-          },
-          {
-            "ic": 0.05088814868433056,
-            "n": 78473,
-            "p_value": 3.650898194496243e-46,
-            "year": 2020
-          },
-          {
-            "ic": 0.028258533066465145,
-            "n": 85670,
-            "p_value": 1.310193348889812e-16,
-            "year": 2021
-          },
-          {
-            "ic": 0.013596316481205807,
-            "n": 87501,
-            "p_value": 5.770702186301989e-05,
-            "year": 2022
-          },
-          {
-            "ic": 0.06722212002021151,
-            "n": 84920,
-            "p_value": 1.2426975038543779e-85,
-            "year": 2023
-          },
-          {
-            "ic": 0.05890727696597074,
-            "n": 85934,
-            "p_value": 6.303039860018401e-67,
-            "year": 2024
-          },
-          {
-            "ic": 0.0530748394199043,
-            "n": 85878,
-            "p_value": 1.2725895871060722e-54,
-            "year": 2025
-          }
-        ],
-        "years": 11
+    "best_bucket": "follow",
+    "best_daily_hit_rate": 0.8666666666666667,
+    "best_daily_rows": 15,
+    "best_feature": "llm_sentiment_5d",
+    "best_mean_ic": 0.4796073660633854,
+    "best_nonzero_rows": 75,
+    "best_positive_years": 1,
+    "best_state_kind": "novelty",
+    "best_target_mean": 0.011875424575428926,
+    "best_years_present": 1,
+    "bucket_table": [
+      {
+        "bucket_name": "follow",
+        "daily_hit_rate": 0.8666666666666667,
+        "daily_rows": 15,
+        "feature_mean": 0.03225012309207287,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": 0.4796073660633854,
+        "nonzero_feature_rows": 75,
+        "positive_years": 1,
+        "row_count": 677,
+        "state_kind": "novelty",
+        "target_mean": 0.011875424575428926,
+        "years_present": 1
       },
-      "xs_compress_blowoff_2": {
-        "avg_ic": 0.035056025663510224,
-        "candidate_corrs": {
-          "c10_illiq_level_rank": 0.07720707278168856,
-          "c11_ret_60d_lag_rank": 0.07849095012074164,
-          "c12_gap_absorb_3": 0.005961300174453134,
-          "c4_oc_asym_5d": 0.153732598412456,
-          "c5_ins_relative_size_5d": -0.005184490695716927,
-          "c6_contrarian_intra_5d": 0.10782991794785957,
-          "c7_ceiling_count_5d": 0.015085877483393727,
-          "c8_vol_zscore_5d": -0.05970871083489763,
-          "c9_reversal_1d": 0.01897418036207487
-        },
-        "corr_with_s1": 0.19071428841484003,
-        "final_pass": true,
-        "gate_pass": true,
-        "max_abs_candidate_corr": 0.153732598412456,
-        "pct_years_positive": 0.9090909090909091,
-        "pos_years": 10,
-        "redundant_with": null,
-        "yearly": [
-          {
-            "ic": 0.05514197470142544,
-            "n": 51787,
-            "p_value": 3.603150557904621e-36,
-            "year": 2015
-          },
-          {
-            "ic": 0.0363835821750717,
-            "n": 57835,
-            "p_value": 2.085610611239569e-18,
-            "year": 2016
-          },
-          {
-            "ic": 0.03703105506039788,
-            "n": 64196,
-            "p_value": 6.257790828529695e-21,
-            "year": 2017
-          },
-          {
-            "ic": 0.04246391331140173,
-            "n": 69322,
-            "p_value": 4.8183230806966753e-29,
-            "year": 2018
-          },
-          {
-            "ic": 0.04459662928524481,
-            "n": 72926,
-            "p_value": 1.9625768602223075e-33,
-            "year": 2019
-          },
-          {
-            "ic": 0.029287285490022977,
-            "n": 78469,
-            "p_value": 2.2929491179303644e-16,
-            "year": 2020
-          },
-          {
-            "ic": 0.0052206666395329185,
-            "n": 85666,
-            "p_value": 0.12650950240620673,
-            "year": 2021
-          },
-          {
-            "ic": -0.000634800135318016,
-            "n": 87501,
-            "p_value": 0.8510531739983651,
-            "year": 2022
-          },
-          {
-            "ic": 0.05185577959078267,
-            "n": 84920,
-            "p_value": 1.1727251086721437e-51,
-            "year": 2023
-          },
-          {
-            "ic": 0.048522634818319865,
-            "n": 85919,
-            "p_value": 5.874823815782176e-46,
-            "year": 2024
-          },
-          {
-            "ic": 0.03574756136173047,
-            "n": 85861,
-            "p_value": 1.0906682612473321e-25,
-            "year": 2025
-          }
-        ],
-        "years": 11
+      {
+        "bucket_name": "follow",
+        "daily_hit_rate": 0.875,
+        "daily_rows": 8,
+        "feature_mean": 0.010093549975381585,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": 0.4643856434543275,
+        "nonzero_feature_rows": 18,
+        "positive_years": 1,
+        "row_count": 677,
+        "state_kind": "novelty",
+        "target_mean": 0.011875424575428926,
+        "years_present": 1
       },
-      "xs_compress_blowoff_3": {
-        "avg_ic": 0.0539591781270113,
-        "candidate_corrs": {},
-        "corr_with_s1": 0.34031944162265576,
-        "final_pass": false,
-        "gate_pass": false,
-        "max_abs_candidate_corr": null,
-        "pct_years_positive": 1.0,
-        "pos_years": 11,
-        "redundant_with": null,
-        "yearly": [
-          {
-            "ic": 0.08470017225200896,
-            "n": 51787,
-            "p_value": 4.490298873964683e-83,
-            "year": 2015
-          },
-          {
-            "ic": 0.06666483812064022,
-            "n": 57835,
-            "p_value": 5.746453943164675e-58,
-            "year": 2016
-          },
-          {
-            "ic": 0.06473089893490346,
-            "n": 64196,
-            "p_value": 1.4282927723192026e-60,
-            "year": 2017
-          },
-          {
-            "ic": 0.06546994790713648,
-            "n": 69330,
-            "p_value": 9.942406991825997e-67,
-            "year": 2018
-          },
-          {
-            "ic": 0.06341518449897898,
-            "n": 72926,
-            "p_value": 7.198547388214118e-66,
-            "year": 2019
-          },
-          {
-            "ic": 0.046085870031039235,
-            "n": 78473,
-            "p_value": 3.623191663286578e-38,
-            "year": 2020
-          },
-          {
-            "ic": 0.01453498481391545,
-            "n": 85670,
-            "p_value": 2.0954380250772604e-05,
-            "year": 2021
-          },
-          {
-            "ic": 0.0013612011108978077,
-            "n": 87501,
-            "p_value": 0.687209066274017,
-            "year": 2022
-          },
-          {
-            "ic": 0.06811559179053338,
-            "n": 84920,
-            "p_value": 7.057732129398964e-88,
-            "year": 2023
-          },
-          {
-            "ic": 0.0659662082183991,
-            "n": 85934,
-            "p_value": 1.7294469002953994e-83,
-            "year": 2024
-          },
-          {
-            "ic": 0.052506061718671365,
-            "n": 85878,
-            "p_value": 1.7072374555915005e-53,
-            "year": 2025
-          }
-        ],
-        "years": 11
+      {
+        "bucket_name": "flat__follow",
+        "daily_hit_rate": 0.5555555555555556,
+        "daily_rows": 9,
+        "feature_mean": 0.05243116578793204,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": 0.3325968068061249,
+        "nonzero_feature_rows": 57,
+        "positive_years": 1,
+        "row_count": 569,
+        "state_kind": "align_novel",
+        "target_mean": 0.012705170368500166,
+        "years_present": 1
+      },
+      {
+        "bucket_name": "miss__new",
+        "daily_hit_rate": 0.7272727272727273,
+        "daily_rows": 22,
+        "feature_mean": -0.04820198928844682,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": 0.32990264746990966,
+        "nonzero_feature_rows": 65,
+        "positive_years": 2,
+        "row_count": 1307,
+        "state_kind": "align_novel",
+        "target_mean": -0.0054756003725274964,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "miss",
+        "daily_hit_rate": 0.68,
+        "daily_rows": 25,
+        "feature_mean": -0.05358385525400139,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": 0.2974596984380398,
+        "nonzero_feature_rows": 83,
+        "positive_years": 2,
+        "row_count": 1437,
+        "state_kind": "alignment",
+        "target_mean": -0.0036136823667833906,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat__follow",
+        "daily_hit_rate": 0.6,
+        "daily_rows": 5,
+        "feature_mean": 0.013766842413591095,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": 0.2859316488715772,
+        "nonzero_feature_rows": 15,
+        "positive_years": 1,
+        "row_count": 569,
+        "state_kind": "align_novel",
+        "target_mean": 0.012705170368500166,
+        "years_present": 1
+      },
+      {
+        "bucket_name": "follow",
+        "daily_hit_rate": 0.6296296296296297,
+        "daily_rows": 27,
+        "feature_mean": 0.08298867552929592,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": 0.16181123860934457,
+        "nonzero_feature_rows": 96,
+        "positive_years": 1,
+        "row_count": 677,
+        "state_kind": "novelty",
+        "target_mean": 0.011875424575428926,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "miss__new",
+        "daily_hit_rate": 0.5283018867924528,
+        "daily_rows": 53,
+        "feature_mean": -0.02078551389951543,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": 0.1349646625107377,
+        "nonzero_feature_rows": 127,
+        "positive_years": 2,
+        "row_count": 1307,
+        "state_kind": "align_novel",
+        "target_mean": -0.0054756003725274964,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "miss__new",
+        "daily_hit_rate": 0.625,
+        "daily_rows": 8,
+        "feature_mean": -0.012165263963274674,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": 0.10741378677744053,
+        "nonzero_feature_rows": 20,
+        "positive_years": 1,
+        "row_count": 1307,
+        "state_kind": "align_novel",
+        "target_mean": -0.0054756003725274964,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "miss",
+        "daily_hit_rate": 0.5333333333333333,
+        "daily_rows": 60,
+        "feature_mean": -0.023010902342843895,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": 0.105941707938133,
+        "nonzero_feature_rows": 148,
+        "positive_years": 2,
+        "row_count": 1437,
+        "state_kind": "alignment",
+        "target_mean": -0.0036136823667833906,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat",
+        "daily_hit_rate": 0.7,
+        "daily_rows": 10,
+        "feature_mean": 6.298696799632156e-05,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": 0.03968526604971847,
+        "nonzero_feature_rows": 14,
+        "positive_years": 2,
+        "row_count": 158763,
+        "state_kind": "novelty",
+        "target_mean": 0.0003625640018057178,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat__flat",
+        "daily_hit_rate": 0.7142857142857143,
+        "daily_rows": 7,
+        "feature_mean": 3.781862188941835e-05,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": 0.0360552204740578,
+        "nonzero_feature_rows": 10,
+        "positive_years": 1,
+        "row_count": 158652,
+        "state_kind": "align_novel",
+        "target_mean": 0.0003500023169716275,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat",
+        "daily_hit_rate": 0.6571428571428571,
+        "daily_rows": 35,
+        "feature_mean": 0.00026664483118442794,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": 0.03359522813956794,
+        "nonzero_feature_rows": 66,
+        "positive_years": 2,
+        "row_count": 158763,
+        "state_kind": "novelty",
+        "target_mean": 0.0003625640018057178,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat__flat",
+        "daily_hit_rate": 0.6538461538461539,
+        "daily_rows": 26,
+        "feature_mean": 0.00019119414399650387,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": 0.026786189280094,
+        "nonzero_feature_rows": 50,
+        "positive_years": 2,
+        "row_count": 158652,
+        "state_kind": "align_novel",
+        "target_mean": 0.0003500023169716275,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "miss",
+        "daily_hit_rate": 0.5,
+        "daily_rows": 12,
+        "feature_mean": -0.011760612386917188,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": 0.01919089850736319,
+        "nonzero_feature_rows": 23,
+        "positive_years": 1,
+        "row_count": 1437,
+        "state_kind": "alignment",
+        "target_mean": -0.0036136823667833906,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat",
+        "daily_hit_rate": 0.5894039735099338,
+        "daily_rows": 151,
+        "feature_mean": 0.002246634235533567,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": 0.007987786407085114,
+        "nonzero_feature_rows": 733,
+        "positive_years": 1,
+        "row_count": 169179,
+        "state_kind": "authority",
+        "target_mean": 0.00033492660250792716,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat",
+        "daily_hit_rate": 0.5,
+        "daily_rows": 46,
+        "feature_mean": 0.0004497209070471709,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": 0.007811873955820758,
+        "nonzero_feature_rows": 174,
+        "positive_years": 1,
+        "row_count": 169179,
+        "state_kind": "authority",
+        "target_mean": 0.00033492660250792716,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat__new",
+        "daily_hit_rate": 0.4444444444444444,
+        "daily_rows": 36,
+        "feature_mean": 0.004751830210222311,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": 0.005383676640236704,
+        "nonzero_feature_rows": 107,
+        "positive_years": 1,
+        "row_count": 9926,
+        "state_kind": "align_novel",
+        "target_mean": -0.00016555512000583644,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat",
+        "daily_hit_rate": 0.4878048780487805,
+        "daily_rows": 41,
+        "feature_mean": 0.0003606330588186607,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": 0.003602902481211337,
+        "nonzero_feature_rows": 132,
+        "positive_years": 1,
+        "row_count": 169147,
+        "state_kind": "alignment",
+        "target_mean": 0.00036131004044222666,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "new",
+        "daily_hit_rate": 0.47058823529411764,
+        "daily_rows": 51,
+        "feature_mean": 0.006943588162762021,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": 0.0008921123266390266,
+        "nonzero_feature_rows": 199,
+        "positive_years": 1,
+        "row_count": 12976,
+        "state_kind": "novelty",
+        "target_mean": -0.0007330709022043655,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat",
+        "daily_hit_rate": 0.5147058823529411,
+        "daily_rows": 136,
+        "feature_mean": 0.0017805025608888523,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": 8.873293409085926e-05,
+        "nonzero_feature_rows": 560,
+        "positive_years": 1,
+        "row_count": 169147,
+        "state_kind": "alignment",
+        "target_mean": 0.00036131004044222666,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "official",
+        "daily_hit_rate": 0.484375,
+        "daily_rows": 128,
+        "feature_mean": 0.07485564304461942,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": -0.0027156451393572575,
+        "nonzero_feature_rows": 281,
+        "positive_years": 1,
+        "row_count": 3175,
+        "state_kind": "authority",
+        "target_mean": 1.6798817209184282e-05,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "beat",
+        "daily_hit_rate": 0.4230769230769231,
+        "daily_rows": 26,
+        "feature_mean": 0.03429767103347889,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": -0.0027352012474972207,
+        "nonzero_feature_rows": 76,
+        "positive_years": 1,
+        "row_count": 1832,
+        "state_kind": "alignment",
+        "target_mean": 9.139474870590039e-05,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "beat",
+        "daily_hit_rate": 0.46938775510204084,
+        "daily_rows": 98,
+        "feature_mean": 0.23699053857350802,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": -0.005412248938602326,
+        "nonzero_feature_rows": 369,
+        "positive_years": 0,
+        "row_count": 1832,
+        "state_kind": "alignment",
+        "target_mean": 9.139474870590039e-05,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat__follow",
+        "daily_hit_rate": 0.4666666666666667,
+        "daily_rows": 15,
+        "feature_mean": 0.10559461042765084,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": -0.006175403747719454,
+        "nonzero_feature_rows": 70,
+        "positive_years": 1,
+        "row_count": 569,
+        "state_kind": "align_novel",
+        "target_mean": 0.012705170368500166,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat",
+        "daily_hit_rate": 0.4329608938547486,
+        "daily_rows": 358,
+        "feature_mean": 0.01736228097655934,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": -0.011154289682996803,
+        "nonzero_feature_rows": 3970,
+        "positive_years": 0,
+        "row_count": 169179,
+        "state_kind": "authority",
+        "target_mean": 0.00033492660250792716,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "new",
+        "daily_hit_rate": 0.4885057471264368,
+        "daily_rows": 174,
+        "feature_mean": 0.03625924784217016,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": -0.013112444726192057,
+        "nonzero_feature_rows": 787,
+        "positive_years": 1,
+        "row_count": 12976,
+        "state_kind": "novelty",
+        "target_mean": -0.0007330709022043655,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "new",
+        "daily_hit_rate": 0.4664429530201342,
+        "daily_rows": 298,
+        "feature_mean": 0.08146449856144679,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": -0.013626838533834049,
+        "nonzero_feature_rows": 1350,
+        "positive_years": 1,
+        "row_count": 12976,
+        "state_kind": "novelty",
+        "target_mean": -0.0007330709022043655,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat",
+        "daily_hit_rate": 0.3707165109034268,
+        "daily_rows": 321,
+        "feature_mean": 0.013194090142749464,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": -0.013731330378876878,
+        "nonzero_feature_rows": 2823,
+        "positive_years": 0,
+        "row_count": 158763,
+        "state_kind": "novelty",
+        "target_mean": 0.0003625640018057178,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat",
+        "daily_hit_rate": 0.4045584045584046,
+        "daily_rows": 351,
+        "feature_mean": 0.01659444152128031,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": -0.01427358482837506,
+        "nonzero_feature_rows": 3752,
+        "positive_years": 0,
+        "row_count": 169147,
+        "state_kind": "alignment",
+        "target_mean": 0.00036131004044222666,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat__flat",
+        "daily_hit_rate": 0.3742138364779874,
+        "daily_rows": 318,
+        "feature_mean": 0.013083562346099219,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": -0.014548125692930904,
+        "nonzero_feature_rows": 2805,
+        "positive_years": 0,
+        "row_count": 158652,
+        "state_kind": "align_novel",
+        "target_mean": 0.0003500023169716275,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "beat__new",
+        "daily_hit_rate": 0.34615384615384615,
+        "daily_rows": 26,
+        "feature_mean": 0.0337540638745458,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": -0.015750387553296646,
+        "nonzero_feature_rows": 72,
+        "positive_years": 0,
+        "row_count": 1743,
+        "state_kind": "align_novel",
+        "target_mean": -0.00040873104930147747,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat__new",
+        "daily_hit_rate": 0.4053030303030303,
+        "daily_rows": 264,
+        "feature_mean": 0.06760863724897576,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": -0.02034759406931585,
+        "nonzero_feature_rows": 877,
+        "positive_years": 1,
+        "row_count": 9926,
+        "state_kind": "align_novel",
+        "target_mean": -0.00016555512000583644,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "flat__new",
+        "daily_hit_rate": 0.4435483870967742,
+        "daily_rows": 124,
+        "feature_mean": 0.024279669554704817,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": -0.022578942641956746,
+        "nonzero_feature_rows": 453,
+        "positive_years": 1,
+        "row_count": 9926,
+        "state_kind": "align_novel",
+        "target_mean": -0.00016555512000583644,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "beat",
+        "daily_hit_rate": 0.45901639344262296,
+        "daily_rows": 61,
+        "feature_mean": 0.16948689956331878,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": -0.025860654463243322,
+        "nonzero_feature_rows": 285,
+        "positive_years": 0,
+        "row_count": 1832,
+        "state_kind": "alignment",
+        "target_mean": 9.139474870590039e-05,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "beat__new",
+        "daily_hit_rate": 0.43157894736842106,
+        "daily_rows": 95,
+        "feature_mean": 0.23704341174220694,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": -0.029006075750432354,
+        "nonzero_feature_rows": 346,
+        "positive_years": 0,
+        "row_count": 1743,
+        "state_kind": "align_novel",
+        "target_mean": -0.00040873104930147747,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "official",
+        "daily_hit_rate": 0.4264705882352941,
+        "daily_rows": 68,
+        "feature_mean": 0.04627296587926509,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": -0.03877343278313936,
+        "nonzero_feature_rows": 186,
+        "positive_years": 1,
+        "row_count": 3175,
+        "state_kind": "authority",
+        "target_mean": 1.6798817209184282e-05,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "official",
+        "daily_hit_rate": 0.3333333333333333,
+        "daily_rows": 21,
+        "feature_mean": 0.009139107611548555,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": -0.0492784586691586,
+        "nonzero_feature_rows": 52,
+        "positive_years": 1,
+        "row_count": 3175,
+        "state_kind": "authority",
+        "target_mean": 1.6798817209184282e-05,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "beat__new",
+        "daily_hit_rate": 0.43859649122807015,
+        "daily_rows": 57,
+        "feature_mean": 0.16781411359724613,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": -0.05190485377905089,
+        "nonzero_feature_rows": 269,
+        "positive_years": 0,
+        "row_count": 1743,
+        "state_kind": "align_novel",
+        "target_mean": -0.00040873104930147747,
+        "years_present": 2
+      },
+      {
+        "bucket_name": "rumor",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": 0.029569892473118278,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": null,
+        "nonzero_feature_rows": 5,
+        "positive_years": 0,
+        "row_count": 62,
+        "state_kind": "authority",
+        "target_mean": -0.010109691952984156,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "beat__flat",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": 0.09090909090909091,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": null,
+        "nonzero_feature_rows": 3,
+        "positive_years": 0,
+        "row_count": 33,
+        "state_kind": "align_novel",
+        "target_mean": 0.017255179420164028,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "beat__follow",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": 0.017857142857142856,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": null,
+        "nonzero_feature_rows": 1,
+        "positive_years": 0,
+        "row_count": 56,
+        "state_kind": "align_novel",
+        "target_mean": 0.005543437101719124,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "miss__flat",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": 0.01282051282051282,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": null,
+        "nonzero_feature_rows": 1,
+        "positive_years": 0,
+        "row_count": 78,
+        "state_kind": "align_novel",
+        "target_mean": 0.0187661552004255,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "miss__follow",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": -0.038461538461538464,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": null,
+        "nonzero_feature_rows": 2,
+        "positive_years": 0,
+        "row_count": 52,
+        "state_kind": "align_novel",
+        "target_mean": 0.009615154234471466,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "rumor",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": 0.12365591397849461,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": null,
+        "nonzero_feature_rows": 9,
+        "positive_years": 0,
+        "row_count": 62,
+        "state_kind": "authority",
+        "target_mean": -0.010109691952984156,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "beat__flat",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": 0.3939393939393939,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": null,
+        "nonzero_feature_rows": 11,
+        "positive_years": 0,
+        "row_count": 33,
+        "state_kind": "align_novel",
+        "target_mean": 0.017255179420164028,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "beat__follow",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": 0.08928571428571429,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": null,
+        "nonzero_feature_rows": 5,
+        "positive_years": 0,
+        "row_count": 56,
+        "state_kind": "align_novel",
+        "target_mean": 0.005543437101719124,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "miss__flat",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": -0.01282051282051282,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": null,
+        "nonzero_feature_rows": 5,
+        "positive_years": 0,
+        "row_count": 78,
+        "state_kind": "align_novel",
+        "target_mean": 0.0187661552004255,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "miss__follow",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": -0.25,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": null,
+        "nonzero_feature_rows": 13,
+        "positive_years": 0,
+        "row_count": 52,
+        "state_kind": "align_novel",
+        "target_mean": 0.009615154234471466,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "rumor",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": 0.5322580645161291,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": null,
+        "nonzero_feature_rows": 18,
+        "positive_years": 0,
+        "row_count": 62,
+        "state_kind": "authority",
+        "target_mean": -0.010109691952984156,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "beat__flat",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": 0.3939393939393939,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": null,
+        "nonzero_feature_rows": 11,
+        "positive_years": 0,
+        "row_count": 33,
+        "state_kind": "align_novel",
+        "target_mean": 0.017255179420164028,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "beat__follow",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": 0.14285714285714285,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": null,
+        "nonzero_feature_rows": 12,
+        "positive_years": 0,
+        "row_count": 56,
+        "state_kind": "align_novel",
+        "target_mean": 0.005543437101719124,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "miss__flat",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": 0.07692307692307693,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": null,
+        "nonzero_feature_rows": 7,
+        "positive_years": 0,
+        "row_count": 78,
+        "state_kind": "align_novel",
+        "target_mean": 0.0187661552004255,
+        "years_present": 0
+      },
+      {
+        "bucket_name": "miss__follow",
+        "daily_hit_rate": null,
+        "daily_rows": 0,
+        "feature_mean": -0.22884615384615387,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": null,
+        "nonzero_feature_rows": 14,
+        "positive_years": 0,
+        "row_count": 52,
+        "state_kind": "align_novel",
+        "target_mean": 0.009615154234471466,
+        "years_present": 0
       }
+    ],
+    "mixed_condition": true,
+    "nonzero_window_rows": 4308,
+    "opposite_stats": {
+      "opposite_bucket": "new",
+      "opposite_daily_hit_rate": 0.4885057471264368,
+      "opposite_mean_ic": -0.013112444726192057,
+      "opposite_positive_years": 1
     },
-    "final_passing_features": [
-      "xs_compress_blowoff_2"
+    "overall_feature_basket": [
+      {
+        "daily_hit_rate": 0.5272727272727272,
+        "daily_rows": 55,
+        "feature_name": "llm_sentiment_conf_weighted",
+        "mean_ic": 0.002361374658409491,
+        "positive_years": 1,
+        "years_present": 2
+      },
+      {
+        "daily_hit_rate": 0.4945054945054945,
+        "daily_rows": 182,
+        "feature_name": "llm_sentiment_5d",
+        "mean_ic": 3.1408573738621494e-05,
+        "positive_years": 1,
+        "years_present": 2
+      },
+      {
+        "daily_hit_rate": 0.4301675977653631,
+        "daily_rows": 358,
+        "feature_name": "llm_sentiment_30d",
+        "mean_ic": -0.012106635405359301,
+        "positive_years": 0,
+        "years_present": 2
+      }
     ],
-    "primary_feature": "xs_compress_blowoff_2",
-    "reason": "Compression blow-off reversal passes: xs_compress_blowoff_2",
-    "standalone_passing_features": [
-      "xs_compress_blowoff_2"
-    ],
-    "verdict": "PASS"
+    "panel_dates": 744,
+    "panel_rows": 172416,
+    "pass_condition": true,
+    "sign_flip": true,
+    "verdict": "PASS",
+    "window_years": [
+      2015,
+      2016,
+      2017
+    ]
   },
-  "ts": "20260328_125618"
+  "ts": "20260405_231037"
 }

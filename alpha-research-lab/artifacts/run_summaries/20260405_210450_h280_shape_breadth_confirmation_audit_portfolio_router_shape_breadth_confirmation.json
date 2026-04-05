@@ -1,0 +1,71 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260405_210450_h280_shape_breadth_confirmation_summary.json",
+    "panel": "artifacts/portfolio_baselines/20260405_210450_h280_shape_breadth_confirmation_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260405_210450_h280_shape_breadth_confirmation_results.parquet"
+  },
+  "metadata": {
+    "confirmation_start_year": 2025,
+    "session": 109,
+    "source_summary": "artifacts/run_summaries/latest_portfolio_router_shape_breadth.json",
+    "validation_end_year": 2024
+  },
+  "mode": "portfolio_router_shape_breadth_confirmation",
+  "name": "h280_shape_breadth_confirmation_audit",
+  "summary": {
+    "best_confirmation_row": {
+      "breadth_gap": -0.55,
+      "future_hold_advantage": -0.020048830317887623,
+      "router_gate": false,
+      "shape_score": 0.3568507157464212
+    },
+    "breadth_gap_min": 0.0,
+    "confirmation": {
+      "baseline": {
+        "count": 78074.0,
+        "group": "all_rows",
+        "mean_adv": -0.0028278689166011182,
+        "positive_rate": 0.41487563081179396,
+        "split": "confirmation"
+      },
+      "lift_over_baseline": -0.001987728002352224,
+      "lift_over_shape_only": -0.0010698297405777762,
+      "router": {
+        "count": 3957.0,
+        "group": "router_gate",
+        "mean_adv": -0.004815596918953342,
+        "positive_rate": 0.4013141268637857,
+        "split": "confirmation"
+      },
+      "shape_only": {
+        "count": 8140.0,
+        "group": "shape_only",
+        "mean_adv": -0.003745767178375566,
+        "positive_rate": 0.41793611793611796,
+        "split": "confirmation"
+      }
+    },
+    "confirmation_start_year": 2025,
+    "shape_threshold": 0.020657276995305153,
+    "validation": {
+      "baseline": {
+        "count": 179307.0,
+        "group": "all_rows",
+        "mean_adv": 0.00163054819251302,
+        "positive_rate": 0.46756122181509924,
+        "split": "validation"
+      },
+      "lift_over_baseline": 0.0009617154663018746,
+      "router": {
+        "count": 9399.0,
+        "group": "router_gate",
+        "mean_adv": 0.0025922636588148946,
+        "positive_rate": 0.49366953931269286,
+        "split": "validation"
+      }
+    },
+    "validation_end_year": 2024,
+    "verdict": "FAILED"
+  },
+  "ts": "20260405_210450"
+}

@@ -1,0 +1,246 @@
+{
+  "artifacts": {
+    "details_json": "artifacts/run_summaries/20260405_230116_h289_marginal_slot_label_audit_details.json"
+  },
+  "metadata": {
+    "signal": "H289"
+  },
+  "mode": "standalone_signal",
+  "name": "h289_marginal_slot_label_audit",
+  "summary": {
+    "best_feature": "selection_score_gap_to_next_candidate",
+    "best_metrics": {
+      "daily_rows": 1388,
+      "mean_ic": 0.00902647582985747,
+      "p_value_mean": 0.5089271837254656,
+      "positive_years": 5,
+      "quintile_table": [
+        {
+          "feature_mean": 0.00039003285206380087,
+          "label_mean": 0.03000076180615998,
+          "n": 5526,
+          "quintile": 1,
+          "winner": "positive"
+        },
+        {
+          "feature_mean": 0.0013231438051810095,
+          "label_mean": 0.02902459324531299,
+          "n": 5525,
+          "quintile": 2,
+          "winner": "positive"
+        },
+        {
+          "feature_mean": 0.0026549339426482268,
+          "label_mean": 0.029327465746784777,
+          "n": 5526,
+          "quintile": 3,
+          "winner": "positive"
+        },
+        {
+          "feature_mean": 0.005112249424076102,
+          "label_mean": 0.03143967789297131,
+          "n": 5525,
+          "quintile": 4,
+          "winner": "positive"
+        },
+        {
+          "feature_mean": 0.017689642795005074,
+          "label_mean": 0.03431593792592515,
+          "n": 5526,
+          "quintile": 5,
+          "winner": "positive"
+        }
+      ],
+      "years_present": 7
+    },
+    "best_q1_mean": 0.03000076180615998,
+    "best_q5_mean": 0.03431593792592515,
+    "feature_results": {
+      "selection_rank": {
+        "daily_rows": 1388,
+        "mean_ic": -0.0017274863711034846,
+        "p_value_mean": 0.5067631881250737,
+        "positive_years": 3,
+        "quintile_table": [
+          {
+            "feature_mean": 2.502352515381831,
+            "label_mean": 0.03182536453425536,
+            "n": 5526,
+            "quintile": 1,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 6.507873303167421,
+            "label_mean": 0.03159169273547834,
+            "n": 5525,
+            "quintile": 2,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 10.509771986970684,
+            "label_mean": 0.030979404117186398,
+            "n": 5526,
+            "quintile": 3,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 14.507149321266969,
+            "label_mean": 0.03012490687080089,
+            "n": 5525,
+            "quintile": 4,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 18.500904813608397,
+            "label_mean": 0.02958729498420122,
+            "n": 5526,
+            "quintile": 5,
+            "winner": "positive"
+          }
+        ],
+        "years_present": 7
+      },
+      "selection_score": {
+        "daily_rows": 1388,
+        "mean_ic": 0.0017274863711034846,
+        "p_value_mean": 0.5067631881250737,
+        "positive_years": 4,
+        "quintile_table": [
+          {
+            "feature_mean": 0.5899442719865687,
+            "label_mean": 0.027893444269487682,
+            "n": 5526,
+            "quintile": 1,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 0.604477621898551,
+            "label_mean": 0.0316588091429041,
+            "n": 5525,
+            "quintile": 2,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 0.6171649236650381,
+            "label_mean": 0.02868363497035026,
+            "n": 5526,
+            "quintile": 3,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 0.6346691572037735,
+            "label_mean": 0.03035070779124867,
+            "n": 5525,
+            "quintile": 4,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 0.6742693568864762,
+            "label_mean": 0.035522120075048375,
+            "n": 5526,
+            "quintile": 5,
+            "winner": "positive"
+          }
+        ],
+        "years_present": 7
+      },
+      "selection_score_gap_to_next_candidate": {
+        "daily_rows": 1388,
+        "mean_ic": 0.00902647582985747,
+        "p_value_mean": 0.5089271837254656,
+        "positive_years": 5,
+        "quintile_table": [
+          {
+            "feature_mean": 0.00039003285206380087,
+            "label_mean": 0.03000076180615998,
+            "n": 5526,
+            "quintile": 1,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 0.0013231438051810095,
+            "label_mean": 0.02902459324531299,
+            "n": 5525,
+            "quintile": 2,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 0.0026549339426482268,
+            "label_mean": 0.029327465746784777,
+            "n": 5526,
+            "quintile": 3,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 0.005112249424076102,
+            "label_mean": 0.03143967789297131,
+            "n": 5525,
+            "quintile": 4,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 0.017689642795005074,
+            "label_mean": 0.03431593792592515,
+            "n": 5526,
+            "quintile": 5,
+            "winner": "positive"
+          }
+        ],
+        "years_present": 7
+      },
+      "selection_score_gap_to_top_k_cutoff": {
+        "daily_rows": 1388,
+        "mean_ic": 0.0017274863711034846,
+        "p_value_mean": 0.5067631881250737,
+        "positive_years": 4,
+        "quintile_table": [
+          {
+            "feature_mean": -0.046148426188794466,
+            "label_mean": 0.03167186748997805,
+            "n": 5526,
+            "quintile": 1,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": -0.029530567092544317,
+            "label_mean": 0.03131373753587732,
+            "n": 5525,
+            "quintile": 2,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": -0.016894061108755146,
+            "label_mean": 0.03064460811185169,
+            "n": 5526,
+            "quintile": 3,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": -0.001659181068665686,
+            "label_mean": 0.02797902004794237,
+            "n": 5525,
+            "quintile": 4,
+            "winner": "positive"
+          },
+          {
+            "feature_mean": 0.03456652298949286,
+            "label_mean": 0.032498991431223465,
+            "n": 5526,
+            "quintile": 5,
+            "winner": "positive"
+          }
+        ],
+        "years_present": 7
+      }
+    },
+    "label_mean": 0.03082173000127609,
+    "label_positive_rate": 0.6225568264079919,
+    "mixed_condition": true,
+    "monotone": true,
+    "panel_dates": 1388,
+    "panel_rows": 27628,
+    "pass_condition": false,
+    "verdict": "MIXED"
+  },
+  "ts": "20260405_230116"
+}
