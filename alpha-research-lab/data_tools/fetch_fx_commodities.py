@@ -204,11 +204,14 @@ def fetch_ticker(
     alias_map: dict,
     *,
     overwrite: bool = False,
-    probe_cache: dict[str, dict[str, object]],
-    probe_cache_ttl_hours: float,
+    probe_cache: dict[str, dict[str, object]] | None = None,
+    probe_cache_ttl_hours: float = 24.0,
     rate_limit_retries: int = 1,
     rate_limit_backoff_seconds: float = 30.0,
 ) -> tuple[str, dict[str, object] | None]:
+    return_details = probe_cache is not None
+    if probe_cache is None:
+        probe_cache = load_probe_cache(probe_cache_path(interval)) if probe_cache_ttl_hours > 0 else {}
     alias = _alias_for_ticker(ticker, alias_map)
     file_path = OUT_DIR / f"fx_commodities_{alias}_{interval}.parquet"
     existing = load_existing_frame(file_path)
@@ -236,10 +239,14 @@ def fetch_ticker(
                 eligible_statuses=PROBE_CACHE_STATUS_SKIP_ELIGIBLE,
             ):
                 print(f"⏭️  {ticker} ({alias}): {format_probe_cache_skip_message(probe_cache[alias])}")
-                return FETCH_STATUS_SKIPPED, None
+                if return_details:
+                    return FETCH_STATUS_SKIPPED, None
+                return True
         if plan.mode == "skip":
             print(f"⏭️  {ticker} ({alias}): {plan.message}")
-            return FETCH_STATUS_SKIPPED, None
+            if return_details:
+                return FETCH_STATUS_SKIPPED, None
+            return True
 
         print(f"📥 Fetching {ticker} ({alias}, {plan.message})...", end=" ", flush=True)
         df, rate_limited = _download_with_rate_limit_retry(
@@ -252,22 +259,30 @@ def fetch_ticker(
             rate_limit_backoff_seconds=rate_limit_backoff_seconds,
         )
         if rate_limited:
-            return FETCH_STATUS_RATE_LIMITED, None
+            if return_details:
+                return FETCH_STATUS_RATE_LIMITED, None
+            return False
         df = _normalize_yf_df(df)
         if df.empty:
             if existing is not None:
-                if current_tail_covers_end:
+                if current_tail_covers_end or plan.mode != "incremental":
                     print("⏭️  No new data returned, keeping existing file")
-                    return FETCH_STATUS_SKIPPED, build_probe_cache_entry(
-                        status="unchanged",
-                        checked_end=end,
-                        path=file_path,
-                        latest_value=plan.existing_last_time,
-                    )
+                    if return_details:
+                        return FETCH_STATUS_SKIPPED, build_probe_cache_entry(
+                            status="unchanged",
+                            checked_end=end,
+                            path=file_path,
+                            latest_value=plan.existing_last_time,
+                        )
+                    return True
                 print("⚠️  No new data returned; existing file is still behind requested end, so probe cache remains retryable")
-                return FETCH_STATUS_RETRYABLE, None
+                if return_details:
+                    return FETCH_STATUS_RETRYABLE, None
+                return False
             print("❌ No data returned")
-            return FETCH_STATUS_FAILED, None
+            if return_details:
+                return FETCH_STATUS_FAILED, None
+            return False
         df["ticker"] = ticker.upper()
         df["alias"] = alias
         base = existing if plan.mode == "incremental" else None
@@ -298,10 +313,14 @@ def fetch_ticker(
                 print(f"✅ Refreshed overlap window (latest {latest_time})")
         else:
             print(f"✅ Saved ({len(combined)} rows)")
-        return FETCH_STATUS_FETCHED, cache_entry
+        if return_details:
+            return FETCH_STATUS_FETCHED, cache_entry
+        return True
     except Exception as e:
         print(f"❌ Error: {e}")
-        return FETCH_STATUS_FAILED, None
+        if return_details:
+            return FETCH_STATUS_FAILED, None
+        return False
 
 
 def main():

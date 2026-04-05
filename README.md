@@ -37,6 +37,8 @@ Shared `data/` currently contains both raw inputs and processed research outputs
 
 This means the root data directory is the canonical dataset surface for the whole ecosystem.
 
+`data/llm_cache/` is the per-day CafeF LLM extraction cache: one JSON object per filtered article, used as the input to `alpha-research-lab/data_tools/build_llm_news_features.py`.
+
 ## Workflow
 
 1. Research and feature generation happen in `alpha-research-lab/`

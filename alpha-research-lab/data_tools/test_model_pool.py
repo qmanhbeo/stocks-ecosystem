@@ -30,6 +30,8 @@ from extract_llm_news_features import (
 )
 from path_utils import data_path
 
+__test__ = False
+
 RAW_DIR = data_path("news/cafef/raw")
 CACHE_DIR = data_path("llm_cache")
 
@@ -53,6 +55,8 @@ SCHEMA_FIELDS = [
     "tickers", "related_tickers", "sentiment", "confidence", "event_type",
     "magnitude", "is_forward_looking", "market_tone", "is_rumor",
     "surprise_direction", "impact_scope", "named_persons",
+    "expectation_alignment", "information_novelty", "macro_theme",
+    "source_authority", "causal_impact_label",
 ]
 
 

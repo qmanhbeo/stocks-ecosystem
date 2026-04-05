@@ -31,6 +31,116 @@ OUT_MARKET = FEATURE_DIR / "xs_llm_news_market_daily.parquet"
 
 EARNINGS_TYPES = {"earnings_beat", "earnings_miss", "earnings_neutral"}
 MACRO_TYPES = {"rate_change", "fx_move", "macro_indicator", "policy_positive", "policy_negative"}
+EVENT_TYPES = {
+    "earnings_beat", "earnings_miss", "earnings_neutral", "revenue_growth",
+    "revenue_decline", "guidance_raise", "guidance_cut", "dividend_announce",
+    "debt_issue", "debt_concern", "rights_issue", "buyback", "merger_acquisition",
+    "divestiture", "ipo_listing", "management_change", "insider_buy", "insider_sell",
+    "contract_win", "contract_loss", "partnership", "expansion", "legal_issue",
+    "regulatory_approval", "regulatory_block", "policy_positive", "policy_negative",
+    "rate_change", "fx_move", "commodity_price", "macro_indicator",
+    "index_inclusion", "index_exclusion", "other", "no_event",
+}
+EXPECTATION_ALIGNMENTS = {"beats", "meets", "misses", "not_applicable"}
+INFORMATION_NOVELTIES = {"new", "follow_up", "recycled", "unclear"}
+MACRO_THEMES = {
+    "rates", "fx", "liquidity", "credit", "real_estate", "banking",
+    "exports", "commodities", "energy", "public_investment", "regulation",
+    "geopolitics", "consumption", "technology", "industrials", "none",
+}
+SOURCE_AUTHORITIES = {"official", "management", "media_report", "analyst", "rumor_source", "unclear"}
+CAUSAL_IMPACT_LABELS = {
+    "revenue_positive", "revenue_negative", "cost_positive", "cost_negative",
+    "financing_positive", "financing_negative", "regulatory_positive",
+    "regulatory_negative", "sentiment_only", "mixed", "none",
+}
+VN_MARKET_OPEN_MINUTE = 9 * 60
+VN_MARKET_CLOSE_MINUTE = 14 * 60 + 45
+
+LIST_COLUMNS = ["tickers", "related_tickers", "named_persons"]
+ENUM_COLUMNS = [
+    "event_type",
+    "impact_scope",
+    "expectation_alignment",
+    "information_novelty",
+    "macro_theme",
+    "source_authority",
+    "causal_impact_label",
+    "event_time_type",
+]
+BOOL_COLUMNS = ["is_forward_looking", "is_rumor", "article_has_numbers", "article_mentions_percent"]
+NUMERIC_COLUMNS = ["sentiment", "confidence", "magnitude", "market_tone", "surprise_direction", "article_text_length"]
+TEXT_COLUMNS = ["published_at", "source_domain", "id", "llm_error"]
+
+
+def _normalize_enum_series(series: pd.Series, allowed: set[str]) -> pd.Series:
+    values = series.astype("string").str.strip().str.lower()
+    return values.where(values.isin(allowed))
+
+
+def _normalize_bool_series(series: pd.Series) -> pd.Series:
+    return series.map({True: 1.0, False: 0.0}).astype("float64")
+
+
+def _parse_event_time_type(value: object) -> str:
+    ts = pd.to_datetime(value, errors="coerce")
+    if pd.isna(ts):
+        return "unknown"
+    if getattr(ts, "tzinfo", None) is not None:
+        ts = ts.tz_convert("Asia/Ho_Chi_Minh")
+    else:
+        ts = ts.tz_localize("Asia/Ho_Chi_Minh")
+    minute_of_day = ts.hour * 60 + ts.minute
+    if minute_of_day < VN_MARKET_OPEN_MINUTE:
+        return "pre_market"
+    if minute_of_day <= VN_MARKET_CLOSE_MINUTE:
+        return "intraday"
+    return "post_market"
+
+
+def _ensure_cache_schema(df: pd.DataFrame) -> pd.DataFrame:
+    out = df.copy()
+    for column in LIST_COLUMNS:
+        if column not in out.columns:
+            out[column] = [[] for _ in range(len(out))]
+        else:
+            out[column] = out[column].map(lambda value: value if isinstance(value, list) else [])
+    for column in TEXT_COLUMNS:
+        if column not in out.columns:
+            out[column] = None
+    for column in ENUM_COLUMNS:
+        if column not in out.columns:
+            out[column] = None
+    for column in BOOL_COLUMNS:
+        if column not in out.columns:
+            out[column] = np.nan
+    for column in NUMERIC_COLUMNS:
+        if column not in out.columns:
+            out[column] = np.nan
+    if "time" in out.columns:
+        out["time"] = pd.to_datetime(out["time"], errors="coerce")
+    for column in NUMERIC_COLUMNS:
+        out[column] = pd.to_numeric(out[column], errors="coerce")
+    for column in BOOL_COLUMNS:
+        out[column] = _normalize_bool_series(out[column])
+    out["event_type"] = _normalize_enum_series(out["event_type"], EVENT_TYPES)
+    out["impact_scope"] = _normalize_enum_series(out["impact_scope"], {"stock", "sector", "market"})
+    out["expectation_alignment"] = _normalize_enum_series(out["expectation_alignment"], EXPECTATION_ALIGNMENTS)
+    out["information_novelty"] = _normalize_enum_series(out["information_novelty"], INFORMATION_NOVELTIES)
+    out["macro_theme"] = _normalize_enum_series(out["macro_theme"], MACRO_THEMES)
+    out["source_authority"] = _normalize_enum_series(out["source_authority"], SOURCE_AUTHORITIES)
+    out["causal_impact_label"] = _normalize_enum_series(out["causal_impact_label"], CAUSAL_IMPACT_LABELS)
+    if "event_time_type" in out.columns:
+        out["event_time_type"] = _normalize_enum_series(out["event_time_type"], {"pre_market", "intraday", "post_market", "unknown"})
+        out["event_time_type"] = out["event_time_type"].where(
+            out["event_time_type"].notna(),
+            out["published_at"].map(_parse_event_time_type),
+        )
+    else:
+        out["event_time_type"] = out["published_at"].map(_parse_event_time_type)
+    if "source_domain" in out.columns:
+        out["source_domain"] = out["source_domain"].astype("string").str.strip().str.lower().replace({"nan": pd.NA, "none": pd.NA})
+    return out
 
 
 def _load_llm_cache(date_from: str, date_to: str) -> pd.DataFrame:
@@ -68,6 +178,17 @@ def _load_llm_cache(date_from: str, date_to: str) -> pd.DataFrame:
                         "surprise_direction": obj.get("surprise_direction"),
                         "impact_scope": obj.get("impact_scope"),
                         "named_persons": obj.get("named_persons") if isinstance(obj.get("named_persons"), list) else [],
+                        "expectation_alignment": obj.get("expectation_alignment"),
+                        "information_novelty": obj.get("information_novelty"),
+                        "macro_theme": obj.get("macro_theme"),
+                        "source_authority": obj.get("source_authority"),
+                        "causal_impact_label": obj.get("causal_impact_label"),
+                        "published_at": obj.get("published_at"),
+                        "source_domain": obj.get("source_domain"),
+                        "event_time_type": obj.get("event_time_type"),
+                        "article_text_length": obj.get("article_text_length"),
+                        "article_has_numbers": obj.get("article_has_numbers"),
+                        "article_mentions_percent": obj.get("article_mentions_percent"),
                     }
                 )
 
@@ -76,17 +197,13 @@ def _load_llm_cache(date_from: str, date_to: str) -> pd.DataFrame:
             "time", "id", "tickers", "related_tickers", "sentiment", "confidence",
             "event_type", "magnitude", "is_forward_looking", "market_tone",
             "is_rumor", "surprise_direction", "impact_scope", "named_persons",
+            "expectation_alignment", "information_novelty", "macro_theme",
+            "source_authority", "causal_impact_label", "published_at",
+            "source_domain", "event_time_type", "article_text_length",
+            "article_has_numbers", "article_mentions_percent",
         ])
 
-    df = pd.DataFrame(rows)
-
-    for c in ["sentiment", "confidence", "magnitude", "market_tone", "surprise_direction"]:
-        df[c] = pd.to_numeric(df[c], errors="coerce")
-    df["is_forward_looking"] = df["is_forward_looking"].map({True: 1.0, False: 0.0})
-    df["is_rumor"] = df["is_rumor"].map({True: 1.0, False: 0.0})
-    df["event_type"] = df["event_type"].astype(str).str.strip().str.lower().replace({"none": np.nan, "nan": np.nan, "": np.nan})
-    df["impact_scope"] = df["impact_scope"].astype(str).str.strip().str.lower().replace({"none": np.nan, "nan": np.nan, "": np.nan})
-    return df
+    return _ensure_cache_schema(pd.DataFrame(rows))
 
 
 def _load_grid() -> pd.DataFrame:
@@ -105,6 +222,11 @@ def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
         "llm_surprise_5d", "llm_is_rumor_5d",
         "llm_related_sentiment_5d",
         "llm_market_news_5d", "llm_stock_news_5d",
+        "llm_expectation_beats_5d", "llm_expectation_misses_5d",
+        "llm_new_info_5d", "llm_followup_info_5d",
+        "llm_official_source_5d", "llm_rumor_source_5d",
+        "llm_causal_rev_pos_5d", "llm_causal_rev_neg_5d", "llm_causal_financing_neg_5d",
+        "llm_theme_real_estate_5d", "llm_theme_banking_5d", "llm_theme_regulation_5d",
     ]
     if df.empty:
         out = grid.copy()
@@ -132,6 +254,18 @@ def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
     x["evt_earnings"] = x["event_type"].isin(EARNINGS_TYPES).astype(float)
     x["is_market_news"] = (x["impact_scope"] == "market").astype(float)
     x["is_stock_news"] = (x["impact_scope"] == "stock").astype(float)
+    x["exp_beats"] = (x["expectation_alignment"] == "beats").astype(float)
+    x["exp_misses"] = (x["expectation_alignment"] == "misses").astype(float)
+    x["novel_new"] = (x["information_novelty"] == "new").astype(float)
+    x["novel_followup"] = (x["information_novelty"] == "follow_up").astype(float)
+    x["source_official"] = (x["source_authority"] == "official").astype(float)
+    x["source_rumor"] = (x["source_authority"] == "rumor_source").astype(float)
+    x["causal_rev_pos"] = (x["causal_impact_label"] == "revenue_positive").astype(float)
+    x["causal_rev_neg"] = (x["causal_impact_label"] == "revenue_negative").astype(float)
+    x["causal_financing_neg"] = (x["causal_impact_label"] == "financing_negative").astype(float)
+    x["theme_real_estate"] = (x["macro_theme"] == "real_estate").astype(float)
+    x["theme_banking"] = (x["macro_theme"] == "banking").astype(float)
+    x["theme_regulation"] = (x["macro_theme"] == "regulation").astype(float)
     x["surprise"] = x["surprise_direction"].fillna(0)
     x["rumor"] = x["is_rumor"].fillna(0)
 
@@ -152,6 +286,18 @@ def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
             evt_contract_win=("evt_contract_win", "sum"),
             evt_legal_issue=("evt_legal_issue", "sum"),
             evt_earnings=("evt_earnings", "sum"),
+            llm_expectation_beats_daily=("exp_beats", "sum"),
+            llm_expectation_misses_daily=("exp_misses", "sum"),
+            llm_new_info_daily=("novel_new", "sum"),
+            llm_followup_info_daily=("novel_followup", "sum"),
+            llm_official_source_daily=("source_official", "sum"),
+            llm_rumor_source_daily=("source_rumor", "sum"),
+            llm_causal_rev_pos_daily=("causal_rev_pos", "sum"),
+            llm_causal_rev_neg_daily=("causal_rev_neg", "sum"),
+            llm_causal_financing_neg_daily=("causal_financing_neg", "sum"),
+            llm_theme_real_estate_daily=("theme_real_estate", "sum"),
+            llm_theme_banking_daily=("theme_banking", "sum"),
+            llm_theme_regulation_daily=("theme_regulation", "sum"),
         )
     )
 
@@ -185,6 +331,11 @@ def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
         "llm_is_rumor_daily", "llm_is_market_daily", "llm_is_stock_daily",
         "evt_insider_buy", "evt_insider_sell", "evt_contract_win", "evt_legal_issue", "evt_earnings",
         "llm_related_sentiment_daily",
+        "llm_expectation_beats_daily", "llm_expectation_misses_daily",
+        "llm_new_info_daily", "llm_followup_info_daily",
+        "llm_official_source_daily", "llm_rumor_source_daily",
+        "llm_causal_rev_pos_daily", "llm_causal_rev_neg_daily", "llm_causal_financing_neg_daily",
+        "llm_theme_real_estate_daily", "llm_theme_banking_daily", "llm_theme_regulation_daily",
     ]
     for c in daily_cols:
         out[c] = out[c].fillna(0.0)
@@ -203,6 +354,18 @@ def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
     out["llm_related_sentiment_5d"] = grp["llm_related_sentiment_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
     out["llm_market_news_5d"] = grp["llm_is_market_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
     out["llm_stock_news_5d"] = grp["llm_is_stock_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_expectation_beats_5d"] = grp["llm_expectation_beats_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_expectation_misses_5d"] = grp["llm_expectation_misses_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_new_info_5d"] = grp["llm_new_info_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_followup_info_5d"] = grp["llm_followup_info_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_official_source_5d"] = grp["llm_official_source_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_rumor_source_5d"] = grp["llm_rumor_source_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_causal_rev_pos_5d"] = grp["llm_causal_rev_pos_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_causal_rev_neg_5d"] = grp["llm_causal_rev_neg_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_causal_financing_neg_5d"] = grp["llm_causal_financing_neg_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_theme_real_estate_5d"] = grp["llm_theme_real_estate_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_theme_banking_5d"] = grp["llm_theme_banking_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
+    out["llm_theme_regulation_5d"] = grp["llm_theme_regulation_daily"].transform(lambda s: s.rolling(5, min_periods=1).sum())
 
     keep = [
         "time", "ticker",
@@ -223,8 +386,20 @@ def _build_ticker_day(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
         "llm_related_sentiment_5d",
         "llm_market_news_5d",
         "llm_stock_news_5d",
+        "llm_expectation_beats_5d",
+        "llm_expectation_misses_5d",
+        "llm_new_info_5d",
+        "llm_followup_info_5d",
+        "llm_official_source_5d",
+        "llm_rumor_source_5d",
+        "llm_causal_rev_pos_5d",
+        "llm_causal_rev_neg_5d",
+        "llm_causal_financing_neg_5d",
+        "llm_theme_real_estate_5d",
+        "llm_theme_banking_5d",
+        "llm_theme_regulation_5d",
     ]
-    out = out[keep]
+    out = out[keep].copy()
     for c in keep[2:]:
         out[c] = out[c].fillna(0.0)
     return out
@@ -269,6 +444,9 @@ def _build_market_daily(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
             "frac_positive_news", "frac_negative_news", "uncertainty_index", "frac_forward_looking",
             "frac_earnings_news", "frac_macro_news", "sector_banking_tone", "sector_realestate_tone",
             "sector_tech_tone", "event_diversity", "avg_magnitude",
+            "frac_expectation_beats", "frac_expectation_misses", "frac_new_information",
+            "frac_official_source", "frac_rumor_source", "frac_regulation_theme",
+            "frac_real_estate_theme", "frac_banking_theme", "frac_causal_financing_negative",
         ]:
             out[c] = 0.0
         return out
@@ -282,6 +460,15 @@ def _build_market_daily(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
     d["surprise"] = d["surprise_direction"].fillna(0) if "surprise_direction" in d.columns else 0.0
     d["rumor"] = d["is_rumor"].fillna(0) if "is_rumor" in d.columns else 0.0
     d["is_market_scope"] = (d["impact_scope"] == "market").astype(float) if "impact_scope" in d.columns else 0.0
+    d["expectation_beats"] = (d["expectation_alignment"] == "beats").astype(float)
+    d["expectation_misses"] = (d["expectation_alignment"] == "misses").astype(float)
+    d["novel_new"] = (d["information_novelty"] == "new").astype(float)
+    d["source_official"] = (d["source_authority"] == "official").astype(float)
+    d["source_rumor"] = (d["source_authority"] == "rumor_source").astype(float)
+    d["macro_regulation"] = (d["macro_theme"] == "regulation").astype(float)
+    d["macro_real_estate"] = (d["macro_theme"] == "real_estate").astype(float)
+    d["macro_banking"] = (d["macro_theme"] == "banking").astype(float)
+    d["causal_financing_negative"] = (d["causal_impact_label"] == "financing_negative").astype(float)
 
     daily = (
         d.groupby("time", as_index=False)
@@ -298,6 +485,15 @@ def _build_market_daily(df: pd.DataFrame, grid: pd.DataFrame) -> pd.DataFrame:
             avg_surprise=("surprise", "mean"),
             frac_rumor=("rumor", "mean"),
             frac_market_scope=("is_market_scope", "mean"),
+            frac_expectation_beats=("expectation_beats", "mean"),
+            frac_expectation_misses=("expectation_misses", "mean"),
+            frac_new_information=("novel_new", "mean"),
+            frac_official_source=("source_official", "mean"),
+            frac_rumor_source=("source_rumor", "mean"),
+            frac_regulation_theme=("macro_regulation", "mean"),
+            frac_real_estate_theme=("macro_real_estate", "mean"),
+            frac_banking_theme=("macro_banking", "mean"),
+            frac_causal_financing_negative=("causal_financing_negative", "mean"),
         )
     )
 

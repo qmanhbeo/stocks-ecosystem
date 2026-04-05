@@ -1,0 +1,1 @@
+{"experiment_name": "skip_logging_regression", "data": {"target_col": "future_return_5d"}, "model": {"type": "linear_regression", "params": {}}}

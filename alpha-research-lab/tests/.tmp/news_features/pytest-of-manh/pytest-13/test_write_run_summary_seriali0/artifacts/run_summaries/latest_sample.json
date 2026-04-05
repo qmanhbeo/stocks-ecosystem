@@ -1,0 +1,25 @@
+{
+  "artifacts": {
+    "path": "data/foo.parquet",
+    "repo_path": "artifacts/portfolio_baselines/sample.parquet"
+  },
+  "metadata": {
+    "flags": [
+      true,
+      false
+    ]
+  },
+  "mode": "sample",
+  "name": "sample_name",
+  "summary": {
+    "missing": null,
+    "score": 0.25,
+    "ts": "2026-03-30T00:00:00",
+    "vector": [
+      1,
+      2,
+      3
+    ]
+  },
+  "ts": "20260330_000000"
+}

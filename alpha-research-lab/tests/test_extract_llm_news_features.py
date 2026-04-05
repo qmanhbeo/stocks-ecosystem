@@ -66,6 +66,22 @@ def test_parse_openai_chat_array_reads_message_content() -> None:
     assert arr == [{"id": "2026-03-13_0001", "tickers": ["FPT"], "sentiment": 1}]
 
 
+def test_parse_openai_chat_array_accepts_single_object_content() -> None:
+    body = {
+        "choices": [
+            {
+                "message": {
+                    "content": '{"id":"2026-03-13_0001","tickers":["FPT"],"sentiment":1}'
+                }
+            }
+        ]
+    }
+
+    arr = llm._parse_openai_chat_array(body)
+
+    assert arr == [{"id": "2026-03-13_0001", "tickers": ["FPT"], "sentiment": 1}]
+
+
 def test_cache_has_successful_rows_rejects_error_only_cache(tmp_path) -> None:
     cache_path = tmp_path / "2026-03-13.jsonl"
     _write_jsonl(
@@ -99,6 +115,12 @@ def test_resolve_provider_api_keys_read_repo_env(monkeypatch, tmp_path) -> None:
                 'MISTRAL_API_KEY="m-key"',
                 'MISTRAL_COSTRAL_API_KEY="codestral-key"',
                 'HUGGINGFACE_FINEGRAINED="hf-key"',
+                'BASETEN_GLM_47_API_KEY="baseten-glm-key"',
+                'BASETEN_NEMOTRON_API_KEY="baseten-nemotron-key"',
+                'CEREBRAS_API_KEY="cerebras-key"',
+                'FIREWORKS_API_KEY="fireworks-key"',
+                'GROQ_API_KEY="groq-key"',
+                'OPENCODE_ZEN_API_KEY="opencode-key"',
                 'VERCEL_AI_GATEWAY_API_KEY="vercel-key"',
             ]
         )
@@ -117,6 +139,14 @@ def test_resolve_provider_api_keys_read_repo_env(monkeypatch, tmp_path) -> None:
         "HUGGINGFACE_FINEGRAINED",
         "HF_TOKEN",
         "HUGGINGFACEHUB_API_TOKEN",
+        "BASETEN_GLM_47_API_KEY",
+        "BASETEN_NEMOTRON_API_KEY",
+        "BASETEN_API_KEY",
+        "CEREBRAS_API_KEY",
+        "FIREWORKS_API_KEY",
+        "GROQ_API_KEY",
+        "OPENCODE_ZEN_API_KEY",
+        "OPENCODE_API_KEY",
         "VERCEL_AI_GATEWAY_API_KEY",
         "AI_GATEWAY_API_KEY",
         "VERCEL_OIDC_TOKEN",
@@ -128,6 +158,12 @@ def test_resolve_provider_api_keys_read_repo_env(monkeypatch, tmp_path) -> None:
     assert llm._resolve_mistral_api_key("") == "m-key"
     assert llm._resolve_mistral_api_key("", model_name="codestral-latest") == "codestral-key"
     assert llm._resolve_huggingface_api_key("") == "hf-key"
+    assert llm._resolve_provider_api_key("baseten", model_name="zai-org/GLM-4.7") == "baseten-glm-key"
+    assert llm._resolve_provider_api_key("baseten", model_name="nvidia/nemotron-mini-4b-instruct") == "baseten-nemotron-key"
+    assert llm._resolve_provider_api_key("cerebras") == "cerebras-key"
+    assert llm._resolve_provider_api_key("fireworks") == "fireworks-key"
+    assert llm._resolve_provider_api_key("groq") == "groq-key"
+    assert llm._resolve_provider_api_key("opencode") == "opencode-key"
     assert llm._resolve_vercel_api_key("") == "vercel-key"
 
 
@@ -206,6 +242,100 @@ def test_select_hosted_model_pool_auto_accepts_qualified_subset() -> None:
         "google:gemini-2.5-flash-lite",
         "nvidia:deepseek-ai/deepseek-v3.2",
     ]
+
+
+def test_select_hosted_model_pool_auto_includes_new_hosted_providers(monkeypatch) -> None:
+    allowed = {"google", "nvidia", "mistral", "huggingface", "vercel", "baseten", "cerebras", "fireworks", "groq", "opencode"}
+
+    def fake_resolve(provider: str, cli_value: str = "", model_name: str = "") -> str:
+        return "key" if provider in allowed else ""
+
+    monkeypatch.setattr(llm, "_resolve_provider_api_key", fake_resolve)
+
+    pool = llm._select_hosted_model_pool("auto", "")
+
+    assert {spec.provider for spec in pool} == allowed
+
+
+def test_article_enrichment_uses_published_at_and_url_only() -> None:
+    article = {
+        "title": "AAA cong bo ke hoach loi nhuan",
+        "summary": "Doanh nghiep vuot ke hoach nam nay.",
+        "body_text": "Thong tin them 15h30 va 2026.",
+        "published_at": "2026-04-04T08:10:00",
+        "url": "https://cafef.vn/aaa-hop-dong-moi.chn",
+    }
+
+    enriched = llm._article_enrichment(article)
+
+    assert enriched["event_time_type"] == "pre_market"
+    assert enriched["source_domain"] == "cafef.vn"
+    assert enriched["article_text_length"] > 0
+    assert enriched["article_has_numbers"] is True
+    assert enriched["article_mentions_percent"] is False
+
+
+def test_normalize_record_accepts_new_enum_fields() -> None:
+    raw = {
+        "id": "2026-04-04_0001",
+        "tickers": ["AAA"],
+        "related_tickers": ["BBB"],
+        "sentiment": 1,
+        "confidence": 2,
+        "event_type": "contract_win",
+        "magnitude": 2,
+        "is_forward_looking": True,
+        "market_tone": 1,
+        "is_rumor": False,
+        "surprise_direction": 1,
+        "impact_scope": "stock",
+        "named_persons": ["CEO A"],
+        "expectation_alignment": "beats",
+        "information_novelty": "new",
+        "macro_theme": "banking",
+        "source_authority": "official",
+        "causal_impact_label": "revenue_positive",
+    }
+
+    norm = llm._normalize_record(raw, "fallback")
+
+    assert norm["expectation_alignment"] == "beats"
+    assert norm["information_novelty"] == "new"
+    assert norm["macro_theme"] == "banking"
+    assert norm["source_authority"] == "official"
+    assert norm["causal_impact_label"] == "revenue_positive"
+
+
+def test_normalize_record_accepts_kimi_style_label_outputs() -> None:
+    raw = {
+        "id": "2026-04-04_0002",
+        "tickers": ["vnpt"],
+        "related_tickers": [],
+        "sentiment": "neutral",
+        "confidence": 0.7,
+        "event_type": "management_change",
+        "magnitude": "low",
+        "is_forward_looking": False,
+        "market_tone": "neutral",
+        "is_rumor": False,
+        "surprise_direction": "none",
+        "impact_scope": "company",
+        "named_persons": ["Đặng Anh Sơn"],
+        "expectation_alignment": "not_applicable",
+        "information_novelty": "new",
+        "macro_theme": "none",
+        "source_authority": "official",
+        "causal_impact_label": "none",
+    }
+
+    norm = llm._normalize_record(raw, "fallback")
+
+    assert norm["sentiment"] == 0
+    assert norm["confidence"] == 2
+    assert norm["magnitude"] == 0
+    assert norm["market_tone"] == 0
+    assert norm["surprise_direction"] == 0
+    assert norm["impact_scope"] == "stock"
 
 
 def test_process_day_retries_smaller_google_batches(monkeypatch, tmp_path) -> None:

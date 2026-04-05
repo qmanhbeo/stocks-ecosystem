@@ -27,6 +27,20 @@ Already queued (near-term, from signal_library.md):
 
 ---
 
+## Bright Mind — News Frontier Queue (2026-04-05)
+
+New branches from the CafeF LLM rebuild. Do **not** assign H numbers until a branch is activated. Ranked by upside, novelty, and testability.
+
+1. `llm-state-router` — Treat `expectation_alignment + information_novelty + source_authority + event_time_type` as a state gate, not just extra sentiment. Smallest test: bucket 5d IC and hit rate by `{beats, misses} × {new, recycled} × {official, rumor} × {pre_market, intraday, post_market}` on `xs_llm_news_ticker_day.parquet`. Kill if the buckets do not separate cleanly after controlling for raw sentiment.
+
+2. `news-marginal-slot` — Use CafeF news to predict replacement value inside the active book, not generic return. Smallest test: join `xs_llm_news_ticker_day.parquet` with `entry_alpha/candidate_panel_daily.parquet` and test whether news state predicts the weakest-held slot's marginal contribution better than standalone `T+1`.
+
+3. `macro-theme-router` — Route macro themes into sector / regime response instead of one pooled news factor. Smallest test: aggregate `macro_theme` by day and compare banking / real-estate / regulation themes against `xs_sector_rotation_daily.parquet` and `event_surface_daily.parquet`; look for stronger effects when the theme matches the sector state.
+
+4. `news-decay-contract` — Separate `follow_up` from `recycled` so news half-life is learned, not assumed. Smallest test: compare `new` vs `follow_up` vs `recycled` on 1d / 5d / 30d forward excess return and keep only the horizon where each class survives.
+
+---
+
 ## Current State
 
 **Session status:** Session 107 ran a user-forced `H278` audit of explicit close-only `upward W / double-bottom reclaim` geometry on `2015-2025` only. No feature survived the canonical next-day signal-library gate, so the current daily next-day queue remains closed. The best reclaim variant, `xs_upward_w_reclaim_12d`, still showed real slower-horizon evidence on a forward `5`-day excess-return diagnostic with IC `+0.0171`, `11 / 11` positive years, corr vs `S1` `+0.0248`, and max candidate corr `0.2960` versus `C8`. Branch consequence: keep the live branch unchanged, keep the official live-monitoring state from Session 106 (`OFF`, `100.00%` cash on `2026-03-31`) unchanged, and only revisit this family as alternative-horizon offline label work rather than as a new daily `T+1` branch. (2026-04-04)

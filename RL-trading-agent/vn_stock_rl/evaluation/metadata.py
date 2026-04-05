@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import json
 import os
+from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 
+from vn_stock_rl.external_features import default_help_assets_dir, default_market_data_dir
 from vn_stock_rl.policies.registry import read_policy_from_metadata
 
 _read_policy_from_metadata = read_policy_from_metadata
@@ -49,13 +51,26 @@ def _resolve_helper_inputs_from_meta(
         return help_tickers, market_data_dir, help_assets, help_assets_dir
     if help_tickers is None:
         help_tickers = meta.get("help_tickers") or None
-    if market_data_dir == "data/stock/" and meta.get("market_data_dir"):
+    if _is_default_shared_path(market_data_dir, default_market_data_dir(), "data/stock/") and meta.get(
+        "market_data_dir"
+    ):
         market_data_dir = meta["market_data_dir"]
     if help_assets is None:
         help_assets = meta.get("help_assets") or None
-    if help_assets_dir == "data/fx-commodities/" and meta.get("help_assets_dir"):
+    if _is_default_shared_path(
+        help_assets_dir,
+        default_help_assets_dir(),
+        "data/fx-commodities/",
+    ) and meta.get("help_assets_dir"):
         help_assets_dir = meta["help_assets_dir"]
     return help_tickers, market_data_dir, help_assets, help_assets_dir
+
+
+def _is_default_shared_path(value: str, canonical_default: Path, legacy_default: str) -> bool:
+    candidate = Path(str(value)).expanduser()
+    if str(candidate).rstrip("/\\") == legacy_default.rstrip("/\\"):
+        return True
+    return candidate == Path(canonical_default).expanduser()
 
 def _merge_env_overrides(
     meta: Optional[dict],

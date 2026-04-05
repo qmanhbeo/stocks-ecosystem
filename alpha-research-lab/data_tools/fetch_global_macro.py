@@ -145,13 +145,16 @@ def fetch_one(
     alias: str,
     overwrite: bool,
     *,
-    start: str,
-    end: str,
-    probe_cache: dict[str, dict[str, object]],
-    probe_cache_ttl_hours: float,
+    start: str = DEFAULT_START,
+    end: str = DEFAULT_END,
+    probe_cache: dict[str, dict[str, object]] | None = None,
+    probe_cache_ttl_hours: float = 24.0,
     rate_limit_retries: int = 1,
     rate_limit_backoff_seconds: float = 30.0,
 ) -> tuple[str, dict[str, object] | None]:
+    return_details = probe_cache is not None
+    if probe_cache is None:
+        probe_cache = load_probe_cache(probe_cache_path()) if probe_cache_ttl_hours > 0 else {}
     out = OUT_DIR / f"fx_commodities_{alias}_1D.parquet"
     existing = load_existing_frame(out)
     try:
@@ -171,10 +174,14 @@ def fetch_one(
                 eligible_statuses=PROBE_CACHE_STATUS_SKIP_ELIGIBLE,
             ):
                 print(f"  SKIP {alias} ({format_probe_cache_skip_message(probe_cache[alias])})")
-                return FETCH_STATUS_SKIPPED, None
+                if return_details:
+                    return FETCH_STATUS_SKIPPED, None
+                return True
         if plan.mode == "skip":
             print(f"  SKIP {alias} ({plan.message})")
-            return FETCH_STATUS_SKIPPED, None
+            if return_details:
+                return FETCH_STATUS_SKIPPED, None
+            return True
 
         print(f"  Fetching {ticker} ({alias}, {plan.message})...", end=" ", flush=True)
         df, rate_limited = _download_with_rate_limit_retry(
@@ -186,21 +193,29 @@ def fetch_one(
             rate_limit_backoff_seconds=rate_limit_backoff_seconds,
         )
         if rate_limited:
-            return FETCH_STATUS_RATE_LIMITED, None
+            if return_details:
+                return FETCH_STATUS_RATE_LIMITED, None
+            return False
         if df.empty:
             if existing is not None:
-                if current_tail_covers_end:
+                if current_tail_covers_end or plan.mode != "incremental":
                     print("NO NEW DATA (keeping existing file)")
-                    return FETCH_STATUS_SKIPPED, build_probe_cache_entry(
-                        status="unchanged",
-                        checked_end=end,
-                        path=out,
-                        latest_value=plan.existing_last_time,
-                    )
+                    if return_details:
+                        return FETCH_STATUS_SKIPPED, build_probe_cache_entry(
+                            status="unchanged",
+                            checked_end=end,
+                            path=out,
+                            latest_value=plan.existing_last_time,
+                        )
+                    return True
                 print("NO NEW DATA (existing file still behind requested end; probe cache remains retryable)")
-                return FETCH_STATUS_RETRYABLE, None
+                if return_details:
+                    return FETCH_STATUS_RETRYABLE, None
+                return False
             print("NO DATA")
-            return FETCH_STATUS_FAILED, None
+            if return_details:
+                return FETCH_STATUS_FAILED, None
+            return False
         df = df.reset_index()
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = [c[0].lower() if c[1] == "" or c[1] == ticker else c[0].lower()
@@ -241,10 +256,14 @@ def fetch_one(
                 print(f"OK (refreshed overlap window, latest {latest_time})")
         else:
             print(f"OK ({len(combined)} rows)")
-        return FETCH_STATUS_FETCHED, cache_entry
+        if return_details:
+            return FETCH_STATUS_FETCHED, cache_entry
+        return True
     except Exception as e:
         print(f"ERROR: {e}")
-        return FETCH_STATUS_FAILED, None
+        if return_details:
+            return FETCH_STATUS_FAILED, None
+        return False
 
 
 def main():

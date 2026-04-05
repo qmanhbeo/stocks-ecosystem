@@ -482,9 +482,12 @@ def fetch_one_ticker(
     ascending: bool,
     chunk_delay: float,
     overwrite: bool,
-    probe_cache: dict[str, dict[str, object]],
-    probe_cache_ttl_hours: float,
-) -> tuple[bool, str, dict[str, object] | None]:
+    probe_cache: dict[str, dict[str, object]] | None = None,
+    probe_cache_ttl_hours: float = 24.0,
+) -> tuple[bool, str, dict[str, object] | None] | tuple[bool, str]:
+    return_details = probe_cache is not None
+    if probe_cache is None:
+        probe_cache = load_probe_cache(probe_cache_path(interval_label)) if probe_cache_ttl_hours > 0 else {}
     output_path = build_output_path(ticker, interval_label)
     existing = load_existing_frame(output_path)
     refresh_plan = plan_refresh(
@@ -502,9 +505,13 @@ def fetch_one_ticker(
         ttl_hours=probe_cache_ttl_hours,
         eligible_statuses=PROBE_CACHE_STATUS_SKIP_ELIGIBLE,
     ):
-        return True, f"{ticker}: {format_probe_cache_skip_message(probe_cache[ticker])}", None
+        if return_details:
+            return True, f"{ticker}: {format_probe_cache_skip_message(probe_cache[ticker])}", None
+        return True, f"{ticker}: {format_probe_cache_skip_message(probe_cache[ticker])}"
     if refresh_plan.mode == "skip":
-        return True, f"{ticker}: {refresh_plan.message}", None
+        if return_details:
+            return True, f"{ticker}: {refresh_plan.message}", None
+        return True, f"{ticker}: {refresh_plan.message}"
 
     fetch_start = parse_iso_date(refresh_plan.fetch_start)
 
@@ -532,17 +539,21 @@ def fetch_one_ticker(
 
     if not all_chunks:
         if existing is not None:
-            return (
-                True,
-                f"{ticker}: no new intraday data returned, keeping existing file",
-                build_probe_cache_entry(
-                    status="unchanged",
-                    checked_end=end_date.isoformat(),
-                    path=output_path,
-                    latest_value=refresh_plan.existing_last_time,
-                ),
-            )
-        return False, f"{ticker}: no intraday data returned", None
+            if return_details:
+                return (
+                    True,
+                    f"{ticker}: no new intraday data returned, keeping existing file",
+                    build_probe_cache_entry(
+                        status="unchanged",
+                        checked_end=end_date.isoformat(),
+                        path=output_path,
+                        latest_value=refresh_plan.existing_last_time,
+                    ),
+                )
+            return True, f"{ticker}: no new intraday data returned, keeping existing file"
+        if return_details:
+            return False, f"{ticker}: no intraday data returned", None
+        return False, f"{ticker}: no intraday data returned"
 
     incoming = (
         pd.concat(all_chunks, ignore_index=True)
@@ -568,9 +579,15 @@ def fetch_one_ticker(
     if refresh_plan.mode == "incremental":
         added_rows = len(out) - before_rows
         if added_rows > 0:
-            return True, f"{ticker}: appended {added_rows} bars (latest {max_time})", cache_entry
-        return True, f"{ticker}: refreshed overlap window (latest {max_time})", cache_entry
-    return True, f"{ticker}: saved {len(out)} bars ({min_time} -> {max_time})", cache_entry
+            if return_details:
+                return True, f"{ticker}: appended {added_rows} bars (latest {max_time})", cache_entry
+            return True, f"{ticker}: appended {added_rows} bars (latest {max_time})"
+        if return_details:
+            return True, f"{ticker}: refreshed overlap window (latest {max_time})", cache_entry
+        return True, f"{ticker}: refreshed overlap window (latest {max_time})"
+    if return_details:
+        return True, f"{ticker}: saved {len(out)} bars ({min_time} -> {max_time})", cache_entry
+    return True, f"{ticker}: saved {len(out)} bars ({min_time} -> {max_time})"
 
 
 def main() -> None:

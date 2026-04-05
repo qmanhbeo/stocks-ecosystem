@@ -131,6 +131,19 @@ def fetch_raw_ratios(ticker: str) -> pd.DataFrame | None:
         return None
 
 
+def fetch_ticker_ratios(ticker: str) -> pd.DataFrame | None:
+    cached = load_cached_ratios(ticker)
+    if cached is not None and not cached.empty:
+        return cached
+
+    fresh = fetch_raw_ratios(ticker)
+    if fresh is None or fresh.empty:
+        return fresh
+
+    atomic_write_parquet(fresh, CACHE_DIR / f"{ticker}_ratios.parquet")
+    return fresh
+
+
 def merge_ratio_frames(existing: pd.DataFrame | None, incoming: pd.DataFrame, ticker: str) -> pd.DataFrame:
     if existing is None or existing.empty:
         combined = incoming.copy()

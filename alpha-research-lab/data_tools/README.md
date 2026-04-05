@@ -323,16 +323,21 @@ Extract per-ticker daily sentiment from cafef JSONL files using a keyword lexico
 Extract structured per-article features from CafeF JSONL with a cross-provider hosted LLM pool or local Ollama.
 - **Status:** Active
 - **Input:** `data/news/cafef/raw/YYYY-MM-DD.jsonl`
-- **Output:** `data/llm_cache/YYYY-MM-DD.jsonl` (resume-safe, atomic write)
+- **Output:** `data/llm_cache/YYYY-MM-DD.jsonl` (resume-safe, atomic write; one JSON object per filtered article)
 - **Usage:** `python data_tools/extract_llm_news_features.py --date-from 2023-01-01 --date-to 2023-01-03`
-- **Provider notes:** the default `--provider auto` builds one hosted pool across configured `google`, `nvidia`, `mistral`, `huggingface`, and `vercel` models, then ranks them by persisted observed latency and recent failures
-- **Explicit provider notes:** `--provider google`, `nvidia`, `mistral`, `huggingface`, and `vercel` still work for debugging or benchmarking; `--provider ollama` stays local-only
+- **Typical full run:** `python data_tools/extract_llm_news_features.py --provider auto --workers 8`
+- **Typical single-provider smoke test:** `python data_tools/extract_llm_news_features.py --provider google --workers 1 --date-from 2016-01-01 --date-to 2016-01-03`
+- **Provider notes:** the default `--provider auto` builds one hosted pool across configured `google`, `nvidia`, `mistral`, `huggingface`, `vercel`, `baseten`, `cerebras`, `fireworks`, `groq`, and `opencode` models, then ranks them by persisted observed latency and recent failures
+- **Explicit provider notes:** `--provider google`, `nvidia`, `mistral`, `huggingface`, `vercel`, `baseten`, `cerebras`, `fireworks`, `groq`, and `opencode` still work for debugging or benchmarking; `--provider ollama` stays local-only
 - **Model override notes:** hosted providers accept comma-separated model lists via `--model`; auto mode expects `provider:model` entries such as `google:gemini-2.5-flash-lite,nvidia:deepseek-v3.2`
-- **Credentials:** provider keys resolve from shell env or `.env`. Supported names are `GOOGLE_API_KEY`, `NVIDIA_API_KEY` / `NGC_API_KEY`, `MISTRAL_API_KEY`, `MISTRAL_COSTRAL_API_KEY`, `HUGGINGFACE_FINEGRAINED`, and `VERCEL_AI_GATEWAY_API_KEY`
+- **Credentials:** provider keys resolve from shell env or `.env`. Supported names are `GOOGLE_API_KEY`, `NVIDIA_API_KEY` / `NGC_API_KEY`, `MISTRAL_API_KEY`, `MISTRAL_COSTRAL_API_KEY`, `HUGGINGFACE_FINEGRAINED`, `BASETEN_API_KEY`, `BASETEN_GLM_47_API_KEY`, `BASETEN_NEMOTRON_API_KEY`, `CEREBRAS_API_KEY`, `FIREWORKS_API_KEY`, `GROQ_API_KEY`, `OPENCODE_ZEN_API_KEY`, and `VERCEL_AI_GATEWAY_API_KEY`
 - **Runtime stats:** observed hosted latency / failure ranking persists to `alpha-research-lab/artifacts/llm_runtime/hosted_model_stats.json` and is reused on later runs
 - **Speed knobs:** `--workers`, `--batch-size`, `--num-predict`, `--max-summary-chars`
 - **Progress logs:** timestamped day/batch progress, rates, ETA, error counts
 - **Reliability:** auto-retries failed or partial batches with smaller slices, falls through to alternate hosted models on single-item failures, and reprocesses existing error-only cache days automatically
+- **Cache schema:** each cache row keeps the LLM semantic fields plus deterministic CafeF metadata. LLM fields are `id`, `tickers`, `related_tickers`, `sentiment`, `confidence`, `event_type`, `magnitude`, `is_forward_looking`, `market_tone`, `is_rumor`, `surprise_direction`, `impact_scope`, `named_persons`, `expectation_alignment`, `information_novelty`, `macro_theme`, `source_authority`, and `causal_impact_label`.
+- **Deterministic enrichments:** the extractor also adds `published_at`, `source_domain`, `event_time_type`, `article_text_length`, `article_has_numbers`, and `article_mentions_percent` in Python, not via the LLM.
+- **Schema rules:** invalid enum values are normalized to null/empty-compatible values in code, and historical cache files without the newer fields remain valid inputs to the builder.
 
 ### `test_model_pool.py`
 Probe hosted model pools without writing cache outputs.
@@ -347,6 +352,30 @@ Build ticker-day and dense market-daily LLM features from `data/llm_cache/`.
   - `data/features/xs_llm_news_ticker_day.parquet`
   - `data/features/xs_llm_news_market_daily.parquet`
 - **Usage:** `python data_tools/build_llm_news_features.py`
+- **Compatibility:** historical cache files are safe; missing fields are filled with nulls or zeros where appropriate.
+- **Ticker-day outputs:** the dense ticker-day surface includes the base sentiment fields plus these rolling 5d features:
+  - `llm_expectation_beats_5d`
+  - `llm_expectation_misses_5d`
+  - `llm_new_info_5d`
+  - `llm_followup_info_5d`
+  - `llm_official_source_5d`
+  - `llm_rumor_source_5d`
+  - `llm_causal_rev_pos_5d`
+  - `llm_causal_rev_neg_5d`
+  - `llm_causal_financing_neg_5d`
+  - `llm_theme_real_estate_5d`
+  - `llm_theme_banking_5d`
+  - `llm_theme_regulation_5d`
+- **Market-daily outputs:** the dense market surface includes these daily fractions:
+  - `frac_expectation_beats`
+  - `frac_expectation_misses`
+  - `frac_new_information`
+  - `frac_official_source`
+  - `frac_rumor_source`
+  - `frac_regulation_theme`
+  - `frac_real_estate_theme`
+  - `frac_banking_theme`
+  - `frac_causal_financing_negative`
 
 ### `build_open_close_asymmetry_features.py`
 Build dense ticker-day open/close asymmetry features from OHLC.
@@ -514,8 +543,8 @@ Build VN30 proximity / rebalancing-pressure features.
 | `xs_barrier_vol_1d_hose_live_current.parquet` | Active | Current-date live extension for `S1` |
 | `xs_rl_signal_matrix.parquet` | Active | Consolidated `S1` + maintained candidate-signal matrix used by RL and activation research |
 | `xs_insider_deals_raw.parquet` | Active | Raw insider + large-shareholder transaction disclosures |
-| `xs_llm_news_ticker_day.parquet` | Active | Structured LLM ticker-day event/sentiment features |
-| `xs_llm_news_market_daily.parquet` | Active | Dense date-level LLM market narrative features |
+| `xs_llm_news_ticker_day.parquet` | Active | Structured LLM ticker-day event/sentiment features plus rolling semantic news states |
+| `xs_llm_news_market_daily.parquet` | Active | Dense date-level LLM market narrative features and daily fractions |
 | `xs_open_close_asymmetry.parquet` | Active | Dense ticker-day open/close asymmetry features (`C4`) |
 | `xs_insider_quality_features.parquet` | Active | Dense insider quality / relative-size features (`C5`) |
 | `xs_sector_rotation_daily.parquet` | Active | Sector breadth / intra-sector artifact that still feeds contrarian `C6` |

@@ -30,6 +30,11 @@ Schema (all LLM-unique fields):
 - surprise_direction : -1/0/1 — negative/neutral/positive surprise vs expectations
 - impact_scope       : "stock"/"sector"/"market" — breadth of impact
 - named_persons      : key people mentioned (CEO, CFO, major shareholders)
+- expectation_alignment : beats/meets/misses/not_applicable vs plan / target / expectation / trajectory
+- information_novelty   : new/follow_up/recycled/unclear
+- macro_theme           : rates/fx/liquidity/credit/real_estate/banking/exports/commodities/energy/public_investment/regulation/geopolitics/consumption/technology/industrials/none
+- source_authority      : official/management/media_report/analyst/rumor_source/unclear
+- causal_impact_label   : revenue_positive/revenue_negative/cost_positive/cost_negative/financing_positive/financing_negative/regulatory_positive/regulatory_negative/sentiment_only/mixed/none
 
 Design:
 - Resume-safe: skip existing day outputs unless --overwrite
@@ -54,9 +59,11 @@ import urllib.request
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+import pandas as pd
 from path_utils import data_path, workspace_path
 from typing import Iterable
 from src.repo_paths import artifact_path
+from urllib.parse import urlparse
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -67,6 +74,11 @@ NVIDIA_CHAT_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
 MISTRAL_CHAT_URL = "https://api.mistral.ai/v1/chat/completions"
 HUGGINGFACE_CHAT_URL = "https://router.huggingface.co/v1/chat/completions"
 VERCEL_CHAT_URL = "https://ai-gateway.vercel.sh/v1/chat/completions"
+BASETEN_CHAT_URL = "https://inference.baseten.co/v1/chat/completions"
+CEREBRAS_CHAT_URL = "https://api.cerebras.ai/v1/chat/completions"
+FIREWORKS_CHAT_URL = "https://api.fireworks.ai/inference/v1/chat/completions"
+GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions"
+OPENCODE_CHAT_URL = "https://opencode.ai/zen/v1/chat/completions"
 
 EVENT_TYPES = {
     "earnings_beat", "earnings_miss", "earnings_neutral", "revenue_growth",
@@ -209,12 +221,22 @@ def _resolve_provider_api_key(provider: str, cli_value: str = "", model_name: st
         return _resolve_google_api_key(cli_value)
     if provider == "nvidia":
         return _resolve_nvidia_api_key(cli_value)
+    if provider == "baseten":
+        return _resolve_api_key(cli_value, _baseten_api_env_names(model_name))
+    if provider == "cerebras":
+        return _resolve_api_key(cli_value, ["CEREBRAS_API_KEY"])
+    if provider == "fireworks":
+        return _resolve_api_key(cli_value, ["FIREWORKS_API_KEY"])
+    if provider == "groq":
+        return _resolve_api_key(cli_value, ["GROQ_API_KEY"])
     if provider == "mistral":
         return _resolve_mistral_api_key(cli_value, model_name=model_name)
     if provider == "huggingface":
         return _resolve_huggingface_api_key(cli_value)
     if provider == "vercel":
         return _resolve_vercel_api_key(cli_value)
+    if provider == "opencode":
+        return _resolve_api_key(cli_value, ["OPENCODE_ZEN_API_KEY", "OPENCODE_API_KEY"])
     return ""
 
 
@@ -249,7 +271,13 @@ def _is_financial_article(article: dict) -> bool:
         ]
     )
     norm = _strip_vi(text)
-    return any(k in norm for k in FIN_KEYWORDS)
+    keep_hits = sum(1 for term in FINANCIAL_KEEP_TERMS if term in norm)
+    fluff_hits = sum(1 for term in FLUFF_DROP_TERMS if term in norm)
+    if keep_hits == 0:
+        return False
+    if fluff_hits >= 2 and keep_hits < 2:
+        return False
+    return True
 
 
 def _chunk(seq: list[dict], n: int) -> Iterable[list[dict]]:
@@ -257,29 +285,132 @@ def _chunk(seq: list[dict], n: int) -> Iterable[list[dict]]:
         yield seq[i : i + n]
 
 
+def _clean_str(value: object) -> str:
+    return str(value).strip()
+
+
+def _text_blob(article: dict) -> str:
+    return " ".join(
+        [
+            _clean_str(article.get("title", "") or ""),
+            _clean_str(article.get("summary", "") or ""),
+            _clean_str(article.get("body_text", "") or ""),
+        ]
+    ).strip()
+
+
+def _source_domain_from_url(url: object) -> str | None:
+    raw = _clean_str(url)
+    if not raw:
+        return None
+    parsed = urlparse(raw)
+    host = parsed.netloc.lower().strip()
+    if not host:
+        return None
+    if host.startswith("www."):
+        host = host[4:]
+    return host or None
+
+
+def _parse_published_at(value: object) -> pd.Timestamp | None:
+    if value is None or value == "":
+        return None
+    ts = pd.to_datetime(value, errors="coerce")
+    if pd.isna(ts):
+        return None
+    if getattr(ts, "tzinfo", None) is not None:
+        return ts.tz_convert("Asia/Ho_Chi_Minh")
+    return ts.tz_localize("Asia/Ho_Chi_Minh")
+
+
+def _event_time_type_from_published_at(value: object) -> str:
+    ts = _parse_published_at(value)
+    if ts is None:
+        return "unknown"
+    minute_of_day = ts.hour * 60 + ts.minute
+    if minute_of_day < VN_MARKET_OPEN_MINUTE:
+        return "pre_market"
+    if minute_of_day <= VN_MARKET_CLOSE_MINUTE:
+        return "intraday"
+    return "post_market"
+
+
+def _article_semantic_flags(article: dict) -> dict[str, object]:
+    text = _strip_vi(_text_blob(article))
+    return {
+        "event_time_type": _event_time_type_from_published_at(article.get("published_at")),
+        "source_domain": _source_domain_from_url(article.get("url")),
+        "article_text_length": int(len(_text_blob(article).strip())),
+        "article_has_numbers": bool(re.search(r"\d", text)),
+        "article_mentions_percent": bool(
+            re.search(r"%|\bpercent\b|\bphan tram\b", text)
+        ),
+    }
+
+
 IMPACT_SCOPES = {"stock", "sector", "market"}
+EXPECTATION_ALIGNMENTS = {"beats", "meets", "misses", "not_applicable"}
+INFORMATION_NOVELTIES = {"new", "follow_up", "recycled", "unclear"}
+MACRO_THEMES = {
+    "rates", "fx", "liquidity", "credit", "real_estate", "banking",
+    "exports", "commodities", "energy", "public_investment", "regulation",
+    "geopolitics", "consumption", "technology", "industrials", "none",
+}
+SOURCE_AUTHORITIES = {"official", "management", "media_report", "analyst", "rumor_source", "unclear"}
+CAUSAL_IMPACT_LABELS = {
+    "revenue_positive", "revenue_negative", "cost_positive", "cost_negative",
+    "financing_positive", "financing_negative", "regulatory_positive",
+    "regulatory_negative", "sentiment_only", "mixed", "none",
+}
+
+FINANCIAL_KEEP_TERMS = [
+    "chung khoan", "co phieu", "doanh nghiep", "tai chinh", "ngan hang",
+    "bat dong san", "dau tu", "ipo", "co tuc", "loi nhuan", "doanh thu",
+    "phat hanh", "mua lai", "sap nhap", "trai phieu", "tin dung", "vn-index",
+    "lai suat", "ty gia", "fx", "usd", "tien te", "nha dau tu",
+    "ket qua kinh doanh", "bao cao tai chinh", "ke hoach", "muc tieu",
+    "san giao dich", "xuat khau", "hang hoa", "gia dau", "dien", "than",
+    "khi", "thep", "ban le", "public investment",
+]
+
+FLUFF_DROP_TERMS = [
+    "showbiz", "celebrity", "am thuc", "du lich", "thoi trang", "lam dep",
+    "suc khoe", "doi song", "gia dinh", "the thao", "bong da", "giai tri",
+    "quan ao", "xe dep", "cau chuyen", "chia se", "tam su",
+]
+
+VN_MARKET_OPEN_MINUTE = 9 * 60
+VN_MARKET_CLOSE_MINUTE = 14 * 60 + 45
 
 
 def _build_prompt(batch: list[dict], max_summary_chars: int) -> str:
     lines = [
-        "You are a Vietnamese financial news analyzer.",
-        "For each numbered article, output a JSON object with ALL of these fields:",
+        "You are reading Vietnamese CafeF financial news.",
+        "Many articles are recap, rolling-update, or headline-led; do not force hidden numbers.",
+        "Use only the article text for semantic judgments.",
+        "Do not extract timestamps, source domains, authors, URLs, or exact numeric expectations.",
+        "Return JSON array only.",
         "",
-        "  id              : the article id string (copy exactly)",
-        "  tickers         : list of stock ticker symbols directly mentioned (uppercase, 2-6 chars)",
-        "  related_tickers : list of other tickers implicitly affected by this news (upstream/downstream/peers)",
-        "  sentiment       : -1 (negative for named stocks) / 0 (neutral) / 1 (positive)",
-        "  confidence      : 0 (unclear/mixed) / 1 (fairly clear) / 2 (very clear signal)",
-        "  event_type      : one of: " + PROMPT_TAXONOMY,
-        "  magnitude       : 0 (minor) / 1 (moderate) / 2 (major event)",
-        "  is_forward_looking : true if article discusses future events or guidance, false if reporting past/current",
-        "  market_tone     : -1 / 0 / 1 — broader market sentiment beyond named stocks",
-        "  is_rumor        : true if based on speculation/unconfirmed rumor, false if official/confirmed",
-        "  surprise_direction : -1 (worse than expected) / 0 (as expected or no comparison) / 1 (better than expected)",
-        "  impact_scope    : 'stock' (affects one company) / 'sector' (affects an industry) / 'market' (market-wide)",
-        "  named_persons   : list of key people mentioned (CEO, CFO, major shareholders, analysts)",
+        "Fields:",
+        "- id",
+        "- tickers / related_tickers",
+        "- sentiment: -1 | 0 | 1",
+        "- confidence: 0 | 1 | 2",
+        "- event_type, magnitude: 0 | 1 | 2",
+        "- is_forward_looking, market_tone: -1 | 0 | 1",
+        "- is_rumor, surprise_direction: bool / -1 | 0 | 1",
+        "- impact_scope, named_persons",
+        "- expectation_alignment: beats | meets | misses | not_applicable",
+        "- information_novelty: new | follow_up | recycled | unclear",
+        "- macro_theme: rates | fx | liquidity | credit | real_estate | banking | exports | commodities | energy | public_investment | regulation | geopolitics | consumption | technology | industrials | none",
+        "- source_authority: official | management | media_report | analyst | rumor_source | unclear",
+        "- causal_impact_label: revenue_positive | revenue_negative | cost_positive | cost_negative | financing_positive | financing_negative | regulatory_positive | regulatory_negative | sentiment_only | mixed | none",
         "",
-        "Output ONLY a JSON array of objects, one per article. No explanation, no markdown.",
+        "Expectation alignment is relative to plan / target / expectation / prior trajectory, not only analyst consensus.",
+        "Information novelty should mark recap or repeated story lines as recycled.",
+        "Use the exact codes above. Do not output words like positive, negative, neutral, low, high, or company.",
+        "Single dominant macro_theme and single dominant causal_impact_label only.",
+        "Keep output strict JSON, no markdown, no prose.",
         "",
     ]
     for i, a in enumerate(batch, start=1):
@@ -303,8 +434,31 @@ def _build_prompt(batch: list[dict], max_summary_chars: int) -> str:
 # Hosted model pools, credentials, and scheduler
 # ---------------------------------------------------------------------------
 
-HOSTED_PROVIDERS = {"auto", "google", "nvidia", "mistral", "huggingface", "vercel"}
-HOSTED_PROVIDER_NAMES = {"google", "nvidia", "mistral", "huggingface", "vercel"}
+HOSTED_PROVIDERS = {
+    "auto",
+    "google",
+    "nvidia",
+    "mistral",
+    "huggingface",
+    "vercel",
+    "baseten",
+    "cerebras",
+    "fireworks",
+    "groq",
+    "opencode",
+}
+HOSTED_PROVIDER_NAMES = {
+    "google",
+    "nvidia",
+    "mistral",
+    "huggingface",
+    "vercel",
+    "baseten",
+    "cerebras",
+    "fireworks",
+    "groq",
+    "opencode",
+}
 
 # Free-tier limits (Google AI Studio) are enforced in-process. Other providers
 # run unbounded unless their APIs explicitly throttle us.
@@ -354,12 +508,59 @@ VERCEL_MODEL_POOL = [
     {"name": "deepseek-ai/deepseek-v3.2", "seed_latency": 5.2},
 ]
 
+BASETEN_MODEL_POOL = [
+    {"name": "zai-org/GLM-4.7", "seed_latency": 3.6},
+    {"name": "deepseek-ai/DeepSeek-V3.1", "seed_latency": 4.2},
+    {"name": "deepseek-ai/DeepSeek-V3-0324", "seed_latency": 4.8},
+    {"name": "moonshotai/Kimi-K2.5", "seed_latency": 5.0},
+    {"name": "MiniMaxAI/MiniMax-M2.5", "seed_latency": 5.2},
+    {"name": "openai/gpt-oss-120b", "seed_latency": 6.0},
+]
+
+CEREBRAS_MODEL_POOL = [
+    {"name": "llama3.1-8b", "seed_latency": 2.6},
+    {"name": "llama-3.3-70b", "seed_latency": 4.5},
+    {"name": "gpt-oss-120b", "seed_latency": 4.8},
+    {"name": "qwen-3-32b", "seed_latency": 5.0},
+    {"name": "zai-glm-4.7", "seed_latency": 5.3},
+]
+
+FIREWORKS_MODEL_POOL = [
+    {"name": "accounts/fireworks/models/llama-v3p1-8b-instruct", "seed_latency": 2.7},
+    {"name": "accounts/fireworks/models/deepseek-v3p1", "seed_latency": 3.6},
+    {"name": "accounts/fireworks/models/llama-v3p1-70b-instruct", "seed_latency": 4.8},
+    {"name": "accounts/fireworks/models/qwen3-0p6b", "seed_latency": 2.9},
+]
+
+GROQ_MODEL_POOL = [
+    {"name": "llama-3.1-8b-instant", "seed_latency": 2.2},
+    {"name": "llama-3.3-70b-versatile", "seed_latency": 3.6},
+    {"name": "openai/gpt-oss-20b", "seed_latency": 3.0},
+    {"name": "openai/gpt-oss-120b", "seed_latency": 4.1},
+    {"name": "deepseek-r1-distill-llama-70b", "seed_latency": 4.8},
+]
+
+OPENCODE_MODEL_POOL = [
+    {"name": "opencode/gpt-5.2-codex", "seed_latency": 2.2},
+    {"name": "opencode/gpt-5.2", "seed_latency": 2.6},
+    {"name": "opencode/claude-opus-4-5", "seed_latency": 4.0},
+    {"name": "opencode/glm-4.7", "seed_latency": 3.5},
+    {"name": "opencode/kimi-k2.5", "seed_latency": 4.2},
+    {"name": "opencode/minimax-m2.5", "seed_latency": 3.3},
+    {"name": "opencode/nemotron-3-super-free", "seed_latency": 4.7},
+]
+
 PROVIDER_MODEL_POOLS = {
     "google": GOOGLE_MODEL_POOL,
     "nvidia": NVIDIA_MODEL_POOL,
     "mistral": MISTRAL_MODEL_POOL,
     "huggingface": HUGGINGFACE_MODEL_POOL,
     "vercel": VERCEL_MODEL_POOL,
+    "baseten": BASETEN_MODEL_POOL,
+    "cerebras": CEREBRAS_MODEL_POOL,
+    "fireworks": FIREWORKS_MODEL_POOL,
+    "groq": GROQ_MODEL_POOL,
+    "opencode": OPENCODE_MODEL_POOL,
 }
 DEFAULT_MODELS = {
     "auto": "",
@@ -397,7 +598,21 @@ def _provider_error_prefix(provider: str) -> str:
         "mistral": "mistral_error",
         "huggingface": "huggingface_error",
         "vercel": "vercel_error",
+        "baseten": "baseten_error",
+        "cerebras": "cerebras_error",
+        "fireworks": "fireworks_error",
+        "groq": "groq_error",
+        "opencode": "opencode_error",
     }.get(provider, "ollama_error")
+
+
+def _baseten_api_env_names(model_name: str = "") -> list[str]:
+    lowered = model_name.lower()
+    if "glm" in lowered:
+        return ["BASETEN_GLM_47_API_KEY", "BASETEN_API_KEY", "BASETEN_NEMOTRON_API_KEY"]
+    if "nemotron" in lowered:
+        return ["BASETEN_NEMOTRON_API_KEY", "BASETEN_API_KEY", "BASETEN_GLM_47_API_KEY"]
+    return ["BASETEN_API_KEY", "BASETEN_GLM_47_API_KEY", "BASETEN_NEMOTRON_API_KEY"]
 
 
 def _mistral_api_env_names(model_name: str = "") -> list[str]:
@@ -412,12 +627,22 @@ def _api_env_names_for_provider(provider: str, model_name: str = "") -> list[str
         return ["GOOGLE_API_KEY"]
     if provider == "nvidia":
         return ["NVIDIA_API_KEY", "NGC_API_KEY"]
+    if provider == "baseten":
+        return _baseten_api_env_names(model_name)
+    if provider == "cerebras":
+        return ["CEREBRAS_API_KEY"]
+    if provider == "fireworks":
+        return ["FIREWORKS_API_KEY"]
+    if provider == "groq":
+        return ["GROQ_API_KEY"]
     if provider == "mistral":
         return _mistral_api_env_names(model_name)
     if provider == "huggingface":
         return ["HUGGINGFACE_FINEGRAINED", "HF_TOKEN", "HUGGINGFACEHUB_API_TOKEN"]
     if provider == "vercel":
         return ["VERCEL_AI_GATEWAY_API_KEY", "AI_GATEWAY_API_KEY", "VERCEL_OIDC_TOKEN"]
+    if provider == "opencode":
+        return ["OPENCODE_ZEN_API_KEY", "OPENCODE_API_KEY"]
     return []
 
 
@@ -729,15 +954,32 @@ def _call_ollama(prompt: str, model: str, timeout: int, num_predict: int) -> str
 def _extract_json_array(text: str) -> list[dict] | None:
     # Strip markdown code fences (```json ... ``` or ``` ... ```)
     text = re.sub(r"```[a-zA-Z]*\n?", "", text).strip()
+    if not text:
+        return None
+    if text.startswith("{") and text.endswith("}"):
+        try:
+            obj = json.loads(text)
+        except Exception:
+            obj = None
+        if isinstance(obj, dict):
+            return [obj]
     start = text.find("[")
     end = text.rfind("]")
     if start == -1 or end == -1 or end <= start:
+        try:
+            obj = json.loads(text)
+        except Exception:
+            return None
+        if isinstance(obj, dict):
+            return [obj]
         return None
     chunk = text[start : end + 1]
     try:
         arr = json.loads(chunk)
         if isinstance(arr, list):
             return [x for x in arr if isinstance(x, dict)]
+        if isinstance(arr, dict):
+            return [arr]
     except Exception:
         pass
 
@@ -858,6 +1100,24 @@ def _extract_openai_chat_text(body: dict) -> str:
     message = choices[0].get("message")
     if not isinstance(message, dict):
         raise ValueError("openai_chat_missing_message")
+
+    function_call = message.get("function_call")
+    if isinstance(function_call, dict):
+        arguments = function_call.get("arguments")
+        if isinstance(arguments, str) and arguments.strip():
+            return arguments
+
+    tool_calls = message.get("tool_calls")
+    if isinstance(tool_calls, list):
+        for tool_call in tool_calls:
+            if not isinstance(tool_call, dict):
+                continue
+            func = tool_call.get("function")
+            if isinstance(func, dict):
+                arguments = func.get("arguments")
+                if isinstance(arguments, str) and arguments.strip():
+                    return arguments
+
     content = message.get("content")
     if isinstance(content, str):
         return content
@@ -870,6 +1130,11 @@ def _extract_openai_chat_text(body: dict) -> str:
                 text_parts.append(part["text"])
         if text_parts:
             return "".join(text_parts)
+
+    reasoning_content = message.get("reasoning_content")
+    if isinstance(reasoning_content, str) and reasoning_content.strip():
+        return reasoning_content
+
     raise ValueError("openai_chat_missing_content")
 
 
@@ -886,6 +1151,7 @@ def _call_openai_compatible(
     max_output_tokens: int,
     url: str,
     provider: str,
+    auth_scheme: str = "Bearer",
 ) -> list[dict]:
     payload = {
         "model": model,
@@ -900,7 +1166,7 @@ def _call_openai_compatible(
         url,
         data=data,
         headers={
-            "Authorization": f"Bearer {api_key}",
+            "Authorization": f"{auth_scheme} {api_key}",
             "Content-Type": "application/json",
         },
         method="POST",
@@ -920,6 +1186,55 @@ def _call_nvidia(prompt: str, model: str, api_key: str, timeout: int, max_output
         max_output_tokens=max_output_tokens,
         url=NVIDIA_CHAT_URL,
         provider="nvidia",
+    )
+
+
+def _call_baseten(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+    return _call_openai_compatible(
+        prompt=prompt,
+        model=model,
+        api_key=api_key,
+        timeout=timeout,
+        max_output_tokens=max_output_tokens,
+        url=BASETEN_CHAT_URL,
+        provider="baseten",
+        auth_scheme="Api-Key",
+    )
+
+
+def _call_cerebras(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+    return _call_openai_compatible(
+        prompt=prompt,
+        model=model,
+        api_key=api_key,
+        timeout=timeout,
+        max_output_tokens=max_output_tokens,
+        url=CEREBRAS_CHAT_URL,
+        provider="cerebras",
+    )
+
+
+def _call_fireworks(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+    return _call_openai_compatible(
+        prompt=prompt,
+        model=model,
+        api_key=api_key,
+        timeout=timeout,
+        max_output_tokens=max_output_tokens,
+        url=FIREWORKS_CHAT_URL,
+        provider="fireworks",
+    )
+
+
+def _call_groq(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+    return _call_openai_compatible(
+        prompt=prompt,
+        model=model,
+        api_key=api_key,
+        timeout=timeout,
+        max_output_tokens=max_output_tokens,
+        url=GROQ_CHAT_URL,
+        provider="groq",
     )
 
 
@@ -959,6 +1274,18 @@ def _call_vercel(prompt: str, model: str, api_key: str, timeout: int, max_output
     )
 
 
+def _call_opencode(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int) -> list[dict]:
+    return _call_openai_compatible(
+        prompt=prompt,
+        model=model,
+        api_key=api_key,
+        timeout=timeout,
+        max_output_tokens=max_output_tokens,
+        url=OPENCODE_CHAT_URL,
+        provider="opencode",
+    )
+
+
 def _call_hosted_model(
     *,
     prompt: str,
@@ -983,6 +1310,38 @@ def _call_hosted_model(
             timeout=timeout,
             max_output_tokens=max_output_tokens,
         )
+    if spec.provider == "baseten":
+        return _call_baseten(
+            prompt,
+            model=spec.name,
+            api_key=api_key,
+            timeout=timeout,
+            max_output_tokens=max_output_tokens,
+        )
+    if spec.provider == "cerebras":
+        return _call_cerebras(
+            prompt,
+            model=spec.name,
+            api_key=api_key,
+            timeout=timeout,
+            max_output_tokens=max_output_tokens,
+        )
+    if spec.provider == "fireworks":
+        return _call_fireworks(
+            prompt,
+            model=spec.name,
+            api_key=api_key,
+            timeout=timeout,
+            max_output_tokens=max_output_tokens,
+        )
+    if spec.provider == "groq":
+        return _call_groq(
+            prompt,
+            model=spec.name,
+            api_key=api_key,
+            timeout=timeout,
+            max_output_tokens=max_output_tokens,
+        )
     if spec.provider == "mistral":
         return _call_mistral(
             prompt,
@@ -1001,6 +1360,14 @@ def _call_hosted_model(
         )
     if spec.provider == "vercel":
         return _call_vercel(
+            prompt,
+            model=spec.name,
+            api_key=api_key,
+            timeout=timeout,
+            max_output_tokens=max_output_tokens,
+        )
+    if spec.provider == "opencode":
+        return _call_opencode(
             prompt,
             model=spec.name,
             api_key=api_key,
@@ -1033,6 +1400,41 @@ def _norm_small_int(v: object, allowed: set[int]) -> int | None:
     return x if x in allowed else None
 
 
+def _norm_tristate(v: object) -> int | None:
+    if isinstance(v, str):
+        s = v.strip().lower()
+        if s in {"negative", "bearish", "down", "lower", "bad", "miss", "misses", "missed", "decrease", "decline", "weak"}:
+            return -1
+        if s in {"neutral", "flat", "none", "unchanged", "mixed", "unclear"}:
+            return 0
+        if s in {"positive", "bullish", "up", "higher", "good", "beat", "beats", "beat out", "increase", "rise", "strong"}:
+            return 1
+    return _norm_small_int(v, {-1, 0, 1})
+
+
+def _norm_level(v: object) -> int | None:
+    if isinstance(v, str):
+        s = v.strip().lower()
+        if s in {"low", "weak", "minor", "small"}:
+            return 0
+        if s in {"medium", "mid", "moderate", "medium-high", "middle"}:
+            return 1
+        if s in {"high", "strong", "large", "major", "big"}:
+            return 2
+    if isinstance(v, (int, float)):
+        try:
+            x = float(v)
+        except Exception:
+            return None
+        if 0.0 <= x <= 1.0:
+            if x < 0.34:
+                return 0
+            if x < 0.67:
+                return 1
+            return 2
+    return _norm_small_int(v, {0, 1, 2})
+
+
 def _norm_bool(v: object) -> bool | None:
     if isinstance(v, bool):
         return v
@@ -1053,6 +1455,18 @@ def _norm_bool(v: object) -> bool | None:
 def _norm_impact_scope(v: object) -> str | None:
     if isinstance(v, str) and v.strip().lower() in IMPACT_SCOPES:
         return v.strip().lower()
+    if isinstance(v, str):
+        s = v.strip().lower()
+        if s in {"company", "firm", "issuer", "stock"}:
+            return "stock"
+    return None
+
+
+def _norm_enum(v: object, allowed: set[str]) -> str | None:
+    if isinstance(v, str):
+        s = v.strip().lower()
+        if s in allowed:
+            return s
     return None
 
 
@@ -1071,16 +1485,21 @@ def _normalize_record(raw: dict, fallback_id: str) -> dict:
         "id": rid,
         "tickers": _norm_tickers(raw.get("tickers")),
         "related_tickers": _norm_tickers(raw.get("related_tickers")),
-        "sentiment": _norm_small_int(raw.get("sentiment"), {-1, 0, 1}),
-        "confidence": _norm_small_int(raw.get("confidence"), {0, 1, 2}),
+        "sentiment": _norm_tristate(raw.get("sentiment")),
+        "confidence": _norm_level(raw.get("confidence")),
         "event_type": ev,
-        "magnitude": _norm_small_int(raw.get("magnitude"), {0, 1, 2}),
+        "magnitude": _norm_level(raw.get("magnitude")),
         "is_forward_looking": _norm_bool(raw.get("is_forward_looking")),
-        "market_tone": _norm_small_int(raw.get("market_tone"), {-1, 0, 1}),
+        "market_tone": _norm_tristate(raw.get("market_tone")),
         "is_rumor": _norm_bool(raw.get("is_rumor")),
-        "surprise_direction": _norm_small_int(raw.get("surprise_direction"), {-1, 0, 1}),
+        "surprise_direction": _norm_tristate(raw.get("surprise_direction")),
         "impact_scope": _norm_impact_scope(raw.get("impact_scope")),
         "named_persons": _norm_str_list(raw.get("named_persons")),
+        "expectation_alignment": _norm_enum(raw.get("expectation_alignment"), EXPECTATION_ALIGNMENTS),
+        "information_novelty": _norm_enum(raw.get("information_novelty"), INFORMATION_NOVELTIES),
+        "macro_theme": _norm_enum(raw.get("macro_theme"), MACRO_THEMES),
+        "source_authority": _norm_enum(raw.get("source_authority"), SOURCE_AUTHORITIES),
+        "causal_impact_label": _norm_enum(raw.get("causal_impact_label"), CAUSAL_IMPACT_LABELS),
     }
 
 
@@ -1099,7 +1518,33 @@ def _blank_record(article: dict, err: str) -> dict:
         "surprise_direction": None,
         "impact_scope": None,
         "named_persons": [],
+        "expectation_alignment": None,
+        "information_novelty": None,
+        "macro_theme": None,
+        "source_authority": None,
+        "causal_impact_label": None,
         "llm_error": err,
+    }
+
+
+def _blank_record_with_enrichment(article: dict, err: str) -> dict:
+    record = _blank_record(article, err)
+    record.update(_article_enrichment(article))
+    return record
+
+
+def _article_enrichment(article: dict) -> dict[str, object]:
+    text_blob = _text_blob(article)
+    norm_text = _strip_vi(text_blob)
+    return {
+        "published_at": _clean_str(article.get("published_at")) or None,
+        "source_domain": _source_domain_from_url(article.get("url")),
+        "event_time_type": _event_time_type_from_published_at(article.get("published_at")),
+        "article_text_length": int(len(text_blob.strip())),
+        "article_has_numbers": bool(re.search(r"\d", norm_text)),
+        "article_mentions_percent": bool(
+            re.search(r"%|\bpercent\b|\bphan tram\b", norm_text)
+        ),
     }
 
 
@@ -1206,6 +1651,7 @@ def process_day(
     for i, a in enumerate(filtered, start=1):
         a["id"] = f"{date}_{i:04d}"
     _log(f"[{date}] loaded total={len(articles):,} filtered={len(filtered):,}")
+    article_meta = {a["id"]: _article_enrichment(a) for a in filtered}
 
     parsed_ok = 0
     parse_fail = 0
@@ -1229,7 +1675,7 @@ def process_day(
                 if rate_limiter is not None:
                     spec_used = rate_limiter.acquire_spec(acquire_timeout=300.0)
                     if spec_used is None:
-                        return ([_blank_record(a, "pool_exhausted") for a in batch], 0, 0, 0, True)
+                        return ([_blank_record_with_enrichment(a, "pool_exhausted") for a in batch], 0, 0, 0, True)
                 else:
                     if provider == "auto":
                         raise ValueError("provider=auto requires a hosted scheduler")
@@ -1271,7 +1717,7 @@ def process_day(
                 )
                 left_rows, left_ok, left_pf, left_tf, left_pool = _run_batch(batch[:split_at], depth=depth + 1)
                 if left_pool:
-                    remaining = [_blank_record(a, "pool_exhausted") for a in batch[split_at:]]
+                    remaining = [_blank_record_with_enrichment(a, "pool_exhausted") for a in batch[split_at:]]
                     return (left_rows + remaining, left_ok, left_pf, left_tf, True)
                 right_rows, right_ok, right_pf, right_tf, right_pool = _run_batch(batch[split_at:], depth=depth + 1)
                 return (
@@ -1282,7 +1728,7 @@ def process_day(
                     right_pool,
                 )
             err_prefix = _provider_error_prefix(provider_used)
-            return ([_blank_record(batch[0], f"{err_prefix}:{e}")], 0, 0, 1, False)
+            return ([_blank_record_with_enrichment(batch[0], f"{err_prefix}:{e}")], 0, 0, 1, False)
 
         if not arr:
             if hosted_mode and rate_limiter is not None and spec_used is not None:
@@ -1301,7 +1747,7 @@ def process_day(
                 )
                 left_rows, left_ok, left_pf, left_tf, left_pool = _run_batch(batch[:split_at], depth=depth + 1)
                 if left_pool:
-                    remaining = [_blank_record(a, "pool_exhausted") for a in batch[split_at:]]
+                    remaining = [_blank_record_with_enrichment(a, "pool_exhausted") for a in batch[split_at:]]
                     return (left_rows + remaining, left_ok, left_pf, left_tf, True)
                 right_rows, right_ok, right_pf, right_tf, right_pool = _run_batch(batch[split_at:], depth=depth + 1)
                 return (
@@ -1311,7 +1757,7 @@ def process_day(
                     left_tf + right_tf,
                     right_pool,
                 )
-            return ([_blank_record(batch[0], "json_parse_fail")], 0, 1, 0, False)
+            return ([_blank_record_with_enrichment(batch[0], "json_parse_fail")], 0, 1, 0, False)
 
         batch_rows: list[dict] = []
         seen: set[str] = set()
@@ -1320,6 +1766,7 @@ def process_day(
             rid = str(obj.get("id", "") or "").strip()
             if rid in by_id and rid not in seen:
                 norm = _normalize_record(obj, rid)
+                norm.update(article_meta.get(rid, {}))
                 norm["llm_error"] = None
                 batch_rows.append(norm)
                 seen.add(rid)
@@ -1349,7 +1796,9 @@ def process_day(
             )
             return _run_batch(batch, depth=depth + 1)
         for article in missing:
-            batch_rows.append(_blank_record(article, "missing_object_in_batch"))
+            blank = _blank_record_with_enrichment(article, "missing_object_in_batch")
+            blank.update(article_meta.get(article["id"], {}))
+            batch_rows.append(blank)
 
         return (batch_rows, batch_ok, len(missing), 0, False)
 
@@ -1427,7 +1876,7 @@ def main():
         "--provider",
         type=str,
         default="auto",
-        choices=["auto", "ollama", "google", "nvidia", "mistral", "huggingface", "vercel"],
+        choices=sorted(HOSTED_PROVIDERS | {"ollama"}),
         help=(
             "LLM provider. 'auto' builds one hosted pool across configured providers and "
             "uses the fastest observed models first."

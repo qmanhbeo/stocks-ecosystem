@@ -1,0 +1,20 @@
+{
+  "adapter_id": "signal_blend",
+  "as_of_date": "2026-03-27",
+  "candidate_count": 2,
+  "eligible_count": 1,
+  "generated_at_utc": "2026-04-05T11:35:33Z",
+  "model_id": "signal_blend__full_library",
+  "policies": [
+    "tradability_daily",
+    "alpha_latest_live_overlay"
+  ],
+  "profile_name": "alpha_full_library_live",
+  "source_artifacts": {
+    "lab_signal_matrix": "/home/manh/stocks-ecosystem/alpha-research-lab/tests/.tmp/news_features/pytest-of-manh/pytest-11/test_build_live_recommendation0/matrix.parquet",
+    "tradability_daily": "/home/manh/stocks-ecosystem/alpha-research-lab/tests/.tmp/news_features/pytest-of-manh/pytest-11/test_build_live_recommendation0/tradability.parquet"
+  },
+  "top_eligible_tickers": [
+    "AAA"
+  ]
+}

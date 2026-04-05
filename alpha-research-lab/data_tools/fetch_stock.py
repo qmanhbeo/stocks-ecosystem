@@ -46,9 +46,11 @@ def plan_ticker_refresh(
     end: str,
     *,
     full_refresh: bool,
-    probe_cache: dict[str, dict[str, object]],
-    probe_cache_ttl_hours: float,
+    probe_cache: dict[str, dict[str, object]] | None = None,
+    probe_cache_ttl_hours: float = 24.0,
 ):
+    if probe_cache is None:
+        probe_cache = load_probe_cache(probe_cache_path(time_interval)) if probe_cache_ttl_hours > 0 else {}
     file_path = DATA_DIR / f"gia_lich_su_{ticker}_{time_interval}.parquet"
     plan = plan_refresh(
         file_path,
@@ -85,8 +87,8 @@ def fetch_ticker(
     end="2026-12-31",
     full_refresh=False,
     *,
-    probe_cache,
-    probe_cache_ttl_hours,
+    probe_cache=None,
+    probe_cache_ttl_hours: float = 24.0,
 ):
     """Fetch data for a single ticker."""
 
