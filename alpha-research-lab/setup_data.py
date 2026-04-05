@@ -9,8 +9,8 @@ To restore news only:
     python data_tools/fetch_news_archive.py
 
 This script restores the old full data/ snapshot from the current backup pair:
-- data-snapshot-2026-04-02.tar.zst
-- data-snapshot-2026-04-02.tar.zst.sha256
+- data-snapshot-2026-04-05.tar.zst
+- data-snapshot-2026-04-05.tar.zst.sha256
 
 The downloaded archive and checksum are kept locally after extraction so reruns
 can reuse them without downloading again.
@@ -34,9 +34,9 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 WORKSPACE_ROOT = SCRIPT_DIR.parent
 
-ARCHIVE_FILE_ID = "1iy2Vxaiw4Ru97EWx1xBwHqAKDKDo5SxZ"
-CHECKSUM_FILE_ID = "1tz7b7LxfJ7Bs4zyoDdw6fS_97ehMOpW9"
-ARCHIVE_NAME = "data-snapshot-2026-04-02.tar.zst"
+ARCHIVE_FILE_ID = "1xMHhPaUDPSvx91EMc4P_Br80qboc7fIg"
+CHECKSUM_FILE_ID = "1g6_3acA7_0TRrzMcU8NWA8QhOaKHPx-P"
+ARCHIVE_NAME = "data-snapshot-2026-04-05.tar.zst"
 CHECKSUM_NAME = f"{ARCHIVE_NAME}.sha256"
 ARCHIVE_PATH = WORKSPACE_ROOT / ARCHIVE_NAME
 CHECKSUM_PATH = WORKSPACE_ROOT / CHECKSUM_NAME

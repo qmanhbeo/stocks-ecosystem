@@ -25,7 +25,15 @@ For the active timing-data acquisition branch, also read:
 | `data/fx-commodities/` — 20 global files | YES | `fetch_fx_commodities.py` + `fetch_global_macro.py` |
 | `data/insider_cache/` — 394 ticker parquets | YES | `fetch_insider_deals.py` |
 | `data/news/cafef/raw/*.jsonl` | NO (3.6 GB) | `python data_tools/fetch_news_archive.py` |
-| Full `data/` snapshot (legacy) | NO | `python setup_data.py` (restores `data-snapshot-2026-04-02.tar.zst` after SHA256 verification) |
+| Full `data/` snapshot (legacy) | NO | `python setup_data.py` (restores `data-snapshot-2026-04-05.tar.zst` after SHA256 verification) |
+
+To create a fresh full-data snapshot backup, run `rclone config` once to create a Google Drive remote, then run:
+```bash
+python backup_data_snapshot.py
+```
+This produces `data-snapshot-YYYY-MM-DD.tar.zst` plus the matching `.sha256`, uploads both via `rclone`, and keeps the newest 7 pairs by default.
+It uses zstd level 9 by default.
+Default Drive destination: `stocks-ecosystem-data-snapshots:project-backup/stock-data-backup/`.
 
 ---
 

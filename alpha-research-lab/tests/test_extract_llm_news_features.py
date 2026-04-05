@@ -82,6 +82,41 @@ def test_parse_openai_chat_array_accepts_single_object_content() -> None:
     assert arr == [{"id": "2026-03-13_0001", "tickers": ["FPT"], "sentiment": 1}]
 
 
+def test_parse_openai_chat_array_accepts_nested_content_text() -> None:
+    body = {
+        "choices": [
+            {
+                "message": {
+                    "content": [
+                        {"type": "text", "text": '[{"id":"2026-03-13_0001",'},
+                        {"type": "text", "text": '"tickers":["FPT"],"sentiment":1}]'},
+                    ]
+                }
+            }
+        ]
+    }
+
+    arr = llm._parse_openai_chat_array(body)
+
+    assert arr == [{"id": "2026-03-13_0001", "tickers": ["FPT"], "sentiment": 1}]
+
+
+def test_parse_openai_chat_array_ignores_bracket_noise() -> None:
+    body = {
+        "choices": [
+            {
+                "message": {
+                    "content": 'note [ignore me] then [{"id":"2026-03-13_0001","tickers":["FPT"],"sentiment":1}] after'
+                }
+            }
+        ]
+    }
+
+    arr = llm._parse_openai_chat_array(body)
+
+    assert arr == [{"id": "2026-03-13_0001", "tickers": ["FPT"], "sentiment": 1}]
+
+
 def test_cache_has_successful_rows_rejects_error_only_cache(tmp_path) -> None:
     cache_path = tmp_path / "2026-03-13.jsonl"
     _write_jsonl(

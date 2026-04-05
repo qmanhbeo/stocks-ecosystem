@@ -11,7 +11,7 @@ def test_parse_expected_sha256_accepts_standard_checksum_line(tmp_path):
     checksum = "a" * 64
     checksum_path = tmp_path / "snapshot.sha256"
     checksum_path.write_text(
-        f"{checksum}  data-snapshot-2026-04-02.tar.zst\n",
+        f"{checksum}  data-snapshot-2026-04-05.tar.zst\n",
         encoding="utf-8",
     )
 

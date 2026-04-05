@@ -963,46 +963,52 @@ def _extract_json_array(text: str) -> list[dict] | None:
             obj = None
         if isinstance(obj, dict):
             return [obj]
-    start = text.find("[")
-    end = text.rfind("]")
-    if start == -1 or end == -1 or end <= start:
+    if text.startswith("[") and text.endswith("]"):
         try:
-            obj = json.loads(text)
+            arr = json.loads(text)
+            if isinstance(arr, list):
+                return [x for x in arr if isinstance(x, dict)]
+            if isinstance(arr, dict):
+                return [arr]
         except Exception:
-            return None
-        if isinstance(obj, dict):
-            return [obj]
-        return None
-    chunk = text[start : end + 1]
-    try:
-        arr = json.loads(chunk)
-        if isinstance(arr, list):
-            return [x for x in arr if isinstance(x, dict)]
-        if isinstance(arr, dict):
-            return [arr]
-    except Exception:
-        pass
+            pass
 
-    # salvage: split top-level object slices by brace depth
-    objs: list[dict] = []
-    depth = 0
-    obj_start = -1
-    for i, ch in enumerate(chunk):
-        if ch == "{":
-            if depth == 0:
-                obj_start = i
-            depth += 1
-        elif ch == "}":
-            depth -= 1
-            if depth == 0 and obj_start != -1:
-                cand = chunk[obj_start : i + 1]
-                try:
-                    parsed = json.loads(cand)
-                    if isinstance(parsed, dict):
-                        objs.append(parsed)
-                except Exception:
-                    continue
-    return objs or None
+    def _balanced_spans(open_char: str, close_char: str) -> Iterable[str]:
+        depth = 0
+        start = -1
+        in_string = False
+        escape = False
+        for i, ch in enumerate(text):
+            if in_string:
+                if escape:
+                    escape = False
+                elif ch == "\\":
+                    escape = True
+                elif ch == '"':
+                    in_string = False
+                continue
+            if ch == '"':
+                in_string = True
+                continue
+            if ch == open_char:
+                if depth == 0:
+                    start = i
+                depth += 1
+            elif ch == close_char and depth > 0:
+                depth -= 1
+                if depth == 0 and start != -1:
+                    yield text[start : i + 1]
+
+    for chunk in list(_balanced_spans("[", "]")) + list(_balanced_spans("{", "}")):
+        try:
+            parsed = json.loads(chunk)
+        except Exception:
+            continue
+        if isinstance(parsed, list):
+            return [x for x in parsed if isinstance(x, dict)]
+        if isinstance(parsed, dict):
+            return [parsed]
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -1094,8 +1100,39 @@ def _normalize_provider_model_name(provider: str, model: str) -> str:
 
 
 def _extract_openai_chat_text(body: dict) -> str:
+    def _coerce_text(payload: object) -> str:
+        if isinstance(payload, str):
+            return payload if payload.strip() else ""
+        if isinstance(payload, dict):
+            for key in ("content", "text", "output_text", "message", "reasoning_content", "arguments"):
+                value = payload.get(key)
+                if isinstance(value, str) and value.strip():
+                    return value
+            parts = payload.get("parts")
+            if isinstance(parts, list):
+                text_parts = []
+                for part in parts:
+                    part_text = _coerce_text(part)
+                    if part_text:
+                        text_parts.append(part_text)
+                if text_parts:
+                    return "".join(text_parts)
+        if isinstance(payload, list):
+            text_parts = []
+            for part in payload:
+                part_text = _coerce_text(part)
+                if part_text:
+                    text_parts.append(part_text)
+            if text_parts:
+                return "".join(text_parts)
+        return ""
+
     choices = body.get("choices")
     if not isinstance(choices, list) or not choices:
+        for key in ("output_text", "text", "response"):
+            text = _coerce_text(body.get(key))
+            if text:
+                return text
         raise ValueError("openai_chat_missing_choices")
     message = choices[0].get("message")
     if not isinstance(message, dict):
@@ -1118,22 +1155,15 @@ def _extract_openai_chat_text(body: dict) -> str:
                 if isinstance(arguments, str) and arguments.strip():
                     return arguments
 
-    content = message.get("content")
-    if isinstance(content, str):
-        return content
-    if isinstance(content, list):
-        text_parts = []
-        for part in content:
-            if isinstance(part, str):
-                text_parts.append(part)
-            elif isinstance(part, dict) and isinstance(part.get("text"), str):
-                text_parts.append(part["text"])
-        if text_parts:
-            return "".join(text_parts)
+    for key in ("content", "reasoning_content", "output_text", "text", "response"):
+        text = _coerce_text(message.get(key))
+        if text:
+            return text
 
-    reasoning_content = message.get("reasoning_content")
-    if isinstance(reasoning_content, str) and reasoning_content.strip():
-        return reasoning_content
+    for key in ("output_text", "text", "response"):
+        text = _coerce_text(body.get(key))
+        if text:
+            return text
 
     raise ValueError("openai_chat_missing_content")
 

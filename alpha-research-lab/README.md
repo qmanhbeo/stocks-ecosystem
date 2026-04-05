@@ -352,6 +352,17 @@ All commands above are intended to be run from `alpha-research-lab/`.
 The environment also installs the workspace-shared `shared-market-rules` package.
 It also installs the workspace-shared `shared-recommendation` package used for candidate generation and artifact resolution.
 
+To create a full snapshot backup of the current shared `data/` tree, run `rclone config`
+once to create a Google Drive remote, then run:
+
+```bash
+python backup_data_snapshot.py
+```
+
+The script writes `data-snapshot-YYYY-MM-DD.tar.zst`, writes the matching `.sha256`, uploads
+both files, uses zstd level 9 by default, and keeps the newest 7 snapshot pairs by default.
+Default Drive destination: `stocks-ecosystem-data-snapshots:project-backup/stock-data-backup/`.
+
 ## Main Experiment Modes
 
 - `run_experiment.py`: quick one-shot screen on a fixed split. Cheap, not authoritative.
