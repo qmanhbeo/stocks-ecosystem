@@ -202,6 +202,15 @@ def test_resolve_provider_api_keys_read_repo_env(monkeypatch, tmp_path) -> None:
     assert llm._resolve_vercel_api_key("") == "vercel-key"
 
 
+def test_opencode_pool_uses_free_zen_models() -> None:
+    assert [cfg["name"] for cfg in llm.OPENCODE_MODEL_POOL] == [
+        "opencode/big-pickle",
+        "opencode/qwen3.6-plus-free",
+        "opencode/nemotron-3-super-free",
+        "opencode/minimax-m2.5-free",
+    ]
+
+
 def test_hosted_scheduler_skips_model_on_cooldown(tmp_path) -> None:
     stats_path = tmp_path / "stats.json"
     limiter = llm.HostedModelScheduler(

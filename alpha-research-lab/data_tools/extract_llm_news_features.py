@@ -532,13 +532,10 @@ GROQ_MODEL_POOL = [
 ]
 
 OPENCODE_MODEL_POOL = [
-    {"name": "opencode/gpt-5.2-codex", "seed_latency": 2.2},
-    {"name": "opencode/gpt-5.2", "seed_latency": 2.6},
-    {"name": "opencode/claude-opus-4-5", "seed_latency": 4.0},
-    {"name": "opencode/glm-4.7", "seed_latency": 3.5},
-    {"name": "opencode/kimi-k2.5", "seed_latency": 4.2},
-    {"name": "opencode/minimax-m2.5", "seed_latency": 3.3},
-    {"name": "opencode/nemotron-3-super-free", "seed_latency": 4.7},
+    {"name": "opencode/big-pickle", "seed_latency": 2.2},
+    {"name": "opencode/qwen3.6-plus-free", "seed_latency": 2.6},
+    {"name": "opencode/nemotron-3-super-free", "seed_latency": 4.0},
+    {"name": "opencode/minimax-m2.5-free", "seed_latency": 3.3},
 ]
 
 PROVIDER_MODEL_POOLS = {
