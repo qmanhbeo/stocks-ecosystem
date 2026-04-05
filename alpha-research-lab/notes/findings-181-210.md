@@ -1198,3 +1198,43 @@ Three reclaim-style variants did pass a forward `5`-day excess-return diagnostic
 **Key finding:** the eyeballed pattern is not fiction, but it is not a transportable `T+1` daily alpha on the current contract. The real information, if any, sits in a slower reclaim / short-swing horizon, not in the canonical next-day library target.
 
 **Implication:** do not reopen the current daily next-day synthesis queue because of the `upward W` idea. If this family is revisited, do it only as alternative-horizon offline label work or as a future swing / entry contract, not as a live-branch or signal-library continuation.
+
+## F214: H291 Shows News Decay Is Real But The Clean Single-Class Half-Life Contract Fails; `follow_up` Owns 1d While 5d Reorders The Classes (2026-04-05, Session 121)
+
+`H291` audited the raw CafeF LLM novelty stream on the nonzero `2015-2017` window and compared `new`, `follow_up`, and `recycled` stories across `1d`, `5d`, and `30d` forward excess returns.
+
+### Result
+The half-life is real, but the clean contract is not:
+- best 1d class: `follow_up`
+  - mean rho `+0.0196`
+  - daily hit rate `0.5256`
+  - positive years `2 / 2`
+- best 5d class: `follow_up_minus_new`
+  - mean rho `+0.0038`
+- best 30d class: `new`
+  - mean rho `+0.0019`
+- `recycled` stays weaker than `follow_up`
+
+### Key finding
+News novelty does decay in a learnable way, but the ordering is not stable enough to call it a single clean contract. The short-horizon edge sits in `follow_up`, while the 5d horizon shifts to a spread feature instead of preserving the same class ordering.
+
+**Implication:** keep this as mixed evidence only. If revisited, it should be as a horizon-specific router or spread contract, not as a single novelty class rule.
+
+## F215: H292 Shows Macro Themes Have Real Strength But Not A Clean Sector Router; Real-Estate Theme Dominates The Combined Property Basket (2026-04-05, Session 121)
+
+`H292` audited the LLM macro-theme fractions against matched sector baskets built from the published rotation / event surfaces.
+
+### Result
+The macro themes are real, but the router is messy:
+- best basket: `regulated_combo`
+- best feature: `frac_real_estate_theme`
+- mean rho `+0.0988`
+- daily hit rate `1.0000`
+- positive years `2 / 2`
+- banking matched theme is positive but weaker
+- regulation theme is weak to negative on its nominal basket
+
+### Key finding
+The theme surface does not cleanly switch by sector. The real-estate theme appears to behave like a broad property / balance-sheet state factor and can dominate the combined regulated basket, while the regulation theme itself does not own the combined basket. That is useful information, but it is not a crisp sector router yet.
+
+**Implication:** keep the macro-theme branch parked as mixed evidence. If revisited, it likely needs a sharper target than pooled sector baskets, or a more explicit regime gate.
