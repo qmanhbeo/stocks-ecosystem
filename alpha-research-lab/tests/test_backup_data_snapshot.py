@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import tarfile
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 import zstandard as zstd
@@ -21,8 +21,8 @@ def _read_tar_names(archive_path: Path) -> list[str]:
     return names
 
 
-def test_snapshot_name_uses_iso_date() -> None:
-    assert backup._snapshot_name(date(2026, 4, 5)) == "data-snapshot-2026-04-05.tar.zst"
+def test_snapshot_name_uses_timestamp() -> None:
+    assert backup._snapshot_name(datetime(2026, 4, 5, 14, 32, 15)) == "data-snapshot-2026-04-05-143215.tar.zst"
 
 
 def test_create_snapshot_writes_valid_archive_and_checksum(tmp_path) -> None:
@@ -35,12 +35,12 @@ def test_create_snapshot_writes_valid_archive_and_checksum(tmp_path) -> None:
     snapshot = backup._create_snapshot(
         source_dir=source_dir,
         output_dir=output_dir,
-        snapshot_date=date(2026, 4, 5),
+        snapshot_at=datetime(2026, 4, 5, 14, 32, 15),
         zstd_level=19,
     )
 
-    assert snapshot.archive_path.name == "data-snapshot-2026-04-05.tar.zst"
-    assert snapshot.checksum_path.name == "data-snapshot-2026-04-05.tar.zst.sha256"
+    assert snapshot.archive_path.name == "data-snapshot-2026-04-05-143215.tar.zst"
+    assert snapshot.checksum_path.name == "data-snapshot-2026-04-05-143215.tar.zst.sha256"
     assert snapshot.archive_path.exists()
     assert snapshot.checksum_path.exists()
 
@@ -56,10 +56,10 @@ def test_create_snapshot_writes_valid_archive_and_checksum(tmp_path) -> None:
 
 def test_prune_local_snapshots_keeps_newest_pairs(tmp_path) -> None:
     root = tmp_path
-    for day in ["2026-04-01", "2026-04-03", "2026-04-05"]:
-        archive = root / f"data-snapshot-{day}.tar.zst"
-        checksum = root / f"data-snapshot-{day}.tar.zst.sha256"
-        archive.write_bytes(day.encode("utf-8"))
+    for stamp in ["2026-04-01-090000", "2026-04-05-083000", "2026-04-05-151500"]:
+        archive = root / f"data-snapshot-{stamp}.tar.zst"
+        checksum = root / f"data-snapshot-{stamp}.tar.zst.sha256"
+        archive.write_bytes(stamp.encode("utf-8"))
         checksum.write_text(f"{'a' * 64}  {archive.name}\n", encoding="utf-8")
     extra = root / "not-a-snapshot.txt"
     extra.write_text("keep me", encoding="utf-8")
@@ -67,11 +67,11 @@ def test_prune_local_snapshots_keeps_newest_pairs(tmp_path) -> None:
     removed = backup._prune_local_snapshots(root, keep=2)
 
     assert sorted(p.name for p in removed) == [
-        "data-snapshot-2026-04-01.tar.zst",
-        "data-snapshot-2026-04-01.tar.zst.sha256",
+        "data-snapshot-2026-04-01-090000.tar.zst",
+        "data-snapshot-2026-04-01-090000.tar.zst.sha256",
     ]
-    assert not (root / "data-snapshot-2026-04-01.tar.zst").exists()
-    assert not (root / "data-snapshot-2026-04-01.tar.zst.sha256").exists()
-    assert (root / "data-snapshot-2026-04-03.tar.zst").exists()
-    assert (root / "data-snapshot-2026-04-05.tar.zst").exists()
+    assert not (root / "data-snapshot-2026-04-01-090000.tar.zst").exists()
+    assert not (root / "data-snapshot-2026-04-01-090000.tar.zst.sha256").exists()
+    assert (root / "data-snapshot-2026-04-05-083000.tar.zst").exists()
+    assert (root / "data-snapshot-2026-04-05-151500.tar.zst").exists()
     assert extra.exists()

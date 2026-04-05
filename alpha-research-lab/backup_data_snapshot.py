@@ -1,13 +1,13 @@
 """
-Create and upload a dated full-data snapshot of the shared workspace `data/` tree.
+Create and upload a timestamped full-data snapshot of the shared workspace `data/` tree.
 
 This is the backup counterpart to `setup_data.py`.
 
 Features:
-- creates `data-snapshot-YYYY-MM-DD.tar.zst`
+- creates `data-snapshot-YYYY-MM-DD-HHMMSS.tar.zst`
 - writes matching `.sha256`
 - uploads both files to a configured Google Drive remote via `rclone`
-- prunes old local and remote snapshot pairs, keeping the newest N
+- prunes old local and remote snapshot pairs, keeping the newest N runs
 
 Usage:
     python backup_data_snapshot.py --remote-root gdrive:stocks-ecosystem-data-snapshots
@@ -41,13 +41,14 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 WORKSPACE_ROOT = SCRIPT_DIR.parent
 DEFAULT_KEEP = 7
 DEFAULT_REMOTE_ROOT = "stocks-ecosystem-data-snapshots:project-backup/stock-data-backup/"
-SNAPSHOT_DATE_RE = re.compile(r"^data-snapshot-(\d{4}-\d{2}-\d{2})\.tar\.zst$")
-SNAPSHOT_CHECKSUM_RE = re.compile(r"^data-snapshot-(\d{4}-\d{2}-\d{2})\.tar\.zst\.sha256$")
+SNAPSHOT_STEM_RE = re.compile(r"^data-snapshot-(\d{4}-\d{2}-\d{2})(?:-(\d{6}))?$")
+SNAPSHOT_ARCHIVE_RE = re.compile(r"^(data-snapshot-(\d{4}-\d{2}-\d{2})(?:-(\d{6}))?)\.tar\.zst$")
+SNAPSHOT_CHECKSUM_RE = re.compile(r"^(data-snapshot-(\d{4}-\d{2}-\d{2})(?:-(\d{6}))?)\.tar\.zst\.sha256$")
 
 
 @dataclass(frozen=True)
 class SnapshotPaths:
-    snapshot_date: date
+    snapshot_at: datetime
     archive_path: Path
     checksum_path: Path
 
@@ -57,15 +58,15 @@ def _log(msg: str) -> None:
     print(f"[{ts}] {msg}", flush=True)
 
 
-def _snapshot_name(snapshot_date: date) -> str:
-    return f"data-snapshot-{snapshot_date.isoformat()}.tar.zst"
+def _snapshot_name(snapshot_at: datetime) -> str:
+    return f"data-snapshot-{snapshot_at.strftime('%Y-%m-%d-%H%M%S')}.tar.zst"
 
 
-def _snapshot_paths(output_dir: Path, snapshot_date: date) -> SnapshotPaths:
-    archive_name = _snapshot_name(snapshot_date)
+def _snapshot_paths(output_dir: Path, snapshot_at: datetime) -> SnapshotPaths:
+    archive_name = _snapshot_name(snapshot_at)
     archive_path = output_dir / archive_name
     checksum_path = output_dir / f"{archive_name}.sha256"
-    return SnapshotPaths(snapshot_date=snapshot_date, archive_path=archive_path, checksum_path=checksum_path)
+    return SnapshotPaths(snapshot_at=snapshot_at, archive_path=archive_path, checksum_path=checksum_path)
 
 
 def _compute_sha256(path: Path) -> str:
@@ -127,24 +128,42 @@ def _build_archive(source_dir: Path, archive_path: Path, *, zstd_level: int = 9)
     tmp_path.replace(archive_path)
 
 
-def _snapshot_group_date(path: Path) -> date | None:
-    m = SNAPSHOT_DATE_RE.fullmatch(path.name)
+def _snapshot_sort_key_from_stem(stem: str) -> datetime | None:
+    m = SNAPSHOT_STEM_RE.fullmatch(stem)
+    if not m:
+        return None
+    day = date.fromisoformat(m.group(1))
+    time_part = m.group(2)
+    if time_part:
+        return datetime.strptime(f"{m.group(1)}-{time_part}", "%Y-%m-%d-%H%M%S")
+    return datetime.combine(day, datetime.min.time())
+
+
+def _snapshot_group_info(path: Path) -> tuple[str, datetime] | None:
+    m = SNAPSHOT_ARCHIVE_RE.fullmatch(path.name)
     if m:
-        return date.fromisoformat(m.group(1))
+        stem = m.group(1)
+        sort_key = _snapshot_sort_key_from_stem(stem)
+        if sort_key is not None:
+            return stem, sort_key
     m = SNAPSHOT_CHECKSUM_RE.fullmatch(path.name)
     if m:
-        return date.fromisoformat(m.group(1))
+        stem = m.group(1)
+        sort_key = _snapshot_sort_key_from_stem(stem)
+        if sort_key is not None:
+            return stem, sort_key
     return None
 
 
-def _local_snapshot_groups(root: Path) -> dict[date, dict[str, Path]]:
-    groups: dict[date, dict[str, Path]] = {}
+def _local_snapshot_groups(root: Path) -> dict[str, dict[str, Path | datetime]]:
+    groups: dict[str, dict[str, Path | datetime]] = {}
     for path in root.iterdir():
-        snap_date = _snapshot_group_date(path)
-        if snap_date is None:
+        info = _snapshot_group_info(path)
+        if info is None:
             continue
-        bucket = groups.setdefault(snap_date, {})
-        if SNAPSHOT_DATE_RE.fullmatch(path.name):
+        stem, sort_key = info
+        bucket = groups.setdefault(stem, {"sort_key": sort_key})
+        if SNAPSHOT_ARCHIVE_RE.fullmatch(path.name):
             bucket["archive"] = path
         elif SNAPSHOT_CHECKSUM_RE.fullmatch(path.name):
             bucket["checksum"] = path
@@ -153,11 +172,11 @@ def _local_snapshot_groups(root: Path) -> dict[date, dict[str, Path]]:
 
 def _prune_local_snapshots(root: Path, keep: int) -> list[Path]:
     groups = _local_snapshot_groups(root)
-    ordered_dates = sorted(groups.keys(), reverse=True)
+    ordered_stems = sorted(groups.keys(), key=lambda stem: groups[stem]["sort_key"], reverse=True)
     removed: list[Path] = []
-    for snap_date in ordered_dates[keep:]:
-        for path in groups[snap_date].values():
-            if path.exists():
+    for stem in ordered_stems[keep:]:
+        for path in groups[stem].values():
+            if isinstance(path, Path) and path.exists():
                 path.unlink()
                 removed.append(path)
     return removed
@@ -202,19 +221,20 @@ def _upload_snapshot(remote_root: str, snapshot: SnapshotPaths) -> None:
     _run_rclone("copyto", str(snapshot.checksum_path), _remote_join(remote_root, snapshot.checksum_path.name))
 
 
-def _remote_snapshot_groups(remote_root: str) -> dict[date, dict[str, str]]:
+def _remote_snapshot_groups(remote_root: str) -> dict[str, dict[str, str | datetime]]:
     result = _run_rclone("lsjson", remote_root)
     entries = json.loads(result.stdout or "[]")
-    groups: dict[date, dict[str, str]] = {}
+    groups: dict[str, dict[str, str | datetime]] = {}
     for entry in entries:
         if not isinstance(entry, dict):
             continue
         name = str(entry.get("Name") or entry.get("Path") or "").strip()
-        snap_date = _snapshot_group_date(Path(name))
-        if snap_date is None:
+        info = _snapshot_group_info(Path(name))
+        if info is None:
             continue
-        bucket = groups.setdefault(snap_date, {})
-        if SNAPSHOT_DATE_RE.fullmatch(name):
+        stem, sort_key = info
+        bucket = groups.setdefault(stem, {"sort_key": sort_key})
+        if SNAPSHOT_ARCHIVE_RE.fullmatch(name):
             bucket["archive"] = name
         elif SNAPSHOT_CHECKSUM_RE.fullmatch(name):
             bucket["checksum"] = name
@@ -223,10 +243,12 @@ def _remote_snapshot_groups(remote_root: str) -> dict[date, dict[str, str]]:
 
 def _prune_remote_snapshots(remote_root: str, keep: int) -> list[str]:
     groups = _remote_snapshot_groups(remote_root)
-    ordered_dates = sorted(groups.keys(), reverse=True)
+    ordered_stems = sorted(groups.keys(), key=lambda stem: groups[stem]["sort_key"], reverse=True)
     removed: list[str] = []
-    for snap_date in ordered_dates[keep:]:
-        for name in groups[snap_date].values():
+    for stem in ordered_stems[keep:]:
+        for name in groups[stem].values():
+            if not isinstance(name, str):
+                continue
             _run_rclone("deletefile", _remote_join(remote_root, name))
             removed.append(name)
     return removed
@@ -236,10 +258,10 @@ def _create_snapshot(
     *,
     source_dir: Path,
     output_dir: Path,
-    snapshot_date: date,
+    snapshot_at: datetime,
     zstd_level: int,
 ) -> SnapshotPaths:
-    snapshot = _snapshot_paths(output_dir, snapshot_date)
+    snapshot = _snapshot_paths(output_dir, snapshot_at)
     _build_archive(source_dir, snapshot.archive_path, zstd_level=zstd_level)
     _write_checksum(snapshot.archive_path, snapshot.checksum_path)
     return snapshot
@@ -275,7 +297,7 @@ def main() -> None:
         "--date",
         type=str,
         default="",
-        help="Override the snapshot date (YYYY-MM-DD). Defaults to today.",
+        help="Override the snapshot day (YYYY-MM-DD). Defaults to today; time still comes from the run clock.",
     )
     ap.add_argument(
         "--zstd-level",
@@ -301,11 +323,12 @@ def main() -> None:
     if not args.no_upload:
         _check_rclone_remote(args.remote_root)
 
-    snapshot_date = date.fromisoformat(args.date) if args.date else datetime.now().date()
+    snapshot_day = date.fromisoformat(args.date) if args.date else datetime.now().date()
+    snapshot_at = datetime.combine(snapshot_day, datetime.now().time().replace(microsecond=0))
     snapshot = _create_snapshot(
         source_dir=args.source_dir.resolve(),
         output_dir=args.output_dir.resolve(),
-        snapshot_date=snapshot_date,
+        snapshot_at=snapshot_at,
         zstd_level=args.zstd_level,
     )
 

@@ -1,5 +1,5 @@
 """
-Legacy full-data snapshot restore from Google Drive.
+Restore the latest full-data snapshot from Google Drive.
 
 NOTE: Most of data/ is now tracked directly in git. You do NOT need this script
 on a normal clone — just `git pull` gets you the stock/features/FX/indices data.
@@ -8,9 +8,10 @@ The only data NOT in git is data/news/ (3.6 GB of cafef JSONL files).
 To restore news only:
     python data_tools/fetch_news_archive.py
 
-This script restores the old full data/ snapshot from the current backup pair:
-- data-snapshot-2026-04-05.tar.zst
-- data-snapshot-2026-04-05.tar.zst.sha256
+This script restores the latest full data/ snapshot pair from the configured
+Google Drive backup remote:
+- data-snapshot-YYYY-MM-DD-HHMMSS.tar.zst
+- data-snapshot-YYYY-MM-DD-HHMMSS.tar.zst.sha256
 
 The downloaded archive and checksum are kept locally after extraction so reruns
 can reuse them without downloading again.
@@ -20,36 +21,34 @@ See notes/data_sources.md for the full data inventory.
 
 Usage:
     python setup_data.py
+    python setup_data.py --snapshot-name data-snapshot-2026-04-05-143215.tar.zst
 """
 
 from __future__ import annotations
 
 import hashlib
+import json
+import os
 import re
 import subprocess
 import sys
 import tarfile
+import shutil
+from datetime import date, datetime
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 WORKSPACE_ROOT = SCRIPT_DIR.parent
 
-ARCHIVE_FILE_ID = "1xMHhPaUDPSvx91EMc4P_Br80qboc7fIg"
-CHECKSUM_FILE_ID = "1g6_3acA7_0TRrzMcU8NWA8QhOaKHPx-P"
-ARCHIVE_NAME = "data-snapshot-2026-04-05.tar.zst"
-CHECKSUM_NAME = f"{ARCHIVE_NAME}.sha256"
-ARCHIVE_PATH = WORKSPACE_ROOT / ARCHIVE_NAME
-CHECKSUM_PATH = WORKSPACE_ROOT / CHECKSUM_NAME
+DEFAULT_REMOTE_ROOT = "stocks-ecosystem-data-snapshots:project-backup/stock-data-backup/"
+SNAPSHOT_STEM_RE = re.compile(r"^data-snapshot-(\d{4}-\d{2}-\d{2})(?:-(\d{6}))?$")
+SNAPSHOT_ARCHIVE_RE = re.compile(r"^(data-snapshot-(\d{4}-\d{2}-\d{2})(?:-(\d{6}))?)\.tar\.zst$")
+SNAPSHOT_CHECKSUM_RE = re.compile(r"^(data-snapshot-(\d{4}-\d{2}-\d{2})(?:-(\d{6}))?)\.tar\.zst\.sha256$")
 EXTRACT_TO = WORKSPACE_ROOT
 
 
 def ensure_runtime_dependencies():
     missing: list[str] = []
-    try:
-        import gdown  # noqa: F401
-    except ImportError:
-        missing.append("gdown")
-
     try:
         import zstandard  # noqa: F401
     except ImportError:
@@ -58,14 +57,6 @@ def ensure_runtime_dependencies():
     if missing:
         print(f"Installing {', '.join(missing)}...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", *missing])
-
-
-def download(file_id: str, dest: Path, label: str):
-    import gdown
-
-    url = f"https://drive.google.com/uc?id={file_id}"
-    print(f"Downloading {label} from Google Drive -> {dest}")
-    gdown.download(url, str(dest), quiet=False)
 
 
 def parse_expected_sha256(checksum_path: Path) -> str:
@@ -123,24 +114,123 @@ def extract(archive: Path, target: Path):
     print("Done.")
 
 
+def _check_rclone_available() -> None:
+    if shutil.which("rclone") is None:
+        raise RuntimeError("rclone is required but was not found on PATH")
+
+
+def _snapshot_sort_key_from_stem(stem: str) -> datetime | None:
+    m = SNAPSHOT_STEM_RE.fullmatch(stem)
+    if not m:
+        return None
+    day = date.fromisoformat(m.group(1))
+    time_part = m.group(2)
+    if time_part:
+        return datetime.strptime(f"{m.group(1)}-{time_part}", "%Y-%m-%d-%H%M%S")
+    return datetime.combine(day, datetime.min.time())
+
+
+def _select_latest_remote_snapshot(remote_root: str) -> tuple[str, str]:
+    result = subprocess.run(
+        ["rclone", "lsjson", remote_root],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    entries = json.loads(result.stdout or "[]")
+    groups: dict[str, dict[str, str | datetime]] = {}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        name = str(entry.get("Name") or entry.get("Path") or "").strip()
+        stem_match = SNAPSHOT_ARCHIVE_RE.fullmatch(name) or SNAPSHOT_CHECKSUM_RE.fullmatch(name)
+        if not stem_match:
+            continue
+        stem = stem_match.group(1)
+        sort_key = _snapshot_sort_key_from_stem(stem)
+        if sort_key is None:
+            continue
+        bucket = groups.setdefault(stem, {"sort_key": sort_key})
+        if SNAPSHOT_ARCHIVE_RE.fullmatch(name):
+            bucket["archive"] = name
+        elif SNAPSHOT_CHECKSUM_RE.fullmatch(name):
+            bucket["checksum"] = name
+
+    if not groups:
+        raise RuntimeError(f"no snapshots found in remote root '{remote_root}'")
+
+    ordered = sorted(groups.items(), key=lambda item: item[1]["sort_key"], reverse=True)
+    for stem, bucket in ordered:
+        archive = bucket.get("archive")
+        checksum = bucket.get("checksum")
+        if isinstance(archive, str) and isinstance(checksum, str):
+            return archive, checksum
+    raise RuntimeError(f"no complete archive/checksum pair found in remote root '{remote_root}'")
+
+
+def _normalize_snapshot_name(snapshot_name: str) -> str:
+    value = snapshot_name.strip()
+    if not value:
+        raise ValueError("snapshot name must not be empty")
+    if value.endswith(".tar.zst.sha256"):
+        value = value[: -len(".sha256")]
+    elif not value.endswith(".tar.zst"):
+        value = value + ".tar.zst"
+    if SNAPSHOT_ARCHIVE_RE.fullmatch(value):
+        return value
+    raise ValueError(
+        "snapshot name must look like data-snapshot-YYYY-MM-DD-HHMMSS.tar.zst "
+        "or the same stem without .tar.zst"
+    )
+
+
+def _download_remote_file(remote_root: str, name: str, dest: Path) -> None:
+    remote_path = remote_root.rstrip("/") + "/" + name
+    print(f"Downloading {name} from Google Drive -> {dest}")
+    subprocess.run(["rclone", "copyto", remote_path, str(dest)], check=True)
+
+
 def main():
     ensure_runtime_dependencies()
 
-    if not ARCHIVE_PATH.exists():
-        download(ARCHIVE_FILE_ID, ARCHIVE_PATH, "snapshot archive")
-    else:
-        print(f"{ARCHIVE_PATH} already exists, skipping download.")
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--snapshot-name",
+        type=str,
+        default="",
+        help=(
+            "Restore a specific snapshot run instead of the newest one. "
+            "Accepts the archive name or stem, e.g. data-snapshot-2026-04-05-143215.tar.zst."
+        ),
+    )
+    args = parser.parse_args()
 
-    if not CHECKSUM_PATH.exists():
-        download(CHECKSUM_FILE_ID, CHECKSUM_PATH, "snapshot checksum")
-    else:
-        print(f"{CHECKSUM_PATH} already exists, skipping download.")
+    _check_rclone_available()
+    remote_root = os.environ.get("DATA_SNAPSHOT_REMOTE_ROOT", DEFAULT_REMOTE_ROOT)
 
-    verify_checksum(ARCHIVE_PATH, CHECKSUM_PATH)
-    extract(ARCHIVE_PATH, EXTRACT_TO)
+    if args.snapshot_name:
+        archive_name = _normalize_snapshot_name(args.snapshot_name)
+        checksum_name = f"{archive_name}.sha256"
+    else:
+        archive_name, checksum_name = _select_latest_remote_snapshot(remote_root)
+    archive_path = WORKSPACE_ROOT / archive_name
+    checksum_path = WORKSPACE_ROOT / checksum_name
+
+    if not archive_path.exists():
+        _download_remote_file(remote_root, archive_name, archive_path)
+    else:
+        print(f"{archive_path} already exists, skipping download.")
+
+    if not checksum_path.exists():
+        _download_remote_file(remote_root, checksum_name, checksum_path)
+    else:
+        print(f"{checksum_path} already exists, skipping download.")
+
+    verify_checksum(archive_path, checksum_path)
+    extract(archive_path, EXTRACT_TO)
     print(
-        f"Data ready in {EXTRACT_TO}/. Kept {ARCHIVE_PATH.name} and "
-        f"{CHECKSUM_PATH.name} for reuse on future setup runs."
+        f"Data ready in {EXTRACT_TO}/. Kept {archive_path.name} and "
+        f"{checksum_path.name} for reuse on future setup runs."
     )
 
 

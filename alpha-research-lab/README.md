@@ -349,6 +349,9 @@ python setup_data.py
 ```
 
 All commands above are intended to be run from `alpha-research-lab/`.
+`setup_data.py` restores the newest full-data snapshot from the configured
+Google Drive backup remote via `rclone`.
+To restore a specific snapshot run, pass `--snapshot-name data-snapshot-YYYY-MM-DD-HHMMSS.tar.zst`.
 The environment also installs the workspace-shared `shared-market-rules` package.
 It also installs the workspace-shared `shared-recommendation` package used for candidate generation and artifact resolution.
 
@@ -359,8 +362,9 @@ once to create a Google Drive remote, then run:
 python backup_data_snapshot.py
 ```
 
-The script writes `data-snapshot-YYYY-MM-DD.tar.zst`, writes the matching `.sha256`, uploads
-both files, uses zstd level 9 by default, and keeps the newest 7 snapshot pairs by default.
+The script writes `data-snapshot-YYYY-MM-DD-HHMMSS.tar.zst`, writes the matching `.sha256`, uploads
+both files, uses zstd level 9 by default, and keeps the newest 7 snapshot runs by default.
+Repeated runs on the same day stay distinct because the filename includes the run time.
 Default Drive destination: `stocks-ecosystem-data-snapshots:project-backup/stock-data-backup/`.
 
 ## Main Experiment Modes

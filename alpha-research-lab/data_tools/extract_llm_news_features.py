@@ -56,7 +56,7 @@ import time
 import unicodedata
 import urllib.error
 import urllib.request
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 from pathlib import Path
 import pandas as pd
@@ -459,6 +459,7 @@ HOSTED_PROVIDER_NAMES = {
     "groq",
     "opencode",
 }
+AUTO_STABLE_PROVIDER_NAMES = {"google", "nvidia", "mistral"}
 
 # Free-tier limits (Google AI Studio) are enforced in-process. Other providers
 # run unbounded unless their APIs explicitly throttle us.
@@ -475,9 +476,10 @@ NVIDIA_MODEL_POOL = [
     {"name": "stepfun-ai/step-3.5-flash", "seed_latency": 2.8},
     {"name": "nvidia/nemotron-mini-4b-instruct", "seed_latency": 3.1},
     {"name": "microsoft/phi-3.5-mini-instruct", "seed_latency": 3.5},
-    {"name": "moonshotai/kimi-k2-instruct", "seed_latency": 4.5},
-    {"name": "moonshotai/kimi-k2-instruct-0905", "seed_latency": 4.8},
-    {"name": "deepseek-ai/deepseek-v3.2", "seed_latency": 5.2},
+    {"name": "moonshotai/kimi-k2", "seed_latency": 4.5},
+    {"name": "moonshotai/kimi-k2-0905", "seed_latency": 4.8},
+    {"name": "moonshotai/kimi-k2.5", "seed_latency": 5.0},
+    {"name": "deepseek-ai/deepseek-v3_2", "seed_latency": 5.2},
     {"name": "z-ai/glm-4.7", "seed_latency": 5.5},
     {"name": "deepseek-ai/deepseek-v3.1", "seed_latency": 6.0},
     {"name": "deepseek-ai/deepseek-v3.1-terminus", "seed_latency": 6.2},
@@ -503,9 +505,11 @@ HUGGINGFACE_MODEL_POOL = [
 
 VERCEL_MODEL_POOL = [
     {"name": "google/gemini-2.5-flash-lite", "seed_latency": 2.6},
-    {"name": "mistral/mistral-small-latest", "seed_latency": 3.1},
-    {"name": "moonshotai/kimi-k2-instruct", "seed_latency": 4.8},
-    {"name": "deepseek-ai/deepseek-v3.2", "seed_latency": 5.2},
+    {"name": "mistral/mistral-small", "seed_latency": 3.1},
+    {"name": "moonshotai/kimi-k2.5", "seed_latency": 4.8},
+    {"name": "deepseek/deepseek-v3.2", "seed_latency": 5.2},
+    {"name": "minimax/minimax-m2.5", "seed_latency": 4.2},
+    {"name": "mistral/mistral-large-3", "seed_latency": 7.5},
 ]
 
 BASETEN_MODEL_POOL = [
@@ -575,6 +579,14 @@ DEFAULT_MODELS = {
 # Backward-compatible alias used by the smoke test.
 MODEL_POOL = GOOGLE_MODEL_POOL
 NVIDIA_MODEL_ALIASES = {cfg["name"].split("/", 1)[1]: cfg["name"] for cfg in NVIDIA_MODEL_POOL}
+NVIDIA_MODEL_ALIASES.update(
+    {
+        "step-3.5-flash": "stepfun-ai/step-3.5-flash",
+        "kimi-k2-instruct": "moonshotai/kimi-k2",
+        "kimi-k2-instruct-0905": "moonshotai/kimi-k2-0905",
+        "deepseek-v3.2": "deepseek-ai/deepseek-v3_2",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -585,6 +597,7 @@ class HostedModelSpec:
     rpm: int | None = None
     rpd: int | None = None
     seed_latency: float = 10.0
+    priority_tier: int = 0
 
     @property
     def key(self) -> str:
@@ -654,6 +667,7 @@ def _build_hosted_spec(provider: str, cfg: dict) -> HostedModelSpec:
         rpm=cfg.get("rpm"),
         rpd=cfg.get("rpd"),
         seed_latency=float(cfg.get("seed_latency", 10.0)),
+        priority_tier=int(cfg.get("priority_tier", 0) or 0),
     )
 
 
@@ -674,6 +688,7 @@ def _coerce_hosted_spec(item: HostedModelSpec | dict | str, default_provider: st
         rpm=item.get("rpm"),
         rpd=item.get("rpd"),
         seed_latency=float(item.get("seed_latency", 10.0)),
+        priority_tier=int(item.get("priority_tier", 0) or 0),
     )
 
 
@@ -685,9 +700,13 @@ class HostedModelScheduler:
         self._models = [_coerce_hosted_spec(model) for model in models]
         self._models_by_key = {model.key: model for model in self._models}
         self._models_by_name = {model.name: model for model in self._models}
+        self._providers = sorted({model.provider for model in self._models})
         self._rpm_windows: dict[str, list[float]] = {model.key: [] for model in self._models}
         self._rpd_counts: dict[str, int] = {model.key: 0 for model in self._models}
         self._cooldown_until: dict[str, float] = {model.key: 0.0 for model in self._models}
+        self._provider_cooldown_until: dict[str, float] = {provider: 0.0 for provider in self._providers}
+        self._inflight_model_counts: dict[str, int] = {model.key: 0 for model in self._models}
+        self._inflight_provider_counts: dict[str, int] = {provider: 0 for provider in self._providers}
         self._current_day: int = datetime.now().toordinal()
         self._stats_path = Path(stats_path or HOSTED_MODEL_STATS_PATH)
         self._stats = self._load_stats()
@@ -738,6 +757,8 @@ class HostedModelScheduler:
             )
             cooldown_until = float(stats.get("cooldown_until", 0.0) or 0.0)
             self._cooldown_until[model.key] = cooldown_until if cooldown_until > now else 0.0
+        for provider in self._providers:
+            self._provider_cooldown_until[provider] = 0.0
 
     def _save_stats_locked(self) -> None:
         self._stats_path.parent.mkdir(parents=True, exist_ok=True)
@@ -765,6 +786,28 @@ class HostedModelScheduler:
             for model in self._models:
                 self._rpd_counts[model.key] = 0
 
+    def _provider_is_cooldown_locked(self, provider: str, now: float) -> bool:
+        return self._provider_cooldown_until.get(provider, 0.0) > now
+
+    def _model_is_available_locked(self, model: HostedModelSpec) -> bool:
+        return self._inflight_model_counts.get(model.key, 0) == 0 and self._inflight_provider_counts.get(
+            model.provider, 0
+        ) == 0
+
+    def _reserve_locked(self, model: HostedModelSpec, now: float) -> None:
+        self._rpm_windows[model.key].append(now)
+        self._rpd_counts[model.key] += 1
+        self._inflight_model_counts[model.key] = self._inflight_model_counts.get(model.key, 0) + 1
+        self._inflight_provider_counts[model.provider] = self._inflight_provider_counts.get(model.provider, 0) + 1
+
+    def _release_locked(self, model: HostedModelSpec) -> None:
+        model_count = self._inflight_model_counts.get(model.key, 0)
+        if model_count > 0:
+            self._inflight_model_counts[model.key] = model_count - 1
+        provider_count = self._inflight_provider_counts.get(model.provider, 0)
+        if provider_count > 0:
+            self._inflight_provider_counts[model.provider] = provider_count - 1
+
     def _prune_rpm_locked(self, now: float) -> None:
         for key, timestamps in self._rpm_windows.items():
             self._rpm_windows[key] = [ts for ts in timestamps if now - ts < 60.0]
@@ -782,7 +825,12 @@ class HostedModelScheduler:
         return min(60.0, streak * 10.0)
 
     def _score_locked(self, model: HostedModelSpec, index: int) -> float:
-        return self._latency_score_locked(model) + self._failure_penalty_locked(model) + (index / 1000.0)
+        return (
+            self._latency_score_locked(model)
+            + self._failure_penalty_locked(model)
+            + (model.priority_tier * 100.0)
+            + (index / 1000.0)
+        )
 
     def acquire_spec(self, acquire_timeout: float = 300.0) -> HostedModelSpec | None:
         deadline = time.time() + acquire_timeout
@@ -801,6 +849,10 @@ class HostedModelScheduler:
                         any_rpd_left = True
                     if now < self._cooldown_until[key]:
                         continue
+                    if self._provider_is_cooldown_locked(model.provider, now):
+                        continue
+                    if not self._model_is_available_locked(model):
+                        continue
                     if rpd_limit is not None and self._rpd_counts[key] >= rpd_limit:
                         continue
                     if rpm_limit is not None and len(self._rpm_windows[key]) >= rpm_limit:
@@ -808,8 +860,7 @@ class HostedModelScheduler:
                     candidates.append((self._score_locked(model, index), model))
                 if candidates:
                     _, chosen = min(candidates, key=lambda item: item[0])
-                    self._rpm_windows[chosen.key].append(now)
-                    self._rpd_counts[chosen.key] += 1
+                    self._reserve_locked(chosen, now)
                     return chosen
                 if not any_rpd_left:
                     return None
@@ -844,9 +895,20 @@ class HostedModelScheduler:
                 self._stats.setdefault(key, {})["cooldown_until"] = until
                 self._save_stats_locked()
 
+    def provider_cooldown(self, provider: str, seconds: float) -> None:
+        if seconds <= 0:
+            return
+        with self._lock:
+            until = time.time() + seconds
+            current = self._provider_cooldown_until.get(provider, 0.0)
+            if until > current:
+                self._provider_cooldown_until[provider] = until
+
     def record_success(self, model_name_or_key: str, latency_sec: float) -> None:
         with self._lock:
             key = self._resolve_key(model_name_or_key)
+            model = self._models_by_key[key]
+            self._release_locked(model)
             stats = self._stats.setdefault(
                 key,
                 {
@@ -870,9 +932,16 @@ class HostedModelScheduler:
             self._cooldown_until[key] = 0.0
             self._save_stats_locked()
 
-    def record_failure(self, model_name_or_key: str, cooldown_seconds: float = 0.0) -> None:
+    def record_failure(
+        self,
+        model_name_or_key: str,
+        cooldown_seconds: float = 0.0,
+        provider_cooldown_seconds: float = 0.0,
+    ) -> None:
         with self._lock:
             key = self._resolve_key(model_name_or_key)
+            model = self._models_by_key[key]
+            self._release_locked(model)
             stats = self._stats.setdefault(
                 key,
                 {
@@ -893,6 +962,11 @@ class HostedModelScheduler:
                 if until > self._cooldown_until.get(key, 0.0):
                     self._cooldown_until[key] = until
                     stats["cooldown_until"] = until
+            if provider_cooldown_seconds > 0:
+                until = time.time() + provider_cooldown_seconds
+                current = self._provider_cooldown_until.get(model.provider, 0.0)
+                if until > current:
+                    self._provider_cooldown_until[model.provider] = until
             self._save_stats_locked()
 
     def status(self) -> str:
@@ -905,10 +979,16 @@ class HostedModelScheduler:
                 stats = self._stats.get(key, {})
                 cooldown_left = max(0.0, self._cooldown_until.get(key, 0.0) - now)
                 cooldown_label = f" cooldown={cooldown_left:.0f}s" if cooldown_left > 0 else ""
+                provider_cooldown_left = max(0.0, self._provider_cooldown_until.get(model.provider, 0.0) - now)
+                provider_cooldown_label = (
+                    f" provider_cd={provider_cooldown_left:.0f}s" if provider_cooldown_left > 0 else ""
+                )
                 parts.append(
                     f"{key}(rpm={len(self._rpm_windows[key])}/{model.rpm if model.rpm is not None else '-'} "
                     f"rpd={self._rpd_counts[key]}/{model.rpd if model.rpd is not None else '-'} "
-                    f"lat={self._latency_score_locked(model):.1f}s fail_streak={int(stats.get('failure_streak', 0) or 0)}{cooldown_label})"
+                    f"lat={self._latency_score_locked(model):.1f}s fail_streak={int(stats.get('failure_streak', 0) or 0)}"
+                    f"{cooldown_label}{provider_cooldown_label} inflight={self._inflight_model_counts.get(key, 0)}/"
+                    f"{self._inflight_provider_counts.get(model.provider, 0)})"
                 )
             return " | ".join(parts)
 
@@ -919,14 +999,28 @@ ModelRateLimiter = HostedModelScheduler
 
 def _remote_cooldown_seconds(exc: Exception) -> float:
     if isinstance(exc, TimeoutError):
-        return 180.0
+        return 300.0
     if isinstance(exc, urllib.error.HTTPError):
+        if exc.code == 429:
+            return 900.0
+        if exc.code in {403, 404}:
+            return 21600.0
         if exc.code in {500, 502, 503, 504}:
             return 180.0
         return 60.0
     if isinstance(exc, urllib.error.URLError):
         return 180.0
     return 60.0
+
+
+def _provider_cooldown_seconds(exc: Exception) -> float:
+    if isinstance(exc, urllib.error.HTTPError) and exc.code == 429:
+        return 900.0
+    if isinstance(exc, TimeoutError):
+        return 180.0
+    if isinstance(exc, urllib.error.URLError):
+        return 120.0
+    return 0.0
 
 
 # ---------------------------------------------------------------------------
@@ -1631,7 +1725,8 @@ def _select_hosted_model_pool(provider: str, model_arg: str) -> list[HostedModel
             for cfg in PROVIDER_MODEL_POOLS.get(hosted_provider, []):
                 spec = _build_hosted_spec(hosted_provider, cfg)
                 if _resolve_provider_api_key(hosted_provider, model_name=spec.name):
-                    specs.append(spec)
+                    tier = 0 if hosted_provider in AUTO_STABLE_PROVIDER_NAMES else 1
+                    specs.append(replace(spec, priority_tier=tier))
         return specs
     requested = _split_model_arg(model_arg)
     if requested:
@@ -1732,7 +1827,11 @@ def process_day(
                 arr = _extract_json_array(resp) or []
         except Exception as e:
             if hosted_mode and rate_limiter is not None and spec_used is not None:
-                rate_limiter.record_failure(spec_used.key, cooldown_seconds=_remote_cooldown_seconds(e))
+                rate_limiter.record_failure(
+                    spec_used.key,
+                    cooldown_seconds=_remote_cooldown_seconds(e),
+                    provider_cooldown_seconds=_provider_cooldown_seconds(e),
+                )
             if hosted_mode and rate_limiter is not None and len(batch) == 1 and depth < max_hosted_retries:
                 _log(
                     f"[{date}] batch error provider={provider_used} model={model_used} size=1 "
@@ -1762,7 +1861,7 @@ def process_day(
 
         if not arr:
             if hosted_mode and rate_limiter is not None and spec_used is not None:
-                rate_limiter.record_failure(spec_used.key, cooldown_seconds=60.0)
+                rate_limiter.record_failure(spec_used.key, cooldown_seconds=43200.0)
             if hosted_mode and rate_limiter is not None and len(batch) == 1 and depth < max_hosted_retries:
                 _log(
                     f"[{date}] empty/invalid JSON provider={provider_used} model={model_used} size=1 "

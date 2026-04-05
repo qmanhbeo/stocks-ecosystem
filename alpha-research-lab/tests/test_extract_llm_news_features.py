@@ -218,6 +218,51 @@ def test_hosted_scheduler_skips_model_on_cooldown(tmp_path) -> None:
     assert limiter.acquire(acquire_timeout=0.01) == "model_b"
 
 
+def test_hosted_scheduler_reserves_provider_during_inflight(tmp_path) -> None:
+    stats_path = tmp_path / "stats.json"
+    limiter = llm.HostedModelScheduler(
+        [
+            llm.HostedModelSpec(provider="google", name="model_a", api_key_envs=()),
+            llm.HostedModelSpec(provider="google", name="model_b", api_key_envs=()),
+            llm.HostedModelSpec(provider="nvidia", name="model_c", api_key_envs=()),
+        ],
+        stats_path=stats_path,
+    )
+
+    first = limiter.acquire_spec(acquire_timeout=0.01)
+    second = limiter.acquire_spec(acquire_timeout=0.01)
+
+    assert first is not None
+    assert first.provider == "google"
+    assert second is not None
+    assert second.provider == "nvidia"
+
+    limiter.record_success(first.key, 0.5)
+    limiter.record_success(second.key, 0.5)
+
+
+def test_hosted_scheduler_cools_provider_after_429(tmp_path) -> None:
+    stats_path = tmp_path / "stats.json"
+    limiter = llm.HostedModelScheduler(
+        [
+            llm.HostedModelSpec(provider="nvidia", name="fast-model", api_key_envs=()),
+            llm.HostedModelSpec(provider="nvidia", name="backup-model", api_key_envs=()),
+            llm.HostedModelSpec(provider="google", name="fallback-model", api_key_envs=()),
+        ],
+        stats_path=stats_path,
+    )
+
+    first = limiter.acquire_spec(acquire_timeout=0.01)
+    assert first is not None
+    assert first.provider == "nvidia"
+
+    limiter.record_failure(first.key, cooldown_seconds=60.0, provider_cooldown_seconds=900.0)
+
+    second = limiter.acquire_spec(acquire_timeout=0.01)
+    assert second is not None
+    assert second.provider == "google"
+
+
 def test_hosted_scheduler_prefers_fastest_model_from_saved_stats(tmp_path) -> None:
     stats_path = tmp_path / "stats.json"
     _write_stats(
@@ -255,6 +300,28 @@ def test_hosted_scheduler_prefers_fastest_model_from_saved_stats(tmp_path) -> No
     assert saved["models"]["nvidia:fast-model"]["success_count"] == 5
 
 
+def test_hosted_scheduler_prefers_stable_tier_over_fallback(tmp_path) -> None:
+    stats_path = tmp_path / "stats.json"
+    limiter = llm.HostedModelScheduler(
+        [
+            llm.HostedModelSpec(provider="google", name="stable-model", api_key_envs=(), seed_latency=10.0, priority_tier=0),
+            llm.HostedModelSpec(provider="baseten", name="fallback-model", api_key_envs=(), seed_latency=1.0, priority_tier=1),
+        ],
+        stats_path=stats_path,
+    )
+
+    first = limiter.acquire_spec(acquire_timeout=0.01)
+    assert first is not None
+    assert first.provider == "google"
+
+    limiter.record_success(first.key, 1.0)
+    limiter.cooldown(first.key, 60.0)
+
+    second = limiter.acquire_spec(acquire_timeout=0.01)
+    assert second is not None
+    assert second.provider == "baseten"
+
+
 def test_select_hosted_model_pool_auto_filters_configured_providers(monkeypatch) -> None:
     def fake_resolve(provider: str, cli_value: str = "", model_name: str = "") -> str:
         return "key" if provider in {"google", "vercel"} else ""
@@ -275,7 +342,7 @@ def test_select_hosted_model_pool_auto_accepts_qualified_subset() -> None:
 
     assert [spec.key for spec in pool] == [
         "google:gemini-2.5-flash-lite",
-        "nvidia:deepseek-ai/deepseek-v3.2",
+        "nvidia:deepseek-ai/deepseek-v3_2",
     ]
 
 
@@ -290,6 +357,17 @@ def test_select_hosted_model_pool_auto_includes_new_hosted_providers(monkeypatch
     pool = llm._select_hosted_model_pool("auto", "")
 
     assert {spec.provider for spec in pool} == allowed
+
+
+def test_vercel_and_nvidia_pools_use_current_model_slugs() -> None:
+    vercel_names = [cfg["name"] for cfg in llm.VERCEL_MODEL_POOL]
+    nvidia_names = [cfg["name"] for cfg in llm.NVIDIA_MODEL_POOL]
+
+    assert "deepseek/deepseek-v3.2" in vercel_names
+    assert "mistral/mistral-large-3" in vercel_names
+    assert "moonshotai/kimi-k2.5" in vercel_names
+    assert "moonshotai/kimi-k2.5" in nvidia_names
+    assert "deepseek-ai/deepseek-v3_2" in nvidia_names
 
 
 def test_article_enrichment_uses_published_at_and_url_only() -> None:
