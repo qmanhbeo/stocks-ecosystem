@@ -320,19 +320,17 @@ Extract per-ticker daily sentiment from cafef JSONL files using a keyword lexico
 - **Coverage:** ~0.8% of (day, ticker) pairs (very sparse; this is the raw base table, not a dense feature surface)
 
 ### `extract_llm_news_features.py`
-Extract structured per-article features from CafeF JSONL with a cross-provider hosted LLM pool or local Ollama.
-- **Status:** Active
+Extract structured per-article features from CafeF JSONL using Google Gemini models only.
+- **Status:** Active canonical extractor
 - **Input:** `data/news/cafef/raw/YYYY-MM-DD.jsonl`
 - **Output:** `data/llm_cache/YYYY-MM-DD.jsonl` (resume-safe, atomic write; one JSON object per filtered article)
 - **Usage:** `python data_tools/extract_llm_news_features.py --date-from 2023-01-01 --date-to 2023-01-03`
-- **Typical full run:** `python data_tools/extract_llm_news_features.py --provider auto --workers 8`
-- **Typical single-provider smoke test:** `python data_tools/extract_llm_news_features.py --provider google --workers 1 --date-from 2016-01-01 --date-to 2016-01-03`
-- **Provider notes:** the default `--provider auto` builds one hosted pool across configured `google`, `nvidia`, `huggingface`, `vercel`, `cerebras`, `groq`, and `opencode` models, then ranks them by persisted observed latency and recent failures
-- **Explicit provider notes:** `--provider huggingface` uses the Hugging Face router pool with provider-linked ids from the free-use partner list `cerebras`, `cohere`, `featherless-ai`, `fireworks-ai`, `groq`, `hf-inference`, `hyperbolic`, `novita`, `nscale`, `ovhcloud`, `publicai`, `sambanova`, `scaleway`, `together`, and `zai-org`; the older direct `google`, `nvidia`, `mistral`, `vercel`, `cerebras`, `fireworks`, `groq`, and `opencode` paths still exist for debugging or benchmarking; `--provider ollama` stays local-only
-- **OpenCode pool:** `opencode` is currently limited to `opencode/big-pickle`, `opencode/qwen3.6-plus-free`, `opencode/nemotron-3-super-free`, and `opencode/minimax-m2.5-free`
-- **Model override notes:** hosted providers accept comma-separated model lists via `--model`; auto mode expects `provider:model` entries such as `google:gemini-2.5-flash-lite,nvidia:deepseek-v3.2`, while `--provider huggingface` accepts router ids like `huggingface:meta-llama/Llama-3.1-8B-Instruct:cerebras,huggingface:openai/gpt-oss-20b:groq`
-- **Credentials:** provider keys resolve from shell env or `.env`. `--provider huggingface` uses `HF_TOKEN`, `HUGGINGFACE_FINEGRAINED`, or `HUGGINGFACEHUB_API_TOKEN`; direct provider modes still accept `GOOGLE_API_KEY`, `NVIDIA_API_KEY` / `NGC_API_KEY`, `MISTRAL_API_KEY`, `MISTRAL_COSTRAL_API_KEY`, `CEREBRAS_API_KEY`, `FIREWORKS_API_KEY`, `GROQ_API_KEY`, `OPENCODE_ZEN_API_KEY`, and `VERCEL_AI_GATEWAY_API_KEY`
-- **Runtime stats:** observed hosted latency / failure ranking persists to `alpha-research-lab/artifacts/llm_runtime/hosted_model_stats.json` and is reused on later runs
+- **Typical Google-only run:** `python data_tools/extract_llm_news_features.py --workers 8`
+- **Typical single-model smoke test:** `python data_tools/extract_llm_news_features.py --model gemini-2.5-flash-lite --workers 1 --date-from 2016-01-01 --date-to 2016-01-03`
+- **Provider notes:** the canonical script is pinned to the Google/Gemini model pool; model overrides accept comma-separated Google model names via `--model`
+- **Credentials:** canonical runs read `GOOGLE_API_KEY`, `GOOGLE_API_KEY_2`, `GOOGLE_API_KEY_3`, or `GOOGLE_API_KEYS` from the shell or `.env`
+- **Rotation:** Google keys are consumed in order and failed keys are cooled down before the next request retries on another key
+- **Runtime stats:** observed Google-model latency / failure ranking persists to `alpha-research-lab/artifacts/llm_runtime/hosted_model_stats.json` and is reused on later runs
 - **Speed knobs:** `--workers`, `--batch-size`, `--num-predict`, `--max-summary-chars`
 - **Concurrency note:** `--workers` is same-day batch concurrency. Days are processed serially so cancellation stops before later days start.
 - **Progress logs:** timestamped day/batch progress, rates, ETA, error counts
@@ -340,6 +338,12 @@ Extract structured per-article features from CafeF JSONL with a cross-provider h
 - **Cache schema:** each cache row keeps the LLM semantic fields plus deterministic CafeF metadata. LLM fields are `id`, `tickers`, `related_tickers`, `sentiment`, `confidence`, `event_type`, `magnitude`, `is_forward_looking`, `market_tone`, `is_rumor`, `surprise_direction`, `impact_scope`, `named_persons`, `expectation_alignment`, `information_novelty`, `macro_theme`, `source_authority`, and `causal_impact_label`.
 - **Deterministic enrichments:** the extractor also adds `published_at`, `source_domain`, `event_time_type`, `article_text_length`, `article_has_numbers`, and `article_mentions_percent` in Python, not via the LLM.
 - **Schema rules:** invalid enum values are normalized to null/empty-compatible values in code, and historical cache files without the newer fields remain valid inputs to the builder.
+
+### `extract_llm_news_features_legacy.py`
+Legacy multi-provider extractor retained for historical rebuilds and debugging.
+- **Status:** Legacy compatibility copy
+- **Behavior:** keeps the older hosted-provider pool, `auto` routing, and local Ollama path
+- **Use when:** you need to reproduce an older multi-provider run or inspect provider-pool behavior directly
 
 ### `test_model_pool.py`
 Probe hosted model pools without writing cache outputs.

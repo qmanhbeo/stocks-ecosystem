@@ -9,6 +9,7 @@ import urllib.error
 from datetime import datetime, timezone
 
 from data_tools import extract_llm_news_features as llm
+from data_tools import extract_llm_news_features_legacy as legacy
 
 
 def _write_jsonl(path, rows: list[dict]) -> None:
@@ -160,6 +161,9 @@ def test_resolve_provider_api_keys_read_repo_env(monkeypatch, tmp_path) -> None:
         "\n".join(
             [
                 'GOOGLE_API_KEY="g-key"',
+                'GOOGLE_API_KEY_2="g-key-2"',
+                'GOOGLE_API_KEY_3="g-key-3"',
+                'GOOGLE_API_KEY_5="g-key-5"',
                 'NVIDIA_API_KEY="nv-key"',
                 'MISTRAL_API_KEY="m-key"',
                 'MISTRAL_COSTRAL_API_KEY="codestral-key"',
@@ -178,6 +182,11 @@ def test_resolve_provider_api_keys_read_repo_env(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(llm, "REPO_ROOT", tmp_path)
     for env_name in [
         "GOOGLE_API_KEY",
+        "GOOGLE_API_KEY_2",
+        "GOOGLE_API_KEY_3",
+        "GOOGLE_API_KEY_4",
+        "GOOGLE_API_KEY_5",
+        "GOOGLE_API_KEYS",
         "NVIDIA_API_KEY",
         "NGC_API_KEY",
         "MISTRAL_API_KEY",
@@ -198,6 +207,7 @@ def test_resolve_provider_api_keys_read_repo_env(monkeypatch, tmp_path) -> None:
         monkeypatch.delenv(env_name, raising=False)
 
     assert llm._resolve_google_api_key("") == "g-key"
+    assert llm._resolve_google_api_keys("") == ["g-key", "g-key-2", "g-key-3", "g-key-5"]
     assert llm._resolve_nvidia_api_key("") == "nv-key"
     assert llm._resolve_mistral_api_key("") == "m-key"
     assert llm._resolve_mistral_api_key("", model_name="codestral-latest") == "codestral-key"
@@ -584,6 +594,73 @@ def test_process_day_retries_smaller_google_batches(monkeypatch, tmp_path) -> No
     assert all(row["llm_error"] is None for row in saved_rows)
 
 
+def test_process_day_rotates_google_keys_after_429(monkeypatch, tmp_path) -> None:
+    raw_path = tmp_path / "raw" / "2026-03-19.jsonl"
+    cache_dir = tmp_path / "cache"
+    _write_jsonl(
+        raw_path,
+        [
+            {
+                "title": "Co phieu FPT tang sau hop dong moi",
+                "summary": "Doanh nghiep cong bo hop dong CNTT gia tri lon.",
+                "url": "https://cafef.vn/fpt-hop-dong-moi.chn",
+            }
+        ],
+    )
+    monkeypatch.setattr(llm, "CACHE_DIR", cache_dir)
+    monkeypatch.setattr(llm, "HOSTED_MODEL_STATS_PATH", tmp_path / "stats.json")
+
+    calls: list[tuple[str, str]] = []
+
+    def fake_call_google(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int):
+        calls.append((model, api_key))
+        if api_key == "g-key":
+            raise urllib.error.HTTPError(
+                url="https://example.com",
+                code=429,
+                msg="Too Many Requests",
+                hdrs=None,
+                fp=None,
+            )
+        return [
+            {
+                "id": "2026-03-19_0001",
+                "tickers": ["FPT"],
+                "related_tickers": [],
+                "sentiment": 1,
+                "confidence": 2,
+                "event_type": "contract_win",
+                "magnitude": 2,
+                "is_forward_looking": True,
+                "market_tone": 1,
+                "is_rumor": False,
+                "surprise_direction": 1,
+                "impact_scope": "stock",
+                "named_persons": [],
+            }
+        ]
+
+    monkeypatch.setattr(llm, "_call_google", fake_call_google)
+
+    stats = llm.process_day(
+        raw_path,
+        batch_size=1,
+        provider="google",
+        model="gemini-2.5-flash-lite,gemini-2.5-flash",
+        api_key="g-key,g-key-2",
+        timeout=30,
+        num_predict=8192,
+        max_summary_chars=400,
+        log_every_batches=1,
+    )
+
+    assert stats["parsed_ok"] == 1
+    assert calls == [
+        ("gemini-2.5-flash-lite", "g-key"),
+        ("gemini-2.5-flash", "g-key-2"),
+    ]
+
+
 def test_process_day_supports_nvidia_provider(monkeypatch, tmp_path) -> None:
     raw_path = tmp_path / "raw" / "2026-03-14.jsonl"
     cache_dir = tmp_path / "cache"
@@ -597,7 +674,7 @@ def test_process_day_supports_nvidia_provider(monkeypatch, tmp_path) -> None:
             }
         ],
     )
-    monkeypatch.setattr(llm, "CACHE_DIR", cache_dir)
+    monkeypatch.setattr(legacy, "CACHE_DIR", cache_dir)
 
     def fake_call_nvidia(prompt: str, model: str, api_key: str, timeout: int, max_output_tokens: int):
         assert model == "moonshotai/kimi-k2-instruct"
@@ -620,9 +697,9 @@ def test_process_day_supports_nvidia_provider(monkeypatch, tmp_path) -> None:
             }
         ]
 
-    monkeypatch.setattr(llm, "_call_nvidia", fake_call_nvidia)
+    monkeypatch.setattr(legacy, "_call_nvidia", fake_call_nvidia)
 
-    stats = llm.process_day(
+    stats = legacy.process_day(
         raw_path,
         batch_size=1,
         provider="nvidia",
@@ -673,12 +750,12 @@ def test_process_day_auto_uses_fastest_hosted_model_first(monkeypatch, tmp_path)
             },
         },
     )
-    monkeypatch.setattr(llm, "CACHE_DIR", cache_dir)
+    monkeypatch.setattr(legacy, "CACHE_DIR", cache_dir)
 
-    scheduler = llm.HostedModelScheduler(
+    scheduler = legacy.HostedModelScheduler(
         [
-            llm.HostedModelSpec(provider="google", name="slow-model", api_key_envs=("GOOGLE_API_KEY",)),
-            llm.HostedModelSpec(provider="nvidia", name="fast-model", api_key_envs=("NVIDIA_API_KEY",)),
+            legacy.HostedModelSpec(provider="google", name="slow-model", api_key_envs=("GOOGLE_API_KEY",)),
+            legacy.HostedModelSpec(provider="nvidia", name="fast-model", api_key_envs=("NVIDIA_API_KEY",)),
         ],
         stats_path=stats_path,
     )
@@ -705,9 +782,9 @@ def test_process_day_auto_uses_fastest_hosted_model_first(monkeypatch, tmp_path)
             }
         ]
 
-    monkeypatch.setattr(llm, "_call_hosted_model", fake_call_hosted_model)
+    monkeypatch.setattr(legacy, "_call_hosted_model", fake_call_hosted_model)
 
-    stats = llm.process_day(
+    stats = legacy.process_day(
         raw_path,
         batch_size=1,
         provider="auto",
@@ -759,11 +836,11 @@ def test_process_day_auto_falls_back_after_single_item_failure(monkeypatch, tmp_
             },
         },
     )
-    monkeypatch.setattr(llm, "CACHE_DIR", cache_dir)
-    scheduler = llm.HostedModelScheduler(
+    monkeypatch.setattr(legacy, "CACHE_DIR", cache_dir)
+    scheduler = legacy.HostedModelScheduler(
         [
-            llm.HostedModelSpec(provider="google", name="fast-model", api_key_envs=("GOOGLE_API_KEY",)),
-            llm.HostedModelSpec(provider="nvidia", name="backup-model", api_key_envs=("NVIDIA_API_KEY",)),
+            legacy.HostedModelSpec(provider="google", name="fast-model", api_key_envs=("GOOGLE_API_KEY",)),
+            legacy.HostedModelSpec(provider="nvidia", name="backup-model", api_key_envs=("NVIDIA_API_KEY",)),
         ],
         stats_path=stats_path,
     )
@@ -791,9 +868,9 @@ def test_process_day_auto_falls_back_after_single_item_failure(monkeypatch, tmp_
             }
         ]
 
-    monkeypatch.setattr(llm, "_call_hosted_model", fake_call_hosted_model)
+    monkeypatch.setattr(legacy, "_call_hosted_model", fake_call_hosted_model)
 
-    stats = llm.process_day(
+    stats = legacy.process_day(
         raw_path,
         batch_size=1,
         provider="auto",
@@ -845,11 +922,11 @@ def test_process_day_auto_falls_back_after_429(monkeypatch, tmp_path) -> None:
             },
         },
     )
-    monkeypatch.setattr(llm, "CACHE_DIR", cache_dir)
-    scheduler = llm.HostedModelScheduler(
+    monkeypatch.setattr(legacy, "CACHE_DIR", cache_dir)
+    scheduler = legacy.HostedModelScheduler(
         [
-            llm.HostedModelSpec(provider="google", name="fast-model", api_key_envs=("GOOGLE_API_KEY",)),
-            llm.HostedModelSpec(provider="nvidia", name="backup-model", api_key_envs=("NVIDIA_API_KEY",)),
+            legacy.HostedModelSpec(provider="google", name="fast-model", api_key_envs=("GOOGLE_API_KEY",)),
+            legacy.HostedModelSpec(provider="nvidia", name="backup-model", api_key_envs=("NVIDIA_API_KEY",)),
         ],
         stats_path=stats_path,
     )
@@ -883,9 +960,9 @@ def test_process_day_auto_falls_back_after_429(monkeypatch, tmp_path) -> None:
             }
         ]
 
-    monkeypatch.setattr(llm, "_call_hosted_model", fake_call_hosted_model)
+    monkeypatch.setattr(legacy, "_call_hosted_model", fake_call_hosted_model)
 
-    stats = llm.process_day(
+    stats = legacy.process_day(
         raw_path,
         batch_size=1,
         provider="auto",
@@ -934,7 +1011,7 @@ def test_process_day_uses_batch_workers_within_day(monkeypatch, tmp_path) -> Non
             },
         ],
     )
-    monkeypatch.setattr(llm, "CACHE_DIR", cache_dir)
+    monkeypatch.setattr(legacy, "CACHE_DIR", cache_dir)
 
     inflight = 0
     max_inflight = 0
@@ -964,9 +1041,9 @@ def test_process_day_uses_batch_workers_within_day(monkeypatch, tmp_path) -> Non
             ]
         )
 
-    monkeypatch.setattr(llm, "_call_ollama", fake_call_ollama)
+    monkeypatch.setattr(legacy, "_call_ollama", fake_call_ollama)
 
-    stats = llm.process_day(
+    stats = legacy.process_day(
         raw_path,
         batch_size=1,
         workers=2,
@@ -1023,10 +1100,11 @@ def test_main_processes_days_serially(monkeypatch, tmp_path) -> None:
         }
 
     monkeypatch.setattr(llm, "process_day", fake_process_day)
+    monkeypatch.setattr(llm, "_resolve_google_api_key", lambda cli_value: "test-key")
     monkeypatch.setattr(sys, "argv", [
         "extract_llm_news_features.py",
         "--provider",
-        "ollama",
+        "google",
         "--workers",
         "2",
         "--date-from",

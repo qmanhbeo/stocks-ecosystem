@@ -17,7 +17,7 @@ from pathlib import Path
 # Allow sibling imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from extract_llm_news_features import (
+from extract_llm_news_features_legacy import (
     HOSTED_MODEL_STATS_PATH,
     HostedModelScheduler,
     _build_prompt,
