@@ -58,7 +58,7 @@ import unicodedata
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, replace
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 import pandas as pd
 from path_utils import data_path, workspace_path
@@ -109,6 +109,10 @@ FIN_KEYWORDS = [
 ]
 
 _LOG_LOCK = threading.Lock()
+
+
+def _utc_now_iso_z() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
 def _log(msg: str) -> None:
@@ -447,7 +451,6 @@ HOSTED_PROVIDERS = {
 HOSTED_PROVIDER_NAMES = {
     "google",
     "nvidia",
-    "mistral",
     "huggingface",
     "vercel",
     "cerebras",
@@ -455,10 +458,19 @@ HOSTED_PROVIDER_NAMES = {
     "groq",
     "opencode",
 }
-AUTO_STABLE_PROVIDER_NAMES = {"google", "nvidia", "mistral"}
+AUTO_PROVIDER_NAMES = {
+    "google",
+    "nvidia",
+    "huggingface",
+    "vercel",
+    "cerebras",
+    "groq",
+    "opencode",
+}
+AUTO_STABLE_PROVIDER_NAMES = {"google", "nvidia", "huggingface"}
 
-# Free-tier limits (Google AI Studio) are enforced in-process. Other providers
-# run unbounded unless their APIs explicitly throttle us.
+# Hugging Face provider routes through HF Inference Providers using HF_TOKEN
+# plus provider-suffixed model ids.
 GOOGLE_MODEL_POOL = [
     {"name": "gemini-2.5-flash-lite", "rpm": 10, "rpd": 20, "seed_latency": 2.0},
     {"name": "gemini-3.1-flash-lite-preview", "rpm": 15, "rpd": 500, "seed_latency": 3.4},
@@ -475,6 +487,7 @@ NVIDIA_MODEL_POOL = [
     {"name": "moonshotai/kimi-k2", "seed_latency": 4.5},
     {"name": "moonshotai/kimi-k2-0905", "seed_latency": 4.8},
     {"name": "moonshotai/kimi-k2.5", "seed_latency": 5.0},
+    {"name": "google/gemma-4-31b-it", "seed_latency": 6.8},
     {"name": "deepseek-ai/deepseek-v3_2", "seed_latency": 5.2},
     {"name": "z-ai/glm-4.7", "seed_latency": 5.5},
     {"name": "deepseek-ai/deepseek-v3.1", "seed_latency": 6.0},
@@ -483,6 +496,8 @@ NVIDIA_MODEL_POOL = [
     {"name": "mistralai/mistral-medium-3-instruct", "seed_latency": 7.5},
     {"name": "meta/llama-4-maverick-17b-128e-instruct", "seed_latency": 8.0},
     {"name": "mistralai/mistral-large-3-675b-instruct-2512", "seed_latency": 10.0},
+    {"name": "nvidia/nemotron-3-super-120b-a12b", "seed_latency": 9.5},
+    {"name": "minimax-ai/minimax-m25", "seed_latency": 4.3},
 ]
 
 MISTRAL_MODEL_POOL = [
@@ -493,10 +508,21 @@ MISTRAL_MODEL_POOL = [
 ]
 
 HUGGINGFACE_MODEL_POOL = [
-    {"name": "microsoft/Phi-4-mini-instruct", "seed_latency": 3.0},
-    {"name": "meta-llama/Llama-3.3-70B-Instruct", "seed_latency": 4.8},
-    {"name": "Qwen/Qwen2.5-72B-Instruct", "seed_latency": 5.0},
-    {"name": "mistralai/Mistral-Small-3.1-24B-Instruct-2503", "seed_latency": 5.5},
+    {"name": "meta-llama/Llama-3.1-8B-Instruct:cerebras", "seed_latency": 2.4},
+    {"name": "CohereLabs/tiny-aya-global:cohere", "seed_latency": 2.8},
+    {"name": "meta-llama/Llama-3.1-8B-Instruct:featherless-ai", "seed_latency": 3.0},
+    {"name": "zai-org/GLM-5:fireworks-ai", "seed_latency": 3.2},
+    {"name": "openai/gpt-oss-20b:groq", "seed_latency": 2.2},
+    {"name": "google/gemma-2-2b-it:hf-inference", "seed_latency": 4.2},
+    {"name": "deepseek-ai/DeepSeek-R1:hyperbolic", "seed_latency": 3.8},
+    {"name": "moonshotai/Kimi-K2-Thinking:novita", "seed_latency": 4.0},
+    {"name": "meta-llama/Llama-3.1-8B-Instruct:nscale", "seed_latency": 3.5},
+    {"name": "meta-llama/Llama-3.1-8B-Instruct:ovhcloud", "seed_latency": 3.9},
+    {"name": "allenai/Olmo-3.1-32B-Think:publicai", "seed_latency": 4.6},
+    {"name": "deepseek-ai/DeepSeek-R1:sambanova", "seed_latency": 3.4},
+    {"name": "meta-llama/Llama-3.1-8B-Instruct:scaleway", "seed_latency": 3.7},
+    {"name": "zai-org/GLM-5:together", "seed_latency": 4.1},
+    {"name": "zai-org/GLM-5:zai-org", "seed_latency": 4.1},
 ]
 
 VERCEL_MODEL_POOL = [
@@ -568,6 +594,7 @@ NVIDIA_MODEL_ALIASES.update(
         "kimi-k2-instruct": "moonshotai/kimi-k2",
         "kimi-k2-instruct-0905": "moonshotai/kimi-k2-0905",
         "deepseek-v3.2": "deepseek-ai/deepseek-v3_2",
+        "minimax-m2.5": "minimax-ai/minimax-m25",
     }
 )
 
@@ -735,7 +762,7 @@ class HostedModelScheduler:
         self._stats_path.parent.mkdir(parents=True, exist_ok=True)
         payload = {
             "version": 1,
-            "updated_at": datetime.utcnow().isoformat(timespec="seconds") + "Z",
+            "updated_at": _utc_now_iso_z(),
             "models": self._stats,
         }
         tmp = self._stats_path.with_suffix(".json.tmp")
@@ -898,7 +925,7 @@ class HostedModelScheduler:
             stats["recent_latencies"] = latencies[-20:]
             stats["success_count"] = int(stats.get("success_count", 0) or 0) + 1
             stats["failure_streak"] = 0
-            stats["last_success"] = datetime.utcnow().isoformat(timespec="seconds") + "Z"
+            stats["last_success"] = _utc_now_iso_z()
             stats["cooldown_until"] = 0.0
             self._cooldown_until[key] = 0.0
             self._save_stats_locked()
@@ -927,7 +954,7 @@ class HostedModelScheduler:
             )
             stats["failure_count"] = int(stats.get("failure_count", 0) or 0) + 1
             stats["failure_streak"] = int(stats.get("failure_streak", 0) or 0) + 1
-            stats["last_failure"] = datetime.utcnow().isoformat(timespec="seconds") + "Z"
+            stats["last_failure"] = _utc_now_iso_z()
             if cooldown_seconds > 0:
                 until = time.time() + cooldown_seconds
                 if until > self._cooldown_until.get(key, 0.0):
@@ -1645,10 +1672,10 @@ def _spec_from_name(provider: str, model_name: str) -> HostedModelSpec:
 def _resolve_auto_model_token(token: str) -> HostedModelSpec:
     if ":" in token:
         provider, model_name = token.split(":", 1)
-        if provider in HOSTED_PROVIDER_NAMES:
+        if provider in AUTO_PROVIDER_NAMES:
             return _spec_from_name(provider, model_name)
     matches: list[HostedModelSpec] = []
-    for provider in HOSTED_PROVIDER_NAMES:
+    for provider in AUTO_PROVIDER_NAMES:
         normalized = _normalize_provider_model_name(provider, token)
         for cfg in PROVIDER_MODEL_POOLS.get(provider, []):
             cfg_name = str(cfg["name"])
@@ -1671,7 +1698,7 @@ def _select_hosted_model_pool(provider: str, model_arg: str) -> list[HostedModel
         if requested:
             return [_resolve_auto_model_token(token) for token in requested]
         specs: list[HostedModelSpec] = []
-        for hosted_provider in HOSTED_PROVIDER_NAMES:
+        for hosted_provider in AUTO_PROVIDER_NAMES:
             for cfg in PROVIDER_MODEL_POOLS.get(hosted_provider, []):
                 spec = _build_hosted_spec(hosted_provider, cfg)
                 if _resolve_provider_api_key(hosted_provider, model_name=spec.name):
@@ -1740,16 +1767,18 @@ def process_day(
     hosted_mode = provider in HOSTED_PROVIDERS
     abort_event = threading.Event()
 
-    def _abort_batch(batch: list[dict], err: str) -> tuple[list[dict], int, int, int, bool]:
-        return ([_blank_record_with_enrichment(a, err) for a in batch], 0, 0, 0, True)
+    def _abort_batch(batch: list[dict], err: str) -> tuple[list[dict], int, int, int, bool, str, str]:
+        return ([_blank_record_with_enrichment(a, err) for a in batch], 0, 0, 0, True, provider, model)
 
-    def _run_batch(batch: list[dict], depth: int = 0) -> tuple[list[dict], int, int, int, bool]:
+    def _run_batch(batch: list[dict], depth: int = 0) -> tuple[list[dict], int, int, int, bool, str, str]:
         if abort_event.is_set():
             return _abort_batch(batch, "pool_exhausted")
         prompt = _build_prompt(batch, max_summary_chars=max_summary_chars)
         by_id = {a["id"]: a for a in batch}
         model_used = model
         provider_used = provider
+        summary_provider = provider_used
+        summary_model = model_used
         spec_used: HostedModelSpec | None = None
         max_hosted_retries = len(rate_limiter.specs()) if rate_limiter is not None else 0
 
@@ -1783,6 +1812,8 @@ def process_day(
                 )
                 if rate_limiter is not None and arr:
                     rate_limiter.record_success(spec_used.key, time.time() - call_t0)
+                summary_provider = provider_used
+                summary_model = model_used
             else:
                 resp = _call_ollama(prompt, model=model, timeout=timeout, num_predict=num_predict)
                 arr = _extract_json_array(resp) or []
@@ -1807,20 +1838,26 @@ def process_day(
                     f"[{date}] batch error provider={provider_used} model={model_used} size={len(batch)} "
                     f"depth={depth} err={type(e).__name__}: {e} | retrying smaller slices"
                 )
-                left_rows, left_ok, left_pf, left_tf, left_pool = _run_batch(batch[:split_at], depth=depth + 1)
+                left_rows, left_ok, left_pf, left_tf, left_pool, left_provider, left_model = _run_batch(
+                    batch[:split_at], depth=depth + 1
+                )
                 if left_pool:
                     remaining = [_blank_record_with_enrichment(a, "pool_exhausted") for a in batch[split_at:]]
-                    return (left_rows + remaining, left_ok, left_pf, left_tf, True)
-                right_rows, right_ok, right_pf, right_tf, right_pool = _run_batch(batch[split_at:], depth=depth + 1)
+                    return (left_rows + remaining, left_ok, left_pf, left_tf, True, left_provider, left_model)
+                right_rows, right_ok, right_pf, right_tf, right_pool, right_provider, right_model = _run_batch(
+                    batch[split_at:], depth=depth + 1
+                )
                 return (
                     left_rows + right_rows,
                     left_ok + right_ok,
                     left_pf + right_pf,
                     left_tf + right_tf,
                     right_pool,
+                    right_provider,
+                    right_model,
                 )
             err_prefix = _provider_error_prefix(provider_used)
-            return ([_blank_record_with_enrichment(batch[0], f"{err_prefix}:{e}")], 0, 0, 1, False)
+            return ([_blank_record_with_enrichment(batch[0], f"{err_prefix}:{e}")], 0, 0, 1, False, provider_used, model_used)
 
         if not arr:
             if hosted_mode and rate_limiter is not None and spec_used is not None:
@@ -1839,19 +1876,25 @@ def process_day(
                     f"[{date}] empty/invalid JSON provider={provider_used} model={model_used} size={len(batch)} "
                     f"depth={depth} | retrying smaller slices"
                 )
-                left_rows, left_ok, left_pf, left_tf, left_pool = _run_batch(batch[:split_at], depth=depth + 1)
+                left_rows, left_ok, left_pf, left_tf, left_pool, left_provider, left_model = _run_batch(
+                    batch[:split_at], depth=depth + 1
+                )
                 if left_pool:
                     remaining = [_blank_record_with_enrichment(a, "pool_exhausted") for a in batch[split_at:]]
-                    return (left_rows + remaining, left_ok, left_pf, left_tf, True)
-                right_rows, right_ok, right_pf, right_tf, right_pool = _run_batch(batch[split_at:], depth=depth + 1)
+                    return (left_rows + remaining, left_ok, left_pf, left_tf, True, left_provider, left_model)
+                right_rows, right_ok, right_pf, right_tf, right_pool, right_provider, right_model = _run_batch(
+                    batch[split_at:], depth=depth + 1
+                )
                 return (
                     left_rows + right_rows,
                     left_ok + right_ok,
                     left_pf + right_pf,
                     left_tf + right_tf,
                     right_pool,
+                    right_provider,
+                    right_model,
                 )
-            return ([_blank_record_with_enrichment(batch[0], "json_parse_fail")], 0, 1, 0, False)
+            return ([_blank_record_with_enrichment(batch[0], "json_parse_fail")], 0, 1, 0, False, provider_used, model_used)
 
         batch_rows: list[dict] = []
         seen: set[str] = set()
@@ -1874,13 +1917,17 @@ def process_day(
                 f"[{date}] partial batch response provider={provider_used} model={model_used} size={len(batch)} "
                 f"matched={len(seen)} missing={len(missing)} depth={depth} | retrying missing subset"
             )
-            retry_rows, retry_ok, retry_pf, retry_tf, retry_pool = _run_batch(missing, depth=depth + 1)
+            retry_rows, retry_ok, retry_pf, retry_tf, retry_pool, retry_provider, retry_model = _run_batch(
+                missing, depth=depth + 1
+            )
             return (
                 batch_rows + retry_rows,
                 batch_ok + retry_ok,
                 retry_pf,
                 retry_tf,
                 retry_pool,
+                retry_provider,
+                retry_model,
             )
 
         if missing and hosted_mode and rate_limiter is not None and spec_used is not None:
@@ -1898,12 +1945,12 @@ def process_day(
             blank.update(article_meta.get(article["id"], {}))
             batch_rows.append(blank)
 
-        return (batch_rows, batch_ok, len(missing), 0, False)
+        return (batch_rows, batch_ok, len(missing), 0, False, summary_provider, summary_model)
 
     if workers <= 1 or n_batches <= 1:
         for batch_idx, batch in batches:
             b_t0 = time.time()
-            batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted = _run_batch(batch)
+            batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted, batch_provider, batch_model = _run_batch(batch)
             rows.extend(batch_rows)
             parsed_ok += batch_ok
             parse_fail += batch_pf
@@ -1929,6 +1976,7 @@ def process_day(
                 eta_s = "inf" if not math.isfinite(eta) else f"{eta:.1f}s"
                 _log(
                     f"[{date}] batch {done_batches}/{n_batches} "
+                    f"provider={batch_provider} model={batch_model} "
                     f"batch_sec={b_elapsed:.2f} elapsed={elapsed:.1f}s "
                     f"done={done_items:,}/{len(filtered):,} rate={rate:.2f} art/s eta={eta_s} "
                     f"ok={parsed_ok:,} parse_fail={parse_fail:,} timeout={timeout_fail:,}"
@@ -1956,9 +2004,9 @@ def process_day(
                     batch_idx, batch, submit_t0 = inflight.pop(fut)
                     b_elapsed = time.time() - submit_t0
                     if fut.cancelled():
-                        batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted = _abort_batch(batch, "pool_exhausted")
+                        batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted, batch_provider, batch_model = _abort_batch(batch, "pool_exhausted")
                     else:
-                        batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted = fut.result()
+                        batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted, batch_provider, batch_model = fut.result()
                     rows.extend(batch_rows)
                     parsed_ok += batch_ok
                     parse_fail += batch_pf
@@ -1984,6 +2032,7 @@ def process_day(
                         eta_s = "inf" if not math.isfinite(eta) else f"{eta:.1f}s"
                         _log(
                             f"[{date}] batch {done_batches}/{n_batches} "
+                            f"provider={batch_provider} model={batch_model} "
                             f"batch_sec={b_elapsed:.2f} elapsed={elapsed:.1f}s "
                             f"done={done_items:,}/{len(filtered):,} rate={rate:.2f} art/s eta={eta_s} "
                             f"ok={parsed_ok:,} parse_fail={parse_fail:,} timeout={timeout_fail:,}"

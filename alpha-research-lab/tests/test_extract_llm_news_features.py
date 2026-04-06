@@ -6,6 +6,7 @@ import sys
 import threading
 import time
 import urllib.error
+from datetime import datetime, timezone
 
 from data_tools import extract_llm_news_features as llm
 
@@ -25,6 +26,15 @@ def _write_stats(path, models: dict[str, dict]) -> None:
         "models": models,
     }
     path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def test_utc_timestamp_helper_returns_z_suffixed_utc() -> None:
+    ts = llm._utc_now_iso_z()
+
+    parsed = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+
+    assert ts.endswith("Z")
+    assert parsed.tzinfo == timezone.utc
 
 
 def test_parse_google_array_joins_all_text_parts() -> None:
@@ -355,8 +365,8 @@ def test_select_hosted_model_pool_auto_accepts_qualified_subset() -> None:
     ]
 
 
-def test_select_hosted_model_pool_auto_includes_new_hosted_providers(monkeypatch) -> None:
-    allowed = {"google", "nvidia", "mistral", "huggingface", "vercel", "cerebras", "fireworks", "groq", "opencode"}
+def test_select_hosted_model_pool_auto_includes_configured_providers(monkeypatch) -> None:
+    allowed = {"google", "nvidia", "huggingface", "vercel", "cerebras", "groq", "opencode"}
 
     def fake_resolve(provider: str, cli_value: str = "", model_name: str = "") -> str:
         return "key" if provider in allowed else ""
@@ -365,7 +375,32 @@ def test_select_hosted_model_pool_auto_includes_new_hosted_providers(monkeypatch
 
     pool = llm._select_hosted_model_pool("auto", "")
 
+    assert pool
     assert {spec.provider for spec in pool} == allowed
+
+
+def test_select_hosted_model_pool_huggingface_uses_router_models() -> None:
+    pool = llm._select_hosted_model_pool("huggingface", "")
+
+    assert pool
+    assert {spec.provider for spec in pool} == {"huggingface"}
+    assert [spec.name for spec in pool] == [
+        "meta-llama/Llama-3.1-8B-Instruct:cerebras",
+        "CohereLabs/tiny-aya-global:cohere",
+        "meta-llama/Llama-3.1-8B-Instruct:featherless-ai",
+        "zai-org/GLM-5:fireworks-ai",
+        "openai/gpt-oss-20b:groq",
+        "google/gemma-2-2b-it:hf-inference",
+        "deepseek-ai/DeepSeek-R1:hyperbolic",
+        "moonshotai/Kimi-K2-Thinking:novita",
+        "meta-llama/Llama-3.1-8B-Instruct:nscale",
+        "meta-llama/Llama-3.1-8B-Instruct:ovhcloud",
+        "allenai/Olmo-3.1-32B-Think:publicai",
+        "deepseek-ai/DeepSeek-R1:sambanova",
+        "meta-llama/Llama-3.1-8B-Instruct:scaleway",
+        "zai-org/GLM-5:together",
+        "zai-org/GLM-5:zai-org",
+    ]
 
 
 def test_vercel_and_nvidia_pools_use_current_model_slugs() -> None:
@@ -376,7 +411,14 @@ def test_vercel_and_nvidia_pools_use_current_model_slugs() -> None:
     assert "mistral/mistral-large-3" in vercel_names
     assert "moonshotai/kimi-k2.5" in vercel_names
     assert "moonshotai/kimi-k2.5" in nvidia_names
+    assert "google/gemma-4-31b-it" in nvidia_names
+    assert "nvidia/nemotron-3-super-120b-a12b" in nvidia_names
+    assert "minimax-ai/minimax-m25" in nvidia_names
     assert "deepseek-ai/deepseek-v3_2" in nvidia_names
+
+
+def test_nvidia_aliases_include_minimax_m25() -> None:
+    assert llm._normalize_nvidia_model_name("minimax-m2.5") == "minimax-ai/minimax-m25"
 
 
 def test_article_enrichment_uses_published_at_and_url_only() -> None:
