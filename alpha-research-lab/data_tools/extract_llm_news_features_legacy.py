@@ -121,6 +121,19 @@ def _log(msg: str) -> None:
         print(f"[{ts}] {msg}", flush=True)
 
 
+def _ordinal_label(index: int, total: int | None = None) -> str:
+    if index <= 0:
+        return "unknown"
+    if 10 <= index % 100 <= 20:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(index % 10, "th")
+    label = f"{index}{suffix}"
+    if total is not None and total > 0:
+        label = f"{label}/{total}"
+    return label
+
+
 def _strip_vi(s: str) -> str:
     s = str(s).replace("đ", "d").replace("Đ", "D")
     return unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode("ascii").lower()
@@ -1744,6 +1757,7 @@ def process_day(
     log_every_batches: int,
     rate_limiter: "HostedModelScheduler | None" = None,
     api_keys: dict[str, str] | None = None,
+    api_key_ordinals: dict[str, int] | None = None,
     workers: int = 1,
 ) -> dict:
     date = path.stem
@@ -1803,6 +1817,13 @@ def process_day(
                 if not resolved_api_key:
                     raise ValueError(f"missing_api_key:{provider_used}")
                 call_t0 = time.time()
+                api_key_label = ""
+                if api_key_ordinals:
+                    api_key_label = _ordinal_label(api_key_ordinals.get(resolved_api_key, 0), len(api_key_ordinals))
+                    _log(
+                        f"[{date}] calling provider={provider_used} model={model_used} "
+                        f"api_key={api_key_label} size={len(batch)} depth={depth}"
+                    )
                 arr = _call_hosted_model(
                     prompt=prompt,
                     spec=spec_used,

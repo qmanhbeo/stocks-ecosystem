@@ -515,6 +515,7 @@ def process_day(
     resolved_api_keys = _resolve_google_api_keys(api_key)
     resolved_api_key = resolved_api_keys[0] if resolved_api_keys else ""
     unique_google_keys = list(dict.fromkeys(resolved_api_keys))
+    api_key_ordinals = {key: index + 1 for index, key in enumerate(unique_google_keys)}
     if rate_limiter is None and len(unique_google_keys) > 1:
         model_pool = _select_google_model_pool(model)
         api_keys = _resolve_google_api_keys_for_specs(model_pool, unique_google_keys)
@@ -535,6 +536,7 @@ def process_day(
         log_every_batches=log_every_batches,
         rate_limiter=rate_limiter,
         api_keys=api_keys,
+        api_key_ordinals=api_key_ordinals,
         workers=workers,
     )
 

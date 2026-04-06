@@ -1,14 +1,14 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_121_log.md` for the latest full session detail.
+Use `notes/session_122_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Immediate Follow-Up (2026-04-05)
 
-1. `breadth-activation-gate` — test whether lagged sector breadth predicts day-to-day IC variation of S1 on the active book. Smallest test: Spearman corr(`breadth_lag1`, daily_IC) on 2015–2025.
+1. `llm-news-gate` — Run H98 properly: LLM ticker sentiment already built in `xs_llm_news_ticker_day.parquet`. Smallest test: standalone IC vs 1d barrier, compare consistency vs C1. Kill if IC < 0.01 or < 6/8 years positive.
 2. `news-marginal-slot` — use CafeF news to predict replacement value inside the active book, not generic return. Smallest test: join `xs_llm_news_ticker_day.parquet` with `entry_alpha/candidate_panel_daily.parquet` and test whether news state predicts the weakest-held slot's marginal contribution better than standalone `T+1`. This remains blocked until the active-book years have nonzero news coverage.
 
 ---
@@ -54,8 +54,9 @@ New branches from the CafeF LLM rebuild. Do **not** assign H numbers until a bra
 ### Start next session here
 
 Session 120 then ran `H290` and found that the rebuilt LLM news surface does contain real signal, but only in the right state buckets: pooled sentiment stays weak or negative overall, while follow-up and miss-state news carry the edge in the nonzero `2015-2017` window and the active-book years remain effectively zero-valued for this cache surface. Session 121 then ran `H291` and `H292`: the news half-life is real but not a clean single-class contract, and the macro-theme surface has genuine signal but not a crisp sector router. Branch consequence: keep the live branch unchanged, promote the rebuilt LLM news state router only as offline evidence (`C15`), keep `news-marginal-slot` blocked until active-book years have nonzero news coverage, park `news-decay-contract` and `macro-theme-router` as mixed evidence, and move the queue to `breadth-activation-gate`. (2026-04-05)
+Session 122 then ran `H293` and found breadth_lag1 does not explain day-to-day S1 IC variation on the active book: Spearman rho `+0.0032`, p-value `0.8664`, q5 minus q1 IC mean `-0.0042`. Branch consequence: park `breadth-activation-gate` and move the queue to `llm-news-gate`. (2026-04-06)
 
-Session 121 is parked here for today. Resume with `breadth-activation-gate` only if you want to continue the queue; otherwise keep this as the stop point and do not reopen the mixed news branches without a new contract or data change.
+Session 122 is parked here for today. Resume with `llm-news-gate` only if you want to continue the queue; otherwise keep this as the stop point and do not reopen the mixed news branches without a new contract or data change.
 
 1. Record the next market-session outcome against the **rollback sticky activated** paper-trade book:
    - current active live branch from the `2026-03-30` signal / `2026-03-31` execution:

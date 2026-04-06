@@ -594,7 +594,7 @@ def test_process_day_retries_smaller_google_batches(monkeypatch, tmp_path) -> No
     assert all(row["llm_error"] is None for row in saved_rows)
 
 
-def test_process_day_rotates_google_keys_after_429(monkeypatch, tmp_path) -> None:
+def test_process_day_rotates_google_keys_after_429(monkeypatch, tmp_path, capsys) -> None:
     raw_path = tmp_path / "raw" / "2026-03-19.jsonl"
     cache_dir = tmp_path / "cache"
     _write_jsonl(
@@ -654,11 +654,14 @@ def test_process_day_rotates_google_keys_after_429(monkeypatch, tmp_path) -> Non
         log_every_batches=1,
     )
 
+    output = capsys.readouterr().out
     assert stats["parsed_ok"] == 1
     assert calls == [
         ("gemini-2.5-flash-lite", "g-key"),
         ("gemini-2.5-flash", "g-key-2"),
     ]
+    assert "api_key=1st/2" in output
+    assert "api_key=2nd/2" in output
 
 
 def test_process_day_supports_nvidia_provider(monkeypatch, tmp_path) -> None:
