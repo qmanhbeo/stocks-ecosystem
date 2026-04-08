@@ -1,6 +1,7 @@
 """
-Canonical Google-only CafeF LLM extractor.
+Canonical CafeF LLM extractor.
 
+Supported providers: google, nvidia, cerebras, groq, mistral.
 The older multi-provider implementation has been moved to
 `extract_llm_news_features_legacy.py` for compatibility and historical rebuilds.
 """
@@ -8,15 +9,12 @@ The older multi-provider implementation has been moved to
 from __future__ import annotations
 
 import argparse
-import json
 import math
+import random
 import re
 import os
-import statistics
-import threading
 import time
 from pathlib import Path
-import urllib.error
 
 from path_utils import data_path
 from src.repo_paths import artifact_path
@@ -47,24 +45,92 @@ OPENCODE_MODEL_POOL = legacy.OPENCODE_MODEL_POOL
 MODEL_POOL = GOOGLE_MODEL_POOL
 DEFAULT_MODEL = GOOGLE_MODEL_POOL[0]["name"]
 
-HOSTED_PROVIDERS = {"google"}
-HOSTED_PROVIDER_NAMES = {"google"}
-AUTO_PROVIDER_NAMES = {"google"}
-AUTO_STABLE_PROVIDER_NAMES = {"google"}
-PROVIDER_MODEL_POOLS = {"google": GOOGLE_MODEL_POOL}
-DEFAULT_MODELS = {"google": DEFAULT_MODEL}
+_SIMPLE_PROVIDERS = {"nvidia", "cerebras", "groq", "mistral"}
+_CANONICAL_PROVIDERS = {"google"} | _SIMPLE_PROVIDERS
+_ALL_PROVIDER_CHOICES = _CANONICAL_PROVIDERS | {"auto"}
+
+HOSTED_PROVIDERS = _CANONICAL_PROVIDERS
+HOSTED_PROVIDER_NAMES = _CANONICAL_PROVIDERS
+AUTO_PROVIDER_NAMES = _CANONICAL_PROVIDERS
+AUTO_STABLE_PROVIDER_NAMES = _CANONICAL_PROVIDERS
+PROVIDER_MODEL_POOLS = {
+    "google":   GOOGLE_MODEL_POOL,
+    "nvidia":   NVIDIA_MODEL_POOL,
+    "cerebras": CEREBRAS_MODEL_POOL,
+    "groq":     GROQ_MODEL_POOL,
+    "mistral":  MISTRAL_MODEL_POOL,
+}
+DEFAULT_NVIDIA_MODEL   = NVIDIA_MODEL_POOL[0]["name"]
+DEFAULT_CEREBRAS_MODEL = CEREBRAS_MODEL_POOL[0]["name"]
+DEFAULT_GROQ_MODEL     = GROQ_MODEL_POOL[0]["name"]
+DEFAULT_MISTRAL_MODEL  = MISTRAL_MODEL_POOL[0]["name"]
+DEFAULT_MODELS = {
+    "google":   DEFAULT_MODEL,
+    "nvidia":   DEFAULT_NVIDIA_MODEL,
+    "cerebras": DEFAULT_CEREBRAS_MODEL,
+    "groq":     DEFAULT_GROQ_MODEL,
+    "mistral":  DEFAULT_MISTRAL_MODEL,
+}
+
+# Env-var names for each single-key provider (checked in order)
+_SIMPLE_KEY_ENV_NAMES: dict[str, list[str]] = {
+    "nvidia":   ["NVIDIA_API_KEY", "NGC_API_KEY"],
+    "cerebras": ["CEREBRAS_API_KEY"],
+    "groq":     ["GROQ_API_KEY"],
+    "mistral":  ["MISTRAL_API_KEY", "MISTRAL_COSTRAL_API_KEY"],
+}
 
 HostedModelSpec = legacy.HostedModelSpec
 HostedModelScheduler = legacy.HostedModelScheduler
 
-_LEGACY_RESOLVE_GOOGLE_API_KEY = legacy._resolve_google_api_key
-_LEGACY_RESOLVE_NVIDIA_API_KEY = legacy._resolve_nvidia_api_key
-_LEGACY_RESOLVE_MISTRAL_API_KEY = legacy._resolve_mistral_api_key
-_LEGACY_RESOLVE_HUGGINGFACE_API_KEY = legacy._resolve_huggingface_api_key
-_LEGACY_RESOLVE_VERCEL_API_KEY = legacy._resolve_vercel_api_key
+
+class ShuffledModelScheduler(HostedModelScheduler):
+    """Picks uniformly at random among eligible specs.
+
+    Keeps all hard gates (RPM/RPD limits, cooldowns) but replaces the
+    score-based min() selection with random.choice so that model-specific
+    extraction biases are spread evenly across articles rather than being
+    correlated with whichever model was fastest/available at the time.
+    """
+
+    def acquire_spec(self, acquire_timeout: float = 300.0) -> "HostedModelSpec | None":
+        deadline = time.time() + acquire_timeout
+        while True:
+            with self._lock:
+                self._maybe_reset_day_locked()
+                now = time.time()
+                self._prune_rpm_locked(now)
+                candidates: list[HostedModelSpec] = []
+                any_rpd_left = False
+                for model in self._models:
+                    key = model.key
+                    rpd_limit = model.rpd
+                    rpm_limit = model.rpm
+                    if rpd_limit is None or self._rpd_counts[key] < rpd_limit:
+                        any_rpd_left = True
+                    if now < self._cooldown_until[key]:
+                        continue
+                    if self._provider_is_cooldown_locked(model.provider, now):
+                        continue
+                    if not self._model_is_available_locked(model):
+                        continue
+                    if rpd_limit is not None and self._rpd_counts[key] >= rpd_limit:
+                        continue
+                    if rpm_limit is not None and len(self._rpm_windows[key]) >= rpm_limit:
+                        continue
+                    candidates.append(model)
+                if candidates:
+                    chosen = random.choice(candidates)
+                    self._reserve_locked(chosen, now)
+                    return chosen
+                if not any_rpd_left:
+                    return None
+            if time.time() >= deadline:
+                return None
+            time.sleep(1.0)
+
+_LEGACY_LOAD_ENV_FILE = legacy._load_env_file
 _LEGACY_RESOLVE_PROVIDER_API_KEY = legacy._resolve_provider_api_key
-_LEGACY_SELECT_HOSTED_MODEL_POOL = legacy._select_hosted_model_pool
-_LEGACY_RESOLVE_API_KEYS_FOR_SPECS = legacy._resolve_api_keys_for_specs
 _LEGACY_LOAD_ARTICLES = legacy._load_articles
 _LEGACY_CACHE_HAS_SUCCESSFUL_ROWS = legacy._cache_has_successful_rows
 _LEGACY_IS_FINANCIAL_ARTICLE = legacy._is_financial_article
@@ -75,7 +141,6 @@ _LEGACY_PARSE_GOOGLE_ARRAY = legacy._parse_google_array
 _LEGACY_PARSE_OPENAI_CHAT_ARRAY = legacy._parse_openai_chat_array
 _LEGACY_NORMALIZE_NVIDIA_MODEL_NAME = legacy._normalize_nvidia_model_name
 _LEGACY_CALL_GOOGLE = legacy._call_google
-_LEGACY_LOAD_ENV_FILE = legacy._load_env_file
 _GOOGLE_API_ENV_NAMES = (
     "GOOGLE_API_KEY",
     "GOOGLE_API_KEY_2",
@@ -228,39 +293,104 @@ def _resolve_google_api_key(cli_value: str) -> str:
     return keys[0] if keys else ""
 
 
-def _resolve_nvidia_api_key(cli_value: str) -> str:
+def _resolve_simple_api_key(provider: str, cli_value: str) -> str:
+    """Resolve a single API key for any provider in _SIMPLE_KEY_ENV_NAMES.
+
+    Priority: CLI arg → os.environ → .env files.
+    """
     _sync_legacy_repo_root()
-    return _LEGACY_RESOLVE_NVIDIA_API_KEY(cli_value)
+    if cli_value.strip():
+        return cli_value.strip()
+    env_names = _SIMPLE_KEY_ENV_NAMES.get(provider, [])
+    for name in env_names:
+        value = os.environ.get(name, "").strip()
+        if value:
+            return value
+    candidates = [
+        Path.cwd() / ".env",
+        REPO_ROOT / ".env",
+        legacy.workspace_path(".env"),
+    ]
+    seen: set[Path] = set()
+    for candidate in candidates:
+        candidate = candidate.resolve()
+        if candidate in seen or not candidate.exists():
+            continue
+        seen.add(candidate)
+        env_map = _LEGACY_LOAD_ENV_FILE(candidate)
+        for name in env_names:
+            value = env_map.get(name, "").strip()
+            if value:
+                os.environ.setdefault(name, value)
+                return value
+    return ""
+
+
+def _resolve_nvidia_api_key(cli_value: str) -> str:
+    return _resolve_simple_api_key("nvidia", cli_value)
+
+
+def _resolve_cerebras_api_key(cli_value: str) -> str:
+    return _resolve_simple_api_key("cerebras", cli_value)
+
+
+def _resolve_groq_api_key(cli_value: str) -> str:
+    return _resolve_simple_api_key("groq", cli_value)
 
 
 def _resolve_mistral_api_key(cli_value: str, model_name: str = "") -> str:
     _sync_legacy_repo_root()
-    return _LEGACY_RESOLVE_MISTRAL_API_KEY(cli_value, model_name=model_name)
+    if cli_value.strip():
+        return cli_value.strip()
+    env_names = legacy._mistral_api_env_names(model_name)
+    # Check .env files first so codestral-specific keys beat a generic MISTRAL_API_KEY
+    # that may have been cached in os.environ by a prior call.
+    candidates = [Path.cwd() / ".env", REPO_ROOT / ".env", legacy.workspace_path(".env")]
+    seen: set[Path] = set()
+    for candidate in candidates:
+        candidate = candidate.resolve()
+        if candidate in seen or not candidate.exists():
+            continue
+        seen.add(candidate)
+        env_map = _LEGACY_LOAD_ENV_FILE(candidate)
+        for name in env_names:
+            value = env_map.get(name, "").strip()
+            if value:
+                return value
+    for name in env_names:
+        value = os.environ.get(name, "").strip()
+        if value:
+            return value
+    return ""
 
 
 def _resolve_huggingface_api_key(cli_value: str) -> str:
     _sync_legacy_repo_root()
-    return _LEGACY_RESOLVE_HUGGINGFACE_API_KEY(cli_value)
+    return legacy._resolve_huggingface_api_key(cli_value)
 
 
 def _resolve_vercel_api_key(cli_value: str) -> str:
     _sync_legacy_repo_root()
-    return _LEGACY_RESOLVE_VERCEL_API_KEY(cli_value)
+    return legacy._resolve_vercel_api_key(cli_value)
 
 
 def _resolve_provider_api_key(provider: str, cli_value: str = "", model_name: str = "") -> str:
     _sync_legacy_repo_root()
+    if provider == "google":
+        keys = _resolve_google_api_keys(cli_value)
+        return keys[0] if keys else ""
+    if provider in _SIMPLE_PROVIDERS:
+        return _resolve_simple_api_key(provider, cli_value)
     return _LEGACY_RESOLVE_PROVIDER_API_KEY(provider, cli_value, model_name=model_name)
 
 
 def _select_hosted_model_pool(provider: str, model_arg: str) -> list[HostedModelSpec]:
-    _sync_legacy_runtime()
-    prev = legacy._resolve_provider_api_key
+    prev_rpak = legacy._resolve_provider_api_key
     legacy._resolve_provider_api_key = _resolve_provider_api_key
     try:
-        return _LEGACY_SELECT_HOSTED_MODEL_POOL(provider, model_arg)
+        return legacy._select_hosted_model_pool(provider, model_arg)
     finally:
-        legacy._resolve_provider_api_key = prev
+        legacy._resolve_provider_api_key = prev_rpak
 
 
 def _resolve_api_keys_for_specs(
@@ -268,21 +398,19 @@ def _resolve_api_keys_for_specs(
     provider: str,
     cli_api_key: str,
 ) -> dict[str, str]:
-    _sync_legacy_runtime()
     prev = legacy._resolve_provider_api_key
     legacy._resolve_provider_api_key = _resolve_provider_api_key
     try:
-        return _LEGACY_RESOLVE_API_KEYS_FOR_SPECS(specs, provider, cli_api_key)
+        return legacy._resolve_api_keys_for_specs(specs, provider, cli_api_key)
     finally:
         legacy._resolve_provider_api_key = prev
 
 
 def _select_google_model_pool(model_arg: str) -> list[HostedModelSpec]:
-    _sync_legacy_runtime()
     prev = legacy._resolve_provider_api_key
     legacy._resolve_provider_api_key = _resolve_provider_api_key
     try:
-        return _LEGACY_SELECT_HOSTED_MODEL_POOL("google", model_arg)
+        return legacy._select_hosted_model_pool("google", model_arg)
     finally:
         legacy._resolve_provider_api_key = prev
 
@@ -291,7 +419,6 @@ def _resolve_google_api_keys_for_specs(
     specs: list[HostedModelSpec],
     google_keys: list[str],
 ) -> dict[str, str]:
-    _sync_legacy_runtime()
     if not google_keys:
         return {}
     out: dict[str, str] = {}
@@ -444,6 +571,13 @@ class GoogleKeyRotationScheduler(HostedModelScheduler):
                 self._api_key_cooldown_until[api_key] = until
             self._save_stats_locked()
 
+    def _model_is_available_locked(self, model: "HostedModelSpec") -> bool:
+        # Keep per-model inflight gate (one request per model at a time) to prevent
+        # thundering-herd from N workers piling onto the same endpoint.
+        # Drop the provider-level gate so all 6 Google models can run concurrently
+        # (6 parallel batches vs 1 before this fix).
+        return self._inflight_model_counts.get(model.key, 0) == 0
+
     def provider_cooldown(self, provider: str, seconds: float) -> None:
         return None
 
@@ -495,6 +629,39 @@ def _sync_legacy_runtime() -> None:
     legacy._log = _log
 
 
+def _build_rate_limiter(
+    provider: str,
+    model_arg: str,
+    cli_api_key: str,
+) -> "tuple[str, dict[str, str], HostedModelScheduler | None, list[HostedModelSpec], dict[str, int]]":
+    """Build (resolved_api_key, api_keys_by_model, rate_limiter, model_pool, api_key_ordinals).
+
+    Called when no external rate_limiter is supplied. Handles all three provider paths.
+    """
+    _sync_legacy_runtime()
+    if provider == "auto":
+        pool = _select_hosted_model_pool("auto", model_arg)
+        api_keys = _resolve_api_keys_for_specs(pool, "auto", cli_api_key)
+        return "", api_keys, ShuffledModelScheduler(pool, stats_path=HOSTED_MODEL_STATS_PATH), pool, {}
+    if provider in _SIMPLE_PROVIDERS:
+        key = _resolve_simple_api_key(provider, cli_api_key)
+        pool = _select_hosted_model_pool(provider, model_arg)
+        api_keys = {spec.key: key for spec in pool if key}
+        return key, api_keys, ShuffledModelScheduler(pool, stats_path=HOSTED_MODEL_STATS_PATH), pool, {}
+    # google
+    google_keys = _resolve_google_api_keys(cli_api_key)
+    key = google_keys[0] if google_keys else ""
+    unique = list(dict.fromkeys(google_keys))
+    pool = _select_google_model_pool(model_arg)
+    api_keys = _resolve_google_api_keys_for_specs(pool, unique)
+    ordinals = {k: i + 1 for i, k in enumerate(unique)}
+    limiter: HostedModelScheduler | None = (
+        GoogleKeyRotationScheduler(pool, api_keys, stats_path=HOSTED_MODEL_STATS_PATH)
+        if len(unique) > 1 else None
+    )
+    return key, api_keys, limiter, pool, ordinals
+
+
 def process_day(
     path: Path,
     batch_size: int,
@@ -509,34 +676,37 @@ def process_day(
     api_keys: dict[str, str] | None = None,
     workers: int = 1,
 ) -> dict:
-    if provider != "google":
-        raise ValueError("canonical extractor only supports provider='google'")
+    if provider not in _ALL_PROVIDER_CHOICES:
+        raise ValueError(
+            f"canonical extractor supports {sorted(_ALL_PROVIDER_CHOICES)}, got {provider!r}"
+        )
     _sync_legacy_runtime()
-    resolved_api_keys = _resolve_google_api_keys(api_key)
-    resolved_api_key = resolved_api_keys[0] if resolved_api_keys else ""
-    unique_google_keys = list(dict.fromkeys(resolved_api_keys))
-    api_key_ordinals = {key: index + 1 for index, key in enumerate(unique_google_keys)}
-    if rate_limiter is None and len(unique_google_keys) > 1:
-        model_pool = _select_google_model_pool(model)
-        api_keys = _resolve_google_api_keys_for_specs(model_pool, unique_google_keys)
-        rate_limiter = GoogleKeyRotationScheduler(model_pool, api_keys, stats_path=HOSTED_MODEL_STATS_PATH)
-    elif rate_limiter is not None and api_keys is None:
-        api_keys = _resolve_google_api_keys_for_specs(rate_limiter.specs(), unique_google_keys)
-    elif rate_limiter is None:
-        api_keys = None
+    if rate_limiter is None:
+        api_key, api_keys_map, rate_limiter, model_pool, api_key_ordinals = _build_rate_limiter(
+            provider, model, api_key
+        )
+        resolved_model = (
+            model or (DEFAULT_MODELS.get(provider, "") if provider in _SIMPLE_PROVIDERS else DEFAULT_MODEL)
+        )
+    else:
+        api_keys_map = api_keys or {spec.key: api_key for spec in rate_limiter.specs() if api_key}
+        api_key_ordinals = {api_key: 1} if api_key and provider not in ("auto", "google") else {}
+        resolved_model = (
+            model or (DEFAULT_MODELS.get(provider, "") if provider in _SIMPLE_PROVIDERS else DEFAULT_MODEL)
+        )
     return legacy.process_day(
         path,
         batch_size=batch_size,
-        provider="google",
-        model=model or DEFAULT_MODEL,
-        api_key=resolved_api_key,
+        provider=provider,
+        model=resolved_model,
+        api_key=api_key,
         timeout=timeout,
         num_predict=num_predict,
         max_summary_chars=max_summary_chars,
         log_every_batches=log_every_batches,
         rate_limiter=rate_limiter,
-        api_keys=api_keys,
-        api_key_ordinals=api_key_ordinals,
+        api_keys=api_keys_map,
+        api_key_ordinals=api_key_ordinals if api_key_ordinals else None,
         workers=workers,
     )
 
@@ -546,19 +716,25 @@ def main() -> None:
     ap.add_argument("--date-from", type=str, default="")
     ap.add_argument("--date-to", type=str, default="")
     ap.add_argument("--batch-size", type=int, default=20)
-    ap.add_argument("--provider", type=str, choices=["google"], default="google",
-                    help="Pinned to the canonical Google-only pipeline.")
+    ap.add_argument(
+        "--provider", type=str,
+        choices=sorted(_ALL_PROVIDER_CHOICES), default="auto",
+        help="LLM provider (default: auto). Supported: " + ", ".join(sorted(_ALL_PROVIDER_CHOICES)),
+    )
     ap.add_argument(
         "--model",
         type=str,
         default="",
-        help="Optional Google model override. Supports comma-separated model names.",
+        help="Optional model override. Supports comma-separated model names.",
     )
     ap.add_argument(
         "--api-key",
         type=str,
         default="",
-        help="Optional Google key override or comma-separated key list. Otherwise reads GOOGLE_API_KEY*, GOOGLE_API_KEYS, and .env.",
+        help=(
+            "Optional API key override. For google: comma-separated list or reads GOOGLE_API_KEY* / .env. "
+            "For others: reads the provider-specific env var from os.environ or .env."
+        ),
     )
     ap.add_argument("--timeout", type=int, default=30)
     ap.add_argument(
@@ -571,8 +747,8 @@ def main() -> None:
     ap.add_argument(
         "--workers",
         type=int,
-        default=1,
-        help="Number of parallel batch workers within each day (default 1).",
+        default=16,
+        help="Number of parallel batch workers within each day (default 16).",
     )
     ap.add_argument(
         "--max-summary-chars",
@@ -590,40 +766,36 @@ def main() -> None:
     if args.workers <= 0:
         raise SystemExit("ERROR: --workers must be positive")
 
-    google_keys = _resolve_google_api_keys(args.api_key)
-    if not google_keys:
-        raise SystemExit(
-            "ERROR: missing Google API key(s). Set GOOGLE_API_KEY*, GOOGLE_API_KEYS, or .env in your environment."
-        )
-    api_key = google_keys[0]
-
     try:
-        model_pool = _select_google_model_pool(args.model)
+        api_key, api_keys_by_model, rate_limiter, model_pool, _ = _build_rate_limiter(
+            args.provider, args.model, args.api_key
+        )
     except ValueError as exc:
         raise SystemExit(f"ERROR: {exc}") from exc
     if not model_pool:
-        raise SystemExit("ERROR: no Google models resolved for the canonical extractor.")
-
-    api_keys_by_model = _resolve_google_api_keys_for_specs(model_pool, google_keys)
-    if not api_keys_by_model:
-        raise SystemExit("ERROR: no Google models had a resolved Google API key.")
-
-    if len(list(dict.fromkeys(google_keys))) > 1:
-        rate_limiter = GoogleKeyRotationScheduler(model_pool, api_keys_by_model, stats_path=HOSTED_MODEL_STATS_PATH)
-    else:
-        rate_limiter = None
+        raise SystemExit(
+            "ERROR: no models found — check provider keys in .env "
+            "(GOOGLE_API_KEY, NVIDIA_API_KEY, CEREBRAS_API_KEY, GROQ_API_KEY, MISTRAL_API_KEY)."
+        )
+    if not api_keys_by_model and args.provider != "auto":
+        env_names = " / ".join(_SIMPLE_KEY_ENV_NAMES.get(args.provider, ["GOOGLE_API_KEY*"]))
+        raise SystemExit(f"ERROR: no API keys resolved — set {env_names} in .env.")
     model_pool_keys = [spec.key for spec in (rate_limiter.specs() if rate_limiter is not None else model_pool)]
-    _log(f"Model pool: {model_pool_keys}")
+    if args.provider == "auto":
+        providers_in_pool = sorted({spec.provider for spec in model_pool})
+        _log(f"Provider: auto | Active providers: {providers_in_pool} | Pool size: {len(model_pool_keys)}")
+    else:
+        _log(f"Provider: {args.provider} | Model pool: {model_pool_keys}")
 
     files = _iter_dates(args.date_from, args.date_to)
     if not files:
         print("No input files matched date filters.")
         return
 
-    run_model = args.model if args.model else "google_pool"
+    run_model = args.model if args.model else f"{args.provider}_pool"
     _log(
         f"Run config: files={len(files)} from={args.date_from or '-'} to={args.date_to or '-'} "
-        f"provider=google model={run_model} batch_size={args.batch_size} batch_workers={args.workers} "
+        f"provider={args.provider} model={run_model} batch_size={args.batch_size} batch_workers={args.workers} "
         f"timeout={args.timeout}s num_predict={args.num_predict} "
         f"max_summary_chars={args.max_summary_chars} overwrite={args.overwrite}"
     )
@@ -658,7 +830,7 @@ def main() -> None:
         stats = process_day(
             p,
             batch_size=args.batch_size,
-            provider="google",
+            provider=args.provider,
             model=args.model,
             api_key=api_key,
             timeout=args.timeout,
@@ -686,7 +858,7 @@ def main() -> None:
             f"day_rate={day_rate:.3f} days/s eta={eta_s}"
         )
         if stats.get("pool_exhausted"):
-            _log(f"All Google model daily limits exhausted after {total_days} days — stopping early.")
+            _log(f"All {args.provider} model daily limits exhausted after {total_days} days — stopping early.")
             break
 
     wall_total = time.time() - start

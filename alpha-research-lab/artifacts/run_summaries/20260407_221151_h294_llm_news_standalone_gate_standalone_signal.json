@@ -1,0 +1,119 @@
+{
+  "artifacts": {},
+  "metadata": {
+    "signal": "H294"
+  },
+  "mode": "standalone_signal",
+  "name": "h294_llm_news_standalone_gate",
+  "summary": {
+    "best_gated_bucket": "follow",
+    "best_gated_ic": 0.4036498205529246,
+    "best_gated_state": "novelty",
+    "best_pooled_feature": "llm_sentiment_raw",
+    "best_pooled_hit_rate": 0.5225225225225225,
+    "best_pooled_ic": 0.04706091747933238,
+    "best_pooled_n_years": 2,
+    "best_pooled_pos_years": 1,
+    "c1_baseline_coverage_pct": 0.8,
+    "c1_baseline_ic": 0.043,
+    "coverage_pct": 0.19,
+    "data_constraint": "cache covers 2016-2017 only; 6/8 year gate cannot be applied",
+    "gated_table": [
+      {
+        "bucket": "flat",
+        "hit_rate": 0.5,
+        "mean_ic": -0.2849009840237068,
+        "n_days": 4,
+        "n_rows": 142,
+        "n_years": 2,
+        "pos_years": 0,
+        "state_kind": "novelty"
+      },
+      {
+        "bucket": "follow",
+        "hit_rate": 1.0,
+        "mean_ic": 0.4036498205529246,
+        "n_days": 4,
+        "n_rows": 99,
+        "n_years": 1,
+        "pos_years": 1,
+        "state_kind": "novelty"
+      },
+      {
+        "bucket": "new",
+        "hit_rate": 0.5408163265306123,
+        "mean_ic": 0.07763709095749205,
+        "n_days": 98,
+        "n_rows": 1331,
+        "n_years": 2,
+        "pos_years": 2,
+        "state_kind": "novelty"
+      },
+      {
+        "bucket": "beat",
+        "hit_rate": 0.5,
+        "mean_ic": 0.01697541243412711,
+        "n_days": 20,
+        "n_rows": 387,
+        "n_years": 2,
+        "pos_years": 1,
+        "state_kind": "alignment"
+      },
+      {
+        "bucket": "flat",
+        "hit_rate": 0.5,
+        "mean_ic": 0.02018746885681985,
+        "n_days": 64,
+        "n_rows": 1022,
+        "n_years": 2,
+        "pos_years": 1,
+        "state_kind": "alignment"
+      },
+      {
+        "bucket": "miss",
+        "hit_rate": 0.5454545454545454,
+        "mean_ic": 0.13616322412008106,
+        "n_days": 11,
+        "n_rows": 163,
+        "n_years": 2,
+        "pos_years": 1,
+        "state_kind": "alignment"
+      }
+    ],
+    "nonzero_rows": 1572,
+    "panel_rows": 1572,
+    "pooled_table": [
+      {
+        "feature": "llm_sentiment_raw",
+        "hit_rate": 0.5225225225225225,
+        "mean_ic": 0.04706091747933238,
+        "n_days": 111,
+        "n_years": 2,
+        "pos_years": 1
+      },
+      {
+        "feature": "llm_sentiment_5d",
+        "hit_rate": 0.4857142857142857,
+        "mean_ic": -0.008005259375656666,
+        "n_days": 105,
+        "n_years": 2,
+        "pos_years": 1
+      },
+      {
+        "feature": "llm_sentiment_conf_weighted",
+        "hit_rate": 0.45,
+        "mean_ic": -0.017488167561931722,
+        "n_days": 40,
+        "n_years": 2,
+        "pos_years": 1
+      }
+    ],
+    "s1_corr": -0.0429592543001413,
+    "verdict": "MIXED",
+    "window_years": [
+      2016,
+      2017
+    ]
+  },
+  "ts": "20260407_221151"
+}

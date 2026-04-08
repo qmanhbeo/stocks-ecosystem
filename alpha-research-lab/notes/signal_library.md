@@ -365,29 +365,33 @@ that volume alone does not explain.
 
 ---
 
-### C15 — LLM News State Router (H290)
+### C15 — LLM News State Router (H290, H294)
 **Status: OFFLINE EVIDENCE — state-gated news surface is real in the nonzero 2015-2017 window**
 
 - **Standalone IC:** the pooled news surface is weak or negative, but the routed buckets are much stronger:
-  - `llm_sentiment_30d` overall IC `-0.0121`
-  - `llm_sentiment_30d` in `novelty=follow`: IC `+0.1618`, daily hit rate `0.6296`
-  - `llm_sentiment_30d` in `alignment×novelty=miss__new`: IC `+0.1350`, daily hit rate `0.5283`
-  - `llm_sentiment_5d` in `novelty=follow`: IC `+0.4796`, daily hit rate `0.8667`
-- **Correlation with S1:** `llm_sentiment_30d` corr with S1 `-0.0020`, `llm_sentiment_5d` corr with S1 `-0.0022`, `llm_sentiment_conf_weighted` corr with S1 `+0.0029`
-- **Consistency:** best routed buckets are positive in the available nonzero years, but the usable news window is only `2015-2017`
-- **Coverage:** the nonzero news window is `2015-2017`; the later `2019-2025` active-book window is effectively zero-valued for this cache surface
+  - `llm_sentiment_30d` overall IC `-0.0121` (vs 5d return, H290)
+  - `llm_sentiment_raw` overall IC `+0.047` (vs 1d barrier, H294) — 1/2 years positive (inconsistent)
+  - `llm_sentiment_30d` in `novelty=follow`: IC `+0.1618`, daily hit rate `0.6296` (vs 5d return)
+  - `llm_sentiment_5d` in `novelty=follow`: IC `+0.4796` (vs 5d return); `+0.4036` (vs 1d barrier) — extraordinary but 1 observable year only
+  - **`llm_sentiment_raw` in `novelty=new`: IC `+0.078`, 2/2 years positive, 1331 rows (vs 1d barrier, H294)** — new; passes IC + available-year consistency gates
+  - `llm_sentiment_raw` in `alignment=miss`: IC `+0.136`, 1/2 years (vs 1d barrier)
+- **Correlation with S1:** `llm_sentiment_raw` corr with S1 `−0.043` (H294); `llm_sentiment_5d` corr with S1 `−0.0022` (H290)
+- **Consistency:** `novelty/new` vs 1d barrier is 2/2 available years; full 6/8-year gate blocked by data constraint
+- **Coverage:** 0.19% of (trading_day, ticker) pairs with nonzero LLM signal; below C1 (0.8%); active-book years zero-valued
 
 **What it captures:** LLM news is not a single pooled sentiment factor. The same surface behaves very differently depending on state:
-- expectation misses are better than beats
-- follow-up news is better than new-news in the strongest buckets
-- the state split is materially stronger than the raw pooled feature
+- `novelty/new` (dominant new information, not follow-up) is consistently predictive vs the 1d barrier
+- `novelty/follow` (dominant follow-up context) is extraordinarily strong but too sparse to confirm with year consistency
+- `alignment/miss` (expectation misses) shows a directional edge but is inconsistent across the 2 available years
+- `novelty/flat` is anti-predictive (IC −0.285)
 
-**Economic mechanism:** the market seems to pay more attention to news when it is follow-up / miss-state information, not when it is already expected or fresh in the wrong direction.
+**Economic mechanism:** New, non-anticipated information moves prices more cleanly the next day in Vietnam's retail-heavy, T+2 market. Follow-up information in the right context triggers a larger concentrated response. Pooled sentiment gets overwhelmed by the noisy flat/beat cases.
 
-**Why not live:** the active-book years still do not have useful news coverage in the current cache surface, so this is offline evidence rather than a deployable current-book signal.
+**Why not live:** active-book years (2018-2025) have zero LLM cache coverage. Re-evaluate when extraction pipeline covers those years.
 
 **Artifact:** `data/features/xs_llm_news_ticker_day.parquet`
-  - routed on the 2015-2017 nonzero window
+  - routed on the 2016-2017 nonzero window
+  - key feature: `llm_sentiment_raw` gated by `novelty/new` (llm_new_info_5d > llm_followup_info_5d)
 
 ---
 

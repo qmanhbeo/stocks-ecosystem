@@ -56,7 +56,14 @@ New branches from the CafeF LLM rebuild. Do **not** assign H numbers until a bra
 Session 120 then ran `H290` and found that the rebuilt LLM news surface does contain real signal, but only in the right state buckets: pooled sentiment stays weak or negative overall, while follow-up and miss-state news carry the edge in the nonzero `2015-2017` window and the active-book years remain effectively zero-valued for this cache surface. Session 121 then ran `H291` and `H292`: the news half-life is real but not a clean single-class contract, and the macro-theme surface has genuine signal but not a crisp sector router. Branch consequence: keep the live branch unchanged, promote the rebuilt LLM news state router only as offline evidence (`C15`), keep `news-marginal-slot` blocked until active-book years have nonzero news coverage, park `news-decay-contract` and `macro-theme-router` as mixed evidence, and move the queue to `breadth-activation-gate`. (2026-04-05)
 Session 122 then ran `H293` and found breadth_lag1 does not explain day-to-day S1 IC variation on the active book: Spearman rho `+0.0032`, p-value `0.8664`, q5 minus q1 IC mean `-0.0042`. Branch consequence: park `breadth-activation-gate` and move the queue to `llm-news-gate`. (2026-04-06)
 
-Session 122 is parked here for today. Resume with `llm-news-gate` only if you want to continue the queue; otherwise keep this as the stop point and do not reopen the mixed news branches without a new contract or data change.
+Session 123 then ran `H294` (llm-news-gate formal gate) and found: pooled `llm_sentiment_raw` IC `+0.047` but only `1/2` years positive (2016 negative, 2017 positive); state-gated `novelty/new` IC `+0.078`, `2/2` years positive, 1331 rows — passes IC and available-year consistency; `novelty/follow` IC `+0.404` but only 1 observable year. Coverage `0.19%` (below C1 `0.8%`). S1 corr `−0.043`. Verdict: MIXED. Branch consequence: keep C15 as offline evidence, upgrade C15 entry in signal_library.md with `novelty/new` 1d-barrier finding, park `llm-news-gate` until extraction covers active-book years (2018+). No active research branch. (2026-04-07)
+
+Session 124 audited `extract_llm_news_features.py`, fixed the provider-level inflight serialisation bug in `GoogleKeyRotationScheduler` (see `session_124_log.md`), and processed ~51 days (613→664 cache files). **Pipeline is currently stopped. First thing next session: restart it.** Do not start any research branch until `ls data/llm_cache/ | wc -l` reaches ~3750. Restart command:
+```bash
+cd /home/manh/stocks-ecosystem/alpha-research-lab
+nohup python data_tools/extract_llm_news_features.py --provider google --workers 16 > /tmp/llm_extract.log 2>&1 &
+```
+It skips existing cache automatically. ETA ~25–40 hours continuous. (2026-04-08)
 
 1. Record the next market-session outcome against the **rollback sticky activated** paper-trade book:
    - current active live branch from the `2026-03-30` signal / `2026-03-31` execution:

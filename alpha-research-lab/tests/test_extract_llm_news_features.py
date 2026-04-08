@@ -399,7 +399,7 @@ def test_select_hosted_model_pool_huggingface_uses_router_models() -> None:
         "CohereLabs/tiny-aya-global:cohere",
         "meta-llama/Llama-3.1-8B-Instruct:featherless-ai",
         "zai-org/GLM-5:fireworks-ai",
-        "openai/gpt-oss-20b:groq",
+        "meta-llama/Llama-3.1-8B-Instruct:groq",
         "google/gemma-2-2b-it:hf-inference",
         "deepseek-ai/DeepSeek-R1:hyperbolic",
         "moonshotai/Kimi-K2-Thinking:novita",

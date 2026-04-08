@@ -525,7 +525,7 @@ HUGGINGFACE_MODEL_POOL = [
     {"name": "CohereLabs/tiny-aya-global:cohere", "seed_latency": 2.8},
     {"name": "meta-llama/Llama-3.1-8B-Instruct:featherless-ai", "seed_latency": 3.0},
     {"name": "zai-org/GLM-5:fireworks-ai", "seed_latency": 3.2},
-    {"name": "openai/gpt-oss-20b:groq", "seed_latency": 2.2},
+    {"name": "meta-llama/Llama-3.1-8B-Instruct:groq", "seed_latency": 2.2},
     {"name": "google/gemma-2-2b-it:hf-inference", "seed_latency": 4.2},
     {"name": "deepseek-ai/DeepSeek-R1:hyperbolic", "seed_latency": 3.8},
     {"name": "moonshotai/Kimi-K2-Thinking:novita", "seed_latency": 4.0},
@@ -550,9 +550,7 @@ VERCEL_MODEL_POOL = [
 CEREBRAS_MODEL_POOL = [
     {"name": "llama3.1-8b", "seed_latency": 2.6},
     {"name": "llama-3.3-70b", "seed_latency": 4.5},
-    {"name": "gpt-oss-120b", "seed_latency": 4.8},
     {"name": "qwen-3-32b", "seed_latency": 5.0},
-    {"name": "zai-glm-4.7", "seed_latency": 5.3},
 ]
 
 FIREWORKS_MODEL_POOL = [
@@ -565,8 +563,6 @@ FIREWORKS_MODEL_POOL = [
 GROQ_MODEL_POOL = [
     {"name": "llama-3.1-8b-instant", "seed_latency": 2.2},
     {"name": "llama-3.3-70b-versatile", "seed_latency": 3.6},
-    {"name": "openai/gpt-oss-20b", "seed_latency": 3.0},
-    {"name": "openai/gpt-oss-120b", "seed_latency": 4.1},
     {"name": "deepseek-r1-distill-llama-70b", "seed_latency": 4.8},
 ]
 
