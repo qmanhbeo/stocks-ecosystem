@@ -51,5 +51,8 @@ def lab_relative_path(value: str | Path) -> str:
         try:
             return str(path.relative_to(LAB_ROOT))
         except ValueError:
-            return str(path)
+            try:
+                return str(path.relative_to(WORKSPACE_ROOT))
+            except ValueError:
+                return str(path)
     return str(path)

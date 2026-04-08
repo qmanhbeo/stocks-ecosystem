@@ -516,11 +516,11 @@ def evaluate_model(
     portfolio_choice: Optional[bool] = None,
     portfolio_universe_size: Optional[int] = None,
     portfolio_top_k: Optional[int] = None,
-    data_dir: str = "data/stock/",
+    data_dir: str = EVAL_DEFAULTS["data_dir"],
     help_tickers: Optional[list] = None,
-    market_data_dir: str = "data/stock/",
+    market_data_dir: str = EVAL_DEFAULTS["market_data_dir"],
     help_assets: Optional[list] = None,
-    help_assets_dir: str = "data/fx-commodities/",
+    help_assets_dir: str = EVAL_DEFAULTS["help_assets_dir"],
     mode: str = 'test',  # 'train', 'val', or 'test'
     output_dir: str = EVAL_DEFAULTS["output_dir"],
     deterministic: bool = True,
@@ -638,8 +638,9 @@ def evaluate_model(
     )
     if not resolved_portfolio_choice and not stock:
         raise ValueError("Single-stock evaluation requires --stock")
-    help_tickers, market_data_dir, help_assets, help_assets_dir = _resolve_helper_inputs_from_meta(
+    data_dir, help_tickers, market_data_dir, help_assets, help_assets_dir = _resolve_helper_inputs_from_meta(
         meta,
+        data_dir,
         help_tickers,
         market_data_dir,
         help_assets,

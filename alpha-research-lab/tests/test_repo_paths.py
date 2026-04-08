@@ -13,6 +13,7 @@ def test_lab_relative_path_relativizes_lab_absolute_paths() -> None:
     assert lab_relative_path(ARTIFACTS_ROOT / "portfolio_baselines/sample.parquet") == (
         "artifacts/portfolio_baselines/sample.parquet"
     )
+    assert lab_relative_path(DATA_ROOT / "features/xs_rl_signal_matrix.parquet") == "data/features/xs_rl_signal_matrix.parquet"
     assert lab_relative_path("/tmp/external.parquet") == "/tmp/external.parquet"
 
 

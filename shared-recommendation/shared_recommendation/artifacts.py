@@ -119,7 +119,11 @@ def latest_time_in_artifact(path: Path, *, time_column: str) -> pd.Timestamp | N
 
 
 def assert_artifact_current(path: Path, spec: ArtifactSpec, as_of_date: pd.Timestamp) -> None:
-    if spec.is_directory or spec.time_column is None:
+    if spec.is_directory:
+        if not path.exists() or not path.is_dir():
+            raise ValueError(f"Artifact directory is missing or unreadable: {path}")
+        return
+    if spec.time_column is None:
         return
     latest = latest_time_in_artifact(path, time_column=spec.time_column)
     if latest is None:

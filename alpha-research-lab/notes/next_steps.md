@@ -1,15 +1,15 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_122_log.md` for the latest full session detail.
+Use `notes/session_125_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
-## Immediate Follow-Up (2026-04-05)
+## Immediate Follow-Up (2026-04-08)
 
-1. `llm-news-gate` — Run H98 properly: LLM ticker sentiment already built in `xs_llm_news_ticker_day.parquet`. Smallest test: standalone IC vs 1d barrier, compare consistency vs C1. Kill if IC < 0.01 or < 6/8 years positive.
-2. `news-marginal-slot` — use CafeF news to predict replacement value inside the active book, not generic return. Smallest test: join `xs_llm_news_ticker_day.parquet` with `entry_alpha/candidate_panel_daily.parquet` and test whether news state predicts the weakest-held slot's marginal contribution better than standalone `T+1`. This remains blocked until the active-book years have nonzero news coverage.
+1. `llm-cache-fill` — rerun `python -u data_tools/extract_llm_news_features.py --provider google --workers 16 --timeout 45` after Google limits / cooldowns clear. Current state: cache `731 / 3750`, next missing day `2017-12-23.jsonl`, and `api_key_cooldowns` now persist in `artifacts/llm_runtime/hosted_model_stats.json`.
+2. `llm-feature-refresh` — only after cache reaches the active-book years (`2018+`), rebuild `xs_llm_news_ticker_day.parquet`, rerun `H294`, and then reconsider `news-marginal-slot`.
 
 ---
 
@@ -64,6 +64,8 @@ cd /home/manh/stocks-ecosystem/alpha-research-lab
 nohup python data_tools/extract_llm_news_features.py --provider google --workers 16 > /tmp/llm_extract.log 2>&1 &
 ```
 It skips existing cache automatically. ETA ~25–40 hours continuous. (2026-04-08)
+
+Session 125 resumed the canonical extractor with plain `python` from the default `stocks` env, confirmed `api_key_cooldowns` now persist in `artifacts/llm_runtime/hosted_model_stats.json`, and wrote one new cache day: `2017-12-22.jsonl` (`730 -> 731` files). The run then stopped cleanly because the Google pool exhausted its available daily-limit / cooldown budget on this pass. Branch consequence: keep the extractor branch active, do not start a research branch yet, and rerun `python -u data_tools/extract_llm_news_features.py --provider google --workers 16 --timeout 45` after limits clear. Next missing cache day: `2017-12-23.jsonl`. (2026-04-08)
 
 1. Record the next market-session outcome against the **rollback sticky activated** paper-trade book:
    - current active live branch from the `2026-03-30` signal / `2026-03-31` execution:

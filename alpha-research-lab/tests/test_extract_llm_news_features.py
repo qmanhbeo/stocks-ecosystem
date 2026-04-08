@@ -1149,6 +1149,49 @@ def test_google_scheduler_applies_cooldown_for_403(tmp_path) -> None:
     assert next_spec.key != spec.key, "403 should have cooled model_a, forcing fallback to model_b"
 
 
+def test_google_scheduler_persists_api_key_cooldowns_with_fingerprints(tmp_path) -> None:
+    stats_path = tmp_path / "stats.json"
+    specs = [
+        llm.HostedModelSpec(provider="google", name="model_a", api_key_envs=(), rpm=10, seed_latency=2.0),
+    ]
+    api_keys = {specs[0].key: "secret-key-1"}
+    scheduler = llm.GoogleKeyRotationScheduler(specs, api_keys, stats_path=stats_path)
+
+    scheduler.record_failure(specs[0].key, cooldown_seconds=300.0, provider_cooldown_seconds=300.0)
+
+    saved = json.loads(stats_path.read_text(encoding="utf-8"))
+    persisted = saved.get("api_key_cooldowns", {})
+    fingerprint = scheduler._api_key_fingerprint("secret-key-1")
+
+    assert "secret-key-1" not in persisted
+    assert fingerprint in persisted
+    assert float(persisted[fingerprint]) > time.time()
+
+
+def test_google_scheduler_loads_legacy_raw_key_cooldowns(tmp_path) -> None:
+    stats_path = tmp_path / "stats.json"
+    cooldown_until = time.time() + 60.0
+    stats_path.write_text(
+        json.dumps(
+            {
+                "version": 1,
+                "updated_at": "2026-04-08T00:00:00Z",
+                "api_key_cooldowns": {"legacy-raw-key": cooldown_until},
+                "models": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+    specs = [
+        llm.HostedModelSpec(provider="google", name="model_a", api_key_envs=(), rpm=10, seed_latency=2.0),
+    ]
+    api_keys = {specs[0].key: "legacy-raw-key"}
+
+    scheduler = llm.GoogleKeyRotationScheduler(specs, api_keys, stats_path=stats_path)
+
+    assert scheduler._api_key_cooldown_until["legacy-raw-key"] == cooldown_until
+
+
 def test_google_scheduler_excludes_high_streak_models(tmp_path) -> None:
     """Models with failure_streak >= HIGH_STREAK_THRESHOLD must be excluded from
     selection so workers wait cheaply rather than burning 30 s on a doomed timeout."""

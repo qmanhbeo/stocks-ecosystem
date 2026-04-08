@@ -30,18 +30,21 @@ def test_rl_external_feature_fallback_paths_point_at_workspace_children():
 
 def test_eval_metadata_rehydrates_helper_paths_for_absolute_defaults():
     meta = {
+        "data_dir": "/meta/data",
         "market_data_dir": "/meta/market",
         "help_assets_dir": "/meta/help",
     }
 
-    help_tickers, market_data_dir, help_assets, help_assets_dir = _resolve_helper_inputs_from_meta(
+    data_dir, help_tickers, market_data_dir, help_assets, help_assets_dir = _resolve_helper_inputs_from_meta(
         meta=meta,
+        data_dir=str(external_features.default_stock_data_dir()),
         help_tickers=None,
         market_data_dir=str(external_features.default_market_data_dir()),
         help_assets=None,
         help_assets_dir=str(external_features.default_help_assets_dir()),
     )
 
+    assert data_dir == "/meta/data"
     assert help_tickers is None
     assert market_data_dir == "/meta/market"
     assert help_assets is None

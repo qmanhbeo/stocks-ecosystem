@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional, Tuple
 import numpy as np
 import pandas as pd
 
-from vn_stock_rl.external_features import default_help_assets_dir, default_market_data_dir
+from vn_stock_rl.external_features import default_help_assets_dir, default_market_data_dir, default_stock_data_dir
 from vn_stock_rl.policies.registry import read_policy_from_metadata
 
 _read_policy_from_metadata = read_policy_from_metadata
@@ -42,13 +42,16 @@ def _load_eval_meta(model_path: str) -> Optional[dict]:
 
 def _resolve_helper_inputs_from_meta(
     meta: Optional[dict],
+    data_dir: str,
     help_tickers: Optional[list],
     market_data_dir: str,
     help_assets: Optional[list],
     help_assets_dir: str,
-) -> Tuple[Optional[list], str, Optional[list], str]:
+) -> Tuple[str, Optional[list], str, Optional[list], str]:
     if not isinstance(meta, dict):
-        return help_tickers, market_data_dir, help_assets, help_assets_dir
+        return data_dir, help_tickers, market_data_dir, help_assets, help_assets_dir
+    if _is_default_shared_path(data_dir, default_stock_data_dir(), "data/stock/") and meta.get("data_dir"):
+        data_dir = meta["data_dir"]
     if help_tickers is None:
         help_tickers = meta.get("help_tickers") or None
     if _is_default_shared_path(market_data_dir, default_market_data_dir(), "data/stock/") and meta.get(
@@ -63,7 +66,7 @@ def _resolve_helper_inputs_from_meta(
         "data/fx-commodities/",
     ) and meta.get("help_assets_dir"):
         help_assets_dir = meta["help_assets_dir"]
-    return help_tickers, market_data_dir, help_assets, help_assets_dir
+    return data_dir, help_tickers, market_data_dir, help_assets, help_assets_dir
 
 
 def _is_default_shared_path(value: str, canonical_default: Path, legacy_default: str) -> bool:

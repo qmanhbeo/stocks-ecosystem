@@ -1,4 +1,9 @@
 {
+  "api_key_cooldowns": {
+    "sha256:2313301ebbec79d5": 1775669022.7383833,
+    "sha256:260d3af9d2e35237": 1775689711.7824163,
+    "sha256:c0a88ffed336a47f": 1775689711.680865
+  },
   "models": {
     "cerebras:gpt-oss-120b": {
       "cooldown_until": 1775597846.4267926,
@@ -15,10 +20,10 @@
       "success_count": 4
     },
     "cerebras:llama-3.3-70b": {
-      "cooldown_until": 1775598099.4496953,
-      "failure_count": 1,
-      "failure_streak": 1,
-      "last_failure": "2026-04-07T15:41:39Z",
+      "cooldown_until": 1775661527.8739939,
+      "failure_count": 2,
+      "failure_streak": 2,
+      "last_failure": "2026-04-08T09:18:47Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5
@@ -26,10 +31,10 @@
       "success_count": 1
     },
     "cerebras:llama3.1-8b": {
-      "cooldown_until": 1775598086.8649614,
-      "failure_count": 2,
-      "failure_streak": 1,
-      "last_failure": "2026-04-07T15:41:26Z",
+      "cooldown_until": 1775661648.0765595,
+      "failure_count": 3,
+      "failure_streak": 2,
+      "last_failure": "2026-04-08T09:20:48Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -39,10 +44,10 @@
       "success_count": 3
     },
     "cerebras:qwen-3-32b": {
-      "cooldown_until": 1775616780.2031386,
-      "failure_count": 1,
-      "failure_streak": 1,
-      "last_failure": "2026-04-07T20:53:00Z",
+      "cooldown_until": 1775661407.7300124,
+      "failure_count": 2,
+      "failure_streak": 2,
+      "last_failure": "2026-04-08T09:16:47Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -68,10 +73,10 @@
       "success_count": 6
     },
     "google:gemini-2.5-flash": {
-      "cooldown_until": 1775655804.34031,
-      "failure_count": 8,
-      "failure_streak": 2,
-      "last_failure": "2026-04-08T07:43:24Z",
+      "cooldown_until": 1775689711.7824163,
+      "failure_count": 12,
+      "failure_streak": 6,
+      "last_failure": "2026-04-08T17:08:31Z",
       "last_success": "2026-04-07T15:41:09Z",
       "recent_latencies": [
         0.5,
@@ -82,10 +87,10 @@
       "success_count": 4
     },
     "google:gemini-2.5-flash-lite": {
-      "cooldown_until": 1775636678.7286534,
-      "failure_count": 24,
-      "failure_streak": 4,
-      "last_failure": "2026-04-08T08:09:38Z",
+      "cooldown_until": 1775640707.8524168,
+      "failure_count": 32,
+      "failure_streak": 12,
+      "last_failure": "2026-04-08T09:16:47Z",
       "last_success": "2026-04-08T07:53:26Z",
       "recent_latencies": [
         0.9236664772033691,
@@ -142,34 +147,34 @@
       "success_count": 21
     },
     "google:gemini-3.1-flash-lite-preview": {
-      "cooldown_until": 0.0,
-      "failure_count": 48,
-      "failure_streak": 0,
-      "last_failure": "2026-04-08T08:10:17Z",
-      "last_success": "2026-04-08T08:11:06Z",
+      "cooldown_until": 1775669022.7383833,
+      "failure_count": 69,
+      "failure_streak": 2,
+      "last_failure": "2026-04-08T17:08:42Z",
+      "last_success": "2026-04-08T17:08:42Z",
       "recent_latencies": [
-        11.787070989608765,
-        8.943044900894165,
-        12.043148040771484,
-        13.85873293876648,
-        6.719459533691406,
-        13.681995630264282,
-        9.00955080986023,
-        9.794257640838623,
-        12.607835292816162,
-        11.148645639419556,
-        6.173320770263672,
-        5.355710744857788,
-        5.436999320983887,
-        12.313359022140503,
-        7.312314033508301,
-        8.465162515640259,
-        7.30481743812561,
-        7.538507699966431,
-        8.36080813407898,
-        18.004895210266113
+        24.182353496551514,
+        2.015594482421875,
+        8.533035039901733,
+        13.501833438873291,
+        7.6128528118133545,
+        12.299339771270752,
+        15.316854238510132,
+        11.123018980026245,
+        11.070782661437988,
+        10.715191841125488,
+        12.793306350708008,
+        11.692509889602661,
+        8.012369871139526,
+        21.048784017562866,
+        7.534675598144531,
+        23.24132513999939,
+        7.126115798950195,
+        7.009196519851685,
+        13.373824119567871,
+        11.0799081325531
       ],
-      "success_count": 753
+      "success_count": 1120
     },
     "google:gemma-3-12b-it": {
       "cooldown_until": 1775635207.8065848,
@@ -188,10 +193,10 @@
       "success_count": 6
     },
     "google:gemma-3-27b-it": {
-      "cooldown_until": 1775655804.122126,
-      "failure_count": 10,
-      "failure_streak": 2,
-      "last_failure": "2026-04-08T07:43:24Z",
+      "cooldown_until": 1775689711.680865,
+      "failure_count": 14,
+      "failure_streak": 6,
+      "last_failure": "2026-04-08T17:08:31Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         21.422932863235474,
@@ -218,10 +223,10 @@
       "success_count": 21
     },
     "groq:deepseek-r1-distill-llama-70b": {
-      "cooldown_until": 1775616780.1979008,
-      "failure_count": 1,
-      "failure_streak": 1,
-      "last_failure": "2026-04-07T20:53:00Z",
+      "cooldown_until": 1775661407.719036,
+      "failure_count": 2,
+      "failure_streak": 2,
+      "last_failure": "2026-04-08T09:16:47Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -231,10 +236,10 @@
       "success_count": 3
     },
     "groq:llama-3.1-8b-instant": {
-      "cooldown_until": 1775598099.4450772,
-      "failure_count": 2,
-      "failure_streak": 1,
-      "last_failure": "2026-04-07T15:41:39Z",
+      "cooldown_until": 1775661648.0644615,
+      "failure_count": 3,
+      "failure_streak": 2,
+      "last_failure": "2026-04-08T09:20:48Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -245,10 +250,10 @@
       "success_count": 4
     },
     "groq:llama-3.3-70b-versatile": {
-      "cooldown_until": 1775598086.8948216,
-      "failure_count": 1,
-      "failure_streak": 1,
-      "last_failure": "2026-04-07T15:41:26Z",
+      "cooldown_until": 1775661527.8710594,
+      "failure_count": 2,
+      "failure_streak": 2,
+      "last_failure": "2026-04-08T09:18:47Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5
@@ -547,13 +552,14 @@
       "failure_count": 0,
       "failure_streak": 0,
       "last_failure": "",
-      "last_success": "2026-04-07T15:07:31Z",
+      "last_success": "2026-04-08T09:17:18Z",
       "recent_latencies": [
         0.5,
         0.5,
-        0.5
+        0.5,
+        30.7430419921875
       ],
-      "success_count": 3
+      "success_count": 4
     },
     "nvidia:microsoft/phi-3.5-mini-instruct": {
       "cooldown_until": 0.0,
@@ -636,10 +642,10 @@
       "success_count": 1
     },
     "nvidia:nvidia/nemotron-3-super-120b-a12b": {
-      "cooldown_until": 0.0,
-      "failure_count": 0,
-      "failure_streak": 0,
-      "last_failure": "",
+      "cooldown_until": 1775640409.1294615,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-08T09:21:49Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -657,10 +663,10 @@
       "success_count": 0
     },
     "nvidia:stepfun-ai/step-3.5-flash": {
-      "cooldown_until": 1775595572.316144,
-      "failure_count": 2,
-      "failure_streak": 1,
-      "last_failure": "2026-04-07T20:54:32Z",
+      "cooldown_until": 1775640183.8019557,
+      "failure_count": 3,
+      "failure_streak": 2,
+      "last_failure": "2026-04-08T09:18:03Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -771,6 +777,6 @@
       "success_count": 0
     }
   },
-  "updated_at": "2026-04-08T08:11:06Z",
+  "updated_at": "2026-04-08T17:08:42Z",
   "version": 1
 }

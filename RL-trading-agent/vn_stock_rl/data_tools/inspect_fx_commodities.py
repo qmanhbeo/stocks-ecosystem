@@ -199,7 +199,7 @@ Examples:
             alias = ticker.lower()
         else:
             alias = _sanitize_ticker(ticker)
-        file_path = f"{args.data_dir}fx_commodities_{alias}_{args.interval}.parquet"
+        file_path = str(Path(args.data_dir).expanduser() / f"fx_commodities_{alias}_{args.interval}.parquet")
 
     print("\n" + "="*60)
     print("FX/Commodities Data Inspector")

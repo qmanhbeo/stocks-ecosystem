@@ -183,3 +183,56 @@ def test_help_tickers_metadata_autoload():
         print("-------------")
         assert not df_history.empty, "Expected evaluation history to be non-empty"
         print("✓ Metadata auto-load produced a valid evaluation history")
+
+
+def test_evaluate_model_metadata_autoloads_data_dir():
+    print("\n" + "="*80)
+    print("TEST: Data Dir Metadata Auto-Load")
+    print("="*80)
+    print("\n1. SYNTHETIC DATA")
+    print("-----------------")
+    with tempfile.TemporaryDirectory() as tmpdir:
+        data_dir = os.path.join(tmpdir, "custom_data")
+        out_dir = os.path.join(tmpdir, "out")
+        os.makedirs(data_dir, exist_ok=True)
+
+        base_df = _make_df(0, 120, 100.0)
+        stock = "ZZMETA"
+        base_path = os.path.join(data_dir, f"gia_lich_su_{stock}_1D.parquet")
+        base_df.to_parquet(base_path, index=False)
+
+        model_path = os.path.join(tmpdir, "dummy_model.zip")
+        meta_path = os.path.splitext(model_path)[0] + "_meta.json"
+        with open(meta_path, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    "model_name": "dummy",
+                    "data_dir": data_dir,
+                },
+                f,
+            )
+
+        print("Created custom parquet outside the default shared path")
+        print("Wrote metadata with data_dir pointing at that custom directory")
+
+        print("\n2. EXPECTED BEHAVIOR")
+        print("--------------------")
+        print("evaluate_model should load the stock parquet from metadata data_dir")
+
+        df_history, stats = evaluate_model(
+            model_path=model_path,
+            stock=stock,
+            output_dir=out_dir,
+            mode="test",
+            forced_policy="flat",
+        )
+
+        print("\n3. ACTUAL RESULTS")
+        print("-----------------")
+        print(f"History rows: {len(df_history)}")
+
+        print("\n4. VALIDATION")
+        print("-------------")
+        assert not df_history.empty, "Expected evaluation history to be non-empty"
+        assert stats["num_trades"] == 0, "Flat policy should still produce zero trades"
+        print("✓ Metadata data_dir was honored")

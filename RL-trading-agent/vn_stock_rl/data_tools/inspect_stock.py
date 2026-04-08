@@ -175,7 +175,7 @@ Examples:
         file_path = args.file
     else:
         ticker = args.ticker.upper()
-        file_path = f"{args.data_dir}gia_lich_su_{ticker}_{args.interval}.parquet"
+        file_path = str(Path(args.data_dir).expanduser() / f"gia_lich_su_{ticker}_{args.interval}.parquet")
     
     print("\n" + "="*60)
     print("Stock Data Inspector")

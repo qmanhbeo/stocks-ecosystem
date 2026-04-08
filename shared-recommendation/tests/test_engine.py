@@ -4,6 +4,7 @@ import json
 from dataclasses import dataclass
 
 import pandas as pd
+import pytest
 
 from shared_recommendation import (
     ArtifactKey,
@@ -28,6 +29,12 @@ class StubAdapter:
 
     def score(self, universe_frame: pd.DataFrame, *, context: RecommendationContext) -> pd.DataFrame:
         return universe_frame[["time", "ticker"]].assign(score_raw=[0.9, 0.2])
+
+
+@dataclass(frozen=True)
+class StubDirectoryAdapter(StubAdapter):
+    def required_artifacts(self) -> tuple[str, ...]:
+        return (ArtifactKey.LAB_SIGNAL_PREDICTION_DIR,)
 
 
 def test_engine_generates_candidates_and_applies_tradability_gate(tmp_path):
@@ -105,3 +112,29 @@ def test_engine_rejects_duplicate_scored_rows(tmp_path):
         assert "duplicate" in str(exc).lower()
     else:
         raise AssertionError("Expected duplicate universe rows to fail")
+
+
+def test_engine_rejects_missing_required_directory_artifact(tmp_path, monkeypatch):
+    data_root = tmp_path / "data"
+    matrix_path = data_root / "features" / "xs_rl_signal_matrix.parquet"
+    matrix_path.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(
+        {
+            "time": pd.to_datetime(["2026-03-27", "2026-03-27"]),
+            "ticker": ["AAA", "BBB"],
+        }
+    ).to_parquet(matrix_path, index=False)
+    monkeypatch.setenv("STOCKS_DATA_ROOT", str(data_root))
+
+    engine = RecommendationEngine()
+    with pytest.raises(ValueError, match="Artifact directory is missing or unreadable"):
+        engine.generate(
+            RecommendationRequest(
+                profile_name="missing_dir_test",
+                adapter=StubDirectoryAdapter(),
+                universe_source_key=ArtifactKey.LAB_SIGNAL_MATRIX,
+                as_of_date="2026-03-27",
+                output_root=data_root / "features" / "recommendations",
+                artifact_overrides={ArtifactKey.LAB_SIGNAL_MATRIX: matrix_path},
+            )
+        )

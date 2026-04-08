@@ -6,6 +6,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from src.repo_paths import LAB_ROOT, WORKSPACE_ROOT
+
 
 VALIDATION_REL_DELTA_MIN = 0.05
 VALIDATION_IR_DELTA_MIN = 0.05
@@ -22,6 +24,28 @@ def summary_is_skipped(summary_path: Path) -> bool:
     return bool(payload.get("summary", {}).get("skipped"))
 
 
+def _workspace_anchor_names(workspace_root: Path, lab_root: Path) -> set[str]:
+    names = {"data", lab_root.name}
+    if workspace_root.exists():
+        names.update(path.name for path in workspace_root.iterdir() if path.is_dir())
+    return names
+
+
+def _rebase_workspace_absolute_path(path: Path) -> Path:
+    if not path.is_absolute():
+        return path
+    if path.exists():
+        return path.resolve()
+    workspace_names = _workspace_anchor_names(WORKSPACE_ROOT, LAB_ROOT)
+    for index, part in enumerate(path.parts):
+        if part not in workspace_names:
+            continue
+        candidate = (WORKSPACE_ROOT / Path(*path.parts[index:])).resolve()
+        if candidate.exists():
+            return candidate
+    return path
+
+
 def resolve_summary_artifact(summary_path: Path, key: str) -> Path:
     payload = load_summary_payload(summary_path)
     artifact = payload.get("artifacts", {}).get(str(key))
@@ -29,9 +53,13 @@ def resolve_summary_artifact(summary_path: Path, key: str) -> Path:
         raise ValueError(f"Summary {summary_path} does not contain artifact key {key!r}")
     artifact_path = Path(str(artifact))
     if artifact_path.is_absolute():
-        return artifact_path
-    summary_root = Path(summary_path).resolve().parents[2]
-    return (summary_root / artifact_path).resolve()
+        return _rebase_workspace_absolute_path(artifact_path)
+    summary_lab_root = Path(summary_path).resolve().parents[2]
+    summary_workspace_root = summary_lab_root.parent
+    workspace_names = _workspace_anchor_names(summary_workspace_root, summary_lab_root)
+    if artifact_path.parts[:1] and artifact_path.parts[0] in workspace_names and artifact_path.parts[0] != "artifacts":
+        return (summary_workspace_root / artifact_path).resolve()
+    return (summary_lab_root / artifact_path).resolve()
 
 
 def blend_state_scoped_scores(

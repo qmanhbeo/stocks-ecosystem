@@ -9,6 +9,8 @@ The older multi-provider implementation has been moved to
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import math
 import random
 import re
@@ -438,9 +440,55 @@ class GoogleKeyRotationScheduler(HostedModelScheduler):
     ) -> None:
         super().__init__(models, stats_path=stats_path)
         self._api_keys_by_model = dict(api_keys_by_model)
+        all_keys = sorted({v for v in self._api_keys_by_model.values() if v})
+        # Load persisted API key cooldowns so dead keys (403-denied) survive restarts
+        # and don't waste requests re-probing them on every process start.
+        persisted_key_cooldowns = self._load_api_key_cooldowns(all_keys)
+        now = time.time()
         self._api_key_cooldown_until: dict[str, float] = {
-            key: 0.0 for key in sorted({value for value in self._api_keys_by_model.values() if value})
+            key: (cd if cd > now else 0.0)
+            for key, cd in persisted_key_cooldowns.items()
         }
+
+    @staticmethod
+    def _api_key_fingerprint(api_key: str) -> str:
+        digest = hashlib.sha256(str(api_key).encode("utf-8")).hexdigest()
+        return f"sha256:{digest[:16]}"
+
+    def _load_api_key_cooldowns(self, all_keys: list[str]) -> dict[str, float]:
+        """Read persisted api_key_cooldowns from the stats file, if present."""
+        try:
+            payload = json.loads(self._stats_path.read_text(encoding="utf-8"))
+            raw = payload.get("api_key_cooldowns", {}) if isinstance(payload, dict) else {}
+            if not isinstance(raw, dict):
+                return {}
+            out: dict[str, float] = {}
+            for api_key in all_keys:
+                fingerprint = self._api_key_fingerprint(api_key)
+                value = raw.get(fingerprint, raw.get(api_key))
+                if value is None:
+                    continue
+                out[api_key] = float(value)
+            return out
+        except (OSError, json.JSONDecodeError, AttributeError):
+            return {}
+
+    def _save_stats_locked(self) -> None:
+        self._stats_path.parent.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "version": 1,
+            "updated_at": _utc_now_iso_z(),
+            "api_key_cooldowns": {
+                self._api_key_fingerprint(api_key): until
+                for api_key, until in sorted(self._api_key_cooldown_until.items())
+                if api_key
+            },
+            "models": self._stats,
+        }
+        tmp = self._stats_path.with_suffix(".json.tmp")
+        with tmp.open("w", encoding="utf-8") as handle:
+            json.dump(payload, handle, ensure_ascii=False, indent=2, sort_keys=True)
+        tmp.replace(self._stats_path)
 
     def _api_key_for_model(self, model: HostedModelSpec) -> str:
         return self._api_keys_by_model.get(model.key, "")
@@ -573,7 +621,7 @@ class GoogleKeyRotationScheduler(HostedModelScheduler):
             self._save_stats_locked()
 
     _HIGH_STREAK_THRESHOLD = 10
-    _MAX_INFLIGHT_PER_MODEL = 3
+    _MAX_INFLIGHT_PER_MODEL = 2
 
     def _model_is_available_locked(self, model: "HostedModelSpec") -> bool:
         # Exclude models on a very long consecutive failure streak.  They will
@@ -584,11 +632,12 @@ class GoogleKeyRotationScheduler(HostedModelScheduler):
         stats = self._stats.get(model.key, {})
         if int(stats.get("failure_streak", 0) or 0) >= self._HIGH_STREAK_THRESHOLD:
             return False
-        # Allow up to 3 concurrent requests per model.  The RPM window gate in
-        # acquire_spec is the real rate-limiter (15 RPM for the workhorse); raising
-        # from 2→3 lets the scheduler hit ~15 RPM in steady state (~5 art/s) vs
-        # the ~12 RPM it achieves with inflight=2.  Workers that exceed the RPM
-        # budget simply spin in acquire_spec (1 s sleep) rather than hitting the API.
+        # Allow up to 2 concurrent requests per model.  inflight=3 was tried but
+        # caused intermittent 429s on the workhorse: 503 errors trigger immediate
+        # retries, momentarily spiking to 5 RPM slots and blowing the 15-RPM limit.
+        # A 429 on the sole working model causes a 900s cooldown (15-min stall),
+        # erasing far more throughput than inflight=3 gained.  inflight=2 keeps the
+        # burst well under 15 RPM even when two retries fire simultaneously.
         return self._inflight_model_counts.get(model.key, 0) < self._MAX_INFLIGHT_PER_MODEL
 
     def provider_cooldown(self, provider: str, seconds: float) -> None:
