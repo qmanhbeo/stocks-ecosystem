@@ -542,18 +542,19 @@ class GoogleKeyRotationScheduler(HostedModelScheduler):
             stats["failure_streak"] = int(stats.get("failure_streak", 0) or 0) + 1
             stats["last_failure"] = _utc_now_iso_z()
             cooldown = max(float(cooldown_seconds or 0.0), float(provider_cooldown_seconds or 0.0))
-            # Only actual rate-limit / transient network failures should force a key rotation.
-            # Parse failures and missing-object retries need to reuse the same key so the
-            # batch-splitting fallback can keep working on one-key pools.
-            should_rotate_key = provider_cooldown_seconds > 0 or cooldown in {180.0, 300.0, 900.0}
-            if cooldown > 0 and should_rotate_key:
+            if cooldown > 0:
                 until = time.time() + cooldown
                 if until > self._cooldown_until.get(key, 0.0):
                     self._cooldown_until[key] = until
                     stats["cooldown_until"] = until
-                api_key = self._api_key_for_model(model)
-                if api_key and until > self._api_key_cooldown_until.get(api_key, 0.0):
-                    self._api_key_cooldown_until[api_key] = until
+                # Only rotate the API key for rate-limit / transient network errors.
+                # Auth failures (403: model not accessible on this key) and parse
+                # errors should NOT rotate the key — the key itself is fine.
+                should_rotate_key = provider_cooldown_seconds > 0 or cooldown in {180.0, 300.0, 900.0}
+                if should_rotate_key:
+                    api_key = self._api_key_for_model(model)
+                    if api_key and until > self._api_key_cooldown_until.get(api_key, 0.0):
+                        self._api_key_cooldown_until[api_key] = until
             self._save_stats_locked()
 
     def cooldown(self, model_name_or_key: str, seconds: float) -> None:
@@ -571,12 +572,22 @@ class GoogleKeyRotationScheduler(HostedModelScheduler):
                 self._api_key_cooldown_until[api_key] = until
             self._save_stats_locked()
 
+    _HIGH_STREAK_THRESHOLD = 10
+
     def _model_is_available_locked(self, model: "HostedModelSpec") -> bool:
-        # Keep per-model inflight gate (one request per model at a time) to prevent
-        # thundering-herd from N workers piling onto the same endpoint.
-        # Drop the provider-level gate so all 6 Google models can run concurrently
-        # (6 parallel batches vs 1 before this fix).
-        return self._inflight_model_counts.get(model.key, 0) == 0
+        # Exclude models on a very long consecutive failure streak.  They will
+        # almost certainly fail again (e.g. gemma-3-12b-it with seed_latency>timeout),
+        # so having workers wait 1 s at a time for a better model is cheaper than
+        # burning 30 s on a doomed timeout.  The streak resets on the first success,
+        # so the model gets another chance after a process restart or if conditions improve.
+        stats = self._stats.get(model.key, {})
+        if int(stats.get("failure_streak", 0) or 0) >= self._HIGH_STREAK_THRESHOLD:
+            return False
+        # Allow up to 2 concurrent requests per model.  The RPM window is the
+        # real rate-limit; allowing 2 inflight roughly doubles throughput on the
+        # primary workhorse model (gemini-3.1-flash-lite-preview, 15 RPM) without
+        # the thundering-herd risk of fully removing the gate.
+        return self._inflight_model_counts.get(model.key, 0) < 2
 
     def provider_cooldown(self, provider: str, seconds: float) -> None:
         return None

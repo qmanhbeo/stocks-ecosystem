@@ -1120,3 +1120,58 @@ def test_main_processes_days_serially(monkeypatch, tmp_path) -> None:
 
     assert max_inflight == 1
     assert seen == ["2026-03-18", "2026-03-19"]
+
+
+def test_google_scheduler_applies_cooldown_for_403(tmp_path) -> None:
+    """A 403 (auth failure, cooldown=21600s) must apply a model-level cooldown
+    even though provider_cooldown_seconds=0 and 21600 is not in the legacy
+    rate-limit set {180, 300, 900}.  Bug: the old code gated both model and key
+    cooldown behind `should_rotate_key`, so 403s were silently swallowed."""
+    import urllib.error
+
+    stats_path = tmp_path / "stats.json"
+    specs = [
+        llm.HostedModelSpec(provider="google", name="model_a", api_key_envs=(), rpm=10, seed_latency=2.0),
+        llm.HostedModelSpec(provider="google", name="model_b", api_key_envs=(), rpm=10, seed_latency=3.0),
+    ]
+    api_keys = {specs[0].key: "key1", specs[1].key: "key1"}
+    scheduler = llm.GoogleKeyRotationScheduler(specs, api_keys, stats_path=stats_path)
+
+    spec = scheduler.acquire_spec(acquire_timeout=0.1)
+    assert spec is not None
+
+    # Simulate 403: cooldown_seconds=21600, provider_cooldown_seconds=0
+    scheduler.record_failure(spec.key, cooldown_seconds=21600.0, provider_cooldown_seconds=0.0)
+
+    # model_a should now be on a long cooldown; only model_b available
+    next_spec = scheduler.acquire_spec(acquire_timeout=0.1)
+    assert next_spec is not None
+    assert next_spec.key != spec.key, "403 should have cooled model_a, forcing fallback to model_b"
+
+
+def test_google_scheduler_excludes_high_streak_models(tmp_path) -> None:
+    """Models with failure_streak >= HIGH_STREAK_THRESHOLD must be excluded from
+    selection so workers wait cheaply rather than burning 30 s on a doomed timeout."""
+    stats_path = tmp_path / "stats.json"
+    _write_stats(
+        stats_path,
+        {
+            "google:bad-model": {
+                "success_count": 0,
+                "failure_count": 14,
+                "failure_streak": 14,
+                "recent_latencies": [],
+            }
+        },
+    )
+    specs = [
+        llm.HostedModelSpec(provider="google", name="bad-model", api_key_envs=(), rpm=30, seed_latency=2.0),
+        llm.HostedModelSpec(provider="google", name="good-model", api_key_envs=(), rpm=30, seed_latency=5.0),
+    ]
+    api_keys = {s.key: "key1" for s in specs}
+    scheduler = llm.GoogleKeyRotationScheduler(specs, api_keys, stats_path=stats_path)
+
+    # Should pick good-model despite its higher seed_latency, because bad-model is streak-excluded
+    spec = scheduler.acquire_spec(acquire_timeout=0.1)
+    assert spec is not None
+    assert spec.key == "google:good-model", "High-streak model must be skipped"
