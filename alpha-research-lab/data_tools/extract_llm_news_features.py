@@ -573,21 +573,23 @@ class GoogleKeyRotationScheduler(HostedModelScheduler):
             self._save_stats_locked()
 
     _HIGH_STREAK_THRESHOLD = 10
+    _MAX_INFLIGHT_PER_MODEL = 3
 
     def _model_is_available_locked(self, model: "HostedModelSpec") -> bool:
         # Exclude models on a very long consecutive failure streak.  They will
         # almost certainly fail again (e.g. gemma-3-12b-it with seed_latency>timeout),
         # so having workers wait 1 s at a time for a better model is cheaper than
-        # burning 30 s on a doomed timeout.  The streak resets on the first success,
+        # burning 45 s on a doomed timeout.  The streak resets on the first success,
         # so the model gets another chance after a process restart or if conditions improve.
         stats = self._stats.get(model.key, {})
         if int(stats.get("failure_streak", 0) or 0) >= self._HIGH_STREAK_THRESHOLD:
             return False
-        # Allow up to 2 concurrent requests per model.  The RPM window is the
-        # real rate-limit; allowing 2 inflight roughly doubles throughput on the
-        # primary workhorse model (gemini-3.1-flash-lite-preview, 15 RPM) without
-        # the thundering-herd risk of fully removing the gate.
-        return self._inflight_model_counts.get(model.key, 0) < 2
+        # Allow up to 3 concurrent requests per model.  The RPM window gate in
+        # acquire_spec is the real rate-limiter (15 RPM for the workhorse); raising
+        # from 2→3 lets the scheduler hit ~15 RPM in steady state (~5 art/s) vs
+        # the ~12 RPM it achieves with inflight=2.  Workers that exceed the RPM
+        # budget simply spin in acquire_spec (1 s sleep) rather than hitting the API.
+        return self._inflight_model_counts.get(model.key, 0) < self._MAX_INFLIGHT_PER_MODEL
 
     def provider_cooldown(self, provider: str, seconds: float) -> None:
         return None
