@@ -1,0 +1,103 @@
+{
+  "branch_decision": "No real historical per-ticker foreign buy/sell or foreign-room table exists in the local canonical data warehouse. Only the known failed VNM ETF proxy surfaces are present, so the branch remains source-blocked.",
+  "candidate_inventory": [
+    {
+      "classification": "proxy_vnm_etf_affinity",
+      "columns": [
+        "ticker",
+        "time",
+        "xs_fa_rank",
+        "xs_fa_signal",
+        "xs_foreign_affinity_120d",
+        "xs_foreign_affinity_20d",
+        "xs_vnm_premium_1d"
+      ],
+      "has_ticker": true,
+      "has_time": true,
+      "path": "features/xs_foreign_demand_daily.parquet",
+      "proxy_column_hits": [
+        "xs_fa_rank",
+        "xs_fa_signal",
+        "xs_foreign_affinity_120d",
+        "xs_foreign_affinity_20d",
+        "xs_vnm_premium_1d"
+      ],
+      "real_flow_column_hits": [],
+      "rows": 826404,
+      "size_bytes": 22363288,
+      "suffix": ".parquet",
+      "ticker_count": 394,
+      "time_max": "2025-12-31T00:00:00",
+      "time_min": "2015-01-05T00:00:00"
+    },
+    {
+      "classification": "proxy_vnm_etf_price",
+      "columns": [
+        "adj_close",
+        "alias",
+        "close",
+        "high",
+        "low",
+        "open",
+        "ticker",
+        "time",
+        "volume"
+      ],
+      "has_ticker": true,
+      "has_time": true,
+      "path": "fx-commodities/fx_commodities_vnm_etf_1D.parquet",
+      "proxy_column_hits": [],
+      "real_flow_column_hits": [],
+      "rows": 4182,
+      "size_bytes": 143872,
+      "suffix": ".parquet",
+      "ticker_count": 1,
+      "time_max": "2026-03-31T00:00:00",
+      "time_min": "2009-08-14T00:00:00"
+    }
+  ],
+  "classification_counts": {
+    "proxy_vnm_etf_affinity": 1,
+    "proxy_vnm_etf_price": 1
+  },
+  "external_probe_note": "Session command `python analysis/probe_vnstock.py` was run with network permission. Installed vnstock 3.5.0 exposed no `quote.history_foreign_ownership`; `price_board` remains current-day only.",
+  "proxy_snapshot": {
+    "vnm_etf_price": {
+      "classification": "date-level ETF proxy, not per-ticker foreign flow",
+      "columns": [
+        "time",
+        "adj_close",
+        "close",
+        "high",
+        "low",
+        "open",
+        "volume",
+        "ticker",
+        "alias"
+      ],
+      "exists": true,
+      "rows": 4182,
+      "time_max": "2026-03-31T00:00:00",
+      "time_min": "2009-08-14T00:00:00"
+    },
+    "xs_foreign_demand_daily": {
+      "classification": "archive-only VNM ETF affinity proxy, not real foreign buy/sell",
+      "columns": [
+        "time",
+        "ticker",
+        "xs_foreign_affinity_120d",
+        "xs_foreign_affinity_20d",
+        "xs_vnm_premium_1d",
+        "xs_fa_rank",
+        "xs_fa_signal"
+      ],
+      "exists": true,
+      "rows": 826404,
+      "tickers": 394,
+      "time_max": "2025-12-31T00:00:00",
+      "time_min": "2015-01-05T00:00:00"
+    }
+  },
+  "real_candidates": [],
+  "schema_fragments": []
+}

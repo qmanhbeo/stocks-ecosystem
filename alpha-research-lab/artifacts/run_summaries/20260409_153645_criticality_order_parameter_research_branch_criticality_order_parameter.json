@@ -1,0 +1,50 @@
+{
+  "artifacts": {
+    "daily_panel": "artifacts/portfolio_baselines/20260409_153645_h320_criticality_order_parameter_panel.parquet",
+    "details": "artifacts/run_summaries/20260409_153645_research_branch_criticality_order_parameter_details.json",
+    "results": "artifacts/portfolio_baselines/20260409_153645_h320_criticality_order_parameter_results.parquet"
+  },
+  "metadata": {
+    "baseline": "full_recent_cycle_relative_return_ewm3",
+    "decision_rules": {
+      "mixed_min_abs_residual_lift": 0.002,
+      "mixed_min_abs_residual_rho": 0.03,
+      "pass_min_abs_baseline_conditioning_lift": 0.004,
+      "pass_min_abs_residual_lift": 0.004,
+      "pass_min_abs_residual_rho": 0.06
+    },
+    "note": "Feature transforms use trailing 252-session z-scores, shifted one day, to avoid future distribution leakage.",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "question": "Do raw market-criticality order parameters explain next-cycle selector efficacy beyond recent efficacy memory?",
+    "target": "full_future_cycle_relative_return"
+  },
+  "mode": "research_branch_criticality_order_parameter",
+  "name": "criticality_order_parameter",
+  "summary": {
+    "baseline_confirmation_rho_target": 0.6557403808783522,
+    "baseline_validation_rho_target": 0.6126183934133327,
+    "best_confirmation_both_minus_base_only_residual": -0.04104887697091788,
+    "best_confirmation_high_minus_not_residual": -0.007784046878063513,
+    "best_confirmation_rho_residual": -0.12059152739992228,
+    "best_feature": "gap_alignment_pressure",
+    "best_feature_decision": "MIXED",
+    "best_validation_both_minus_base_only_residual": -0.005418935716330406,
+    "best_validation_high_minus_not_residual": -0.007437634923960853,
+    "best_validation_rho_residual": -0.04451997971847309,
+    "branch_decision": "Criticality carries a weak residual or conditioning trace, but not enough to promote. Keep as offline meta-state evidence only.",
+    "rows": 2748,
+    "verdict": "MIXED"
+  },
+  "ts": "20260409_153645"
+}

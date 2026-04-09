@@ -1,0 +1,181 @@
+{
+  "artifacts": {
+    "coverage_by_ticker": "artifacts/portfolio_baselines/20260409_214416_h327_cafef_foreign_flow_coverage_by_ticker.parquet",
+    "details": "artifacts/run_summaries/20260409_214416_h327_cafef_foreign_flow_source_audit_details.json",
+    "feature_results": "artifacts/portfolio_baselines/20260409_214416_h327_cafef_foreign_flow_feature_results.parquet",
+    "yearly_ic": "artifacts/portfolio_baselines/20260409_214416_h327_cafef_foreign_flow_yearly_ic.parquet"
+  },
+  "metadata": {
+    "hypothesis": "CafeF GDKhoiNgoai has enough source quality to reopen H95 and simple lagged foreign-flow ranks may add standalone alpha.",
+    "protocol": {
+      "confirmation": "2025-01-01..2025-12-31",
+      "dev": "2015-01-01..2022-12-31",
+      "no_tuning_window": "2026+",
+      "source_window": "2015-01-01..2025-12-31",
+      "validation": "2023-01-01..2024-12-31"
+    }
+  },
+  "mode": "research_branch_cafef_foreign_flow_source_audit",
+  "name": "h327_cafef_foreign_flow_source_audit",
+  "summary": {
+    "branch_decision": "CafeF foreign-flow source coverage is usable, but the first simple foreign-flow feature screen did not clear the honest standalone gate. Next: inspect failure shape before deciding whether to narrow by liquidity, room scarcity, or sector ownership state.",
+    "predictive": {
+      "best_feature": {
+        "abs_dev_ic": 0.011741077441151848,
+        "abs_validation_ic": 0.007442350288821325,
+        "candidate_gate": false,
+        "confirmation_avg_ic": -0.004766225416749797,
+        "confirmation_n": 86427,
+        "confirmation_ok": false,
+        "corr_gate": true,
+        "corr_with_s1": -0.0027581717167365198,
+        "coverage": 1.0,
+        "dev_avg_ic": 0.011741077441151848,
+        "dev_directional_years": 7,
+        "dev_gate": true,
+        "dev_n": 563422,
+        "dev_pct_directional_years": 0.875,
+        "dev_years": 8,
+        "direction": "positive",
+        "feature": "xs_ff_room_scarcity_rank",
+        "full_avg_ic": 0.009009799213183529,
+        "full_n": 817074,
+        "validation_avg_ic": 0.007442350288821325,
+        "validation_gate": true,
+        "validation_n": 167225
+      },
+      "feature_count": 10,
+      "merged_dates": 2741,
+      "merged_rows": 817074,
+      "merged_tickers": 391,
+      "passing_features": []
+    },
+    "source": {
+      "duplicate_ticker_day_rows_total": 0,
+      "eval_window": "2015-01-01..2025-12-31",
+      "flow_date_max": "2026-04-09T00:00:00",
+      "flow_date_min": "2001-04-02T00:00:00",
+      "flow_path": "data/foreign_flow/cafef/foreign_flow_daily.parquet",
+      "flow_rows_eval": 961091,
+      "flow_rows_total": 1353462,
+      "flow_tickers_total": 404,
+      "matched_stock_rows_eval": 955342,
+      "net_value_mismatch_rows_total": 0,
+      "net_volume_mismatch_rows_total": 0,
+      "null_ratios_eval": {
+        "foreign_buy_value": 0.0,
+        "foreign_buy_volume": 0.0,
+        "foreign_net_value": 0.0,
+        "foreign_net_volume": 0.0,
+        "foreign_ownership_pct": 0.0,
+        "foreign_room_remaining": 0.0,
+        "foreign_sell_value": 0.0,
+        "foreign_sell_volume": 0.0
+      },
+      "row_coverage_eval": 0.9879533522028644,
+      "source_gate_pass": true,
+      "stock_rows_eval": 966991,
+      "ticker_coverage_median": 0.9963456959603014,
+      "ticker_coverage_p01": 0.9789089965574957,
+      "ticker_coverage_p10": 0.9901608599386927,
+      "tickers_with_any_flow_eval": 399,
+      "tickers_with_coverage_ge_60pct": 399,
+      "tickers_with_coverage_ge_90pct": 398,
+      "unmatched_flow_rows_eval": 5749,
+      "worst_coverage_tickers": [
+        {
+          "coverage_ratio": 0.0,
+          "flow_days": 0,
+          "stock_days": 2743,
+          "ticker": "AAA"
+        },
+        {
+          "coverage_ratio": 0.0,
+          "flow_days": 0,
+          "stock_days": 1882,
+          "ticker": "YEG"
+        },
+        {
+          "coverage_ratio": 0.0,
+          "flow_days": 0,
+          "stock_days": 1841,
+          "ticker": "YBM"
+        },
+        {
+          "coverage_ratio": 0.7491138243402915,
+          "flow_days": 1902,
+          "stock_days": 2539,
+          "ticker": "VHM"
+        },
+        {
+          "coverage_ratio": 0.978891820580475,
+          "flow_days": 371,
+          "stock_days": 379,
+          "ticker": "DSE"
+        },
+        {
+          "coverage_ratio": 0.9806094182825484,
+          "flow_days": 354,
+          "stock_days": 361,
+          "ticker": "TSA"
+        },
+        {
+          "coverage_ratio": 0.9812646370023419,
+          "flow_days": 2095,
+          "stock_days": 2135,
+          "ticker": "HII"
+        },
+        {
+          "coverage_ratio": 0.9823502090106828,
+          "flow_days": 2115,
+          "stock_days": 2153,
+          "ticker": "TNI"
+        },
+        {
+          "coverage_ratio": 0.9831223628691983,
+          "flow_days": 466,
+          "stock_days": 474,
+          "ticker": "QNP"
+        },
+        {
+          "coverage_ratio": 0.9840142095914742,
+          "flow_days": 2216,
+          "stock_days": 2252,
+          "ticker": "PVP"
+        },
+        {
+          "coverage_ratio": 0.9846153846153847,
+          "flow_days": 512,
+          "stock_days": 520,
+          "ticker": "SBG"
+        },
+        {
+          "coverage_ratio": 0.9852466574458276,
+          "flow_days": 2137,
+          "stock_days": 2169,
+          "ticker": "PDV"
+        },
+        {
+          "coverage_ratio": 0.98559670781893,
+          "flow_days": 479,
+          "stock_days": 486,
+          "ticker": "TAL"
+        },
+        {
+          "coverage_ratio": 0.9857954545454546,
+          "flow_days": 347,
+          "stock_days": 352,
+          "ticker": "CCC"
+        },
+        {
+          "coverage_ratio": 0.9859719438877755,
+          "flow_days": 2460,
+          "stock_days": 2495,
+          "ticker": "TEG"
+        }
+      ]
+    },
+    "verdict": "MIXED"
+  },
+  "ts": "20260409_214416"
+}

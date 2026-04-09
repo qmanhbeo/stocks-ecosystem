@@ -1,0 +1,44 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260409_155621_research_branch_hawkes_disclosure_cascade_details.json",
+    "panel": "artifacts/portfolio_baselines/20260409_155621_h321_hawkes_disclosure_cascade_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260409_155621_h321_hawkes_disclosure_cascade_results.parquet"
+  },
+  "metadata": {
+    "controls": [
+      "event_today_novel20",
+      "event_today_follow20",
+      "event_today_crowded20",
+      "recent5_low_repeat20",
+      "recent5_crowded20",
+      "v1_proxy_5d"
+    ],
+    "intensity_model": "decayed prior trading-day event article counts with tau=2/5/10; no full Hawkes likelihood fit",
+    "protocol": {
+      "confirmation": "2025",
+      "dev": "2023",
+      "validation": "2024"
+    },
+    "question": "Can simple Hawkes-style self/sector disclosure intensity improve on H310 novelty windows?",
+    "source_surface": "artifacts/run_summaries/latest_research_branch_event_v2_predictive_rescreen.json"
+  },
+  "mode": "research_branch_hawkes_disclosure_cascade",
+  "name": "hawkes_disclosure_cascade",
+  "summary": {
+    "best_confirmation_daily_ic_mean": 0.3215373499097972,
+    "best_confirmation_fwd5_uplift_vs_control": 0.0008847554257748187,
+    "best_confirmation_ic_uplift_vs_control": 0.2289543623090654,
+    "best_matched_control": "event_today_follow20",
+    "best_state": "today_self_accel_high",
+    "best_state_decision": "PASSED",
+    "best_validation_daily_ic_mean": 0.23950805304837453,
+    "best_validation_fwd5_uplift_vs_control": 0.001418696270164649,
+    "best_validation_ic_uplift_vs_control": 0.18311881822427417,
+    "branch_decision": "A Hawkes-style cascade state beats the matched H310 novelty/control window. Advance to a narrower cascade feature or additive follow-up.",
+    "panel_dates": 748,
+    "panel_rows": 258375,
+    "panel_tickers": 394,
+    "verdict": "PASSED"
+  },
+  "ts": "20260409_155621"
+}

@@ -33,11 +33,26 @@ Shared `data/` currently contains both raw inputs and processed research outputs
 - `data/dividend_cache/`
 - `data/fundamentals_cache/`
 - `data/insider_cache/`
+- `data/foreign_flow/`
+- `data/foreign_flow_forward/`
 - `data/llm_cache/`
 
 This means the root data directory is the canonical dataset surface for the whole ecosystem.
 
 `data/llm_cache/` is the per-day CafeF LLM extraction cache: one JSON object per filtered article, used as the input to `alpha-research-lab/data_tools/build_llm_news_features.py`.
+
+`data/foreign_flow/` is the historical CafeF foreign-investor-flow archive. It
+stores per-ticker daily buy/sell/net volume and value, remaining foreign room,
+and reported ownership percentage from
+`alpha-research-lab/data_tools/fetch_cafef_foreign_flow.py`. The source has now
+been backfilled and audited, but it remains a raw research surface until a
+separate published feature contract passes.
+
+`data/foreign_flow_forward/` is the forward-only VCI board foreign-flow archive
+started on `2026-04-09`. It stores current-day accumulated foreign buy/sell and
+foreign-room snapshots from `alpha-research-lab/data_tools/collect_forward_foreign_flow.py`.
+It is not a historical backfill and is not backtestable until enough forward
+collection days accrue.
 
 ## Workflow
 
@@ -76,10 +91,11 @@ Current active live branch:
 Current research posture:
 - keep the live sticky branch frozen
 - do not retune timing rules on `2026+`
-- acquisition-first timing research:
-  - multi-ticker intraday / auction source first
-  - richer company-event source second
-  - otherwise stop timing research and wait for new data or more live evidence
+- keep `llm-cache-fill` as the highest-value blocked branch
+- if a non-LLM branch is intentionally reopened, prefer:
+  - richer company-event timing follow-through on the saved CafeF event-v2 work
+  - a different historical foreign-flow thesis such as room-change or ownership-regime transitions, not more raw buy/sell rank retunes
+  - genuinely new acquisition work such as queue / order-book data, not another OHLCV proxy
 
 ## Strategy Guardrails
 

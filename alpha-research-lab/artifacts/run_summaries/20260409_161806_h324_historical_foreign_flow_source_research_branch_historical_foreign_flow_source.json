@@ -1,0 +1,65 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260409_161806_research_branch_historical_foreign_flow_source_details.json",
+    "inventory": "artifacts/portfolio_baselines/20260409_161806_h324_historical_foreign_flow_source_inventory.parquet"
+  },
+  "metadata": {
+    "excluded_surfaces": {
+      "fx_commodities_vnm_etf_1D.parquet": "date-level ETF price proxy, not per-ticker foreign flow",
+      "xs_foreign_demand_daily.parquet": "H110 VNM ETF proxy, archive-only and already failed"
+    },
+    "question": "Is a real historical per-ticker foreign buy/sell or foreign-room table available locally?",
+    "source_gate": "No alpha test is run unless a real table with time+ticker+foreign-flow columns exists."
+  },
+  "mode": "research_branch_historical_foreign_flow_source",
+  "name": "h324_historical_foreign_flow_source",
+  "summary": {
+    "branch_decision": "No real historical per-ticker foreign buy/sell or foreign-room table exists in the local canonical data warehouse. Only the known failed VNM ETF proxy and VNM ticker-name collisions are present, so the branch remains source-blocked.",
+    "candidate_paths": 2,
+    "classification_counts": {
+      "proxy_vnm_etf_affinity": 1,
+      "proxy_vnm_etf_price": 1
+    },
+    "proxy_snapshot": {
+      "vnm_etf_price": {
+        "classification": "date-level ETF proxy, not per-ticker foreign flow",
+        "columns": [
+          "time",
+          "adj_close",
+          "close",
+          "high",
+          "low",
+          "open",
+          "volume",
+          "ticker",
+          "alias"
+        ],
+        "exists": true,
+        "rows": 4182,
+        "time_max": "2026-03-31T00:00:00",
+        "time_min": "2009-08-14T00:00:00"
+      },
+      "xs_foreign_demand_daily": {
+        "classification": "archive-only VNM ETF affinity proxy, not real foreign buy/sell",
+        "columns": [
+          "time",
+          "ticker",
+          "xs_foreign_affinity_120d",
+          "xs_foreign_affinity_20d",
+          "xs_vnm_premium_1d",
+          "xs_fa_rank",
+          "xs_fa_signal"
+        ],
+        "exists": true,
+        "rows": 826404,
+        "tickers": 394,
+        "time_max": "2025-12-31T00:00:00",
+        "time_min": "2015-01-05T00:00:00"
+      }
+    },
+    "real_candidate_paths": 0,
+    "schema_fragment_paths": 0,
+    "verdict": "SKIP"
+  },
+  "ts": "20260409_161806"
+}

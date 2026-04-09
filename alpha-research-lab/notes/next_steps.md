@@ -1,16 +1,337 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_137_log.md` for the latest full session detail.
+Use `notes/session_147_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
-## Immediate Follow-Up (2026-04-08)
+## Immediate Follow-Up (2026-04-09)
 
 1. `llm-cache-fill` — rerun `python -u data_tools/extract_llm_news_features.py --provider google --workers 16 --timeout 45` after Google limits / cooldowns clear. Current state: cache `731 / 3750`, next missing day `2017-12-23.jsonl`, and `api_key_cooldowns` now persist in `artifacts/llm_runtime/hosted_model_stats.json`.
 2. `llm-feature-refresh` — only after cache reaches the active-book years (`2018+`), rebuild `xs_llm_news_ticker_day.parquet`, rerun `H294`, and then reconsider `news-marginal-slot`.
 3. `intraday-shape-disagreement-review` — only if an offline side branch is intentionally reopened before the LLM cache is ready. Use the `H299` winners (`fade_tension_disagreement`, `intraday_shape_core_disagreement`) as observed-subset candidate-library review inputs. Do not publish them or route them live yet.
+4. `foreign-room-transition-audit` — only if continuing `H95`. Session 147 acquired and source-audited CafeF historical foreign flow, but `H327/H328` rejected raw buy/sell/net flow ranks and high-participation / room-scarcity conditioning. A continuation must test a different thesis such as room-change events or ownership-regime transitions.
+
+---
+
+## Session 138 — Attention-Congestion Router (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`, but it answers the first
+current-data branch from the wild-frontier queue.
+
+1. `attention-congestion-router`
+   - `H318` result: MIXED
+   - the intended `xs_llm_news_market_daily` representation is unusable on `2023-2025`: every audited market-load column is flat in the target window
+   - raw CafeF attention proxies were broad enough to test the mechanism, but they only produced one local validation pocket:
+     - `event_today_novel20 × high_distraction`
+     - validation lag-gap / `fwd5` uplift vs not-high days `+0.0301 / +0.0154`
+     - confirmation lag-gap / `fwd5` uplift vs not-high days `-0.0412 / -0.0057`
+   - no proxy passed on the secondary `recent5_low_repeat20` state
+   - branch consequence: keep attention congestion only as weak offline evidence; do **not** open a broader market-attention router on the current local stack
+
+2. `ownership-network-contagion`
+   - claim: insider and event shocks may diffuse through an issuer / director / large-holder network before they show up as sector moves
+   - why now: `H318` narrowed the market-attention line, but the current data stack still has rich insider and issuer linkage information through CafeF and vnstock metadata
+   - smallest honest next test: build a pilot graph from `xs_insider_deals_raw.parquet`, issuer metadata, and family aliases, then test whether neighbor-node insider / event activity predicts next-day response
+
+3. `historical-foreign-flow-source`
+   - claim: real per-ticker historical foreign-buy / foreign-sell is still one of the highest-upside blocked surfaces
+   - why now: current-data attention routing did not reopen a new branch, so the next big unlock remains a blocked acquisition problem
+   - smallest honest next test: source one historical foreign-flow table, validate ticker/date integrity on a pilot basket, then run a compact IC audit before any full feature build
+
+---
+
+## Session 139 — Ownership-Network Contagion (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`, but it resolves the next
+current-data creative branch.
+
+1. `ownership-network-contagion`
+   - `H319` result: MIXED
+   - a pre-2023 static graph from shared `ShareHolderCode`, `TransactionMan`, and the small family-alias layer covered `358` tickers and `229,421` pure target rows on `2023-2025`
+   - neighbor event-v2 contagion failed cleanly on the union graph:
+     - `nbr_event` validation / confirmation actual lift `-0.0053 / -0.0106`
+   - the only surviving broad line was weak neighbor insider contagion:
+     - `nbr_c5` validation / confirmation actual lift `+0.0031 / +0.0127`
+     - `nbr_c5` validation / confirmation `fwd5` lift `+0.0001 / +0.0011`
+   - branch consequence: keep only as weak offline evidence; do **not** open a graph router or additive branch on the current contract
+
+2. `criticality-order-parameter`
+   - claim: the real activation state may be a market-criticality field, not another macro filter; when gap alignment, ceiling clustering, and cross-sectional correlation compress into a critical zone, small shocks propagate further
+   - why now: `H318` and `H319` both found only weak or unstable creative side-branches, while the repo still believes activation is a meta-state problem rather than a static regime gate
+   - smallest honest next test: derive daily order-parameter / susceptibility proxies from OHLCV + price-limit surfaces and audit whether they explain selector efficacy beyond the existing activation meta
+
+3. `historical-foreign-flow-source`
+   - claim: real per-ticker historical foreign-buy / foreign-sell is still one of the highest-upside blocked surfaces
+   - why now: the current-data network branch did not reopen a promotable line, so the next major unlock remains a blocked acquisition problem
+   - smallest honest next test: source one historical foreign-flow table, validate ticker/date integrity on a pilot basket, then run a compact IC audit before any full feature build
+
+---
+
+## Session 140 — Criticality Order Parameter (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`, but it resolves the complex-systems
+activation-state idea from the current-data creative queue.
+
+1. `criticality-order-parameter`
+   - `H320` result: MIXED
+   - the incumbent short-memory activation baseline remains extremely strong:
+     - `full_recent_cycle_relative_return_ewm3` validation / confirmation rho vs next-cycle relative return `+0.6126 / +0.6557`
+   - the best criticality trace was adverse rather than promotable:
+     - `gap_alignment_pressure`
+     - validation / confirmation residual rho `-0.0431 / -0.1246`
+     - validation / confirmation high-minus-not residual lift `-0.0077 / -0.0083`
+     - validation / confirmation high-baseline conditioned residual lift `-0.0054 / -0.0410`
+   - branch consequence: keep high gap-alignment pressure only as weak adverse offline meta-state evidence; do **not** open a raw OHLCV criticality router or activation overlay
+
+2. `hawkes-disclosure-cascade`
+   - claim: news and filings behave like self-exciting cascades; cascade intensity may separate first-public shock, follow-up drift, and already-crowded stories better than simple repeat counts
+   - why now: current-data attention, network, and criticality branches are all narrowed, while `H310` still says event-v2 timing is real as a sparse predictive state
+   - smallest honest next test: fit simple ticker / sector self-excitation proxies from CafeF timestamps and compare cascade-intensity states against `H310/H317` novelty windows
+
+3. `historical-foreign-flow-source`
+   - claim: real per-ticker historical foreign-buy / foreign-sell is still one of the highest-upside blocked surfaces
+   - why now: the current-data criticality branch did not reopen a promotable activation line, so the next major unlock remains a blocked acquisition problem
+   - smallest honest next test: source one historical foreign-flow table, validate ticker/date integrity on a pilot basket, then run a compact IC audit before any full feature build
+
+---
+
+## Session 141 — Hawkes Disclosure Cascade (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`, but it reopens a narrow event-v2
+timing branch from the current-data creative queue.
+
+1. `hawkes-disclosure-cascade`
+   - `H321` result: PASSED
+   - simple decayed ticker / sector-peer event intensities were enough to beat the matched H310 follow-up control on one sparse same-day state:
+     - best state `today_self_accel_high`
+     - matched control `event_today_follow20`
+     - validation / confirmation daily IC `+0.2395 / +0.3215`
+     - validation / confirmation IC uplift vs control `+0.1831 / +0.2290`
+     - validation / confirmation actual uplift vs control `+0.0369 / +0.0329`
+     - validation / confirmation `fwd5` uplift vs control `+0.0014 / +0.0009`
+   - branch consequence: event-v2 cascade timing is real enough for a focused follow-up, but still too sparse for direct live/library promotion
+
+2. `cascade-additive-screen`
+   - claim: `today_self_accel_high` may be the first event-v2 state that adds real value over the frozen `S1 / C4 / C13` core rather than only improving a matched cohort comparison
+   - why now: `H317` said broad event-v2 states were not additive, but `H321` found a sharper same-day cascade state under a materially different representation
+   - smallest honest next test: materialize `today_self_accel_high` and compare standalone / additive IC against the frozen core, H310 `event_today_novel20`, and the matched `event_today_follow20` control
+
+3. `historical-foreign-flow-source`
+   - claim: real per-ticker historical foreign-buy / foreign-sell remains one of the highest-upside blocked surfaces
+   - why now: even with the H321 pass, the next new-data unlock is still a blocked acquisition problem rather than a local OHLCV retune
+   - smallest honest next test: source one historical foreign-flow table, validate ticker/date integrity on a pilot basket, then run a compact IC audit before any full feature build
+
+---
+
+## Session 142 — Cascade Additive Screen (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`, but it answers whether the H321
+cascade pass is promotable over the frozen core.
+
+1. `cascade-additive-screen`
+   - `H322` result: MIXED
+   - `today_self_accel_high` remains a real sparse event-timing cohort:
+     - standalone validation / confirmation IC `+0.0046 / +0.0072`
+     - standalone validation / confirmation active lift `+0.0288 / +0.0570`
+   - but it is not additive enough over the frozen `S1 / C4 / C13` core:
+     - best variant `core_mul__today_self_accel_high__50`
+     - validation / confirmation IC delta vs core `+0.00015 / +0.00005`
+     - validation / confirmation spread delta vs core `+0.00018 / -0.00021`
+     - validation / confirmation IC delta vs H310 novelty control `-0.00012 / +0.00017`
+   - branch consequence: keep H321 as offline event-timing evidence; do **not** promote cascade state into the live/library additive queue on the current core
+
+2. `policy-beneficiary-graph`
+   - claim: the next high-upside branch should test political-economy transmission from state policy, procurement, land approvals, or infrastructure planning into listed beneficiaries
+   - why now: current-data attention, network, criticality, and event-v2 additive lines are all narrowed; a materially different information channel is preferable to another local event overlay
+   - smallest honest next test: build a tiny manually mapped policy-event corpus for one theme and test direct plus second-order beneficiary reactions, or record a source constraint if no usable local corpus exists
+
+3. `historical-foreign-flow-source`
+   - claim: real per-ticker historical foreign-buy / foreign-sell remains one of the highest-upside blocked surfaces
+   - why now: the H322 additive ceiling suggests the next major unlock is more likely new data than another rank overlay
+   - smallest honest next test: source one historical foreign-flow table, validate ticker/date integrity on a pilot basket, then run a compact IC audit before any full feature build
+
+---
+
+## Session 143 — Policy Beneficiary Graph (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`, but it answers the first
+political-economy beneficiary pilot on the local CafeF archive.
+
+1. `policy-beneficiary-graph`
+   - `H323` result: MIXED
+   - the branch is not source-blocked:
+     - `5,964` unique CafeF public-investment / infrastructure policy articles
+     - `744` trading signal days after next-trading-day assignment
+   - the best state was only weak:
+     - `policy_total_5d_high`
+     - validation / confirmation active days `96 / 211`
+     - validation / confirmation direct public-works `fwd5` edge `+0.0010 / +0.0023`
+     - validation / confirmation `fwd5` diff-in-diff `+0.0032 / +0.0007`
+     - validation / confirmation actual diff-in-diff `+0.0027 / -0.0006`
+     - validation / confirmation direct-minus-real-estate `fwd5` `+0.0048 / -0.0012`
+   - branch consequence: keep the raw policy corpus as usable offline evidence, but do **not** promote a direct public-works beneficiary router on the current manual map
+
+2. `historical-foreign-flow-source`
+   - claim: real per-ticker historical foreign-buy / foreign-sell remains one of the highest-upside blocked surfaces
+   - why now: the current-data creative queue has produced offline evidence but no promotable overlay; the next major unlock is more likely a missing data surface
+   - smallest honest next test: locate or source one historical foreign-flow table, validate ticker/date integrity on a pilot basket, then run a compact IC audit before any full feature build
+
+3. `queueing-open-fill-source`
+   - claim: the missing bridge between alpha and deployability is opening-queue state, and queueing features are likely more valuable than another daily predictor
+   - why now: if historical foreign flow is unavailable locally, the next acquisition target should be auction / queue data rather than another current-data route split
+   - smallest honest next test: acquire a pilot order-book / auction / fine-minute source for a small basket and test whether queue imbalance explains blocked buys and next-open drift
+
+---
+
+## Session 144 — Historical Foreign-Flow Source Gate (2026-04-09)
+
+This answers the top acquisition queue item after the current-data creative
+passes.
+
+1. `historical-foreign-flow-source`
+   - `H324` result: SKIP / source-blocked
+   - local source scan found only two foreign-looking maintained surfaces:
+     - `data/features/xs_foreign_demand_daily.parquet`
+     - `data/fx-commodities/fx_commodities_vnm_etf_1D.parquet`
+   - real historical per-ticker foreign-flow candidates:
+     - `0`
+   - schema fragments with foreign buy/sell/room columns:
+     - `0`
+   - `xs_foreign_demand_daily` is the archive-only H110 VNM ETF affinity proxy:
+     - `826,404` rows
+     - `394` tickers
+     - not real foreign buy/sell
+   - live vnstock probe with network permission still exposed no historical foreign-flow method on installed `vnstock 3.5.0`; `price_board` remains current-day only
+   - branch consequence: keep H95 / real historical foreign flow blocked; do **not** retest the VNM ETF proxy as if it were the missing source
+
+2. `queueing-open-fill-source`
+   - claim: the missing bridge between alpha and deployability is opening-queue state, and queueing features are likely more valuable than another daily predictor
+   - why now: historical foreign flow is still source-blocked, while execution pain remains a live deployment bottleneck
+   - smallest honest next test: inventory whether any auction / order-book / fine-minute pilot source exists locally; if absent, record a source-gate result rather than faking an OHLCV proxy
+
+3. `forward-foreign-flow-collector`
+   - claim: if no historical foreign flow is available, the only cheap path is to start collecting current-day board foreign fields forward-only
+   - why now: H324 confirms the historical branch remains blocked, but vnstock current-day `price_board` can expose intraday accumulated foreign buy/sell fields
+   - smallest honest next test: design a minimal daily collector contract and storage path; do not use it for backtests until enough forward history accrues
+
+---
+
+## Session 145 — Queueing / Open-Fill Source Gate (2026-04-09)
+
+This answers the next acquisition queue item after H324.
+
+1. `queueing-open-fill-source`
+   - `H325` result: SKIP / source-blocked
+   - source-looking paths scanned: `13,637`
+   - true historical queue / order-book candidates: `0`
+   - true fine-minute candidates: `0`
+   - local intraday surface is reduced hourly OHLCV plus daily summaries:
+     - `404` raw CafeF `1H_CAFEF` files
+     - `404` adjusted CafeF `1H_CAFEF_ADJ` files
+     - `11,996` CafeF hourly yearly parts
+     - `9` legacy shallow `1H` files
+     - `1` derived `fpt_intraday_daily` file
+   - representative hourly sample:
+     - median bars/day `4.0`
+     - max bars/day `5`
+     - columns are OHLCV, not bid/ask/depth/order/queue
+   - branch consequence: do **not** fake queue imbalance from hourly OHLCV or blocked-buy proxies; queue/open-fill alpha remains acquisition-blocked
+
+2. `forward-foreign-flow-collector`
+   - claim: if real historical foreign flow is unavailable, start collecting current-day board foreign fields forward-only so the workspace is not still blocked months from now
+   - why now: H324 source-gated historical foreign flow and H325 source-gated queue/open-fill; the cheapest remaining high-value data unlock is a durable forward collector
+   - smallest honest next test: design and implement the minimal daily storage contract for current-day board foreign buy/sell fields, with freshness checks and explicit “not backtestable yet” metadata
+
+3. `order-book-acquisition-contract`
+   - claim: queue/open-fill remains high value, but it now needs an external source contract before research
+   - why now: local data has no auction/order-book/fine-minute history
+   - smallest honest next test if reopened: acquire one pilot source for a small basket, validate ticker/date/time integrity, then test blocked-buy / next-open drift on that pilot only
+
+---
+
+## Session 146 — Forward Foreign-Flow Collector (2026-04-09)
+
+This implements the cheap acquisition follow-up after H324 and H325 both
+source-blocked their historical branches.
+
+1. `forward-foreign-flow-collector`
+   - `H326` result: PASSED
+   - new producer:
+     - `data_tools/collect_forward_foreign_flow.py`
+   - new contract gate:
+     - `analysis/h326_forward_foreign_flow_collector.py`
+   - new canonical forward-only root:
+     - `data/foreign_flow_forward/vci_price_board/`
+   - full local-HOSE capture succeeded:
+     - rows `404`
+     - tickers `404`
+     - board trading date `2026-04-09`
+     - failed chunks `0`
+   - latest output files:
+     - `data/foreign_flow_forward/vci_price_board/latest_snapshot.parquet`
+     - `data/foreign_flow_forward/vci_price_board/daily_latest.parquet`
+     - `data/foreign_flow_forward/vci_price_board/manifest.json`
+   - contract consequence: this data is explicitly forward-only and not backtestable yet; do **not** merge it into historical alpha tests until enough collection days exist
+
+2. `forward-foreign-flow-daily-runbook`
+   - claim: the collector is only valuable if it runs daily now
+   - why now: H326 captured the first full universe snapshot, but one day is not a research dataset
+   - smallest honest next test: add a simple daily run habit / cron wrapper and monitor manifest freshness, stale board dates, missing tickers, and failed chunks
+
+3. `retail-attention-ecology-source`
+   - claim: while forward foreign-flow history accrues, the next high-upside non-LLM/new-source branch is crowd attention rather than another OHLCV retune
+   - why now: foreign-flow and queue branches are now acquisition/accumulation problems; LLM remains cost-blocked
+   - smallest honest next test: source-gate one cheap attention surface, such as Google Trends, a forum/RSS proxy, or app-ranking data, and only then run a tiny turnover/ceiling-pressure pilot
+
+---
+
+## Session 147 — CafeF Historical Foreign-Flow Audit (2026-04-09)
+
+This completes the first honest follow-through after discovering CafeF
+`GDKhoiNgoai`.
+
+1. `cafef-foreign-flow-backfill`
+   - full raw backfill completed:
+     - `404` tickers
+     - `1,353,462` rows
+     - date range `2001-04-02` to `2026-04-09`
+     - `0` failures
+   - producer:
+     - `data_tools/fetch_cafef_foreign_flow.py`
+   - canonical raw root:
+     - `data/foreign_flow/cafef/`
+   - fetcher fixes:
+     - per-ticker coverage sidecars prevent partial probe windows from being reused as full history
+     - subset runs now rebuild the combined panel from all per-ticker caches instead of clobbering it
+
+2. `cafef-foreign-flow-source-audit`
+   - `H327` result: `MIXED`
+   - source-quality gate passed:
+     - `98.80%` row coverage versus the local 2015-2025 stock calendar
+     - `399` tickers with any 2015-2025 flow
+     - `0` duplicate ticker-days
+     - `0` net-volume / net-value consistency mismatches
+   - first simple feature screen did not promote:
+     - best feature `xs_ff_room_scarcity_rank`
+     - dev IC `+0.0117`
+     - validation IC `+0.0074`
+     - confirmation IC `-0.0048`
+     - corr vs S1 `-0.0028`
+   - branch consequence: data source is usable; raw same-day / lagged flow ranks are not promoted
+
+3. `cafef-foreign-flow-conditioned-screen`
+   - `H328` result: `FAILED`
+   - tested the constrained follow-up states:
+     - high rolling foreign participation
+     - high room scarcity
+   - best row:
+     - `foreign_participation_top30 × xs_ff_buy_share_5d_rank`
+     - dev IC `-0.0088`
+     - validation IC `-0.0147`
+     - confirmation IC `+0.0079`
+   - branch consequence: do not continue thresholding raw foreign buy/sell ranks; if `H95` continues, use a different thesis such as room-change events, ownership-regime transitions, or near-limit foreign-room discontinuities
 
 ---
 
@@ -3188,9 +3509,9 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
      - observation scaling / normalization
      - action or turnover control
 
-### Remaining blocked paths
+### Remaining constrained paths
 - **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)
-- **H95 Foreign flow** — BLOCKED (historical daily data not available via vnstock)
+- **H95 Foreign flow** — SOURCE ACQUIRED / RAW-RANK PATH FAILED (`H327` source pass; `H327/H328` reject raw and conditioned buy/sell ranks; reopen only with a different thesis such as room-change or ownership-regime transitions)
 - **Order book imbalance** — BLOCKED (intraday data not available historically)
 
 ---

@@ -1,0 +1,69 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260409_215607_h328_cafef_foreign_flow_conditioned_screen_details.json",
+    "results": "artifacts/portfolio_baselines/20260409_215607_h328_cafef_foreign_flow_conditioned_results.parquet",
+    "yearly_ic": "artifacts/portfolio_baselines/20260409_215607_h328_cafef_foreign_flow_conditioned_yearly_ic.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Foreign-flow alpha may be state-local to high foreign participation or high room scarcity.",
+    "protocol": {
+      "confirmation": "2025-01-01..2025-12-31",
+      "dev": "2015-01-01..2022-12-31",
+      "no_tuning_window": "2026+",
+      "validation": "2023-01-01..2024-12-31"
+    }
+  },
+  "mode": "research_branch_cafef_foreign_flow_conditioned_screen",
+  "name": "h328_cafef_foreign_flow_conditioned_screen",
+  "summary": {
+    "branch_decision": "Conditioning on high foreign participation or room scarcity did not rescue simple CafeF foreign-flow features. Do not promote raw flow ranks; if this branch continues, it needs a different thesis such as room-change events or ownership-regime transitions.",
+    "screen": {
+      "best_pair": {
+        "abs_dev_ic": 0.008817906875743617,
+        "abs_validation_ic": 0.014710990482004995,
+        "candidate_gate": false,
+        "confirmation_avg_ic": 0.007859420960671774,
+        "confirmation_n": 26875,
+        "confirmation_ok": false,
+        "corr_gate": true,
+        "corr_with_s1": -0.03976956745117086,
+        "coverage": 1.0,
+        "dev_avg_ic": -0.008817906875743617,
+        "dev_directional_years": 6,
+        "dev_gate": false,
+        "dev_n": 174816,
+        "dev_pct_directional_years": 0.75,
+        "dev_years": 8,
+        "direction": "negative",
+        "feature": "xs_ff_buy_share_5d_rank",
+        "full_avg_ic": -0.008130123782546527,
+        "full_n": 252956,
+        "state": "foreign_participation_top30",
+        "state_col": "xs_ff_participation_20d_rank",
+        "state_rows": 252956,
+        "threshold": 0.7,
+        "validation_avg_ic": -0.014710990482004995,
+        "validation_gate": true,
+        "validation_n": 51265
+      },
+      "features": [
+        "xs_ff_net_vol_share_1d_rank",
+        "xs_ff_net_vol_share_1d_lag1_rank",
+        "xs_ff_net_vol_share_5d_rank",
+        "xs_ff_net_vol_share_5d_lag1_rank",
+        "xs_ff_buy_share_5d_rank",
+        "xs_ff_sell_share_5d_rank"
+      ],
+      "merged_rows": 817074,
+      "passing_pairs": [],
+      "states": [
+        "foreign_participation_top30",
+        "foreign_participation_top20",
+        "room_scarcity_top30",
+        "room_scarcity_top20"
+      ]
+    },
+    "verdict": "FAILED"
+  },
+  "ts": "20260409_215607"
+}

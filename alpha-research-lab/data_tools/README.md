@@ -16,8 +16,9 @@ state of each data source. Read this before running experiments or wondering why
 | Dividend event calendar | YES | YES (52 tickers) | `fetch_dividend_events.py` |
 | Fundamentals cache | YES | YES (52 tickers) | `fetch_fundamentals.py` / `fetch_all_stock_fundamentals.py` |
 | Insider deals raw | YES | YES (394 tickers) | `fetch_insider_deals.py` |
+| Historical foreign investor flow | YES | YES (CafeF raw archive) | `fetch_cafef_foreign_flow.py` |
+| Forward foreign-flow board snapshots | YES | YES (forward-only from 2026-04-09) | `collect_forward_foreign_flow.py` |
 | News archive (cafef, 3.6 GB) | NO | YES (fetched this session) | `fetch_news_archive.py` |
-| Historical foreign investor flow | ✗ Not available | — | F59 in findings.md — vnstock only has current-day |
 | Intraday tick data | Partial | YES (`FPT` 1H legacy + open CafeF fetch path) | `fetch_cafef_intraday_all.py` + `adjust_cafef_intraday_to_vci.py`; authenticated fallback is `fetch_ssi_intraday.py` |
 
 ## Critical Refresh Warning
@@ -228,6 +229,58 @@ Fetch ICB sector/sub-sector labels for all HOSE stocks via `vnstock company.over
 - **Negative cache:** blank or incomplete sector rows now persist a probe-cache record under `data/features/_refresh_metadata/`, so unchanged failures are not retried every run
 - **Probe cache control:** `--probe-cache-ttl-hours` defaults to `168` hours; set it to `0` to disable the negative cache
 - **Full refetch:** use `--refresh-existing` to refetch all covered symbols
+
+### `collect_forward_foreign_flow.py`
+Collect current-day accumulated foreign buy/sell and foreign-room fields from
+`vnstock` / VCI `price_board`.
+- **Status:** Active forward collector
+- **Source:** `Vnstock().stock(..., source="VCI").trading.price_board(symbols_list=...)`
+- **Output root:** `data/foreign_flow_forward/vci_price_board/`
+- **Snapshot output:** `data/foreign_flow_forward/vci_price_board/snapshots/YYYY-MM-DD/vci_price_board_foreign_flow_YYYYMMDDTHHMMSSZ.parquet`
+- **Latest output:** `data/foreign_flow_forward/vci_price_board/latest_snapshot.parquet`
+- **Daily latest output:** `data/foreign_flow_forward/vci_price_board/daily_latest.parquet`
+- **Manifest:** `data/foreign_flow_forward/vci_price_board/manifest.json`
+- **Schema:** normalized fields include `collected_at_utc`, `ticker`, `trading_date`,
+  `current_room`, `total_room`, `foreign_buy_volume`, `foreign_sell_volume`,
+  `foreign_net_volume`, `foreign_buy_value`, `foreign_sell_value`,
+  `foreign_net_value`, and `foreign_room_used_ratio`, plus flattened raw board
+  columns for auditability.
+- **Usage:** `python data_tools/collect_forward_foreign_flow.py`
+- **Usage:** `python data_tools/collect_forward_foreign_flow.py --tickers FPT,VCB,HPG`
+- **Usage:** `python data_tools/collect_forward_foreign_flow.py --dry-run`
+- **Important:** this is forward-only current-day board data. It is not a
+  historical backfill and must not be used for alpha backtests until enough
+  future collection days accrue.
+
+### `fetch_cafef_foreign_flow.py`
+Fetch historical daily foreign-investor flow from CafeF's `GDKhoiNgoai` endpoint.
+- **Status:** Active
+- **Source:** `cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDKhoiNgoai.ashx`
+- **Output root:** `data/foreign_flow/cafef/`
+- **Per-ticker output:** `data/foreign_flow/cafef/per_ticker/<TICKER>.parquet`
+- **Per-ticker metadata:** `data/foreign_flow/cafef/per_ticker/<TICKER>.meta.json`
+- **Combined panel:** `data/foreign_flow/cafef/foreign_flow_daily.parquet`
+- **Manifest:** `data/foreign_flow/cafef/manifest.json`
+- **Coverage:** full local backfill currently has `404` tickers, `1,353,462`
+  rows, and date range `2001-04-02` through `2026-04-09`; live probe
+  confirmed examples back to `2006-12-13` for `FPT`
+- **Schema:** `ticker`, `date`, `foreign_buy_volume`, `foreign_sell_volume`,
+  `foreign_net_volume`, `foreign_buy_value`, `foreign_sell_value`,
+  `foreign_net_value`, `foreign_room_remaining`, `foreign_ownership_pct`,
+  `price_change_raw`
+- **Usage:** `python data_tools/fetch_cafef_foreign_flow.py`
+- **Usage:** `python data_tools/fetch_cafef_foreign_flow.py --tickers FPT,VCB,HPG`
+- **Usage:** `python data_tools/fetch_cafef_foreign_flow.py --start-date 2015-01-01 --end-date 2026-04-09`
+- **Refresh behavior:** reruns use per-ticker coverage sidecars so partial
+  probe windows are not mistaken for full history; subset runs rebuild the
+  combined panel from all cached per-ticker files instead of clobbering it with
+  only the requested tickers
+- **Known source caveat:** coverage depth is not uniform across all names; H327
+  found `98.80%` row coverage versus the 2015-2025 local stock calendar, but
+  `AAA`, `YBM`, and `YEG` have no CafeF foreign-flow rows in that audit window
+- **Important:** this is a raw source archive. H327 passed the source-quality
+  audit, but H327/H328 did not publish a feature; do not treat this as a model
+  feature until a separate feature contract passes.
 
 ### `fetch_insider_deals.py`
 Fetch insider + large-shareholder transaction disclosures for all HOSE tickers.
@@ -605,7 +658,7 @@ Build VN30 proximity / rebalancing-pressure features.
 
 | Data | Reason | Finding |
 |------|--------|---------|
-| **Historical foreign investor flow** | vnstock only has current-day; no historical per-ticker breakdown | F59 |
+| **Backtestable foreign-flow board history** | only forward snapshots are collected from H326 onward | F245 |
 | **Intraday tick/order flow data** | vnstock doesn't provide historical intraday OHLCV | — |
 | **Insider data via KBS/VCI vnstock** | KBS endpoint returns empty `[]`; VCI has no implementation | Session 31 |
 | **SSC filing text (structured)** | Vietnamese SSC portal is HTML-only; no JSON API found | Session 31 |

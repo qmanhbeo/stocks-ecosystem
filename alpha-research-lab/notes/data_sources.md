@@ -24,6 +24,8 @@ For the active timing-data acquisition branch, also read:
 | `data/stock/` — 394 HOSE OHLCV parquets | YES | `fetch_hose_universe.py` / `fetch_refresh_all.py` |
 | `data/fx-commodities/` — 20 global files | YES | `fetch_fx_commodities.py` + `fetch_global_macro.py` |
 | `data/insider_cache/` — 394 ticker parquets | YES | `fetch_insider_deals.py` |
+| `data/foreign_flow/cafef/` — historical CafeF foreign flow | YES | `fetch_cafef_foreign_flow.py` |
+| `data/foreign_flow_forward/` — forward-only VCI board snapshots | YES | `collect_forward_foreign_flow.py` |
 | `data/news/cafef/raw/*.jsonl` | NO (3.6 GB) | `python data_tools/fetch_news_archive.py` |
 | Full `data/` snapshot (legacy) | NO | `python setup_data.py` (restores the newest `data-snapshot-YYYY-MM-DD-HHMMSS.tar.zst` from the Drive backup remote after SHA256 verification; pass `--snapshot-name` to restore a specific run) |
 
@@ -88,11 +90,25 @@ python data_tools/fetch_news_archive.py
 - **Stock OHLCV:** `Vnstock(source='VCI').stock(symbol).quote.history(...)`
 - **Sector classification:** `.company.overview()` → `icb_name2/3/4`
 - **Dividend events:** `.company.events()` → ex-dates
-- **Foreign flow:** NOT available historically (current-day only). See F59.
+- **Foreign flow:** historical per-ticker daily flow is still not available from vnstock; use CafeF `GDKhoiNgoai` for history, or VCI `price_board` for forward-only current-day accumulation.
+- **Forward foreign-flow collector:** `stock.trading.price_board(symbols_list=...)`
+  exposes current-day accumulated `foreign_buy_volume`,
+  `foreign_sell_volume`, `foreign_buy_value`, `foreign_sell_value`,
+  `current_room`, and `total_room`. Session 146 `H326` stores these under
+  `data/foreign_flow_forward/vci_price_board/`. This is forward-only and not
+  backtestable until enough future collection days accrue.
 - **Insider deals (vnstock):** KBS endpoint returns `[]` (unpopulated); VCI has no implementation. Use CafeF instead.
 
 ### CafeF APIs — financial disclosure data
 - **Price history:** `s.cafef.vn/Ajax/PageNew/DataHistory/PriceHistory.ashx`
+- **Historical foreign flow (Khối ngoại):**
+  `cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDKhoiNgoai.ashx?Symbol=<TICKER>&StartDate=...`
+  - public/no auth required
+  - full local backfill currently has `404` tickers, `1,353,462` rows, and date range `2001-04-02` through `2026-04-09`
+  - live probe confirmed examples back to `2006-12-13` for `FPT`
+  - H327 source audit found `98.80%` row coverage versus the 2015-2025 local stock calendar, with `AAA`, `YBM`, and `YEG` missing in that audit window
+  - H327/H328 rejected raw and conditioned foreign buy/sell ranks as signal-library candidates; treat this as raw source data unless a different feature thesis passes
+  - fields: `KLMua`, `GtMua`, `KLBan`, `GtBan`, `KLGDRong`, `GTDGRong`, `RoomConLai`, `DangSoHuu`, `ThayDoi`
 - **Insider + large-shareholder transactions (GDNB):**
   `cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=<TICKER>&StartDate=...`
   - 394/394 HOSE tickers covered, 2010–2026, free/no auth required
@@ -109,9 +125,18 @@ python data_tools/fetch_news_archive.py
 
 | Data | Reason |
 |------|--------|
-| Historical foreign investor flow (per-ticker, daily) | vnstock only has current-day. F59. |
 | Historical intraday OHLCV / tick data via vnstock | vnstock doesn't provide historical intraday |
 | SSC filing text (structured JSON) | SSC portal is HTML-only |
+
+Forward-only acquisition note:
+- Session 146 `H326` started `data/foreign_flow_forward/vci_price_board/`
+  from current-day VCI board fields.
+- First full snapshot:
+  - board date `2026-04-09`
+  - `404` tickers
+  - `0` failed chunks
+- This is not a historical source and must not be used for backtests until a
+  sufficient forward window exists and passes a source-quality audit.
 
 Open intraday note:
 - CafeF does expose a public historical matched-trade endpoint:
@@ -164,6 +189,12 @@ Current branch state:
   - universal five-bar completeness still not honest (`67.50%` complete-day share present), so this is a reduced-shape research surface, not a canonical auction-resolution artifact
   - the first reduced-shape exit predictive screen still failed, so the source reopens research but does not yet prove timing alpha
 - local order-book / queue history is absent
+- Session 145 `H325` refreshed this source gate:
+  - `13,637` source-looking local paths scanned
+  - `0` true historical queue / order-book candidates
+  - `0` true fine-minute candidates
+  - local intraday remains reduced hourly OHLCV plus daily summaries, not an
+    auction / queue-resolution artifact
 
 Operational consequence:
 - do not keep tuning timing rules on the current local data stack

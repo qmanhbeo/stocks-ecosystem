@@ -1,0 +1,27 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260409_165555_research_branch_forward_foreign_flow_collector_details.json"
+  },
+  "metadata": {
+    "not_backtestable_yet": true,
+    "question": "Can current-day board foreign fields be collected forward-only?",
+    "source_gate": "No alpha test is run; this only validates the collector contract."
+  },
+  "mode": "research_branch_forward_foreign_flow_collector",
+  "name": "h326_forward_foreign_flow_collector",
+  "summary": {
+    "branch_decision": "The forward-only VCI price_board collector contract is implemented and has a valid current snapshot. Start running it daily, but do not run backtests until enough forward history accrues.",
+    "daily_latest_rows": 404,
+    "fixture_passed": true,
+    "latest_rows": 404,
+    "latest_snapshot_exists": true,
+    "latest_tickers": 404,
+    "latest_trading_dates": [
+      "2026-04-09"
+    ],
+    "live_capture_ready": true,
+    "manifest_exists": true,
+    "verdict": "PASSED"
+  },
+  "ts": "20260409_165555"
+}

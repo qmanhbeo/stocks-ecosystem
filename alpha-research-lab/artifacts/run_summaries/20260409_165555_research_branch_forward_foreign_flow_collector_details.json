@@ -1,0 +1,119 @@
+{
+  "branch_decision": "The forward-only VCI price_board collector contract is implemented and has a valid current snapshot. Start running it daily, but do not run backtests until enough forward history accrues.",
+  "contract": {
+    "daily_latest": "data/foreign_flow_forward/vci_price_board/daily_latest.parquet",
+    "forward_only": true,
+    "manifest": "data/foreign_flow_forward/vci_price_board/manifest.json",
+    "not_backtestable_yet": true,
+    "root": "data/foreign_flow_forward/vci_price_board",
+    "snapshot": "data/foreign_flow_forward/vci_price_board/latest_snapshot.parquet"
+  },
+  "fixture_contract": {
+    "fpt_net_value": 440000.0,
+    "fpt_net_volume": 45.0,
+    "fpt_room_used_ratio": 0.75,
+    "missing_contract_columns": [],
+    "missing_fixture_source_columns": [],
+    "passed": true,
+    "rows": 2,
+    "tickers": [
+      "FPT",
+      "VCB"
+    ],
+    "vcb_net_value": -120000.0,
+    "vcb_net_volume": -20.0
+  },
+  "outputs": {
+    "daily_latest_dates": [
+      "2026-04-09"
+    ],
+    "daily_latest_exists": true,
+    "daily_latest_rows": 404,
+    "daily_latest_tickers": 404,
+    "latest_missing_contract_columns": [],
+    "latest_required_non_null_counts": {
+      "current_room": 404,
+      "foreign_buy_value": 404,
+      "foreign_buy_volume": 404,
+      "foreign_sell_value": 404,
+      "foreign_sell_volume": 404,
+      "total_room": 404
+    },
+    "latest_rows": 404,
+    "latest_snapshot_exists": true,
+    "latest_tickers": 404,
+    "latest_trading_dates": [
+      "2026-04-09"
+    ],
+    "manifest": {
+      "contract": {
+        "contract_columns": [
+          "collected_at_utc",
+          "source",
+          "ticker",
+          "exchange",
+          "trading_date",
+          "listing_sending_time",
+          "match_sending_time",
+          "transaction_time",
+          "current_room",
+          "total_room",
+          "foreign_buy_volume",
+          "foreign_sell_volume",
+          "foreign_net_volume",
+          "foreign_buy_value",
+          "foreign_sell_value",
+          "foreign_net_value",
+          "foreign_room_used_ratio",
+          "accumulated_volume",
+          "accumulated_value",
+          "match_price",
+          "open_price",
+          "reference_price",
+          "ceiling_price",
+          "floor_price"
+        ],
+        "daily_latest": "foreign_flow_forward/vci_price_board/daily_latest.parquet",
+        "daily_latest_primary_key": [
+          "trading_date",
+          "ticker"
+        ],
+        "forward_only": true,
+        "latest_snapshot": "foreign_flow_forward/vci_price_board/latest_snapshot.parquet",
+        "not_backtestable_yet": true,
+        "reason": "VCI price_board exposes current-day accumulated fields, not historical backfill.",
+        "required_source_columns": [
+          "listing__symbol",
+          "match__current_room",
+          "match__foreign_buy_value",
+          "match__foreign_buy_volume",
+          "match__foreign_sell_value",
+          "match__foreign_sell_volume",
+          "match__total_room"
+        ],
+        "root": "foreign_flow_forward/vci_price_board",
+        "snapshot_path_pattern": "snapshots/YYYY-MM-DD/vci_price_board_foreign_flow_YYYYMMDDTHHMMSSZ.parquet",
+        "snapshot_primary_key": [
+          "collected_at_utc",
+          "ticker"
+        ],
+        "source": "vnstock_vci_price_board"
+      },
+      "last_run": {
+        "collected_at_utc": "2026-04-09T16:49:39Z",
+        "daily_latest": "foreign_flow_forward/vci_price_board/daily_latest.parquet",
+        "daily_latest_rows": 404,
+        "failed_chunks": [],
+        "latest_snapshot": "foreign_flow_forward/vci_price_board/latest_snapshot.parquet",
+        "rows": 404,
+        "snapshot": "foreign_flow_forward/vci_price_board/snapshots/2026-04-09/vci_price_board_foreign_flow_20260409T164939Z.parquet",
+        "tickers": 404,
+        "trading_dates": [
+          "2026-04-09"
+        ]
+      }
+    },
+    "manifest_exists": true,
+    "root": "data/foreign_flow_forward/vci_price_board"
+  }
+}

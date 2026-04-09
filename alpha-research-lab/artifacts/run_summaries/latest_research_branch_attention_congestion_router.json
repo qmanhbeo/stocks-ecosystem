@@ -1,0 +1,43 @@
+{
+  "artifacts": {
+    "daily_proxy_panel": "artifacts/timing_data/20260409_145951_h318_attention_congestion_router_daily_proxies.parquet",
+    "details": "artifacts/run_summaries/20260409_145951_research_branch_attention_congestion_router_details.json",
+    "result_table": "artifacts/timing_data/20260409_145951_h318_attention_congestion_router_results.parquet"
+  },
+  "metadata": {
+    "note": "The intended xs_llm_news_market_daily representation was audited first; raw archive proxies were used because the published surface is flat on 2023-2025.",
+    "protocol": {
+      "confirmation": "2025",
+      "dev": "2023",
+      "validation": "2024"
+    },
+    "proxy_specs": [
+      "high_raw_load",
+      "high_event_breadth",
+      "high_distraction"
+    ],
+    "question": "Do market-wide attention-congestion states change the H310 event-v2 response?",
+    "state_specs": [
+      "event_today_novel20",
+      "recent5_low_repeat20"
+    ]
+  },
+  "mode": "research_branch_attention_congestion_router",
+  "name": "attention_congestion_router",
+  "summary": {
+    "best_primary_confirmation_fwd5_lift_delta": -0.00572581593572695,
+    "best_primary_confirmation_lag_gap_delta": -0.04117211556416017,
+    "best_primary_decision": "FAILED",
+    "best_primary_proxy": "high_distraction",
+    "best_primary_validation_fwd5_lift_delta": 0.015420667410535917,
+    "best_primary_validation_lag_gap_delta": 0.03006469349011283,
+    "best_secondary_decision": "FAILED",
+    "best_secondary_proxy": "high_event_breadth",
+    "branch_decision": "Raw archive attention proxies show only unstable local separation. Keep the idea as offline evidence only and wait for richer market-attention data before reopening a broader router.",
+    "market_daily_rows": 748,
+    "market_daily_surface_flat_2023_2025": true,
+    "proxy_days_2023_2025": 1096,
+    "verdict": "MIXED"
+  },
+  "ts": "20260409_145951"
+}

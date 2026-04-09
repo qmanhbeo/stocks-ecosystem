@@ -29,6 +29,8 @@ Key exported inputs:
 - consolidated lab RL matrix: `data/features/xs_rl_signal_matrix.parquet`
 - adapted lab signal features: `data/features/signals/predictions/rl_lab_matrix/*_signal_predictions.parquet`
 - execution tradability flags: `data/features/execution/tradability_daily.parquet`
+- raw historical foreign-flow archive: `data/foreign_flow/cafef/` (not consumed by RL directly; raw source only)
+- forward-only foreign-flow board snapshots: `data/foreign_flow_forward/vci_price_board/` (raw acquisition surface, not consumed by RL and not historical/backtestable yet)
 
 ## RL Training / Evaluation
 
@@ -80,3 +82,17 @@ If a new external feature family is added:
 - update the producing pipeline
 - update the env merge point
 - update metadata round-tripping if evaluation should reuse it
+
+If `data/foreign_flow_forward/vci_price_board/` is promoted from raw
+forward-only acquisition data into an RL feature:
+- first run a source-quality audit after enough collection days exist
+- build a research-owned feature artifact under `data/features/`
+- update `vn_stock_rl/external_features.py` and env merge behavior only after
+  that feature artifact exists
+
+If `data/foreign_flow/cafef/` is promoted from raw historical source data into
+an RL feature:
+- first run a source-quality audit and align it against the trading calendar
+- build a research-owned feature artifact under `data/features/`
+- update `vn_stock_rl/external_features.py` and env merge behavior only after
+  that feature artifact exists

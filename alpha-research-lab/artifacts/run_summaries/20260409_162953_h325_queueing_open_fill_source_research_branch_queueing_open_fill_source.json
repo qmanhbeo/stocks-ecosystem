@@ -1,0 +1,45 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260409_162953_research_branch_queueing_open_fill_source_details.json",
+    "inventory": "artifacts/portfolio_baselines/20260409_162953_h325_queueing_open_fill_source_inventory.parquet"
+  },
+  "metadata": {
+    "data_root": "data",
+    "question": "Is queue/open-fill microstructure data available locally?",
+    "source_gate": "No alpha test is run unless true auction/order-book/queue or fine-minute data exists."
+  },
+  "mode": "research_branch_queueing_open_fill_source",
+  "name": "h325_queueing_open_fill_source",
+  "summary": {
+    "branch_decision": "No local historical auction, order-book, opening-queue, or fine-minute source exists in the canonical warehouse. The available intraday surface is reduced hourly OHLCV plus daily derived features, so queue imbalance / open-fill pain cannot be honestly tested yet.",
+    "candidate_paths": 13637,
+    "hourly_snapshot": {
+      "max_observed_bars_per_day_in_samples": 5,
+      "median_of_file_median_bars_per_day": 4.0,
+      "sampled_files": 33
+    },
+    "path_class_counts": {
+      "barrier_depth_feature_not_orderbook": 2,
+      "cafef_adjustment_factor": 810,
+      "cafef_hourly_year_part": 11996,
+      "derived_intraday_daily": 1,
+      "intraday_other": 11,
+      "reduced_hourly_cafef_adjusted": 404,
+      "reduced_hourly_cafef_raw": 404,
+      "reduced_hourly_legacy": 9
+    },
+    "reduced_hourly_source_paths": 12813,
+    "schema_class_counts": {
+      "adjustment_audit": 810,
+      "daily_or_reduced_ohlcv": 5,
+      "derived_daily_intraday_feature": 1,
+      "intraday_ohlcv_not_queue": 4,
+      "reduced_hourly_ohlcv": 12813,
+      "schema_not_microstructure": 4
+    },
+    "true_fine_minute_candidates": 0,
+    "true_queue_or_orderbook_candidates": 0,
+    "verdict": "SKIP"
+  },
+  "ts": "20260409_162953"
+}

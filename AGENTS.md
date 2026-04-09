@@ -19,6 +19,8 @@ This workspace is an ecosystem, not a set of truly standalone repos.
 Current responsibilities:
 
 - `data/` is the canonical shared data root for the entire workspace
+- `data/foreign_flow/` is a raw historical CafeF foreign-flow surface
+- `data/foreign_flow_forward/` is a forward-only raw acquisition surface, not a historical feature backfill
 - `alpha-research-lab/` owns research pipelines and research outputs
 - `manual-label-factory/` owns the manual buy-zone labelling UI
 - `shared-recommendation/` owns shared model-agnostic recommendation contracts and artifact resolution
@@ -40,6 +42,8 @@ Current responsibilities:
 - Do not reintroduce duplicate data stores inside child repos unless explicitly requested
 - Treat cross-project path contracts as ecosystem-level contracts
 - Treat `data/features/recommendations/` as a shared published surface, not an alpha-only private output
+- Treat `data/foreign_flow/` as a raw source surface until a research-owned feature artifact is published from it
+- Treat `data/foreign_flow_forward/` as forward-only raw data; do not use it in historical alpha tests until enough post-collection history exists
 - When changing producer/consumer boundaries, update docs in both the producer and consumer project
 
 ## Change Map

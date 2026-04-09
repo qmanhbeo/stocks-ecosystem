@@ -1,0 +1,66 @@
+{
+  "artifacts": {
+    "daily_panel": "artifacts/portfolio_baselines/20260409_161017_h323_policy_beneficiary_graph_daily.parquet",
+    "details": "artifacts/run_summaries/20260409_161017_research_branch_policy_beneficiary_graph_details.json",
+    "policy_articles": "artifacts/portfolio_baselines/20260409_161017_h323_policy_beneficiary_graph_articles.parquet",
+    "results": "artifacts/portfolio_baselines/20260409_161017_h323_policy_beneficiary_graph_results.parquet"
+  },
+  "metadata": {
+    "beneficiary_map": {
+      "direct_public_works": "icb_name2 == 'X\u00e2y d\u1ef1ng v\u00e0 V\u1eadt li\u1ec7u'",
+      "rest": "all other mapped or unmapped tickers",
+      "second_order_real_estate": "icb_name2 == 'B\u1ea5t \u0111\u1ed9ng s\u1ea3n'"
+    },
+    "note": "CafeF articles are assigned to the first trading day on or after their published date.",
+    "protocol": {
+      "confirmation": "2025",
+      "dev": "2023",
+      "validation": "2024"
+    },
+    "question": "Can a tiny public-investment policy-event corpus and beneficiary map predict direct public-works beneficiaries?",
+    "theme_patterns": {
+      "core_public_investment": [
+        "\\bdau tu cong\\b",
+        "\\bvon dau tu cong\\b",
+        "\\bgiai ngan dau tu cong\\b",
+        "\\bgiai ngan von dau tu cong\\b"
+      ],
+      "transport_infrastructure": [
+        "\\bcao toc\\b",
+        "\\bcao toc bac nam\\b",
+        "\\bduong vanh dai\\b",
+        "\\bvanh dai\\b",
+        "\\bsan bay long thanh\\b",
+        "\\blong thanh\\b",
+        "\\bmetro\\b",
+        "\\bduong sat\\b",
+        "\\bha tang giao thong\\b",
+        "\\bdu an giao thong\\b"
+      ]
+    }
+  },
+  "mode": "research_branch_policy_beneficiary_graph",
+  "name": "h323_policy_beneficiary_graph",
+  "summary": {
+    "best_confirmation_active_days": 211,
+    "best_confirmation_active_direct_fwd5_edge": 0.0023294925754078783,
+    "best_confirmation_actual_did": -0.0006460738855714049,
+    "best_confirmation_fwd5_did": 0.0006617266497941979,
+    "best_state": "policy_total_5d_high",
+    "best_state_decision": "MIXED",
+    "best_validation_active_days": 96,
+    "best_validation_active_direct_fwd5_edge": 0.0010380689044195046,
+    "best_validation_actual_did": 0.0026820223204354673,
+    "best_validation_fwd5_did": 0.0032180492810329584,
+    "branch_decision": "The local CafeF policy corpus is usable and shows some beneficiary-state structure, but the direct public-works response is too weak or unstable to promote.",
+    "group_counts": {
+      "direct_public_works": 55,
+      "rest": 282,
+      "second_order_real_estate": 57
+    },
+    "policy_signal_days": 744,
+    "policy_unique_articles": 5964,
+    "verdict": "MIXED"
+  },
+  "ts": "20260409_161017"
+}

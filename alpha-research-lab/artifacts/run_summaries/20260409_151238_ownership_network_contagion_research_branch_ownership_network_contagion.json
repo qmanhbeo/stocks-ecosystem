@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260409_151238_research_branch_ownership_network_contagion_details.json",
+    "edge_table": "artifacts/portfolio_baselines/20260409_151238_h319_ownership_network_contagion_edges.parquet",
+    "neighbor_panel": "artifacts/portfolio_baselines/20260409_151238_h319_ownership_network_contagion_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260409_151238_h319_ownership_network_contagion_results.parquet"
+  },
+  "metadata": {
+    "graph_degree_gate": {
+      "max": 20,
+      "min": 2
+    },
+    "note": "The union graph includes shared holder-code links, shared transaction-name links, and the tiny issuer-family alias layer.",
+    "protocol": {
+      "confirmation": "2025",
+      "dev": "2023",
+      "validation": "2024"
+    },
+    "question": "Do pre-2023 ownership links create pure cross-ticker spillover after excluding own direct event/insider shocks?"
+  },
+  "mode": "research_branch_ownership_network_contagion",
+  "name": "ownership_network_contagion",
+  "summary": {
+    "best_union_confirmation_actual_lift": -0.010599058152356107,
+    "best_union_confirmation_fwd5_lift": -0.00016257997705146764,
+    "best_union_decision": "FAILED",
+    "best_union_state": "nbr_event",
+    "best_union_validation_actual_lift": -0.0053134179832067556,
+    "best_union_validation_fwd5_lift": 0.0024053810593832607,
+    "branch_decision": "Ownership links create weak broad spillover, especially around neighbor C5 activity, but the effect is too small or unstable to promote. Keep it as offline evidence only.",
+    "union_graph_tickers": 358,
+    "union_panel_rows": 229421,
+    "verdict": "MIXED"
+  },
+  "ts": "20260409_151238"
+}

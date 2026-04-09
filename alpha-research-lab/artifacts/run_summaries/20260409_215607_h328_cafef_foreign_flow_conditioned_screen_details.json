@@ -1,0 +1,5480 @@
+{
+  "results": [
+    {
+      "abs_dev_ic": 0.008817906875743617,
+      "abs_validation_ic": 0.014710990482004995,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.007859420960671774,
+      "confirmation_n": 26875,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.03976956745117086,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.008817906875743617,
+      "dev_directional_years": 6,
+      "dev_gate": false,
+      "dev_n": 174816,
+      "dev_pct_directional_years": 0.75,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_buy_share_5d_rank",
+      "full_avg_ic": -0.008130123782546527,
+      "full_n": 252956,
+      "state": "foreign_participation_top30",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 252956,
+      "threshold": 0.7,
+      "validation_avg_ic": -0.014710990482004995,
+      "validation_gate": true,
+      "validation_n": 51265
+    },
+    {
+      "abs_dev_ic": 0.008749183951614847,
+      "abs_validation_ic": 0.014399609121404235,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.012510819033028132,
+      "confirmation_n": 17794,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.04619240766067499,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.008749183951614847,
+      "dev_directional_years": 6,
+      "dev_gate": false,
+      "dev_n": 115720,
+      "dev_pct_directional_years": 0.75,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_buy_share_5d_rank",
+      "full_avg_ic": -0.007291787341008139,
+      "full_n": 167202,
+      "state": "foreign_participation_top20",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 167202,
+      "threshold": 0.8,
+      "validation_avg_ic": -0.014399609121404235,
+      "validation_gate": true,
+      "validation_n": 33688
+    },
+    {
+      "abs_dev_ic": 0.002373155952578294,
+      "abs_validation_ic": 0.009388115787521382,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -0.0030118227119087,
+      "confirmation_n": 16265,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.03887516256539062,
+      "coverage": 0.9767400008998065,
+      "dev_avg_ic": 0.002373155952578294,
+      "dev_directional_years": 7,
+      "dev_gate": false,
+      "dev_n": 104553,
+      "dev_pct_directional_years": 0.875,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "full_avg_ic": 0.0005200431899600038,
+      "full_n": 151970,
+      "state": "room_scarcity_top20",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 155589,
+      "threshold": 0.8,
+      "validation_avg_ic": 0.009388115787521382,
+      "validation_gate": true,
+      "validation_n": 31152
+    },
+    {
+      "abs_dev_ic": 0.0042001235204964255,
+      "abs_validation_ic": 0.009227913884411658,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.012112533261564785,
+      "confirmation_n": 17794,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.0725964688399715,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.0042001235204964255,
+      "dev_directional_years": 4,
+      "dev_gate": false,
+      "dev_n": 115720,
+      "dev_pct_directional_years": 0.5,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "full_avg_ic": -0.0028150912610525967,
+      "full_n": 167202,
+      "state": "foreign_participation_top20",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 167202,
+      "threshold": 0.8,
+      "validation_avg_ic": -0.009227913884411658,
+      "validation_gate": true,
+      "validation_n": 33688
+    },
+    {
+      "abs_dev_ic": 0.0031746225248326303,
+      "abs_validation_ic": 0.007697993135698386,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -0.0008846850070292435,
+      "confirmation_n": 22987,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.03670834103594789,
+      "coverage": 0.9710032088642061,
+      "dev_avg_ic": 0.0031746225248326303,
+      "dev_directional_years": 7,
+      "dev_gate": false,
+      "dev_n": 149655,
+      "dev_pct_directional_years": 0.875,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "full_avg_ic": 0.001479800695435406,
+      "full_n": 215754,
+      "state": "room_scarcity_top30",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 222197,
+      "threshold": 0.7,
+      "validation_avg_ic": 0.007697993135698386,
+      "validation_gate": true,
+      "validation_n": 43112
+    },
+    {
+      "abs_dev_ic": 0.0025426491810993405,
+      "abs_validation_ic": 0.0071188953172680374,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.001543189150512808,
+      "confirmation_n": 16397,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.05589854874472908,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.0025426491810993405,
+      "dev_directional_years": 4,
+      "dev_gate": false,
+      "dev_n": 107526,
+      "dev_pct_directional_years": 0.5,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "full_avg_ic": -0.005931095023968947,
+      "full_n": 155589,
+      "state": "room_scarcity_top20",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 155589,
+      "threshold": 0.8,
+      "validation_avg_ic": -0.0071188953172680374,
+      "validation_gate": true,
+      "validation_n": 31666
+    },
+    {
+      "abs_dev_ic": 0.0006101342829666527,
+      "abs_validation_ic": 0.007092897489260085,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.009978871469569755,
+      "confirmation_n": 23246,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.05457277132474986,
+      "coverage": 1.0,
+      "dev_avg_ic": 0.0006101342829666527,
+      "dev_directional_years": 5,
+      "dev_gate": false,
+      "dev_n": 154797,
+      "dev_pct_directional_years": 0.625,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "full_avg_ic": -0.002208287762547928,
+      "full_n": 222197,
+      "state": "room_scarcity_top30",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 222197,
+      "threshold": 0.7,
+      "validation_avg_ic": -0.007092897489260085,
+      "validation_gate": false,
+      "validation_n": 44154
+    },
+    {
+      "abs_dev_ic": 0.0024933016131888273,
+      "abs_validation_ic": 0.007027651933922951,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.0059206846035155716,
+      "confirmation_n": 26875,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.06326784725778857,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.0024933016131888273,
+      "dev_directional_years": 5,
+      "dev_gate": false,
+      "dev_n": 174816,
+      "dev_pct_directional_years": 0.625,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "full_avg_ic": -0.0019605730127372316,
+      "full_n": 252956,
+      "state": "foreign_participation_top30",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 252956,
+      "threshold": 0.7,
+      "validation_avg_ic": -0.007027651933922951,
+      "validation_gate": true,
+      "validation_n": 51265
+    },
+    {
+      "abs_dev_ic": 0.012065355570143044,
+      "abs_validation_ic": 0.006914550213645587,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.012346607596180365,
+      "confirmation_n": 17794,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.12820377447325246,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.012065355570143044,
+      "dev_directional_years": 6,
+      "dev_gate": true,
+      "dev_n": 115720,
+      "dev_pct_directional_years": 0.75,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "full_avg_ic": -0.00759630287485355,
+      "full_n": 167202,
+      "state": "foreign_participation_top20",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 167202,
+      "threshold": 0.8,
+      "validation_avg_ic": -0.006914550213645587,
+      "validation_gate": true,
+      "validation_n": 33688
+    },
+    {
+      "abs_dev_ic": 0.0010110732034077018,
+      "abs_validation_ic": 0.006908203297330604,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.014098410333462348,
+      "confirmation_n": 17794,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.04229012228151774,
+      "coverage": 0.9996291910383847,
+      "dev_avg_ic": 0.0010110732034077018,
+      "dev_directional_years": 4,
+      "dev_gate": false,
+      "dev_n": 115662,
+      "dev_pct_directional_years": 0.5,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "full_avg_ic": 0.0013845927625302107,
+      "full_n": 167140,
+      "state": "foreign_participation_top20",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 167202,
+      "threshold": 0.8,
+      "validation_avg_ic": -0.006908203297330604,
+      "validation_gate": false,
+      "validation_n": 33684
+    },
+    {
+      "abs_dev_ic": 0.0014699041215751728,
+      "abs_validation_ic": 0.006453991082110446,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -0.011792702359669548,
+      "confirmation_n": 16397,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.03514914983450044,
+      "coverage": 1.0,
+      "dev_avg_ic": 0.0014699041215751728,
+      "dev_directional_years": 4,
+      "dev_gate": false,
+      "dev_n": 107526,
+      "dev_pct_directional_years": 0.5,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "full_avg_ic": -0.0016578063853261078,
+      "full_n": 155589,
+      "state": "room_scarcity_top20",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 155589,
+      "threshold": 0.8,
+      "validation_avg_ic": -0.006453991082110446,
+      "validation_gate": false,
+      "validation_n": 31666
+    },
+    {
+      "abs_dev_ic": 0.00967197421851207,
+      "abs_validation_ic": 0.0063422272126089,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.01060496422384355,
+      "confirmation_n": 26875,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.1108198744945636,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.00967197421851207,
+      "dev_directional_years": 6,
+      "dev_gate": false,
+      "dev_n": 174816,
+      "dev_pct_directional_years": 0.75,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "full_avg_ic": -0.006194109332388983,
+      "full_n": 252956,
+      "state": "foreign_participation_top30",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 252956,
+      "threshold": 0.7,
+      "validation_avg_ic": -0.0063422272126089,
+      "validation_gate": true,
+      "validation_n": 51265
+    },
+    {
+      "abs_dev_ic": 0.004709693493003962,
+      "abs_validation_ic": 0.006319719039823213,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.002549446000252382,
+      "confirmation_n": 26803,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.07400078805127924,
+      "coverage": 0.9854480621135692,
+      "dev_avg_ic": -0.004709693493003962,
+      "dev_directional_years": 6,
+      "dev_gate": false,
+      "dev_n": 171746,
+      "dev_pct_directional_years": 0.75,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "full_avg_ic": -0.0036729486624745584,
+      "full_n": 249275,
+      "state": "foreign_participation_top30",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 252956,
+      "threshold": 0.7,
+      "validation_avg_ic": -0.006319719039823213,
+      "validation_gate": true,
+      "validation_n": 50726
+    },
+    {
+      "abs_dev_ic": 0.009759224233353748,
+      "abs_validation_ic": 0.005618155949770045,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -0.009341957707313196,
+      "confirmation_n": 26875,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": 0.03300417620130725,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.009759224233353748,
+      "dev_directional_years": 7,
+      "dev_gate": false,
+      "dev_n": 174816,
+      "dev_pct_directional_years": 0.875,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_sell_share_5d_rank",
+      "full_avg_ic": -0.009017315937923511,
+      "full_n": 252956,
+      "state": "foreign_participation_top30",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 252956,
+      "threshold": 0.7,
+      "validation_avg_ic": -0.005618155949770045,
+      "validation_gate": true,
+      "validation_n": 51265
+    },
+    {
+      "abs_dev_ic": 0.011880586288898615,
+      "abs_validation_ic": 0.005608068058551419,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.0041429491532535105,
+      "confirmation_n": 23246,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": 0.008271046318579228,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.011880586288898615,
+      "dev_directional_years": 7,
+      "dev_gate": true,
+      "dev_n": 154797,
+      "dev_pct_directional_years": 0.875,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_sell_share_5d_rank",
+      "full_avg_ic": -0.0029077062591237155,
+      "full_n": 222197,
+      "state": "room_scarcity_top30",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 222197,
+      "threshold": 0.7,
+      "validation_avg_ic": -0.005608068058551419,
+      "validation_gate": true,
+      "validation_n": 44154
+    },
+    {
+      "abs_dev_ic": 0.005240320138863948,
+      "abs_validation_ic": 0.005214965416421627,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.0028766072344264203,
+      "confirmation_n": 23246,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.012209637119576882,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.005240320138863948,
+      "dev_directional_years": 7,
+      "dev_gate": false,
+      "dev_n": 154797,
+      "dev_pct_directional_years": 0.875,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_buy_share_5d_rank",
+      "full_avg_ic": 0.0030727885462651567,
+      "full_n": 222197,
+      "state": "room_scarcity_top30",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 222197,
+      "threshold": 0.7,
+      "validation_avg_ic": -0.005214965416421627,
+      "validation_gate": true,
+      "validation_n": 44154
+    },
+    {
+      "abs_dev_ic": 0.0031142625168667135,
+      "abs_validation_ic": 0.005037373974193264,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.004419279956459414,
+      "confirmation_n": 17740,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.08501821063712486,
+      "coverage": 0.984174830444612,
+      "dev_avg_ic": -0.0031142625168667135,
+      "dev_directional_years": 5,
+      "dev_gate": false,
+      "dev_n": 113534,
+      "dev_pct_directional_years": 0.625,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "full_avg_ic": -0.002079590207499706,
+      "full_n": 164556,
+      "state": "foreign_participation_top20",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 167202,
+      "threshold": 0.8,
+      "validation_avg_ic": -0.005037373974193264,
+      "validation_gate": true,
+      "validation_n": 33282
+    },
+    {
+      "abs_dev_ic": 0.002367919045440086,
+      "abs_validation_ic": 0.004336676500500251,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.008400695707976828,
+      "confirmation_n": 26875,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.03583711930605249,
+      "coverage": 0.999652113411028,
+      "dev_avg_ic": 0.002367919045440086,
+      "dev_directional_years": 5,
+      "dev_gate": false,
+      "dev_n": 174736,
+      "dev_pct_directional_years": 0.625,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "full_avg_ic": 0.0021513190627998825,
+      "full_n": 252868,
+      "state": "foreign_participation_top30",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 252956,
+      "threshold": 0.7,
+      "validation_avg_ic": -0.004336676500500251,
+      "validation_gate": false,
+      "validation_n": 51257
+    },
+    {
+      "abs_dev_ic": 0.005690812188392016,
+      "abs_validation_ic": 0.0038533570344377204,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.0012805442668995838,
+      "confirmation_n": 23241,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.022476541371924806,
+      "coverage": 0.9989378794493174,
+      "dev_avg_ic": 0.005690812188392016,
+      "dev_directional_years": 8,
+      "dev_gate": false,
+      "dev_n": 154601,
+      "dev_pct_directional_years": 1.0,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "full_avg_ic": 0.004326139026601372,
+      "full_n": 221961,
+      "state": "room_scarcity_top30",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 222197,
+      "threshold": 0.7,
+      "validation_avg_ic": 0.0038533570344377204,
+      "validation_gate": false,
+      "validation_n": 44119
+    },
+    {
+      "abs_dev_ic": 0.0073057675425230615,
+      "abs_validation_ic": 0.0024294846359022475,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -0.01426661231881222,
+      "confirmation_n": 17794,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": 0.04220025883701942,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.0073057675425230615,
+      "dev_directional_years": 7,
+      "dev_gate": false,
+      "dev_n": 115720,
+      "dev_pct_directional_years": 0.875,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_sell_share_5d_rank",
+      "full_avg_ic": -0.007134805884996173,
+      "full_n": 167202,
+      "state": "foreign_participation_top20",
+      "state_col": "xs_ff_participation_20d_rank",
+      "state_rows": 167202,
+      "threshold": 0.8,
+      "validation_avg_ic": -0.0024294846359022475,
+      "validation_gate": false,
+      "validation_n": 33688
+    },
+    {
+      "abs_dev_ic": 0.0019115269397604277,
+      "abs_validation_ic": 0.001500761835489771,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -0.002614343902953802,
+      "confirmation_n": 23246,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.03224304166616461,
+      "coverage": 1.0,
+      "dev_avg_ic": 0.0019115269397604277,
+      "dev_directional_years": 5,
+      "dev_gate": false,
+      "dev_n": 154797,
+      "dev_pct_directional_years": 0.625,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "full_avg_ic": 0.00047315413720171726,
+      "full_n": 222197,
+      "state": "room_scarcity_top30",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 222197,
+      "threshold": 0.7,
+      "validation_avg_ic": -0.001500761835489771,
+      "validation_gate": false,
+      "validation_n": 44154
+    },
+    {
+      "abs_dev_ic": 0.0039594117117503986,
+      "abs_validation_ic": 0.0014739098021532262,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.010019891731383916,
+      "confirmation_n": 16397,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": 0.0009668595261101715,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.0039594117117503986,
+      "dev_directional_years": 7,
+      "dev_gate": false,
+      "dev_n": 107526,
+      "dev_pct_directional_years": 0.875,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_buy_share_5d_rank",
+      "full_avg_ic": 0.007396446041399139,
+      "full_n": 155589,
+      "state": "room_scarcity_top20",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 155589,
+      "threshold": 0.8,
+      "validation_avg_ic": -0.0014739098021532262,
+      "validation_gate": false,
+      "validation_n": 31666
+    },
+    {
+      "abs_dev_ic": 0.006645130447811485,
+      "abs_validation_ic": 0.0006965178751613168,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -0.004691905616655522,
+      "confirmation_n": 16396,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.025139661197379693,
+      "coverage": 0.9992223100604799,
+      "dev_avg_ic": 0.006645130447811485,
+      "dev_directional_years": 7,
+      "dev_gate": false,
+      "dev_n": 107417,
+      "dev_pct_directional_years": 0.875,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "full_avg_ic": 0.003729786139593377,
+      "full_n": 155468,
+      "state": "room_scarcity_top20",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 155589,
+      "threshold": 0.8,
+      "validation_avg_ic": 0.0006965178751613168,
+      "validation_gate": false,
+      "validation_n": 31655
+    },
+    {
+      "abs_dev_ic": 0.009700822450172382,
+      "abs_validation_ic": 0.00040356064680786374,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.01171295075816354,
+      "confirmation_n": 16397,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": 0.01960964100806113,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.009700822450172382,
+      "dev_directional_years": 7,
+      "dev_gate": false,
+      "dev_n": 107526,
+      "dev_pct_directional_years": 0.875,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_sell_share_5d_rank",
+      "full_avg_ic": 0.002751682687707298,
+      "full_n": 155589,
+      "state": "room_scarcity_top20",
+      "state_col": "xs_ff_room_scarcity_rank",
+      "state_rows": 155589,
+      "threshold": 0.8,
+      "validation_avg_ic": 0.00040356064680786374,
+      "validation_gate": false,
+      "validation_n": 31666
+    }
+  ],
+  "summary": {
+    "branch_decision": "Conditioning on high foreign participation or room scarcity did not rescue simple CafeF foreign-flow features. Do not promote raw flow ranks; if this branch continues, it needs a different thesis such as room-change events or ownership-regime transitions.",
+    "screen": {
+      "best_pair": {
+        "abs_dev_ic": 0.008817906875743617,
+        "abs_validation_ic": 0.014710990482004995,
+        "candidate_gate": false,
+        "confirmation_avg_ic": 0.007859420960671774,
+        "confirmation_n": 26875,
+        "confirmation_ok": false,
+        "corr_gate": true,
+        "corr_with_s1": -0.03976956745117086,
+        "coverage": 1.0,
+        "dev_avg_ic": -0.008817906875743617,
+        "dev_directional_years": 6,
+        "dev_gate": false,
+        "dev_n": 174816,
+        "dev_pct_directional_years": 0.75,
+        "dev_years": 8,
+        "direction": "negative",
+        "feature": "xs_ff_buy_share_5d_rank",
+        "full_avg_ic": -0.008130123782546527,
+        "full_n": 252956,
+        "state": "foreign_participation_top30",
+        "state_col": "xs_ff_participation_20d_rank",
+        "state_rows": 252956,
+        "threshold": 0.7,
+        "validation_avg_ic": -0.014710990482004995,
+        "validation_gate": true,
+        "validation_n": 51265
+      },
+      "features": [
+        "xs_ff_net_vol_share_1d_rank",
+        "xs_ff_net_vol_share_1d_lag1_rank",
+        "xs_ff_net_vol_share_5d_rank",
+        "xs_ff_net_vol_share_5d_lag1_rank",
+        "xs_ff_buy_share_5d_rank",
+        "xs_ff_sell_share_5d_rank"
+      ],
+      "merged_rows": 817074,
+      "passing_pairs": [],
+      "states": [
+        "foreign_participation_top30",
+        "foreign_participation_top20",
+        "room_scarcity_top30",
+        "room_scarcity_top20"
+      ]
+    },
+    "verdict": "FAILED"
+  },
+  "yearly_ic": [
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.012032191356039638,
+      "n": 15999,
+      "p_value": 0.12804571571363285,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.012067866140720493,
+      "n": 18272,
+      "p_value": 0.10284621167812079,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.01507556877723337,
+      "n": 19767,
+      "p_value": 0.03404498732294911,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.017567970342229604,
+      "n": 21529,
+      "p_value": 0.009944417473443693,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.013866496324135082,
+      "n": 22800,
+      "p_value": 0.03627950339588587,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.020930754047425202,
+      "n": 24748,
+      "p_value": 0.0009915432479680407,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.01757373538392428,
+      "n": 25642,
+      "p_value": 0.004890132294127289,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.005809165358059471,
+      "n": 26059,
+      "p_value": 0.34838581038402894,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.0004768649878044483,
+      "n": 25438,
+      "p_value": 0.9393770366544374,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.013634089097399098,
+      "n": 25827,
+      "p_value": 0.02844452973510826,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.01060496422384355,
+      "n": 26875,
+      "p_value": 0.08212221454794087,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.012032191356039638,
+      "n": 15999,
+      "p_value": 0.12804571571363285,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.012067866140720493,
+      "n": 18272,
+      "p_value": 0.10284621167812079,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.01507556877723337,
+      "n": 19767,
+      "p_value": 0.03404498732294911,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.017567970342229604,
+      "n": 21529,
+      "p_value": 0.009944417473443693,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.013866496324135082,
+      "n": 22800,
+      "p_value": 0.03627950339588587,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.020930754047425202,
+      "n": 24748,
+      "p_value": 0.0009915432479680407,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.01757373538392428,
+      "n": 25642,
+      "p_value": 0.004890132294127289,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.005809165358059471,
+      "n": 26059,
+      "p_value": 0.34838581038402894,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.0004768649878044483,
+      "n": 25438,
+      "p_value": 0.9393770366544374,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.013634089097399098,
+      "n": 25827,
+      "p_value": 0.02844452973510826,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.01060496422384355,
+      "n": 26875,
+      "p_value": 0.08212221454794087,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.01423388830905522,
+      "n": 15535,
+      "p_value": 0.07605462450907696,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.007345934058197538,
+      "n": 17901,
+      "p_value": 0.3257102766229908,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.008546379704532436,
+      "n": 19378,
+      "p_value": 0.23418682312300512,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0030315588557267396,
+      "n": 21091,
+      "p_value": 0.6597630368132192,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.006310779933227849,
+      "n": 22361,
+      "p_value": 0.3453510340222514,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.021620224076557976,
+      "n": 24410,
+      "p_value": 0.0007298832814611891,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0077050715183401165,
+      "n": 25307,
+      "p_value": 0.22031391242864645,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.003417787393024554,
+      "n": 25763,
+      "p_value": 0.5833080327956606,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.00410236807958368,
+      "n": 25055,
+      "p_value": 0.5161284625048381,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.017307059270816123,
+      "n": 25671,
+      "p_value": 0.005553538356526577,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.002549446000252382,
+      "n": 26803,
+      "p_value": 0.6764100842938225,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.01423388830905522,
+      "n": 15535,
+      "p_value": 0.07605462450907696,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.007345934058197538,
+      "n": 17901,
+      "p_value": 0.3257102766229908,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.008546379704532436,
+      "n": 19378,
+      "p_value": 0.23418682312300512,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0030315588557267396,
+      "n": 21091,
+      "p_value": 0.6597630368132192,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.006310779933227849,
+      "n": 22361,
+      "p_value": 0.3453510340222514,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.021620224076557976,
+      "n": 24410,
+      "p_value": 0.0007298832814611891,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0077050715183401165,
+      "n": 25307,
+      "p_value": 0.22031391242864645,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.003417787393024554,
+      "n": 25763,
+      "p_value": 0.5833080327956606,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.00410236807958368,
+      "n": 25055,
+      "p_value": 0.5161284625048381,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.017307059270816123,
+      "n": 25671,
+      "p_value": 0.005553538356526577,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.002549446000252382,
+      "n": 26803,
+      "p_value": 0.6764100842938225,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.012671071777708723,
+      "n": 15999,
+      "p_value": 0.10900821317402742,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.00575712506665353,
+      "n": 18272,
+      "p_value": 0.4364707964510546,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.013219664791943095,
+      "n": 19767,
+      "p_value": 0.06308604131598008,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.0002197878846767107,
+      "n": 21529,
+      "p_value": 0.9742750070540371,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.0020541214712013066,
+      "n": 22800,
+      "p_value": 0.7564477561568713,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.017002426972038437,
+      "n": 24748,
+      "p_value": 0.007477506378697973,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.008338826085460018,
+      "n": 25642,
+      "p_value": 0.1817898540709042,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.00660168719497193,
+      "n": 26059,
+      "p_value": 0.28657842037006576,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.004166877582818847,
+      "n": 25438,
+      "p_value": 0.5063333615574146,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.018804674679944053,
+      "n": 25827,
+      "p_value": 0.002509620914686844,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.0059206846035155716,
+      "n": 26875,
+      "p_value": 0.3317592165511667,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.012671071777708723,
+      "n": 15999,
+      "p_value": 0.10900821317402742,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.00575712506665353,
+      "n": 18272,
+      "p_value": 0.4364707964510546,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.013219664791943095,
+      "n": 19767,
+      "p_value": 0.06308604131598008,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.0002197878846767107,
+      "n": 21529,
+      "p_value": 0.9742750070540371,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.0020541214712013066,
+      "n": 22800,
+      "p_value": 0.7564477561568713,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.017002426972038437,
+      "n": 24748,
+      "p_value": 0.007477506378697973,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.008338826085460018,
+      "n": 25642,
+      "p_value": 0.1817898540709042,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.00660168719497193,
+      "n": 26059,
+      "p_value": 0.28657842037006576,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.004166877582818847,
+      "n": 25438,
+      "p_value": 0.5063333615574146,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.018804674679944053,
+      "n": 25827,
+      "p_value": 0.002509620914686844,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.0059206846035155716,
+      "n": 26875,
+      "p_value": 0.3317592165511667,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.019932927566358293,
+      "n": 15987,
+      "p_value": 0.011723257472234523,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0030048646424618497,
+      "n": 18267,
+      "p_value": 0.6846713254478889,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0020874167642479713,
+      "n": 19763,
+      "p_value": 0.7691913848251831,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0032582389966599548,
+      "n": 21518,
+      "p_value": 0.6327035378592389,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0040036709779209395,
+      "n": 22779,
+      "p_value": 0.5456895078762254,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.014071370704697715,
+      "n": 24744,
+      "p_value": 0.026866215079990218,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0006781917044143778,
+      "n": 25628,
+      "p_value": 0.9135477485150961,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.005518538337293387,
+      "n": 26050,
+      "p_value": 0.3731133107436898,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.005834828944117578,
+      "n": 25434,
+      "p_value": 0.35211067195166856,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.014930676347066497,
+      "n": 25823,
+      "p_value": 0.01642608930794268,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.008400695707976828,
+      "n": 26875,
+      "p_value": 0.16847008596358184,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.019932927566358293,
+      "n": 15987,
+      "p_value": 0.011723257472234523,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0030048646424618497,
+      "n": 18267,
+      "p_value": 0.6846713254478889,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0020874167642479713,
+      "n": 19763,
+      "p_value": 0.7691913848251831,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0032582389966599548,
+      "n": 21518,
+      "p_value": 0.6327035378592389,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0040036709779209395,
+      "n": 22779,
+      "p_value": 0.5456895078762254,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.014071370704697715,
+      "n": 24744,
+      "p_value": 0.026866215079990218,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0006781917044143778,
+      "n": 25628,
+      "p_value": 0.9135477485150961,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.005518538337293387,
+      "n": 26050,
+      "p_value": 0.3731133107436898,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.005834828944117578,
+      "n": 25434,
+      "p_value": 0.35211067195166856,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.014930676347066497,
+      "n": 25823,
+      "p_value": 0.01642608930794268,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.008400695707976828,
+      "n": 26875,
+      "p_value": 0.16847008596358184,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.005912956945268826,
+      "n": 15999,
+      "p_value": 0.4545438870140427,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.014677658316114313,
+      "n": 18272,
+      "p_value": 0.04725490837068944,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.0023151253147201036,
+      "n": 19767,
+      "p_value": 0.7448213929576811,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.010413083742723818,
+      "n": 21529,
+      "p_value": 0.126552294142583,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.003337328979592848,
+      "n": 22800,
+      "p_value": 0.6143320722738951,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.03186100091695121,
+      "n": 24748,
+      "p_value": 5.352332523933121e-07,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.020669319928022078,
+      "n": 25642,
+      "p_value": 0.0009329758965348139,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.00703309692758034,
+      "n": 26059,
+      "p_value": 0.25625032626645655,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.008918424735421534,
+      "n": 25438,
+      "p_value": 0.15491473992308719,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.021319951506041476,
+      "n": 25827,
+      "p_value": 0.0006113995901751438,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.007859420960671774,
+      "n": 26875,
+      "p_value": 0.1976061629106823,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.005912956945268826,
+      "n": 15999,
+      "p_value": 0.4545438870140427,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.014677658316114313,
+      "n": 18272,
+      "p_value": 0.04725490837068944,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.0023151253147201036,
+      "n": 19767,
+      "p_value": 0.7448213929576811,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.010413083742723818,
+      "n": 21529,
+      "p_value": 0.126552294142583,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.003337328979592848,
+      "n": 22800,
+      "p_value": 0.6143320722738951,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.03186100091695121,
+      "n": 24748,
+      "p_value": 5.352332523933121e-07,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.020669319928022078,
+      "n": 25642,
+      "p_value": 0.0009329758965348139,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.00703309692758034,
+      "n": 26059,
+      "p_value": 0.25625032626645655,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.008918424735421534,
+      "n": 25438,
+      "p_value": 0.15491473992308719,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.021319951506041476,
+      "n": 25827,
+      "p_value": 0.0006113995901751438,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.007859420960671774,
+      "n": 26875,
+      "p_value": 0.1976061629106823,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.013273537358862516,
+      "n": 15999,
+      "p_value": 0.09317646020611735,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.016647445125701404,
+      "n": 18272,
+      "p_value": 0.024429711972428818,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.005822532324658074,
+      "n": 19767,
+      "p_value": 0.41302890464215514,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.014764075463853684,
+      "n": 21529,
+      "p_value": 0.030289017352969183,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.007758271752892287,
+      "n": 22800,
+      "p_value": 0.24142728704730773,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.011074178090409446,
+      "n": 24748,
+      "p_value": 0.08149104914585562,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.014444803272914137,
+      "n": 25642,
+      "p_value": 0.02071870661413202,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.007824004001204362,
+      "n": 26059,
+      "p_value": 0.20659921353754326,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.015969967071316673,
+      "n": 25438,
+      "p_value": 0.010861160701871528,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.00437842532276226,
+      "n": 25827,
+      "p_value": 0.48167165927957833,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.009341957707313196,
+      "n": 26875,
+      "p_value": 0.12565944601083004,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.013273537358862516,
+      "n": 15999,
+      "p_value": 0.09317646020611735,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.016647445125701404,
+      "n": 18272,
+      "p_value": 0.024429711972428818,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.005822532324658074,
+      "n": 19767,
+      "p_value": 0.41302890464215514,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.014764075463853684,
+      "n": 21529,
+      "p_value": 0.030289017352969183,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.007758271752892287,
+      "n": 22800,
+      "p_value": 0.24142728704730773,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.011074178090409446,
+      "n": 24748,
+      "p_value": 0.08149104914585562,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.014444803272914137,
+      "n": 25642,
+      "p_value": 0.02071870661413202,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.007824004001204362,
+      "n": 26059,
+      "p_value": 0.20659921353754326,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.015969967071316673,
+      "n": 25438,
+      "p_value": 0.010861160701871528,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.00437842532276226,
+      "n": 25827,
+      "p_value": 0.48167165927957833,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.009341957707313196,
+      "n": 26875,
+      "p_value": 0.12565944601083004,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.011602117864903528,
+      "n": 10703,
+      "p_value": 0.23006135071879927,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.01749261609653807,
+      "n": 12207,
+      "p_value": 0.053282193762773135,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.017807425796119186,
+      "n": 13076,
+      "p_value": 0.041725062181281414,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.023417367692592183,
+      "n": 14382,
+      "p_value": 0.0049777788402513585,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.013122753932338508,
+      "n": 15030,
+      "p_value": 0.10767223951880614,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.019990754363638754,
+      "n": 16393,
+      "p_value": 0.01047987806022571,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.019686360867186593,
+      "n": 16803,
+      "p_value": 0.010712826916617228,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.0003804655208404727,
+      "n": 17126,
+      "p_value": 0.9602925253249489,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.0014400259142955424,
+      "n": 16750,
+      "p_value": 0.8521648727689887,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.013473974140989341,
+      "n": 16938,
+      "p_value": 0.07951022036682968,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.012346607596180365,
+      "n": 17794,
+      "p_value": 0.09957606795312494,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.011602117864903528,
+      "n": 10703,
+      "p_value": 0.23006135071879927,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.01749261609653807,
+      "n": 12207,
+      "p_value": 0.053282193762773135,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.017807425796119186,
+      "n": 13076,
+      "p_value": 0.041725062181281414,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.023417367692592183,
+      "n": 14382,
+      "p_value": 0.0049777788402513585,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.013122753932338508,
+      "n": 15030,
+      "p_value": 0.10767223951880614,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.019990754363638754,
+      "n": 16393,
+      "p_value": 0.01047987806022571,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.019686360867186593,
+      "n": 16803,
+      "p_value": 0.010712826916617228,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.0003804655208404727,
+      "n": 17126,
+      "p_value": 0.9602925253249489,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.0014400259142955424,
+      "n": 16750,
+      "p_value": 0.8521648727689887,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.013473974140989341,
+      "n": 16938,
+      "p_value": 0.07951022036682968,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.012346607596180365,
+      "n": 17794,
+      "p_value": 0.09957606795312494,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.02040870685758529,
+      "n": 10376,
+      "p_value": 0.037631042511507264,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.011133359489572829,
+      "n": 11962,
+      "p_value": 0.22338500728941435,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.009075488673292763,
+      "n": 12794,
+      "p_value": 0.3046774036349201,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.001835334953290447,
+      "n": 14086,
+      "p_value": 0.8275798156660618,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0020774037488639945,
+      "n": 14717,
+      "p_value": 0.8010439370887844,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.020959164699168354,
+      "n": 16140,
+      "p_value": 0.007749168769626379,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.00432261872355895,
+      "n": 16557,
+      "p_value": 0.5780951410230504,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.0009231064317139915,
+      "n": 16902,
+      "p_value": 0.904481495119789,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.0036046386206175,
+      "n": 16470,
+      "p_value": 0.6436729865684674,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.013202838680814389,
+      "n": 16812,
+      "p_value": 0.086925815378158,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.004419279956459414,
+      "n": 17740,
+      "p_value": 0.5561482017630855,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.02040870685758529,
+      "n": 10376,
+      "p_value": 0.037631042511507264,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.011133359489572829,
+      "n": 11962,
+      "p_value": 0.22338500728941435,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.009075488673292763,
+      "n": 12794,
+      "p_value": 0.3046774036349201,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.001835334953290447,
+      "n": 14086,
+      "p_value": 0.8275798156660618,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0020774037488639945,
+      "n": 14717,
+      "p_value": 0.8010439370887844,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.020959164699168354,
+      "n": 16140,
+      "p_value": 0.007749168769626379,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.00432261872355895,
+      "n": 16557,
+      "p_value": 0.5780951410230504,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.0009231064317139915,
+      "n": 16902,
+      "p_value": 0.904481495119789,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.0036046386206175,
+      "n": 16470,
+      "p_value": 0.6436729865684674,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.013202838680814389,
+      "n": 16812,
+      "p_value": 0.086925815378158,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.004419279956459414,
+      "n": 17740,
+      "p_value": 0.5561482017630855,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.011884006151780422,
+      "n": 10703,
+      "p_value": 0.21893562949152107,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.015865306420185507,
+      "n": 12207,
+      "p_value": 0.07963396765072779,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.016292095850618048,
+      "n": 13076,
+      "p_value": 0.0624689899827641,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.0011956451008202243,
+      "n": 14382,
+      "p_value": 0.88599378996236,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.001362683802654193,
+      "n": 15030,
+      "p_value": 0.8673330728530229,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.01789049025933314,
+      "n": 16393,
+      "p_value": 0.02198538572087452,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.00733762286115991,
+      "n": 16803,
+      "p_value": 0.34155789011898363,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.0013942935165887904,
+      "n": 17126,
+      "p_value": 0.8552273414339939,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.002950190851168687,
+      "n": 16750,
+      "p_value": 0.7026161577939186,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.02114341321972585,
+      "n": 16938,
+      "p_value": 0.005926206715909668,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.012112533261564785,
+      "n": 17794,
+      "p_value": 0.10616203135010568,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.011884006151780422,
+      "n": 10703,
+      "p_value": 0.21893562949152107,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.015865306420185507,
+      "n": 12207,
+      "p_value": 0.07963396765072779,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.016292095850618048,
+      "n": 13076,
+      "p_value": 0.0624689899827641,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.0011956451008202243,
+      "n": 14382,
+      "p_value": 0.88599378996236,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.001362683802654193,
+      "n": 15030,
+      "p_value": 0.8673330728530229,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.01789049025933314,
+      "n": 16393,
+      "p_value": 0.02198538572087452,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.00733762286115991,
+      "n": 16803,
+      "p_value": 0.34155789011898363,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.0013942935165887904,
+      "n": 17126,
+      "p_value": 0.8552273414339939,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.002950190851168687,
+      "n": 16750,
+      "p_value": 0.7026161577939186,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.02114341321972585,
+      "n": 16938,
+      "p_value": 0.005926206715909668,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.012112533261564785,
+      "n": 17794,
+      "p_value": 0.10616203135010568,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.020899842628018115,
+      "n": 10697,
+      "p_value": 0.03065080268052238,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0031113190332194523,
+      "n": 12202,
+      "p_value": 0.7311093602618217,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.004647066252929412,
+      "n": 13074,
+      "p_value": 0.5952074243971539,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.004755919632085838,
+      "n": 14372,
+      "p_value": 0.5686038653177535,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0023041850085890173,
+      "n": 15013,
+      "p_value": 0.7777111807758986,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.015536305345734127,
+      "n": 16391,
+      "p_value": 0.04669676585123247,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0005746294164633926,
+      "n": 16792,
+      "p_value": 0.9406465862662119,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.001220853623629041,
+      "n": 17121,
+      "p_value": 0.8730908354438899,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.00301922021048613,
+      "n": 16747,
+      "p_value": 0.6960266731018565,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.016619309986637503,
+      "n": 16937,
+      "p_value": 0.030551657656100177,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.014098410333462348,
+      "n": 17794,
+      "p_value": 0.060025420435516466,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.020899842628018115,
+      "n": 10697,
+      "p_value": 0.03065080268052238,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0031113190332194523,
+      "n": 12202,
+      "p_value": 0.7311093602618217,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.004647066252929412,
+      "n": 13074,
+      "p_value": 0.5952074243971539,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.004755919632085838,
+      "n": 14372,
+      "p_value": 0.5686038653177535,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0023041850085890173,
+      "n": 15013,
+      "p_value": 0.7777111807758986,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.015536305345734127,
+      "n": 16391,
+      "p_value": 0.04669676585123247,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0005746294164633926,
+      "n": 16792,
+      "p_value": 0.9406465862662119,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.001220853623629041,
+      "n": 17121,
+      "p_value": 0.8730908354438899,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.00301922021048613,
+      "n": 16747,
+      "p_value": 0.6960266731018565,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.016619309986637503,
+      "n": 16937,
+      "p_value": 0.030551657656100177,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.014098410333462348,
+      "n": 17794,
+      "p_value": 0.060025420435516466,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.00500848422183006,
+      "n": 10703,
+      "p_value": 0.6043905999850179,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.017475748572356935,
+      "n": 12207,
+      "p_value": 0.053512379382580515,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.0025906640509353075,
+      "n": 13076,
+      "p_value": 0.7670655212040622,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.01115557537461167,
+      "n": 14382,
+      "p_value": 0.18097551470760148,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.0028795720168074074,
+      "n": 15030,
+      "p_value": 0.7240899591357892,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.03208663480662872,
+      "n": 16393,
+      "p_value": 3.974418110737118e-05,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.017200561626098308,
+      "n": 16803,
+      "p_value": 0.025770973231656537,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.00046928455922579224,
+      "n": 17126,
+      "p_value": 0.9510334249364616,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.006943681538861415,
+      "n": 16750,
+      "p_value": 0.3688617804098655,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.022067152011717345,
+      "n": 16938,
+      "p_value": 0.0040776566322333375,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.012510819033028132,
+      "n": 17794,
+      "p_value": 0.09515342046186477,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.00500848422183006,
+      "n": 10703,
+      "p_value": 0.6043905999850179,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.017475748572356935,
+      "n": 12207,
+      "p_value": 0.053512379382580515,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.0025906640509353075,
+      "n": 13076,
+      "p_value": 0.7670655212040622,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.01115557537461167,
+      "n": 14382,
+      "p_value": 0.18097551470760148,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.0028795720168074074,
+      "n": 15030,
+      "p_value": 0.7240899591357892,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.03208663480662872,
+      "n": 16393,
+      "p_value": 3.974418110737118e-05,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.017200561626098308,
+      "n": 16803,
+      "p_value": 0.025770973231656537,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.00046928455922579224,
+      "n": 17126,
+      "p_value": 0.9510334249364616,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.006943681538861415,
+      "n": 16750,
+      "p_value": 0.3688617804098655,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.022067152011717345,
+      "n": 16938,
+      "p_value": 0.0040776566322333375,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.012510819033028132,
+      "n": 17794,
+      "p_value": 0.09515342046186477,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.011277416291462075,
+      "n": 10703,
+      "p_value": 0.24336816085078408,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.006270699902017641,
+      "n": 12207,
+      "p_value": 0.48846270244244316,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.01559829034313473,
+      "n": 13076,
+      "p_value": 0.07448742240311836,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.018787524391398278,
+      "n": 14382,
+      "p_value": 0.02425306955838743,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.006724891246300643,
+      "n": 15030,
+      "p_value": 0.4097171011252805,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.008661782681260317,
+      "n": 16393,
+      "p_value": 0.26745223101042853,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.013457279737500456,
+      "n": 16803,
+      "p_value": 0.08109498542373267,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.010077801715497865,
+      "n": 17126,
+      "p_value": 0.1872419071470987,
+      "phase": "dev_2015_2022",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.011822800080643273,
+      "n": 16750,
+      "p_value": 0.12600008634624368,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.006780343928155545,
+      "n": 16938,
+      "p_value": 0.37757126935353647,
+      "phase": "validation_2023_2024",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.01426661231881222,
+      "n": 17794,
+      "p_value": 0.0570345677609958,
+      "phase": "confirmation_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.011277416291462075,
+      "n": 10703,
+      "p_value": 0.24336816085078408,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.006270699902017641,
+      "n": 12207,
+      "p_value": 0.48846270244244316,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.01559829034313473,
+      "n": 13076,
+      "p_value": 0.07448742240311836,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.018787524391398278,
+      "n": 14382,
+      "p_value": 0.02425306955838743,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.006724891246300643,
+      "n": 15030,
+      "p_value": 0.4097171011252805,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.008661782681260317,
+      "n": 16393,
+      "p_value": 0.26745223101042853,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.013457279737500456,
+      "n": 16803,
+      "p_value": 0.08109498542373267,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.010077801715497865,
+      "n": 17126,
+      "p_value": 0.1872419071470987,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.011822800080643273,
+      "n": 16750,
+      "p_value": 0.12600008634624368,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.006780343928155545,
+      "n": 16938,
+      "p_value": 0.37757126935353647,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.01426661231881222,
+      "n": 17794,
+      "p_value": 0.0570345677609958,
+      "phase": "full_2015_2025",
+      "state": "foreign_participation_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.00876282158625235,
+      "n": 14314,
+      "p_value": 0.2944900718835166,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.002348946593255924,
+      "n": 16915,
+      "p_value": 0.760003350868592,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.015526649353100056,
+      "n": 18407,
+      "p_value": 0.035159061453383336,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.011214017725864686,
+      "n": 18904,
+      "p_value": 0.12312652845096574,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.006976874489578457,
+      "n": 18841,
+      "p_value": 0.3382586953922554,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.0010430578332609973,
+      "n": 20346,
+      "p_value": 0.8817335070179578,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.007866478993427019,
+      "n": 22934,
+      "p_value": 0.23355499920864875,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.008592322424564555,
+      "n": 24136,
+      "p_value": 0.18192919702806712,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.016566366017248136,
+      "n": 22329,
+      "p_value": 0.013304031941367511,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.0007998510883326636,
+      "n": 21825,
+      "p_value": 0.9059428280441505,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.009978871469569755,
+      "n": 23246,
+      "p_value": 0.1281598479737658,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.00876282158625235,
+      "n": 14314,
+      "p_value": 0.2944900718835166,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.002348946593255924,
+      "n": 16915,
+      "p_value": 0.760003350868592,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.015526649353100056,
+      "n": 18407,
+      "p_value": 0.035159061453383336,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.011214017725864686,
+      "n": 18904,
+      "p_value": 0.12312652845096574,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.006976874489578457,
+      "n": 18841,
+      "p_value": 0.3382586953922554,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.0010430578332609973,
+      "n": 20346,
+      "p_value": 0.8817335070179578,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.007866478993427019,
+      "n": 22934,
+      "p_value": 0.23355499920864875,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.008592322424564555,
+      "n": 24136,
+      "p_value": 0.18192919702806712,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.016566366017248136,
+      "n": 22329,
+      "p_value": 0.013304031941367511,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.0007998510883326636,
+      "n": 21825,
+      "p_value": 0.9059428280441505,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.009978871469569755,
+      "n": 23246,
+      "p_value": 0.1281598479737658,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.005972988124974618,
+      "n": 13684,
+      "p_value": 0.48476805399340617,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 6.456897909340671e-05,
+      "n": 16446,
+      "p_value": 0.9933937325629231,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0023148691945718827,
+      "n": 17911,
+      "p_value": 0.7567264890812659,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.017218764101101056,
+      "n": 18198,
+      "p_value": 0.020188648484132606,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.005206756897111388,
+      "n": 18044,
+      "p_value": 0.48432126686361976,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.0026540579386690444,
+      "n": 19525,
+      "p_value": 0.7107615991354883,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.013394304022039115,
+      "n": 22246,
+      "p_value": 0.04574374280755972,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.00017349474699918525,
+      "n": 23601,
+      "p_value": 0.9787373602303525,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.02186507310090361,
+      "n": 21719,
+      "p_value": 0.0012706123157533995,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.012282247708521873,
+      "n": 21393,
+      "p_value": 0.07242983683023739,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0008846850070292435,
+      "n": 22987,
+      "p_value": 0.893304574206955,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.005972988124974618,
+      "n": 13684,
+      "p_value": 0.48476805399340617,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 6.456897909340671e-05,
+      "n": 16446,
+      "p_value": 0.9933937325629231,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0023148691945718827,
+      "n": 17911,
+      "p_value": 0.7567264890812659,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.017218764101101056,
+      "n": 18198,
+      "p_value": 0.020188648484132606,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.005206756897111388,
+      "n": 18044,
+      "p_value": 0.48432126686361976,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.0026540579386690444,
+      "n": 19525,
+      "p_value": 0.7107615991354883,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.013394304022039115,
+      "n": 22246,
+      "p_value": 0.04574374280755972,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.00017349474699918525,
+      "n": 23601,
+      "p_value": 0.9787373602303525,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.02186507310090361,
+      "n": 21719,
+      "p_value": 0.0012706123157533995,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.012282247708521873,
+      "n": 21393,
+      "p_value": 0.07242983683023739,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0008846850070292435,
+      "n": 22987,
+      "p_value": 0.893304574206955,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.0023104384640400192,
+      "n": 14314,
+      "p_value": 0.7822410891176287,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.0003966477909396299,
+      "n": 16915,
+      "p_value": 0.9588607414776665,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.007790722689084134,
+      "n": 18407,
+      "p_value": 0.2905433994260741,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.007438209168028928,
+      "n": 18904,
+      "p_value": 0.30647836420940827,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.008573806985913908,
+      "n": 18841,
+      "p_value": 0.2392729799398444,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.007684705806450883,
+      "n": 20346,
+      "p_value": 0.2730390821080565,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.004969837689219221,
+      "n": 22934,
+      "p_value": 0.45169354160653774,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.002314270140912966,
+      "n": 24136,
+      "p_value": 0.7192050451642453,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.0032173931271854968,
+      "n": 22329,
+      "p_value": 0.6306971141046246,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.0012104549825961216,
+      "n": 21825,
+      "p_value": 0.8580839025834507,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.002614343902953802,
+      "n": 23246,
+      "p_value": 0.6902035679877738,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.0023104384640400192,
+      "n": 14314,
+      "p_value": 0.7822410891176287,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.0003966477909396299,
+      "n": 16915,
+      "p_value": 0.9588607414776665,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.007790722689084134,
+      "n": 18407,
+      "p_value": 0.2905433994260741,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.007438209168028928,
+      "n": 18904,
+      "p_value": 0.30647836420940827,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.008573806985913908,
+      "n": 18841,
+      "p_value": 0.2392729799398444,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.007684705806450883,
+      "n": 20346,
+      "p_value": 0.2730390821080565,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.004969837689219221,
+      "n": 22934,
+      "p_value": 0.45169354160653774,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.002314270140912966,
+      "n": 24136,
+      "p_value": 0.7192050451642453,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.0032173931271854968,
+      "n": 22329,
+      "p_value": 0.6306971141046246,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.0012104549825961216,
+      "n": 21825,
+      "p_value": 0.8580839025834507,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.002614343902953802,
+      "n": 23246,
+      "p_value": 0.6902035679877738,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0065771795782026046,
+      "n": 14296,
+      "p_value": 0.43166480192477286,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.005509142865108752,
+      "n": 16895,
+      "p_value": 0.47396969407958245,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0033674116886804615,
+      "n": 18397,
+      "p_value": 0.6478788074188009,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.00447455529839957,
+      "n": 18879,
+      "p_value": 0.538706508617933,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.010793211243240218,
+      "n": 18787,
+      "p_value": 0.1390538846546562,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.007894376175179752,
+      "n": 20319,
+      "p_value": 0.2604831015377934,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.007497233263483907,
+      "n": 22911,
+      "p_value": 0.25647431928135256,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.005307442829374718,
+      "n": 24117,
+      "p_value": 0.40983142150003515,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.002367008232033796,
+      "n": 22307,
+      "p_value": 0.7237092331047112,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.004061851902778533,
+      "n": 21812,
+      "p_value": 0.5486006216652339,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0012805442668995838,
+      "n": 23241,
+      "p_value": 0.8452296913324735,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0065771795782026046,
+      "n": 14296,
+      "p_value": 0.43166480192477286,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.005509142865108752,
+      "n": 16895,
+      "p_value": 0.47396969407958245,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0033674116886804615,
+      "n": 18397,
+      "p_value": 0.6478788074188009,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.00447455529839957,
+      "n": 18879,
+      "p_value": 0.538706508617933,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.010793211243240218,
+      "n": 18787,
+      "p_value": 0.1390538846546562,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.007894376175179752,
+      "n": 20319,
+      "p_value": 0.2604831015377934,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.007497233263483907,
+      "n": 22911,
+      "p_value": 0.25647431928135256,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.005307442829374718,
+      "n": 24117,
+      "p_value": 0.40983142150003515,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.002367008232033796,
+      "n": 22307,
+      "p_value": 0.7237092331047112,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.004061851902778533,
+      "n": 21812,
+      "p_value": 0.5486006216652339,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0012805442668995838,
+      "n": 23241,
+      "p_value": 0.8452296913324735,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.006192887174948852,
+      "n": 14314,
+      "p_value": 0.45877443897575165,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.004828265777516009,
+      "n": 16915,
+      "p_value": 0.5300627057966851,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.019229979475777967,
+      "n": 18407,
+      "p_value": 0.009079622809858325,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.009402979245674233,
+      "n": 18904,
+      "p_value": 0.19608861339987066,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.011887754004023086,
+      "n": 18841,
+      "p_value": 0.1027442835793857,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.009913597661113181,
+      "n": 20346,
+      "p_value": 0.15735675220629133,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.018032061282069942,
+      "n": 22934,
+      "p_value": 0.006317233850935895,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.016959200505668653,
+      "n": 24136,
+      "p_value": 0.008418821599529716,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.005218396690502559,
+      "n": 22329,
+      "p_value": 0.43554334123892036,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.007941342042704838,
+      "n": 21825,
+      "p_value": 0.2407362483487552,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.0028766072344264203,
+      "n": 23246,
+      "p_value": 0.6609780359908585,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.006192887174948852,
+      "n": 14314,
+      "p_value": 0.45877443897575165,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.004828265777516009,
+      "n": 16915,
+      "p_value": 0.5300627057966851,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.019229979475777967,
+      "n": 18407,
+      "p_value": 0.009079622809858325,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.009402979245674233,
+      "n": 18904,
+      "p_value": 0.19608861339987066,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.011887754004023086,
+      "n": 18841,
+      "p_value": 0.1027442835793857,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.009913597661113181,
+      "n": 20346,
+      "p_value": 0.15735675220629133,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.018032061282069942,
+      "n": 22934,
+      "p_value": 0.006317233850935895,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.016959200505668653,
+      "n": 24136,
+      "p_value": 0.008418821599529716,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.005218396690502559,
+      "n": 22329,
+      "p_value": 0.43554334123892036,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.007941342042704838,
+      "n": 21825,
+      "p_value": 0.2407362483487552,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.0028766072344264203,
+      "n": 23246,
+      "p_value": 0.6609780359908585,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.008191370268931797,
+      "n": 14314,
+      "p_value": 0.32710801196783024,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.01008877277276838,
+      "n": 16915,
+      "p_value": 0.18950029715336453,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.01822158547444576,
+      "n": 18407,
+      "p_value": 0.013428302730848149,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.019566273416810002,
+      "n": 18904,
+      "p_value": 0.007139163513657656,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.024143865477316905,
+      "n": 18841,
+      "p_value": 0.000918692376879287,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.02586181344714621,
+      "n": 20346,
+      "p_value": 0.0002248683405240956,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.030670980829246085,
+      "n": 22934,
+      "p_value": 3.3901461753206315e-06,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.009970527053094612,
+      "n": 24136,
+      "p_value": 0.12139231106928454,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.0045189708751682345,
+      "n": 22329,
+      "p_value": 0.4995293003650947,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.007265705991759651,
+      "n": 21825,
+      "p_value": 0.283120269755565,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.0041429491532535105,
+      "n": 23246,
+      "p_value": 0.5276291729000334,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.008191370268931797,
+      "n": 14314,
+      "p_value": 0.32710801196783024,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.01008877277276838,
+      "n": 16915,
+      "p_value": 0.18950029715336453,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.01822158547444576,
+      "n": 18407,
+      "p_value": 0.013428302730848149,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.019566273416810002,
+      "n": 18904,
+      "p_value": 0.007139163513657656,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.024143865477316905,
+      "n": 18841,
+      "p_value": 0.000918692376879287,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.02586181344714621,
+      "n": 20346,
+      "p_value": 0.0002248683405240956,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.030670980829246085,
+      "n": 22934,
+      "p_value": 3.3901461753206315e-06,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.009970527053094612,
+      "n": 24136,
+      "p_value": 0.12139231106928454,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.0045189708751682345,
+      "n": 22329,
+      "p_value": 0.4995293003650947,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.007265705991759651,
+      "n": 21825,
+      "p_value": 0.283120269755565,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.0041429491532535105,
+      "n": 23246,
+      "p_value": 0.5276291729000334,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top30",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.012892494277693869,
+      "n": 10557,
+      "p_value": 0.18531491158074775,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.0031508201603350854,
+      "n": 11959,
+      "p_value": 0.730447927391257,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.01130268886989446,
+      "n": 12840,
+      "p_value": 0.200311014383232,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.010327787849792202,
+      "n": 13019,
+      "p_value": 0.23866608188030797,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.00940560938051759,
+      "n": 12922,
+      "p_value": 0.28502342765913097,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.004219040495662361,
+      "n": 13830,
+      "p_value": 0.6198091648059909,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.0008478222555218181,
+      "n": 15302,
+      "p_value": 0.9164804507365069,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.00726997009025745,
+      "n": 17097,
+      "p_value": 0.341842200062355,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.01727953769415236,
+      "n": 16050,
+      "p_value": 0.028588608261210124,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 1.3957115455499737e-06,
+      "n": 15616,
+      "p_value": 0.9998608491497756,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.001543189150512808,
+      "n": 16397,
+      "p_value": 0.8433645967575338,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.012892494277693869,
+      "n": 10557,
+      "p_value": 0.18531491158074775,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.0031508201603350854,
+      "n": 11959,
+      "p_value": 0.730447927391257,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.01130268886989446,
+      "n": 12840,
+      "p_value": 0.200311014383232,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.010327787849792202,
+      "n": 13019,
+      "p_value": 0.23866608188030797,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.00940560938051759,
+      "n": 12922,
+      "p_value": 0.28502342765913097,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.004219040495662361,
+      "n": 13830,
+      "p_value": 0.6198091648059909,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.0008478222555218181,
+      "n": 15302,
+      "p_value": 0.9164804507365069,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.00726997009025745,
+      "n": 17097,
+      "p_value": 0.341842200062355,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": -0.01727953769415236,
+      "n": 16050,
+      "p_value": 0.028588608261210124,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 1.3957115455499737e-06,
+      "n": 15616,
+      "p_value": 0.9998608491497756,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_rank",
+      "ic": 0.001543189150512808,
+      "n": 16397,
+      "p_value": 0.8433645967575338,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.004220468270325971,
+      "n": 10209,
+      "p_value": 0.6698279907917288,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.001973960363459352,
+      "n": 11745,
+      "p_value": 0.8306218326677108,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.0026261501718106107,
+      "n": 12550,
+      "p_value": 0.7686277304700482,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.014266983270534807,
+      "n": 12606,
+      "p_value": 0.10920673920977768,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.007388774876670154,
+      "n": 12426,
+      "p_value": 0.41018411513315234,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.0026150804027956593,
+      "n": 13332,
+      "p_value": 0.7627126062312606,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.007779241849293532,
+      "n": 14833,
+      "p_value": 0.34344792465230856,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.003122810335470665,
+      "n": 16852,
+      "p_value": 0.6852133995385308,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.027940514295541008,
+      "n": 15752,
+      "p_value": 0.00045295810065487543,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.014522258240058065,
+      "n": 15400,
+      "p_value": 0.0715275360567918,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0030118227119087,
+      "n": 16265,
+      "p_value": 0.7009176136308619,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.004220468270325971,
+      "n": 10209,
+      "p_value": 0.6698279907917288,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.001973960363459352,
+      "n": 11745,
+      "p_value": 0.8306218326677108,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.0026261501718106107,
+      "n": 12550,
+      "p_value": 0.7686277304700482,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.014266983270534807,
+      "n": 12606,
+      "p_value": 0.10920673920977768,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.007388774876670154,
+      "n": 12426,
+      "p_value": 0.41018411513315234,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.0026150804027956593,
+      "n": 13332,
+      "p_value": 0.7627126062312606,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.007779241849293532,
+      "n": 14833,
+      "p_value": 0.34344792465230856,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.003122810335470665,
+      "n": 16852,
+      "p_value": 0.6852133995385308,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": 0.027940514295541008,
+      "n": 15752,
+      "p_value": 0.00045295810065487543,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.014522258240058065,
+      "n": 15400,
+      "p_value": 0.0715275360567918,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_1d_lag1_rank",
+      "ic": -0.0030118227119087,
+      "n": 16265,
+      "p_value": 0.7009176136308619,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.007613814457457388,
+      "n": 10557,
+      "p_value": 0.4340868802242588,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.003157775614656601,
+      "n": 11959,
+      "p_value": 0.7298761350171712,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.004523291819351724,
+      "n": 12840,
+      "p_value": 0.6082984886026306,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.014358237179290138,
+      "n": 13019,
+      "p_value": 0.1013770703928934,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.012328582499545302,
+      "n": 12922,
+      "p_value": 0.16110376073924845,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.007141326129097137,
+      "n": 13830,
+      "p_value": 0.4010418226235618,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.0022491460544303496,
+      "n": 15302,
+      "p_value": 0.7808589818186831,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.005139886081085719,
+      "n": 17097,
+      "p_value": 0.5015686342987304,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.004892057203100255,
+      "n": 16050,
+      "p_value": 0.5354399799720965,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.009540061327591356,
+      "n": 15616,
+      "p_value": 0.23322365720307547,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.011792702359669548,
+      "n": 16397,
+      "p_value": 0.13104291115521843,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.007613814457457388,
+      "n": 10557,
+      "p_value": 0.4340868802242588,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.003157775614656601,
+      "n": 11959,
+      "p_value": 0.7298761350171712,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.004523291819351724,
+      "n": 12840,
+      "p_value": 0.6082984886026306,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.014358237179290138,
+      "n": 13019,
+      "p_value": 0.1013770703928934,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.012328582499545302,
+      "n": 12922,
+      "p_value": 0.16110376073924845,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.007141326129097137,
+      "n": 13830,
+      "p_value": 0.4010418226235618,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": 0.0022491460544303496,
+      "n": 15302,
+      "p_value": 0.7808589818186831,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.005139886081085719,
+      "n": 17097,
+      "p_value": 0.5015686342987304,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.004892057203100255,
+      "n": 16050,
+      "p_value": 0.5354399799720965,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.009540061327591356,
+      "n": 15616,
+      "p_value": 0.23322365720307547,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_rank",
+      "ic": -0.011792702359669548,
+      "n": 16397,
+      "p_value": 0.13104291115521843,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.003350735616283866,
+      "n": 10549,
+      "p_value": 0.7307645958662388,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.005799200844754328,
+      "n": 11950,
+      "p_value": 0.5261560218275774,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0054101210352283866,
+      "n": 12836,
+      "p_value": 0.5399489065404094,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.010297343031098779,
+      "n": 13002,
+      "p_value": 0.24036046299804267,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.016704614947670945,
+      "n": 12890,
+      "p_value": 0.057894962549308746,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.008954080061999405,
+      "n": 13813,
+      "p_value": 0.2926677001220348,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.007077479017456625,
+      "n": 15289,
+      "p_value": 0.38154101066267065,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0012132322107220002,
+      "n": 17088,
+      "p_value": 0.8739970467113156,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0011438278104097753,
+      "n": 16045,
+      "p_value": 0.884808678004556,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0011386885775876545,
+      "n": 15610,
+      "p_value": 0.8868774935858912,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.004691905616655522,
+      "n": 16396,
+      "p_value": 0.5480122974496866,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.003350735616283866,
+      "n": 10549,
+      "p_value": 0.7307645958662388,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.005799200844754328,
+      "n": 11950,
+      "p_value": 0.5261560218275774,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0054101210352283866,
+      "n": 12836,
+      "p_value": 0.5399489065404094,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.010297343031098779,
+      "n": 13002,
+      "p_value": 0.24036046299804267,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.016704614947670945,
+      "n": 12890,
+      "p_value": 0.057894962549308746,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.008954080061999405,
+      "n": 13813,
+      "p_value": 0.2926677001220348,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.007077479017456625,
+      "n": 15289,
+      "p_value": 0.38154101066267065,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0012132322107220002,
+      "n": 17088,
+      "p_value": 0.8739970467113156,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": 0.0011438278104097753,
+      "n": 16045,
+      "p_value": 0.884808678004556,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.0011386885775876545,
+      "n": 15610,
+      "p_value": 0.8868774935858912,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_vol_share_5d_lag1_rank",
+      "ic": -0.004691905616655522,
+      "n": 16396,
+      "p_value": 0.5480122974496866,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.0023450407194625855,
+      "n": 10557,
+      "p_value": 0.8096184265658969,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.0017377267574317256,
+      "n": 11959,
+      "p_value": 0.8492987599126489,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.018555379508959486,
+      "n": 12840,
+      "p_value": 0.035504647972198385,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.009522151727224816,
+      "n": 13019,
+      "p_value": 0.2772995206981194,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.014243864684304287,
+      "n": 12922,
+      "p_value": 0.1054265107188312,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.014519741964283116,
+      "n": 13830,
+      "p_value": 0.08773433336610428,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.013324065284418998,
+      "n": 15302,
+      "p_value": 0.09932351908023435,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.018142421989745233,
+      "n": 17097,
+      "p_value": 0.017680449548537112,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.012097261857257064,
+      "n": 16050,
+      "p_value": 0.1253937197651281,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.008085862139490665,
+      "n": 15616,
+      "p_value": 0.31231457604268537,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.010019891731383916,
+      "n": 16397,
+      "p_value": 0.19949584169111503,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.0023450407194625855,
+      "n": 10557,
+      "p_value": 0.8096184265658969,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.0017377267574317256,
+      "n": 11959,
+      "p_value": 0.8492987599126489,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.018555379508959486,
+      "n": 12840,
+      "p_value": 0.035504647972198385,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.009522151727224816,
+      "n": 13019,
+      "p_value": 0.2772995206981194,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.014243864684304287,
+      "n": 12922,
+      "p_value": 0.1054265107188312,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.014519741964283116,
+      "n": 13830,
+      "p_value": 0.08773433336610428,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.013324065284418998,
+      "n": 15302,
+      "p_value": 0.09932351908023435,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.018142421989745233,
+      "n": 17097,
+      "p_value": 0.017680449548537112,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.012097261857257064,
+      "n": 16050,
+      "p_value": 0.1253937197651281,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": -0.008085862139490665,
+      "n": 15616,
+      "p_value": 0.31231457604268537,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_buy_share_5d_rank",
+      "ic": 0.010019891731383916,
+      "n": 16397,
+      "p_value": 0.19949584169111503,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.0005193631386749273,
+      "n": 10557,
+      "p_value": 0.9574476043091165,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.004260421158411084,
+      "n": 11959,
+      "p_value": 0.641314857744156,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.025232788114289452,
+      "n": 12840,
+      "p_value": 0.004244458282747689,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.022515692035746073,
+      "n": 13019,
+      "p_value": 0.010195179167664796,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.02977854499318746,
+      "n": 12922,
+      "p_value": 0.0007104906424501367,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.026040780388109825,
+      "n": 13830,
+      "p_value": 0.0021937559614641855,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.0249734791920564,
+      "n": 15302,
+      "p_value": 0.0020050713826511675,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.018155275378700875,
+      "n": 17097,
+      "p_value": 0.017600166637175306,
+      "phase": "dev_2015_2022",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.012497937349157703,
+      "n": 16050,
+      "p_value": 0.1133566045553869,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.003850020904261721,
+      "n": 15616,
+      "p_value": 0.630461587595138,
+      "phase": "validation_2023_2024",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.01171295075816354,
+      "n": 16397,
+      "p_value": 0.13366894401441853,
+      "phase": "confirmation_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.0005193631386749273,
+      "n": 10557,
+      "p_value": 0.9574476043091165,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.004260421158411084,
+      "n": 11959,
+      "p_value": 0.641314857744156,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.025232788114289452,
+      "n": 12840,
+      "p_value": 0.004244458282747689,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.022515692035746073,
+      "n": 13019,
+      "p_value": 0.010195179167664796,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.02977854499318746,
+      "n": 12922,
+      "p_value": 0.0007104906424501367,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.026040780388109825,
+      "n": 13830,
+      "p_value": 0.0021937559614641855,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.0249734791920564,
+      "n": 15302,
+      "p_value": 0.0020050713826511675,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.018155275378700875,
+      "n": 17097,
+      "p_value": 0.017600166637175306,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.012497937349157703,
+      "n": 16050,
+      "p_value": 0.1133566045553869,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": -0.003850020904261721,
+      "n": 15616,
+      "p_value": 0.630461587595138,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_sell_share_5d_rank",
+      "ic": 0.01171295075816354,
+      "n": 16397,
+      "p_value": 0.13366894401441853,
+      "phase": "full_2015_2025",
+      "state": "room_scarcity_top20",
+      "year": 2025
+    }
+  ]
+}
