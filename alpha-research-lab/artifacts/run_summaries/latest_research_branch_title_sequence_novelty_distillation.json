@@ -1,0 +1,319 @@
+{
+  "artifacts": {
+    "articles": "artifacts/portfolio_baselines/20260409_225625_h329_title_sequence_novelty_distillation_articles.parquet",
+    "details": "artifacts/run_summaries/20260409_225625_h329_title_sequence_novelty_distillation_details.json",
+    "feature_results": "artifacts/portfolio_baselines/20260409_225625_h329_title_sequence_novelty_distillation_decay_results.parquet",
+    "holdout_confusion": "artifacts/portfolio_baselines/20260409_225625_h329_title_sequence_novelty_distillation_holdout_confusion.parquet"
+  },
+  "metadata": {
+    "holdout_year": 2017,
+    "session": 148,
+    "target_horizons": [
+      1,
+      5,
+      30
+    ]
+  },
+  "mode": "research_branch_title_sequence_novelty_distillation",
+  "name": "h329_title_sequence_novelty_distillation",
+  "summary": {
+    "alpha_contract_rows": [
+      {
+        "deterministic_hit_rate": 0.45588235294117646,
+        "deterministic_mean_ic": -0.014191014977379138,
+        "deterministic_positive_years": 1,
+        "feature_name": "follow_up",
+        "horizon": "1d",
+        "sign_preserved": false,
+        "teacher_hit_rate": 0.502127659574468,
+        "teacher_mean_ic": 0.002300641655215893,
+        "teacher_positive_years": 1
+      },
+      {
+        "deterministic_hit_rate": 0.4684873949579832,
+        "deterministic_mean_ic": 0.00525250670599938,
+        "deterministic_positive_years": 1,
+        "feature_name": "follow_up_minus_new",
+        "horizon": "5d",
+        "sign_preserved": false,
+        "teacher_hit_rate": 0.4838709677419355,
+        "teacher_mean_ic": -0.0025026426696062405,
+        "teacher_positive_years": 1
+      },
+      {
+        "deterministic_hit_rate": 0.5111111111111111,
+        "deterministic_mean_ic": 0.009191940572753857,
+        "deterministic_positive_years": 1,
+        "feature_name": "new",
+        "horizon": "30d",
+        "sign_preserved": true,
+        "teacher_hit_rate": 0.49772727272727274,
+        "teacher_mean_ic": 0.010776796713418337,
+        "teacher_positive_years": 2
+      }
+    ],
+    "artifacts": {
+      "articles": "artifacts/portfolio_baselines/20260409_225625_h329_title_sequence_novelty_distillation_articles.parquet",
+      "feature_results": "artifacts/portfolio_baselines/20260409_225625_h329_title_sequence_novelty_distillation_decay_results.parquet",
+      "holdout_confusion": "artifacts/portfolio_baselines/20260409_225625_h329_title_sequence_novelty_distillation_holdout_confusion.parquet"
+    },
+    "baseline_always_new_full": {
+      "accuracy": 0.8704351362342415,
+      "balanced_accuracy": 0.3333333333333333,
+      "confusion_matrix": [
+        {
+          "follow_up": 0,
+          "new": 10702,
+          "recycled": 0,
+          "teacher_novelty": "new"
+        },
+        {
+          "follow_up": 0,
+          "new": 799,
+          "recycled": 0,
+          "teacher_novelty": "follow_up"
+        },
+        {
+          "follow_up": 0,
+          "new": 794,
+          "recycled": 0,
+          "teacher_novelty": "recycled"
+        }
+      ],
+      "macro_f1": 0.31024336507660416,
+      "per_label": [
+        {
+          "f1": 0.9307300952298125,
+          "label": "new",
+          "precision": 0.8704351362342415,
+          "predicted_total": 12295,
+          "recall": 1.0,
+          "support": 10702,
+          "tp": 10702
+        },
+        {
+          "f1": 0.0,
+          "label": "follow_up",
+          "precision": 0.0,
+          "predicted_total": 0,
+          "recall": 0.0,
+          "support": 799,
+          "tp": 0
+        },
+        {
+          "f1": 0.0,
+          "label": "recycled",
+          "precision": 0.0,
+          "predicted_total": 0,
+          "recall": 0.0,
+          "support": 794,
+          "tp": 0
+        }
+      ],
+      "row_count": 12295
+    },
+    "baseline_always_new_holdout_2017": {
+      "accuracy": 0.8727011494252873,
+      "balanced_accuracy": 0.3333333333333333,
+      "confusion_matrix": [
+        {
+          "follow_up": 0,
+          "new": 6074,
+          "recycled": 0,
+          "teacher_novelty": "new"
+        },
+        {
+          "follow_up": 0,
+          "new": 490,
+          "recycled": 0,
+          "teacher_novelty": "follow_up"
+        },
+        {
+          "follow_up": 0,
+          "new": 396,
+          "recycled": 0,
+          "teacher_novelty": "recycled"
+        }
+      ],
+      "macro_f1": 0.3106746457981689,
+      "per_label": [
+        {
+          "f1": 0.9320239373945066,
+          "label": "new",
+          "precision": 0.8727011494252873,
+          "predicted_total": 6960,
+          "recall": 1.0,
+          "support": 6074,
+          "tp": 6074
+        },
+        {
+          "f1": 0.0,
+          "label": "follow_up",
+          "precision": 0.0,
+          "predicted_total": 0,
+          "recall": 0.0,
+          "support": 490,
+          "tp": 0
+        },
+        {
+          "f1": 0.0,
+          "label": "recycled",
+          "precision": 0.0,
+          "predicted_total": 0,
+          "recall": 0.0,
+          "support": 396,
+          "tp": 0
+        }
+      ],
+      "row_count": 6960
+    },
+    "classification_full": {
+      "accuracy": 0.8117934119560797,
+      "balanced_accuracy": 0.40168039807169914,
+      "confusion_matrix": [
+        {
+          "follow_up": 389,
+          "new": 9747,
+          "recycled": 566,
+          "teacher_novelty": "new"
+        },
+        {
+          "follow_up": 55,
+          "new": 716,
+          "recycled": 28,
+          "teacher_novelty": "follow_up"
+        },
+        {
+          "follow_up": 30,
+          "new": 585,
+          "recycled": 179,
+          "teacher_novelty": "recycled"
+        }
+      ],
+      "macro_f1": 0.4037159821375462,
+      "per_label": [
+        {
+          "f1": 0.8962758620689655,
+          "label": "new",
+          "precision": 0.8822411296162201,
+          "predicted_total": 11048,
+          "recall": 0.9107643431134368,
+          "support": 10702,
+          "tp": 9747
+        },
+        {
+          "f1": 0.08641005498821681,
+          "label": "follow_up",
+          "precision": 0.1160337552742616,
+          "predicted_total": 474,
+          "recall": 0.0688360450563204,
+          "support": 799,
+          "tp": 55
+        },
+        {
+          "f1": 0.2284620293554563,
+          "label": "recycled",
+          "precision": 0.2315653298835705,
+          "predicted_total": 773,
+          "recall": 0.22544080604534006,
+          "support": 794,
+          "tp": 179
+        }
+      ],
+      "row_count": 12295
+    },
+    "classification_holdout_2017": {
+      "accuracy": 0.8126436781609195,
+      "balanced_accuracy": 0.3971292694845073,
+      "confusion_matrix": [
+        {
+          "follow_up": 213,
+          "new": 5539,
+          "recycled": 322,
+          "teacher_novelty": "new"
+        },
+        {
+          "follow_up": 33,
+          "new": 437,
+          "recycled": 20,
+          "teacher_novelty": "follow_up"
+        },
+        {
+          "follow_up": 17,
+          "new": 295,
+          "recycled": 84,
+          "teacher_novelty": "recycled"
+        }
+      ],
+      "macro_f1": 0.39646543987959,
+      "per_label": [
+        {
+          "f1": 0.8973673552045361,
+          "label": "new",
+          "precision": 0.8832722053898899,
+          "predicted_total": 6271,
+          "recall": 0.9119196575567995,
+          "support": 6074,
+          "tp": 5539
+        },
+        {
+          "f1": 0.08764940239043824,
+          "label": "follow_up",
+          "precision": 0.12547528517110265,
+          "predicted_total": 263,
+          "recall": 0.0673469387755102,
+          "support": 490,
+          "tp": 33
+        },
+        {
+          "f1": 0.20437956204379562,
+          "label": "recycled",
+          "precision": 0.19718309859154928,
+          "predicted_total": 426,
+          "recall": 0.21212121212121213,
+          "support": 396,
+          "tp": 84
+        }
+      ],
+      "row_count": 6960
+    },
+    "deterministic_label_share": {
+      "follow_up": 0.03855225701504677,
+      "new": 0.8985766571777145,
+      "recycled": 0.06287108580723871
+    },
+    "holdout_follow_up_metrics": {
+      "f1": 0.08764940239043824,
+      "label": "follow_up",
+      "precision": 0.12547528517110265,
+      "predicted_total": 263,
+      "recall": 0.0673469387755102,
+      "support": 490,
+      "tp": 33
+    },
+    "holdout_macro_f1_delta_vs_always_new": 0.0857907940814211,
+    "preserved_alpha_contracts": 1,
+    "rule_constants": {
+      "followup_story_gap_days": 7,
+      "lookback_days": 45,
+      "recycled_combined_threshold": 0.7,
+      "recycled_story_count_threshold": 4,
+      "recycled_summary_threshold": 0.85,
+      "story_sim_threshold": 0.22
+    },
+    "teacher_label_share": {
+      "follow_up": 0.06498576657177714,
+      "new": 0.8704351362342415,
+      "recycled": 0.06457909719398129
+    },
+    "teacher_window": {
+      "article_rows": 12295,
+      "date_max": "2018-01-03T00:00:00",
+      "date_min": "2015-09-21T00:00:00",
+      "days": 728,
+      "tickers_covered": 2073
+    },
+    "verdict": "MIXED"
+  },
+  "ts": "20260409_225625"
+}

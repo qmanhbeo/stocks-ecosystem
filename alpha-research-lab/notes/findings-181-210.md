@@ -2861,3 +2861,68 @@ must be a materially different thesis such as:
 - ownership-regime transitions
 - near-limit foreign-room discontinuities
 - sector-specific foreign ownership pressure
+
+## F249: H329 Shows Title-Sequence Novelty Distillation Recovers Some Teacher Structure But Does Not Preserve The Short-Horizon Novelty Contract (2026-04-09, Session 148)
+
+Session 148 ran the first honest cheap non-API continuation from the LLM-news
+branch:
+- do not retry the dead keyword-sentiment path
+- do not claim a full deterministic replacement up front
+- test whether deterministic title / summary / article-sequence rules can
+  recover enough of the saved LLM novelty labels to preserve the novelty
+  half-life evidence from `H290/H291`
+
+The teacher surface was restricted to ticker-tagged cached rows with usable
+novelty labels:
+- teacher article rows:
+  - `12,295`
+- teacher cached days:
+  - `728`
+- teacher date range:
+  - `2015-09-21` to `2018-01-03`
+- holdout slice:
+  - `2017`
+
+The deterministic classifier did recover real novelty structure versus a naive
+baseline:
+- holdout macro-F1:
+  - `0.3965`
+- naive `always_new` macro-F1:
+  - `0.3107`
+- holdout macro-F1 delta:
+  - `+0.0858`
+- holdout balanced accuracy:
+  - `0.3971`
+
+But the hard short-horizon novelty state remained weak:
+- holdout `follow_up` precision:
+  - `0.1255`
+- holdout `follow_up` recall:
+  - `0.0673`
+- holdout `follow_up` F1:
+  - `0.0876`
+
+The more important test was whether the reconstructed novelty labels preserved
+the saved teacher-alpha directions:
+- preserved key contracts:
+  - `1 / 3`
+- `1d follow_up` teacher / deterministic IC:
+  - `+0.0023 / -0.0142`
+- `5d follow_up_minus_new` teacher / deterministic IC:
+  - `-0.0025 / +0.0053`
+- `30d new` teacher / deterministic IC:
+  - `+0.0108 / +0.0092`
+
+### Key finding
+Title-sequence novelty distillation is not a dead end, because it recovers
+meaningful teacher-label structure above a naive baseline. But it is not strong
+enough to replace the LLM novelty branch on its own: the key `follow_up`
+bucket remains too lossy, and only one of the three key novelty contracts keeps
+the teacher sign.
+
+**Implication:** do not continue retuning novelty-only deterministic rules in
+isolation. If the cheap branch continues, move to:
+- hybrid deterministic-first routing with API only for ambiguous rows
+- broader teacher-state distillation on more lexical fields such as
+  `event_type`, `expectation_alignment`, `impact_scope`, and
+  `source_authority`

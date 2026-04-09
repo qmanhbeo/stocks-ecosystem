@@ -12,6 +12,190 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 2. `llm-feature-refresh` — only after cache reaches the active-book years (`2018+`), rebuild `xs_llm_news_ticker_day.parquet`, rerun `H294`, and then reconsider `news-marginal-slot`.
 3. `intraday-shape-disagreement-review` — only if an offline side branch is intentionally reopened before the LLM cache is ready. Use the `H299` winners (`fade_tension_disagreement`, `intraday_shape_core_disagreement`) as observed-subset candidate-library review inputs. Do not publish them or route them live yet.
 4. `foreign-room-transition-audit` — only if continuing `H95`. Session 147 acquired and source-audited CafeF historical foreign flow, but `H327/H328` rejected raw buy/sell/net flow ranks and high-participation / room-scarcity conditioning. A continuation must test a different thesis such as room-change events or ownership-regime transitions.
+5. `hybrid-news-cascade-audit` — only if intentionally continuing the cheap non-API news branch before the full LLM cache is ready. `H329` showed title-sequence novelty rules improve over the naive baseline, but they do not preserve the short-horizon novelty contracts well enough for full replacement. The next honest step is hybrid routing or broader teacher-state distillation, not another novelty-only retune.
+
+---
+
+## Bright-Mind Follow-Up — Foreign-State Queue (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`. `H327/H328` killed raw buy/sell/net
+rank continuations, but they did **not** kill foreign-state mechanics,
+discontinuities, or interaction branches.
+
+1. `room-residual-discontinuity`
+   - claim: the usable foreign signal is in days where `foreign_room_remaining`
+     changes in a way that ordinary net trading cannot explain, because those
+     are ownership-regime / corporate-action / special-situation events rather
+     than simple flow
+   - why now: the raw panel shows room mechanics are exact on most days, but
+     there are giant residual reset events that raw rank screens collapse into
+     noise
+   - smallest honest next test: compute `room_delta + foreign_net_volume`,
+     separate idiosyncratic residual shocks from cross-market reset dates, and
+     test signed post-event drift on `T+1` / `T+5`
+
+2. `foreign-accumulation-change-point`
+   - claim: the real edge may be the first room-tightening / accumulation burst
+     after dormancy, or the acceleration of a tightening sequence, not another
+     1d / 5d flow share rank
+   - why now: `H321` passed on event self-excitation while `H327/H328` failed on
+     raw levels; the same representation shift may be needed for foreign-state
+     data
+   - smallest honest next test: build dormant-to-active, tightening-streak, and
+     acceleration states from room deltas and compare them against matched raw
+     flow controls
+
+3. `foreign-friction-interaction`
+   - claim: foreign room pressure only matters when the name is already inside a
+     real execution-friction state such as ceiling pressure, opening-gap
+     continuation, or blocked-buy risk
+   - why now: room scarcity nearly passed alone, and the lab's surviving
+     non-LLM edges already live in auction / queue / friction mechanics rather
+     than plain daily direction
+   - smallest honest next test: interact room-tightening / low-room states with
+     `xs_ceiling_count_*`, `oc_asym_*`, and tradability flags, then compare the
+     conditioned edge versus the standalone friction features
+
+4. `foreign-insider-agreement`
+   - claim: foreign-state transitions may only matter when they agree with the
+     surviving insider-conviction branch; agreement could mark real informed
+     accumulation and disagreement could mark distribution / false positives
+   - why now: `C5` is one of the strongest sparse independent signals, and no
+     branch has yet tested CafeF room mechanics as a conditioner on insider
+     buying or recent major-holder filings
+   - smallest honest next test: on positive `C5` / recent insider-filing rows,
+     compare subsequent returns for room-tightening, neutral, and room-loosening
+     names
+
+5. `systemic-room-reset-regime`
+   - claim: the foreign branch may be partly a date-level regime problem rather
+     than a stock-level rank problem; days with broad room resets could mark
+     policy, accounting, or market-structure transitions that change which
+     sectors and signals work
+   - why now: the raw panel shows extreme cross-market reset clusters on dates
+     like `2022-09-15` and `2022-09-16`, and the old VNM ETF branch already
+     hinted that foreign variables may live better as market-state than as stock
+     rank
+   - smallest honest next test: build a date-level systemic room-reset score
+     from cross-sectional residual counts and test whether it conditions `S1`,
+     sector rotation, or activation efficacy
+
+---
+
+## Bright-Mind Follow-Up — Cheap LLM Surrogate Queue (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`. The idea is not to revive the dead
+keyword-sentiment path. The idea is to distill the specific structured LLM news
+states that showed edge on the `2015-2017` nonzero window. `H329` already
+tested the pure title-sequence novelty line and left it mixed: better than the
+naive baseline on held-out teacher labels, but not enough to preserve the
+short-horizon novelty-alpha contracts cleanly.
+
+1. `teacher-distilled-news-state`
+   - claim: the cheapest viable non-API continuation is to treat the existing
+     `2015-09-21` to `2017-12-22` LLM cache as weak teacher labels and learn an
+     interpretable surrogate for the highest-value state fields
+   - why now: `H281` killed pooled sentiment, but `H290/H291` say the usable
+     edge lives in novelty / alignment buckets such as `follow_up` and
+     `miss__new`, not in raw polarity
+   - smallest honest next test: fit simple title+summary+metadata rules or
+     decision lists for `information_novelty`, `expectation_alignment`, and
+     `source_authority`, then test whether the rebuilt ticker-day features
+     preserve the sign of the saved `H290/H291` buckets on a held-out slice of
+     the teacher window
+
+2. `hybrid-news-cascade`
+   - claim: the best cost-saving contract may be deterministic-first and
+     paid-API-only-for-ambiguous-cases, not full replacement
+   - why now: many LLM labels look lexical enough for cheap routing, but a
+     minority of articles will stay genuinely semantic or ambiguous
+   - smallest honest next test: score rule coverage / confidence on the current
+     teacher window, route only low-confidence articles to the canonical LLM
+     schema, and estimate article-share and token-share saved versus full API
+
+3. `title-sequence-novelty`
+   - claim: `follow_up` versus `new` may be reproducible mostly from title
+     similarity, ticker overlap, and recent article sequence state rather than
+     from a general-purpose LLM
+   - why now: `H290/H291` say novelty is one of the main surviving LLM state
+     variables, and novelty is more structural than sentiment
+   - smallest honest next test: cluster recent article titles by ticker and
+     lexical similarity, label `new/follow_up/recycled` deterministically, then
+     compare those states against the saved LLM novelty labels and bucket edges
+   - current status: `H329` came back `MIXED`; do not keep retuning this line
+     in isolation
+
+4. `deterministic-event-family-router`
+   - claim: a structured event-family and expectation router may be more useful
+     than trying to clone all LLM outputs; the lab may only need a few fields
+     that map cleanly into market-relevant article families
+   - why now: the current builder already turns the cache into a small set of
+     ticker-day state columns, and several of those classes are naturally tied
+     to explicit finance language such as board changes, contract wins, misses,
+     legal issues, or official filings
+   - smallest honest next test: build a deterministic extractor for
+     `event_type`, `expectation_alignment`, `impact_scope`, and
+     `source_authority`, then test whether those rebuilt 5d counts recover the
+     strongest old LLM subfamilies better than the legacy sentiment lexicon
+
+5. `surrogate-disagreement-residual`
+   - claim: the gap between a cheap deterministic student and the teacher may
+     itself be informative, with disagreement marking ambiguous or unusually
+     non-template news
+   - why now: `H299` only survived as disagreement residuals, and the same
+     pattern may hold for language: easy-template news is cheap to classify,
+     while ambiguous articles may carry the real incremental information
+   - smallest honest next test: build the deterministic surrogate first, then
+     test whether high surrogate-teacher disagreement predicts stronger or more
+     unstable post-news reactions on the `2015-2017` teacher window
+
+---
+
+## Session 148 — Title-Sequence Novelty Distillation (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`, but it answers the first honest
+cheap-LLM surrogate pass on the current teacher window.
+
+1. `title-sequence-novelty-distillation`
+   - `H329` result: `MIXED`
+   - deterministic title / summary / sequence rules did improve novelty-class
+     reconstruction versus the naive `always_new` baseline on held-out `2017`:
+     - holdout macro-F1 `0.3965` vs baseline `0.3107`
+     - holdout macro-F1 delta `+0.0858`
+     - holdout balanced accuracy `0.3971` vs baseline `0.3333`
+   - but the hard class remained weak:
+     - holdout `follow_up` precision / recall / F1 `0.1255 / 0.0673 / 0.0876`
+   - the deterministic labels did not preserve the short-horizon teacher
+     novelty contracts cleanly:
+     - preserved key contracts `1 / 3`
+     - only `30d new` kept the teacher sign
+     - `1d follow_up` flipped negative
+   - branch consequence: pure novelty-only deterministic replacement is not
+     strong enough on the current heuristic; if the cheap-LLM line continues,
+     move to hybrid routing or broader teacher-state distillation rather than
+     keep retuning novelty alone
+
+2. `hybrid-news-cascade`
+   - claim: the practical cost-saving path is likely deterministic-first,
+     paid-API-only-for-ambiguous-cases, not full deterministic replacement
+   - why now: `H329` shows there is real recoverable structure in novelty, but
+     the short-horizon alpha survives poorly once the hard `follow_up` rows are
+     approximated too crudely
+   - smallest honest next test: use the `H329` rule outputs as a confidence
+     screen, route only low-confidence / disagreement rows to the canonical LLM
+     schema, and estimate token-share saved versus full API
+
+3. `deterministic-event-family-router`
+   - claim: the first non-novelty surrogate may be easier than novelty itself,
+     because event-family / authority / expectation buckets map more directly to
+     explicit finance language
+   - why now: `H329` suggests the cheap branch can recover some structure, but
+     novelty alone is too lossy; a more lexical teacher field may distill more
+     cleanly
+   - smallest honest next test: rebuild `event_type`,
+     `expectation_alignment`, `impact_scope`, and `source_authority`
+     deterministically on the same teacher window and compare them with both the
+     saved teacher labels and the old keyword baseline
 
 ---
 
