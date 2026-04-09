@@ -1,0 +1,172 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260408_192123_h300_vn30_boundary_pressure_details.json",
+    "panel": "artifacts/portfolio_baselines/20260408_192123_h300_vn30_boundary_pressure_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260408_192123_h300_vn30_boundary_pressure_results.parquet"
+  },
+  "metadata": {
+    "session": 128,
+    "years": [
+      2015,
+      2025
+    ]
+  },
+  "mode": "research_branch_vn30_boundary_pressure",
+  "name": "h300_vn30_boundary_pressure",
+  "summary": {
+    "best_interaction": {
+      "candidate_decision": "PASSED",
+      "confirmation_avg_ic": 0.09937879755423576,
+      "dev_avg_ic": 0.10997198104257677,
+      "feature_group": "interaction",
+      "feature_name": "s1_x_add_pressure",
+      "formula": "rank(S1) * rank(add_pressure)",
+      "phase_details": {
+        "confirmation": {
+          "avg_ic": 0.09937879755423576,
+          "dates": 249,
+          "days": 249,
+          "hit_rate": 0.8955823293172691,
+          "rows": 87117
+        },
+        "dev": {
+          "avg_ic": 0.10997198104257677,
+          "dates": 2000,
+          "days": 2000,
+          "hit_rate": 0.9075,
+          "rows": 568029
+        },
+        "validation": {
+          "avg_ic": 0.09939527460064085,
+          "dates": 499,
+          "days": 499,
+          "hit_rate": 0.9078156312625251,
+          "rows": 171258
+        }
+      },
+      "validation_avg_ic": 0.09939527460064085
+    },
+    "best_raw_vn30_feature": {
+      "candidate_decision": "MIXED",
+      "confirmation_avg_ic": 0.010308392189943831,
+      "dev_avg_ic": 0.009719477071461893,
+      "feature_group": "raw_vn30",
+      "feature_name": "rank_change_rank",
+      "formula": "rank(xs_vn30_rank_change_5d)",
+      "phase_details": {
+        "confirmation": {
+          "avg_ic": 0.010308392189943831,
+          "dates": 249,
+          "days": 249,
+          "hit_rate": 0.5461847389558233,
+          "rows": 87117
+        },
+        "dev": {
+          "avg_ic": 0.009719477071461893,
+          "dates": 2000,
+          "days": 2000,
+          "hit_rate": 0.5565,
+          "rows": 568029
+        },
+        "validation": {
+          "avg_ic": 0.00256502356847935,
+          "dates": 499,
+          "days": 499,
+          "hit_rate": 0.5390781563126252,
+          "rows": 171258
+        }
+      },
+      "validation_avg_ic": 0.00256502356847935
+    },
+    "branch_decision": "Boundary pressure is directionally real but too weak or too local to reopen the VN30 branch broadly.",
+    "c13_boundary_uplift": -0.019004559022727522,
+    "cohort_summary": {
+      "c13_rank": {
+        "boundary": {
+          "avg_ic": 0.021715374641588615,
+          "days": 2745,
+          "mean_universe_size": 60.703784570596795
+        },
+        "rest": {
+          "avg_ic": 0.04071993366431614,
+          "days": 2748,
+          "mean_universe_size": 240.0254730713246
+        }
+      },
+      "s1_rank": {
+        "boundary": {
+          "avg_ic": 0.07480603439518388,
+          "days": 2745,
+          "mean_universe_size": 60.703784570596795
+        },
+        "rest": {
+          "avg_ic": 0.16714650988925173,
+          "days": 2748,
+          "mean_universe_size": 240.0254730713246
+        }
+      }
+    },
+    "hypothesis": "Large-cap level is weak, but VN30 boundary pressure may still matter as a recipient-state overlay on top of S1 or C13.",
+    "s1_boundary_uplift": -0.09234047549406785,
+    "tested_rows": [
+      {
+        "candidate_decision": "PASSED",
+        "confirmation_avg_ic": 0.09937879755423576,
+        "dev_avg_ic": 0.10997198104257677,
+        "feature_group": "interaction",
+        "feature_name": "s1_x_add_pressure",
+        "validation_avg_ic": 0.09939527460064085
+      },
+      {
+        "candidate_decision": "PASSED",
+        "confirmation_avg_ic": 0.07943937951157938,
+        "dev_avg_ic": 0.0748254732106148,
+        "feature_group": "interaction",
+        "feature_name": "s1_x_boundary",
+        "validation_avg_ic": 0.08275880653393458
+      },
+      {
+        "candidate_decision": "PASSED",
+        "confirmation_avg_ic": 0.033735465743512355,
+        "dev_avg_ic": 0.02708951134549848,
+        "feature_group": "interaction",
+        "feature_name": "c13_x_add_pressure",
+        "validation_avg_ic": 0.03235676992843426
+      },
+      {
+        "candidate_decision": "PASSED",
+        "confirmation_avg_ic": 0.02318768833539472,
+        "dev_avg_ic": -0.0016503722448280485,
+        "feature_group": "interaction",
+        "feature_name": "c13_x_boundary",
+        "validation_avg_ic": 0.02921382110495554
+      },
+      {
+        "candidate_decision": "MIXED",
+        "confirmation_avg_ic": 0.010308392189943831,
+        "dev_avg_ic": 0.009719477071461893,
+        "feature_group": "raw_vn30",
+        "feature_name": "rank_change_rank",
+        "validation_avg_ic": 0.00256502356847935
+      },
+      {
+        "candidate_decision": "FAILED",
+        "confirmation_avg_ic": 0.013870432742035522,
+        "dev_avg_ic": 0.006503387038392628,
+        "feature_group": "raw_vn30",
+        "feature_name": "add_pressure_rank",
+        "validation_avg_ic": -0.0019727968621925675
+      },
+      {
+        "candidate_decision": "FAILED",
+        "confirmation_avg_ic": -0.001513426870676919,
+        "dev_avg_ic": -0.02559714765935951,
+        "feature_group": "raw_vn30",
+        "feature_name": "boundary_rank",
+        "validation_avg_ic": -0.007331574321470369
+      }
+    ],
+    "verdict": "MIXED"
+  },
+  "ts": "20260408_192123"
+}

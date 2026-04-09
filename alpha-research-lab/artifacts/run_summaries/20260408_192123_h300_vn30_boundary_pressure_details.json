@@ -1,0 +1,155 @@
+{
+  "verdict": "MIXED",
+  "hypothesis": "Large-cap level is weak, but VN30 boundary pressure may still matter as a recipient-state overlay on top of S1 or C13.",
+  "best_interaction": {
+    "feature_name": "s1_x_add_pressure",
+    "feature_group": "interaction",
+    "formula": "rank(S1) * rank(add_pressure)",
+    "candidate_decision": "PASSED",
+    "dev_avg_ic": 0.10997198104257677,
+    "validation_avg_ic": 0.09939527460064085,
+    "confirmation_avg_ic": 0.09937879755423576,
+    "phase_details": {
+      "dev": {
+        "rows": 568029,
+        "dates": 2000,
+        "avg_ic": 0.10997198104257677,
+        "hit_rate": 0.9075,
+        "days": 2000
+      },
+      "validation": {
+        "rows": 171258,
+        "dates": 499,
+        "avg_ic": 0.09939527460064085,
+        "hit_rate": 0.9078156312625251,
+        "days": 499
+      },
+      "confirmation": {
+        "rows": 87117,
+        "dates": 249,
+        "avg_ic": 0.09937879755423576,
+        "hit_rate": 0.8955823293172691,
+        "days": 249
+      }
+    }
+  },
+  "best_raw_vn30_feature": {
+    "feature_name": "rank_change_rank",
+    "feature_group": "raw_vn30",
+    "formula": "rank(xs_vn30_rank_change_5d)",
+    "candidate_decision": "MIXED",
+    "dev_avg_ic": 0.009719477071461893,
+    "validation_avg_ic": 0.00256502356847935,
+    "confirmation_avg_ic": 0.010308392189943831,
+    "phase_details": {
+      "dev": {
+        "rows": 568029,
+        "dates": 2000,
+        "avg_ic": 0.009719477071461893,
+        "hit_rate": 0.5565,
+        "days": 2000
+      },
+      "validation": {
+        "rows": 171258,
+        "dates": 499,
+        "avg_ic": 0.00256502356847935,
+        "hit_rate": 0.5390781563126252,
+        "days": 499
+      },
+      "confirmation": {
+        "rows": 87117,
+        "dates": 249,
+        "avg_ic": 0.010308392189943831,
+        "hit_rate": 0.5461847389558233,
+        "days": 249
+      }
+    }
+  },
+  "cohort_summary": {
+    "s1_rank": {
+      "boundary": {
+        "avg_ic": 0.07480603439518388,
+        "days": 2745,
+        "mean_universe_size": 60.703784570596795
+      },
+      "rest": {
+        "avg_ic": 0.16714650988925173,
+        "days": 2748,
+        "mean_universe_size": 240.0254730713246
+      }
+    },
+    "c13_rank": {
+      "boundary": {
+        "avg_ic": 0.021715374641588615,
+        "days": 2745,
+        "mean_universe_size": 60.703784570596795
+      },
+      "rest": {
+        "avg_ic": 0.04071993366431614,
+        "days": 2748,
+        "mean_universe_size": 240.0254730713246
+      }
+    }
+  },
+  "s1_boundary_uplift": -0.09234047549406785,
+  "c13_boundary_uplift": -0.019004559022727522,
+  "tested_rows": [
+    {
+      "feature_name": "s1_x_add_pressure",
+      "feature_group": "interaction",
+      "candidate_decision": "PASSED",
+      "dev_avg_ic": 0.10997198104257677,
+      "validation_avg_ic": 0.09939527460064085,
+      "confirmation_avg_ic": 0.09937879755423576
+    },
+    {
+      "feature_name": "s1_x_boundary",
+      "feature_group": "interaction",
+      "candidate_decision": "PASSED",
+      "dev_avg_ic": 0.0748254732106148,
+      "validation_avg_ic": 0.08275880653393458,
+      "confirmation_avg_ic": 0.07943937951157938
+    },
+    {
+      "feature_name": "c13_x_add_pressure",
+      "feature_group": "interaction",
+      "candidate_decision": "PASSED",
+      "dev_avg_ic": 0.02708951134549848,
+      "validation_avg_ic": 0.03235676992843426,
+      "confirmation_avg_ic": 0.033735465743512355
+    },
+    {
+      "feature_name": "c13_x_boundary",
+      "feature_group": "interaction",
+      "candidate_decision": "PASSED",
+      "dev_avg_ic": -0.0016503722448280485,
+      "validation_avg_ic": 0.02921382110495554,
+      "confirmation_avg_ic": 0.02318768833539472
+    },
+    {
+      "feature_name": "rank_change_rank",
+      "feature_group": "raw_vn30",
+      "candidate_decision": "MIXED",
+      "dev_avg_ic": 0.009719477071461893,
+      "validation_avg_ic": 0.00256502356847935,
+      "confirmation_avg_ic": 0.010308392189943831
+    },
+    {
+      "feature_name": "add_pressure_rank",
+      "feature_group": "raw_vn30",
+      "candidate_decision": "FAILED",
+      "dev_avg_ic": 0.006503387038392628,
+      "validation_avg_ic": -0.0019727968621925675,
+      "confirmation_avg_ic": 0.013870432742035522
+    },
+    {
+      "feature_name": "boundary_rank",
+      "feature_group": "raw_vn30",
+      "candidate_decision": "FAILED",
+      "dev_avg_ic": -0.02559714765935951,
+      "validation_avg_ic": -0.007331574321470369,
+      "confirmation_avg_ic": -0.001513426870676919
+    }
+  ],
+  "branch_decision": "Boundary pressure is directionally real but too weak or too local to reopen the VN30 branch broadly."
+}

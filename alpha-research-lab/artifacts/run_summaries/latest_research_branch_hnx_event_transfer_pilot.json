@@ -1,0 +1,39 @@
+{
+  "artifacts": {
+    "combined_alias_map": "artifacts/timing_data/20260409_120129_h316_hnx_event_transfer_pilot_combined_alias_map.parquet",
+    "combined_assignments": "artifacts/timing_data/20260409_120129_h316_hnx_event_transfer_pilot_combined_assignments.parquet",
+    "combined_holdout": "artifacts/timing_data/20260409_120129_h316_hnx_event_transfer_pilot_combined_holdout.parquet",
+    "details": "artifacts/run_summaries/20260409_120129_h316_hnx_event_transfer_pilot_details.json",
+    "metadata_alias_map": "artifacts/timing_data/20260409_120129_h316_hnx_event_transfer_pilot_metadata_alias_map.parquet",
+    "strict_alias_map": "artifacts/timing_data/20260409_120129_h316_hnx_event_transfer_pilot_strict_alias_map.parquet"
+  },
+  "metadata": {
+    "branch_contract": "HNX transfer only advances if issuer-validated mapping maintains high holdout precision with enough coverage to matter.",
+    "session": 136
+  },
+  "mode": "research_branch_hnx_event_transfer_pilot",
+  "name": "h316_hnx_event_transfer_pilot",
+  "summary": {
+    "branch_decision": "HNX event-title coverage is still too thin for an honest transfer judgment.",
+    "combined_holdout_summary": {
+      "assigned_precision": 1.0,
+      "assigned_rows": 3,
+      "assigned_share": 0.17647058823529413,
+      "holdout_rows": 17
+    },
+    "combined_unique_articles": 950,
+    "combined_unique_tickers": 48,
+    "decision": "SKIP",
+    "hnx_ticker_count": 402,
+    "skipped": true,
+    "strict_holdout_summary": {
+      "assigned_precision": 1.0,
+      "assigned_rows": 3,
+      "assigned_share": 0.17647058823529413,
+      "holdout_rows": 17
+    },
+    "training_title_rows": 94,
+    "validated_metadata_alias_count": 0
+  },
+  "ts": "20260409_120129"
+}

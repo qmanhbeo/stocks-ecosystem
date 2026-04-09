@@ -1,0 +1,147 @@
+{
+  "artifacts": {
+    "alias_assignments": "artifacts/timing_data/20260408_192103_h301_cafef_event_surface_v2_pilot_alias_assignments.parquet",
+    "alias_holdout": "artifacts/timing_data/20260408_192103_h301_cafef_event_surface_v2_pilot_alias_holdout.parquet",
+    "alias_map": "artifacts/timing_data/20260408_192103_h301_cafef_event_surface_v2_pilot_alias_map.parquet",
+    "expanded_article_events": "artifacts/timing_data/20260408_192103_h301_cafef_event_surface_v2_pilot_expanded_article_events.parquet",
+    "first_public": "artifacts/timing_data/20260408_192103_h301_cafef_event_surface_v2_pilot_first_public.parquet",
+    "pilot_surface": "artifacts/timing_data/20260408_192103_h301_cafef_event_surface_v2_pilot_pilot_surface.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Data-first event pilot only; no predictive claim yet.",
+    "session": 128
+  },
+  "mode": "research_branch_cafef_event_surface_v2_pilot",
+  "name": "h301_cafef_event_surface_v2_pilot",
+  "summary": {
+    "alias_holdout_summary": {
+      "assigned_precision": 0.9882352941176471,
+      "assigned_rows": 85,
+      "assigned_share": 0.4381443298969072,
+      "holdout_rows": 194
+    },
+    "analysis_window": {
+      "end_date": "2025-12-31",
+      "start_date": "2023-01-01"
+    },
+    "branch_decision": "Pilot extraction is real and richer than the seed, but still too sparse to open a predictive branch yet.",
+    "candidate_source": "cafef_company_news_archive_event_surface_v2_pilot",
+    "decision": "MIXED",
+    "first_public_rows": 5177,
+    "novelty_vs_v1": {
+      "candidate_daily_rows": 3429,
+      "family_novelty": {
+        "board_management": {
+          "novel_rows": 1367,
+          "novel_share": 0.7236633139227104,
+          "rows": 1889
+        },
+        "buyback": {
+          "novel_rows": 26,
+          "novel_share": 0.6190476190476191,
+          "rows": 42
+        },
+        "earnings_company": {
+          "novel_rows": 1496,
+          "novel_share": 0.7559373420919656,
+          "rows": 1979
+        },
+        "rights_issuance": {
+          "novel_rows": 437,
+          "novel_share": 0.6743827160493827,
+          "rows": 648
+        },
+        "shareholder_meeting": {
+          "novel_rows": 462,
+          "novel_share": 0.7463651050080775,
+          "rows": 619
+        }
+      },
+      "novel_daily_rows_vs_v1": 2554,
+      "novel_daily_share_vs_v1": 0.7448235637212015,
+      "rows_with_v1_company_proxy": 875
+    },
+    "pilot_held_window_coverage": {
+      "recent_board_management_1d": 0.005298013245033113,
+      "recent_board_management_20d": 0.030022075055187638,
+      "recent_board_management_5d": 0.020309050772626933,
+      "recent_buyback_1d": 0.0,
+      "recent_buyback_20d": 0.0,
+      "recent_buyback_5d": 0.0,
+      "recent_earnings_company_1d": 0.004415011037527594,
+      "recent_earnings_company_20d": 0.024724061810154525,
+      "recent_earnings_company_5d": 0.01545253863134658,
+      "recent_has_company_event_article_1d": 0.006181015452538631,
+      "recent_has_company_event_article_20d": 0.03532008830022075,
+      "recent_has_company_event_article_5d": 0.022958057395143488,
+      "recent_rights_issuance_1d": 0.0008830022075055188,
+      "recent_rights_issuance_20d": 0.003532008830022075,
+      "recent_rights_issuance_5d": 0.0030905077262693157,
+      "recent_shareholder_meeting_1d": 0.0026490066225165563,
+      "recent_shareholder_meeting_20d": 0.017218543046357615,
+      "recent_shareholder_meeting_5d": 0.009271523178807948
+    },
+    "pilot_summary": {
+      "archive_window": {
+        "end_date": "2025-12-31",
+        "start_date": "2023-01-01"
+      },
+      "candidate_article_rows": 5692,
+      "candidate_unique_articles": 3933,
+      "candidate_unique_tickers": 190,
+      "family_qualified_article_share": 0.8528241845664281,
+      "linkage_modes": {
+        "title_alias_rows": 3958,
+        "title_alias_unique_articles": 2861,
+        "title_alias_unique_tickers": 57,
+        "title_ticker_rows": 1734
+      },
+      "timestamp_coverage": 1.0,
+      "timestamped_title_ticker_articles": 1257,
+      "title_ticker_articles": 1257,
+      "total_articles_scanned": 312488
+    },
+    "pilot_surface_rows": 258375,
+    "pilot_surface_tickers": 394,
+    "seed_held_window_coverage": {
+      "recent_board_management_1d": 0.0013245033112582781,
+      "recent_board_management_20d": 0.006181015452538631,
+      "recent_board_management_5d": 0.004856512141280353,
+      "recent_buyback_1d": 0.0,
+      "recent_buyback_20d": 0.0,
+      "recent_buyback_5d": 0.0,
+      "recent_earnings_company_1d": 0.002207505518763797,
+      "recent_earnings_company_20d": 0.011479028697571744,
+      "recent_earnings_company_5d": 0.0075055187637969095,
+      "recent_has_company_event_article_1d": 0.002207505518763797,
+      "recent_has_company_event_article_20d": 0.011479028697571744,
+      "recent_has_company_event_article_5d": 0.0075055187637969095,
+      "recent_rights_issuance_1d": 0.0004415011037527594,
+      "recent_rights_issuance_20d": 0.0008830022075055188,
+      "recent_rights_issuance_5d": 0.0008830022075055188,
+      "recent_shareholder_meeting_1d": 0.0004415011037527594,
+      "recent_shareholder_meeting_20d": 0.0017660044150110375,
+      "recent_shareholder_meeting_5d": 0.0017660044150110375
+    },
+    "seed_summary": {
+      "archive_window": {
+        "end_date": "2025-12-31",
+        "start_date": "2023-01-01"
+      },
+      "candidate_article_rows": 1734,
+      "candidate_unique_articles": 1072,
+      "candidate_unique_tickers": 190,
+      "family_qualified_article_share": 0.8528241845664281,
+      "timestamp_coverage": 1.0,
+      "timestamped_title_ticker_articles": 1257,
+      "title_ticker_articles": 1257,
+      "total_articles_scanned": 312488
+    },
+    "v1_held_window_coverage": {
+      "recent_has_company_proxy_v1_1d": 0.08167770419426049,
+      "recent_has_company_proxy_v1_20d": 0.1955849889624724,
+      "recent_has_company_proxy_v1_5d": 0.1554083885209713
+    }
+  },
+  "ts": "20260408_192103"
+}

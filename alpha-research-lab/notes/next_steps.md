@@ -1,7 +1,7 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_125_log.md` for the latest full session detail.
+Use `notes/session_137_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
@@ -10,6 +10,306 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 
 1. `llm-cache-fill` — rerun `python -u data_tools/extract_llm_news_features.py --provider google --workers 16 --timeout 45` after Google limits / cooldowns clear. Current state: cache `731 / 3750`, next missing day `2017-12-23.jsonl`, and `api_key_cooldowns` now persist in `artifacts/llm_runtime/hosted_model_stats.json`.
 2. `llm-feature-refresh` — only after cache reaches the active-book years (`2018+`), rebuild `xs_llm_news_ticker_day.parquet`, rerun `H294`, and then reconsider `news-marginal-slot`.
+3. `intraday-shape-disagreement-review` — only if an offline side branch is intentionally reopened before the LLM cache is ready. Use the `H299` winners (`fade_tension_disagreement`, `intraday_shape_core_disagreement`) as observed-subset candidate-library review inputs. Do not publish them or route them live yet.
+
+---
+
+## Session 137 — Event-V2 Additive Screen (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`. The current-data event-v2 promotion
+question is now answered.
+
+1. `event-v2-additive-screen`
+   - `H317` result: MIXED
+   - the surviving standalone state is still `event_today_novel20`, with validation / confirmation active-row lift `+0.0314 / +0.0307` and near-zero overlap with `S1 / C4 / C13`
+   - but the best additive candidate, `core_mul__event_today_novel20__30`, improved validation avg IC by only `+0.0002` versus the frozen core and `+0.0019` versus the matched v1 control, while confirmation was effectively flat
+   - `recent5_low_repeat20` failed both standalone and additive screening
+   - branch consequence: keep `H310` as predictive cohort evidence only; do **not** promote event-v2 into the additive/library queue on the current data stack
+
+2. `historical-foreign-flow-source`
+   - claim: real per-ticker historical foreign-buy / foreign-sell is still one of the highest-upside blocked surfaces, and the current-data event-v2 promotion path is now exhausted
+   - why now: `H315` and `H316` both came back source-blocked, and `H317` says more local event-v2 tuning is not the honest next spend
+   - smallest honest next test: source one historical foreign-flow table, validate ticker/date integrity on a pilot basket, then run a compact IC audit before any full feature build
+
+3. `auction-resolution-intraday-source`
+   - claim: a true opening-auction or finer intraday source is still the most plausible structural unlock for both alpha and execution pain
+   - why now: reduced-shape `1H` survived only as offline atoms, and current-data event-v2 additive promotion is paused
+   - smallest honest next test: acquire a pilot minute-level or auction-level source for a small basket, verify session completeness and price alignment, then test whether opening state explains fill pain or next-open drift
+
+---
+
+## Session 136 — H309 Spark Wave Results (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`. The wave result is clear: the broad
+event-v2 branch is now real under the richer `H309` mapping, while the finer
+router and transfer ideas stay mixed, failed, or data-blocked.
+
+1. `event-v2-predictive-re-screen`
+   - `H310` result: PASSED
+   - same-day first-public `event_today_novel20` and recent low-repeat `recent5_low_repeat20` both cleared the predeclared bar on the richer issuer-validated surface
+   - observed event-v2 pilot `5d` coverage rose to `6.00%`, with `6,043` mapped articles across `190` tickers
+   - branch consequence: event-v2 is reopened as a real predictive line; move the next honest current-data queue to `event-v2-additive-screen`
+
+2. `event-v2-additive-screen`
+   - claim: the passed `H310` states should now be tested as bounded additive / promotion candidates, not left as a pure cohort study
+   - why now: `H311` and `H312` both came back only mixed, so the broad `H310` states are the real surviving contract
+   - smallest honest next test: materialize predeclared `H310` daily states and audit standalone / additive value against the v1 proxy and frozen `S1 / C4 / C13`
+
+3. `publication-time-x-family-router`
+   - `H311` result: MIXED
+   - best row was `board_management × post_close`, with validation uplift over intraday but weaker confirmation
+   - branch consequence: keep only as local offline timing evidence; do **not** open a broad publication-time router
+
+4. `v2-v1-disagreement-router`
+   - `H312` result: MIXED
+   - `v2_only_5d` stayed positive and beat `both_5d`, but did not beat `v1_only_5d` robustly enough
+   - branch consequence: keep only as mixed cohort evidence; do **not** open a broad disagreement router
+
+5. `issuer-family-spillover-graph`
+   - `H313` result: FAILED
+   - `9` ambiguous family aliases produced `0` surviving evaluation rows
+   - branch consequence: treat the remaining `H309` miss cases as narrow mapping noise, not a family-recipient branch
+
+6. `event-conditioned-c5-redux`
+   - `H314` result: MIXED
+   - richer event-v2 windows sharpened a few local pockets, but no conditioned `C5` row beat baseline cleanly in both validation and confirmation
+   - branch consequence: keep broad insider-event confirmation closed
+
+7. `official-disclosure-timestamp-source`
+   - `H315` result: NEUTRAL / SKIP
+   - there are still `0` local official-disclosure source files
+   - branch consequence: keep this branch parked behind source acquisition
+
+8. `hnx-event-transfer-pilot`
+   - `H316` result: NEUTRAL / SKIP
+   - HNX title volume is too thin for a real transfer judgment: only `94` training titles and `17` holdout rows
+   - branch consequence: do **not** spend research budget on HNX transfer until the source becomes materially denser
+
+---
+
+## Bright Mind — Post-H304 Queue Refresh (2026-04-09)
+
+This stays subordinate to `llm-cache-fill`. The top four are honest with current
+data. The last three are the highest-value new-data unlocks.
+
+1. `insider-event-confirmation`
+   - `H305` result: MIXED / broad branch effectively closed
+   - best broad row was `v1_recent_any_filing_5d`, which improved dev and `2025` but fell below standalone `C5` in validation (`+0.0124` vs `+0.0168`)
+   - broad event-v2 windows did not help; the only surviving local pocket was `v2_rights_issuance_5d` on just `74 / 57` validation / confirmation rows
+   - branch consequence: keep only as local sparse-state evidence; do **not** reopen a generic insider-event timing branch
+
+2. `insider-follow-through-split`
+   - `H306` result: PASSED
+   - best rewrite was `c5_scale_pos_exec_cap_dev_median`: avg IC `+0.0379`, `11 / 11` positive years, confirmation pooled IC `+0.0119`
+   - simpler fallback `c5_gate_pos_exec_gt_0` also passed with `98.6%` avg-IC retention and `11 / 11` positive years
+   - branch consequence: execution follow-through is a robustness rewrite of the bullish side of `C5`, not a new standalone signal family; move the queue to `event-novelty-half-life-without-llm`
+
+3. `event-novelty-half-life-without-llm`
+   - `H307` result: MIXED / broad branch effectively closed
+   - broad recent-window target `recent5_low_repeat20` stayed positive in isolation, but lost to crowded recent-window follow-ups in validation (`+0.0669` vs `+0.1060`) and stayed below the broad v1 company-proxy control in validation (`+0.0669` vs `+0.0778`)
+   - the only surviving local pocket was same-day first-public `event_today_novel20`, which beat same-day crowded follow-ups in both validation and confirmation, but on only `16 / 17` daily IC rows
+   - branch consequence: keep only as sparse same-day offline evidence; do **not** open a broad event-novelty branch; move the next honest current-data queue to `stock-local-predictability-atlas`
+
+4. `stock-local-predictability-atlas`
+   - `H308` result: MIXED / broad branch effectively closed
+   - no null-controlled stable tail survived: dev->validation rank rho was only `+0.1018` versus null `p95` `+0.2588`, and there were `0` FDR survivors at `q <= 0.10`
+   - the only surviving evidence was a nominal recurrent-recipient tail of `7` names (`AAM, VTB, SRF, SHA, VID, TMT, DTA`), and that tail clustered in smoother / less gap-dominant / more liquid names
+   - branch consequence: keep only as a bounded recipient-state diagnostic line; do **not** reopen generic stock-local OHLCV hunting; move the next honest queue to `issuer-lexicon-event-surface`
+
+5. `issuer-lexicon-event-surface`
+   - `H309` result: PASSED
+   - `120` issuer-metadata aliases survived validation on `871` known-ticker training titles
+   - combined holdout assignment share rose from `43.81%` to `62.37%`, while precision stayed effectively unchanged at `99.17%`
+   - pilot `5d` held-row coverage improved from `2.30%` to `3.84%`, and unique pilot articles rose from `3,933` to `6,043`
+   - branch consequence: the `H301` ceiling was real and mostly mapping-driven; move the next honest queue to `event-v2-predictive-re-screen`
+
+6. `event-v2-predictive-re-screen`
+   - claim: the richer `H309` combined surface is now broad enough to retest the event-v2 branch honestly against the old v1 company-proxy and the `H307` same-day / recent-window contracts
+   - why now: `H309` passed cleanly and materially raised coverage while keeping holdout precision near `99%`
+   - smallest honest next test: rebuild first-public and daily event windows from the combined `H309` assignments, then rerun the `H301/H307` predictive comparison versus v1 proxies and same-day / recent-window novelty states
+
+7. `hnx-transfer-pilot`
+   - claim: the next honest universe-expansion question is not "merge HNX live" but "does HNX carry the same retail-microstructure alpha under a separate contract?"
+   - why now: the workspace already supports exchange-specific ticker fetches, but the current research inventory and published surfaces are still HOSE-only
+   - smallest honest next test: fetch HNX daily OHLCV only, run a minimal `H93`-style HNX-only audit, and only if it passes compare HOSE-only versus HOSE+HNX-with-exchange-tag training
+
+8. `historical-foreign-flow-source`
+   - claim: real per-ticker historical foreign trading is still one of the highest-upside blocked surfaces; the VNM proxy failed, but the true source has never been tested
+   - why now: `H110` killed only the ETF-premium proxy and the data inventory still marks historical foreign flow as a blocked source, not a falsified mechanism
+   - smallest honest next test: source one historical foreign-buy / foreign-sell table, validate ticker/date integrity on a pilot basket, then run a small IC audit before any full feature build
+
+9. `auction-resolution-intraday-source`
+   - claim: the opening auction is still the lab's most plausible structural mechanism, and a true auction-resolution source is worth more than another daily-only feature branch
+   - why now: reduced-shape `1H` data survived only as disagreement atoms; the remaining missing piece is genuine open / auction structure, not another router retune
+   - smallest honest next test: acquire a pilot minute-level or auction-level source for a small basket, verify session completeness and price alignment, then test whether opening state explains fill pain or next-open drift
+
+---
+
+## Bright Mind — H307 Spark Queue (2026-04-09)
+
+`H307` did not kill company-event timing completely. It killed the idea that
+one broad `low-repeat > crowded` recent-window rule is the right contract.
+What remains looks more like a two-phase process: same-day first-public shock
+plus a separate follow-up / crowding regime.
+
+1. `event-half-life-two-state-router`
+   - claim: company events obey a two-state half-life, not a single novelty ranking: same-day first-public rows carry the true "new information" shock, while crowded follow-up windows may carry a separate reinforcement / drift state
+   - connection: `H307` same-day first-public pocket survived, while crowded recent windows beat low-repeat windows in validation; this rhymes with `H291/H294`, where `new` and `follow_up` mattered differently by contract
+   - smallest honest next test: audit the saved `H301` first-public states across both `1d` and `5d` targets, comparing `event_today_novel20`, `event_today_follow20`, `recent5_low_repeat20`, and `recent5_crowded20` instead of forcing one monotone state ordering
+
+2. `publication-time-router`
+   - claim: the real edge is not "recent event density" but the exact publication-time bucket: pre-open, intraday, and post-close events should route differently into next-open and first-hour behavior
+   - connection: `H307` left only a same-day pocket, and `H301` already saved exact `first_published_at` timestamps while the CafeF `1H` surface is broad enough for reduced-shape work
+   - smallest honest next test: split same-day first-public rows by publication-time bucket and compare next-open gap, first-hour shape, and frozen-`S1` efficacy on the observed `2023-2025` panel
+
+3. `calendar-surprise-event-audit`
+   - claim: what matters is not raw novelty but whether the event arrived off the expected reporting clock; "surprise relative to calendar" may be the hidden state variable
+   - connection: `H298` killed broad report windows, but `H307` suggests same-day company-specific novelty still matters locally; the missing distinction may be on-calendar versus off-calendar publication
+   - smallest honest next test: join `H301` first-public rows to `xs_earnings_calendar_daily` and `xs_fundamentals_daily.release_date`, then compare same-day first-public rows that are on-calendar, early, late, or off-calendar
+
+4. `issuer-lexicon-event-surface`
+   - claim: `H307` may be sparse because the event source is still map-poor, not because exact company-event timing is weak; the local fundamentals cache is enough to try a real issuer-name lexicon now
+   - connection: `H301` and `H307` both preserved precision / novelty but lost on coverage, and the workspace already has broad per-ticker fundamentals cache plus sector metadata
+   - smallest honest next test: derive official issuer-name / abbreviation aliases from local company metadata, rerun the `H301` holdout, and compare precision plus held-row coverage against the strict title-alias pilot
+
+5. `official-disclosure-timestamp-source`
+   - claim: the highest-value new data unlocked by `H307` is an official disclosure-timestamp feed, not more generic daily features
+   - connection: the surviving pocket is same-day and first-public, which means timestamp exactness matters more than broad event density
+   - smallest honest next test: pilot one official exchange / issuer disclosure source on a basket, then compare timestamp integrity, same-day coverage, and family overlap versus the CafeF first-public surface
+
+---
+
+## Bright Mind — Session 128 Theory Results (2026-04-08)
+
+These still stay subordinate to `llm-cache-fill`. Session 128 formalized and ran `H297-H302`. Only one branch remains honestly alive as a follow-up.
+
+1. `intraday-library-atoms`
+   - `H299` result: PASSED / only surviving follow-through from this wave
+   - winners: `fade_tension_disagreement` and `intraday_shape_core_disagreement` on the observed `2023-2025` reduced-shape subset
+   - raw shape atoms failed or stayed too redundant against `S1 / C4 / C13`
+   - branch consequence: if a side branch is intentionally reopened before LLM readiness, candidate-library review of the disagreement atoms is the only clean continuation
+
+2. `cafef-event-surface-v2`
+   - `H301` result: MIXED / acquisition evidence only
+   - alias holdout precision `98.82%`, novel daily share vs v1 `74.48%`, pilot 5d held coverage `2.30%` versus seed `0.75%`
+   - pilot coverage is still far below v1 company-proxy coverage `15.54%`
+   - branch consequence: keep source-hardening / mapping improvement only; do not open a predictive event-v2 branch yet
+
+3. `calendar-conditioned-quality`
+   - `H298` result: MIXED / sparse offline evidence only
+   - timing windows create local positives, but the strongest rows are too sparse or flip negative in `2025`
+   - branch consequence: do not reopen the slow-data family broadly
+
+4. `vn30-boundary-pressure`
+   - `H300` result: MIXED / local overlay evidence only
+   - `S1 × add_pressure` is strong as an interaction row, but the actual boundary cohort remains weaker than the rest of the universe
+   - branch consequence: do not reopen a VN30 / big-name branch from this result
+
+5. `activation-pressure-interactions`
+   - `H297` result: FAILED
+   - reserve / blocked-buy / replacement interactions were weaker than the already-weak baseline breadth states
+   - branch consequence: close the branch on the current contract
+
+6. `news-attention-disagreement`
+   - `H302` result: SKIP / data blocked
+   - active-book years `2018-2025` still contain `0` nonzero LLM ticker-day rows
+   - branch consequence: keep blocked behind `llm-cache-fill` and `llm-feature-refresh`
+
+---
+
+## Bright Mind — Post-128 Continuation Queue (2026-04-08)
+
+These stay subordinate to `llm-cache-fill`. The first four are honest with current data. The fifth is mainly a data-wiring unlock.
+
+1. `event-conditioned-intraday-disagreement`
+   - `H303` result: FAILED
+   - `fade_tension_disagreement × event_v2_5d` improved over the unconditional and no-event versions, but it still lost to the broad v1 company-proxy control in validation (`+0.0430` vs `+0.0513`)
+   - `intraday_shape_core_disagreement` did not improve on the same contract
+   - branch consequence: keep `H299` and `H301` separate offline evidence lines; do **not** reopen a generic recent-event overlay on top of the disagreement atoms
+
+2. `execution-spillover-substitutes`
+   - `H304` result: MIXED / effectively closed as a predictive routing fix
+   - best local row was `blocked_or_thin_top1 × same_family_or_sector`, but validation top-edge vs other eligible top was still `-0.0070` with hit rate only `46.91%`
+   - 2025 confirmation rebounded to `+0.0036`, but no row passed and the effect was too unstable to rescue the branch
+   - branch consequence: keep only as weak local substitute evidence; do **not** reopen substitute-routing work
+
+3. `insider-event-confirmation`
+   - `H305` result: MIXED / effectively closed as a broad branch
+   - broad event confirmation did not beat standalone `C5` cleanly; only `v2_rights_issuance_5d` survived as a small local pocket
+   - branch consequence: keep only as local sparse-state evidence and move the queue to `insider-follow-through-split`
+
+4. `insider-follow-through-split`
+   - `H306` result: PASSED
+   - soft positive-side follow-through scaling lifted `C5` from `10 / 11` to `11 / 11` positive years while retaining `101.3%` of baseline avg IC
+   - branch consequence: keep as a robustness rewrite of `C5`, then move the queue to `event-novelty-half-life-without-llm`
+
+5. `event-novelty-half-life-without-llm`
+   - `H307` result: MIXED / broad branch effectively closed
+   - low-repeat recent windows did not beat crowded follow-up windows or the broad v1 proxy in validation
+   - same-day first-public versus crowded follow-up survived only as a tiny sparse pocket
+   - branch consequence: keep only as local offline evidence and move the next honest current-data branch to `stock-local-predictability-atlas`
+
+6. `issuer-lexicon-event-surface`
+   - claim: the H301 coverage ceiling is mostly a mapping problem, not a source problem; official issuer-name / abbreviation data could materially widen event-v2 coverage while keeping timestamp integrity
+   - smallest honest next test: wire an issuer lexicon from company-overview / fundamentals metadata, rerun the H301 masked holdout, and compare precision plus held-row coverage versus the strict title-alias pilot
+
+---
+
+## Bright Mind — No-LLM Frontier And New Data (2026-04-08)
+
+These also stay subordinate to `llm-cache-fill`. The first four are the highest-value non-LLM lines. The last two are explicit data-acquisition bets.
+
+1. `execution-spillover-substitutes`
+   - `H304` result: MIXED / effectively closed as a predictive branch
+   - best row recovered only a small `2025` confirmation rebound after a negative `2023-2024` validation window
+   - branch consequence: execution mismatch does not reroute cleanly into nearest substitutes; do **not** keep spending the no-LLM budget here
+
+2. `insider-event-confirmation`
+   - `H305` result: MIXED / broad branch effectively closed
+   - generic recent-event windows did not upgrade `C5` cleanly; only the narrow `rights_issuance` family stayed directionally positive across all three phases
+   - branch consequence: do **not** spend more of the no-LLM budget on generic insider-event timing
+
+3. `insider-follow-through-split`
+   - `H306` result: PASSED
+   - positive-side follow-through belongs as a robustness rewrite of `C5`, not as a standalone signal
+   - branch consequence: this line is no longer the open no-LLM blocker; move next to `event-novelty-half-life-without-llm`
+
+4. `event-novelty-half-life-without-llm`
+   - `H307` result: MIXED / broad branch effectively closed
+   - same-day first-public versus crowded follow-up is real enough to keep as sparse offline evidence, but the broad recent-window split fails
+   - branch consequence: do **not** spend more of the no-LLM budget on a broad event-novelty branch under the current alias contract; move the current-data queue to `stock-local-predictability-atlas`
+
+5. `hnx-transfer-pilot`
+   - claim: the next honest universe expansion is not "merge HNX into live HOSE now" but "test whether HNX carries the same retail-microstructure alpha and can regularize HOSE"
+   - smallest honest next test: fetch HNX daily OHLCV, run a minimal H93-style HNX-only audit first, then only if it passes compare HOSE-only versus HOSE+HNX-with-exchange-tag training
+
+6. `historical-foreign-flow-source`
+   - claim: real per-ticker historical foreign trading is still one of the highest-upside blocked data surfaces; the VNM proxy failed, but the true source has never been tested
+   - smallest honest next test: source-hunt one public historical foreign-buy / foreign-sell table, prove ticker/date integrity on a small sample, then run a pilot IC audit before building a full feature surface
+
+7. `auction-resolution-intraday-source`
+   - claim: the alpha and execution bottleneck both live at the open, so a true opening-auction / finer intraday source is worth more than another daily-only modeling branch
+   - smallest honest next test: acquire a credentialed or alternate minute-level source for a pilot basket, validate session completeness and price alignment, then test whether opening-auction state explains fill pain or next-open drift
+
+---
+
+## Bright Mind — Interim Queue While LLM Cache Is Blocked (2026-04-08)
+
+These stay subordinate to `llm-cache-fill`. They are bounded diagnostics, not permission to reopen generic stock-local OHLCV hunting.
+
+1. `stock-local-heterogeneity-audit`
+   - `H295` result: MIXED / effectively closed as a broad branch
+   - big-name proxy (`VN30`) retained only `55.2%` of full S1 IC and `23.7%` of full top-5 edge; dev->validation stock-edge rank rho only `+0.0701`
+   - branch consequence: do **not** reopen a generic big-name / single-stock HOSE search under the current contract
+   - if intentionally revisited, keep it tiny and recipient-first around the strongest recurrent responders only
+
+2. `liquidity-router-audit` — big names may matter as execution sleeves, not as the alpha source. Smallest honest next test: keep the canonical XS ranker fixed and compare a simple large-cap `H=1` sleeve plus mid-cap `H=5` sleeve against the current one-size-fits-all routing under realistic cost assumptions. Kill if the router only recovers edge by silently dropping the true signal names.
+   - `H296` result: MIXED / effectively closed as a real branch
+   - router beat the eligible one-size-fits-all baselines only slightly, but avg annual net stayed negative (`-22.26%`) and executed slot share collapsed to `32.86%`
+   - raw top-5 thin share stayed `63.25%`, so the sleeve split did not solve the underlying execution mismatch
+   - branch consequence: keep only as weak execution-allocation evidence and return priority to `llm-cache-fill`
+
+No further blocked-LLM interim branches remain active. Wait for `llm-cache-fill` unless a materially different contract is reopened on purpose.
 
 ---
 
@@ -66,6 +366,20 @@ nohup python data_tools/extract_llm_news_features.py --provider google --workers
 It skips existing cache automatically. ETA ~25–40 hours continuous. (2026-04-08)
 
 Session 125 resumed the canonical extractor with plain `python` from the default `stocks` env, confirmed `api_key_cooldowns` now persist in `artifacts/llm_runtime/hosted_model_stats.json`, and wrote one new cache day: `2017-12-22.jsonl` (`730 -> 731` files). The run then stopped cleanly because the Google pool exhausted its available daily-limit / cooldown budget on this pass. Branch consequence: keep the extractor branch active, do not start a research branch yet, and rerun `python -u data_tools/extract_llm_news_features.py --provider google --workers 16 --timeout 45` after limits clear. Next missing cache day: `2017-12-23.jsonl`. (2026-04-08)
+
+Session 126 then ran `H295` as a bounded audit of the proposed big-name HOSE detour using the frozen `S1 / H93` surface and a predeclared `VN30` proxy. Result: the big-name cohort kept some positive structure but retained only `55.2%` of full IC and `23.7%` of full top-5 edge, while the rest of the universe preserved essentially all of the signal. Dev-to-validation stock-edge rank stability inside the big-name proxy was only `+0.0701`. Branch consequence: do not reopen a generic big-name / stock-local branch while the LLM cache remains blocked; only a narrow execution/router audit or tiny recurrent-recipient audit remains honest. (2026-04-08)
+
+Session 127 then ran `H296` as that final narrow execution/router audit on the frozen H54 ranker. Result: the liquidity router was directionally better than the eligible one-size-fits-all baselines, but still negative on average (`-22.26%` annual net), with executed slot share only `32.86%` and raw top-5 thin share still `63.25%`. Branch consequence: park the liquidity-router idea as weak execution-allocation evidence only, do not continue the sleeve split, and treat the blocked-LLM interim queue as exhausted. (2026-04-08)
+
+Session 128 then ran the full staged bright-mind theory wave `H297-H302`. Result: `H297` failed outright, `H298` stayed mixed as sparse timing-only evidence, `H299` passed on reduced-shape disagreement residuals, `H300` stayed mixed as local overlay evidence only, `H301` proved the CafeF event-v2 source is real but still too sparse for prediction, and `H302` cleanly skipped because the active-book LLM years still have zero nonzero rows. Branch consequence: keep `llm-cache-fill` first, and if a side branch is intentionally reopened before LLM readiness, only the `H299` disagreement-atom line remains honestly alive. (2026-04-08)
+Session 129 then ran `H303` as the first continuation of that surviving side branch. Result: the best local interaction (`fade_tension_disagreement × event_v2_5d`) did improve over the unconditional and no-event versions, but it still lost to the broader v1 company-proxy timing control in validation, and the second disagreement atom failed the same contract. Branch consequence: keep `H299` disagreement atoms and `H301` event-v2 as separate offline evidence lines, do not reopen a combined recent-event timing overlay, and if another blocked-LLM side branch is intentionally reopened move to `execution-spillover-substitutes`. (2026-04-08)
+Session 130 then ran `H304` as that next blocked-LLM side-branch audit on the frozen `2019-2025` candidate panel. Result: the best substitute row (`blocked_or_thin_top1 × same_family_or_sector`) stayed negative in `2023-2024` validation (`-0.0070`, `46.91%` hit rate) and only rebounded locally in `2025` (`+0.0036`, `54.95%` hit rate). No row passed the predeclared bar. Branch consequence: the execution mismatch does not reroute cleanly into nearest eligible substitutes; keep `H304` only as weak local evidence and move the next honest non-LLM branch to `insider-event-confirmation`. (2026-04-08)
+Session 131 then ran `H305` as that next current-data sparse-state audit on `C5` fire rows. Result: broad event confirmation did not upgrade `C5` cleanly. The best broad row (`v1_recent_any_filing_5d`) improved dev and `2025` but fell below standalone `C5` in validation, and the broad event-v2 row stayed unstable. The only surviving local pocket was `v2_rights_issuance_5d`, but on just `74 / 57` validation / confirmation rows. Branch consequence: keep insider-event confirmation only as local sparse-state evidence and move the next honest current-data branch to `insider-follow-through-split`. (2026-04-09)
+Session 132 then ran `H306` as that next current-data continuation on the original `H108` `fwd_rel_5d` target. Result: execution follow-through does matter, but as a robustness rewrite of the bullish side of `C5`, not as a standalone signal. The best rewrite, `c5_scale_pos_exec_cap_dev_median`, retained `101.3%` of baseline avg IC, improved consistency from `10 / 11` to `11 / 11` positive years, and lifted `2025` confirmation pooled IC from `+0.0028` to `+0.0119`. A simpler `c5_gate_pos_exec_gt_0` fallback also passed. Branch consequence: update the `C5` interpretation to downweight or gate weak bullish follow-through, and move the next honest current-data branch to `event-novelty-half-life-without-llm`. (2026-04-09)
+Session 133 then ran `H307` as that next current-data branch using the saved `H301` first-public rows and the frozen `S1 / H93` surface on `2023-2025`. Result: the broad recent-window novelty split failed. `recent5_low_repeat20` stayed positive in isolation, but lost to crowded recent-window follow-ups and the broad v1 company-proxy control in validation. The only surviving evidence was a sparse same-day first-public pocket (`event_today_novel20`), which beat crowded same-day follow-ups in validation and confirmation on only `16 / 17` daily IC rows. Branch consequence: keep event novelty only as sparse offline evidence, do not open a broad event-novelty branch, move the next honest current-data queue to `stock-local-predictability-atlas`, and keep `issuer-lexicon-event-surface` as the event-family data-wiring follow-up. (2026-04-09)
+Session 134 then ran `H308` as that next current-data diagnostic branch on the full HOSE universe using the frozen `S1 / H93` top-5 recipient panel plus daily OHLCV structure metrics. Result: the broad stock-local branch failed null control. Dev->validation ticker-edge rank stability was only `+0.1018` versus null `p95` `+0.2588`, and there were `0` FDR survivors at `q <= 0.10`. The only surviving evidence was a nominal recurrent-recipient tail of `7` names (`AAM, VTB, SRF, SHA, VID, TMT, DTA`), and that tail clustered in smoother / less gap-dominant / more liquid names. Branch consequence: keep only a tiny recipient-state diagnostic line, do not reopen generic stock-local OHLCV hunting, and move the next honest queue item to `issuer-lexicon-event-surface`. (2026-04-09)
+
+Session 135 then ran `H309` as that next event-family data-wiring branch using vnstock issuer metadata plus the saved `H301` CafeF event scan. Result: the mapping ceiling was real and mostly alias-driven. `120` metadata aliases survived validation on `871` known-ticker training titles, and the combined lexicon lifted holdout assignment share from `43.81%` to `62.37%` while keeping precision at `99.17%`. Pilot `5d` held-row coverage improved from `2.30%` to `3.84%`, and unique pilot articles rose from `3,933` to `6,043`. Branch consequence: reopen the event-v2 branch for a predictive re-screen on the richer combined surface; move the next honest queue item to `event-v2-predictive-re-screen`. (2026-04-09)
 
 1. Record the next market-session outcome against the **rollback sticky activated** paper-trade book:
    - current active live branch from the `2026-03-30` signal / `2026-03-31` execution:

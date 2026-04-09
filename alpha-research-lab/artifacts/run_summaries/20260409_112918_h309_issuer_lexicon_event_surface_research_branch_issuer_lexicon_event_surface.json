@@ -1,0 +1,64 @@
+{
+  "artifacts": {
+    "combined_alias_map": "artifacts/timing_data/20260409_112918_h309_issuer_lexicon_event_surface_combined_alias_map.parquet",
+    "combined_assignments": "artifacts/timing_data/20260409_112918_h309_issuer_lexicon_event_surface_combined_assignments.parquet",
+    "combined_holdout": "artifacts/timing_data/20260409_112918_h309_issuer_lexicon_event_surface_combined_holdout.parquet",
+    "details": "artifacts/run_summaries/20260409_112918_h309_issuer_lexicon_event_surface_details.json",
+    "listing_metadata": "artifacts/timing_data/20260409_112918_h309_issuer_lexicon_event_surface_listing_metadata.parquet",
+    "metadata_alias_map": "artifacts/timing_data/20260409_112918_h309_issuer_lexicon_event_surface_metadata_alias_map.parquet",
+    "metadata_candidate_aliases": "artifacts/timing_data/20260409_112918_h309_issuer_lexicon_event_surface_candidate_aliases.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Issuer metadata can only reopen event-v2 mapping if combined holdout precision stays high while H301 assignment share and held-row coverage lift materially.",
+    "session": 135
+  },
+  "mode": "research_branch_issuer_lexicon_event_surface",
+  "name": "h309_issuer_lexicon_event_surface",
+  "summary": {
+    "branch_decision": "Issuer metadata clears the H301 mapping ceiling: combined precision stays high while both holdout assignment share and held-row coverage improve materially.",
+    "combined_coverage_snapshot": {
+      "recent_has_company_event_article_1d": 0.011920529801324504,
+      "recent_has_company_event_article_20d": 0.053863134657836646,
+      "recent_has_company_event_article_5d": 0.038410596026490065
+    },
+    "combined_holdout_summary": {
+      "assigned_precision": 0.9917355371900827,
+      "assigned_rows": 121,
+      "assigned_share": 0.6237113402061856,
+      "holdout_rows": 194
+    },
+    "comparison": {
+      "assigned_share_uplift": 0.18556701030927836,
+      "combined_precision": 0.9917355371900827,
+      "coverage_5d_uplift": 0.015452538631346577
+    },
+    "decision": "PASSED",
+    "metadata_holdout_summary": {
+      "assigned_precision": 1.0,
+      "assigned_rows": 94,
+      "assigned_share": 0.4845360824742268,
+      "holdout_rows": 194
+    },
+    "new_holdout_assignment_count": 36,
+    "new_holdout_correct_count": 36,
+    "pilot_article_lift": {
+      "combined_minus_strict_unique_articles": 2110,
+      "combined_unique_articles": 6043,
+      "metadata_unique_articles": 4771,
+      "strict_unique_articles": 3933
+    },
+    "strict_coverage_snapshot": {
+      "recent_has_company_event_article_1d": 0.006181015452538631,
+      "recent_has_company_event_article_20d": 0.03532008830022075,
+      "recent_has_company_event_article_5d": 0.022958057395143488
+    },
+    "strict_holdout_summary": {
+      "assigned_precision": 0.9882352941176471,
+      "assigned_rows": 85,
+      "assigned_share": 0.4381443298969072,
+      "holdout_rows": 194
+    },
+    "validated_metadata_alias_count": 120
+  },
+  "ts": "20260409_112918"
+}

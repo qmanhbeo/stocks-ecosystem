@@ -1,0 +1,59 @@
+{
+  "verdict": "MIXED",
+  "hypothesis": "A frozen H54 ranker may still support a useful execution sleeve if large names run daily H=1 and mid names run weekly H=5 under realistic bucket-specific costs.",
+  "branch_contract": {
+    "ranker": "/home/manh/stocks-ecosystem/data/features/xs_barrier_all_probas_hose_full.parquet",
+    "large_bucket": "top 50 rolling liquidity rank",
+    "mid_bucket": "ranks 51-200",
+    "costs": {
+      "large_daily_h1_rt": 0.002,
+      "mid_weekly_h5_rt": 0.005
+    },
+    "top_n": 5,
+    "min_proba": 0.55
+  },
+  "strategy_summary": {
+    "eligible_all_h1": {
+      "avg_annual_gross": 0.5914236852670792,
+      "avg_annual_net": -0.4837944965511029,
+      "positive_years": 1,
+      "years": 11,
+      "avg_signal_dates": 246.8181818181818,
+      "avg_eligible_slot_share": 0.9706301951826801,
+      "avg_executed_slot_share": 0.9706301951826801,
+      "avg_raw_large_slot_share": 0.056504509143759644,
+      "avg_raw_mid_slot_share": 0.3110144552501709,
+      "avg_raw_thin_slot_share": 0.6324810356060695
+    },
+    "eligible_all_h5_weekly": {
+      "avg_annual_gross": -0.021732695996673723,
+      "avg_annual_net": -0.23920542326940122,
+      "positive_years": 2,
+      "years": 11,
+      "avg_signal_dates": 246.8181818181818,
+      "avg_eligible_slot_share": 0.19692805003848593,
+      "avg_executed_slot_share": 0.19692805003848593,
+      "avg_raw_large_slot_share": 0.056504509143759644,
+      "avg_raw_mid_slot_share": 0.3110144552501709,
+      "avg_raw_thin_slot_share": 0.6324810356060695
+    },
+    "liquidity_router": {
+      "avg_annual_gross": 0.05968728971998147,
+      "avg_annual_net": -0.22262180118910965,
+      "positive_years": 4,
+      "years": 11,
+      "avg_signal_dates": 246.8181818181818,
+      "avg_eligible_slot_share": 0.9706301951826801,
+      "avg_executed_slot_share": 0.3285856791907671,
+      "avg_raw_large_slot_share": 0.056504509143759644,
+      "avg_raw_mid_slot_share": 0.3110144552501709,
+      "avg_raw_thin_slot_share": 0.6324810356060695
+    }
+  },
+  "comparisons": {
+    "router_minus_all_h1_ann_net": 0.2611726953619933,
+    "router_minus_all_h5_ann_net": 0.01658362208029157,
+    "raw_top5_thin_share": 0.6324810356060695
+  },
+  "branch_decision": "The router is directionally better than the one-size-fits-all eligible baselines, but it still fails as a deployable branch because net stays negative or slot coverage collapses. Keep only as weak execution-allocation evidence."
+}

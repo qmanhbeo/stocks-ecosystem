@@ -1,0 +1,48 @@
+{
+  "artifacts": {
+    "combined_alias_assignments": "artifacts/timing_data/20260409_115740_h310_event_v2_predictive_rescreen_alias_assignments.parquet",
+    "combined_article_events": "artifacts/timing_data/20260409_115740_h310_event_v2_predictive_rescreen_article_events.parquet",
+    "combined_first_public": "artifacts/timing_data/20260409_115740_h310_event_v2_predictive_rescreen_first_public.parquet",
+    "combined_pilot_surface": "artifacts/timing_data/20260409_115740_h310_event_v2_predictive_rescreen_pilot_surface.parquet",
+    "details": "artifacts/run_summaries/20260409_115740_h310_event_v2_predictive_rescreen_details.json"
+  },
+  "metadata": {
+    "branch_contract": "H310 reruns the H307 predictive contract on the richer H309 event-v2 surface; only a clean same-day or recent-window rescue reopens the branch.",
+    "session": 136
+  },
+  "mode": "research_branch_event_v2_predictive_rescreen",
+  "name": "h310_event_v2_predictive_rescreen",
+  "summary": {
+    "branch_decision": "The richer H309 surface now clears the predictive re-screen bar; event-v2 is reopened as a real predictive branch.",
+    "decision": "PASSED",
+    "recent_window_candidate": {
+      "candidate_decision": "PASSED",
+      "confirmation_active_dates": 248,
+      "confirmation_pooled_ic": 0.11175831959225732,
+      "confirmation_uplift_vs_crowded": 0.017341507223104874,
+      "validation_active_dates": 249,
+      "validation_pooled_ic": 0.0811451030128073,
+      "validation_uplift_vs_crowded": 0.01389888406493077,
+      "validation_uplift_vs_v1": -0.0008617141124142302
+    },
+    "same_day_candidate": {
+      "candidate_decision": "PASSED",
+      "confirmation_active_dates": 161,
+      "confirmation_pooled_ic": 0.18286762272576987,
+      "confirmation_uplift_vs_crowded": 0.10431200258083623,
+      "validation_active_dates": 174,
+      "validation_pooled_ic": 0.11699689553948452,
+      "validation_uplift_vs_crowded": 0.10228368125622765,
+      "validation_uplift_vs_v1": 0.03499007841426299
+    },
+    "surface_summary": {
+      "article_rows": 8813,
+      "first_public_rows": 7970,
+      "pilot_5d_coverage": 0.06000580551523948,
+      "title_alias_unique_articles": 4971,
+      "unique_articles": 6043,
+      "unique_tickers": 190
+    }
+  },
+  "ts": "20260409_115740"
+}

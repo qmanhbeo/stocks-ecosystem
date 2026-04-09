@@ -1,0 +1,228 @@
+{
+  "artifacts": {
+    "cohort_metrics": "artifacts/portfolio_baselines/20260408_175426_h295_big_name_cohort_metrics.parquet",
+    "details": "artifacts/run_summaries/20260408_175426_h295_big_name_cohort_audit_details.json",
+    "stock_edges": "artifacts/portfolio_baselines/20260408_175426_h295_big_name_stock_edges.parquet"
+  },
+  "metadata": {
+    "big_name_proxy": [
+      "ACB",
+      "BCM",
+      "BID",
+      "BVH",
+      "CTG",
+      "FPT",
+      "GAS",
+      "GVR",
+      "HDB",
+      "HPG",
+      "MBB",
+      "MWG",
+      "NVL",
+      "PDR",
+      "PLX",
+      "PNJ",
+      "POW",
+      "SAB",
+      "SHB",
+      "SSI",
+      "STB",
+      "TCB",
+      "TPB",
+      "VCB",
+      "VHM",
+      "VIB",
+      "VIC",
+      "VJC",
+      "VNM",
+      "VPB"
+    ],
+    "session": 126,
+    "signal_surface": "data/features/xs_barrier_vol_1d_hose_full.parquet",
+    "top_n": 5,
+    "years": [
+      2015,
+      2025
+    ]
+  },
+  "mode": "research_branch_big_name_cohort_audit",
+  "name": "h295_big_name_cohort_audit",
+  "summary": {
+    "branch_decision": "Generic big-name cohort revival is not justified. Some stock-local response exists inside the big-name proxy, but the cohort loses too much signal and the stock ranking is not stable enough to reopen a broad stock-local branch.",
+    "cohorts": [
+      {
+        "avg_baseline_hit_rate": 0.4655560162360831,
+        "avg_ic": 0.1491338115287636,
+        "avg_n_tickers": 300.7292576419214,
+        "avg_q5_q1_spread": 0.20856292290674572,
+        "avg_top5_edge": 0.2415764437348048,
+        "avg_top5_hit_rate": 0.7071324599708878,
+        "cohort": "full_universe",
+        "days": 2748,
+        "ic_retention_vs_full": null,
+        "positive_ic_years": 11,
+        "spread_retention_vs_full": null,
+        "top5_edge_retention_vs_full": null,
+        "years": 11
+      },
+      {
+        "avg_baseline_hit_rate": 0.4591797441291033,
+        "avg_ic": 0.08230670494906937,
+        "avg_n_tickers": 26.475409836065573,
+        "avg_q5_q1_spread": 0.10839795298811694,
+        "avg_top5_edge": 0.05717726862135202,
+        "avg_top5_hit_rate": 0.5163570127504553,
+        "cohort": "big_name_vn30_proxy",
+        "days": 2745,
+        "ic_retention_vs_full": 0.5518983529311513,
+        "positive_ic_years": 11,
+        "spread_retention_vs_full": 0.5197374081518059,
+        "top5_edge_retention_vs_full": 0.2366839570008716,
+        "years": 11
+      },
+      {
+        "avg_baseline_hit_rate": 0.4661464764366272,
+        "avg_ic": 0.15532808990060828,
+        "avg_n_tickers": 274.2802037845706,
+        "avg_q5_q1_spread": 0.21531161743056376,
+        "avg_top5_edge": 0.24003984088506128,
+        "avg_top5_hit_rate": 0.7061863173216885,
+        "cohort": "rest_of_universe",
+        "days": 2748,
+        "ic_retention_vs_full": 1.0415350369466685,
+        "positive_ic_years": 11,
+        "spread_retention_vs_full": 1.0323580741474148,
+        "top5_edge_retention_vs_full": 0.9936392686886708,
+        "years": 11
+      }
+    ],
+    "decision_rule": {
+      "min_dev_days": 20,
+      "min_val_days": 10,
+      "pass_dev_val_rank_stability": 0.3,
+      "pass_ic_retention_vs_full": 0.8,
+      "pass_top5_edge_retention_vs_full": 0.5
+    },
+    "hypothesis": "If stock-local work is still alive anywhere, a frozen big-name HOSE proxy should keep most of the S1 signal and show stable stock-level response ordering.",
+    "stock_local_diagnostics": {
+      "big_name_proxy_size": 30,
+      "dev_val_edge_rank_spearman": 0.07007786429365963,
+      "qualified_names": 30,
+      "stable_positive_dev_val_names": 26,
+      "top_names_by_min_dev_val_edge": [
+        {
+          "dev_2015_2022_days": 166,
+          "dev_2015_2022_edge": 0.08719569101990843,
+          "min_dev_val_edge": 0.08719569101990843,
+          "stable_positive_dev_val": true,
+          "tail_2025_days": 47,
+          "tail_2025_edge": 0.19190511127415016,
+          "ticker": "VJC",
+          "val_2023_2024_days": 66,
+          "val_2023_2024_edge": 0.09545454545454546
+        },
+        {
+          "dev_2015_2022_days": 355,
+          "dev_2015_2022_edge": 0.08578715194456313,
+          "min_dev_val_edge": 0.08204909890733646,
+          "stable_positive_dev_val": true,
+          "tail_2025_days": 37,
+          "tail_2025_edge": 0.05225225225225225,
+          "ticker": "PDR",
+          "val_2023_2024_days": 81,
+          "val_2023_2024_edge": 0.08204909890733646
+        },
+        {
+          "dev_2015_2022_days": 404,
+          "dev_2015_2022_edge": 0.07751971061409152,
+          "min_dev_val_edge": 0.07751971061409152,
+          "stable_positive_dev_val": true,
+          "tail_2025_days": 20,
+          "tail_2025_edge": 0.15511904761904763,
+          "ticker": "CTG",
+          "val_2023_2024_days": 56,
+          "val_2023_2024_edge": 0.1625
+        },
+        {
+          "dev_2015_2022_days": 402,
+          "dev_2015_2022_edge": 0.07271948919384418,
+          "min_dev_val_edge": 0.07271948919384418,
+          "stable_positive_dev_val": true,
+          "tail_2025_days": 25,
+          "tail_2025_edge": 0.050666666666666665,
+          "ticker": "MBB",
+          "val_2023_2024_days": 55,
+          "val_2023_2024_edge": 0.13696969696969696
+        },
+        {
+          "dev_2015_2022_days": 143,
+          "dev_2015_2022_edge": 0.07250227422641216,
+          "min_dev_val_edge": 0.07250227422641216,
+          "stable_positive_dev_val": true,
+          "tail_2025_days": 37,
+          "tail_2025_edge": -0.030939067145963693,
+          "ticker": "HDB",
+          "val_2023_2024_days": 70,
+          "val_2023_2024_edge": 0.08285714285714287
+        },
+        {
+          "dev_2015_2022_days": 441,
+          "dev_2015_2022_edge": 0.06792068554370861,
+          "min_dev_val_edge": 0.06792068554370861,
+          "stable_positive_dev_val": true,
+          "tail_2025_days": 39,
+          "tail_2025_edge": 0.12496947496947496,
+          "ticker": "STB",
+          "val_2023_2024_days": 65,
+          "val_2023_2024_edge": 0.16666666666666669
+        },
+        {
+          "dev_2015_2022_days": 397,
+          "dev_2015_2022_edge": 0.08639462636139139,
+          "min_dev_val_edge": 0.058333333333333334,
+          "stable_positive_dev_val": true,
+          "tail_2025_days": 37,
+          "tail_2025_edge": -0.004169440376336924,
+          "ticker": "ACB",
+          "val_2023_2024_days": 68,
+          "val_2023_2024_edge": 0.058333333333333334
+        },
+        {
+          "dev_2015_2022_days": 430,
+          "dev_2015_2022_edge": 0.058205773265117465,
+          "min_dev_val_edge": 0.058205773265117465,
+          "stable_positive_dev_val": true,
+          "tail_2025_days": 57,
+          "tail_2025_edge": -0.030651340996168574,
+          "ticker": "FPT",
+          "val_2023_2024_days": 88,
+          "val_2023_2024_edge": 0.0721133751306165
+        },
+        {
+          "dev_2015_2022_days": 311,
+          "dev_2015_2022_edge": 0.05642633155690639,
+          "min_dev_val_edge": 0.05642633155690639,
+          "stable_positive_dev_val": true,
+          "tail_2025_days": 42,
+          "tail_2025_edge": 0.00714285714285715,
+          "ticker": "VIB",
+          "val_2023_2024_days": 70,
+          "val_2023_2024_edge": 0.10809523809523809
+        },
+        {
+          "dev_2015_2022_days": 443,
+          "dev_2015_2022_edge": 0.05311160479632133,
+          "min_dev_val_edge": 0.05311160479632133,
+          "stable_positive_dev_val": true,
+          "tail_2025_days": 27,
+          "tail_2025_edge": 0.3074074074074074,
+          "ticker": "MWG",
+          "val_2023_2024_days": 68,
+          "val_2023_2024_edge": 0.05735294117647059
+        }
+      ]
+    },
+    "verdict": "MIXED"
+  },
+  "ts": "20260408_175426"
+}

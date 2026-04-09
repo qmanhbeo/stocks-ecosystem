@@ -92,15 +92,24 @@ the fractional commitment signal.
 - `xs_ins_ceo_buy_5d` (CEO only): IC = +0.0210, 5/11 → inconsistent (too sparse at 0.78%)
 - `xs_ins_exec_rate_5d` (execution rate): IC = −0.0084 → anti-predictive
 
-**Execution rate finding:** When insiders execute LESS than announced (exec_rate < 1.0), it
-is slightly bearish — consistent with "lost conviction after disclosure" hypothesis. Not
-strong enough standalone but may be useful as a confirmation filter.
+**Execution rate finding:** `xs_ins_exec_rate_5d` is still weak or anti-predictive as a
+standalone feature, but Session 132 `H306` showed it matters as a conditioner on the
+**positive side** of `C5`. Two rewrites improved confirmation stability versus raw `C5`:
+- `c5_scale_pos_exec_cap_dev_median`: scale positive `C5` by clipped `exec_rate / 0.20`
+  using the dev-median threshold. Avg IC `+0.0379`, `11 / 11` positive years,
+  confirmation pooled IC `+0.0119`.
+- `c5_gate_pos_exec_gt_0`: zero positive `C5` rows when follow-through is absent.
+  Avg IC `+0.0368`, `11 / 11` positive years, confirmation pooled IC `+0.0088`.
+
+**Interpretation update:** weak bullish follow-through is a pollutant on raw `C5`, not a
+new alpha family. Prefer the soft rewrite when the branch wants the more robust form.
 
 **Artifact:** `data/features/xs_insider_quality_features.parquet`
 (key column: xs_ins_relative_size_5d)
 
 **Supersedes C2:** C5 is strictly better. Use `xs_ins_relative_size_5d` as the primary
-insider signal going forward.
+insider signal going forward, with the `H306` positive-side follow-through rewrite as the
+preferred robustness variant when needed.
 
 ---
 

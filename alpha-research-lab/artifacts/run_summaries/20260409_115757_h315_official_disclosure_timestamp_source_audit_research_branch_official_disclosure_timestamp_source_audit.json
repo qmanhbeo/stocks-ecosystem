@@ -1,0 +1,19 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260409_115757_h315_official_disclosure_timestamp_source_audit_details.json"
+  },
+  "metadata": {
+    "branch_contract": "Only a locally available official disclosure timestamp history can advance this branch beyond a source audit.",
+    "session": 136
+  },
+  "mode": "research_branch_official_disclosure_timestamp_source_audit",
+  "name": "h315_official_disclosure_timestamp_source_audit",
+  "summary": {
+    "blocker": "missing_local_official_disclosure_history",
+    "branch_decision": "No local official disclosure timestamp history exists yet, so the official-source branch remains data-blocked.",
+    "decision": "SKIP",
+    "local_hit_count": 0,
+    "skipped": true
+  },
+  "ts": "20260409_115757"
+}

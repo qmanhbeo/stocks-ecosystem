@@ -1,0 +1,38 @@
+{
+  "artifacts": {
+    "aliases": "artifacts/portfolio_baselines/20260409_120743_h313_issuer_family_spillover_graph_aliases.parquet",
+    "details": "artifacts/run_summaries/20260409_120743_h313_issuer_family_spillover_graph_details.json",
+    "panel": "artifacts/portfolio_baselines/20260409_120743_h313_issuer_family_spillover_graph_panel.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Only repeated ambiguous-name cases where family peers beat the named ticker can justify a family-recipient branch.",
+    "session": 136
+  },
+  "mode": "research_branch_issuer_family_spillover_graph",
+  "name": "h313_issuer_family_spillover_graph",
+  "summary": {
+    "ambiguous_family_alias_count": 9,
+    "branch_decision": "The named ticker still dominates most ambiguous-family event responses; the H309 miss cases are mostly mapping noise, not a family spillover branch.",
+    "confirmation": {
+      "actual_diff_vs_best_peer": null,
+      "dates": 0,
+      "exact_actual_win_rate": null,
+      "exact_fwd5_win_rate": null,
+      "family_aliases": 0,
+      "fwd5_diff_vs_best_peer": null,
+      "rows": 0
+    },
+    "decision": "FAILED",
+    "matched_article_rows": 0,
+    "validation": {
+      "actual_diff_vs_best_peer": null,
+      "dates": 0,
+      "exact_actual_win_rate": null,
+      "exact_fwd5_win_rate": null,
+      "family_aliases": 0,
+      "fwd5_diff_vs_best_peer": null,
+      "rows": 0
+    }
+  },
+  "ts": "20260409_120743"
+}

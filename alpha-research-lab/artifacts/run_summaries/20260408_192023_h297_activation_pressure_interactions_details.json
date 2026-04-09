@@ -1,0 +1,372 @@
+{
+  "verdict": "FAILED",
+  "hypothesis": "Selector efficacy should respond more to reserve scarcity, score-gap compression, and blocked-buy pressure than to flat breadth.",
+  "protocol": {
+    "dev_years": [
+      2019,
+      2022
+    ],
+    "validation_years": [
+      2023,
+      2024
+    ],
+    "confirmation_year": 2025,
+    "forward_start_year": 2026
+  },
+  "target": "selector_cycle_edge",
+  "panel_rows": 1749,
+  "panel_dates": 1749,
+  "selector_cycle_edge_mean": 0.0006966244579961476,
+  "selector_hit_edge_mean": -0.0019028417240929583,
+  "best_interaction": {
+    "state_name": "replacement_pressure_combo",
+    "state_group": "interaction",
+    "candidate_decision": "FAILED",
+    "dev_rho": -0.028190998765782245,
+    "validation_rho": -0.003998455706221162,
+    "confirmation_rho": 0.004251847746540448,
+    "dev_q5_minus_q1": -0.003600183541663519,
+    "validation_q5_minus_q1": 0.00013465445438148258,
+    "confirmation_q5_minus_q1": 0.0016760328805541357,
+    "dev_rows": 1001,
+    "validation_rows": 499,
+    "confirmation_rows": 249,
+    "phase_details": {
+      "dev": {
+        "rows": 1001,
+        "dates": 1001,
+        "mean_target": 0.0005229176581451929,
+        "rho": -0.028190998765782245,
+        "q1_mean": 0.0007364593344092594,
+        "q5_mean": -0.0028637242072542595,
+        "q5_minus_q1": -0.003600183541663519,
+        "quintile_table": [
+          {
+            "quintile": 1,
+            "n": 201,
+            "state_mean": 0.2929968510790814,
+            "edge_mean": 0.0007364593344092594
+          },
+          {
+            "quintile": 2,
+            "n": 200,
+            "state_mean": 0.4106149942824471,
+            "edge_mean": 0.0012523801489867827
+          },
+          {
+            "quintile": 3,
+            "n": 200,
+            "state_mean": 0.4963697112635792,
+            "edge_mean": 0.00011683712176896592
+          },
+          {
+            "quintile": 4,
+            "n": 200,
+            "state_mean": 0.5785820468839337,
+            "edge_mean": 0.0033715681844338954
+          },
+          {
+            "quintile": 5,
+            "n": 200,
+            "state_mean": 0.6962868067467124,
+            "edge_mean": -0.0028637242072542595
+          }
+        ]
+      },
+      "validation": {
+        "rows": 499,
+        "dates": 499,
+        "mean_target": 0.0008096771353083016,
+        "rho": -0.003998455706221162,
+        "q1_mean": -2.0442659940857894e-05,
+        "q5_mean": 0.0001142117944406247,
+        "q5_minus_q1": 0.00013465445438148258,
+        "quintile_table": [
+          {
+            "quintile": 1,
+            "n": 100,
+            "state_mean": 0.3040487421383648,
+            "edge_mean": -2.0442659940857894e-05
+          },
+          {
+            "quintile": 2,
+            "n": 100,
+            "state_mean": 0.4362557175528874,
+            "edge_mean": 0.0007228949591438497
+          },
+          {
+            "quintile": 3,
+            "n": 99,
+            "state_mean": 0.5168610057117776,
+            "edge_mean": 8.970690797957855e-05
+          },
+          {
+            "quintile": 4,
+            "n": 100,
+            "state_mean": 0.5976772441395083,
+            "edge_mean": 0.0031348149726450254
+          },
+          {
+            "quintile": 5,
+            "n": 100,
+            "state_mean": 0.7128809319611206,
+            "edge_mean": 0.0001142117944406247
+          }
+        ]
+      },
+      "confirmation": {
+        "rows": 249,
+        "dates": 249,
+        "mean_target": 0.0011683803643095646,
+        "rho": 0.004251847746540448,
+        "q1_mean": 0.0046541678948960295,
+        "q5_mean": 0.006330200775450165,
+        "q5_minus_q1": 0.0016760328805541357,
+        "quintile_table": [
+          {
+            "quintile": 1,
+            "n": 50,
+            "state_mean": 0.28238993710691823,
+            "edge_mean": 0.0046541678948960295
+          },
+          {
+            "quintile": 2,
+            "n": 50,
+            "state_mean": 0.41948113207547166,
+            "edge_mean": 0.0026722688606230682
+          },
+          {
+            "quintile": 3,
+            "n": 49,
+            "state_mean": 0.5012120628697447,
+            "edge_mean": -0.00726703052992516
+          },
+          {
+            "quintile": 4,
+            "n": 50,
+            "state_mean": 0.5768367638650658,
+            "edge_mean": -0.0007164133973809728
+          },
+          {
+            "quintile": 5,
+            "n": 50,
+            "state_mean": 0.6997327044025157,
+            "edge_mean": 0.006330200775450165
+          }
+        ]
+      }
+    }
+  },
+  "best_baseline": {
+    "state_name": "buyable_breadth_all",
+    "state_group": "baseline",
+    "candidate_decision": "FAILED",
+    "dev_rho": 0.013030078631163074,
+    "validation_rho": 0.1172383661109538,
+    "confirmation_rho": -0.051947916699442945,
+    "dev_q5_minus_q1": 0.0008109135661806346,
+    "validation_q5_minus_q1": 0.00649904073096343,
+    "confirmation_q5_minus_q1": -0.007635614331735416,
+    "dev_rows": 1001,
+    "validation_rows": 499,
+    "confirmation_rows": 249,
+    "phase_details": {
+      "dev": {
+        "rows": 1001,
+        "dates": 1001,
+        "mean_target": 0.0005229176581451929,
+        "rho": 0.013030078631163074,
+        "q1_mean": -0.0023067057934159432,
+        "q5_mean": -0.0014957922272353086,
+        "q5_minus_q1": 0.0008109135661806346,
+        "quintile_table": [
+          {
+            "quintile": 1,
+            "n": 201,
+            "state_mean": 0.9641508992484152,
+            "edge_mean": -0.0023067057934159432
+          },
+          {
+            "quintile": 2,
+            "n": 200,
+            "state_mean": 0.9836670836637791,
+            "edge_mean": 0.003904765478102623
+          },
+          {
+            "quintile": 3,
+            "n": 200,
+            "state_mean": 0.9897296222358335,
+            "edge_mean": 0.0003332843219828126
+          },
+          {
+            "quintile": 4,
+            "n": 200,
+            "state_mean": 0.9939789522903197,
+            "edge_mean": 0.0021931846285495864
+          },
+          {
+            "quintile": 5,
+            "n": 200,
+            "state_mean": 0.9981536040286404,
+            "edge_mean": -0.0014957922272353086
+          }
+        ]
+      },
+      "validation": {
+        "rows": 499,
+        "dates": 499,
+        "mean_target": 0.0008096771353083016,
+        "rho": 0.1172383661109538,
+        "q1_mean": -0.003946158277822587,
+        "q5_mean": 0.0025528824531408432,
+        "q5_minus_q1": 0.00649904073096343,
+        "quintile_table": [
+          {
+            "quintile": 1,
+            "n": 100,
+            "state_mean": 0.9802323525580668,
+            "edge_mean": -0.003946158277822587
+          },
+          {
+            "quintile": 2,
+            "n": 100,
+            "state_mean": 0.990438166556346,
+            "edge_mean": -0.004013734864100055
+          },
+          {
+            "quintile": 3,
+            "n": 99,
+            "state_mean": 0.9943946034758313,
+            "edge_mean": 0.007077895175015075
+          },
+          {
+            "quintile": 4,
+            "n": 100,
+            "state_mean": 0.997074309610895,
+            "edge_mean": 0.0024401833707052983
+          },
+          {
+            "quintile": 5,
+            "n": 100,
+            "state_mean": 0.9995482878836173,
+            "edge_mean": 0.0025528824531408432
+          }
+        ]
+      },
+      "confirmation": {
+        "rows": 249,
+        "dates": 249,
+        "mean_target": 0.0011683803643095646,
+        "rho": -0.051947916699442945,
+        "q1_mean": 0.0034493616876509698,
+        "q5_mean": -0.004186252644084446,
+        "q5_minus_q1": -0.007635614331735416,
+        "quintile_table": [
+          {
+            "quintile": 1,
+            "n": 50,
+            "state_mean": 0.9717506027008139,
+            "edge_mean": 0.0034493616876509698
+          },
+          {
+            "quintile": 2,
+            "n": 50,
+            "state_mean": 0.9883398952185756,
+            "edge_mean": -0.0010470193495600436
+          },
+          {
+            "quintile": 3,
+            "n": 49,
+            "state_mean": 0.9925341838166537,
+            "edge_mean": 0.005183648045458669
+          },
+          {
+            "quintile": 4,
+            "n": 50,
+            "state_mean": 0.9950508168376635,
+            "edge_mean": 0.0025224694357056576
+          },
+          {
+            "quintile": 5,
+            "n": 50,
+            "state_mean": 0.9981138644826139,
+            "edge_mean": -0.004186252644084446
+          }
+        ]
+      }
+    }
+  },
+  "tested_states": [
+    {
+      "state_name": "buyable_breadth_all",
+      "state_group": "baseline",
+      "candidate_decision": "FAILED",
+      "dev_rho": 0.013030078631163074,
+      "validation_rho": 0.1172383661109538,
+      "confirmation_rho": -0.051947916699442945,
+      "validation_q5_minus_q1": 0.00649904073096343,
+      "confirmation_q5_minus_q1": -0.007635614331735416
+    },
+    {
+      "state_name": "replacement_pressure_combo",
+      "state_group": "interaction",
+      "candidate_decision": "FAILED",
+      "dev_rho": -0.028190998765782245,
+      "validation_rho": -0.003998455706221162,
+      "confirmation_rho": 0.004251847746540448,
+      "validation_q5_minus_q1": 0.00013465445438148258,
+      "confirmation_q5_minus_q1": 0.0016760328805541357
+    },
+    {
+      "state_name": "reserve_pressure_combo",
+      "state_group": "interaction",
+      "candidate_decision": "FAILED",
+      "dev_rho": -0.024908248484196902,
+      "validation_rho": -0.05428457175964328,
+      "confirmation_rho": 0.061900505246793636,
+      "validation_q5_minus_q1": -0.0017681645395919616,
+      "confirmation_q5_minus_q1": 0.005899386843707895
+    },
+    {
+      "state_name": "activation_pressure_combo",
+      "state_group": "interaction",
+      "candidate_decision": "FAILED",
+      "dev_rho": -0.023236919117363464,
+      "validation_rho": -0.08898051954417373,
+      "confirmation_rho": 0.08876643777039378,
+      "validation_q5_minus_q1": -0.003666693795986306,
+      "confirmation_q5_minus_q1": 0.004347747732882674
+    },
+    {
+      "state_name": "blocked_pressure_combo",
+      "state_group": "interaction",
+      "candidate_decision": "FAILED",
+      "dev_rho": 0.002838910034945094,
+      "validation_rho": -0.09447277326351622,
+      "confirmation_rho": 0.12388651379712398,
+      "validation_q5_minus_q1": -0.003916362679563976,
+      "confirmation_q5_minus_q1": 0.006926211811324781
+    },
+    {
+      "state_name": "candidate_count",
+      "state_group": "baseline",
+      "candidate_decision": "FAILED",
+      "dev_rho": 0.002840936907319418,
+      "validation_rho": -0.09896624652423976,
+      "confirmation_rho": -0.10423762530756889,
+      "validation_q5_minus_q1": -0.01110623871427597,
+      "confirmation_q5_minus_q1": -0.0067884422863839795
+    },
+    {
+      "state_name": "liq_open_breadth_all",
+      "state_group": "baseline",
+      "candidate_decision": "FAILED",
+      "dev_rho": -0.018546090934057565,
+      "validation_rho": -0.12888493784609684,
+      "confirmation_rho": 0.05497690526960093,
+      "validation_q5_minus_q1": -0.007636666007765771,
+      "confirmation_q5_minus_q1": 0.005293434219173419
+    }
+  ],
+  "branch_decision": "Close the activation-pressure interaction branch on the current contract. The date-level selector edge still is not explained meaningfully beyond the weak baseline states."
+}

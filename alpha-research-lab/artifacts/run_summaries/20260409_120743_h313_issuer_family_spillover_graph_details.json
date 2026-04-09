@@ -1,0 +1,99 @@
+{
+  "phase_rows": {
+    "dev": {
+      "rows": 0,
+      "dates": 0,
+      "family_aliases": 0,
+      "exact_actual_win_rate": null,
+      "exact_fwd5_win_rate": null,
+      "actual_diff_vs_best_peer": null,
+      "fwd5_diff_vs_best_peer": null
+    },
+    "validation": {
+      "rows": 0,
+      "dates": 0,
+      "family_aliases": 0,
+      "exact_actual_win_rate": null,
+      "exact_fwd5_win_rate": null,
+      "actual_diff_vs_best_peer": null,
+      "fwd5_diff_vs_best_peer": null
+    },
+    "confirmation": {
+      "rows": 0,
+      "dates": 0,
+      "family_aliases": 0,
+      "exact_actual_win_rate": null,
+      "exact_fwd5_win_rate": null,
+      "actual_diff_vs_best_peer": null,
+      "fwd5_diff_vs_best_peer": null
+    }
+  },
+  "alias_support": [
+    {
+      "family_alias": "ben thanh",
+      "family_tickers": [
+        "BRC",
+        "BTT"
+      ]
+    },
+    {
+      "family_alias": "capital vnx50",
+      "family_tickers": [
+        "FUEFCV50",
+        "FUETCC50"
+      ]
+    },
+    {
+      "family_alias": "hoang huy",
+      "family_tickers": [
+        "HHS",
+        "TCH"
+      ]
+    },
+    {
+      "family_alias": "mien trung",
+      "family_tickers": [
+        "CHP",
+        "PMG",
+        "SMB"
+      ]
+    },
+    {
+      "family_alias": "thanh cong",
+      "family_tickers": [
+        "TCI",
+        "TCM",
+        "VNG"
+      ]
+    },
+    {
+      "family_alias": "thuong tin",
+      "family_tickers": [
+        "SCR",
+        "STB"
+      ]
+    },
+    {
+      "family_alias": "tien phong",
+      "family_tickers": [
+        "ORS",
+        "TPB"
+      ]
+    },
+    {
+      "family_alias": "truong thanh",
+      "family_tickers": [
+        "TTA",
+        "TTF"
+      ]
+    },
+    {
+      "family_alias": "vien dong",
+      "family_tickers": [
+        "SVT",
+        "VID"
+      ]
+    }
+  ],
+  "examples": []
+}

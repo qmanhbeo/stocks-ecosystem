@@ -1,0 +1,22 @@
+{
+  "artifacts": {},
+  "metadata": {
+    "blocked": true,
+    "session": 128
+  },
+  "mode": "research_branch_news_attention_disagreement",
+  "name": "h302_news_attention_disagreement",
+  "summary": {
+    "active_window": {
+      "end_date": "2025-12-31",
+      "start_date": "2018-01-01"
+    },
+    "blocked": true,
+    "branch_contract": "Do not run the novelty x attention disagreement audit until xs_llm_news_ticker_day.parquet contains nonzero active-book coverage.",
+    "decision": "SKIP",
+    "nonzero_rows_2018_2025": 0,
+    "reason": "No nonzero LLM ticker-day rows exist in the active-book years.",
+    "rows_2018_2025": 652527
+  },
+  "ts": "20260408_192019"
+}

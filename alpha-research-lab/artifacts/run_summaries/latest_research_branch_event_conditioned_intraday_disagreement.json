@@ -1,0 +1,95 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260408_211247_h303_event_conditioned_intraday_disagreement_details.json",
+    "panel": "artifacts/portfolio_baselines/20260408_211247_h303_event_conditioned_intraday_disagreement_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260408_211247_h303_event_conditioned_intraday_disagreement_results.parquet"
+  },
+  "metadata": {
+    "branch_contract": "H303 is a narrow continuation of H299 on the 2023-2025 observed subset only; no live-branch change.",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    },
+    "session": 129,
+    "source_h299_summary": "artifacts/run_summaries/latest_research_branch_intraday_library_atoms.json",
+    "source_h301_summary": "artifacts/run_summaries/latest_research_branch_cafef_event_surface_v2_pilot.json"
+  },
+  "mode": "research_branch_event_conditioned_intraday_disagreement",
+  "name": "h303_event_conditioned_intraday_disagreement",
+  "summary": {
+    "best_event_candidate": {
+      "cohort_family": "event_v2",
+      "cohort_label": "H301 event-v2 recent 5d",
+      "cohort_name": "event_v2_5d",
+      "confirmation_active_dates": 218,
+      "confirmation_avg_ic": 0.04551746373214458,
+      "confirmation_avg_names_per_ic_day": 12.104265402843602,
+      "confirmation_cohort_rows": 2614,
+      "confirmation_daily_hit_rate": 0.5023696682464455,
+      "confirmation_daily_ic_rows": 211,
+      "confirmation_median_names_per_ic_day": 11.0,
+      "confirmation_positive_years": 1,
+      "confirmation_uplift_vs_full": 0.02469522520908016,
+      "confirmation_uplift_vs_no_event": 0.025062472849201607,
+      "confirmation_uplift_vs_v1": 0.011638537385854665,
+      "confirmation_years_present": 1,
+      "dev_active_dates": 249,
+      "dev_avg_ic": 0.020365824143241545,
+      "dev_avg_names_per_ic_day": 15.570850202429149,
+      "dev_cohort_rows": 3860,
+      "dev_daily_hit_rate": 0.5141700404858299,
+      "dev_daily_ic_rows": 247,
+      "dev_median_names_per_ic_day": 14.0,
+      "dev_positive_years": 1,
+      "dev_uplift_vs_full": -0.011427197006576174,
+      "dev_uplift_vs_no_event": -0.011628813007134173,
+      "dev_uplift_vs_v1": -0.020620958833767338,
+      "dev_years_present": 1,
+      "signal_name": "fade_tension_disagreement",
+      "validation_active_dates": 246,
+      "validation_avg_ic": 0.04299442683215055,
+      "validation_avg_names_per_ic_day": 14.091666666666667,
+      "validation_cohort_rows": 3405,
+      "validation_daily_hit_rate": 0.5291666666666667,
+      "validation_daily_ic_rows": 240,
+      "validation_median_names_per_ic_day": 14.0,
+      "validation_positive_years": 1,
+      "validation_uplift_vs_full": 0.006465346061654699,
+      "validation_uplift_vs_no_event": 0.006939379773385455,
+      "validation_uplift_vs_v1": -0.008301643412806994,
+      "validation_years_present": 1
+    },
+    "branch_decision": "The H299 disagreement atoms do not sharpen enough inside H301 event-v2 windows to beat the unconditional baseline or the broad v1 company-proxy control.",
+    "decision": "FAILED",
+    "mixed_candidate_count": 0,
+    "observed_dates": 718,
+    "observed_rows": 243763,
+    "observed_tickers": 394,
+    "pass_candidate_count": 0,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    },
+    "tested_signals": [
+      "fade_tension_disagreement",
+      "intraday_shape_core_disagreement"
+    ]
+  },
+  "ts": "20260408_211247"
+}

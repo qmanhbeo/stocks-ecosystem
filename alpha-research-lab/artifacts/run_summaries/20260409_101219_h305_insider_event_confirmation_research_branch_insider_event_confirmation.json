@@ -1,0 +1,121 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260409_101219_h305_insider_event_confirmation_details.json",
+    "results": "artifacts/portfolio_baselines/20260409_101219_h305_insider_event_confirmation_results.parquet"
+  },
+  "metadata": {
+    "branch_contract": "H305 is a pooled sparse-row 2023-2025 audit on C5 fire rows versus event-v1/v2 windows; no live-branch change.",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    },
+    "session": 131
+  },
+  "mode": "research_branch_insider_event_confirmation",
+  "name": "h305_insider_event_confirmation",
+  "summary": {
+    "baseline_row": {
+      "candidate_decision": "BASELINE",
+      "complement_name": null,
+      "confirmation_bottom_mean": 0.428927680798005,
+      "confirmation_complement_rows": null,
+      "confirmation_dates": 249,
+      "confirmation_ic_uplift_vs_baseline": 0.0,
+      "confirmation_ic_uplift_vs_complement": null,
+      "confirmation_pooled_ic": 0.016394500378490773,
+      "confirmation_q5_minus_q1": 0.0,
+      "confirmation_qspread_uplift_vs_baseline": 0.0,
+      "confirmation_rows": 2002,
+      "confirmation_tickers": 161,
+      "confirmation_top_mean": 0.428927680798005,
+      "dev_bottom_mean": 0.4332344213649852,
+      "dev_complement_rows": null,
+      "dev_dates": 249,
+      "dev_ic_uplift_vs_baseline": 0.0,
+      "dev_ic_uplift_vs_complement": null,
+      "dev_pooled_ic": 0.013085484654348585,
+      "dev_q5_minus_q1": 0.026706231454005913,
+      "dev_qspread_uplift_vs_baseline": 0.0,
+      "dev_rows": 1683,
+      "dev_tickers": 156,
+      "dev_top_mean": 0.4599406528189911,
+      "mask_name": "c5_all",
+      "mask_note": "Standalone C5 fire rows",
+      "validation_bottom_mean": 0.40311804008908686,
+      "validation_complement_rows": null,
+      "validation_dates": 247,
+      "validation_ic_uplift_vs_baseline": 0.0,
+      "validation_ic_uplift_vs_complement": null,
+      "validation_pooled_ic": 0.016841834597939902,
+      "validation_q5_minus_q1": 0.020044543429844075,
+      "validation_qspread_uplift_vs_baseline": 0.0,
+      "validation_rows": 2243,
+      "validation_tickers": 171,
+      "validation_top_mean": 0.42316258351893093
+    },
+    "best_candidate": {
+      "candidate_decision": "MIXED",
+      "complement_name": "v1_no_recent_any_filing_5d",
+      "confirmation_bottom_mean": 0.41846153846153844,
+      "confirmation_complement_rows": 378.0,
+      "confirmation_dates": 246,
+      "confirmation_ic_uplift_vs_baseline": 0.006425061693965537,
+      "confirmation_ic_uplift_vs_complement": 0.03505496209766961,
+      "confirmation_pooled_ic": 0.02281956207245631,
+      "confirmation_q5_minus_q1": 0.009230769230769265,
+      "confirmation_qspread_uplift_vs_baseline": 0.009230769230769265,
+      "confirmation_rows": 1624,
+      "confirmation_tickers": 151,
+      "confirmation_top_mean": 0.4276923076923077,
+      "dev_bottom_mean": 0.42857142857142855,
+      "dev_complement_rows": 322.0,
+      "dev_dates": 245,
+      "dev_ic_uplift_vs_baseline": 0.0108591407841863,
+      "dev_ic_uplift_vs_complement": 0.061838327041568254,
+      "dev_pooled_ic": 0.023944625438534886,
+      "dev_q5_minus_q1": 0.03466386554621853,
+      "dev_qspread_uplift_vs_baseline": 0.007957634092212618,
+      "dev_rows": 1361,
+      "dev_tickers": 145,
+      "dev_top_mean": 0.4632352941176471,
+      "mask_name": "v1_recent_any_filing_5d",
+      "mask_note": "C5 inside v1 recent filing 5d",
+      "validation_bottom_mean": 0.4092140921409214,
+      "validation_complement_rows": 401.0,
+      "validation_dates": 244,
+      "validation_ic_uplift_vs_baseline": -0.004416004080285389,
+      "validation_ic_uplift_vs_complement": -0.02929624450199371,
+      "validation_pooled_ic": 0.012425830517654514,
+      "validation_q5_minus_q1": 0.016260162601625994,
+      "validation_qspread_uplift_vs_baseline": -0.0037843808282180813,
+      "validation_rows": 1842,
+      "validation_tickers": 168,
+      "validation_top_mean": 0.4254742547425474
+    },
+    "branch_decision": "Broad event confirmation does not rescue C5 cleanly, but one narrow event pocket shows enough local support to preserve a bounded sparse-state follow-up.",
+    "decision": "MIXED",
+    "mixed_candidate_count": 2,
+    "pass_candidate_count": 0,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    }
+  },
+  "ts": "20260409_101219"
+}

@@ -1,0 +1,73 @@
+{
+  "artifacts": {
+    "atlas": "artifacts/portfolio_baselines/20260409_110708_h308_stock_local_predictability_atlas_atlas.parquet",
+    "details": "artifacts/run_summaries/20260409_110708_h308_stock_local_predictability_atlas_details.json",
+    "selected_panel": "artifacts/portfolio_baselines/20260409_110708_h308_stock_local_predictability_atlas_selected_panel.parquet"
+  },
+  "metadata": {
+    "branch_contract": "H308 is a frozen-S1 HOSE-wide recipient atlas with within-day permutation null control and BH-style multiple-testing discipline; only a null-controlled stable tail may reopen stock-local work.",
+    "session": 134
+  },
+  "mode": "research_branch_stock_local_predictability_atlas",
+  "name": "h308_stock_local_predictability_atlas",
+  "summary": {
+    "best_nominal_tail": [],
+    "branch_decision": "The apparent per-ticker tail is not stable enough after null control to justify more stock-local work; keep the branch closed.",
+    "decision": "FAILED",
+    "diagnostic_correlations": {
+      "dev_median_value_bn": {
+        "n": 0,
+        "spearman": null
+      },
+      "dev_overnight_share_abs": {
+        "n": 0,
+        "spearman": null
+      },
+      "dev_ret_autocorr_1d": {
+        "n": 0,
+        "spearman": null
+      },
+      "dev_variance_ratio_5d": {
+        "n": 0,
+        "spearman": null
+      },
+      "dev_zero_range_rate": {
+        "n": 0,
+        "spearman": null
+      }
+    },
+    "fdr_tail_count": 0,
+    "fdr_tail_tickers": [],
+    "nominal_tail_count": 0,
+    "nominal_tail_summary": {
+      "dev_median_value_bn_rest_median": 0.0007098415000000001,
+      "dev_median_value_bn_tail_median": null,
+      "dev_overnight_share_abs_rest_median": 0.3897206252397627,
+      "dev_overnight_share_abs_tail_median": null,
+      "dev_ret_autocorr_1d_rest_median": 0.04701934968347279,
+      "dev_ret_autocorr_1d_tail_median": null,
+      "dev_variance_ratio_5d_rest_median": 1.054161706742104,
+      "dev_variance_ratio_5d_tail_median": null,
+      "dev_zero_range_rate_rest_median": 0.033,
+      "dev_zero_range_rate_tail_median": null,
+      "tail_count": 0,
+      "tail_tickers": []
+    },
+    "nominal_tail_tickers": [],
+    "null_summary": {
+      "n_perm": 200,
+      "observed_rank_corr_dev_val": null,
+      "rank_corr_empirical_p": null,
+      "rank_corr_null_mean": null,
+      "rank_corr_null_p95": null
+    },
+    "qualified_ticker_count": 0,
+    "stable_all_count": 0,
+    "stable_dev_val_count": 0,
+    "structural_mixed_hits": {
+      "columns": [],
+      "count": 0
+    }
+  },
+  "ts": "20260409_110708"
+}

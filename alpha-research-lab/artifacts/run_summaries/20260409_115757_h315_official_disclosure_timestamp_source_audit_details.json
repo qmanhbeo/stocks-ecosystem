@@ -1,0 +1,14 @@
+{
+  "data_root": "/home/manh/stocks-ecosystem/data",
+  "search_patterns": [
+    "*ssc*",
+    "*disclosure*",
+    "*cong_bo*",
+    "*filing*",
+    "*hose*announcement*",
+    "*hnx*announcement*",
+    "*official*"
+  ],
+  "local_hits": [],
+  "local_hit_count": 0
+}

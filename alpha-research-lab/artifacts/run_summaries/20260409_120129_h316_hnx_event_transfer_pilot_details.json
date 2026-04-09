@@ -1,0 +1,39 @@
+{
+  "hnx_ticker_count": 402,
+  "training_title_rows": 94,
+  "strict_holdout_summary": {
+    "holdout_rows": 17,
+    "assigned_rows": 3,
+    "assigned_share": 0.17647058823529413,
+    "assigned_precision": 1.0
+  },
+  "combined_holdout_summary": {
+    "holdout_rows": 17,
+    "assigned_rows": 3,
+    "assigned_share": 0.17647058823529413,
+    "assigned_precision": 1.0
+  },
+  "metadata_candidate_alias_count": 0,
+  "validated_metadata_alias_count": 0,
+  "combined_summary": {
+    "archive_window": {
+      "start_date": "2023-01-01",
+      "end_date": "2025-12-31"
+    },
+    "total_articles_scanned": 312488,
+    "title_ticker_articles": 152,
+    "timestamped_title_ticker_articles": 152,
+    "candidate_article_rows": 1223,
+    "candidate_unique_articles": 950,
+    "candidate_unique_tickers": 48,
+    "timestamp_coverage": 1.0,
+    "family_qualified_article_share": 0.7302631578947368,
+    "linkage_modes": {
+      "title_ticker_rows": 191,
+      "title_alias_rows": 1032,
+      "title_alias_unique_articles": 839,
+      "title_alias_unique_tickers": 11
+    }
+  },
+  "new_holdout_assignments": []
+}

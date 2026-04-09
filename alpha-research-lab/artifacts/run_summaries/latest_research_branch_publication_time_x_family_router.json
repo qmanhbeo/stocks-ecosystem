@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260409_120129_h311_publication_time_x_family_router_details.json",
+    "panel": "artifacts/portfolio_baselines/20260409_120129_h311_publication_time_x_family_router_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260409_120129_h311_publication_time_x_family_router_results.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Only a stable family-specific publication-time advantage over intraday references can reopen an event publication router branch.",
+    "session": 136
+  },
+  "mode": "research_branch_publication_time_x_family_router",
+  "name": "h311_publication_time_x_family_router",
+  "summary": {
+    "best_candidate": {
+      "bucket": "post_close",
+      "candidate_decision": "MIXED",
+      "confirmation_actual_uplift_vs_intraday": -0.005590991416646984,
+      "confirmation_fwd5_uplift_vs_intraday": -0.0006231535069619429,
+      "confirmation_rows": 83,
+      "event_family": "board_management",
+      "validation_actual_uplift_vs_intraday": 0.027129993073193248,
+      "validation_fwd5_uplift_vs_intraday": 0.00303010591969326,
+      "validation_rows": 61
+    },
+    "branch_decision": "Publication time matters for some families, but the bucket effects are too local or unstable to call a broad router yet.",
+    "decision": "MIXED",
+    "families_tested": [
+      "earnings_company",
+      "rights_issuance",
+      "board_management",
+      "shareholder_meeting"
+    ],
+    "panel_rows": 6240
+  },
+  "ts": "20260409_120129"
+}

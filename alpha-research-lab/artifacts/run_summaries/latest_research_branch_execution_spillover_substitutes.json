@@ -1,0 +1,103 @@
+{
+  "artifacts": {
+    "date_level": "artifacts/portfolio_baselines/20260408_231957_h304_execution_spillover_substitutes_date_level.parquet",
+    "details": "artifacts/run_summaries/20260408_231957_h304_execution_spillover_substitutes_details.json",
+    "results": "artifacts/portfolio_baselines/20260408_231957_h304_execution_spillover_substitutes_results.parquet"
+  },
+  "metadata": {
+    "branch_contract": "H304 is a narrow substitute-beneficiary audit on the frozen 2019-2025 candidate panel only; no live-branch change.",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2019,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "session": 130
+  },
+  "mode": "research_branch_execution_spillover_substitutes",
+  "name": "h304_execution_spillover_substitutes",
+  "summary": {
+    "best_candidate": {
+      "confirmation_mean_avg_chosen_rank": 4.736263736263736,
+      "confirmation_mean_avg_other_group_count": 7.076923076923077,
+      "confirmation_mean_avg_other_top_rank": 2.2967032967032965,
+      "confirmation_mean_avg_same_group_count": 1.6703296703296704,
+      "confirmation_mean_dates": 91,
+      "confirmation_mean_hit_rate": 0.5054945054945055,
+      "confirmation_mean_mean_edge": 0.003697674268703916,
+      "confirmation_top_avg_chosen_rank": 4.736263736263736,
+      "confirmation_top_avg_other_group_count": 7.076923076923077,
+      "confirmation_top_avg_other_top_rank": 2.2967032967032965,
+      "confirmation_top_avg_same_group_count": 1.6703296703296704,
+      "confirmation_top_dates": 91,
+      "confirmation_top_hit_rate": 0.5494505494505495,
+      "confirmation_top_mean_edge": 0.003645647150720556,
+      "dev_mean_avg_chosen_rank": 5.163551401869159,
+      "dev_mean_avg_other_group_count": 7.025700934579439,
+      "dev_mean_avg_other_top_rank": 2.282710280373832,
+      "dev_mean_avg_same_group_count": 1.5841121495327102,
+      "dev_mean_dates": 428,
+      "dev_mean_hit_rate": 0.4719626168224299,
+      "dev_mean_mean_edge": -0.0009662786578362858,
+      "dev_top_avg_chosen_rank": 5.163551401869159,
+      "dev_top_avg_other_group_count": 7.025700934579439,
+      "dev_top_avg_other_top_rank": 2.282710280373832,
+      "dev_top_avg_same_group_count": 1.5841121495327102,
+      "dev_top_dates": 428,
+      "dev_top_hit_rate": 0.48130841121495327,
+      "dev_top_mean_edge": -0.0021792735734626574,
+      "relation_label": "Same family or sector",
+      "relation_name": "same_family_or_sector",
+      "state_label": "Top1 blocked or H296-thin",
+      "state_name": "blocked_or_thin_top1",
+      "total_dates": 713,
+      "validation_mean_avg_chosen_rank": 4.912371134020619,
+      "validation_mean_avg_other_group_count": 7.005154639175258,
+      "validation_mean_avg_other_top_rank": 2.3092783505154637,
+      "validation_mean_avg_same_group_count": 1.7216494845360826,
+      "validation_mean_dates": 194,
+      "validation_mean_hit_rate": 0.3865979381443299,
+      "validation_mean_mean_edge": -0.007060891560846031,
+      "validation_top_avg_chosen_rank": 4.912371134020619,
+      "validation_top_avg_other_group_count": 7.005154639175258,
+      "validation_top_avg_other_top_rank": 2.3092783505154637,
+      "validation_top_avg_same_group_count": 1.7216494845360826,
+      "validation_top_dates": 194,
+      "validation_top_hit_rate": 0.4690721649484536,
+      "validation_top_mean_edge": -0.007042776072904281
+    },
+    "branch_decision": "There is only weak local substitute evidence on stressed execution dates, not enough to reopen execution routing as a branch yet.",
+    "decision": "MIXED",
+    "mixed_candidate_count": 4,
+    "pass_candidate_count": 0,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2019,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "state_date_counts": {
+      "blocked_or_thin_top1": 1238,
+      "blocked_top1": 137,
+      "thin_top1_h296": 1192
+    },
+    "substitute_rank_window": [
+      2,
+      10
+    ],
+    "thin_adv20_rank_max": 0.4923857868020305
+  },
+  "ts": "20260408_231957"
+}

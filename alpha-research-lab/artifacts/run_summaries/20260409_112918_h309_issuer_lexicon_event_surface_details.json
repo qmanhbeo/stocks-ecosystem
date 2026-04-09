@@ -1,0 +1,544 @@
+{
+  "listing_source": "vnstock_listing_symbols_by_exchange",
+  "listing_rows": 3252,
+  "hose_listing_rows": 699,
+  "allowed_ticker_count": 394,
+  "training_title_rows": 871,
+  "metadata_candidate_alias_count": 1191,
+  "metadata_validated_alias_count": 120,
+  "metadata_alias_source_counts": {
+    "organ_name_suffix_2": 38,
+    "organ_name_suffix_3": 37,
+    "organ_name_suffix_4": 21,
+    "en_organ_name_brand_token": 19,
+    "organ_name_brand_token": 3,
+    "en_organ_name_suffix_3": 1,
+    "en_organ_name_suffix_2": 1
+  },
+  "strict_holdout_summary": {
+    "holdout_rows": 194,
+    "assigned_rows": 85,
+    "assigned_share": 0.4381443298969072,
+    "assigned_precision": 0.9882352941176471
+  },
+  "metadata_holdout_summary": {
+    "holdout_rows": 194,
+    "assigned_rows": 94,
+    "assigned_share": 0.4845360824742268,
+    "assigned_precision": 1.0
+  },
+  "combined_holdout_summary": {
+    "holdout_rows": 194,
+    "assigned_rows": 121,
+    "assigned_share": 0.6237113402061856,
+    "assigned_precision": 0.9917355371900827
+  },
+  "strict_coverage_snapshot": {
+    "recent_has_company_event_article_1d": 0.006181015452538631,
+    "recent_has_company_event_article_5d": 0.022958057395143488,
+    "recent_has_company_event_article_20d": 0.03532008830022075
+  },
+  "combined_coverage_snapshot": {
+    "recent_has_company_event_article_1d": 0.011920529801324504,
+    "recent_has_company_event_article_5d": 0.038410596026490065,
+    "recent_has_company_event_article_20d": 0.053863134657836646
+  },
+  "new_holdout_assignment_count": 36,
+  "new_holdout_correct_count": 36,
+  "new_holdout_examples": [
+    {
+      "masked_title": "Tập đoàn Bảo Việt vừa bổ sung thêm loạt nhân sự cấp cao",
+      "expected_ticker": "BVH",
+      "predicted_ticker": "BVH",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Phát Đạt lên tiếng về việc nhiều lãnh đạo bán cổ phiếu, khẳng định là giao dịch bình thường, phục vụ nhu cầu cá nhân",
+      "expected_ticker": "PDR",
+      "predicted_ticker": "PDR",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Phát Đạt vừa bổ nhiệm thêm 2 Phó Tổng giám đốc",
+      "expected_ticker": "PDR",
+      "predicted_ticker": "PDR",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Lợi nhuận giảm 288 tỷ đồng do Techcombank chấm dứt hợp đồng với Manulife, Masan vẫn báo lãi ròng quý 4 gần 700 tỷ đồng, gấp 14 lần cùng kỳ",
+      "expected_ticker": "MSN",
+      "predicted_ticker": "MSN",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Phó Chủ tịch bị khởi tố, Phó TGĐ Tracodi đăng ký bán 200.000 cổ phiếu",
+      "expected_ticker": "TCD",
+      "predicted_ticker": "TCD",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Loạt cá nhân bị xử phạt vì hành vi thao túng cổ phiếu Phát Đạt",
+      "expected_ticker": "PDR",
+      "predicted_ticker": "PDR",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Dabaco ước lãi sau thuế hơn 500 tỷ quý 1, gấp 7 lần cùng kỳ",
+      "expected_ticker": "DBC",
+      "predicted_ticker": "DBC",
+      "is_correct": true
+    },
+    {
+      "masked_title": "ĐHĐCĐ Đạt Phương : Kế hoạch lợi nhuận tăng 24%, Khu đô thị Cồn Tiến sẽ mở bán ngay cuối quý II/2025",
+      "expected_ticker": "DPG",
+      "predicted_ticker": "DPG",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Phát Đạt : Doanh thu quý 1/2025 gấp 2,7 lần cùng kỳ nhưng lợi nhuận giảm, đã phát hành 34,1 triệu cp để hoán đổi nợ",
+      "expected_ticker": "PDR",
+      "predicted_ticker": "PDR",
+      "is_correct": true
+    },
+    {
+      "masked_title": "ĐHĐCĐ Searefico : Quý 1/2025 đạt hơn 1.000 tỷ doanh số ký hợp đồng, có thể trúng thầu thêm 2.000 tỷ",
+      "expected_ticker": "SRF",
+      "predicted_ticker": "SRF",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Phát Đạt bị phạt gần nửa tỷ đồng vì hàng loạt vi phạm trong công bố thông tin và sử dụng vốn trái phiếu",
+      "expected_ticker": "PDR",
+      "predicted_ticker": "PDR",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Viconship tiếp tục gom thêm hơn 1 triệu cổ phiếu Vận tải và Xếp dỡ Hải An",
+      "expected_ticker": "HAH",
+      "predicted_ticker": "HAH",
+      "is_correct": true
+    },
+    {
+      "masked_title": "ACBS dự đoán Vinhomes lãi ròng hơn 35.000 tỷ đồng, 8 dự án mới dự kiến mở bán trong năm 2025",
+      "expected_ticker": "VHM",
+      "predicted_ticker": "VHM",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Con trai Chủ tịch Phát Đạt muốn bán sạch 3,4 triệu cổ phiếu",
+      "expected_ticker": "PDR",
+      "predicted_ticker": "PDR",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Cổ phiếu Đạt Phương tăng hơn 40% trong hơn 1 tháng: Điều gì đang diễn ra?",
+      "expected_ticker": "DPG",
+      "predicted_ticker": "DPG",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Chủ tịch Phát Đạt hé lộ 2 “tin vui” trị giá hàng chục ha đất vàng tại TP.HCM và Bình Dương",
+      "expected_ticker": "PDR",
+      "predicted_ticker": "PDR",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Vinhomes của tỷ phú Phạm Nhật Vượng thành lập công ty con ở Hải Phòng với vốn điều lệ hơn 5.200 tỷ đồng",
+      "expected_ticker": "VHM",
+      "predicted_ticker": "VHM",
+      "is_correct": true
+    },
+    {
+      "masked_title": "DRH Holdings của Chủ tịch Phan Tấn Đạt bị xử phạt nặng vì không minh bạch thông tin",
+      "expected_ticker": "DRH",
+      "predicted_ticker": "DRH",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Phục vụ Mặt đất Sài Gòn báo lãi quý 2/2025 giảm 12%, mất khách hàng lớn Vietjet không phải lý do duy nhất",
+      "expected_ticker": "SGN",
+      "predicted_ticker": "SGN",
+      "is_correct": true
+    },
+    {
+      "masked_title": "Dabaco nộp tài liệu chia cổ tức, chuẩn bị phát hành hơn 50 triệu cổ phiếu",
+      "expected_ticker": "DBC",
+      "predicted_ticker": "DBC",
+      "is_correct": true
+    }
+  ],
+  "combined_holdout_wrong_examples": [
+    {
+      "masked_title": "Nhóm Dịch vụ Hoàng Huy hoàn tất thương vụ sở hữu trên 51% Tập đoàn Bất động sản CRV",
+      "expected_ticker": "HHS",
+      "predicted_ticker": "TCH"
+    }
+  ],
+  "top_validated_metadata_aliases": [
+    {
+      "alias": "the gioi di dong",
+      "ticker": "MWG",
+      "support": 32,
+      "total_support": 32,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "hoa chat duc giang",
+      "ticker": "DGC",
+      "support": 25,
+      "total_support": 25,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "hoa dau binh son",
+      "ticker": "BSR",
+      "support": 16,
+      "total_support": 16,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "giao thong deo ca",
+      "ticker": "HHV",
+      "support": 8,
+      "total_support": 8,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "quoc cuong gia lai",
+      "ticker": "QCG",
+      "support": 8,
+      "total_support": 8,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "dia oc hoang quan",
+      "ticker": "HQC",
+      "support": 7,
+      "total_support": 7,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "hoang anh gia lai",
+      "ticker": "HAG",
+      "support": 6,
+      "total_support": 6,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "nhiet dien pha lai",
+      "ticker": "PPC",
+      "support": 5,
+      "total_support": 5,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "bao hiem quan doi",
+      "ticker": "MIG",
+      "support": 4,
+      "total_support": 4,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "duc long gia lai",
+      "ticker": "DLG",
+      "support": 4,
+      "total_support": 4,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "cao su da nang",
+      "ticker": "DRC",
+      "support": 3,
+      "total_support": 3,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "cao su phuoc hoa",
+      "ticker": "PHR",
+      "support": 3,
+      "total_support": 3,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "phan bon binh dien",
+      "ticker": "BFC",
+      "support": 3,
+      "total_support": 3,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "tai chinh hoang huy",
+      "ticker": "TCH",
+      "support": 3,
+      "total_support": 3,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "thuc pham sao ta",
+      "ticker": "FMC",
+      "support": 3,
+      "total_support": 3,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "cao su sao vang",
+      "ticker": "SRC",
+      "support": 2,
+      "total_support": 2,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "chung khoan rong viet",
+      "ticker": "VDS",
+      "support": 2,
+      "total_support": 2,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "mat dat sai gon",
+      "ticker": "SGN",
+      "support": 2,
+      "total_support": 2,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "nuoc thu dau mot",
+      "ticker": "TDM",
+      "support": 2,
+      "total_support": 2,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "thuy dien hua na",
+      "ticker": "HNA",
+      "support": 2,
+      "total_support": 2,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "xep do hai an",
+      "ticker": "HAH",
+      "support": 2,
+      "total_support": 2,
+      "dominance": 1.0,
+      "token_count": 4,
+      "alias_source": "organ_name_suffix_4"
+    },
+    {
+      "alias": "gioi di dong",
+      "ticker": "MWG",
+      "support": 32,
+      "total_support": 32,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "chat duc giang",
+      "ticker": "DGC",
+      "support": 25,
+      "total_support": 25,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "dau binh son",
+      "ticker": "BSR",
+      "support": 16,
+      "total_support": 16,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "nhua binh minh",
+      "ticker": "BMP",
+      "support": 10,
+      "total_support": 10,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "cuong gia lai",
+      "ticker": "QCG",
+      "support": 8,
+      "total_support": 8,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "thong deo ca",
+      "ticker": "HHV",
+      "support": 8,
+      "total_support": 8,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "co dien lanh",
+      "ticker": "REE",
+      "support": 7,
+      "total_support": 7,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "oc hoang quan",
+      "ticker": "HQC",
+      "support": 7,
+      "total_support": 7,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "thep nam kim",
+      "ticker": "NKG",
+      "support": 7,
+      "total_support": 7,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "anh gia lai",
+      "ticker": "HAG",
+      "support": 6,
+      "total_support": 6,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "an phat holdings",
+      "ticker": "APH",
+      "support": 5,
+      "total_support": 5,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "chung khoan vietcap",
+      "ticker": "VCI",
+      "support": 5,
+      "total_support": 5,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "dien pha lai",
+      "ticker": "PPC",
+      "support": 5,
+      "total_support": 5,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "duoc hau giang",
+      "ticker": "DHG",
+      "support": 4,
+      "total_support": 4,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "go truong thanh",
+      "ticker": "TTF",
+      "support": 4,
+      "total_support": 4,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "hiem quan doi",
+      "ticker": "MIG",
+      "support": 4,
+      "total_support": 4,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "khai hoan land",
+      "ticker": "KHG",
+      "support": 4,
+      "total_support": 4,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "long gia lai",
+      "ticker": "DLG",
+      "support": 4,
+      "total_support": 4,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    },
+    {
+      "alias": "nha khang dien",
+      "ticker": "KDH",
+      "support": 4,
+      "total_support": 4,
+      "dominance": 1.0,
+      "token_count": 3,
+      "alias_source": "organ_name_suffix_3"
+    }
+  ],
+  "comparison": {
+    "assigned_share_uplift": 0.18556701030927836,
+    "coverage_5d_uplift": 0.015452538631346577,
+    "combined_precision": 0.9917355371900827
+  }
+}

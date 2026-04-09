@@ -1,0 +1,29 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260409_120129_h312_v2_v1_disagreement_router_details.json",
+    "panel": "artifacts/portfolio_baselines/20260409_120129_h312_v2_v1_disagreement_router_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260409_120129_h312_v2_v1_disagreement_router_results.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Only a stable v2-only advantage over v1-only and both-active cohorts can reopen a disagreement-router branch.",
+    "session": 136
+  },
+  "mode": "research_branch_v2_v1_disagreement_router",
+  "name": "h312_v2_v1_disagreement_router",
+  "summary": {
+    "branch_decision": "v2-only disagreement is directionally better than the broad v1 states, but not strong enough to call a full router yet.",
+    "decision": "MIXED",
+    "panel_rows": 258371,
+    "v2_only_candidate": {
+      "candidate_decision": "MIXED",
+      "confirmation_pooled_ic": 0.09279251262448845,
+      "confirmation_rows": 4336,
+      "validation_fwd5_uplift_vs_v1_only_5d": -0.0007139709296189518,
+      "validation_ic_uplift_vs_both_5d": 0.07321481722113161,
+      "validation_ic_uplift_vs_v1_only_5d": 0.004423523241328553,
+      "validation_pooled_ic": 0.09385924053826462,
+      "validation_rows": 4557
+    }
+  },
+  "ts": "20260409_120129"
+}

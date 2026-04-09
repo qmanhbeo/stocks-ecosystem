@@ -1,0 +1,29 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260409_120129_h314_event_conditioned_c5_redux_details.json",
+    "results": "artifacts/portfolio_baselines/20260409_120129_h314_event_conditioned_c5_redux_results.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Only a richer H310/H309 family-specific or same-day event state that beats baseline C5 in validation and confirmation can reopen the insider-event branch.",
+    "session": 136
+  },
+  "mode": "research_branch_event_conditioned_c5_redux",
+  "name": "h314_event_conditioned_c5_redux",
+  "summary": {
+    "best_candidate": {
+      "candidate_decision": "FAILED",
+      "confirmation_ic_uplift_vs_baseline": -0.016394500378490773,
+      "confirmation_pooled_ic": null,
+      "confirmation_rows": 22,
+      "mask_name": "v2_same_day_earnings",
+      "validation_ic_uplift_vs_baseline": 0.0863685734678094,
+      "validation_pooled_ic": 0.10321040806574931,
+      "validation_rows": 35
+    },
+    "branch_decision": "The richer event surface improves some insider pockets, but no broad conditioned C5 branch is promotable yet.",
+    "c5_nonzero_rows": 5928,
+    "decision": "MIXED",
+    "panel_rows": 258375
+  },
+  "ts": "20260409_120129"
+}
