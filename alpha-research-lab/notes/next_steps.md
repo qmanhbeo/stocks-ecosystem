@@ -14,6 +14,54 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 
 ---
 
+## Bright Mind — Wild Frontier Queue (2026-04-09)
+
+These stay subordinate to `llm-cache-fill`. The first four are high-upside with
+mostly current data. The rest are acquisition-heavy but materially more
+interesting than another local parameter sweep.
+
+1. `attention-congestion-router`
+   - claim: same-day company-specific news underreacts differently when the whole market is already cognitively overloaded; market-wide attention load is a missing state variable, not just ticker-level sentiment
+   - smallest honest next test: interact `H310` same-day event-v2 states with `xs_llm_news_market_daily` distraction / surprise / uncertainty load, then compare `1d` versus `5d` response
+
+2. `ownership-network-contagion`
+   - claim: insider and event shocks diffuse through a hidden issuer / director / large-shareholder network before they look like sector moves
+   - smallest honest next test: build a pilot graph from `xs_insider_deals_raw.parquet`, issuer metadata, and family aliases, then test whether neighbor-node event / insider activity predicts next-day response
+
+3. `criticality-order-parameter`
+   - claim: the real activation state is a market-criticality field, not a macro filter; when gap alignment, limit clustering, and cross-sectional correlation hit a critical zone, small stock-level shocks propagate further
+   - smallest honest next test: derive daily order-parameter / susceptibility features from OHLCV + price-limit surfaces and audit whether they explain selector efficacy beyond the current activation meta
+
+4. `hawkes-disclosure-cascade`
+   - claim: news and filings behave like self-exciting cascades; cascade intensity may separate first-public shock, follow-up drift, and already-crowded stories better than simple repeat counts
+   - smallest honest next test: fit ticker / sector self-excitation intensity on CafeF timestamps and compare its predictive value against `H310/H317` novelty windows
+
+5. `policy-beneficiary-graph`
+   - claim: the biggest unexplored Vietnam-specific edge may be political-economy transmission from state policy, procurement, land approvals, and infrastructure planning into listed beneficiaries
+   - smallest honest next test: build a tiny manually mapped policy-event corpus for one theme (for example public investment / power / real estate credit), then test direct and second-order beneficiary reactions
+
+6. `queueing-open-fill-source`
+   - claim: the missing bridge between alpha and deployability is opening-queue state, and queueing features are likely more valuable than another daily predictor
+   - smallest honest next test: acquire a pilot order-book / auction / fine-minute source for a small basket and test whether queue imbalance explains blocked buys and next-open drift
+
+7. `foreign-room-pressure-source`
+   - claim: true foreign-room scarcity and ownership-limit pressure may matter far more than the dead VNM proxy; this is a regulatory microstructure branch, not a macro branch
+   - smallest honest next test: source daily foreign ownership / remaining room history for a pilot basket, validate ticker-date integrity, then test scarcity and room-change signals
+
+8. `retail-attention-ecology`
+   - claim: search / forum / app-ranking attention may capture crowd psychology earlier than article sentiment and may explain why some event-v2 shocks drift while others die immediately
+   - smallest honest next test: build a small basket from Google Trends or one forum / app-ranking source, then audit whether attention shocks predict turnover, ceiling pressure, or delayed continuation
+
+9. `geospatial-activity-nowcast`
+   - claim: satellite night lights, vessel traffic, power load, or truck / mobility proxies could create sector- or issuer-level nowcasts before fundamentals move
+   - smallest honest next test: pick one accessible source for one sector family, align it to listed beneficiaries, and test whether the nowcast improves event or slow-data windows
+
+10. `exchange-ecology-transfer`
+   - claim: if HNX / UPCOM matter, the likely value is as a different microstructure ecology or a regularizer, not just more rows
+   - smallest honest next test: keep it separate from live HOSE work and test one clean transfer contract such as HNX-only `S1` or event mapping before any pooled universe merge
+
+---
+
 ## Session 137 — Event-V2 Additive Screen (2026-04-09)
 
 This stays subordinate to `llm-cache-fill`. The current-data event-v2 promotion
