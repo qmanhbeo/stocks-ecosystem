@@ -3113,3 +3113,53 @@ deterministic continuations. Do not continue this branch without:
 - more cache years
 - new labels
 - or a materially different contract
+
+## F253: H333 Shows Foreign Room Residual Discontinuities Are Structured But Not Predictive Enough To Reopen H95 (2026-04-10, Session 153)
+
+Session 153 ran the first distinct H95 continuation after `H327/H328` rejected
+raw and conditioned CafeF foreign-flow ranks:
+- compute the room-mechanics residual:
+  - `delta(foreign_room_remaining) + foreign_net_volume`
+- separate idiosyncratic residual shocks from systemic reset days
+- test both dense residual ranks and sparse top-tail discontinuity states
+- evaluate both `T+1` (`actual`) and `T+5` (`fwd_rel_5d`) drift on
+  `2015-2025`, with `2026+` excluded from the predictive decision
+
+The room mechanics are structured:
+- merged rows:
+  - `817,074`
+- residual exact-zero share:
+  - `65.64%`
+- systemic reset days:
+  - `288`
+
+But the dense residual ranks failed:
+- best dense feature:
+  - `xs_ff_room_residual_loosen_rank`
+- dev / validation / confirmation IC:
+  - `-0.0044 / -0.0109 / +0.0132`
+- corr vs S1:
+  - `-0.0226`
+
+And the sparse event states failed:
+- best event state:
+  - `room_residual_systemic_abs_top5`
+- validation / confirmation actual lift:
+  - `-0.0724 / +0.0137`
+- validation / confirmation `fwd5` lift:
+  - `-0.0033 / +0.0090`
+- passing dense features:
+  - `0`
+- passing event states:
+  - `0`
+
+### Key finding
+The residual branch is real as source mechanics, but not as an alpha branch on
+the current contract. Room residual discontinuities cluster and are not just
+random scraper noise, but neither idiosyncratic nor systemic top-tail states
+keep validation and confirmation signs together.
+
+**Implication:** do not keep thresholding
+`delta(foreign_room_remaining) + foreign_net_volume`. If H95 continues, move to
+a materially different foreign-state thesis such as accumulation change-points,
+foreign-friction interaction, or foreign-insider agreement.

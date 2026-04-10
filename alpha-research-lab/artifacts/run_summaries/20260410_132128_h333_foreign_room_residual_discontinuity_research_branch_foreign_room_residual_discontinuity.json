@@ -1,0 +1,152 @@
+{
+  "artifacts": {
+    "date_stats": "artifacts/portfolio_baselines/20260410_132128_h333_foreign_room_residual_date_stats.parquet",
+    "dense_results": "artifacts/portfolio_baselines/20260410_132128_h333_foreign_room_residual_dense_results.parquet",
+    "details": "artifacts/run_summaries/20260410_132128_h333_foreign_room_residual_discontinuity_details.json",
+    "event_results": "artifacts/portfolio_baselines/20260410_132128_h333_foreign_room_residual_event_results.parquet",
+    "panel": "artifacts/portfolio_baselines/20260410_132128_h333_foreign_room_residual_panel.parquet",
+    "yearly_ic": "artifacts/portfolio_baselines/20260410_132128_h333_foreign_room_residual_yearly_ic.parquet"
+  },
+  "metadata": {
+    "hypothesis": "CafeF foreign-flow value may live in residual room discontinuities rather than raw buy/sell ranks.",
+    "protocol": {
+      "confirmation": "2025-01-01..2025-12-31",
+      "dev": "2015-01-01..2022-12-31",
+      "no_tuning_window": "2026+",
+      "residual_formula": "delta(foreign_room_remaining) + foreign_net_volume",
+      "validation": "2023-01-01..2024-12-31"
+    }
+  },
+  "mode": "research_branch_foreign_room_residual_discontinuity",
+  "name": "h333_foreign_room_residual_discontinuity",
+  "summary": {
+    "branch_decision": "Room residual discontinuities did not beat the H333 gate. Do not continue raw room-residual thresholding; move to a different foreign-state thesis such as accumulation change-points or friction interactions.",
+    "dense": {
+      "best_feature": {
+        "abs_dev_ic": 0.004359487494257278,
+        "abs_validation_ic": 0.010858128044155573,
+        "candidate_gate": false,
+        "confirmation_avg_ic": 0.013246117521677411,
+        "confirmation_n": 86427,
+        "confirmation_ok": false,
+        "corr_gate": true,
+        "corr_with_s1": -0.02258041752556329,
+        "coverage": 0.9999938806032257,
+        "dev_avg_ic": -0.004359487494257278,
+        "dev_directional_years": 5,
+        "dev_gate": false,
+        "dev_n": 563417,
+        "dev_pct_directional_years": 0.625,
+        "dev_years": 8,
+        "direction": "negative",
+        "feature": "xs_ff_room_residual_loosen_rank",
+        "full_avg_ic": -0.0037933756145375167,
+        "full_n": 817069,
+        "validation_avg_ic": -0.010858128044155573,
+        "validation_gate": true,
+        "validation_n": 167225
+      },
+      "features": [
+        "xs_ff_room_residual_tighten_rank",
+        "xs_ff_room_residual_loosen_rank",
+        "xs_ff_room_residual_abs_rank",
+        "xs_ff_room_residual_tighten_5d_rank",
+        "xs_ff_room_residual_loosen_5d_rank",
+        "xs_ff_room_residual_abs_5d_rank"
+      ],
+      "passing_features": []
+    },
+    "events": {
+      "best_event_state": {
+        "confirmation_active_days": 17,
+        "confirmation_actual_lift": 0.013661555392030122,
+        "confirmation_fwd5_lift": 0.00900585870018214,
+        "days_gate": true,
+        "dev_active_days": 48,
+        "direction": "negative",
+        "event_gate": false,
+        "mixed_gate": false,
+        "score": 0.09831051529377612,
+        "state": "room_residual_systemic_abs_top5",
+        "validation_active_days": 99,
+        "validation_actual_lift": -0.07235524622741535,
+        "validation_fwd5_lift": -0.0032878549741485043
+      },
+      "event_state_summary": [
+        {
+          "confirmation_active_days": 17,
+          "confirmation_actual_lift": 0.013661555392030122,
+          "confirmation_fwd5_lift": 0.00900585870018214,
+          "days_gate": true,
+          "dev_active_days": 48,
+          "direction": "negative",
+          "event_gate": false,
+          "mixed_gate": false,
+          "score": 0.09831051529377612,
+          "state": "room_residual_systemic_abs_top5",
+          "validation_active_days": 99,
+          "validation_actual_lift": -0.07235524622741535,
+          "validation_fwd5_lift": -0.0032878549741485043
+        },
+        {
+          "confirmation_active_days": 228,
+          "confirmation_actual_lift": -0.007587229214653546,
+          "confirmation_fwd5_lift": -0.0006100553466469672,
+          "days_gate": true,
+          "dev_active_days": 1426,
+          "direction": "positive",
+          "event_gate": false,
+          "mixed_gate": false,
+          "score": 0.035609667322942073,
+          "state": "room_residual_idio_tighten_top5",
+          "validation_active_days": 372,
+          "validation_actual_lift": 0.02612299823371189,
+          "validation_fwd5_lift": 0.0012893845279296726
+        },
+        {
+          "confirmation_active_days": 232,
+          "confirmation_actual_lift": 0.007225219567693453,
+          "confirmation_fwd5_lift": -3.790859946756209e-05,
+          "days_gate": true,
+          "dev_active_days": 1702,
+          "direction": "negative",
+          "event_gate": false,
+          "mixed_gate": false,
+          "score": 0.032340320573880366,
+          "state": "room_residual_idio_abs_top5",
+          "validation_active_days": 379,
+          "validation_actual_lift": 0.02382525515920425,
+          "validation_fwd5_lift": 0.0012519372475150985
+        },
+        {
+          "confirmation_active_days": 230,
+          "confirmation_actual_lift": 0.012844834151252815,
+          "confirmation_fwd5_lift": 0.000583744565932208,
+          "days_gate": true,
+          "dev_active_days": 1636,
+          "direction": "negative",
+          "event_gate": false,
+          "mixed_gate": false,
+          "score": 0.026246947618031716,
+          "state": "room_residual_idio_loosen_top5",
+          "validation_active_days": 284,
+          "validation_actual_lift": 0.011741799147292897,
+          "validation_fwd5_lift": 0.0010765697535537963
+        }
+      ],
+      "mixed_event_states": [],
+      "passing_event_states": []
+    },
+    "mechanics": {
+      "date_stats_rows": 5746,
+      "merged_dates": 2741,
+      "merged_rows": 817074,
+      "merged_tickers": 391,
+      "residual_exact_zero_share": 0.6564264681044801,
+      "residual_nonnull_share": 1.0,
+      "systemic_reset_days": 288
+    },
+    "verdict": "FAILED"
+  },
+  "ts": "20260410_132128"
+}

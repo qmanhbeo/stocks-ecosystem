@@ -547,7 +547,7 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Insider tier-weighting (H108 quality) | CEO-only IC +0.021, exec-rate IC −0.008 | Position-size normalization wins; tier/quality weighting doesn't |
 | Sector rotation composite (H111) | xs_sector_rotation_signal IC −0.038 | Intra-sector rank is anti-predictive (laggards beat leaders) |
 | VNM ETF foreign affinity (H110) | xs_fa_signal IC −0.001 | ETF premium is market-direction signal only; no cross-sectional differentiation |
-| CafeF raw foreign-flow ranks (H327/H328) | best raw room-scarcity dev/validation IC +0.0117/+0.0074 but 2025 IC −0.0048; best conditioned row sign-flips | Source acquired, but raw and conditioned buy/sell/net ranks fail confirmation |
+| CafeF foreign-flow ranks / residuals (H327/H328/H333) | best raw room-scarcity dev/validation IC +0.0117/+0.0074 but 2025 IC −0.0048; best residual loosen rank −0.0044/−0.0109/+0.0132 across dev/validation/confirmation | Source acquired, but raw, conditioned, and room-residual discontinuity paths fail confirmation |
 | Earnings quality 52 tickers (H109) | best IC +0.005 (roe_delta) | Insufficient universe; re-test at 394 tickers pending |
 | VN30 rebalancing proximity (H114) | xs_vn30_rank_change_5d IC +0.0075 (10/11) | Rank level anti-predictive; change directionally consistent but below 0.01 gate |
 | 52-week high proximity (H118) | xs_52w_high_prox IC +0.0065 (9/11) | Directionally correct but below IC > 0.01 gate |
@@ -571,7 +571,7 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Signal | Hypothesis | Data available | Priority |
 |--------|-----------|----------------|---------|
 | H98: LLM news sentiment | Higher quality than keyword approach | **PARKED** (runtime/throughput bottleneck) | Parked |
-| H95 follow-up: foreign room transitions | Foreign-room changes or ownership-regime transitions may matter more than raw buy/sell ranks | CafeF source acquired; raw ranks failed H327/H328 | Medium |
+| H95 follow-up: foreign accumulation / interactions | Accumulation change-points or friction/insider interactions may matter more than raw buy/sell ranks or room-residual thresholds | CafeF source acquired; raw ranks failed H327/H328 and room residuals failed H333 | Medium |
 | H135: Gap-failure exhaustion | Combine H130 and H133 logic: failed gap acceptance after compression may be the strongest reversal state | Ready to test | High |
 | H136: Sector-conditioned blow-off reversal | Test whether H133 strengthens inside hot sectors or recent ceiling clusters | Ready to test | High |
 | H137: Residual long-horizon reversal | H126 continuation is redundant; test the sign-flipped 90d/120d residual after removing C11 | Ready to test | Medium |

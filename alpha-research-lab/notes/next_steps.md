@@ -1,7 +1,7 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_152_log.md` for the latest full session detail.
+Use `notes/session_153_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
@@ -11,7 +11,7 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 1. `llm-cache-fill` — resume the patched Google workhorse backfill with `python -u data_tools/extract_llm_news_features.py --provider google --model gemini-3.1-flash-lite-preview --workers 4 --batch-size 10 --timeout 45` after limits clear. Current state: cache `767 / 3750`, last completed cache day `2018-01-29.jsonl`, no extractor process live, and the canonical extractor now fans the surviving Google model across all configured `GOOGLE_API_KEY*` slots via `@gk*` pool specs. The command skips existing cache days automatically.
 2. `llm-feature-refresh` — only after cache reaches the active-book years (`2018+`), rebuild `xs_llm_news_ticker_day.parquet`, rerun `H294`, and then reconsider `news-marginal-slot`.
 3. `intraday-shape-disagreement-review` — only if an offline side branch is intentionally reopened before the LLM cache is ready. Use the `H299` winners (`fade_tension_disagreement`, `intraday_shape_core_disagreement`) as observed-subset candidate-library review inputs. Do not publish them or route them live yet.
-4. `foreign-room-transition-audit` — only if continuing `H95`. Session 147 acquired and source-audited CafeF historical foreign flow, but `H327/H328` rejected raw buy/sell/net flow ranks and high-participation / room-scarcity conditioning. A continuation must test a different thesis such as room-change events or ownership-regime transitions.
+4. `foreign-room-transition-audit` — only if continuing `H95`. `H327/H328` rejected raw buy/sell/net flow ranks and high-participation / room-scarcity conditioning; `H333` also rejected room-residual discontinuity thresholding. If this branch continues, the next distinct thesis is `foreign-accumulation-change-point`, not more residual or raw-flow thresholds.
 5. `cheap-llm-surrogate-branch-parked` — `H329/H330/H331/H332` exhausted the current non-API continuation on the `2015-2017` teacher window. Novelty distillation, hybrid routing, lexical field routing, and disagreement residuals all recovered some structure, but none preserved the short-horizon contract cleanly enough to beat the old keyword baseline or justify continuation. Do not keep extending this branch without new labels, more cache coverage, or a materially different contract.
 
 ---
@@ -23,6 +23,8 @@ rank continuations, but they did **not** kill foreign-state mechanics,
 discontinuities, or interaction branches.
 
 1. `room-residual-discontinuity`
+   - current status: `H333` failed; dense residual ranks and sparse idiosyncratic/systemic discontinuity states did not keep validation and confirmation signs together
+   - branch consequence: do not continue raw `room_delta + foreign_net_volume` thresholding
    - claim: the usable foreign signal is in days where `foreign_room_remaining`
      changes in a way that ordinary net trading cannot explain, because those
      are ownership-regime / corporate-action / special-situation events rather
@@ -35,6 +37,7 @@ discontinuities, or interaction branches.
      test signed post-event drift on `T+1` / `T+5`
 
 2. `foreign-accumulation-change-point`
+   - current status: next distinct H95 continuation if this branch is reopened
    - claim: the real edge may be the first room-tightening / accumulation burst
      after dormancy, or the acceleration of a tightening sequence, not another
      1d / 5d flow share rank
