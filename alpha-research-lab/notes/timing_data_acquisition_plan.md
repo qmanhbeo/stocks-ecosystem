@@ -21,14 +21,92 @@ The current local workspace has already established:
 - local intraday surface: not usable beyond `FPT` 1H
 - local order-book / queue data: not available historically
 - CafeF stock-history page 2 (`ThongKeDL`) and page 4 (`GDTuDoanh`) are now
-  confirmed/wired as historical daily summary surfaces, but they do **not**
-  satisfy the missing auction / queue / depth requirement on their own
+  confirmed/wired as historical daily summary surfaces
+  - order stats first full run:
+    - `404` tickers
+    - `1,340,619` rows
+    - `2007-07-02` through `2026-04-10`
+  - proprietary trading first full run:
+    - `343` tickers
+    - `50,918` rows
+    - `2022-11-01` through `2026-04-09`
+    - plus `29` source-side CafeF failures
+  - they do **not** satisfy the missing auction / queue / depth requirement on
+    their own
+
+Adjacent unlocked low-resolution branch:
+- real daily order-pressure and proprietary-flow side channels now exist
+  through CafeF page 2 / page 4
+- these can support daily implementation-pain, crowding, and transfer-state
+  tests
+- they must **not** be mislabeled as auction / queue / depth evidence
 
 So the active next branch is acquisition-first:
 
 1. acquire a usable multi-ticker intraday / auction surface
 2. if that is not feasible, acquire a richer company-event source than the current event surface
 3. if that is also not feasible, stop timing research and wait for more forward live evidence or genuinely new data access
+
+## Practical source split after Session 161
+
+### Open-source data that is now honestly collectable
+
+- reduced-shape CafeF `1H` intraday
+- CafeF historical foreign flow
+- CafeF page 2 daily order stats
+- CafeF page 4 daily proprietary trading
+- CafeF raw company news archive
+
+Operational meaning:
+- daily order-pressure / implementation-pain tests are now honest
+- daily proprietary-flow and cross-flow divergence tests are now honest
+- reduced-shape intraday remains honest only for coarse open / first-hour /
+  close-hour state, not auction-resolution claims
+
+### Data that is only collectable if the lab starts recording forward from now
+
+- liveboard depth / bid-ask snapshots
+- board-state snapshots near open / close / ATC
+- any queue-like board pressure state that is only rendered live
+
+Operational meaning:
+- this can reopen some future microstructure research
+- it cannot repair missing historical dates
+
+### Data that likely requires paid / credentialed escalation
+
+1. `FiinQuant`
+- best near-term vendor candidate for:
+  - historical intraday plus foreign-flow-like fields
+  - live order-book access
+- still unknown:
+  - historical depth archive availability
+  - actual date range
+  - entitlement / price
+
+2. `SSI FastConnect`
+- credentialed fallback for:
+  - historical intraday
+  - live board / best-bid-ask style data
+- still unknown:
+  - whether historical depth / auction-state archives are sold
+
+3. `ICE`
+- strongest current evidence that real historical HOSE depth may exist
+  commercially
+- likely only relevant if the lab is willing to pay enterprise pricing
+
+### Data that remains genuinely unavailable from the current open stack
+
+- historical queue position
+- historical auction-book state
+- historical full order-book ladders
+- actual fill position
+- reconstructed past liveboard depth for dates that were never collected
+
+Operational rule:
+- do not keep phrasing the branch as “almost solved” on open data if the real
+  requirement is historical queue / depth / auction state
 
 ## Decision tree
 

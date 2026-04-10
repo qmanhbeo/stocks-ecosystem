@@ -118,6 +118,14 @@ python data_tools/fetch_news_archive.py
   - fields: `Date`, `ThayDoi`, `SoLenhMua`, `KLDatMua`, `KLTB1LenhMua`,
     `SoLenhDatBan`, `KLDatBan`, `KLTB1LenhBan`, `ChenhLechKL`
   - repo fetcher writes raw daily summaries under `data/order_stats/cafef/`
+  - fetcher writes resumable per-ticker caches plus an incrementally updated
+    `manifest.json` so long backfills can be monitored and resumed
+  - first full run completed cleanly:
+    - `404` tickers
+    - `1,340,619` rows
+    - `2007-07-02` through `2026-04-10`
+  - this newly reopens daily order-pressure / implementation-pain side-channel
+    tests
   - this is useful as a posted-order summary surface, not as a historical depth
     ladder or queue-position archive
 - **Historical proprietary trading (Tự doanh):**
@@ -127,6 +135,17 @@ python data_tools/fetch_news_archive.py
   - fields: `KLcpMua`, `KlcpBan`, `GtMua`, `GtBan`
   - repo fetcher writes raw daily summaries under
     `data/proprietary_trading/cafef/`
+  - fetcher writes resumable per-ticker caches plus an incrementally updated
+    `manifest.json`
+  - first full live run completed with some source-side `Success=false`
+    formatting failures on a subset of tickers; treat those names as source
+    holes unless CafeF later fixes the endpoint
+  - first full run snapshot:
+    - `343` tickers
+    - `50,918` rows
+    - `2022-11-01` through `2026-04-09`
+    - `29` source-side failures
+  - this newly reopens daily proprietary-flow and cross-flow divergence tests
 - **Historical matched trades by session (Khớp lệnh theo phiên):**
   CafeF stock-history page 5 uses `https://msh-appdata.cafef.vn/rest-api/api/v1/MatchPrice`
   plus a page-scoped export helper
@@ -150,15 +169,65 @@ python data_tools/fetch_news_archive.py
 - VIX, S&P500, gold, oil, copper, Asian indices, EM ETFs, yield curve
 - Stored in `data/fx-commodities/`
 
+## Practical Timing-Source Split (2026-04-10)
+
+This is the clean handoff view after Sessions `160-161`.
+
+### Collectable now from the current open stack
+
+- CafeF reduced-shape historical intraday via `MatchPrice`
+- CafeF historical foreign flow
+- CafeF page 2 historical daily order stats
+- CafeF page 4 historical daily proprietary trading
+- CafeF raw company news archive
+
+Operational consequence:
+- daily order-pressure / implementation-pain tests are now honest
+- daily proprietary-flow and cross-flow divergence tests are now honest
+- reduced-shape intraday is honest only for coarse intraday state, not
+  auction-resolution claims
+
+### Collectable only if we start recording forward from now
+
+- CafeF Liveboard board-depth snapshots
+- board-state snapshots near open / close / ATC
+- any live-only queue / pressure state shown on current boards
+
+Operational consequence:
+- this can support future forward microstructure research
+- it cannot backfill historical dates that were never recorded
+
+### Likely collectable only through paid / credentialed vendors
+
+- `FiinQuant`
+  - docs suggest historical intraday plus foreign buy/sell/net fields
+  - docs also suggest live `3/10`-level order-book coverage
+- `SSI FastConnect`
+  - docs already support authenticated historical intraday and live-board style
+    feeds
+- `ICE`
+  - market-data docs are the strongest current evidence that real historical
+    HOSE depth may exist commercially
+
+Operational consequence:
+- if the branch truly needs historical queue / depth / auction state, the next
+  honest step is vendor inquiry, not more local proxy tuning
+
 ---
 
-## What Is Genuinely Not Available
+## What Is Genuinely Not Available From The Current Open Stack
 
 | Data | Reason |
 |------|--------|
 | Historical intraday OHLCV / tick data via vnstock | vnstock doesn't provide historical intraday |
 | Historical full order-book / queue depth from CafeF | page-backed probe found daily summary tabs and live-only board feed, not a historical depth archive |
 | SSC filing text (structured JSON) | SSC portal is HTML-only |
+
+Still genuinely undoable without either forward collection or a paid vendor:
+- reconstructing historical queue position
+- reconstructing historical auction-book state
+- reconstructing past liveboard depth for dates never collected
+- inferring true order-book ladders from page-2 / page-4 daily summaries
 
 Forward-only acquisition note:
 - Session 146 `H326` started `data/foreign_flow_forward/vci_price_board/`

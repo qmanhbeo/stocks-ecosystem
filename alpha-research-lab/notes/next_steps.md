@@ -1,7 +1,7 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_159_log.md` for the latest full session detail.
+Use `notes/session_161_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
@@ -10,10 +10,42 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 
 1. `llm-cache-fill` — resume the patched Google workhorse backfill with `python -u data_tools/extract_llm_news_features.py --provider google --model gemini-3.1-flash-lite-preview --workers 4 --batch-size 10 --timeout 45` after limits clear. Current state: cache `767 / 3750`, last completed cache day `2018-01-29.jsonl`, no extractor process live, and the canonical extractor now fans the surviving Google model across all configured `GOOGLE_API_KEY*` slots via `@gk*` pool specs. The command skips existing cache days automatically.
 2. `llm-feature-refresh` — only after cache reaches the active-book years (`2018+`), rebuild `xs_llm_news_ticker_day.parquet`, rerun `H294`, and then reconsider `news-marginal-slot`.
-3. `intraday-shape-disagreement-review` — only if an offline side branch is intentionally reopened before the LLM cache is ready. Use the `H299` winners (`fade_tension_disagreement`, `intraday_shape_core_disagreement`) as observed-subset candidate-library review inputs. Do not publish them or route them live yet.
-4. `foreign-room-transition-audit` — only if continuing `H95`. `H327/H328` rejected raw buy/sell/net flow ranks and high-participation / room-scarcity conditioning; `H333` also rejected room-residual discontinuity thresholding. If this branch continues, the next distinct thesis is `foreign-accumulation-change-point`, not more residual or raw-flow thresholds.
-5. `cheap-llm-surrogate-branch-parked` — `H329/H330/H331/H332` exhausted the current non-API continuation on the `2015-2017` teacher window. Novelty distillation, hybrid routing, lexical field routing, and disagreement residuals all recovered some structure, but none preserved the short-horizon contract cleanly enough to beat the old keyword baseline or justify continuation. Do not keep extending this branch without new labels, more cache coverage, or a materially different contract.
-6. `smart-exit-distillation` — only if continuing the outcome-contract branch while LLM is blocked. `H334` passed the constrained legal-exit oracle upper-bound audit, `H335/H336` failed, `H337` improved the branch to `MIXED`, `H338` diagnosed why it stalled, and `H339` tested the exact skip-aware continuation. `H339` proved that the skip-aware label ceiling is fully removable in principle: a perfect skip-aware oracle recovers `100% / 100%` of the H334 oracle on validation / confirmation. But the learned daily-state policy still failed badly: dev-selected margin `0.0200`, validation / confirmation uplift vs fixed `3d` `-0.00430 / -0.01109`, and non-best-fixed rate `95.60% / 96.04%`. Do not reopen entry-time value routing, generic hold/sell labels, or more skip-aware margin retunes on the same daily state. Park current-state daily smart-exit ML unless new post-entry state/data or a materially different nonlinear replacement-relative model is available.
+3. `daily-order-pressure-and-proprietary-side-channels` — new acquisition follow-through after Sessions 160-161. CafeF page 2 (`ThongKeDL`) and page 4 (`GDTuDoanh`) are now wired as raw historical daily summaries, and the first full order-stats backfill completed cleanly: `404` tickers, `1,340,619` rows, `2007-07-02` through `2026-04-10`. The first proprietary-trading backfill also completed with source-side holes: `50,918` rows, `343` tickers, `2022-11-01` through `2026-04-09`, plus `29` CafeF `Success=false` failures. Use these surfaces for daily order-pressure, implementation-pain, proprietary-flow, and cross-flow divergence audits. Do **not** misclassify this as reopened queue/open-fill or auction-resolution work.
+4. `timing-vendor-source-decision` — only if the branch still needs more than daily side channels and reduced-shape intraday before the LLM cache is ready. Session 161 split the outside options cleanly:
+   - `FiinQuant`: most promising near-term vendor for historical intraday plus foreign-flow-like fields and live order-book access
+   - `SSI FastConnect`: authenticated intraday / live-board fallback, but historical depth remains unconfirmed
+   - `ICE`: strongest evidence of real historical HOSE depth, but likely enterprise-cost
+  Next honest action: ask all three one exact question about historical order-book depth / auction-state coverage, granularity, date range, and price. Do not assume the open-source Liveboard path can backfill this.
+5. `intraday-shape-disagreement-review` — only if an offline side branch is intentionally reopened before the LLM cache is ready. Use the `H299` winners (`fade_tension_disagreement`, `intraday_shape_core_disagreement`) as observed-subset candidate-library review inputs. Do not publish them or route them live yet.
+6. `foreign-room-transition-audit` — only if continuing `H95`. `H327/H328` rejected raw buy/sell/net flow ranks and high-participation / room-scarcity conditioning; `H333` also rejected room-residual discontinuity thresholding. If this branch continues, the next distinct thesis is `foreign-accumulation-change-point`, not more residual or raw-flow thresholds.
+7. `cheap-llm-surrogate-branch-parked` — `H329/H330/H331/H332` exhausted the current non-API continuation on the `2015-2017` teacher window. Novelty distillation, hybrid routing, lexical field routing, and disagreement residuals all recovered some structure, but none preserved the short-horizon contract cleanly enough to beat the old keyword baseline or justify continuation. Do not keep extending this branch without new labels, more cache coverage, or a materially different contract.
+8. `smart-exit-distillation` — only if continuing the outcome-contract branch while LLM is blocked. `H334` passed the constrained legal-exit oracle upper-bound audit, `H335/H336` failed, `H337` improved the branch to `MIXED`, `H338` diagnosed why it stalled, and `H339` tested the exact skip-aware continuation. `H339` proved that the skip-aware label ceiling is fully removable in principle: a perfect skip-aware oracle recovers `100% / 100%` of the H334 oracle on validation / confirmation. But the learned daily-state policy still failed badly: dev-selected margin `0.0200`, validation / confirmation uplift vs fixed `3d` `-0.00430 / -0.01109`, and non-best-fixed rate `95.60% / 96.04%`. Do not reopen entry-time value routing, generic hold/sell labels, or more skip-aware margin retunes on the same daily state. Park current-state daily smart-exit ML unless new post-entry state/data or a materially different nonlinear replacement-relative model is available.
+
+---
+
+## Session 161 — Timing Data Wrap-Up (2026-04-10)
+
+1. `what finished`
+   - CafeF order-stats first full backfill completed cleanly:
+     - `404` tickers
+     - `1,340,619` rows
+     - `2007-07-02` through `2026-04-10`
+   - CafeF proprietary-trading first full backfill completed with source-side holes:
+     - `343` tickers
+     - `50,918` rows
+     - `2022-11-01` through `2026-04-09`
+     - `29` CafeF `Success=false` failures
+
+2. `what this really unlocks`
+   - daily order-pressure / implementation-pain side channels
+   - daily proprietary-flow regime states
+   - daily cross-flow divergence states
+
+3. `what stayed blocked`
+   - historical queue / depth / auction state is still not in the open stack
+   - if the branch truly needs that resolution, the next honest paths are:
+     - forward collection from now, or
+     - paid / credentialed vendor escalation
 
 ---
 
@@ -815,6 +847,60 @@ This completes the first honest follow-through after discovering CafeF
      - validation IC `-0.0147`
      - confirmation IC `+0.0079`
    - branch consequence: do not continue thresholding raw foreign buy/sell ranks; if `H95` continues, use a different thesis such as room-change events, ownership-regime transitions, or near-limit foreign-room discontinuities
+
+---
+
+## Session 160 — CafeF Order-Stats And Proprietary-Trading Acquisition (2026-04-10)
+
+This is the direct follow-through after discovering CafeF stock-history page 2
+(`ThongKeDL`) and page 4 (`GDTuDoanh`).
+
+1. `cafef-order-stats-source`
+   - producer:
+     - `data_tools/fetch_cafef_order_stats.py`
+   - canonical raw root:
+     - `data/order_stats/cafef/`
+   - status:
+     - live full-universe backfill is running with resumable per-ticker caches
+       and incremental manifest tracking
+   - branch consequence:
+     - daily posted-order pressure is no longer source-blocked
+     - honest next work is order-count / posted-volume / avg-order-size /
+       imbalance audits around implementation pain, blocked-buy strain, and
+       continuation
+
+2. `cafef-proprietary-trading-source`
+   - producer:
+     - `data_tools/fetch_cafef_proprietary_trading.py`
+   - canonical raw root:
+     - `data/proprietary_trading/cafef/`
+   - first backfill result:
+     - `completed_with_errors`
+     - `404` requested
+     - `350` fetched
+     - `25` cached
+     - `29` source-side failures
+     - `50,918` panel rows
+     - `343` panel tickers
+   - branch consequence:
+     - daily proprietary-flow states are now testable
+     - source-side missing names must be treated as holes, not parser bugs,
+       unless CafeF later fixes the endpoint
+
+3. `what this does and does not unlock`
+   - newly unlocked:
+     - daily order-pressure side channels
+     - daily proprietary-flow side channels
+     - daily foreign-flow / proprietary-flow / posted-order divergence states
+   - still blocked:
+     - queue imbalance
+     - opening-auction / open-fill pain
+     - order-book depth
+     - fine-minute microstructure
+   - branch consequence:
+     - do **not** relabel these daily summaries as solved queue/open-fill data
+     - the next low-cost acquisition follow-through is daily pressure / flow
+       testing, not another fake microstructure proxy
 
 ---
 
@@ -3995,7 +4081,7 @@ Note: RL signal matrix built at `data/features/xs_rl_signal_matrix.parquet` (S1+
 ### Remaining constrained paths
 - **H98 LLM Sentiment** — PARKED (runtime/throughput bottleneck; re-open when local inference restored)
 - **H95 Foreign flow** — SOURCE ACQUIRED / RAW-RANK PATH FAILED (`H327` source pass; `H327/H328` reject raw and conditioned buy/sell ranks; reopen only with a different thesis such as room-change or ownership-regime transitions)
-- **Order book imbalance** — BLOCKED (intraday data not available historically)
+- **Order book imbalance / queue-open-fill** — BLOCKED (true auction/depth history is still absent; CafeF order stats and proprietary trading only unlock daily summary side channels, not microstructure)
 
 ---
 

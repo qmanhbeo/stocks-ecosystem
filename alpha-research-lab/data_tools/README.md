@@ -17,8 +17,8 @@ state of each data source. Read this before running experiments or wondering why
 | Fundamentals cache | YES | YES (52 tickers) | `fetch_fundamentals.py` / `fetch_all_stock_fundamentals.py` |
 | Insider deals raw | YES | YES (394 tickers) | `fetch_insider_deals.py` |
 | Historical foreign investor flow | YES | YES (CafeF raw archive) | `fetch_cafef_foreign_flow.py` |
-| Historical order statistics | YES | NO (fetch path wired; raw backfill pending) | `fetch_cafef_order_stats.py` |
-| Historical proprietary trading | YES | NO (fetch path wired; raw backfill pending) | `fetch_cafef_proprietary_trading.py` |
+| Historical order statistics | YES | YES (first full backfill completed; inspect `manifest.json`) | `fetch_cafef_order_stats.py` |
+| Historical proprietary trading | YES | YES (first full backfill completed with source-side holes; inspect `manifest.json`) | `fetch_cafef_proprietary_trading.py` |
 | Forward foreign-flow board snapshots | YES | YES (forward-only from 2026-04-09) | `collect_forward_foreign_flow.py` |
 | News archive (cafef, 3.6 GB) | NO | YES (fetched this session) | `fetch_news_archive.py` |
 | Intraday tick data | Partial | YES (`FPT` 1H legacy + open CafeF fetch path) | `fetch_cafef_intraday_all.py` + `adjust_cafef_intraday_to_vci.py`; authenticated fallback is `fetch_ssi_intraday.py` |
@@ -309,6 +309,11 @@ Fetch historical daily order-statistics data from CafeF's `ThongKeDL` endpoint.
   fetched, cached, and failed ticker counts
 - **Failure control:** use `--fail-fast` to stop on the first ticker failure;
   default behavior records the failure in the manifest and continues
+- **Research use unlocked:** daily order-pressure / implementation-pain
+  side-channel tests are now honestly possible on a real source surface
+- **Current acquisition state:** first full-universe run completed cleanly with
+  `404` tickers, `1,340,619` rows, and date coverage `2007-07-02` through
+  `2026-04-10`
 - **Important:** this is a raw daily summary of posted orders, not a historical
   depth ladder or queue-position archive
 
@@ -337,6 +342,14 @@ Fetch historical daily proprietary-trading data from CafeF's `GDTuDoanh` endpoin
   fetched, cached, and failed ticker counts
 - **Failure control:** use `--fail-fast` to stop on the first ticker failure;
   default behavior records the failure in the manifest and continues
+- **Research use unlocked:** daily proprietary-flow regime and cross-flow
+  divergence tests are now honestly possible on a real source surface
+- **Current acquisition state:** first full-universe run completed with
+  source-side holes:
+  - `343` tickers
+  - `50,918` rows
+  - `2022-11-01` through `2026-04-09`
+  - `29` CafeF `Success=false` failures on some tickers
 - **Important:** this is a raw daily summary surface, not an intraday
   proprietary-flow tape
 

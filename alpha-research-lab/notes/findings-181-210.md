@@ -3601,3 +3601,144 @@ long-hold policy.
 branch is reopened, the next honest change must be richer post-entry state/data
 or a materially different nonlinear / replacement-relative model, not another
 margin retune or small target rewrite.
+
+## F260: CafeF Order-Stats And Proprietary-Trading Surfaces Reopen Daily Pressure / Flow Side Channels But Do Not Reopen Queue / Open-Fill Research (2026-04-10, Session 160)
+
+Session 160 followed through on the CafeF stock-history page probe after page 2
+(`ThongKeDL`) and page 4 (`GDTuDoanh`) were found.
+
+Two new raw historical producers were wired:
+- `data_tools/fetch_cafef_order_stats.py`
+- `data_tools/fetch_cafef_proprietary_trading.py`
+
+The fetchers now share one resumable history helper:
+- `data_tools/cafef_history_common.py`
+
+The monitored live backfill found and fixed two real operator bugs:
+- manifests originally only wrote at the end of a run
+  - they now update incrementally with `running / completed /
+    completed_with_errors / interrupted`
+- resumed runs misclassified cached tickers as failures because cached-path
+  logging used an invalid DataFrame truthiness shortcut
+  - cached resumes now work cleanly again
+
+The acquisition result split by surface:
+
+1. proprietary trading:
+- first full-universe run status:
+  - `completed_with_errors`
+- requested:
+  - `404` tickers
+- fetched:
+  - `350`
+- cached:
+  - `25`
+- failed:
+  - `29`
+- combined panel:
+  - `50,918` rows
+  - `343` tickers
+- direct endpoint probes reproduced CafeF `Success=false` formatting failures on
+  names such as:
+  - `ANV`
+  - `BVH`
+  - `DGC`
+  - `GVR`
+  - `HDB`
+  - `HPG`
+
+2. order statistics:
+- live backfill is in progress with durable checkpointing
+- note-promotion snapshot:
+  - `143 / 404` processed
+  - `134` fetched
+  - `9` cached
+  - `0` failed
+
+Scientifically, this changes the branch state in a narrow but important way.
+The workspace now owns real daily summary data for:
+- posted buy / sell order counts
+- posted buy / sell volume
+- average order size
+- buy-sell imbalance
+- proprietary buy / sell / net volume
+- proprietary buy / sell / net value
+
+So earlier **daily** execution-friction / crowding ideas are no longer
+source-blocked. The lab can now honestly test:
+- daily order-pressure / implementation-pain side channels
+- daily proprietary-flow regime states
+- foreign-flow vs proprietary-flow vs posted-order conflict states
+
+But the older `H325` blockage still stands in the microstructure sense.
+These new surfaces do **not** provide:
+- order-book ladders
+- opening-auction queues
+- actual fill position
+- fine-minute sequence data
+- bid / ask depth
+
+### Key finding
+CafeF page 2 and page 4 are a real acquisition win, but at **daily summary**
+granularity only. They reopen lower-resolution pressure / flow-state research,
+not the true queue/open-fill branch.
+
+**Implication:** keep queue/open-fill research acquisition-blocked until a real
+auction / order-book / fine-minute source exists. Move the next honest
+low-cost follow-through to daily order-pressure, proprietary-flow, and
+cross-flow divergence audits instead of pretending the microstructure question
+is solved.
+
+## F261: The Current Open Stack Now Maxes Out At Daily Side Channels Plus Reduced-Shape Intraday; True Historical Queue / Depth Likely Requires Either Forward Collection Or A Paid Vendor (2026-04-10, Session 161)
+
+Session 161 closed the full `2026-04-10` timing-data acquisition pass with a
+clean source-feasibility split.
+
+What is now clearly in hand:
+- CafeF historical foreign flow
+- CafeF page 2 daily order statistics
+- CafeF page 4 daily proprietary trading
+- CafeF page 5 reduced-shape matched-trade intraday
+- CafeF raw company news archive
+
+What is therefore honestly collectable from the current open stack:
+- daily order-pressure / implementation-pain side channels
+- daily proprietary-flow regime states
+- daily foreign-vs-proprietary-vs-posted-order divergence states
+- reduced-shape intraday state from the existing CafeF `1H` path
+
+What is only collectable if the lab starts recording from now:
+- liveboard depth snapshots
+- live board-state snapshots near open / close / ATC
+- any current-board state that only exists on a live feed
+
+What remains structurally unavailable from the current open/local surfaces:
+- historical order-book ladders
+- historical queue position
+- historical auction-book state
+- actual fill-position / open-fill pain
+- reconstructed past liveboard history for dates never recorded
+
+The vendor audit also sharpened the escalation path:
+- `FiinQuant` appears promising for historical intraday plus foreign-flow-like
+  fields and live order-book access
+- `SSI FastConnect` remains a credentialed intraday / live-board fallback
+- `ICE` is the first strong evidence that true historical HOSE depth may exist
+  commercially, but likely only as an enterprise-cost path
+
+### Key finding
+The missing timing data problem is no longer ambiguous.
+The open-data branch now appears to max out at:
+- daily side channels
+- reduced-shape intraday
+
+If the lab needs true historical queue / depth / auction state, the next honest
+paths are:
+- start forward collection now, or
+- pay for a vendor that can actually deliver historical depth
+
+### Implication
+Do not keep hand-waving the queue/open-fill branch as “almost solved.”
+Keep the next steps explicit:
+- first test the newly unlocked daily side channels
+- if that still is not enough, escalate the vendor question directly
