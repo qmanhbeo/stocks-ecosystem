@@ -1,7 +1,7 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_153_log.md` for the latest full session detail.
+Use `notes/session_156_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
@@ -13,6 +13,138 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 3. `intraday-shape-disagreement-review` — only if an offline side branch is intentionally reopened before the LLM cache is ready. Use the `H299` winners (`fade_tension_disagreement`, `intraday_shape_core_disagreement`) as observed-subset candidate-library review inputs. Do not publish them or route them live yet.
 4. `foreign-room-transition-audit` — only if continuing `H95`. `H327/H328` rejected raw buy/sell/net flow ranks and high-participation / room-scarcity conditioning; `H333` also rejected room-residual discontinuity thresholding. If this branch continues, the next distinct thesis is `foreign-accumulation-change-point`, not more residual or raw-flow thresholds.
 5. `cheap-llm-surrogate-branch-parked` — `H329/H330/H331/H332` exhausted the current non-API continuation on the `2015-2017` teacher window. Novelty distillation, hybrid routing, lexical field routing, and disagreement residuals all recovered some structure, but none preserved the short-horizon contract cleanly enough to beat the old keyword baseline or justify continuation. Do not keep extending this branch without new labels, more cache coverage, or a materially different contract.
+6. `smart-exit-distillation` — only if continuing the outcome-contract branch while LLM is blocked. `H334` passed the constrained legal-exit oracle upper-bound audit, but `H335` and `H336` both failed to distill it into a useful learned policy. `H335` validation / confirmation model uplift vs fixed `3d` was `-0.04% / -0.92%` per entry despite decision AUCs of `0.590 / 0.575`; `H336` entry-time action-value routing was also negative at `-0.41% / -0.96%`. Do not integrate `exit-mdp-lite` and do not continue entry-time value routing on the current daily feature state. The only honest continuation is a materially different label family such as `discrete-exit-hazard`, or parking smart exits until new post-entry state/data exists.
+
+---
+
+## Bright-Mind Follow-Up — Outcome Contract Queue (2026-04-10)
+
+This stays subordinate to `llm-cache-fill`, but it is a real protocol concern:
+single fixed-horizon returns can misclassify delayed signals as failures.
+Prior evidence already points this way: `H285` reordered the library on a 5d
+contract, `H286` showed a naive 5d WF proxy was not a clean replacement, and
+`H291` showed news novelty changes shape across `1d / 5d / 30d`.
+
+1. `multi-horizon-response-surface`
+   - claim: evaluate signals on a predeclared `1d / 3d / 5d / 10d / 20d`
+     response surface instead of one endpoint return
+   - smallest honest next test: rerun recent sparse branches such as `H321`,
+     `H333`, and LLM-news buckets on the horizon surface and classify whether
+     each is short-shock, delayed-drift, or false-positive
+
+2. `path-aware-patience-label`
+   - claim: a signal should not get full credit for a good day-10 return if it
+     requires intolerable interim drawdown; use max favorable excursion,
+     adverse excursion, and time-to-hit as the label family
+   - smallest honest next test: build `mfe_10d`, `mae_10d`, `time_to_plus`,
+     and `hit_plus_before_minus` labels from existing OHLCV and compare them
+     against fixed `fwd_rel_5d`
+
+3. `horizon-router-contract`
+   - current status: `H336` failed the entry-time action-value version; do not
+     continue this as another margin/grid retune on the current daily feature
+     state
+   - claim: the model should learn which signals deserve `H=1`, `H=5`, or
+     `H=10` instead of forcing a universal holding period
+   - smallest honest next test: compute best predeclared horizon by dev-only
+     performance per signal family, then test whether simple state variables
+     route horizons out-of-sample without hindsight max-return leakage
+
+4. `discounted-return-kernel`
+   - claim: a smooth discounted sum of daily excess returns over `10-15` days
+     is less brittle than endpoint return
+   - smallest honest next test: compare IC and year consistency for endpoint
+     `fwd_rel_5d`, endpoint `fwd_rel_10d`, and a triangular / exponential
+     `return_kernel_10d` on the frozen library
+
+5. `book-marginal-outcome`
+   - claim: the right target is not generic stock return; it is whether a
+     candidate beats the weakest currently held or next eligible replacement
+     over its intended horizon
+   - smallest honest next test: revive the `H289` marginal-slot idea with
+     multi-horizon candidate returns and a cost-aware replacement baseline
+
+## Bright-Mind Follow-Up — Smart Exit ML Queue (2026-04-10)
+
+This is not a request to reopen `H218-H220` with a more complex model. `H218`
+already failed on a one-step `future_hold_advantage_5d > 0` continuation target.
+The new claim is that the label itself needs to become sequential, path-aware,
+and opportunity-cost aware before "real ML" is justified.
+
+1. `exit-oracle-upper-bound`
+   - current status: `H334` passed the upper-bound gate, but only as offline
+     evidence; the constrained hindsight oracle is not a deployable policy
+   - result: validation / confirmation oracle utility uplift over the best
+     fixed horizon was about `+4.00% / +4.40%` per entry, and non-best-fixed
+     horizon choices were `64.78% / 53.74%`
+   - claim: before training anything, estimate whether a legal exit policy could
+     beat fixed `H=5` / `H=10` at all under costs, T+ sellability, and drawdown
+     penalties
+   - smallest honest next test: for each historical entry, allow only
+     predeclared legal exits such as `1d / 3d / 5d / 10d / 15d`, compute a
+     constrained oracle utility, and stop the branch if the oracle uplift over
+     fixed horizons is not material out-of-sample
+
+2. `exit-mdp-lite`
+   - current status: `H335` failed; the classifier saw some hold/sell signal
+     in AUC space, but the sequential policy underperformed fixed `3d` on
+     validation and confirmation
+   - result: validation / confirmation decision AUC `0.5897 / 0.5746`, but
+     model utility uplift vs fixed `3d` was `-0.00037 / -0.00918`; do not
+     integrate this policy
+   - claim: the exit problem should be a two-action sequential decision problem
+     (`hold one more day` vs `sell / replace`), not a fixed endpoint label
+   - smallest honest next test: build held-position episode rows with
+     `days_held`, return since entry, drawdown from peak, score / rank decay,
+     activation state, tradability, event state, and best replacement pressure;
+     train a dev-only fitted-Q / logistic hold-advantage model and compare the
+     resulting policy against fixed horizons and the archived `H211` rule
+
+3. `discrete-exit-hazard`
+   - claim: delayed signals should be modeled as time-to-alpha and time-to-fail
+     hazards, so a position can be kept when alpha hazard dominates and exited
+     when failure hazard dominates
+   - smallest honest next test: create per-hold-day survival rows with targets
+     like `hit_plus_next` and `hit_minus_next` up to a max hold, then test a
+     competing-risk logistic hazard rule against fixed `H=5`
+
+4. `oracle-distilled-exit-bucket`
+   - current status: `H336` failed the simplest entry-time action-value
+     imitation route, so this should not be continued without post-entry state
+     or a materially different label contract
+   - claim: if the constrained oracle has real uplift, learn to imitate only
+     the legal exit bucket or horizon family that the oracle chose, using only
+     information available at entry or at the current hold day
+   - smallest honest next test: train a small regularized classifier for
+     `exit_now / hold_short / hold_long`, evaluate strictly walk-forward, and
+     require it to recover a material share of oracle uplift without using the
+     realized future path at inference
+
+5. `multi-task-path-labels`
+   - claim: a smarter model should learn several related outcomes together:
+     endpoint returns, max favorable excursion, max adverse excursion,
+     time-to-profit, and hit-plus-before-minus
+   - smallest honest next test: build a target matrix for
+     `r1/r3/r5/r10`, `mfe_10d`, `mae_10d`, and
+     `hit_plus_before_minus_10d`, then compare simple multi-head / per-head
+     learners against the current single `fwd_rel_5d` contract
+
+6. `replacement-value-exit`
+   - claim: exit value is book-relative: the right question is whether the held
+     name should keep a scarce slot versus the best eligible replacement, not
+     whether it has positive standalone return
+   - smallest honest next test: extend the parked `H289` marginal-slot label to
+     held-position rows by pairing each incumbent with the best same-day
+     replacement candidate from `candidate_panel_daily.parquet`, then test a
+     pairwise hold-vs-replace model
+
+Priority order: `exit-oracle-upper-bound` is complete and `exit-mdp-lite` is
+closed on the first simple distillation contract. `action-value-horizon-router`
+is also closed for the current daily feature state. If continuing the branch,
+test a materially different `discrete-exit-hazard` target before any
+neural/offline-RL variant, and require the learned policy to recover real
+oracle uplift walk-forward without using future paths at inference. Otherwise,
+park smart-exit ML until new post-entry state/data exists.
 
 ---
 

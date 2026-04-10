@@ -3163,3 +3163,217 @@ keep validation and confirmation signs together.
 `delta(foreign_room_remaining) + foreign_net_volume`. If H95 continues, move to
 a materially different foreign-state thesis such as accumulation change-points,
 foreign-friction interaction, or foreign-insider agreement.
+
+## F254: H334 Shows A Constrained Legal-Exit Oracle Has Enough Upper-Bound Uplift To Justify One Smart-Exit Distillation Attempt (2026-04-10, Session 154)
+
+Session 154 tested the first smart-exit ML gate before training any model:
+- keep the frozen `full_library` top-5 / rebalance-5 backbone
+- use actual executed buy entries from the simulated blotter
+- allow only predeclared legal exits:
+  - `3d`
+  - `5d`
+  - `10d`
+  - `15d`
+- if a scheduled exit is sell-blocked, use the first legal sell thereafter
+- score utility as relative return minus a drawdown penalty:
+  - `relative_return - 0.25 * open-path MAE`
+- exclude `2026+` from the predictive decision
+
+The audit covered:
+- entries:
+  - `2,578`
+- horizon rows:
+  - `10,295`
+- tickers / entry dates:
+  - `359 / 548`
+- round-trip cost:
+  - `0.30%`
+
+The best fixed horizon was `3d` in every phase:
+- dev fixed `3d` utility:
+  - `-0.0003`
+- validation fixed `3d` utility:
+  - `-0.0018`
+- confirmation fixed `3d` utility:
+  - `-0.0068`
+
+But the constrained oracle had material uplift:
+- dev oracle utility / uplift:
+  - `+0.0593 / +0.0596`
+- validation oracle utility / uplift:
+  - `+0.0382 / +0.0400`
+- confirmation oracle utility / uplift:
+  - `+0.0372 / +0.0440`
+
+The oracle choice was not degenerate:
+- validation non-best-fixed horizon choice rate:
+  - `64.78%`
+- confirmation non-best-fixed horizon choice rate:
+  - `53.74%`
+
+### Key finding
+The current fixed-horizon exit contract is leaving a large upper-bound gap, but
+the gap is not deployable by itself because the oracle uses future path
+outcomes. This branch passes only as offline evidence that an exit target is
+worth learning.
+
+**Implication:** advance to `exit-mdp-lite` or `discrete-exit-hazard` before any
+neural/offline-RL variant. The next model must use only information available
+at entry or the current hold day and must recover a material share of oracle
+uplift strictly walk-forward. Do not deploy or tune against the oracle directly.
+
+## F255: H335 Fails To Distill The Legal-Exit Oracle With A Simple Hold/Sell MDP-Lite Policy (2026-04-10, Session 155)
+
+Session 155 tested the first learned smart-exit distillation after `H334`:
+- consume the H334 legal-horizon outcomes
+- create decision rows at scheduled legal exits:
+  - `3d`
+  - `5d`
+  - `10d`
+- label a row as "hold" if a later legal horizon has higher H334 utility
+- train a regularized logistic classifier on dev only
+- run a sequential policy with fixed threshold `0.50`
+- compare against the best fixed horizon and the H334 oracle
+- exclude `2026+`
+
+The panel covered:
+- decision rows:
+  - `7,717`
+- policy entries:
+  - `2,578`
+- features:
+  - `57`
+
+The model had non-random classification signal:
+- dev decision AUC:
+  - `0.6299`
+- validation decision AUC:
+  - `0.5897`
+- confirmation decision AUC:
+  - `0.5746`
+
+But the induced policy failed economically:
+- best fixed horizon:
+  - `3d`
+- dev model uplift vs fixed `3d`:
+  - `+0.00472`
+- validation model uplift vs fixed `3d`:
+  - `-0.00037`
+- confirmation model uplift vs fixed `3d`:
+  - `-0.00918`
+- validation oracle uplift recovered:
+  - `-0.93%`
+- confirmation oracle uplift recovered:
+  - `-20.88%`
+
+The policy mostly held too long:
+- validation model horizon choices:
+  - `3d 7.97%`
+  - `5d 50.52%`
+  - `10d 39.83%`
+  - `15d 1.68%`
+- confirmation model horizon choices:
+  - `3d 13.22%`
+  - `5d 51.54%`
+  - `10d 33.04%`
+  - `15d 2.20%`
+
+### Key finding
+The H334 oracle gap is real, but the first simple hold/sell MDP-lite
+distillation does not monetize it. The classifier can predict the hold label
+better than random, yet the sequential policy loses to the fixed `3d` exit in
+validation and confirmation.
+
+**Implication:** do not integrate `exit-mdp-lite` and do not retune its
+threshold against validation / confirmation. If continuing smart-exit work,
+move to a materially different target such as `discrete-exit-hazard`; do not
+jump to neural/offline RL from this failed distillation.
+
+## F256: H336 Fails To Recover The Legal-Exit Oracle With Entry-Time Action-Value Horizon Routing (2026-04-10, Session 156)
+
+Session 156 tested a second learned smart-exit distillation after `H334/H335`:
+- consume the H334 executed-entry universe
+- train one action-value regressor per legal exit horizon:
+  - `3d`
+  - `5d`
+  - `10d`
+  - `15d`
+- use only entry-time daily state features
+- select a non-`3d` horizon only when the predicted best horizon beats
+  predicted `3d` by a dev-selected margin
+- select the margin on dev only from:
+  - `0.0000`
+  - `0.0025`
+  - `0.0050`
+  - `0.0100`
+  - `0.0150`
+  - `0.0200`
+  - `0.0300`
+- compare against fixed `3d` and the H334 constrained oracle
+- exclude `2026+`
+
+The panel covered:
+- entries:
+  - `2,578`
+- features:
+  - `32`
+- selected margin:
+  - `0.0000`
+- model:
+  - `GradientBoostingRegressor(max_depth=2, n_estimators=80, min_samples_leaf=30)`
+
+The model appeared useful on dev:
+- dev model utility:
+  - `+0.02045`
+- dev model uplift vs fixed `3d`:
+  - `+0.02075`
+- dev oracle uplift recovered:
+  - `34.81%`
+
+But it failed out of sample:
+- validation model utility:
+  - `-0.00586`
+- validation model uplift vs fixed `3d`:
+  - `-0.00406`
+- validation oracle uplift recovered:
+  - `-10.16%`
+- confirmation model utility:
+  - `-0.01642`
+- confirmation model uplift vs fixed `3d`:
+  - `-0.00960`
+- confirmation oracle uplift recovered:
+  - `-21.84%`
+
+The router overrode fixed `3d` too aggressively:
+- validation override rate:
+  - `86.37%`
+- confirmation override rate:
+  - `82.82%`
+- validation model / oracle horizon match:
+  - `22.85%`
+- confirmation model / oracle horizon match:
+  - `25.11%`
+
+Per-horizon rank quality was weak in the held-out phases:
+- validation Spearman:
+  - `h3 0.1048`
+  - `h5 0.0686`
+  - `h10 0.0303`
+  - `h15 0.0641`
+- confirmation Spearman:
+  - `h3 0.0777`
+  - `h5 -0.0739`
+  - `h10 0.0932`
+  - `h15 0.0543`
+
+### Key finding
+The H334 oracle gap is not recovered by entry-time action-value horizon routing
+on the current daily feature state. The model can fit useful-looking dev
+utility, but the out-of-sample policy pushes too many entries into longer
+horizons and loses to fixed `3d`.
+
+**Implication:** close entry-time horizon routing for now. Do not integrate the
+policy, and do not retune its margin on validation / confirmation. If the
+smart-exit branch continues, use a materially different target such as
+`discrete-exit-hazard` with post-entry state, or park the branch until better
+state/data exists.

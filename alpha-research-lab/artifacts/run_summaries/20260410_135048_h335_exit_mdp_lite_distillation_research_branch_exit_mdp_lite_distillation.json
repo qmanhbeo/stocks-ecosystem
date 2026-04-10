@@ -1,0 +1,198 @@
+{
+  "artifacts": {
+    "decision_rows": "artifacts/portfolio_baselines/20260410_135048_h335_exit_mdp_lite_decision_rows.parquet",
+    "details": "artifacts/run_summaries/20260410_135048_h335_exit_mdp_lite_distillation_details.json",
+    "phase_results": "artifacts/portfolio_baselines/20260410_135048_h335_exit_mdp_lite_phase_results.parquet",
+    "policy_entries": "artifacts/portfolio_baselines/20260410_135048_h335_exit_mdp_lite_policy_entries.parquet"
+  },
+  "metadata": {
+    "hypothesis": "A simple ex-ante hold-vs-sell classifier can recover useful H334 oracle uplift at legal exit decision horizons.",
+    "no_tuning_window": "2026+",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "research_branch_exit_mdp_lite_distillation",
+  "name": "h335_exit_mdp_lite_distillation",
+  "summary": {
+    "branch_decision": "The exit-MDP-lite classifier did not recover enough H334 oracle uplift out of sample. Do not integrate this policy; try discrete-exit-hazard only if continuing the branch.",
+    "confirmation_decision_auc": 0.5745944960816475,
+    "confirmation_model_uplift_vs_best_fixed": -0.009181567472200305,
+    "confirmation_oracle_uplift_recovered_share": -0.20877792298561984,
+    "mechanics": {
+      "decision_horizons": [
+        3,
+        5,
+        10
+      ],
+      "decision_rows": 7717,
+      "entry_outcomes": "artifacts/portfolio_baselines/20260410_134038_h334_exit_oracle_upper_bound_entry_outcomes.parquet",
+      "feature_count": 57,
+      "h334_summary": "artifacts/run_summaries/latest_research_branch_exit_oracle_upper_bound.json",
+      "hold_threshold": 0.5,
+      "horizon_outcomes": "artifacts/portfolio_baselines/20260410_134038_h334_exit_oracle_upper_bound_horizon_outcomes.parquet",
+      "max_horizon": 15,
+      "policy_entries": 2578
+    },
+    "mixed_condition": false,
+    "model": {
+      "dev_positive_rate": 0.5869797225186766,
+      "dev_rows": 5622,
+      "feature_count": 57,
+      "strongest_standardized_coefficients": [
+        [
+          "full_score_change_since_entry",
+          0.7465118669707163
+        ],
+        [
+          "current_score__full_library",
+          -0.6079011735747522
+        ],
+        [
+          "entry_full_library_rank",
+          -0.3508884933194969
+        ],
+        [
+          "entry_score__full_library",
+          0.3335634313335985
+        ],
+        [
+          "entry_full_library_rank_pct",
+          -0.33057415276609037
+        ],
+        [
+          "current_c5_ins_relative_size_5d",
+          0.22361530680182096
+        ],
+        [
+          "current_c11_ret_60d_lag_rank",
+          0.1770864898926444
+        ],
+        [
+          "horizon_eq_3",
+          0.14371057892190262
+        ],
+        [
+          "horizon",
+          -0.14022375935854148
+        ],
+        [
+          "entry_c11_ret_60d_lag_rank",
+          -0.1367620742229482
+        ],
+        [
+          "entry_c8_vol_zscore_5d",
+          -0.13258351023832848
+        ],
+        [
+          "horizon_eq_10",
+          -0.1176551877356359
+        ],
+        [
+          "entry_c14_clv_volconf_resid_rank",
+          -0.11483774584425178
+        ],
+        [
+          "scheduled_blocked_extra_days",
+          -0.10299553604891767
+        ],
+        [
+          "current_full_library_rank",
+          0.10054710825963721
+        ]
+      ]
+    },
+    "pass_condition": false,
+    "phase_results": [
+      {
+        "best_fixed_horizon": 3,
+        "best_fixed_utility_mean": -0.00030236369079395816,
+        "decision_auc": 0.6298961188108475,
+        "decision_rows": 5622,
+        "entries": 1874,
+        "h10_utility_mean": -0.0024823157741155084,
+        "h15_utility_mean": -0.000313167184929764,
+        "h3_utility_mean": -0.00030236369079395816,
+        "h5_utility_mean": -0.0012597521106494378,
+        "hold_label_rate": 0.5869797225186766,
+        "hold_prob_mean": 0.5045504934709598,
+        "model_h10_choice_rate": 0.48025613660619,
+        "model_h15_choice_rate": 0.05816435432230523,
+        "model_h3_choice_rate": 0.06937033084311633,
+        "model_h5_choice_rate": 0.39220917822838847,
+        "model_matches_oracle_rate": 0.25773745997865527,
+        "model_not_best_fixed_rate": 0.9306296691568837,
+        "model_uplift_vs_best_fixed": 0.0047223570523841985,
+        "model_utility_mean": 0.00441999336159024,
+        "oracle_uplift_recovered_share": 0.07923777191101744,
+        "oracle_uplift_vs_best_fixed": 0.05959729733046152,
+        "oracle_utility_mean": 0.05929493363966756,
+        "phase": "dev"
+      },
+      {
+        "best_fixed_horizon": 3,
+        "best_fixed_utility_mean": -0.0017915833955942327,
+        "decision_auc": 0.5896778902104661,
+        "decision_rows": 1431,
+        "entries": 477,
+        "h10_utility_mean": -0.007095032603329964,
+        "h15_utility_mean": -0.008507591758872309,
+        "h3_utility_mean": -0.0017915833955942327,
+        "h5_utility_mean": -0.002792159674048963,
+        "hold_label_rate": 0.549266247379455,
+        "hold_prob_mean": 0.4855511260536475,
+        "model_h10_choice_rate": 0.39832285115303984,
+        "model_h15_choice_rate": 0.016771488469601678,
+        "model_h3_choice_rate": 0.07966457023060797,
+        "model_h5_choice_rate": 0.5052410901467506,
+        "model_matches_oracle_rate": 0.23270440251572327,
+        "model_not_best_fixed_rate": 0.9203354297693921,
+        "model_uplift_vs_best_fixed": -0.000370061378158775,
+        "model_utility_mean": -0.0021616447737530077,
+        "oracle_uplift_recovered_share": -0.009255110768937194,
+        "oracle_uplift_vs_best_fixed": 0.039984543394208434,
+        "oracle_utility_mean": 0.038192959998614204,
+        "phase": "validation"
+      },
+      {
+        "best_fixed_horizon": 3,
+        "best_fixed_utility_mean": -0.006821569571287752,
+        "decision_auc": 0.5745944960816475,
+        "decision_rows": 664,
+        "entries": 227,
+        "h10_utility_mean": -0.0210334155619701,
+        "h15_utility_mean": -0.030051818598144344,
+        "h3_utility_mean": -0.006821569571287752,
+        "h5_utility_mean": -0.013167024180830704,
+        "hold_label_rate": 0.46686746987951805,
+        "hold_prob_mean": 0.47438653813040726,
+        "model_h10_choice_rate": 0.3303964757709251,
+        "model_h15_choice_rate": 0.022026431718061675,
+        "model_h3_choice_rate": 0.13215859030837004,
+        "model_h5_choice_rate": 0.5154185022026432,
+        "model_matches_oracle_rate": 0.19823788546255505,
+        "model_not_best_fixed_rate": 0.8678414096916299,
+        "model_uplift_vs_best_fixed": -0.009181567472200305,
+        "model_utility_mean": -0.016003137043488058,
+        "oracle_uplift_recovered_share": -0.20877792298561984,
+        "oracle_uplift_vs_best_fixed": 0.043977674175984166,
+        "oracle_utility_mean": 0.03715610460469641,
+        "phase": "confirmation"
+      }
+    ],
+    "validation_decision_auc": 0.5896778902104661,
+    "validation_model_uplift_vs_best_fixed": -0.000370061378158775,
+    "validation_oracle_uplift_recovered_share": -0.009255110768937194,
+    "verdict": "FAILED"
+  },
+  "ts": "20260410_135048"
+}

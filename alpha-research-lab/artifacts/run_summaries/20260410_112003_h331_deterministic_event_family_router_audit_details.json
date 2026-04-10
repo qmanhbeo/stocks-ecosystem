@@ -1,0 +1,817 @@
+{
+  "verdict": "FAILED",
+  "teacher_window": {
+    "date_min": "2015-09-21T00:00:00",
+    "date_max": "2018-01-03T00:00:00",
+    "article_rows": 12353,
+    "days": 731,
+    "tickers_covered": 2075
+  },
+  "field_metrics": [
+    {
+      "field_name": "source_authority",
+      "row_count": 12353,
+      "holdout_rows": 7016,
+      "majority_label": "media_report",
+      "det_macro_f1": 0.28051628068319867,
+      "baseline_macro_f1": 0.12929487797820005,
+      "macro_f1_delta": 0.15122140270499862,
+      "det_accuracy": 0.3070125427594071,
+      "det_balanced_accuracy": 0.33543321929066194,
+      "dense_field": true
+    },
+    {
+      "field_name": "expectation_alignment",
+      "row_count": 3955,
+      "holdout_rows": 2353,
+      "majority_label": "beats",
+      "det_macro_f1": 0.21673561913807635,
+      "baseline_macro_f1": 0.19274924471299096,
+      "macro_f1_delta": 0.02398637442508539,
+      "det_accuracy": 0.13047173820654484,
+      "det_balanced_accuracy": 0.13250233235030118,
+      "dense_field": true
+    },
+    {
+      "field_name": "impact_scope",
+      "row_count": 3961,
+      "holdout_rows": 3437,
+      "majority_label": "market",
+      "det_macro_f1": 0.5177231678540452,
+      "baseline_macro_f1": 0.0815457950289411,
+      "macro_f1_delta": 0.43617737282510405,
+      "det_accuracy": 0.6715158568519057,
+      "det_balanced_accuracy": 0.6262359422067146,
+      "dense_field": true
+    },
+    {
+      "field_name": "event_type",
+      "row_count": 295,
+      "holdout_rows": 128,
+      "majority_label": "management_change",
+      "det_macro_f1": 0.5300206953183084,
+      "baseline_macro_f1": 0.08527131782945736,
+      "macro_f1_delta": 0.44474937748885107,
+      "det_accuracy": 0.453125,
+      "det_balanced_accuracy": 0.5576053770790613,
+      "dense_field": false
+    }
+  ],
+  "field_reports": {
+    "source_authority": {
+      "deterministic": {
+        "accuracy": 0.3070125427594071,
+        "balanced_accuracy": 0.33543321929066194,
+        "macro_f1": 0.28051628068319867,
+        "row_count": 7016,
+        "per_label": [
+          {
+            "label": "media_report",
+            "precision": 0.5350877192982456,
+            "recall": 0.03640704267382871,
+            "f1": 0.06817546800782343,
+            "support": 3351,
+            "tp": 122,
+            "predicted_total": 228
+          },
+          {
+            "label": "management",
+            "precision": 0.2999642474079371,
+            "recall": 0.7596197374377547,
+            "f1": 0.43009099064462386,
+            "support": 2209,
+            "tp": 1678,
+            "predicted_total": 5594
+          },
+          {
+            "label": "official",
+            "precision": 0.268,
+            "recall": 0.21560740144810941,
+            "f1": 0.23896567097637095,
+            "support": 1243,
+            "tp": 268,
+            "predicted_total": 1000
+          },
+          {
+            "label": "analyst",
+            "precision": 0.4968944099378882,
+            "recall": 0.425531914893617,
+            "f1": 0.4584527220630373,
+            "support": 188,
+            "tp": 80,
+            "predicted_total": 161
+          },
+          {
+            "label": "rumor_source",
+            "precision": 0.18181818181818182,
+            "recall": 0.24,
+            "f1": 0.20689655172413793,
+            "support": 25,
+            "tp": 6,
+            "predicted_total": 33
+          }
+        ],
+        "confusion_matrix": [
+          {
+            "teacher_source_authority": "media_report",
+            "media_report": 122,
+            "management": 2891,
+            "official": 291,
+            "analyst": 37,
+            "rumor_source": 10
+          },
+          {
+            "teacher_source_authority": "management",
+            "media_report": 60,
+            "management": 1678,
+            "official": 430,
+            "analyst": 32,
+            "rumor_source": 9
+          },
+          {
+            "teacher_source_authority": "official",
+            "media_report": 43,
+            "management": 916,
+            "official": 268,
+            "analyst": 12,
+            "rumor_source": 4
+          },
+          {
+            "teacher_source_authority": "analyst",
+            "media_report": 2,
+            "management": 94,
+            "official": 8,
+            "analyst": 80,
+            "rumor_source": 4
+          },
+          {
+            "teacher_source_authority": "rumor_source",
+            "media_report": 1,
+            "management": 15,
+            "official": 3,
+            "analyst": 0,
+            "rumor_source": 6
+          }
+        ]
+      },
+      "baseline": {
+        "accuracy": 0.4776225769669327,
+        "balanced_accuracy": 0.2,
+        "macro_f1": 0.12929487797820005,
+        "row_count": 7016,
+        "per_label": [
+          {
+            "label": "media_report",
+            "precision": 0.4776225769669327,
+            "recall": 1.0,
+            "f1": 0.6464743898910003,
+            "support": 3351,
+            "tp": 3351,
+            "predicted_total": 7016
+          },
+          {
+            "label": "management",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 2209,
+            "tp": 0,
+            "predicted_total": 0
+          },
+          {
+            "label": "official",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 1243,
+            "tp": 0,
+            "predicted_total": 0
+          },
+          {
+            "label": "analyst",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 188,
+            "tp": 0,
+            "predicted_total": 0
+          },
+          {
+            "label": "rumor_source",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 25,
+            "tp": 0,
+            "predicted_total": 0
+          }
+        ],
+        "confusion_matrix": [
+          {
+            "teacher_source_authority": "media_report",
+            "media_report": 3351,
+            "management": 0,
+            "official": 0,
+            "analyst": 0,
+            "rumor_source": 0
+          },
+          {
+            "teacher_source_authority": "management",
+            "media_report": 2209,
+            "management": 0,
+            "official": 0,
+            "analyst": 0,
+            "rumor_source": 0
+          },
+          {
+            "teacher_source_authority": "official",
+            "media_report": 1243,
+            "management": 0,
+            "official": 0,
+            "analyst": 0,
+            "rumor_source": 0
+          },
+          {
+            "teacher_source_authority": "analyst",
+            "media_report": 188,
+            "management": 0,
+            "official": 0,
+            "analyst": 0,
+            "rumor_source": 0
+          },
+          {
+            "teacher_source_authority": "rumor_source",
+            "media_report": 25,
+            "management": 0,
+            "official": 0,
+            "analyst": 0,
+            "rumor_source": 0
+          }
+        ]
+      }
+    },
+    "expectation_alignment": {
+      "deterministic": {
+        "accuracy": 0.13047173820654484,
+        "balanced_accuracy": 0.13250233235030118,
+        "macro_f1": 0.21673561913807635,
+        "row_count": 2353,
+        "per_label": [
+          {
+            "label": "beats",
+            "precision": 0.8181818181818182,
+            "recall": 0.09404388714733543,
+            "f1": 0.16869728209934395,
+            "support": 957,
+            "tp": 90,
+            "predicted_total": 110
+          },
+          {
+            "label": "misses",
+            "precision": 0.7761904761904762,
+            "recall": 0.2217687074829932,
+            "f1": 0.344973544973545,
+            "support": 735,
+            "tp": 163,
+            "predicted_total": 210
+          },
+          {
+            "label": "meets",
+            "precision": 0.4153846153846154,
+            "recall": 0.08169440242057488,
+            "f1": 0.1365360303413401,
+            "support": 661,
+            "tp": 54,
+            "predicted_total": 130
+          }
+        ],
+        "confusion_matrix": [
+          {
+            "teacher_expectation_alignment": "beats",
+            "beats": 90,
+            "misses": 36,
+            "meets": 48,
+            "other": 783
+          },
+          {
+            "teacher_expectation_alignment": "misses",
+            "beats": 12,
+            "misses": 163,
+            "meets": 28,
+            "other": 532
+          },
+          {
+            "teacher_expectation_alignment": "meets",
+            "beats": 8,
+            "misses": 11,
+            "meets": 54,
+            "other": 588
+          }
+        ]
+      },
+      "baseline": {
+        "accuracy": 0.4067148321291968,
+        "balanced_accuracy": 0.3333333333333333,
+        "macro_f1": 0.19274924471299096,
+        "row_count": 2353,
+        "per_label": [
+          {
+            "label": "beats",
+            "precision": 0.4067148321291968,
+            "recall": 1.0,
+            "f1": 0.5782477341389729,
+            "support": 957,
+            "tp": 957,
+            "predicted_total": 2353
+          },
+          {
+            "label": "misses",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 735,
+            "tp": 0,
+            "predicted_total": 0
+          },
+          {
+            "label": "meets",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 661,
+            "tp": 0,
+            "predicted_total": 0
+          }
+        ],
+        "confusion_matrix": [
+          {
+            "teacher_expectation_alignment": "beats",
+            "beats": 957,
+            "misses": 0,
+            "meets": 0
+          },
+          {
+            "teacher_expectation_alignment": "misses",
+            "beats": 735,
+            "misses": 0,
+            "meets": 0
+          },
+          {
+            "teacher_expectation_alignment": "meets",
+            "beats": 661,
+            "misses": 0,
+            "meets": 0
+          }
+        ]
+      }
+    },
+    "impact_scope": {
+      "deterministic": {
+        "accuracy": 0.6715158568519057,
+        "balanced_accuracy": 0.6262359422067146,
+        "macro_f1": 0.5177231678540452,
+        "row_count": 3437,
+        "per_label": [
+          {
+            "label": "stock",
+            "precision": 0.9520083463745436,
+            "recall": 0.6636363636363637,
+            "f1": 0.7820869937861582,
+            "support": 2750,
+            "tp": 1825,
+            "predicted_total": 1917
+          },
+          {
+            "label": "sector",
+            "precision": 0.1254125412541254,
+            "recall": 0.36538461538461536,
+            "f1": 0.1867321867321867,
+            "support": 208,
+            "tp": 76,
+            "predicted_total": 606
+          },
+          {
+            "label": "market",
+            "precision": 0.44529540481400437,
+            "recall": 0.8496868475991649,
+            "f1": 0.5843503230437904,
+            "support": 479,
+            "tp": 407,
+            "predicted_total": 914
+          }
+        ],
+        "confusion_matrix": [
+          {
+            "teacher_impact_scope": "stock",
+            "stock": 1825,
+            "sector": 502,
+            "market": 423
+          },
+          {
+            "teacher_impact_scope": "sector",
+            "stock": 48,
+            "sector": 76,
+            "market": 84
+          },
+          {
+            "teacher_impact_scope": "market",
+            "stock": 44,
+            "sector": 28,
+            "market": 407
+          }
+        ]
+      },
+      "baseline": {
+        "accuracy": 0.13936572592377072,
+        "balanced_accuracy": 0.3333333333333333,
+        "macro_f1": 0.0815457950289411,
+        "row_count": 3437,
+        "per_label": [
+          {
+            "label": "stock",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 2750,
+            "tp": 0,
+            "predicted_total": 0
+          },
+          {
+            "label": "sector",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 208,
+            "tp": 0,
+            "predicted_total": 0
+          },
+          {
+            "label": "market",
+            "precision": 0.13936572592377072,
+            "recall": 1.0,
+            "f1": 0.2446373850868233,
+            "support": 479,
+            "tp": 479,
+            "predicted_total": 3437
+          }
+        ],
+        "confusion_matrix": [
+          {
+            "teacher_impact_scope": "stock",
+            "stock": 0,
+            "sector": 0,
+            "market": 2750
+          },
+          {
+            "teacher_impact_scope": "sector",
+            "stock": 0,
+            "sector": 0,
+            "market": 208
+          },
+          {
+            "teacher_impact_scope": "market",
+            "stock": 0,
+            "sector": 0,
+            "market": 479
+          }
+        ]
+      }
+    },
+    "event_type": {
+      "deterministic": {
+        "accuracy": 0.453125,
+        "balanced_accuracy": 0.5576053770790613,
+        "macro_f1": 0.5300206953183084,
+        "row_count": 128,
+        "per_label": [
+          {
+            "label": "management_change",
+            "precision": 1.0,
+            "recall": 0.4090909090909091,
+            "f1": 0.5806451612903226,
+            "support": 44,
+            "tp": 18,
+            "predicted_total": 18
+          },
+          {
+            "label": "merger_acquisition",
+            "precision": 0.5294117647058824,
+            "recall": 0.6428571428571429,
+            "f1": 0.5806451612903226,
+            "support": 14,
+            "tp": 9,
+            "predicted_total": 17
+          },
+          {
+            "label": "partnership",
+            "precision": 0.9473684210526315,
+            "recall": 0.47368421052631576,
+            "f1": 0.631578947368421,
+            "support": 38,
+            "tp": 18,
+            "predicted_total": 19
+          },
+          {
+            "label": "expansion",
+            "precision": 0.8888888888888888,
+            "recall": 0.32,
+            "f1": 0.47058823529411764,
+            "support": 25,
+            "tp": 8,
+            "predicted_total": 9
+          },
+          {
+            "label": "earnings_miss",
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.6666666666666666,
+            "support": 4,
+            "tp": 2,
+            "predicted_total": 2
+          },
+          {
+            "label": "legal_issue",
+            "precision": 0.14285714285714285,
+            "recall": 1.0,
+            "f1": 0.25,
+            "support": 3,
+            "tp": 3,
+            "predicted_total": 21
+          }
+        ],
+        "confusion_matrix": [
+          {
+            "teacher_event_type": "management_change",
+            "management_change": 18,
+            "merger_acquisition": 2,
+            "partnership": 0,
+            "expansion": 1,
+            "earnings_miss": 0,
+            "legal_issue": 4,
+            "other": 19
+          },
+          {
+            "teacher_event_type": "merger_acquisition",
+            "management_change": 0,
+            "merger_acquisition": 9,
+            "partnership": 1,
+            "expansion": 0,
+            "earnings_miss": 0,
+            "legal_issue": 0,
+            "other": 4
+          },
+          {
+            "teacher_event_type": "partnership",
+            "management_change": 0,
+            "merger_acquisition": 2,
+            "partnership": 18,
+            "expansion": 0,
+            "earnings_miss": 0,
+            "legal_issue": 10,
+            "other": 8
+          },
+          {
+            "teacher_event_type": "expansion",
+            "management_change": 0,
+            "merger_acquisition": 3,
+            "partnership": 0,
+            "expansion": 8,
+            "earnings_miss": 0,
+            "legal_issue": 4,
+            "other": 10
+          },
+          {
+            "teacher_event_type": "earnings_miss",
+            "management_change": 0,
+            "merger_acquisition": 1,
+            "partnership": 0,
+            "expansion": 0,
+            "earnings_miss": 2,
+            "legal_issue": 0,
+            "other": 1
+          },
+          {
+            "teacher_event_type": "legal_issue",
+            "management_change": 0,
+            "merger_acquisition": 0,
+            "partnership": 0,
+            "expansion": 0,
+            "earnings_miss": 0,
+            "legal_issue": 3,
+            "other": 0
+          }
+        ]
+      },
+      "baseline": {
+        "accuracy": 0.34375,
+        "balanced_accuracy": 0.16666666666666666,
+        "macro_f1": 0.08527131782945736,
+        "row_count": 128,
+        "per_label": [
+          {
+            "label": "management_change",
+            "precision": 0.34375,
+            "recall": 1.0,
+            "f1": 0.5116279069767442,
+            "support": 44,
+            "tp": 44,
+            "predicted_total": 128
+          },
+          {
+            "label": "merger_acquisition",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 14,
+            "tp": 0,
+            "predicted_total": 0
+          },
+          {
+            "label": "partnership",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 38,
+            "tp": 0,
+            "predicted_total": 0
+          },
+          {
+            "label": "expansion",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 25,
+            "tp": 0,
+            "predicted_total": 0
+          },
+          {
+            "label": "earnings_miss",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 4,
+            "tp": 0,
+            "predicted_total": 0
+          },
+          {
+            "label": "legal_issue",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 3,
+            "tp": 0,
+            "predicted_total": 0
+          }
+        ],
+        "confusion_matrix": [
+          {
+            "teacher_event_type": "management_change",
+            "management_change": 44,
+            "merger_acquisition": 0,
+            "partnership": 0,
+            "expansion": 0,
+            "earnings_miss": 0,
+            "legal_issue": 0
+          },
+          {
+            "teacher_event_type": "merger_acquisition",
+            "management_change": 14,
+            "merger_acquisition": 0,
+            "partnership": 0,
+            "expansion": 0,
+            "earnings_miss": 0,
+            "legal_issue": 0
+          },
+          {
+            "teacher_event_type": "partnership",
+            "management_change": 38,
+            "merger_acquisition": 0,
+            "partnership": 0,
+            "expansion": 0,
+            "earnings_miss": 0,
+            "legal_issue": 0
+          },
+          {
+            "teacher_event_type": "expansion",
+            "management_change": 25,
+            "merger_acquisition": 0,
+            "partnership": 0,
+            "expansion": 0,
+            "earnings_miss": 0,
+            "legal_issue": 0
+          },
+          {
+            "teacher_event_type": "earnings_miss",
+            "management_change": 4,
+            "merger_acquisition": 0,
+            "partnership": 0,
+            "expansion": 0,
+            "earnings_miss": 0,
+            "legal_issue": 0
+          },
+          {
+            "teacher_event_type": "legal_issue",
+            "management_change": 3,
+            "merger_acquisition": 0,
+            "partnership": 0,
+            "expansion": 0,
+            "earnings_miss": 0,
+            "legal_issue": 0
+          }
+        ]
+      }
+    }
+  },
+  "field_champions": [
+    {
+      "field_name": "source_authority",
+      "eligible": true,
+      "teacher_feature": "source_authority__rumor_source",
+      "teacher_mean_ic": 0.06784543843740236,
+      "teacher_nonzero_rows": 22,
+      "deterministic_mean_ic": -0.08478427457146412,
+      "sign_preserved": false
+    },
+    {
+      "field_name": "expectation_alignment",
+      "eligible": true,
+      "teacher_feature": "expectation_alignment__misses",
+      "teacher_mean_ic": -0.04019931028043741,
+      "teacher_nonzero_rows": 566,
+      "deterministic_mean_ic": -0.006360572792927506,
+      "sign_preserved": true
+    },
+    {
+      "field_name": "impact_scope",
+      "eligible": true,
+      "teacher_feature": "impact_scope__stock",
+      "teacher_mean_ic": -0.02719971773969549,
+      "teacher_nonzero_rows": 1508,
+      "deterministic_mean_ic": -0.005670763931676409,
+      "sign_preserved": true
+    },
+    {
+      "field_name": "event_type",
+      "eligible": true,
+      "teacher_feature": "event_type__merger_acquisition",
+      "teacher_mean_ic": -0.026387947476570937,
+      "teacher_nonzero_rows": 21,
+      "deterministic_mean_ic": -0.03325705959888144,
+      "sign_preserved": true
+    }
+  ],
+  "eligible_field_champions": 4,
+  "preserved_field_champions": 3,
+  "dense_field_macro_improvements": 2,
+  "best_deterministic_feature": {
+    "source_name": "deterministic",
+    "feature_name": "source_authority__rumor_source",
+    "field_name": "source_authority",
+    "label_name": "rumor_source",
+    "row_count": 8054,
+    "nonzero_rows": 36,
+    "feature_mean": 0.0045939905636950586,
+    "target_mean": Infinity,
+    "mean_ic": -0.08478427457146412,
+    "daily_hit_rate": 0.32142857142857145,
+    "positive_years": 0,
+    "years_present": 2,
+    "daily_rows": 28,
+    "abs_mean_ic": 0.08478427457146412
+  },
+  "best_keyword_baseline": {
+    "feature_name": "sentiment_score",
+    "mean_ic": 0.1302849972275172,
+    "abs_mean_ic": 0.1302849972275172,
+    "daily_hit_rate": 0.52,
+    "positive_years": 2,
+    "daily_rows": 75,
+    "row_count": 609
+  },
+  "keyword_baseline_table": [
+    {
+      "feature_name": "sentiment_score",
+      "mean_ic": 0.1302849972275172,
+      "abs_mean_ic": 0.1302849972275172,
+      "daily_hit_rate": 0.52,
+      "positive_years": 2,
+      "daily_rows": 75,
+      "row_count": 609
+    },
+    {
+      "feature_name": "positive_ratio",
+      "mean_ic": 0.046814914286477174,
+      "abs_mean_ic": 0.046814914286477174,
+      "daily_hit_rate": 0.5135135135135135,
+      "positive_years": 2,
+      "daily_rows": 74,
+      "row_count": 609
+    }
+  ],
+  "artifacts": {
+    "articles": "artifacts/portfolio_baselines/20260410_112003_h331_deterministic_event_family_router_articles.parquet",
+    "feature_results": "artifacts/portfolio_baselines/20260410_112003_h331_deterministic_event_family_router_feature_results.parquet",
+    "field_metrics": "artifacts/portfolio_baselines/20260410_112003_h331_deterministic_event_family_router_field_metrics.parquet",
+    "keyword_baseline": "artifacts/portfolio_baselines/20260410_112003_h331_deterministic_event_family_router_keyword_baseline.parquet"
+  }
+}

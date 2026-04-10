@@ -1,0 +1,157 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260410_140352_h336_action_value_horizon_router_details.json",
+    "margin_grid": "artifacts/portfolio_baselines/20260410_140352_h336_action_value_horizon_router_margin_grid.parquet",
+    "phase_results": "artifacts/portfolio_baselines/20260410_140352_h336_action_value_horizon_router_phase_results.parquet",
+    "policy_entries": "artifacts/portfolio_baselines/20260410_140352_h336_action_value_horizon_router_policy_entries.parquet",
+    "scored_entries": "artifacts/portfolio_baselines/20260410_140352_h336_action_value_horizon_router_scored_entries.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Predict per-horizon exit utility and override fixed 3d only when the predicted best horizon has a dev-selected utility margin.",
+    "no_tuning_window": "2026+",
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "research_branch_action_value_horizon_router",
+  "name": "h336_action_value_horizon_router",
+  "summary": {
+    "branch_decision": "The action-value router did not recover enough oracle uplift out of sample. Do not continue entry-time horizon routing on the current daily feature state.",
+    "confirmation_model_uplift_vs_best_fixed": -0.009603191021094911,
+    "confirmation_oracle_uplift_recovered_share": -0.21836514097280596,
+    "confirmation_override_rate": 0.8281938325991189,
+    "mechanics": {
+      "entry_outcomes": "artifacts/portfolio_baselines/20260410_134038_h334_exit_oracle_upper_bound_entry_outcomes.parquet",
+      "feature_count": 32,
+      "h334_summary": "artifacts/run_summaries/latest_research_branch_exit_oracle_upper_bound.json",
+      "horizons": [
+        3,
+        5,
+        10,
+        15
+      ],
+      "margin_grid": [
+        0.0,
+        0.0025,
+        0.005,
+        0.01,
+        0.015,
+        0.02,
+        0.03
+      ],
+      "model_type": "GradientBoostingRegressor(max_depth=2, n_estimators=80, min_samples_leaf=30)",
+      "rows": 2578,
+      "selected_margin_dev_only": 0.0
+    },
+    "mixed_condition": false,
+    "model": {
+      "h10": {
+        "confirmation_rmse": 0.11516071107208455,
+        "confirmation_spearman": 0.0932426873603344,
+        "dev_rmse": 0.11802033033362516,
+        "dev_spearman": 0.32741379842679724,
+        "dev_train_rows": 1874,
+        "validation_rmse": 0.09049870338200063,
+        "validation_spearman": 0.0302647940047575
+      },
+      "h15": {
+        "confirmation_rmse": 0.15236092349310096,
+        "confirmation_spearman": 0.05434453851558127,
+        "dev_rmse": 0.142553972791564,
+        "dev_spearman": 0.30376600079382654,
+        "dev_train_rows": 1874,
+        "validation_rmse": 0.10810751751640689,
+        "validation_spearman": 0.06409313112354699
+      },
+      "h3": {
+        "confirmation_rmse": 0.06998107244359693,
+        "confirmation_spearman": 0.07774191628930031,
+        "dev_rmse": 0.06747602895385052,
+        "dev_spearman": 0.34986278567337625,
+        "dev_train_rows": 1874,
+        "validation_rmse": 0.05856083789620184,
+        "validation_spearman": 0.10483100427205719
+      },
+      "h5": {
+        "confirmation_rmse": 0.08590266861220053,
+        "confirmation_spearman": -0.07386702888365901,
+        "dev_rmse": 0.08576792328197716,
+        "dev_spearman": 0.338226383702053,
+        "dev_train_rows": 1874,
+        "validation_rmse": 0.06750187492045558,
+        "validation_spearman": 0.06861319913516287
+      }
+    },
+    "pass_condition": false,
+    "phase_results": [
+      {
+        "best_fixed_horizon": 3,
+        "best_fixed_utility_mean": -0.00030236369079395816,
+        "entries": 1874,
+        "margin": 0.0,
+        "model_h10_choice_rate": 0.16915688367129136,
+        "model_h15_choice_rate": 0.31590181430096054,
+        "model_h3_choice_rate": 0.33884738527214514,
+        "model_h5_choice_rate": 0.17609391675560299,
+        "model_matches_oracle_rate": 0.3665955176093917,
+        "model_not_best_fixed_rate": 0.6611526147278548,
+        "model_uplift_vs_best_fixed": 0.02074803463107885,
+        "model_utility_mean": 0.020445670940284894,
+        "oracle_uplift_recovered_share": 0.34813717333577915,
+        "oracle_uplift_vs_best_fixed": 0.05959729733046152,
+        "oracle_utility_mean": 0.05929493363966756,
+        "phase": "dev"
+      },
+      {
+        "best_fixed_horizon": 3,
+        "best_fixed_utility_mean": -0.0017915833955942327,
+        "entries": 477,
+        "margin": 0.0,
+        "model_h10_choice_rate": 0.11949685534591195,
+        "model_h15_choice_rate": 0.5429769392033543,
+        "model_h3_choice_rate": 0.13626834381551362,
+        "model_h5_choice_rate": 0.20125786163522014,
+        "model_matches_oracle_rate": 0.22851153039832284,
+        "model_not_best_fixed_rate": 0.8637316561844863,
+        "model_uplift_vs_best_fixed": -0.00406347906573213,
+        "model_utility_mean": -0.005855062461326363,
+        "oracle_uplift_recovered_share": -0.10162624656408369,
+        "oracle_uplift_vs_best_fixed": 0.039984543394208434,
+        "oracle_utility_mean": 0.038192959998614204,
+        "phase": "validation"
+      },
+      {
+        "best_fixed_horizon": 3,
+        "best_fixed_utility_mean": -0.006821569571287752,
+        "entries": 227,
+        "margin": 0.0,
+        "model_h10_choice_rate": 0.08370044052863436,
+        "model_h15_choice_rate": 0.3832599118942731,
+        "model_h3_choice_rate": 0.17180616740088106,
+        "model_h5_choice_rate": 0.36123348017621143,
+        "model_matches_oracle_rate": 0.2511013215859031,
+        "model_not_best_fixed_rate": 0.8281938325991189,
+        "model_uplift_vs_best_fixed": -0.009603191021094911,
+        "model_utility_mean": -0.016424760592382664,
+        "oracle_uplift_recovered_share": -0.21836514097280596,
+        "oracle_uplift_vs_best_fixed": 0.043977674175984166,
+        "oracle_utility_mean": 0.03715610460469641,
+        "phase": "confirmation"
+      }
+    ],
+    "validation_model_uplift_vs_best_fixed": -0.00406347906573213,
+    "validation_oracle_uplift_recovered_share": -0.10162624656408369,
+    "validation_override_rate": 0.8637316561844863,
+    "verdict": "FAILED"
+  },
+  "ts": "20260410_140352"
+}
