@@ -20,6 +20,8 @@ Current responsibilities:
 
 - `data/` is the canonical shared data root for the entire workspace
 - `data/foreign_flow/` is a raw historical CafeF foreign-flow surface
+- `data/order_stats/` is a raw historical CafeF order-statistics surface
+- `data/proprietary_trading/` is a raw historical CafeF proprietary-trading surface
 - `data/foreign_flow_forward/` is a forward-only raw acquisition surface, not a historical feature backfill
 - `alpha-research-lab/` owns research pipelines and research outputs
 - `manual-label-factory/` owns the manual buy-zone labelling UI
@@ -43,6 +45,8 @@ Current responsibilities:
 - Treat cross-project path contracts as ecosystem-level contracts
 - Treat `data/features/recommendations/` as a shared published surface, not an alpha-only private output
 - Treat `data/foreign_flow/` as a raw source surface until a research-owned feature artifact is published from it
+- Treat `data/order_stats/` as a raw source surface until a research-owned feature artifact is published from it
+- Treat `data/proprietary_trading/` as a raw source surface until a research-owned feature artifact is published from it
 - Treat `data/foreign_flow_forward/` as forward-only raw data; do not use it in historical alpha tests until enough post-collection history exists
 - When changing producer/consumer boundaries, update docs in both the producer and consumer project
 

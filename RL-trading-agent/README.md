@@ -5,6 +5,10 @@ Consumer-only RL runtime for Vietnamese equity experiments.
 This repo no longer owns data fetching, news feature generation, manual labelling, or supervised signal production. Those producer pipelines now live in `../alpha-research-lab` and `../manual-label-factory`.
 
 The RL runtime reads shared research exports from `/home/manh/stocks/data` by default.
+It does not consume raw CafeF source archives under `../data/foreign_flow/`,
+`../data/order_stats/`, or `../data/proprietary_trading/` directly; those
+remain research-side acquisition surfaces until a separate feature contract is
+published.
 
 ## Quick start
 

@@ -1,7 +1,7 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_156_log.md` for the latest full session detail.
+Use `notes/session_159_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
@@ -13,7 +13,7 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 3. `intraday-shape-disagreement-review` — only if an offline side branch is intentionally reopened before the LLM cache is ready. Use the `H299` winners (`fade_tension_disagreement`, `intraday_shape_core_disagreement`) as observed-subset candidate-library review inputs. Do not publish them or route them live yet.
 4. `foreign-room-transition-audit` — only if continuing `H95`. `H327/H328` rejected raw buy/sell/net flow ranks and high-participation / room-scarcity conditioning; `H333` also rejected room-residual discontinuity thresholding. If this branch continues, the next distinct thesis is `foreign-accumulation-change-point`, not more residual or raw-flow thresholds.
 5. `cheap-llm-surrogate-branch-parked` — `H329/H330/H331/H332` exhausted the current non-API continuation on the `2015-2017` teacher window. Novelty distillation, hybrid routing, lexical field routing, and disagreement residuals all recovered some structure, but none preserved the short-horizon contract cleanly enough to beat the old keyword baseline or justify continuation. Do not keep extending this branch without new labels, more cache coverage, or a materially different contract.
-6. `smart-exit-distillation` — only if continuing the outcome-contract branch while LLM is blocked. `H334` passed the constrained legal-exit oracle upper-bound audit, but `H335` and `H336` both failed to distill it into a useful learned policy. `H335` validation / confirmation model uplift vs fixed `3d` was `-0.04% / -0.92%` per entry despite decision AUCs of `0.590 / 0.575`; `H336` entry-time action-value routing was also negative at `-0.41% / -0.96%`. Do not integrate `exit-mdp-lite` and do not continue entry-time value routing on the current daily feature state. The only honest continuation is a materially different label family such as `discrete-exit-hazard`, or parking smart exits until new post-entry state/data exists.
+6. `smart-exit-distillation` — only if continuing the outcome-contract branch while LLM is blocked. `H334` passed the constrained legal-exit oracle upper-bound audit, `H335/H336` failed, `H337` improved the branch to `MIXED`, `H338` diagnosed why it stalled, and `H339` tested the exact skip-aware continuation. `H339` proved that the skip-aware label ceiling is fully removable in principle: a perfect skip-aware oracle recovers `100% / 100%` of the H334 oracle on validation / confirmation. But the learned daily-state policy still failed badly: dev-selected margin `0.0200`, validation / confirmation uplift vs fixed `3d` `-0.00430 / -0.01109`, and non-best-fixed rate `95.60% / 96.04%`. Do not reopen entry-time value routing, generic hold/sell labels, or more skip-aware margin retunes on the same daily state. Park current-state daily smart-exit ML unless new post-entry state/data or a materially different nonlinear replacement-relative model is available.
 
 ---
 
@@ -100,13 +100,41 @@ and opportunity-cost aware before "real ML" is justified.
      train a dev-only fitted-Q / logistic hold-advantage model and compare the
      resulting policy against fixed horizons and the archived `H211` rule
 
-3. `discrete-exit-hazard`
-   - claim: delayed signals should be modeled as time-to-alpha and time-to-fail
-     hazards, so a position can be kept when alpha hazard dominates and exited
-     when failure hazard dominates
-   - smallest honest next test: create per-hold-day survival rows with targets
-     like `hit_plus_next` and `hit_minus_next` up to a max hold, then test a
-     competing-risk logistic hazard rule against fixed `H=5`
+3. `replacement-aware-step-hazard`
+   - current status: `H337` is `MIXED`, `H338` diagnosed the blocker, and
+     `H339` failed the exact skip-aware continuation on the same daily state
+   - claim: exit should be modeled as a one-legal-step-ahead competing hazard
+     between alpha persistence and failure / replacement pressure, not as an
+     entry-time horizon pick or a generic unconditional hold label
+   - why now: `H211` says strength exhaustion is the best offline exit clue,
+     `H289` says replacement pressure is weak but real, and `H291/H321` say
+     payoff half-life is state-dependent rather than universal
+   - result: validation / confirmation uplift vs fixed `3d` was
+     `+0.00245 / +0.00253`, and delta vs local H211 was
+     `+0.00742 / +0.03246`, but oracle uplift recovered was only
+     `6.14% / 5.75%`
+   - diagnosis: `H338` found that a perfect one-step oracle still recovers
+     `72.56% / 68.48%` of H334 oracle uplift, so the label family is usable, but
+     current daily state ranks step utility weakly on holdout
+     (`rho ~ 0.03 / 0.12` overall). Threshold `0.50` was already the dev-optimal
+     operating point, and no simple event / replacement / core ablation rescued
+     the branch. About `24.32% / 21.15%` of entries also have skip-over
+     conflicts where the immediate next step looks bad even though a later legal
+     horizon is better.
+   - `H339` result: the skip-aware target itself fully solves the label ceiling
+     in hindsight:
+     - perfect skip-aware oracle recovered `100% / 100%` of H334 oracle uplift
+   - but the learned dev-only Ridge value model still overpredicted positive
+     continuation and flipped back into long-hold bias:
+     - selected margin `0.0200`
+     - validation / confirmation uplift vs fixed `3d`:
+       - `-0.00430 / -0.01109`
+     - validation / confirmation non-best-fixed rate:
+       - `95.60% / 96.04%`
+   - branch consequence: close this current-state daily hazard continuation;
+     do not keep retuning skip-aware labels or margins
+   - reopen requirement: new post-entry state/data or a materially different
+     nonlinear / pairwise replacement model
 
 4. `oracle-distilled-exit-bucket`
    - current status: `H336` failed the simplest entry-time action-value
@@ -140,11 +168,12 @@ and opportunity-cost aware before "real ML" is justified.
 
 Priority order: `exit-oracle-upper-bound` is complete and `exit-mdp-lite` is
 closed on the first simple distillation contract. `action-value-horizon-router`
-is also closed for the current daily feature state. If continuing the branch,
-test a materially different `discrete-exit-hazard` target before any
-neural/offline-RL variant, and require the learned policy to recover real
-oracle uplift walk-forward without using future paths at inference. Otherwise,
-park smart-exit ML until new post-entry state/data exists.
+is also closed for the current daily feature state. `replacement-aware-step-hazard`
+now has a closed narrow continuation as well: `H339` showed the skip-aware
+target can match the oracle exactly in hindsight, but the learned daily-state
+policy still fails badly out of sample. Park smart-exit ML until new post-entry
+state/data or a materially different nonlinear / replacement-relative model
+exists.
 
 ---
 

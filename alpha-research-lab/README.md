@@ -124,6 +124,8 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - The lab can publish canonical recommendation candidate tables at `data/features/recommendations/<profile>/latest_candidates.parquet`
 - The lab can publish stock-specific entry-alpha research artifacts under `data/features/entry_alpha/`
 - The lab now owns a historical CafeF foreign-flow archive at `data/foreign_flow/cafef/`; H327 passed the source-quality audit, but H327/H328 rejected the first raw-flow feature path, so this remains a raw source surface rather than a published model feature contract
+- The lab now owns a historical CafeF order-statistics archive at `data/order_stats/cafef/`; this is a raw daily summary surface from stock-history page 2 (`ThongKeDL`), not historical queue depth
+- The lab now owns a historical CafeF proprietary-trading archive at `data/proprietary_trading/cafef/`; this is a raw daily summary surface from stock-history page 4 (`GDTuDoanh`)
 - The lab now owns a forward-only VCI board foreign-flow collector at `data/foreign_flow_forward/vci_price_board/`; this is raw acquisition data and not backtestable history
 - RL consumes that matrix through `../RL-trading-agent` via `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 - Recommendation contracts are shared with RL-adjacent consumers via `../shared-recommendation/`

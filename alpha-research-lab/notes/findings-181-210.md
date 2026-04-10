@@ -3377,3 +3377,227 @@ policy, and do not retune its margin on validation / confirmation. If the
 smart-exit branch continues, use a materially different target such as
 `discrete-exit-hazard` with post-entry state, or park the branch until better
 state/data exists.
+
+## F257: H337 Fixes The H336 Long-Hold Bias But Only Delivers Mixed Smart-Exit Evidence (2026-04-10, Session 157)
+
+Session 157 tested the next honest smart-exit continuation after `H335/H336`:
+- keep the H334 legal-horizon oracle as the offline target surface
+- create held-position decision rows only at legal step boundaries:
+  - `3d`
+  - `5d`
+  - `10d`
+- label each row by whether waiting exactly one more legal step has higher
+  utility than exiting now
+- use only current hold-day state at the decision date:
+  - path state
+  - score decay
+  - current signal state
+  - activation state
+  - tradability
+  - event surface v1
+  - a 2015-compatible replacement-pressure proxy from the full score surface
+- train a dev-only logistic hazard with fixed threshold `0.50`
+- compare against fixed `3d`, the H334 oracle, and a local H211
+  strength-exhaustion path on the same H334 entry universe
+- exclude `2026+`
+
+The panel covered:
+- step rows:
+  - `7,717`
+- policy entries:
+  - `2,578`
+- features:
+  - `79`
+- event features:
+  - `15`
+
+The branch improved materially versus `H335/H336`:
+- validation decision AUC:
+  - `0.5107`
+- confirmation decision AUC:
+  - `0.5587`
+- validation model uplift vs fixed `3d`:
+  - `+0.00245`
+- confirmation model uplift vs fixed `3d`:
+  - `+0.00253`
+- validation delta vs local H211:
+  - `+0.00742`
+- confirmation delta vs local H211:
+  - `+0.03246`
+
+But the recovered oracle share stayed small:
+- validation oracle uplift recovered:
+  - `6.14%`
+- confirmation oracle uplift recovered:
+  - `5.75%`
+
+The shape of the failure changed in a useful way:
+- `H336` validation / confirmation non-best-fixed horizon choice rate:
+  - `86.37%`
+  - `82.82%`
+- `H337` validation / confirmation non-best-fixed horizon choice rate:
+  - `36.69%`
+  - `26.87%`
+
+So the new hazard no longer hallucinates long holds. It became conservative:
+- validation model horizon choices:
+  - `3d 63.31%`
+  - `15d 16.98%`
+- confirmation model horizon choices:
+  - `3d 73.13%`
+  - `15d 11.01%`
+
+### Key finding
+Changing both the label and the state helped. A one-step current-state hazard
+is better than entry-time horizon routing and better than the local H211 rule
+on the H334 entry universe. But on the current daily stack, the gain is still
+too small to claim that smart-exit ML is solved or integration-ready.
+
+**Implication:** keep `H337` as mixed offline evidence only. If the branch
+continues, stay inside the one-step current-state hazard family and narrow to a
+stronger replacement-relative label or a smaller state family. Do not reopen
+`H335/H336`, and do not jump to neural/offline RL from this result.
+
+## F258: H338 Shows H337 Fails Mainly Because Current Daily State Does Not Rank Continuation Utility Well Enough, With A Smaller Skip-Over Ceiling Behind It (2026-04-10, Session 158)
+
+Session 158 audited the exact blocker behind `H337` by testing four competing
+failure explanations:
+- the one-step label family is itself too weak
+- the fixed `0.50` threshold is wrong
+- one simple feature family is missing
+- the current daily state does not localize continuation utility well enough
+
+The audit ruled out threshold tuning as the main explanation:
+- tested thresholds:
+  - `0.35`
+  - `0.40`
+  - `0.45`
+  - `0.50`
+  - `0.55`
+  - `0.60`
+  - `0.65`
+- dev-selected threshold:
+  - `0.50`
+- validation / confirmation uplift vs fixed `3d` at `0.50`:
+  - `+0.00245`
+  - `+0.00253`
+- lower thresholds turned strongly negative out of sample
+- higher thresholds collapsed back toward fixed `3d`
+
+The audit also ruled out "one-step hazard is impossible" as the main ceiling:
+- a perfect H337-style step oracle recovered:
+  - validation `72.56%` of H334 oracle uplift
+  - confirmation `68.48%` of H334 oracle uplift
+
+So the current label family is usable enough that a much better learner could
+still recover materially more than `H337`.
+
+No simple feature-family rescue appeared:
+- `core_only`:
+  - validation / confirmation uplift `+0.00020 / -0.00337`
+- `core_plus_replacement`:
+  - `+0.00230 / +0.00253`
+- `full_no_event`:
+  - `-0.00109 / +0.00283`
+- `full_no_replacement`:
+  - `+0.00282 / +0.00248`
+- `full`:
+  - `+0.00208 / +0.00154`
+
+The dominant blocker was weak out-of-sample utility ranking:
+- overall probability-to-utility Spearman:
+  - validation `0.0296`
+  - confirmation `0.1174`
+- mean step delta utility stayed negative in every held-out horizon:
+  - validation:
+    - `3d -> 5d: -0.0010`
+    - `5d -> 10d: -0.0043`
+    - `10d -> 15d: -0.0014`
+  - confirmation:
+    - `3d -> 5d: -0.0063`
+    - `5d -> 10d: -0.0095`
+    - `10d -> 15d: -0.0092`
+
+There is a secondary label ceiling from skip-over states:
+- entries with skip-over conflicts:
+  - validation `24.32%`
+  - confirmation `21.15%`
+- these are rows where the immediate next legal step is worse, but a later
+  legal horizon is still better than exiting now
+
+### Key finding
+`H337` is not mainly failing because of threshold choice, and not mainly
+because the branch forgot one obvious feature family. It is mainly failing
+because the current daily state does not rank the sparse profitable
+continuation pockets strongly enough out of sample. A secondary but real cap is
+that one-step labels still miss skip-over states on about one-fifth to
+one-quarter of entries.
+
+**Implication:** the next honest smart-exit continuation is not more threshold
+tuning. It is a skip-aware, utility-weighted, replacement-relative target
+inside the current-state hazard family. If that still fails, the branch is
+probably blocked by missing post-entry data rather than local model design.
+
+## F259: H339 Shows The Skip-Aware Label Ceiling Is Solved, But The Current Daily State Still Cannot Learn The Right Exit Pockets (2026-04-10, Session 159)
+
+Session 159 tested the exact continuation implied by `H338`:
+- reuse the saved `H337` legal-step rows unchanged
+- replace the immediate-next-step sign label with a skip-aware continuous
+  target:
+  - `max(later_legal_utility) - current_utility`
+- train only a dev-only regularized linear value model:
+  - `Ridge(alpha=10.0)`
+- choose the hold margin only on dev from:
+  - `-0.005`
+  - `0.000`
+  - `0.0025`
+  - `0.0050`
+  - `0.0100`
+  - `0.0150`
+  - `0.0200`
+- compare directly against fixed `3d`, the `H334` oracle, and saved `H337`
+
+The new target fully solved the skip-over label ceiling in principle:
+- perfect skip-aware oracle recovered:
+  - validation `100.00%` of `H334` oracle uplift
+  - confirmation `100.00%`
+
+So the target itself was not the problem anymore.
+
+But the learned policy failed badly out of sample:
+- dev-selected margin:
+  - `0.0200`
+- validation / confirmation uplift vs fixed `3d`:
+  - `-0.00430 / -0.01109`
+- validation / confirmation uplift delta vs `H337`:
+  - `-0.00676 / -0.01362`
+- validation / confirmation non-best-fixed rate:
+  - `95.60% / 96.04%`
+
+The failure mode was a return of long-hold bias:
+- validation horizon choices:
+  - `3d 4.40%`
+  - `10d 49.90%`
+- confirmation horizon choices:
+  - `3d 3.96%`
+  - `10d 54.19%`
+
+The value model overpredicted positive continuation on holdout:
+- overall predicted mean skip value vs true mean:
+  - validation `0.0273 vs 0.0147`
+  - confirmation `0.0270 vs 0.0105`
+- per-horizon utility Spearman stayed weak where the decision mattered:
+  - validation `3d 0.0462`, `5d 0.0379`, `10d -0.0068`
+  - confirmation `3d 0.1916`, `5d -0.0100`, `10d 0.1372`
+
+### Key finding
+`H339` proves that fixing the skip-aware label ceiling is not enough on the
+current daily state. The target can reproduce the oracle exactly, but the
+learned model still cannot localize the rare bad continuation pockets well
+enough, so it smooths toward positive hold values and recreates an aggressive
+long-hold policy.
+
+**Implication:** park current-state daily smart-exit label tinkering. If this
+branch is reopened, the next honest change must be richer post-entry state/data
+or a materially different nonlinear / replacement-relative model, not another
+margin retune or small target rewrite.

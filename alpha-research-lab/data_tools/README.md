@@ -17,6 +17,8 @@ state of each data source. Read this before running experiments or wondering why
 | Fundamentals cache | YES | YES (52 tickers) | `fetch_fundamentals.py` / `fetch_all_stock_fundamentals.py` |
 | Insider deals raw | YES | YES (394 tickers) | `fetch_insider_deals.py` |
 | Historical foreign investor flow | YES | YES (CafeF raw archive) | `fetch_cafef_foreign_flow.py` |
+| Historical order statistics | YES | NO (fetch path wired; raw backfill pending) | `fetch_cafef_order_stats.py` |
+| Historical proprietary trading | YES | NO (fetch path wired; raw backfill pending) | `fetch_cafef_proprietary_trading.py` |
 | Forward foreign-flow board snapshots | YES | YES (forward-only from 2026-04-09) | `collect_forward_foreign_flow.py` |
 | News archive (cafef, 3.6 GB) | NO | YES (fetched this session) | `fetch_news_archive.py` |
 | Intraday tick data | Partial | YES (`FPT` 1H legacy + open CafeF fetch path) | `fetch_cafef_intraday_all.py` + `adjust_cafef_intraday_to_vci.py`; authenticated fallback is `fetch_ssi_intraday.py` |
@@ -123,6 +125,7 @@ Fetch historical intraday OHLCV from SSI FastConnect via the official `IntradayO
 Fetch open historical matched-trade data from CafeF and aggregate it into repo-style hourly OHLCV bars.
 - **Status:** Active
 - **Source:** `https://msh-appdata.cafef.vn/rest-api/api/v1/MatchPrice`
+- **CafeF page mapping:** backs stock-history page 5, `Khớp lệnh theo phiên`
 - **Output:** `data/stock/gia_lich_su_<TICKER>_1H_CAFEF.parquet` by default
 - **Usage:** `python data_tools/fetch_cafef_intraday.py --tickers FPT,ACB --start 2019-01-01 --end 2025-12-31`
 - **Usage:** `python data_tools/fetch_cafef_intraday.py --tickers FPT,ACB --start 2000-01-01 --end 2026-12-31 --workers 8`
@@ -281,6 +284,51 @@ Fetch historical daily foreign-investor flow from CafeF's `GDKhoiNgoai` endpoint
 - **Important:** this is a raw source archive. H327 passed the source-quality
   audit, but H327/H328 did not publish a feature; do not treat this as a model
   feature until a separate feature contract passes.
+
+### `fetch_cafef_order_stats.py`
+Fetch historical daily order-statistics data from CafeF's `ThongKeDL` endpoint.
+- **Status:** Active
+- **Source:** `cafef.vn/du-lieu/Ajax/PageNew/DataHistory/ThongKeDL.ashx`
+- **CafeF page mapping:** stock-history page 2, `Thống kê đặt lệnh`
+- **Output root:** `data/order_stats/cafef/`
+- **Per-ticker output:** `data/order_stats/cafef/per_ticker/<TICKER>.parquet`
+- **Per-ticker metadata:** `data/order_stats/cafef/per_ticker/<TICKER>.meta.json`
+- **Combined panel:** `data/order_stats/cafef/order_stats_daily.parquet`
+- **Manifest:** `data/order_stats/cafef/manifest.json`
+- **Schema:** `ticker`, `date`, `price_change_raw`, `buy_order_count`,
+  `buy_order_volume`, `avg_buy_order_volume`, `sell_order_count`,
+  `sell_order_volume`, `avg_sell_order_volume`, `buy_sell_volume_imbalance`
+- **Usage:** `python data_tools/fetch_cafef_order_stats.py`
+- **Usage:** `python data_tools/fetch_cafef_order_stats.py --tickers FPT,VCB,HPG`
+- **Usage:** `python data_tools/fetch_cafef_order_stats.py --start-date 2015-01-01 --end-date 2026-04-10`
+- **Refresh behavior:** reruns use per-ticker coverage sidecars, bounded
+  lookback refresh, and panel rebuild from all cached per-ticker files so
+  subset runs do not clobber the combined panel
+- **Important:** this is a raw daily summary of posted orders, not a historical
+  depth ladder or queue-position archive
+
+### `fetch_cafef_proprietary_trading.py`
+Fetch historical daily proprietary-trading data from CafeF's `GDTuDoanh` endpoint.
+- **Status:** Active
+- **Source:** `cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDTuDoanh.ashx`
+- **CafeF page mapping:** stock-history page 4, `Tự doanh`
+- **Output root:** `data/proprietary_trading/cafef/`
+- **Per-ticker output:** `data/proprietary_trading/cafef/per_ticker/<TICKER>.parquet`
+- **Per-ticker metadata:** `data/proprietary_trading/cafef/per_ticker/<TICKER>.meta.json`
+- **Combined panel:** `data/proprietary_trading/cafef/proprietary_trading_daily.parquet`
+- **Manifest:** `data/proprietary_trading/cafef/manifest.json`
+- **Schema:** `ticker`, `date`, `proprietary_buy_volume`,
+  `proprietary_sell_volume`, `proprietary_net_volume`,
+  `proprietary_buy_value`, `proprietary_sell_value`,
+  `proprietary_net_value`
+- **Usage:** `python data_tools/fetch_cafef_proprietary_trading.py`
+- **Usage:** `python data_tools/fetch_cafef_proprietary_trading.py --tickers FPT,VCB,HPG`
+- **Usage:** `python data_tools/fetch_cafef_proprietary_trading.py --start-date 2015-01-01 --end-date 2026-04-10`
+- **Refresh behavior:** reruns use per-ticker coverage sidecars, bounded
+  lookback refresh, and panel rebuild from all cached per-ticker files so
+  subset runs do not clobber the combined panel
+- **Important:** this is a raw daily summary surface, not an intraday
+  proprietary-flow tape
 
 ### `fetch_insider_deals.py`
 Fetch insider + large-shareholder transaction disclosures for all HOSE tickers.

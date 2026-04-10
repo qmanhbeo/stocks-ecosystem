@@ -34,6 +34,8 @@ Shared `data/` currently contains both raw inputs and processed research outputs
 - `data/fundamentals_cache/`
 - `data/insider_cache/`
 - `data/foreign_flow/`
+- `data/order_stats/`
+- `data/proprietary_trading/`
 - `data/foreign_flow_forward/`
 - `data/llm_cache/`
 
@@ -47,6 +49,18 @@ and reported ownership percentage from
 `alpha-research-lab/data_tools/fetch_cafef_foreign_flow.py`. The source has now
 been backfilled and audited, but it remains a raw research surface until a
 separate published feature contract passes.
+
+`data/order_stats/` is the historical CafeF order-statistics archive from the
+`ThongKeDL` page-2 stock-history endpoint. It stores daily buy/sell order
+counts, posted order volumes, average order size, and raw buy-sell volume
+imbalance from `alpha-research-lab/data_tools/fetch_cafef_order_stats.py`. This
+is a raw summary surface, not historical order-book depth.
+
+`data/proprietary_trading/` is the historical CafeF proprietary-trading archive
+from the `GDTuDoanh` page-4 stock-history endpoint. It stores daily proprietary
+desk buy/sell volume and value from
+`alpha-research-lab/data_tools/fetch_cafef_proprietary_trading.py`. This is a
+raw source surface, not a published research feature contract.
 
 `data/foreign_flow_forward/` is the forward-only VCI board foreign-flow archive
 started on `2026-04-09`. It stores current-day accumulated foreign buy/sell and

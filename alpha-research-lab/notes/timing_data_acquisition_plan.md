@@ -20,6 +20,9 @@ The current local workspace has already established:
 - corporate-event surface v1: good local coverage, failed predictive gate
 - local intraday surface: not usable beyond `FPT` 1H
 - local order-book / queue data: not available historically
+- CafeF stock-history page 2 (`ThongKeDL`) and page 4 (`GDTuDoanh`) are now
+  confirmed/wired as historical daily summary surfaces, but they do **not**
+  satisfy the missing auction / queue / depth requirement on their own
 
 So the active next branch is acquisition-first:
 
@@ -103,6 +106,13 @@ Current repo normalization bridge:
 - current empirical caution:
   - CafeF intraday coverage can begin much later than the daily listing history for a ticker
   - treat long empty prefixes as source gaps until coverage is audited ticker-by-ticker
+- adjacent CafeF page-backed discoveries that do **not** close H230 by
+  themselves:
+  - stock-history page 2 `ThongKeDL`: daily order counts, posted order volumes,
+    average order size, and buy-sell imbalance
+  - stock-history page 4 `GDTuDoanh`: daily proprietary buy/sell volume and value
+  - useful as daily side channels later, but they are not time-of-day bars and
+    not historical queue depth
 
 Pass:
 - pilot panel builds cleanly and supports derived first-hour / close-auction features

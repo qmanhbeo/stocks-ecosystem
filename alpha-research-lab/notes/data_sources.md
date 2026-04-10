@@ -25,6 +25,8 @@ For the active timing-data acquisition branch, also read:
 | `data/fx-commodities/` — 20 global files | YES | `fetch_fx_commodities.py` + `fetch_global_macro.py` |
 | `data/insider_cache/` — 394 ticker parquets | YES | `fetch_insider_deals.py` |
 | `data/foreign_flow/cafef/` — historical CafeF foreign flow | YES | `fetch_cafef_foreign_flow.py` |
+| `data/order_stats/cafef/` — historical CafeF order statistics | YES | `fetch_cafef_order_stats.py` |
+| `data/proprietary_trading/cafef/` — historical CafeF proprietary trading | YES | `fetch_cafef_proprietary_trading.py` |
 | `data/foreign_flow_forward/` — forward-only VCI board snapshots | YES | `collect_forward_foreign_flow.py` |
 | `data/news/cafef/raw/*.jsonl` | NO (3.6 GB) | `python data_tools/fetch_news_archive.py` |
 | Full `data/` snapshot (legacy) | NO | `python setup_data.py` (restores the newest `data-snapshot-YYYY-MM-DD-HHMMSS.tar.zst` from the Drive backup remote after SHA256 verification; pass `--snapshot-name` to restore a specific run) |
@@ -109,11 +111,40 @@ python data_tools/fetch_news_archive.py
   - H327 source audit found `98.80%` row coverage versus the 2015-2025 local stock calendar, with `AAA`, `YBM`, and `YEG` missing in that audit window
   - H327/H328 rejected raw and conditioned foreign buy/sell ranks as signal-library candidates; treat this as raw source data unless a different feature thesis passes
   - fields: `KLMua`, `GtMua`, `KLBan`, `GtBan`, `KLGDRong`, `GTDGRong`, `RoomConLai`, `DangSoHuu`, `ThayDoi`
+- **Historical order statistics (Thống kê đặt lệnh):**
+  `cafef.vn/du-lieu/Ajax/PageNew/DataHistory/ThongKeDL.ashx?Symbol=<TICKER>&StartDate=...`
+  - public/no auth required
+  - stock-history page 2
+  - fields: `Date`, `ThayDoi`, `SoLenhMua`, `KLDatMua`, `KLTB1LenhMua`,
+    `SoLenhDatBan`, `KLDatBan`, `KLTB1LenhBan`, `ChenhLechKL`
+  - repo fetcher writes raw daily summaries under `data/order_stats/cafef/`
+  - this is useful as a posted-order summary surface, not as a historical depth
+    ladder or queue-position archive
+- **Historical proprietary trading (Tự doanh):**
+  `cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDTuDoanh.ashx?Symbol=<TICKER>&StartDate=...`
+  - public/no auth required
+  - stock-history page 4
+  - fields: `KLcpMua`, `KlcpBan`, `GtMua`, `GtBan`
+  - repo fetcher writes raw daily summaries under
+    `data/proprietary_trading/cafef/`
+- **Historical matched trades by session (Khớp lệnh theo phiên):**
+  CafeF stock-history page 5 uses `https://msh-appdata.cafef.vn/rest-api/api/v1/MatchPrice`
+  plus a page-scoped export helper
+  - repo fetcher: `data_tools/fetch_cafef_intraday.py`
+  - this is already the open historical intraday acquisition path in the lab
 - **Insider + large-shareholder transactions (GDNB):**
   `cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=<TICKER>&StartDate=...`
   - 394/394 HOSE tickers covered, 2010–2026, free/no auth required
   - Fields: `PublishedDate`, `PlanBuyVolume`, `PlanSellVolume`, `RealBuyVolume`, `RealSellVolume`, `ShareHolderCode`
   - `ShareHolderCode` prefix: `CEO_`/`LQ_` = insiders, `CORP_` = large shareholders
+- **Current live board / depth feed (Liveboard):**
+  `https://liveboard.cafef.vn/`
+  - current page assets show a SignalR hub at
+    `https://realtime.cafef.vn/hub/priceshub`
+  - useful for a forward-only collector if we later choose to accumulate live
+    board snapshots
+  - no historical archive contract was confirmed from this probe, so do not
+    treat it as a backfillable order-book source
 
 ### yfinance — global macro / indices
 - VIX, S&P500, gold, oil, copper, Asian indices, EM ETFs, yield curve
@@ -126,6 +157,7 @@ python data_tools/fetch_news_archive.py
 | Data | Reason |
 |------|--------|
 | Historical intraday OHLCV / tick data via vnstock | vnstock doesn't provide historical intraday |
+| Historical full order-book / queue depth from CafeF | page-backed probe found daily summary tabs and live-only board feed, not a historical depth archive |
 | SSC filing text (structured JSON) | SSC portal is HTML-only |
 
 Forward-only acquisition note:
@@ -216,5 +248,6 @@ Operational consequence:
 - **HOSE only** — HNX/UPCOM not included
 - **VCI daily prices adjusted** for splits/dividends by VCI
 - **CafeF MatchPrice prices raw** until explicitly normalized onto the VCI daily backbone
+- **CafeF order stats / proprietary trading** are daily summary surfaces, not intraday order-book depth
 - **Insider signal date:** use `published_date` (SSC disclosure date) — `real_end_date` is after-the-fact
 - **Ticker identification in news:** parenthetical pattern `(TICKER)` in article titles

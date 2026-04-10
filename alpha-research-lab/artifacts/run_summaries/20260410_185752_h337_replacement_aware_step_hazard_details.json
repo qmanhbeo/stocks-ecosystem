@@ -1,0 +1,186 @@
+{
+  "branch_decision": "The replacement-aware step-hazard improved one benchmark but did not clear the full confirmation bar. Narrow to a smaller state family or a stronger replacement-relative label before integration.",
+  "confirmation_decision_auc": 0.5586665896131915,
+  "confirmation_model_delta_vs_h211": 0.032464536574706285,
+  "confirmation_model_uplift_vs_best_fixed": 0.0025306854994772187,
+  "confirmation_oracle_uplift_recovered_share": 0.0575447780469301,
+  "mechanics": {
+    "decision_horizons": [
+      3,
+      5,
+      10
+    ],
+    "entry_outcomes": "/home/manh/stocks-ecosystem/alpha-research-lab/artifacts/portfolio_baselines/20260410_134038_h334_exit_oracle_upper_bound_entry_outcomes.parquet",
+    "event_feature_count": 15,
+    "feature_count": 79,
+    "h211_local_params": {
+      "return_since_entry_threshold": 0.15,
+      "score_drop_threshold": 0.05
+    },
+    "h334_summary": "/home/manh/stocks-ecosystem/alpha-research-lab/artifacts/run_summaries/latest_research_branch_exit_oracle_upper_bound.json",
+    "hold_threshold": 0.5,
+    "horizon_outcomes": "/home/manh/stocks-ecosystem/alpha-research-lab/artifacts/portfolio_baselines/20260410_134038_h334_exit_oracle_upper_bound_horizon_outcomes.parquet",
+    "max_horizon": 15,
+    "policy_entries": 2578,
+    "step_rows": 7717
+  },
+  "mixed_condition": true,
+  "model": {
+    "dev_positive_rate": 0.468338669512629,
+    "dev_rows": 5622,
+    "feature_count": 79,
+    "strongest_standardized_coefficients": [
+      [
+        "current_event_density_20d",
+        -0.3560342158238437
+      ],
+      [
+        "entry_score__full_library",
+        0.24155524532334613
+      ],
+      [
+        "full_score_drop_since_entry",
+        -0.2350067406304077
+      ],
+      [
+        "full_score_change_since_entry",
+        0.2350067406304077
+      ],
+      [
+        "entry_full_library_rank",
+        -0.1924156254299622
+      ],
+      [
+        "current_score__full_library",
+        -0.1793252120674887
+      ],
+      [
+        "current_full_top5_score_std",
+        -0.17310324164232213
+      ],
+      [
+        "current_recent_any_filing_20d",
+        0.17217412510292845
+      ],
+      [
+        "current_full_library_rank_pct",
+        -0.17030804968553376
+      ],
+      [
+        "current_buyable_top5_cutoff_score",
+        -0.16232923066138874
+      ],
+      [
+        "entry_full_library_rank_pct",
+        -0.15700682880073616
+      ],
+      [
+        "current_c11_ret_60d_lag_rank",
+        0.15320666448095246
+      ],
+      [
+        "current_recent_insider_filing_20d",
+        0.14534982601801194
+      ],
+      [
+        "current_dividend_window_post_5d",
+        -0.1415074665324066
+      ],
+      [
+        "entry_c11_ret_60d_lag_rank",
+        -0.14129088646114155
+      ],
+      [
+        "current_recent_major_holder_filing_20d",
+        0.13159238395054634
+      ],
+      [
+        "current_full_top1_minus_top5_spread",
+        0.11641238534112411
+      ],
+      [
+        "entry_c8_vol_zscore_5d",
+        -0.11116853607579887
+      ],
+      [
+        "current_full_top5_mean_score",
+        0.10958684244162227
+      ],
+      [
+        "current_c5_signal_present",
+        -0.10081677611049254
+      ]
+    ]
+  },
+  "pass_condition": false,
+  "phase_results": [
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.00030236369079395816,
+      "decision_auc": 0.5771145675681066,
+      "decision_rows": 5622,
+      "entries": 1874,
+      "h211_not_best_fixed_rate": 0.9866595517609391,
+      "h211_uplift_vs_best_fixed": -0.0004100527536309632,
+      "h211_utility_mean": -0.0007124164444249213,
+      "model_delta_vs_h211": 0.008382762746766045,
+      "model_matches_oracle_rate": 0.3409818569903949,
+      "model_not_best_fixed_rate": 0.4727854855923159,
+      "model_uplift_vs_best_fixed": 0.00797270999313508,
+      "model_utility_mean": 0.007670346302341123,
+      "oracle_uplift_recovered_share": 0.1337763682290346,
+      "oracle_uplift_vs_best_fixed": 0.05959729733046152,
+      "oracle_utility_mean": 0.05929493363966756,
+      "phase": "dev",
+      "wait_label_rate": 0.468338669512629,
+      "wait_prob_mean": 0.49937043767751677
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.0017915833955942327,
+      "decision_auc": 0.5106953138885049,
+      "decision_rows": 1431,
+      "entries": 477,
+      "h211_not_best_fixed_rate": 0.9874213836477987,
+      "h211_uplift_vs_best_fixed": -0.004971293747251414,
+      "h211_utility_mean": -0.006762877142845647,
+      "model_delta_vs_h211": 0.007424866714952299,
+      "model_matches_oracle_rate": 0.3249475890985325,
+      "model_not_best_fixed_rate": 0.3668763102725367,
+      "model_uplift_vs_best_fixed": 0.002453572967700885,
+      "model_utility_mean": 0.0006619895721066524,
+      "oracle_uplift_recovered_share": 0.06136303579888505,
+      "oracle_uplift_vs_best_fixed": 0.039984543394208434,
+      "oracle_utility_mean": 0.038192959998614204,
+      "phase": "validation",
+      "wait_label_rate": 0.4479385045422781,
+      "wait_prob_mean": 0.4876949413479872
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.006821569571287752,
+      "decision_auc": 0.5586665896131915,
+      "decision_rows": 664,
+      "entries": 227,
+      "h211_not_best_fixed_rate": 0.9911894273127754,
+      "h211_uplift_vs_best_fixed": -0.029933851075229063,
+      "h211_utility_mean": -0.036755420646516816,
+      "model_delta_vs_h211": 0.032464536574706285,
+      "model_matches_oracle_rate": 0.45374449339207046,
+      "model_not_best_fixed_rate": 0.2687224669603524,
+      "model_uplift_vs_best_fixed": 0.0025306854994772187,
+      "model_utility_mean": -0.004290884071810533,
+      "oracle_uplift_recovered_share": 0.0575447780469301,
+      "oracle_uplift_vs_best_fixed": 0.043977674175984166,
+      "oracle_utility_mean": 0.03715610460469641,
+      "phase": "confirmation",
+      "wait_label_rate": 0.3795180722891566,
+      "wait_prob_mean": 0.47331201521601035
+    }
+  ],
+  "validation_decision_auc": 0.5106953138885049,
+  "validation_model_delta_vs_h211": 0.007424866714952299,
+  "validation_model_uplift_vs_best_fixed": 0.002453572967700885,
+  "validation_oracle_uplift_recovered_share": 0.06136303579888505,
+  "verdict": "MIXED"
+}

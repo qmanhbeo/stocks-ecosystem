@@ -1,0 +1,628 @@
+{
+  "ablation": [
+    {
+      "confirmation_auc": 0.5364462937278471,
+      "confirmation_recovered_share": -0.07653539931211652,
+      "confirmation_uplift_vs_best_fixed": -0.003365848853877103,
+      "dev_auc": 0.5401932671981085,
+      "feature_count": 19,
+      "model_name": "core_only",
+      "validation_auc": 0.5242520586899425,
+      "validation_recovered_share": 0.004991103999099087,
+      "validation_uplift_vs_best_fixed": 0.0001995670144369847
+    },
+    {
+      "confirmation_auc": 0.533932424102327,
+      "confirmation_recovered_share": 0.05744153749129579,
+      "confirmation_uplift_vs_best_fixed": 0.0025261452199597852,
+      "dev_auc": 0.5419998660743273,
+      "feature_count": 23,
+      "model_name": "core_plus_replacement",
+      "validation_auc": 0.5251762475562314,
+      "validation_recovered_share": 0.05760895669697454,
+      "validation_uplift_vs_best_fixed": 0.002303467828945253
+    },
+    {
+      "confirmation_auc": 0.5564994606256742,
+      "confirmation_recovered_share": 0.06424112559651549,
+      "confirmation_uplift_vs_best_fixed": 0.0028251752901820347,
+      "dev_auc": 0.570730607746825,
+      "feature_count": 59,
+      "model_name": "full_no_event",
+      "validation_auc": 0.5045893481308872,
+      "validation_recovered_share": -0.027257867267364105,
+      "validation_uplift_vs_best_fixed": -0.0010898933765854937
+    },
+    {
+      "confirmation_auc": 0.5446524888272462,
+      "confirmation_recovered_share": 0.056386429264061455,
+      "confirmation_uplift_vs_best_fixed": 0.002479744014122073,
+      "dev_auc": 0.5757032654357279,
+      "feature_count": 70,
+      "model_name": "full_no_replacement",
+      "validation_auc": 0.5170145539998815,
+      "validation_recovered_share": 0.0705467759606522,
+      "validation_uplift_vs_best_fixed": 0.0028207806247201985
+    },
+    {
+      "confirmation_auc": 0.5541782246879335,
+      "confirmation_recovered_share": 0.03504338408341317,
+      "confirmation_uplift_vs_best_fixed": 0.0015411265272442139,
+      "dev_auc": 0.5765587887325053,
+      "feature_count": 74,
+      "model_name": "full",
+      "validation_auc": 0.5137798929678706,
+      "validation_recovered_share": 0.05191029009799692,
+      "validation_uplift_vs_best_fixed": 0.0020756092470293063
+    }
+  ],
+  "best_ablation_confirmation_uplift": 0.002479744014122073,
+  "best_ablation_model": "full_no_replacement",
+  "best_ablation_validation_uplift": 0.0028207806247201985,
+  "branch_decision": "The audit narrowed the blockers but did not isolate a single dominant cause cleanly enough. The branch should stay inside diagnostic narrowing rather than claiming an exact solved reason.",
+  "confirmation_skip_over_entry_rate": 0.21145374449339208,
+  "confirmation_step_oracle_recovered_share": 0.6848410303018083,
+  "confirmation_utility_spearman": 0.11740425683840411,
+  "dev_selected_threshold": 0.5,
+  "dev_selected_threshold_confirmation_uplift": 0.0025306854994772187,
+  "dev_selected_threshold_validation_uplift": 0.002453572967700885,
+  "feature_family_issue": false,
+  "label_bottleneck": false,
+  "mechanics": {
+    "ablation_models": [
+      "core_only",
+      "core_plus_replacement",
+      "full_no_event",
+      "full_no_replacement",
+      "full"
+    ],
+    "entries": 2578,
+    "h337_summary": "/home/manh/stocks-ecosystem/alpha-research-lab/artifacts/run_summaries/latest_research_branch_replacement_aware_step_hazard.json",
+    "step_rows": 7717,
+    "threshold_grid": [
+      0.35,
+      0.4,
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65
+    ]
+  },
+  "root_cause": "partial_identification",
+  "skip_over_entries": [
+    {
+      "entries": 227,
+      "entry_skip_over_rate": 0.21145374449339208,
+      "phase": "confirmation"
+    },
+    {
+      "entries": 1874,
+      "entry_skip_over_rate": 0.28441835645677693,
+      "phase": "dev"
+    },
+    {
+      "entries": 477,
+      "entry_skip_over_rate": 0.2431865828092243,
+      "phase": "validation"
+    }
+  ],
+  "skip_over_rows": [
+    {
+      "current_horizon": 3,
+      "phase": "confirmation",
+      "rows": 227,
+      "skip_over_gain_mean": 0.07811688619720267,
+      "skip_over_rate": 0.15859030837004406
+    },
+    {
+      "current_horizon": 5,
+      "phase": "confirmation",
+      "rows": 221,
+      "skip_over_gain_mean": 0.05118766181087434,
+      "skip_over_rate": 0.09502262443438914
+    },
+    {
+      "current_horizon": 10,
+      "phase": "confirmation",
+      "rows": 216,
+      "skip_over_gain_mean": NaN,
+      "skip_over_rate": 0.0
+    },
+    {
+      "current_horizon": 3,
+      "phase": "dev",
+      "rows": 1874,
+      "skip_over_gain_mean": 0.07658801207248643,
+      "skip_over_rate": 0.22411953041622198
+    },
+    {
+      "current_horizon": 5,
+      "phase": "dev",
+      "rows": 1874,
+      "skip_over_gain_mean": 0.054455801069563124,
+      "skip_over_rate": 0.09978655282817503
+    },
+    {
+      "current_horizon": 10,
+      "phase": "dev",
+      "rows": 1874,
+      "skip_over_gain_mean": NaN,
+      "skip_over_rate": 0.0
+    },
+    {
+      "current_horizon": 3,
+      "phase": "validation",
+      "rows": 477,
+      "skip_over_gain_mean": 0.04615869266222275,
+      "skip_over_rate": 0.18238993710691823
+    },
+    {
+      "current_horizon": 5,
+      "phase": "validation",
+      "rows": 477,
+      "skip_over_gain_mean": 0.04406133254224714,
+      "skip_over_rate": 0.09433962264150944
+    },
+    {
+      "current_horizon": 10,
+      "phase": "validation",
+      "rows": 477,
+      "skip_over_gain_mean": NaN,
+      "skip_over_rate": 0.0
+    }
+  ],
+  "step_oracle_phase_results": [
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.00030236369079395816,
+      "entries": 1874,
+      "oracle_uplift_recovered_share": 0.6577101651463041,
+      "oracle_uplift_vs_best_fixed": 0.05959729733046152,
+      "oracle_utility_mean": 0.05929493363966756,
+      "phase": "dev",
+      "policy_matches_oracle_rate": 0.7155816435432231,
+      "policy_not_best_fixed_rate": 0.4637139807897545,
+      "policy_uplift_vs_best_fixed": 0.03919774826949123,
+      "policy_utility_mean": 0.038895384578697276
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.0017915833955942327,
+      "entries": 477,
+      "oracle_uplift_recovered_share": 0.7256083664947993,
+      "oracle_uplift_vs_best_fixed": 0.039984543394208434,
+      "oracle_utility_mean": 0.038192959998614204,
+      "phase": "validation",
+      "policy_matches_oracle_rate": 0.7568134171907757,
+      "policy_not_best_fixed_rate": 0.46540880503144655,
+      "policy_uplift_vs_best_fixed": 0.029013119217312002,
+      "policy_utility_mean": 0.02722153582171777
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.006821569571287752,
+      "entries": 227,
+      "oracle_uplift_recovered_share": 0.6848410303018083,
+      "oracle_uplift_vs_best_fixed": 0.043977674175984166,
+      "oracle_utility_mean": 0.03715610460469641,
+      "phase": "confirmation",
+      "policy_matches_oracle_rate": 0.788546255506608,
+      "policy_not_best_fixed_rate": 0.3788546255506608,
+      "policy_uplift_vs_best_fixed": 0.030117715692958225,
+      "policy_utility_mean": 0.023296146121670473
+    }
+  ],
+  "threshold_issue": false,
+  "threshold_sweep": [
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.00030236369079395816,
+      "entries": 1874,
+      "oracle_uplift_recovered_share": 0.03079570402251165,
+      "oracle_uplift_vs_best_fixed": 0.05959729733046152,
+      "oracle_utility_mean": 0.05929493363966756,
+      "phase": "dev",
+      "policy_matches_oracle_rate": 0.2886872998932764,
+      "policy_not_best_fixed_rate": 0.9765208110992529,
+      "policy_uplift_vs_best_fixed": 0.0018353407291305166,
+      "policy_utility_mean": 0.0015329770383365584,
+      "threshold": 0.35
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.0017915833955942327,
+      "entries": 477,
+      "oracle_uplift_recovered_share": -0.16636876563280809,
+      "oracle_uplift_vs_best_fixed": 0.039984543394208434,
+      "oracle_utility_mean": 0.038192959998614204,
+      "phase": "validation",
+      "policy_matches_oracle_rate": 0.2557651991614256,
+      "policy_not_best_fixed_rate": 0.9874213836477987,
+      "policy_uplift_vs_best_fixed": -0.006652179128885907,
+      "policy_utility_mean": -0.00844376252448014,
+      "threshold": 0.35
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.006821569571287752,
+      "entries": 227,
+      "oracle_uplift_recovered_share": -0.45630280268176654,
+      "oracle_uplift_vs_best_fixed": 0.043977674175984166,
+      "oracle_utility_mean": 0.03715610460469641,
+      "phase": "confirmation",
+      "policy_matches_oracle_rate": 0.21585903083700442,
+      "policy_not_best_fixed_rate": 0.9647577092511013,
+      "policy_uplift_vs_best_fixed": -0.020067135981927123,
+      "policy_utility_mean": -0.026888705553214876,
+      "threshold": 0.35
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.00030236369079395816,
+      "entries": 1874,
+      "oracle_uplift_recovered_share": 0.06750678863346438,
+      "oracle_uplift_vs_best_fixed": 0.05959729733046152,
+      "oracle_utility_mean": 0.05929493363966756,
+      "phase": "dev",
+      "policy_matches_oracle_rate": 0.3030949839914621,
+      "policy_not_best_fixed_rate": 0.9092849519743863,
+      "policy_uplift_vs_best_fixed": 0.004023222154013196,
+      "policy_utility_mean": 0.0037208584632192378,
+      "threshold": 0.4
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.0017915833955942327,
+      "entries": 477,
+      "oracle_uplift_recovered_share": -0.09339607265870026,
+      "oracle_uplift_vs_best_fixed": 0.039984543394208434,
+      "oracle_utility_mean": 0.038192959998614204,
+      "phase": "validation",
+      "policy_matches_oracle_rate": 0.2557651991614256,
+      "policy_not_best_fixed_rate": 0.9056603773584906,
+      "policy_uplift_vs_best_fixed": -0.0037343993200704443,
+      "policy_utility_mean": -0.005525982715664677,
+      "threshold": 0.4
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.006821569571287752,
+      "entries": 227,
+      "oracle_uplift_recovered_share": -0.31469155483412253,
+      "oracle_uplift_vs_best_fixed": 0.043977674175984166,
+      "oracle_utility_mean": 0.03715610460469641,
+      "phase": "confirmation",
+      "policy_matches_oracle_rate": 0.2422907488986784,
+      "policy_not_best_fixed_rate": 0.8722466960352423,
+      "policy_uplift_vs_best_fixed": -0.013839402664428894,
+      "policy_utility_mean": -0.020660972235716647,
+      "threshold": 0.4
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.00030236369079395816,
+      "entries": 1874,
+      "oracle_uplift_recovered_share": 0.13329275586059441,
+      "oracle_uplift_vs_best_fixed": 0.05959729733046152,
+      "oracle_utility_mean": 0.05929493363966756,
+      "phase": "dev",
+      "policy_matches_oracle_rate": 0.327641408751334,
+      "policy_not_best_fixed_rate": 0.7545357524012807,
+      "policy_uplift_vs_best_fixed": 0.007943888003020462,
+      "policy_utility_mean": 0.0076415243122265036,
+      "threshold": 0.45
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.0017915833955942327,
+      "entries": 477,
+      "oracle_uplift_recovered_share": -0.10717476503388158,
+      "oracle_uplift_vs_best_fixed": 0.039984543394208434,
+      "oracle_utility_mean": 0.038192959998614204,
+      "phase": "validation",
+      "policy_matches_oracle_rate": 0.259958071278826,
+      "policy_not_best_fixed_rate": 0.6960167714884696,
+      "policy_uplift_vs_best_fixed": -0.004285334043261331,
+      "policy_utility_mean": -0.006076917438855564,
+      "threshold": 0.45
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.006821569571287752,
+      "entries": 227,
+      "oracle_uplift_recovered_share": -0.03206580231048194,
+      "oracle_uplift_vs_best_fixed": 0.043977674175984166,
+      "oracle_utility_mean": 0.03715610460469641,
+      "phase": "confirmation",
+      "policy_matches_oracle_rate": 0.33480176211453744,
+      "policy_not_best_fixed_rate": 0.5991189427312775,
+      "policy_uplift_vs_best_fixed": -0.0014101794062018952,
+      "policy_utility_mean": -0.008231748977489647,
+      "threshold": 0.45
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.00030236369079395816,
+      "entries": 1874,
+      "oracle_uplift_recovered_share": 0.1337763682290346,
+      "oracle_uplift_vs_best_fixed": 0.05959729733046152,
+      "oracle_utility_mean": 0.05929493363966756,
+      "phase": "dev",
+      "policy_matches_oracle_rate": 0.3409818569903949,
+      "policy_not_best_fixed_rate": 0.4727854855923159,
+      "policy_uplift_vs_best_fixed": 0.00797270999313508,
+      "policy_utility_mean": 0.007670346302341123,
+      "threshold": 0.5
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.0017915833955942327,
+      "entries": 477,
+      "oracle_uplift_recovered_share": 0.06136303579888505,
+      "oracle_uplift_vs_best_fixed": 0.039984543394208434,
+      "oracle_utility_mean": 0.038192959998614204,
+      "phase": "validation",
+      "policy_matches_oracle_rate": 0.3249475890985325,
+      "policy_not_best_fixed_rate": 0.3668763102725367,
+      "policy_uplift_vs_best_fixed": 0.002453572967700885,
+      "policy_utility_mean": 0.0006619895721066524,
+      "threshold": 0.5
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.006821569571287752,
+      "entries": 227,
+      "oracle_uplift_recovered_share": 0.0575447780469301,
+      "oracle_uplift_vs_best_fixed": 0.043977674175984166,
+      "oracle_utility_mean": 0.03715610460469641,
+      "phase": "confirmation",
+      "policy_matches_oracle_rate": 0.45374449339207046,
+      "policy_not_best_fixed_rate": 0.2687224669603524,
+      "policy_uplift_vs_best_fixed": 0.0025306854994772187,
+      "policy_utility_mean": -0.004290884071810533,
+      "threshold": 0.5
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.00030236369079395816,
+      "entries": 1874,
+      "oracle_uplift_recovered_share": 0.07094249049892688,
+      "oracle_uplift_vs_best_fixed": 0.05959729733046152,
+      "oracle_utility_mean": 0.05929493363966756,
+      "phase": "dev",
+      "policy_matches_oracle_rate": 0.33404482390608325,
+      "policy_not_best_fixed_rate": 0.20437566702241194,
+      "policy_uplift_vs_best_fixed": 0.004227980699627987,
+      "policy_utility_mean": 0.003925617008834028,
+      "threshold": 0.55
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.0017915833955942327,
+      "entries": 477,
+      "oracle_uplift_recovered_share": 0.013249249158271135,
+      "oracle_uplift_vs_best_fixed": 0.039984543394208434,
+      "oracle_utility_mean": 0.038192959998614204,
+      "phase": "validation",
+      "policy_matches_oracle_rate": 0.3333333333333333,
+      "policy_not_best_fixed_rate": 0.12578616352201258,
+      "policy_uplift_vs_best_fixed": 0.0005297651779095718,
+      "policy_utility_mean": -0.001261818217684661,
+      "threshold": 0.55
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.006821569571287752,
+      "entries": 227,
+      "oracle_uplift_recovered_share": 0.07493557814227793,
+      "oracle_uplift_vs_best_fixed": 0.043977674175984166,
+      "oracle_utility_mean": 0.03715610460469641,
+      "phase": "confirmation",
+      "policy_matches_oracle_rate": 0.4801762114537445,
+      "policy_not_best_fixed_rate": 0.08370044052863436,
+      "policy_uplift_vs_best_fixed": 0.0032954924397300997,
+      "policy_utility_mean": -0.003526077131557652,
+      "threshold": 0.55
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.00030236369079395816,
+      "entries": 1874,
+      "oracle_uplift_recovered_share": 0.02788464537607203,
+      "oracle_uplift_vs_best_fixed": 0.05959729733046152,
+      "oracle_utility_mean": 0.05929493363966756,
+      "phase": "dev",
+      "policy_matches_oracle_rate": 0.3281750266808965,
+      "policy_not_best_fixed_rate": 0.0528281750266809,
+      "policy_uplift_vs_best_fixed": 0.0016618495014322438,
+      "policy_utility_mean": 0.0013594858106382856,
+      "threshold": 0.6
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.0017915833955942327,
+      "entries": 477,
+      "oracle_uplift_recovered_share": 0.007902660226011904,
+      "oracle_uplift_vs_best_fixed": 0.039984543394208434,
+      "oracle_utility_mean": 0.038192959998614204,
+      "phase": "validation",
+      "policy_matches_oracle_rate": 0.35429769392033544,
+      "policy_not_best_fixed_rate": 0.025157232704402517,
+      "policy_uplift_vs_best_fixed": 0.000315984260736658,
+      "policy_utility_mean": -0.0014755991348575747,
+      "threshold": 0.6
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.006821569571287752,
+      "entries": 227,
+      "oracle_uplift_recovered_share": 0.0003968378679023115,
+      "oracle_uplift_vs_best_fixed": 0.043977674175984166,
+      "oracle_utility_mean": 0.03715610460469641,
+      "phase": "confirmation",
+      "policy_matches_oracle_rate": 0.4581497797356828,
+      "policy_not_best_fixed_rate": 0.013215859030837005,
+      "policy_uplift_vs_best_fixed": 1.7452006455300102e-05,
+      "policy_utility_mean": -0.006804117564832452,
+      "threshold": 0.6
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.00030236369079395816,
+      "entries": 1874,
+      "oracle_uplift_recovered_share": 0.004878234349519746,
+      "oracle_uplift_vs_best_fixed": 0.05959729733046152,
+      "oracle_utility_mean": 0.05929493363966756,
+      "phase": "dev",
+      "policy_matches_oracle_rate": 0.31750266808964783,
+      "policy_not_best_fixed_rate": 0.012273212379935965,
+      "policy_uplift_vs_best_fixed": 0.00029072958297599884,
+      "policy_utility_mean": -1.1634107817959312e-05,
+      "threshold": 0.65
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.0017915833955942327,
+      "entries": 477,
+      "oracle_uplift_recovered_share": 0.004340397558936388,
+      "oracle_uplift_vs_best_fixed": 0.039984543394208434,
+      "oracle_utility_mean": 0.038192959998614204,
+      "phase": "validation",
+      "policy_matches_oracle_rate": 0.3522012578616352,
+      "policy_not_best_fixed_rate": 0.0041928721174004195,
+      "policy_uplift_vs_best_fixed": 0.00017354881454340835,
+      "policy_utility_mean": -0.0016180345810508244,
+      "threshold": 0.65
+    },
+    {
+      "best_fixed_horizon": 3,
+      "best_fixed_utility_mean": -0.006821569571287752,
+      "entries": 227,
+      "oracle_uplift_recovered_share": 0.001211883922997281,
+      "oracle_uplift_vs_best_fixed": 0.043977674175984166,
+      "oracle_utility_mean": 0.03715610460469641,
+      "phase": "confirmation",
+      "policy_matches_oracle_rate": 0.46255506607929514,
+      "policy_not_best_fixed_rate": 0.004405286343612335,
+      "policy_uplift_vs_best_fixed": 5.3295836304687906e-05,
+      "policy_utility_mean": -0.006768273734983064,
+      "threshold": 0.65
+    }
+  ],
+  "utility_alignment": [
+    {
+      "current_horizon": NaN,
+      "mean_step_delta_utility": -0.008327297517751278,
+      "negative_step_delta_mean": NaN,
+      "phase": "confirmation",
+      "positive_rate": 0.3795180722891566,
+      "positive_step_delta_mean": NaN,
+      "utility_spearman": 0.11740425683840411
+    },
+    {
+      "current_horizon": 3.0,
+      "mean_step_delta_utility": -0.00634545460954295,
+      "negative_step_delta_mean": -0.032129971517247495,
+      "phase": "confirmation",
+      "positive_rate": 0.3788546255506608,
+      "positive_step_delta_mean": 0.03592916032053078,
+      "utility_spearman": 0.17312337552141588
+    },
+    {
+      "current_horizon": 5.0,
+      "mean_step_delta_utility": -0.009495265731580308,
+      "negative_step_delta_mean": -0.05123094205698775,
+      "phase": "confirmation",
+      "positive_rate": 0.36199095022624433,
+      "positive_step_delta_mean": 0.06406386379195032,
+      "utility_spearman": 0.033683734222302836
+    },
+    {
+      "current_horizon": 10.0,
+      "mean_step_delta_utility": -0.009215063096024772,
+      "negative_step_delta_mean": -0.04872179821318698,
+      "phase": "confirmation",
+      "positive_rate": 0.39814814814814814,
+      "positive_step_delta_mean": 0.05050442022061576,
+      "utility_spearman": 0.16768358756355753
+    },
+    {
+      "current_horizon": NaN,
+      "mean_step_delta_utility": -3.6011647119353822e-06,
+      "negative_step_delta_mean": NaN,
+      "phase": "dev",
+      "positive_rate": 0.468338669512629,
+      "positive_step_delta_mean": NaN,
+      "utility_spearman": 0.1314211600100992
+    },
+    {
+      "current_horizon": 3.0,
+      "mean_step_delta_utility": -0.0009573884198554789,
+      "negative_step_delta_mean": -0.03873646283028653,
+      "phase": "dev",
+      "positive_rate": 0.4637139807897545,
+      "positive_step_delta_mean": 0.04273417634709873,
+      "utility_spearman": 0.15038373487030385
+    },
+    {
+      "current_horizon": 5.0,
+      "mean_step_delta_utility": -0.0012225636634660706,
+      "negative_step_delta_mean": -0.055804769056691565,
+      "phase": "dev",
+      "positive_rate": 0.4594450373532551,
+      "positive_step_delta_mean": 0.06299552467955068,
+      "utility_spearman": 0.12734956978839035
+    },
+    {
+      "current_horizon": 10.0,
+      "mean_step_delta_utility": 0.002169148589185744,
+      "negative_step_delta_mean": -0.05158636087113279,
+      "phase": "dev",
+      "positive_rate": 0.4818569903948773,
+      "positive_step_delta_mean": 0.05997269198450058,
+      "utility_spearman": 0.12065935206336044
+    },
+    {
+      "current_horizon": NaN,
+      "mean_step_delta_utility": -0.0022386694544260263,
+      "negative_step_delta_mean": NaN,
+      "phase": "validation",
+      "positive_rate": 0.4479385045422781,
+      "positive_step_delta_mean": NaN,
+      "utility_spearman": 0.029638081787740245
+    },
+    {
+      "current_horizon": 3.0,
+      "mean_step_delta_utility": -0.0010005762784547317,
+      "negative_step_delta_mean": -0.02918399857420841,
+      "phase": "validation",
+      "positive_rate": 0.46540880503144655,
+      "positive_step_delta_mean": 0.031372273655856917,
+      "utility_spearman": 0.022600474849462877
+    },
+    {
+      "current_horizon": 5.0,
+      "mean_step_delta_utility": -0.004302872929281001,
+      "negative_step_delta_mean": -0.04165842727947757,
+      "phase": "validation",
+      "positive_rate": 0.4360587002096436,
+      "positive_step_delta_mean": 0.04400791611015591,
+      "utility_spearman": 0.05421954990070889
+    },
+    {
+      "current_horizon": 10.0,
+      "mean_step_delta_utility": -0.0014125591555423464,
+      "negative_step_delta_mean": -0.036661812575633446,
+      "phase": "validation",
+      "positive_rate": 0.44234800838574423,
+      "positive_step_delta_mean": 0.04302488828400378,
+      "utility_spearman": 0.017425514936291898
+    }
+  ],
+  "utility_mismatch": false,
+  "validation_skip_over_entry_rate": 0.2431865828092243,
+  "validation_step_oracle_recovered_share": 0.7256083664947993,
+  "validation_utility_spearman": 0.029638081787740245,
+  "verdict": "MIXED"
+}
