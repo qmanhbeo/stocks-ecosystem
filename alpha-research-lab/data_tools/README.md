@@ -304,6 +304,11 @@ Fetch historical daily order-statistics data from CafeF's `ThongKeDL` endpoint.
 - **Refresh behavior:** reruns use per-ticker coverage sidecars, bounded
   lookback refresh, and panel rebuild from all cached per-ticker files so
   subset runs do not clobber the combined panel
+- **Run tracking:** `manifest.json` now updates incrementally during a run with
+  `running` / `completed` / `completed_with_errors` state plus processed,
+  fetched, cached, and failed ticker counts
+- **Failure control:** use `--fail-fast` to stop on the first ticker failure;
+  default behavior records the failure in the manifest and continues
 - **Important:** this is a raw daily summary of posted orders, not a historical
   depth ladder or queue-position archive
 
@@ -327,6 +332,11 @@ Fetch historical daily proprietary-trading data from CafeF's `GDTuDoanh` endpoin
 - **Refresh behavior:** reruns use per-ticker coverage sidecars, bounded
   lookback refresh, and panel rebuild from all cached per-ticker files so
   subset runs do not clobber the combined panel
+- **Run tracking:** `manifest.json` now updates incrementally during a run with
+  `running` / `completed` / `completed_with_errors` state plus processed,
+  fetched, cached, and failed ticker counts
+- **Failure control:** use `--fail-fast` to stop on the first ticker failure;
+  default behavior records the failure in the manifest and continues
 - **Important:** this is a raw daily summary surface, not an intraday
   proprietary-flow tape
 

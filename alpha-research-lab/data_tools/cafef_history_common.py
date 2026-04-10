@@ -195,6 +195,58 @@ def path_for_json(path: Path) -> str:
         return str(path)
 
 
+def write_run_manifest(
+    *,
+    output_root: Path,
+    source: str,
+    panel_filename: str,
+    contract_columns: list[str],
+    contract_notes: list[str],
+    started_at_utc: str,
+    requested_start_date: date,
+    requested_end_date: date,
+    tickers_requested: int,
+    tickers_processed: int,
+    tickers_fetched: int,
+    tickers_cached: int,
+    tickers_failed: int,
+    status: str,
+    items: list[dict[str, object]],
+    current_ticker: str | None = None,
+    panel: pd.DataFrame | None = None,
+) -> None:
+    payload: dict[str, object] = {
+        "contract": {
+            "source": source,
+            "root": path_for_json(output_root),
+            "per_ticker_dir": path_for_json(per_ticker_dir(output_root)),
+            "panel": path_for_json(panel_path(output_root, panel_filename)),
+            "primary_key": ["ticker", "date"],
+            "contract_columns": contract_columns,
+            "notes": contract_notes,
+        },
+        "last_run": {
+            "status": status,
+            "started_at_utc": started_at_utc,
+            "updated_at_utc": utc_now_iso(),
+            "requested_start_date": requested_start_date.isoformat(),
+            "requested_end_date": requested_end_date.isoformat(),
+            "tickers_requested": int(tickers_requested),
+            "tickers_processed": int(tickers_processed),
+            "tickers_remaining": int(max(tickers_requested - tickers_processed, 0)),
+            "tickers_fetched": int(tickers_fetched),
+            "tickers_cached": int(tickers_cached),
+            "tickers_failed": int(tickers_failed),
+            "current_ticker": current_ticker,
+            "items": items,
+        },
+    }
+    if panel is not None:
+        payload["last_run"]["panel_rows"] = int(len(panel))
+        payload["last_run"]["panel_tickers"] = int(panel["ticker"].nunique()) if not panel.empty else 0
+    atomic_write_json(payload, manifest_path(output_root))
+
+
 def build_session(*, referer: str) -> requests.Session:
     session = requests.Session()
     session.headers.update(

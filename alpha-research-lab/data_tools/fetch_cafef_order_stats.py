@@ -37,10 +37,10 @@ try:
         panel_path,
         parse_iso_date,
         parse_tickers,
-        path_for_json,
         per_ticker_dir,
         utc_now_iso,
         write_cache_metadata,
+        write_run_manifest,
         write_panel_from_disk,
     )
 except ModuleNotFoundError:
@@ -60,10 +60,10 @@ except ModuleNotFoundError:
         panel_path,
         parse_iso_date,
         parse_tickers,
-        path_for_json,
         per_ticker_dir,
         utc_now_iso,
         write_cache_metadata,
+        write_run_manifest,
         write_panel_from_disk,
     )
 from path_utils import data_path
@@ -87,6 +87,10 @@ CONTRACT_COLUMNS = [
     "avg_sell_order_volume",
     "buy_sell_volume_imbalance",
 ]
+CONTRACT_NOTES = [
+    "Raw historical CafeF order-statistics surface from the ThongKeDL endpoint.",
+    "This is a raw source surface, not a published research feature contract.",
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -108,6 +112,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--retries", type=int, default=2)
     parser.add_argument("--sleep", type=float, default=0.2, help="Sleep between ticker requests.")
     parser.add_argument("--max-tickers", type=int, help="Limit ticker count for probes.")
+    parser.add_argument(
+        "--fail-fast",
+        action="store_true",
+        help="Stop immediately on the first ticker failure instead of recording it and continuing.",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Print plan without fetching or writing.")
     return parser.parse_args()
 
@@ -205,62 +214,171 @@ def main() -> None:
     print(f"force         : {args.force}")
     print(f"dry run       : {args.dry_run}")
 
+    started_at_utc = utc_now_iso()
     last_run: list[dict[str, object]] = []
     fetched_count = 0
+    cached_count = 0
+    failed_count = 0
+    active_ticker: str | None = None
 
-    for index, ticker in enumerate(tickers, start=1):
-        ticker_cache_path = cache_path(output_root, ticker)
-        ticker_meta_path = metadata_path(output_root, ticker)
-        cached_frame = load_cached_frame(ticker_cache_path)
-        cached_meta = load_cache_metadata(ticker_meta_path)
-        if not args.force and cache_covers_requested_window(cached_meta, start_date, end_date):
-            print(f"[{index}/{len(tickers)}] {ticker}: cached window already covers requested range")
-            last_run.append({"ticker": ticker, "status": "cached", "rows": int(len(cached_frame or []))})
-            continue
-
-        query_start = default_query_start(
-            force=args.force,
-            cached_frame=cached_frame,
-            requested_start=start_date,
-            requested_end=end_date,
-            lookback_days=args.lookback_days,
-        )
-        if args.dry_run:
-            print(f"[{index}/{len(tickers)}] {ticker}: would fetch {query_start} -> {end_date}")
-            last_run.append({"ticker": ticker, "status": "planned", "query_start": query_start.isoformat()})
-            continue
-
-        print(f"[{index}/{len(tickers)}] {ticker}: fetching {query_start} -> {end_date}")
-        incoming = fetch_ticker(
-            ticker,
-            start_date=query_start,
-            end_date=end_date,
-            page_size=args.page_size,
-            max_pages=args.max_pages,
-            timeout=args.timeout,
-            retries=args.retries,
-        )
-        combined = combine_frames(cached_frame, incoming, CONTRACT_COLUMNS)
-        atomic_write_parquet(combined, ticker_cache_path)
-        write_cache_metadata(
-            ticker_meta_path,
-            ticker=ticker,
+    if not args.dry_run:
+        write_run_manifest(
+            output_root=output_root,
             source=SOURCE,
-            query_start=query_start,
-            requested_end=end_date,
-            combined=combined,
-            previous_metadata=cached_meta,
+            panel_filename="order_stats_daily.parquet",
+            contract_columns=CONTRACT_COLUMNS,
+            contract_notes=CONTRACT_NOTES,
+            started_at_utc=started_at_utc,
+            requested_start_date=start_date,
+            requested_end_date=end_date,
+            tickers_requested=len(tickers),
+            tickers_processed=0,
+            tickers_fetched=0,
+            tickers_cached=0,
+            tickers_failed=0,
+            status="running",
+            items=last_run,
         )
-        fetched_count += 1
-        last_run.append(
-            {
-                "ticker": ticker,
-                "status": "fetched",
-                "query_start": query_start.isoformat(),
-                "rows": int(len(combined)),
-            }
-        )
-        time.sleep(args.sleep)
+
+    try:
+        for index, ticker in enumerate(tickers, start=1):
+            active_ticker = ticker
+            ticker_cache_path = cache_path(output_root, ticker)
+            ticker_meta_path = metadata_path(output_root, ticker)
+            cached_frame = load_cached_frame(ticker_cache_path)
+            cached_meta = load_cache_metadata(ticker_meta_path)
+            query_start = default_query_start(
+                force=args.force,
+                cached_frame=cached_frame,
+                requested_start=start_date,
+                requested_end=end_date,
+                lookback_days=args.lookback_days,
+            )
+            progress_status = "running"
+            if not args.dry_run:
+                write_run_manifest(
+                    output_root=output_root,
+                    source=SOURCE,
+                    panel_filename="order_stats_daily.parquet",
+                    contract_columns=CONTRACT_COLUMNS,
+                    contract_notes=CONTRACT_NOTES,
+                    started_at_utc=started_at_utc,
+                    requested_start_date=start_date,
+                    requested_end_date=end_date,
+                    tickers_requested=len(tickers),
+                    tickers_processed=len(last_run),
+                    tickers_fetched=fetched_count,
+                    tickers_cached=cached_count,
+                    tickers_failed=failed_count,
+                    status="running",
+                    items=last_run,
+                    current_ticker=ticker,
+                )
+            try:
+                if not args.force and cache_covers_requested_window(cached_meta, start_date, end_date):
+                    print(f"[{index}/{len(tickers)}] {ticker}: cached window already covers requested range")
+                    cached_count += 1
+                    last_run.append(
+                        {
+                            "ticker": ticker,
+                            "status": "cached",
+                            "rows": int(len(cached_frame)) if cached_frame is not None else 0,
+                        }
+                    )
+                    continue
+
+                if args.dry_run:
+                    print(f"[{index}/{len(tickers)}] {ticker}: would fetch {query_start} -> {end_date}")
+                    last_run.append({"ticker": ticker, "status": "planned", "query_start": query_start.isoformat()})
+                    continue
+
+                print(f"[{index}/{len(tickers)}] {ticker}: fetching {query_start} -> {end_date}")
+                incoming = fetch_ticker(
+                    ticker,
+                    start_date=query_start,
+                    end_date=end_date,
+                    page_size=args.page_size,
+                    max_pages=args.max_pages,
+                    timeout=args.timeout,
+                    retries=args.retries,
+                )
+                combined = combine_frames(cached_frame, incoming, CONTRACT_COLUMNS)
+                atomic_write_parquet(combined, ticker_cache_path)
+                write_cache_metadata(
+                    ticker_meta_path,
+                    ticker=ticker,
+                    source=SOURCE,
+                    query_start=query_start,
+                    requested_end=end_date,
+                    combined=combined,
+                    previous_metadata=cached_meta,
+                )
+                fetched_count += 1
+                last_run.append(
+                    {
+                        "ticker": ticker,
+                        "status": "fetched",
+                        "query_start": query_start.isoformat(),
+                        "rows": int(len(combined)),
+                    }
+                )
+                time.sleep(args.sleep)
+            except Exception as exc:
+                failed_count += 1
+                print(f"[{index}/{len(tickers)}] {ticker}: FAILED ({exc})")
+                last_run.append(
+                    {
+                        "ticker": ticker,
+                        "status": "failed",
+                        "query_start": query_start.isoformat(),
+                        "error": str(exc),
+                    }
+                )
+                if args.fail_fast:
+                    progress_status = "failed"
+                    raise
+            finally:
+                if not args.dry_run:
+                    write_run_manifest(
+                        output_root=output_root,
+                        source=SOURCE,
+                        panel_filename="order_stats_daily.parquet",
+                        contract_columns=CONTRACT_COLUMNS,
+                        contract_notes=CONTRACT_NOTES,
+                        started_at_utc=started_at_utc,
+                        requested_start_date=start_date,
+                        requested_end_date=end_date,
+                        tickers_requested=len(tickers),
+                        tickers_processed=len(last_run),
+                        tickers_fetched=fetched_count,
+                        tickers_cached=cached_count,
+                        tickers_failed=failed_count,
+                        status=progress_status,
+                        items=last_run,
+                        current_ticker=ticker if progress_status != "running" else None,
+                    )
+            active_ticker = None
+    except KeyboardInterrupt:
+        if not args.dry_run:
+            write_run_manifest(
+                output_root=output_root,
+                source=SOURCE,
+                panel_filename="order_stats_daily.parquet",
+                contract_columns=CONTRACT_COLUMNS,
+                contract_notes=CONTRACT_NOTES,
+                started_at_utc=started_at_utc,
+                requested_start_date=start_date,
+                requested_end_date=end_date,
+                tickers_requested=len(tickers),
+                tickers_processed=len(last_run),
+                tickers_fetched=fetched_count,
+                tickers_cached=cached_count,
+                tickers_failed=failed_count,
+                status="interrupted",
+                items=last_run,
+                current_ticker=active_ticker,
+            )
+        raise
 
     if args.dry_run:
         return
@@ -270,33 +388,23 @@ def main() -> None:
         contract_columns=CONTRACT_COLUMNS,
         panel_filename="order_stats_daily.parquet",
     )
-    manifest_payload = {
-        "contract": {
-            "source": SOURCE,
-            "root": path_for_json(output_root),
-            "per_ticker_dir": path_for_json(per_ticker_dir(output_root)),
-            "panel": path_for_json(panel_path(output_root, "order_stats_daily.parquet")),
-            "primary_key": ["ticker", "date"],
-            "contract_columns": CONTRACT_COLUMNS,
-            "notes": [
-                "Raw historical CafeF order-statistics surface from the ThongKeDL endpoint.",
-                "This is a raw source surface, not a published research feature contract.",
-            ],
-        },
-        "last_run": {
-            "fetched_at_utc": utc_now_iso(),
-            "requested_start_date": start_date.isoformat(),
-            "requested_end_date": end_date.isoformat(),
-            "tickers_requested": int(len(tickers)),
-            "tickers_fetched": int(fetched_count),
-            "panel_rows": int(len(panel)),
-            "panel_tickers": int(panel["ticker"].nunique()) if not panel.empty else 0,
-            "items": last_run,
-        },
-    }
-    manifest_path(output_root).write_text(
-        json.dumps(manifest_payload, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+    write_run_manifest(
+        output_root=output_root,
+        source=SOURCE,
+        panel_filename="order_stats_daily.parquet",
+        contract_columns=CONTRACT_COLUMNS,
+        contract_notes=CONTRACT_NOTES,
+        started_at_utc=started_at_utc,
+        requested_start_date=start_date,
+        requested_end_date=end_date,
+        tickers_requested=len(tickers),
+        tickers_processed=len(last_run),
+        tickers_fetched=fetched_count,
+        tickers_cached=cached_count,
+        tickers_failed=failed_count,
+        status="completed_with_errors" if failed_count else "completed",
+        items=last_run,
+        panel=panel,
     )
     print(f"panel rows     : {len(panel)}")
     print(f"panel path     : {panel_path(output_root, 'order_stats_daily.parquet')}")
