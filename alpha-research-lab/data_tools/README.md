@@ -379,10 +379,11 @@ Extract structured per-article features from CafeF JSONL using Google Gemini mod
 - **Output:** `data/llm_cache/YYYY-MM-DD.jsonl` (resume-safe, atomic write; one JSON object per filtered article)
 - **Usage:** `python data_tools/extract_llm_news_features.py --date-from 2023-01-01 --date-to 2023-01-03`
 - **Typical Google-only run:** `python data_tools/extract_llm_news_features.py --workers 8`
+- **Recommended frontier backfill:** `python data_tools/extract_llm_news_features.py --provider google --model gemini-3.1-flash-lite-preview --workers 4 --batch-size 10 --timeout 45`
 - **Typical single-model smoke test:** `python data_tools/extract_llm_news_features.py --model gemini-2.5-flash-lite --workers 1 --date-from 2016-01-01 --date-to 2016-01-03`
 - **Provider notes:** the canonical script is pinned to the Google/Gemini model pool; model overrides accept comma-separated Google model names via `--model`
 - **Credentials:** canonical runs read `GOOGLE_API_KEY`, `GOOGLE_API_KEY_2`, `GOOGLE_API_KEY_3`, or `GOOGLE_API_KEYS` from the shell or `.env`
-- **Rotation:** Google keys are consumed in order and failed keys are cooled down before the next request retries on another key
+- **Rotation:** Google keys are consumed in order and failed keys are cooled down before the next request retries on another key; when one Google model is the only healthy survivor, the extractor now fans that model out across all configured `GOOGLE_API_KEY*` slots (`@gk1`, `@gk2`, ...) so keys are not stranded on dead models
 - **Runtime stats:** observed Google-model latency / failure ranking persists to `alpha-research-lab/artifacts/llm_runtime/hosted_model_stats.json` and is reused on later runs
 - **Speed knobs:** `--workers`, `--batch-size`, `--num-predict`, `--max-summary-chars`
 - **Concurrency note:** `--workers` is same-day batch concurrency. Days are processed serially so cancellation stops before later days start.

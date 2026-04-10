@@ -1,18 +1,18 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_150_log.md` for the latest full session detail.
+Use `notes/session_152_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
-## Immediate Follow-Up (2026-04-09)
+## Immediate Follow-Up (2026-04-10)
 
-1. `llm-cache-fill` — rerun `python -u data_tools/extract_llm_news_features.py --provider google --workers 16 --timeout 45` after Google limits / cooldowns clear. Current state: cache `731 / 3750`, next missing day `2017-12-23.jsonl`, and `api_key_cooldowns` now persist in `artifacts/llm_runtime/hosted_model_stats.json`.
+1. `llm-cache-fill` — resume the patched Google workhorse backfill with `python -u data_tools/extract_llm_news_features.py --provider google --model gemini-3.1-flash-lite-preview --workers 4 --batch-size 10 --timeout 45` after limits clear. Current state: cache `767 / 3750`, last completed cache day `2018-01-29.jsonl`, no extractor process live, and the canonical extractor now fans the surviving Google model across all configured `GOOGLE_API_KEY*` slots via `@gk*` pool specs. The command skips existing cache days automatically.
 2. `llm-feature-refresh` — only after cache reaches the active-book years (`2018+`), rebuild `xs_llm_news_ticker_day.parquet`, rerun `H294`, and then reconsider `news-marginal-slot`.
 3. `intraday-shape-disagreement-review` — only if an offline side branch is intentionally reopened before the LLM cache is ready. Use the `H299` winners (`fade_tension_disagreement`, `intraday_shape_core_disagreement`) as observed-subset candidate-library review inputs. Do not publish them or route them live yet.
 4. `foreign-room-transition-audit` — only if continuing `H95`. Session 147 acquired and source-audited CafeF historical foreign flow, but `H327/H328` rejected raw buy/sell/net flow ranks and high-participation / room-scarcity conditioning. A continuation must test a different thesis such as room-change events or ownership-regime transitions.
-5. `surrogate-disagreement-residual-audit` — only if intentionally continuing the cheap non-API news branch before the full LLM cache is ready. `H329/H330/H331` showed direct novelty and lexical routers recover real teacher structure, but the remaining alpha still sits in the hard tail: `H330` failed the `1d follow_up` contract and `H331` failed to beat the old keyword baseline. The next honest step is to test whether student-teacher disagreement or teacher-fallback rows themselves carry the surviving short-horizon information.
+5. `cheap-llm-surrogate-branch-parked` — `H329/H330/H331/H332` exhausted the current non-API continuation on the `2015-2017` teacher window. Novelty distillation, hybrid routing, lexical field routing, and disagreement residuals all recovered some structure, but none preserved the short-horizon contract cleanly enough to beat the old keyword baseline or justify continuation. Do not keep extending this branch without new labels, more cache coverage, or a materially different contract.
 
 ---
 
@@ -155,9 +155,10 @@ short-horizon novelty-alpha contracts cleanly.
    - smallest honest next test: build the deterministic surrogate first, then
      test whether high surrogate-teacher disagreement predicts stronger or more
      unstable post-news reactions on the `2015-2017` teacher window
-   - current status: promoted to the next honest cheap-LLM branch after
-     `H331`; direct novelty and lexical routers both left the residual tail as
-     the likeliest remaining information pocket
+   - current status: `H332` came back `FAILED`; disagreement rows had slightly
+     better signed means than the deterministic-safe control, but consistently
+     weaker absolute post-news reactions, so the residual tail is not the
+     surviving information pocket on the current contract
 
 ---
 
@@ -292,6 +293,44 @@ non-API branch after `H330`.
      student-teacher disagreement states and test whether disagreement / routed
      rows show stronger `1d` / `5d` post-news reactions than deterministic-safe
      rows
+
+---
+
+## Session 151 — Surrogate Disagreement Residual Audit (2026-04-10)
+
+This stays subordinate to `llm-cache-fill`, and it answers the last honest
+cheap non-API continuation on the current teacher window.
+
+1. `surrogate-disagreement-residual-audit`
+   - `H332` result: `FAILED`
+   - the audit used the `H330` `aggressive_triple` route table plus `H331`
+     teacher-vs-student field disagreements, and compared the residual states
+     against a mutually exclusive `safe_only` control:
+     - `fallback_day`
+     - `novelty_disagree_day`
+     - `lexical_2plus_day`
+     - `hard_tail_day`
+   - every residual state had slightly better signed mean returns than the
+     `safe_only` control:
+     - `hard_tail_day` signed uplift vs `safe_only`: `+0.00017 / +0.00093`
+       on `1d / 5d`
+     - best signed uplift state: `lexical_2plus_day` at `+0.00025 / +0.00062`
+   - but every residual state had weaker absolute reactions than the
+     deterministic-safe control:
+     - `fallback_day` absolute uplift vs `safe_only`: `-0.00104 / -0.00269`
+     - `novelty_disagree_day`: `-0.00202 / -0.00417`
+     - `lexical_2plus_day`: `-0.00011 / -0.00137`
+     - `hard_tail_day`: `-0.00124 / -0.00303`
+   - branch consequence: the disagreement / fallback tail is not where the
+     surviving news reaction sits on the current contract
+
+2. `cheap-llm-surrogate-branch`
+   - claim: if this branch is ever reopened, it now needs genuinely new inputs
+     rather than more deterministic tuning on the same teacher window
+   - why now: `H329/H330/H331/H332` jointly exhausted the obvious non-API
+     continuations
+   - smallest honest next step if revisited: wait for more cache years, new
+     labels, or a changed contract instead of continuing local surrogate work
 
 ---
 

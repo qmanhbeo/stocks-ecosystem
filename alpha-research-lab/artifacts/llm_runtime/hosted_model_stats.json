@@ -1,8 +1,10 @@
 {
   "api_key_cooldowns": {
-    "sha256:2313301ebbec79d5": 1775669022.7383833,
-    "sha256:260d3af9d2e35237": 1775689711.7824163,
-    "sha256:c0a88ffed336a47f": 1775689711.680865
+    "sha256:2313301ebbec79d5": 0.0,
+    "sha256:260d3af9d2e35237": 1775844643.7378144,
+    "sha256:3506c44fe44c6097": 0.0,
+    "sha256:9568455e3a5c035f": 0.0,
+    "sha256:c0a88ffed336a47f": 1775844643.9426064
   },
   "models": {
     "cerebras:gpt-oss-120b": {
@@ -20,10 +22,10 @@
       "success_count": 4
     },
     "cerebras:llama-3.3-70b": {
-      "cooldown_until": 1775661527.8739939,
-      "failure_count": 2,
-      "failure_streak": 2,
-      "last_failure": "2026-04-08T09:18:47Z",
+      "cooldown_until": 1775843892.2433643,
+      "failure_count": 3,
+      "failure_streak": 3,
+      "last_failure": "2026-04-10T11:58:12Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5
@@ -31,10 +33,10 @@
       "success_count": 1
     },
     "cerebras:llama3.1-8b": {
-      "cooldown_until": 1775661648.0765595,
-      "failure_count": 3,
-      "failure_streak": 2,
-      "last_failure": "2026-04-08T09:20:48Z",
+      "cooldown_until": 1775843772.1142087,
+      "failure_count": 4,
+      "failure_streak": 3,
+      "last_failure": "2026-04-10T11:56:12Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -44,10 +46,10 @@
       "success_count": 3
     },
     "cerebras:qwen-3-32b": {
-      "cooldown_until": 1775661407.7300124,
-      "failure_count": 2,
-      "failure_streak": 2,
-      "last_failure": "2026-04-08T09:16:47Z",
+      "cooldown_until": 1775844012.4846847,
+      "failure_count": 3,
+      "failure_streak": 3,
+      "last_failure": "2026-04-10T12:00:12Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -73,10 +75,10 @@
       "success_count": 6
     },
     "google:gemini-2.5-flash": {
-      "cooldown_until": 1775689711.7824163,
-      "failure_count": 12,
-      "failure_streak": 6,
-      "last_failure": "2026-04-08T17:08:31Z",
+      "cooldown_until": 1775841240.115948,
+      "failure_count": 14,
+      "failure_streak": 8,
+      "last_failure": "2026-04-10T11:14:00Z",
       "last_success": "2026-04-07T15:41:09Z",
       "recent_latencies": [
         0.5,
@@ -117,10 +119,10 @@
       "success_count": 61
     },
     "google:gemini-3-flash-preview": {
-      "cooldown_until": 1775635872.2378187,
-      "failure_count": 43,
-      "failure_streak": 13,
-      "last_failure": "2026-04-08T08:06:12Z",
+      "cooldown_until": 1775822531.098045,
+      "failure_count": 44,
+      "failure_streak": 14,
+      "last_failure": "2026-04-10T11:57:11Z",
       "last_success": "2026-04-08T00:20:48Z",
       "recent_latencies": [
         20.72459650039673,
@@ -147,40 +149,148 @@
       "success_count": 21
     },
     "google:gemini-3.1-flash-lite-preview": {
-      "cooldown_until": 1775669022.7383833,
-      "failure_count": 69,
-      "failure_streak": 2,
-      "last_failure": "2026-04-08T17:08:42Z",
-      "last_success": "2026-04-08T17:08:42Z",
+      "cooldown_until": 0.0,
+      "failure_count": 80,
+      "failure_streak": 0,
+      "last_failure": "2026-04-10T12:07:24Z",
+      "last_success": "2026-04-10T12:07:51Z",
       "recent_latencies": [
-        24.182353496551514,
-        2.015594482421875,
-        8.533035039901733,
-        13.501833438873291,
-        7.6128528118133545,
-        12.299339771270752,
-        15.316854238510132,
-        11.123018980026245,
-        11.070782661437988,
-        10.715191841125488,
-        12.793306350708008,
-        11.692509889602661,
-        8.012369871139526,
-        21.048784017562866,
-        7.534675598144531,
-        23.24132513999939,
-        7.126115798950195,
-        7.009196519851685,
-        13.373824119567871,
-        11.0799081325531
+        13.908151149749756,
+        7.783546447753906,
+        11.722444295883179,
+        11.913605213165283,
+        12.17200255393982,
+        11.477953433990479,
+        27.397910356521606,
+        7.194204092025757,
+        10.374775171279907,
+        21.327476024627686,
+        5.643917560577393,
+        13.983914136886597,
+        32.0788140296936,
+        10.617110252380371,
+        10.76845383644104,
+        8.599188804626465,
+        9.406683683395386,
+        4.531080961227417,
+        8.696094989776611,
+        4.209866762161255
       ],
-      "success_count": 1120
+      "success_count": 1276
+    },
+    "google:gemini-3.1-flash-lite-preview@gk1": {
+      "cooldown_until": 0.0,
+      "failure_count": 4,
+      "failure_streak": 0,
+      "last_failure": "2026-04-10T12:24:57Z",
+      "last_success": "2026-04-10T12:30:46Z",
+      "recent_latencies": [
+        6.939068555831909,
+        5.200742244720459,
+        7.391247510910034,
+        10.074211120605469,
+        11.995806217193604,
+        9.830599308013916,
+        15.431159496307373,
+        13.42607045173645,
+        21.35128426551819,
+        2.798560619354248,
+        31.480823040008545,
+        4.465138673782349,
+        7.230572938919067,
+        6.200245141983032,
+        9.229197978973389,
+        11.202315330505371,
+        14.003300189971924,
+        8.506033658981323,
+        7.900195598602295,
+        7.561323165893555
+      ],
+      "success_count": 82
+    },
+    "google:gemini-3.1-flash-lite-preview@gk2": {
+      "cooldown_until": 0.0,
+      "failure_count": 7,
+      "failure_streak": 0,
+      "last_failure": "2026-04-10T12:29:53Z",
+      "last_success": "2026-04-10T12:30:00Z",
+      "recent_latencies": [
+        4.882352352142334,
+        13.430463075637817,
+        19.186564207077026,
+        20.730562686920166,
+        13.477872848510742,
+        15.716735124588013,
+        4.021392107009888,
+        4.524748086929321,
+        12.897073030471802,
+        11.657591581344604,
+        4.149408578872681,
+        7.321111679077148,
+        4.631577730178833,
+        4.8699870109558105,
+        8.584563732147217,
+        13.17398452758789,
+        7.936842918395996,
+        12.815235137939453,
+        4.257458448410034,
+        10.364969491958618
+      ],
+      "success_count": 63
+    },
+    "google:gemini-3.1-flash-lite-preview@gk3": {
+      "cooldown_until": 0.0,
+      "failure_count": 7,
+      "failure_streak": 0,
+      "last_failure": "2026-04-10T12:30:03Z",
+      "last_success": "2026-04-10T12:30:45Z",
+      "recent_latencies": [
+        8.393982887268066,
+        8.117110013961792,
+        17.253496646881104,
+        9.840027332305908,
+        17.905973196029663,
+        27.55962872505188,
+        7.521016359329224,
+        8.096003293991089,
+        8.560588121414185,
+        8.69492220878601,
+        15.366767406463623,
+        14.432843208312988,
+        44.332968950271606,
+        7.3764331340789795,
+        10.03954029083252,
+        14.111396789550781,
+        5.08342432975769,
+        7.677967309951782,
+        8.117165088653564,
+        3.944228172302246
+      ],
+      "success_count": 66
+    },
+    "google:gemini-3.1-flash-lite-preview@gk4": {
+      "cooldown_until": 1775844643.7378144,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-10T12:10:43Z",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
+    },
+    "google:gemini-3.1-flash-lite-preview@gk5": {
+      "cooldown_until": 1775844643.9426064,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-10T12:10:43Z",
+      "last_success": "",
+      "recent_latencies": [],
+      "success_count": 0
     },
     "google:gemma-3-12b-it": {
-      "cooldown_until": 1775635207.8065848,
-      "failure_count": 21,
-      "failure_streak": 14,
-      "last_failure": "2026-04-08T07:55:07Z",
+      "cooldown_until": 1775822816.968886,
+      "failure_count": 22,
+      "failure_streak": 15,
+      "last_failure": "2026-04-10T12:03:56Z",
       "last_success": "2026-04-07T23:52:07Z",
       "recent_latencies": [
         0.5,
@@ -193,10 +303,10 @@
       "success_count": 6
     },
     "google:gemma-3-27b-it": {
-      "cooldown_until": 1775689711.680865,
-      "failure_count": 14,
-      "failure_streak": 6,
-      "last_failure": "2026-04-08T17:08:31Z",
+      "cooldown_until": 1775841240.4162662,
+      "failure_count": 16,
+      "failure_streak": 8,
+      "last_failure": "2026-04-10T11:14:00Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         21.422932863235474,
@@ -223,10 +333,10 @@
       "success_count": 21
     },
     "groq:deepseek-r1-distill-llama-70b": {
-      "cooldown_until": 1775661407.719036,
-      "failure_count": 2,
-      "failure_streak": 2,
-      "last_failure": "2026-04-08T09:16:47Z",
+      "cooldown_until": 1775843772.0919075,
+      "failure_count": 3,
+      "failure_streak": 3,
+      "last_failure": "2026-04-10T11:56:12Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -236,10 +346,10 @@
       "success_count": 3
     },
     "groq:llama-3.1-8b-instant": {
-      "cooldown_until": 1775661648.0644615,
-      "failure_count": 3,
-      "failure_streak": 2,
-      "last_failure": "2026-04-08T09:20:48Z",
+      "cooldown_until": 1775843892.2897794,
+      "failure_count": 4,
+      "failure_streak": 3,
+      "last_failure": "2026-04-10T11:58:12Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -250,10 +360,10 @@
       "success_count": 4
     },
     "groq:llama-3.3-70b-versatile": {
-      "cooldown_until": 1775661527.8710594,
-      "failure_count": 2,
-      "failure_streak": 2,
-      "last_failure": "2026-04-08T09:18:47Z",
+      "cooldown_until": 1775844012.5048852,
+      "failure_count": 3,
+      "failure_streak": 3,
+      "last_failure": "2026-04-10T12:00:12Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5
@@ -518,20 +628,21 @@
       "success_count": 3
     },
     "nvidia:google/gemma-3-27b-it": {
-      "cooldown_until": 1775576696.688501,
+      "cooldown_until": 0.0,
       "failure_count": 1,
-      "failure_streak": 1,
+      "failure_streak": 0,
       "last_failure": "2026-04-07T15:39:56Z",
-      "last_success": "2026-04-07T15:07:31Z",
+      "last_success": "2026-04-10T11:56:41Z",
       "recent_latencies": [
         0.5,
         0.5,
         0.5,
         0.5,
         0.5,
-        0.5
+        0.5,
+        29.687671899795532
       ],
-      "success_count": 6
+      "success_count": 7
     },
     "nvidia:google/gemma-4-31b-it": {
       "cooldown_until": 0.0,
@@ -597,10 +708,10 @@
       "success_count": 1
     },
     "nvidia:mistralai/mistral-medium-3-instruct": {
-      "cooldown_until": 0.0,
-      "failure_count": 0,
-      "failure_streak": 0,
-      "last_failure": "",
+      "cooldown_until": 1775822546.8023553,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-10T11:57:26Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -654,19 +765,19 @@
       "success_count": 2
     },
     "nvidia:nvidia/nemotron-mini-4b-instruct": {
-      "cooldown_until": 0.0,
-      "failure_count": 0,
-      "failure_streak": 0,
-      "last_failure": "",
+      "cooldown_until": 1775822487.1958406,
+      "failure_count": 1,
+      "failure_streak": 1,
+      "last_failure": "2026-04-10T12:00:27Z",
       "last_success": "",
       "recent_latencies": [],
       "success_count": 0
     },
     "nvidia:stepfun-ai/step-3.5-flash": {
-      "cooldown_until": 1775640183.8019557,
-      "failure_count": 3,
-      "failure_streak": 2,
-      "last_failure": "2026-04-08T09:18:03Z",
+      "cooldown_until": 1775822892.45974,
+      "failure_count": 4,
+      "failure_streak": 3,
+      "last_failure": "2026-04-10T12:03:12Z",
       "last_success": "2026-04-07T15:07:31Z",
       "recent_latencies": [
         0.5,
@@ -777,6 +888,6 @@
       "success_count": 0
     }
   },
-  "updated_at": "2026-04-08T17:08:42Z",
+  "updated_at": "2026-04-10T12:30:46Z",
   "version": 1
 }

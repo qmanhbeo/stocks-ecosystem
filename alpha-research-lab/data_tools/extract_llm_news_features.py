@@ -9,6 +9,7 @@ The older multi-provider implementation has been moved to
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import hashlib
 import json
 import math
@@ -429,6 +430,52 @@ def _resolve_google_api_keys_for_specs(
     return out
 
 
+def _load_hosted_model_stats_models(stats_path: Path) -> dict[str, dict]:
+    try:
+        payload = json.loads(stats_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    models = payload.get("models", {}) if isinstance(payload, dict) else {}
+    return models if isinstance(models, dict) else {}
+
+
+def _expand_google_specs_across_keys(
+    specs: list[HostedModelSpec],
+    google_keys: list[str],
+    stats_path: Path = HOSTED_MODEL_STATS_PATH,
+) -> tuple[list[HostedModelSpec], dict[str, str]]:
+    unique_keys = list(dict.fromkeys(google_keys))
+    if not unique_keys:
+        return [], {}
+
+    models = _load_hosted_model_stats_models(stats_path)
+    healthy_specs = [
+        spec
+        for spec in specs
+        if int(models.get(spec.key, {}).get("success_count", 0) or 0) > 0
+        and int(models.get(spec.key, {}).get("failure_streak", 0) or 0) == 0
+    ]
+    fanout_name = ""
+    if len(unique_keys) > 1:
+        if len(specs) == 1:
+            fanout_name = specs[0].name
+        elif len(healthy_specs) == 1:
+            fanout_name = healthy_specs[0].name
+
+    expanded: list[HostedModelSpec] = []
+    api_keys: dict[str, str] = {}
+    for index, spec in enumerate(specs):
+        if fanout_name and spec.name == fanout_name:
+            for key_index, google_key in enumerate(unique_keys, start=1):
+                slot_spec = replace(spec, slot_id=f"gk{key_index}")
+                expanded.append(slot_spec)
+                api_keys[slot_spec.key] = google_key
+            continue
+        expanded.append(spec)
+        api_keys[spec.key] = unique_keys[index % len(unique_keys)]
+    return expanded, api_keys
+
+
 class GoogleKeyRotationScheduler(HostedModelScheduler):
     """Google-only scheduler that cools down API keys, not the whole provider."""
 
@@ -714,8 +761,8 @@ def _build_rate_limiter(
     google_keys = _resolve_google_api_keys(cli_api_key)
     key = google_keys[0] if google_keys else ""
     unique = list(dict.fromkeys(google_keys))
-    pool = _select_google_model_pool(model_arg)
-    api_keys = _resolve_google_api_keys_for_specs(pool, unique)
+    base_pool = _select_google_model_pool(model_arg)
+    pool, api_keys = _expand_google_specs_across_keys(base_pool, unique)
     ordinals = {k: i + 1 for i, k in enumerate(unique)}
     limiter: HostedModelScheduler | None = (
         GoogleKeyRotationScheduler(pool, api_keys, stats_path=HOSTED_MODEL_STATS_PATH)

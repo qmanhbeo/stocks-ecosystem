@@ -1,0 +1,90 @@
+{
+  "verdict": "FAILED",
+  "policy_name": "aggressive_triple",
+  "panel_rows": 18640,
+  "panel_dates": 728,
+  "panel_tickers": 2073,
+  "state_activity": {
+    "fallback_day": {
+      "active_rows": 6283,
+      "active_share": 0.33707081545064377
+    },
+    "novelty_disagree_day": {
+      "active_rows": 6403,
+      "active_share": 0.34350858369098713
+    },
+    "lexical_2plus_day": {
+      "active_rows": 4731,
+      "active_share": 0.2538090128755365
+    },
+    "hard_tail_day": {
+      "active_rows": 12431,
+      "active_share": 0.6668991416309012
+    },
+    "safe_only_day": {
+      "active_rows": 6209,
+      "active_share": 0.3331008583690987
+    }
+  },
+  "state_summaries": [
+    {
+      "state_name": "fallback_day",
+      "pass_candidate": false,
+      "mixed_candidate": false,
+      "one_day_signed_uplift": 0.0001703282596788344,
+      "five_day_signed_uplift": 0.0020782173336962506,
+      "one_day_abs_uplift": -0.0010409279077978548,
+      "five_day_abs_uplift": -0.0026903151211805573,
+      "one_day_mean_ic": -0.010075229595939907,
+      "five_day_mean_ic": 0.0003734465448997455
+    },
+    {
+      "state_name": "novelty_disagree_day",
+      "pass_candidate": false,
+      "mixed_candidate": false,
+      "one_day_signed_uplift": 0.000262278948013883,
+      "five_day_signed_uplift": 0.0003736023585504968,
+      "one_day_abs_uplift": -0.0020154848881778938,
+      "five_day_abs_uplift": -0.004171668642054004,
+      "one_day_mean_ic": 0.014029308979958147,
+      "five_day_mean_ic": 0.01676475088268831
+    },
+    {
+      "state_name": "lexical_2plus_day",
+      "pass_candidate": false,
+      "mixed_candidate": false,
+      "one_day_signed_uplift": 0.00024965466873642646,
+      "five_day_signed_uplift": 0.0006242934833112645,
+      "one_day_abs_uplift": -0.00010922240117584858,
+      "five_day_abs_uplift": -0.0013670821550803292,
+      "one_day_mean_ic": -0.004625378635605645,
+      "five_day_mean_ic": -0.002056693184913871
+    },
+    {
+      "state_name": "hard_tail_day",
+      "pass_candidate": false,
+      "mixed_candidate": false,
+      "one_day_signed_uplift": 0.00016619973744727058,
+      "five_day_signed_uplift": 0.0009268898801331532,
+      "one_day_abs_uplift": -0.0012414138934049024,
+      "five_day_abs_uplift": -0.0030308909319037847,
+      "one_day_mean_ic": 0.004885867337955754,
+      "five_day_mean_ic": 0.018776514239655206
+    }
+  ],
+  "best_state": {
+    "state_name": "lexical_2plus_day",
+    "pass_candidate": false,
+    "mixed_candidate": false,
+    "one_day_signed_uplift": 0.00024965466873642646,
+    "five_day_signed_uplift": 0.0006242934833112645,
+    "one_day_abs_uplift": -0.00010922240117584858,
+    "five_day_abs_uplift": -0.0013670821550803292,
+    "one_day_mean_ic": -0.004625378635605645,
+    "five_day_mean_ic": -0.002056693184913871
+  },
+  "artifacts": {
+    "panel": "artifacts/portfolio_baselines/20260410_113110_h332_surrogate_disagreement_residual_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260410_113110_h332_surrogate_disagreement_residual_results.parquet"
+  }
+}

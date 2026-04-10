@@ -3051,3 +3051,65 @@ contract. If the cheap branch continues, move to:
   rows themselves
 - more selective narrow follow-ups only if a future branch needs one isolated
   lexical field rather than a broad replacement surface
+
+## F252: H332 Shows The Surrogate Disagreement Tail Does Not Hold The Remaining News Reaction; Deterministic-Safe Rows Still React More Strongly (2026-04-10, Session 151)
+
+Session 151 ran the last honest cheap non-API continuation after `H331`:
+- take the best `H330` hybrid contract (`aggressive_triple`)
+- merge it with the `H331` student-teacher field disagreements
+- test whether the remaining short-horizon signal sits in:
+  - teacher-fallback rows
+  - novelty-disagreement rows
+  - high lexical-disagreement rows
+  - the combined hard tail
+
+The residual audit built a ticker-day panel from the teacher window:
+- panel rows:
+  - `18,640`
+- panel dates:
+  - `728`
+- panel tickers:
+  - `2,073`
+- deterministic-safe control rows:
+  - `6,209`
+- hard-tail rows:
+  - `12,431`
+
+The disagreement tail was not empty on signed means:
+- `hard_tail_day` signed uplift vs `safe_only`:
+  - `+0.00017 / +0.00093`
+  - on `1d / 5d`
+- best signed uplift state:
+  - `lexical_2plus_day`
+  - `+0.00025 / +0.00062`
+
+But the more important result is that every residual state had weaker absolute
+post-news reactions than the deterministic-safe control:
+- `fallback_day` absolute uplift vs `safe_only`:
+  - `-0.00104 / -0.00269`
+- `novelty_disagree_day`:
+  - `-0.00202 / -0.00417`
+- `lexical_2plus_day`:
+  - `-0.00011 / -0.00137`
+- `hard_tail_day`:
+  - `-0.00124 / -0.00303`
+
+The daily ICs were not enough to rescue the line:
+- `hard_tail_day` mean IC:
+  - `+0.0049 / +0.0188`
+- `lexical_2plus_day` mean IC:
+  - `-0.0046 / -0.0021`
+
+### Key finding
+The teacher-fallback / disagreement tail is not where the remaining useful
+reaction sits on the current teacher window. The residual rows have slightly
+better signed means than deterministic-safe rows, but consistently weaker
+absolute reactions. That points in the opposite direction from the desired
+cheap-LLM continuation.
+
+**Implication:** close the current cheap non-API surrogate branch on the
+`2015-2017` teacher window. `H329/H330/H331/H332` together exhaust the obvious
+deterministic continuations. Do not continue this branch without:
+- more cache years
+- new labels
+- or a materially different contract

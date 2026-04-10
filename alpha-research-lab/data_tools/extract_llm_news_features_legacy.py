@@ -613,6 +613,7 @@ class HostedModelSpec:
     provider: str
     name: str
     api_key_envs: tuple[str, ...]
+    slot_id: str = ""
     rpm: int | None = None
     rpd: int | None = None
     seed_latency: float = 10.0
@@ -620,7 +621,10 @@ class HostedModelSpec:
 
     @property
     def key(self) -> str:
-        return f"{self.provider}:{self.name}"
+        base = f"{self.provider}:{self.name}"
+        if self.slot_id:
+            return f"{base}@{self.slot_id}"
+        return base
 
 
 def _provider_error_prefix(provider: str) -> str:
@@ -692,6 +696,7 @@ def _coerce_hosted_spec(item: HostedModelSpec | dict | str, default_provider: st
         provider=provider,
         name=str(item["name"]),
         api_key_envs=tuple(item.get("api_key_envs") or _api_env_names_for_provider(provider, str(item["name"]))),
+        slot_id=str(item.get("slot_id", "")),
         rpm=item.get("rpm"),
         rpd=item.get("rpd"),
         seed_latency=float(item.get("seed_latency", 10.0)),

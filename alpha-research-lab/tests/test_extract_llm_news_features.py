@@ -1218,3 +1218,46 @@ def test_google_scheduler_excludes_high_streak_models(tmp_path) -> None:
     spec = scheduler.acquire_spec(acquire_timeout=0.1)
     assert spec is not None
     assert spec.key == "google:good-model", "High-streak model must be skipped"
+
+
+def test_expand_google_specs_across_keys_fans_out_single_healthy_model(tmp_path) -> None:
+    stats_path = tmp_path / "stats.json"
+    _write_stats(
+        stats_path,
+        {
+            "google:gemini-2.5-flash-lite": {
+                "success_count": 61,
+                "failure_count": 32,
+                "failure_streak": 12,
+                "recent_latencies": [1.2, 1.4],
+            },
+            "google:gemini-3.1-flash-lite-preview": {
+                "success_count": 1267,
+                "failure_count": 78,
+                "failure_streak": 0,
+                "recent_latencies": [16.0, 18.0],
+            },
+        },
+    )
+    specs = [
+        llm.HostedModelSpec(provider="google", name="gemini-2.5-flash-lite", api_key_envs=(), rpm=10),
+        llm.HostedModelSpec(provider="google", name="gemini-3.1-flash-lite-preview", api_key_envs=(), rpm=15),
+    ]
+
+    expanded, api_keys = llm._expand_google_specs_across_keys(
+        specs,
+        ["key-1", "key-2", "key-3"],
+        stats_path=stats_path,
+    )
+
+    expanded_keys = [spec.key for spec in expanded]
+
+    assert "google:gemini-2.5-flash-lite" in expanded_keys
+    assert expanded_keys.count("google:gemini-3.1-flash-lite-preview@gk1") == 1
+    assert expanded_keys.count("google:gemini-3.1-flash-lite-preview@gk2") == 1
+    assert expanded_keys.count("google:gemini-3.1-flash-lite-preview@gk3") == 1
+    assert {
+        api_keys["google:gemini-3.1-flash-lite-preview@gk1"],
+        api_keys["google:gemini-3.1-flash-lite-preview@gk2"],
+        api_keys["google:gemini-3.1-flash-lite-preview@gk3"],
+    } == {"key-1", "key-2", "key-3"}
