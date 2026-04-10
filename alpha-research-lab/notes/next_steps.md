@@ -1,7 +1,7 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_147_log.md` for the latest full session detail.
+Use `notes/session_150_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
@@ -12,7 +12,7 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 2. `llm-feature-refresh` — only after cache reaches the active-book years (`2018+`), rebuild `xs_llm_news_ticker_day.parquet`, rerun `H294`, and then reconsider `news-marginal-slot`.
 3. `intraday-shape-disagreement-review` — only if an offline side branch is intentionally reopened before the LLM cache is ready. Use the `H299` winners (`fade_tension_disagreement`, `intraday_shape_core_disagreement`) as observed-subset candidate-library review inputs. Do not publish them or route them live yet.
 4. `foreign-room-transition-audit` — only if continuing `H95`. Session 147 acquired and source-audited CafeF historical foreign flow, but `H327/H328` rejected raw buy/sell/net flow ranks and high-participation / room-scarcity conditioning. A continuation must test a different thesis such as room-change events or ownership-regime transitions.
-5. `hybrid-news-cascade-audit` — only if intentionally continuing the cheap non-API news branch before the full LLM cache is ready. `H329` showed title-sequence novelty rules improve over the naive baseline, but they do not preserve the short-horizon novelty contracts well enough for full replacement. The next honest step is hybrid routing or broader teacher-state distillation, not another novelty-only retune.
+5. `surrogate-disagreement-residual-audit` — only if intentionally continuing the cheap non-API news branch before the full LLM cache is ready. `H329/H330/H331` showed direct novelty and lexical routers recover real teacher structure, but the remaining alpha still sits in the hard tail: `H330` failed the `1d follow_up` contract and `H331` failed to beat the old keyword baseline. The next honest step is to test whether student-teacher disagreement or teacher-fallback rows themselves carry the surviving short-horizon information.
 
 ---
 
@@ -112,6 +112,9 @@ short-horizon novelty-alpha contracts cleanly.
    - smallest honest next test: score rule coverage / confidence on the current
      teacher window, route only low-confidence articles to the canonical LLM
      schema, and estimate article-share and token-share saved versus full API
+   - current status: `H330` came back `MIXED`; the cascade saves substantial
+     API share and recovers `2 / 3` novelty contracts, but it still fails the
+     `1d follow_up` contract in every tested policy
 
 3. `title-sequence-novelty`
    - claim: `follow_up` versus `new` may be reproducible mostly from title
@@ -137,6 +140,10 @@ short-horizon novelty-alpha contracts cleanly.
      `event_type`, `expectation_alignment`, `impact_scope`, and
      `source_authority`, then test whether those rebuilt 5d counts recover the
      strongest old LLM subfamilies better than the legacy sentiment lexicon
+   - current status: `H331` came back `FAILED`; it recovered some structure
+     and preserved `3 / 4` field champions, but the key `source_authority`
+     rumor state flipped sign and the best deterministic feature still trailed
+     the old keyword-news baseline
 
 5. `surrogate-disagreement-residual`
    - claim: the gap between a cheap deterministic student and the teacher may
@@ -148,6 +155,9 @@ short-horizon novelty-alpha contracts cleanly.
    - smallest honest next test: build the deterministic surrogate first, then
      test whether high surrogate-teacher disagreement predicts stronger or more
      unstable post-news reactions on the `2015-2017` teacher window
+   - current status: promoted to the next honest cheap-LLM branch after
+     `H331`; direct novelty and lexical routers both left the residual tail as
+     the likeliest remaining information pocket
 
 ---
 
@@ -196,6 +206,92 @@ cheap-LLM surrogate pass on the current teacher window.
      `expectation_alignment`, `impact_scope`, and `source_authority`
      deterministically on the same teacher window and compare them with both the
      saved teacher labels and the old keyword baseline
+
+---
+
+## Session 149 — Hybrid News Cascade Audit (2026-04-10)
+
+This stays subordinate to `llm-cache-fill`, and it answers the next honest
+cheap-LLM continuation after `H329`.
+
+1. `hybrid-news-cascade-audit`
+   - `H330` result: `MIXED`
+   - the hybrid novelty cascade materially improved on the pure deterministic
+     baseline while saving large API share:
+     - best policy by cost / contract trade-off: `aggressive_triple`
+     - preserved key novelty contracts `2 / 3`
+     - API article share `0.2028`
+     - API text share `0.2035`
+     - holdout macro-F1 `0.5654`
+     - holdout `follow_up` F1 `0.4139`
+   - more conservative policies traded cost savings for label fidelity, but the
+     core failure stayed the same:
+     - `new_only_balanced` kept API article share at `0.4115` and `follow_up`
+       F1 at `0.6721`, but still preserved only `2 / 3`
+     - even `new_only_strict`, which routed `58.9%` of articles and `60.2%` of
+       text back to the teacher, still failed the `1d follow_up` sign test
+   - branch consequence: the hybrid cascade is real cost-reduction evidence,
+     but novelty-only routing is still too lossy on the short-horizon contract
+
+2. `deterministic-event-family-router`
+   - claim: the next cheap surrogate should move off novelty and onto more
+     lexical teacher fields that map more directly to finance language
+   - why now: `H329/H330` both say novelty structure is partly recoverable but
+     too fragile around the short-horizon `follow_up` contract
+   - smallest honest next test: deterministically rebuild `event_type`,
+     `expectation_alignment`, `impact_scope`, and `source_authority` on the
+     same teacher window, then compare teacher-label recovery and the strongest
+     old LLM bucket edges against the dead keyword baseline
+
+3. `surrogate-disagreement-residual`
+   - claim: the remaining signal may sit in the rows where a cheap student and
+     the teacher disagree, not in the fully deterministic output itself
+   - why now: `H330` shows a small ambiguous tail matters disproportionately to
+     the short-horizon contract, which is exactly where a disagreement residual
+     could live
+   - smallest honest next test: use the `H330` route table to test whether
+     teacher-fallback rows and high disagreement rows have stronger or less
+     stable post-news reactions than the deterministic-safe rows
+
+---
+
+## Session 150 — Deterministic Event-Family Router Audit (2026-04-10)
+
+This stays subordinate to `llm-cache-fill`, and it answers the next cheap
+non-API branch after `H330`.
+
+1. `deterministic-event-family-router-audit`
+   - `H331` result: `FAILED`
+   - the lexical router did recover real field structure:
+     - preserved field champions `3 / 4`
+     - dense-field macro-F1 improvements:
+       - `source_authority` `+0.1514`
+       - `impact_scope` `+0.4364`
+     - sparse `event_type` also improved materially on held-out `2017`:
+       - macro-F1 delta `+0.4458`
+   - but the branch still failed the honest contract:
+     - `source_authority__rumor_source` teacher / deterministic mean IC:
+       `+0.0678 / -0.0848`
+     - `expectation_alignment` stayed weak:
+       - macro-F1 delta `+0.0244`
+     - best deterministic feature absolute IC:
+       - `0.0848`
+     - best old keyword-news baseline absolute IC:
+       - `0.1303`
+   - branch consequence: direct lexical field routing is not enough to reopen
+     the cheap branch; the remaining information likely sits in disagreement or
+     teacher-fallback tails rather than in fully deterministic labels
+
+2. `surrogate-disagreement-residual`
+   - claim: the remaining short-horizon signal may be concentrated exactly
+     where the deterministic student disagrees with the teacher
+   - why now: `H329/H330/H331` all recovered meaningful structure while still
+     missing the part of the branch that actually matters for the surviving
+     alpha contracts
+   - smallest honest next test: combine the `H330` route table with `H331`
+     student-teacher disagreement states and test whether disagreement / routed
+     rows show stronger `1d` / `5d` post-news reactions than deterministic-safe
+     rows
 
 ---
 

@@ -2926,3 +2926,128 @@ isolation. If the cheap branch continues, move to:
 - broader teacher-state distillation on more lexical fields such as
   `event_type`, `expectation_alignment`, `impact_scope`, and
   `source_authority`
+
+## F250: H330 Shows A Hybrid Novelty Cascade Can Save Large API Share, But It Still Fails The `1d follow_up` Contract (2026-04-10, Session 149)
+
+Session 149 ran the next honest cheap non-API continuation after `H329`:
+- keep the novelty rules from `H329`
+- use them only as a deterministic-first confidence screen
+- route the ambiguous rows back to the teacher as an oracle fallback
+- test whether that hybrid contract preserves the saved novelty-alpha evidence
+  while reducing API demand materially
+
+The audit used the same ticker-tagged teacher window:
+- teacher article rows:
+  - `12,295`
+- teacher date range:
+  - `2015-09-21` to `2018-01-03`
+- policy ladder:
+  - `5` predeclared hybrid policies from strict to aggressive
+
+The hybrid cascade did recover much more teacher-label structure than the pure
+deterministic student:
+- pure deterministic holdout macro-F1:
+  - `0.3965`
+- best hybrid holdout macro-F1:
+  - `0.8840`
+- pure deterministic holdout `follow_up` F1:
+  - `0.0876`
+- best hybrid holdout `follow_up` F1:
+  - `0.8235`
+
+It also showed that a large share of API traffic can be avoided:
+- best cost / contract trade-off policy:
+  - `aggressive_triple`
+- best-policy API article share:
+  - `0.2028`
+- best-policy API text share:
+  - `0.2035`
+- best-policy preserved contracts:
+  - `2 / 3`
+
+But the more important result is what failed to recover:
+- every tested hybrid policy preserved only:
+  - `2 / 3`
+- the failed contract in every policy was:
+  - `1d follow_up`
+- even the strict new-only cascade, which routed:
+  - `58.9%` of articles
+  - `60.2%` of article text
+  back to the teacher, still left `1d follow_up` negative
+
+### Key finding
+The hybrid novelty cascade is real as a cost-reduction mechanism, but it still
+does not preserve the short-horizon novelty contract that matters most. The
+remaining information loss is concentrated in the `1d follow_up` line, and more
+novelty-only cascade retuning is unlikely to change that.
+
+**Implication:** do not continue the cheap branch with more novelty-only
+distillation or cascade tuning. If the surrogate branch continues, move to:
+- more lexical teacher fields such as `event_type`,
+  `expectation_alignment`, `impact_scope`, and `source_authority`
+- disagreement-residual tests that treat the teacher-fallback tail itself as a
+  possible signal source
+
+## F251: H331 Shows Direct Lexical Event-Family Routing Recovers Some Structure, But It Does Not Beat The Old Keyword Baseline Or Preserve The Key Authority State (2026-04-10, Session 150)
+
+Session 150 ran the next honest cheap non-API continuation after `H330`:
+- move off novelty-only routing
+- test more lexical teacher fields directly from article text
+- compare the rebuilt field routers with both teacher-state preservation and
+  the old keyword-news baseline
+
+The audited teacher surface stayed on the same ticker-tagged window:
+- teacher article rows:
+  - `12,378`
+- teacher date range:
+  - `2015-09-21` to `2018-01-03`
+- tested field families:
+  - `source_authority`
+  - `expectation_alignment`
+  - `impact_scope`
+  - sparse focused `event_type`
+
+The lexical router did recover meaningful article-level structure on several
+fields:
+- `source_authority` held-out macro-F1 delta vs train-majority:
+  - `+0.1514`
+- `impact_scope` held-out macro-F1 delta:
+  - `+0.4364`
+- sparse `event_type` held-out macro-F1 delta:
+  - `+0.4458`
+- preserved field champions:
+  - `3 / 4`
+
+But the broad branch still failed on the parts that mattered most:
+- failed teacher champion:
+  - `source_authority__rumor_source`
+- teacher / deterministic mean IC:
+  - `+0.0678 / -0.0848`
+- weak field:
+  - `expectation_alignment`
+- its held-out macro-F1 delta:
+  - `+0.0244`
+
+The final bar was not cleared against the dead keyword path:
+- best deterministic feature:
+  - `source_authority__rumor_source`
+  - abs IC `0.0848`
+- best keyword baseline feature:
+  - `sentiment_score`
+  - abs IC `0.1303`
+  - matched rows `609`
+
+### Key finding
+Direct lexical routing is not empty. It can recover real structure in
+`impact_scope`, some authority buckets, and the densest event-type families.
+But it still does not reopen the cheap branch as a broad replacement path: the
+most important authority state flips sign, `expectation_alignment` stays weak,
+and the best deterministic feature still trails the old keyword-news baseline
+on the audited `5d` target.
+
+**Implication:** close the direct lexical-router continuation on the current
+contract. If the cheap branch continues, move to:
+- disagreement-residual tests using student-teacher gaps or teacher-fallback
+  rows themselves
+- more selective narrow follow-ups only if a future branch needs one isolated
+  lexical field rather than a broad replacement surface
