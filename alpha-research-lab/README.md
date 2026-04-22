@@ -113,6 +113,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 
 - Run research scripts from inside `alpha-research-lab/`
 - Canonical data lives in the workspace root at `../data/`
+- Root `data/README.md` is the shared warehouse contract; use it together with `notes/data_sources.md` for source-level detail
 - Lab scripts now resolve the workspace-root `data/` directory directly; a repo-local `data/` symlink is optional compatibility only
 - Artifact outputs are anchored to `alpha-research-lab/artifacts/` regardless of launch directory
 - No research data is duplicated inside `alpha-research-lab/`
@@ -127,6 +128,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - The lab now owns a historical CafeF order-statistics archive at `data/order_stats/cafef/`; this is a raw daily summary surface from stock-history page 2 (`ThongKeDL`), not historical queue depth
 - The lab now owns a historical CafeF proprietary-trading archive at `data/proprietary_trading/cafef/`; this is a raw daily summary surface from stock-history page 4 (`GDTuDoanh`)
 - The lab now owns a forward-only VCI board foreign-flow collector at `data/foreign_flow_forward/vci_price_board/`; this is raw acquisition data and not backtestable history
+- The lab now owns a raw official HNX / UPCoM issuer-disclosure surface at `data/official_disclosures/hnx/`; the HNX issuer universe is fetchable now, and per-ticker official disclosure history plus attachment metadata, OCR text caches, and transaction-attachment extracts are wired through `data_tools/fetch_hnx_official_disclosures.py`
 - RL consumes that matrix through `../RL-trading-agent` via `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 - Recommendation contracts are shared with RL-adjacent consumers via `../shared-recommendation/`
 - Execution reality is shared with RL via `../docs/execution_reality.md` and `../shared-market-rules/`

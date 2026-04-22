@@ -38,6 +38,7 @@ Thumbs.db
 *.swo
 
 # Large restorable archive data
-data/
+data/*
+!data/README.md
 *.tar.zst
 *.tar.zst.sha256

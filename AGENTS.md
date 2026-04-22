@@ -7,6 +7,7 @@ Root coordination notes for coding agents working in `/home/manh/stocks`.
 Read these first:
 
 - `README.md`
+- `data/README.md` when the task touches shared datasets or source availability
 - `alpha-research-lab/README.md`
 - `shared-recommendation/README.md` when changing shared recommendation contracts or candidate artifacts
 - `RL-trading-agent/README.md`
@@ -23,6 +24,7 @@ Current responsibilities:
 - `data/order_stats/` is a raw historical CafeF order-statistics surface
 - `data/proprietary_trading/` is a raw historical CafeF proprietary-trading surface
 - `data/foreign_flow_forward/` is a forward-only raw acquisition surface, not a historical feature backfill
+- `data/official_disclosures/` is a raw official-disclosure acquisition surface; the first wired source is HNX mobile issuer disclosures
 - `alpha-research-lab/` owns research pipelines and research outputs
 - `manual-label-factory/` owns the manual buy-zone labelling UI
 - `shared-recommendation/` owns shared model-agnostic recommendation contracts and artifact resolution
@@ -48,6 +50,7 @@ Current responsibilities:
 - Treat `data/order_stats/` as a raw source surface until a research-owned feature artifact is published from it
 - Treat `data/proprietary_trading/` as a raw source surface until a research-owned feature artifact is published from it
 - Treat `data/foreign_flow_forward/` as forward-only raw data; do not use it in historical alpha tests until enough post-collection history exists
+- Treat `data/official_disclosures/` as a raw source surface; do not assume exchange-hosted disclosures are a published event feature contract yet
 - When changing producer/consumer boundaries, update docs in both the producer and consumer project
 
 ## Change Map

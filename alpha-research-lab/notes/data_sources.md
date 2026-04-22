@@ -28,6 +28,7 @@ For the active timing-data acquisition branch, also read:
 | `data/order_stats/cafef/` — historical CafeF order statistics | YES | `fetch_cafef_order_stats.py` |
 | `data/proprietary_trading/cafef/` — historical CafeF proprietary trading | YES | `fetch_cafef_proprietary_trading.py` |
 | `data/foreign_flow_forward/` — forward-only VCI board snapshots | YES | `collect_forward_foreign_flow.py` |
+| `data/official_disclosures/hnx/` — official HNX / UPCoM issuer disclosures | YES | `fetch_hnx_official_disclosures.py` |
 | `data/news/cafef/raw/*.jsonl` | NO (3.6 GB) | `python data_tools/fetch_news_archive.py` |
 | Full `data/` snapshot (legacy) | NO | `python setup_data.py` (restores the newest `data-snapshot-YYYY-MM-DD-HHMMSS.tar.zst` from the Drive backup remote after SHA256 verification; pass `--snapshot-name` to restore a specific run) |
 
@@ -165,6 +166,32 @@ python data_tools/fetch_news_archive.py
   - no historical archive contract was confirmed from this probe, so do not
     treat it as a backfillable order-book source
 
+### HNX mobile official disclosure site
+- **Issuer universe JSON:**
+  `https://hnx.vn/Home/MobileSearchAutocompleteStockCode`
+  - public, no auth required
+  - returns the official HNX / UPCoM symbol list plus `MARKETCODE` and detail slug
+  - repo fetcher writes the normalized universe under
+    `data/official_disclosures/hnx/issuer_universe.{json,parquet}`
+- **Issuer disclosure listing AJAX:**
+  `https://hnx.vn/ModuleMobile/MobileIssuer/ChangePageTCB`
+  - public, no auth required
+  - accepts `StockCode`, `MarketCode`, and `Page`
+  - returns issuer-news listing HTML with exact publication times and article links
+- **Issuer disclosure article pages:**
+  `https://hnx.vn/m-niem-yet/tin-tuc/...`
+  and `https://hnx.vn/m-upcom/tin-tuc/...`
+  - public, no auth required
+  - article pages expose exact publication timestamps and attachment links
+  - repo fetcher can normalize article metadata, optional downloaded PDFs, and
+    attachment-level transaction extracts under
+    `data/official_disclosures/hnx/`
+  - transaction attachment parsing now supports local OCR for scanned PDFs and
+    caches extracted text under `data/official_disclosures/hnx/extracted_text/`
+  - the extract parquet can be rebuilt from local caches only, without refetching
+    HNX, after OCR or parser changes
+  - this is a raw official-disclosure source surface, not a published event feature contract
+
 ### yfinance — global macro / indices
 - VIX, S&P500, gold, oil, copper, Asian indices, EM ETFs, yield curve
 - Stored in `data/fx-commodities/`
@@ -180,12 +207,16 @@ This is the clean handoff view after Sessions `160-161`.
 - CafeF page 2 historical daily order stats
 - CafeF page 4 historical daily proprietary trading
 - CafeF raw company news archive
+- HNX mobile official issuer universe and issuer disclosures
 
 Operational consequence:
 - daily order-pressure / implementation-pain tests are now honest
 - daily proprietary-flow and cross-flow divergence tests are now honest
 - reduced-shape intraday is honest only for coarse intraday state, not
   auction-resolution claims
+- official HNX / UPCoM disclosure timestamps are now locally acquirable, but
+  only from the HNX mobile surface so far; this does not solve HSX official
+  disclosure history yet
 
 ### Collectable only if we start recording forward from now
 
@@ -221,6 +252,7 @@ Operational consequence:
 |------|--------|
 | Historical intraday OHLCV / tick data via vnstock | vnstock doesn't provide historical intraday |
 | Historical full order-book / queue depth from CafeF | page-backed probe found daily summary tabs and live-only board feed, not a historical depth archive |
+| Historical full official-disclosure history from HSX | HSX is SPA-driven and the stable disclosure API contract is still unresolved locally |
 | SSC filing text (structured JSON) | SSC portal is HTML-only |
 
 Still genuinely undoable without either forward collection or a paid vendor:

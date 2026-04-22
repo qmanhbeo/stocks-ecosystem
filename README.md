@@ -24,6 +24,7 @@ This is no longer a set of fully self-contained repos. The projects below now op
 
 Shared `data/` currently contains both raw inputs and processed research outputs, including:
 
+- `data/README.md`
 - `data/stock/`
 - `data/news/`
 - `data/fx-commodities/`
@@ -37,6 +38,7 @@ Shared `data/` currently contains both raw inputs and processed research outputs
 - `data/order_stats/`
 - `data/proprietary_trading/`
 - `data/foreign_flow_forward/`
+- `data/official_disclosures/`
 - `data/llm_cache/`
 
 This means the root data directory is the canonical dataset surface for the whole ecosystem.
@@ -68,6 +70,16 @@ foreign-room snapshots from `alpha-research-lab/data_tools/collect_forward_forei
 It is not a historical backfill and is not backtestable until enough forward
 collection days accrue.
 
+`data/official_disclosures/` is the root official-disclosure acquisition
+surface. The first wired contract is `data/official_disclosures/hnx/`, which
+can store the official HNX / UPCoM issuer universe, official disclosure
+timestamps, attachment metadata, optionally downloaded exchange-hosted PDFs,
+and attachment-level transaction extracts from
+`alpha-research-lab/data_tools/fetch_hnx_official_disclosures.py`. This is a
+raw source surface, not yet a published feature contract. OCR text caches for
+scanned filings also live under that root so local re-parsing does not require
+re-fetching HNX.
+
 ## Workflow
 
 1. Research and feature generation happen in `alpha-research-lab/`
@@ -84,20 +96,21 @@ collection days accrue.
 If you are starting this workspace fresh, read in this order:
 
 1. `README.md`
-2. `alpha-research-lab/README.md`
-3. `alpha-research-lab/notes/next_steps.md`
-4. `alpha-research-lab/notes/session_74_log.md`
-5. `alpha-research-lab/README_for_AGENTS.md` if you are continuing research or making repo changes as an agent
+2. `data/README.md`
+3. `alpha-research-lab/README.md`
+4. `alpha-research-lab/notes/next_steps.md`
+5. `alpha-research-lab/notes/session_74_log.md`
+6. `alpha-research-lab/README_for_AGENTS.md` if you are continuing research or making repo changes as an agent
 
 If you are picking up the currently active timing-research branch, continue with:
 
-6. `alpha-research-lab/notes/timing_data_acquisition_plan.md`
-7. `alpha-research-lab/notes/timing_data_source_scorecard.csv`
+7. `alpha-research-lab/notes/timing_data_acquisition_plan.md`
+8. `alpha-research-lab/notes/timing_data_source_scorecard.csv`
 
 If you are working on RL runtime or feature consumption, also read:
 
-8. `RL-trading-agent/README.md`
-9. `RL-trading-agent/AGENTS.md`
+9. `RL-trading-agent/README.md`
+10. `RL-trading-agent/AGENTS.md`
 
 Current active live branch:
 - `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`

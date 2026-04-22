@@ -20,6 +20,7 @@ state of each data source. Read this before running experiments or wondering why
 | Historical order statistics | YES | YES (first full backfill completed; inspect `manifest.json`) | `fetch_cafef_order_stats.py` |
 | Historical proprietary trading | YES | YES (first full backfill completed with source-side holes; inspect `manifest.json`) | `fetch_cafef_proprietary_trading.py` |
 | Forward foreign-flow board snapshots | YES | YES (forward-only from 2026-04-09) | `collect_forward_foreign_flow.py` |
+| HNX official issuer universe + disclosure history | YES | Universe YES; history on demand | `fetch_hnx_official_disclosures.py` |
 | News archive (cafef, 3.6 GB) | NO | YES (fetched this session) | `fetch_news_archive.py` |
 | Intraday tick data | Partial | YES (`FPT` 1H legacy + open CafeF fetch path) | `fetch_cafef_intraday_all.py` + `adjust_cafef_intraday_to_vci.py`; authenticated fallback is `fetch_ssi_intraday.py` |
 
@@ -254,6 +255,43 @@ Collect current-day accumulated foreign buy/sell and foreign-room fields from
 - **Important:** this is forward-only current-day board data. It is not a
   historical backfill and must not be used for alpha backtests until enough
   future collection days accrue.
+
+### `fetch_hnx_official_disclosures.py`
+Fetch the official HNX / UPCoM issuer universe and optional per-ticker official
+issuer-disclosure history from the HNX mobile site.
+- **Status:** Active acquisition path
+- **Universe source:** `https://hnx.vn/Home/MobileSearchAutocompleteStockCode`
+- **Disclosure list source:** `https://hnx.vn/ModuleMobile/MobileIssuer/ChangePageTCB`
+- **Article source:** `https://hnx.vn/m-niem-yet/tin-tuc/...` and `https://hnx.vn/m-upcom/tin-tuc/...`
+- **Outputs:**
+  - `data/official_disclosures/hnx/issuer_universe.json`
+  - `data/official_disclosures/hnx/issuer_universe.parquet`
+  - `data/official_disclosures/hnx/issuer_news.parquet`
+  - `data/official_disclosures/hnx/issuer_news_attachments.parquet`
+  - `data/official_disclosures/hnx/issuer_transaction_disclosures.parquet`
+  - `data/official_disclosures/hnx/issuer_transaction_attachment_extracts.parquet`
+  - `data/official_disclosures/hnx/attachments/<TICKER>/*.pdf`
+  - `data/official_disclosures/hnx/extracted_text/<TICKER>/*.txt`
+  - `data/official_disclosures/hnx/_easyocr_models/*`
+  - `data/official_disclosures/hnx/manifest.json`
+- **Usage:** `python data_tools/fetch_hnx_official_disclosures.py`
+- **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --tickers DL1,VE9 --max-pages-per-ticker 2`
+- **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --fetch-all-linked --max-tickers 50 --max-pages-per-ticker 1`
+- **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --tickers DL1 --download-attachments`
+- **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --tickers DL1 --parse-transaction-attachments`
+- **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --tickers DL1 --parse-transaction-attachments --ocr-transaction-attachments`
+- **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --rebuild-transaction-extracts-from-local --ocr-transaction-attachments`
+- **Notes:**
+  - default run refreshes only the official HNX symbol universe
+  - per-ticker disclosure history is fetched only when `--tickers` or `--fetch-all-linked` is supplied
+  - attachment PDFs are downloaded only when `--download-attachments`, `--download-transaction-attachments`, or `--parse-transaction-attachments` is supplied
+  - `issuer_transaction_attachment_extracts.parquet` stores attachment-level structured metadata and parsing results for transaction-keyword PDFs
+  - current local parsing first tries embedded PDF text and then can fall back to EasyOCR for scanned filings when `--ocr-transaction-attachments` is supplied
+  - OCR text is cached under `data/official_disclosures/hnx/extracted_text/` so reruns can rebuild extracts locally without re-fetching HNX or re-running OCR
+  - `--rebuild-transaction-extracts-from-local` is the recovery path after an interrupted OCR run or a parser-only code change
+  - article pages expose exact publication timestamps and exchange-hosted attachment links
+  - the current environment requires TLS verification to be disabled for the HNX host
+  - this is a raw official-disclosure acquisition surface, not a published feature contract
 
 ### `fetch_cafef_foreign_flow.py`
 Fetch historical daily foreign-investor flow from CafeF's `GDKhoiNgoai` endpoint.
@@ -733,6 +771,7 @@ Build VN30 proximity / rebalancing-pressure features.
 | **Backtestable foreign-flow board history** | only forward snapshots are collected from H326 onward | F245 |
 | **Intraday tick/order flow data** | vnstock doesn't provide historical intraday OHLCV | — |
 | **Insider data via KBS/VCI vnstock** | KBS endpoint returns empty `[]`; VCI has no implementation | Session 31 |
+| **Backfillable HSX official disclosure history** | HSX is SPA-driven and the stable disclosure API contract is still unresolved locally | Session 136 + source audit follow-up |
 | **SSC filing text (structured)** | Vietnamese SSC portal is HTML-only; no JSON API found | Session 31 |
 
 ---
@@ -744,6 +783,7 @@ Build VN30 proximity / rebalancing-pressure features.
 | Dividend events | 52 tickers | Yes — 394 tickers | `fetch_dividend_events.py` (rerun on full universe) |
 | Fundamentals (quarterly ratios) | 52 tickers | Yes — 394 tickers | `fetch_all_stock_fundamentals.py` (rerun on full universe) |
 | News (live update) | 2016–2026 archive restored | Yes — run daily crawler | `fetch_news.py` |
+| HNX official disclosure history | Universe fetchable now; history crawled only on demand | Yes — with `--tickers` or `--fetch-all-linked` | `fetch_hnx_official_disclosures.py` |
 
 ---
 
