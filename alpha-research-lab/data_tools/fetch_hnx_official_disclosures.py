@@ -353,6 +353,11 @@ def parse_args() -> argparse.Namespace:
         help="Use OCR on scanned transaction PDFs when embedded text extraction is empty.",
     )
     parser.add_argument(
+        "--refresh-transaction-text-cache",
+        action="store_true",
+        help="Ignore cached extracted text and rebuild it from the local PDF attachments for this run.",
+    )
+    parser.add_argument(
         "--ocr-languages",
         default="vi,en",
         help="Comma-separated EasyOCR language list for scanned PDFs (default: vi,en).",
@@ -949,6 +954,7 @@ def parse_transaction_attachment(
     ocr_transaction_attachments: bool,
     ocr_languages: tuple[str, ...],
     ocr_gpu: bool,
+    refresh_transaction_text_cache: bool,
 ) -> dict[str, object]:
     # Article-title metadata is always available; the PDF text layer only
     # fills the actor/volume fields when the attachment is machine-readable.
@@ -966,7 +972,7 @@ def parse_transaction_attachment(
     text_storage_path = None
     parser_notes: list[str] = []
     cached_text_path = text_destination_path(attachment_row)
-    if cached_text_path.exists():
+    if cached_text_path.exists() and not refresh_transaction_text_cache:
         cached_text = cached_text_path.read_text(encoding="utf-8").strip()
         if cached_text:
             text = cached_text
@@ -986,6 +992,8 @@ def parse_transaction_attachment(
                 cached_text_path.parent.mkdir(parents=True, exist_ok=True)
                 cached_text_path.write_text(text + "\n", encoding="utf-8")
                 text_storage_path = str(cached_text_path)
+            elif refresh_transaction_text_cache and cached_text_path.exists():
+                cached_text_path.unlink(missing_ok=True)
             elif text_status == "needs_ocr":
                 parser_notes.append("attachment_downloaded_but_image_only")
             elif text_status == "ocr_attempted_no_text":
@@ -1017,22 +1025,27 @@ def parse_transaction_attachment(
     if planned_buy and planned_buy > 0 and actual_buy is not None:
         execution_rate_buy = float(min(actual_buy, planned_buy) / planned_buy)
 
-    if text and any(
-        value is not None
-        for value in (
-            actor_name,
-            actor_position,
-            planned_buy,
-            planned_sell,
-            actual_buy,
-            actual_sell,
-            before_volume,
-            after_volume,
-            before_pct,
-            after_pct,
-        )
-    ):
-        parser_status = "structured_fields_extracted"
+    identity_fields = (
+        actor_name,
+        actor_position,
+        related_person_name,
+    )
+    transaction_fields = (
+        planned_buy,
+        planned_sell,
+        actual_buy,
+        actual_sell,
+        before_volume,
+        after_volume,
+        before_pct,
+        after_pct,
+        execution_rate_buy,
+    )
+
+    if text and any(value is not None for value in transaction_fields):
+        parser_status = "transaction_fields_extracted"
+    elif text and any(value is not None for value in identity_fields):
+        parser_status = "identity_fields_extracted"
     elif text:
         parser_status = "text_only_no_structured_fields"
     elif text_status in {"needs_ocr", "ocr_attempted_no_text"}:
@@ -1162,6 +1175,7 @@ def build_transaction_extracts(
     ocr_transaction_attachments: bool,
     ocr_languages: tuple[str, ...],
     ocr_gpu: bool,
+    refresh_transaction_text_cache: bool,
 ) -> pd.DataFrame:
     if news.empty or attachments.empty:
         return ensure_contract_shape(pd.DataFrame(), TRANSACTION_ATTACHMENT_EXTRACT_COLUMNS)
@@ -1176,6 +1190,7 @@ def build_transaction_extracts(
             ocr_transaction_attachments=ocr_transaction_attachments,
             ocr_languages=ocr_languages,
             ocr_gpu=ocr_gpu,
+            refresh_transaction_text_cache=refresh_transaction_text_cache,
         )
         for row in transaction_attachments.to_dict(orient="records")
     ]
@@ -1183,6 +1198,35 @@ def build_transaction_extracts(
     if extracts.empty:
         return extracts
     return extracts.sort_values(["ticker", "published_at", "article_url", "attachment_index"]).reset_index(drop=True)
+
+
+def prepare_news_output(news_rows: list[dict[str, object]]) -> pd.DataFrame:
+    news = ensure_contract_shape(pd.DataFrame(news_rows), NEWS_COLUMNS)
+    if news.empty:
+        return news
+    return (
+        news.sort_values(["ticker", "published_at", "article_url"])
+        .drop_duplicates(subset=["ticker", "article_url"], keep="last")
+        .reset_index(drop=True)
+    )
+
+
+def prepare_attachment_output(attachment_rows: list[dict[str, object]]) -> pd.DataFrame:
+    attachments = ensure_contract_shape(pd.DataFrame(attachment_rows), ATTACHMENT_COLUMNS)
+    if attachments.empty:
+        return attachments
+    return (
+        attachments.sort_values(["ticker", "article_url", "attachment_index"])
+        .drop_duplicates(subset=["ticker", "article_url", "attachment_index"], keep="last")
+        .reset_index(drop=True)
+    )
+
+
+def prepare_transaction_output(news: pd.DataFrame) -> pd.DataFrame:
+    if news.empty:
+        return ensure_contract_shape(pd.DataFrame(), TRANSACTION_COLUMNS)
+    transactions = news[news["has_transaction_keywords"].fillna(False)].copy()
+    return ensure_contract_shape(transactions.reset_index(drop=True), TRANSACTION_COLUMNS)
 
 
 def main() -> None:
@@ -1214,9 +1258,9 @@ def main() -> None:
             ocr_transaction_attachments=args.ocr_transaction_attachments,
             ocr_languages=ocr_languages,
             ocr_gpu=args.ocr_gpu,
+            refresh_transaction_text_cache=args.refresh_transaction_text_cache,
         )
-        if not transaction_extracts.empty:
-            atomic_write_parquet(transaction_extracts, transaction_extract_path)
+        atomic_write_parquet(transaction_extracts, transaction_extract_path)
 
         manifest = {}
         if manifest_path.exists():
@@ -1233,6 +1277,10 @@ def main() -> None:
                 "fetched_at_utc": utc_now_iso(),
                 "source": SOURCE,
                 "notes": notes,
+                "run_mode": "local_rebuild_transaction_extracts",
+                "ocr_transaction_attachments": bool(args.ocr_transaction_attachments),
+                "refresh_transaction_text_cache": bool(args.refresh_transaction_text_cache),
+                "ocr_languages": list(ocr_languages),
                 "outputs": {
                     **(manifest.get("outputs") or {}),
                     "issuer_transaction_attachment_extracts_parquet": str(transaction_extract_path)
@@ -1284,6 +1332,7 @@ def main() -> None:
         print(f"download tx pdfs      : {args.download_transaction_attachments}")
         print(f"parse tx attachments  : {args.parse_transaction_attachments}")
         print(f"ocr tx attachments    : {args.ocr_transaction_attachments}")
+        print(f"refresh text cache    : {args.refresh_transaction_text_cache}")
         print(f"ocr languages         : {','.join(ocr_languages)}")
         return
 
@@ -1330,59 +1379,54 @@ def main() -> None:
                 }
             )
 
-    news = ensure_contract_shape(pd.DataFrame(news_rows), NEWS_COLUMNS)
-    if not news.empty:
-        news = news.sort_values(["ticker", "published_at", "article_url"]).drop_duplicates(
-            subset=["ticker", "article_url"],
-            keep="last",
-        )
-        atomic_write_parquet(news.reset_index(drop=True), news_parquet_path)
+    news = prepare_news_output(news_rows)
+    atomic_write_parquet(news, news_parquet_path)
 
-    attachments = ensure_contract_shape(pd.DataFrame(attachment_rows), ATTACHMENT_COLUMNS)
-    if not attachments.empty:
-        attachments = attachments.sort_values(["ticker", "article_url", "attachment_index"]).drop_duplicates(
-            subset=["ticker", "article_url", "attachment_index"],
-            keep="last",
-        )
-        atomic_write_parquet(attachments.reset_index(drop=True), attachment_parquet_path)
+    attachments = prepare_attachment_output(attachment_rows)
+    atomic_write_parquet(attachments, attachment_parquet_path)
 
-    transactions = ensure_contract_shape(
-        news[news["has_transaction_keywords"].fillna(False)].copy() if not news.empty else pd.DataFrame(),
-        TRANSACTION_COLUMNS,
-    )
-    if not transactions.empty:
-        atomic_write_parquet(transactions.reset_index(drop=True), transaction_parquet_path)
+    transactions = prepare_transaction_output(news)
+    atomic_write_parquet(transactions, transaction_parquet_path)
 
     transaction_extracts = ensure_contract_shape(pd.DataFrame(), TRANSACTION_ATTACHMENT_EXTRACT_COLUMNS)
-    if args.parse_transaction_attachments and not attachments.empty:
+    if args.parse_transaction_attachments:
         transaction_extracts = build_transaction_extracts(
             news=news,
             attachments=attachments,
             ocr_transaction_attachments=args.ocr_transaction_attachments,
             ocr_languages=ocr_languages,
             ocr_gpu=args.ocr_gpu,
+            refresh_transaction_text_cache=args.refresh_transaction_text_cache,
         )
-        if not transaction_extracts.empty:
-            atomic_write_parquet(transaction_extracts, transaction_extract_path)
+    atomic_write_parquet(transaction_extracts, transaction_extract_path)
 
     manifest = {
         "fetched_at_utc": utc_now_iso(),
         "started_at_utc": started_at_utc,
         "source": SOURCE,
+        "run_mode": "network_fetch",
+        "requested_tickers": requested_tickers,
+        "resolved_target_tickers": target["ticker"].tolist(),
+        "fetch_all_linked": bool(args.fetch_all_linked),
+        "max_tickers": args.max_tickers,
+        "max_pages_per_ticker": int(args.max_pages_per_ticker),
+        "parse_transaction_attachments": bool(args.parse_transaction_attachments),
+        "ocr_transaction_attachments": bool(args.ocr_transaction_attachments),
+        "refresh_transaction_text_cache": bool(args.refresh_transaction_text_cache),
+        "ocr_languages": list(ocr_languages),
         "notes": [
             "Universe refresh is full; per-ticker disclosure history is only fetched for the requested ticker set.",
             "The HNX mobile site requires TLS verification to be disabled in this environment.",
             "HSX official disclosures are not part of this fetcher because the current HSX SPA/API route is still unresolved.",
+            "Latest-run parquet outputs are rewritten to match the current request scope; they are not append-only history stores.",
         ],
         "outputs": {
             "issuer_universe_json": str(universe_json_path),
             "issuer_universe_parquet": str(universe_parquet_path),
-            "issuer_news_parquet": str(news_parquet_path) if news_parquet_path.exists() else None,
-            "issuer_news_attachments_parquet": str(attachment_parquet_path) if attachment_parquet_path.exists() else None,
-            "issuer_transaction_disclosures_parquet": str(transaction_parquet_path) if transaction_parquet_path.exists() else None,
-            "issuer_transaction_attachment_extracts_parquet": str(transaction_extract_path)
-            if transaction_extract_path.exists()
-            else None,
+            "issuer_news_parquet": str(news_parquet_path),
+            "issuer_news_attachments_parquet": str(attachment_parquet_path),
+            "issuer_transaction_disclosures_parquet": str(transaction_parquet_path),
+            "issuer_transaction_attachment_extracts_parquet": str(transaction_extract_path),
         },
         "universe_rows": int(len(universe)),
         "target_tickers": int(len(target)),

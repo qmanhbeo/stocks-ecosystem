@@ -69,7 +69,9 @@ Important limitations:
 - article attachments are only downloaded when `--download-attachments`, `--download-transaction-attachments`, or `--parse-transaction-attachments` is supplied
 - transaction parsing is attachment-level and raw-source only; it does not publish a model feature contract by itself
 - OCR is now available through EasyOCR for scanned transaction PDFs, and extracted text is cached locally so the extract table can be rebuilt without refetching HNX
+- use `--refresh-transaction-text-cache` if the OCR backend changed and you want to regenerate those cached text files from local PDFs
 - OCR output is still noisy, so extracted tables should be treated as assisted raw-source normalization rather than final truth
+- latest-run parquet outputs are rewritten to match the current request scope; this root is not an append-only historical crawl ledger
 - this is a raw official source surface, not a published feature contract
 - HSX official disclosures are still source-blocked here because the current HSX SPA/API route has not yet been resolved into a stable crawler contract
 

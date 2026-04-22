@@ -170,12 +170,13 @@ def test_parse_transaction_attachment_extracts_structured_fields(monkeypatch, tm
         ocr_transaction_attachments=False,
         ocr_languages=("vi", "en"),
         ocr_gpu=False,
+        refresh_transaction_text_cache=False,
     )
 
     assert row["filing_stage"] == "result"
     assert row["filing_subject_scope"] == "insider"
     assert row["transaction_instrument"] == "subscription_rights"
-    assert row["parser_status"] == "structured_fields_extracted"
+    assert row["parser_status"] == "transaction_fields_extracted"
     assert row["text_extraction_status"] == "text_extracted"
     assert row["actor_name"] == "Nguyen Dinh Trac"
     assert row["actor_position"] == "Tong Giam doc"
@@ -219,6 +220,7 @@ def test_parse_transaction_attachment_marks_needs_ocr(monkeypatch, tmp_path: Pat
         ocr_transaction_attachments=False,
         ocr_languages=("vi", "en"),
         ocr_gpu=False,
+        refresh_transaction_text_cache=False,
     )
 
     assert row["parser_status"] == "needs_ocr"
@@ -262,8 +264,118 @@ def test_parse_transaction_attachment_accepts_ocr_text(monkeypatch, tmp_path: Pa
         ocr_transaction_attachments=True,
         ocr_languages=("vi", "en"),
         ocr_gpu=False,
+        refresh_transaction_text_cache=False,
     )
 
     assert row["text_extraction_status"] == "ocr_text_extracted"
     assert row["text_extraction_method"] == "easyocr"
     assert row["actor_name"] == "Bui Phap"
+    assert row["parser_status"] == "transaction_fields_extracted"
+
+
+def test_parse_transaction_attachment_marks_identity_only_when_only_names_found(monkeypatch, tmp_path: Path):
+    attachment_path = tmp_path / "scan.pdf"
+    attachment_path.write_bytes(b"%PDF-1.4 mock")
+    monkeypatch.setattr(hnx, "TEXT_ROOT", tmp_path / "text")
+
+    monkeypatch.setattr(
+        hnx,
+        "extract_attachment_text",
+        lambda path, *, use_ocr, ocr_languages, ocr_gpu: (
+            "Ten ca nhan: Nguyen Dinh Trac",
+            "ocr_text_extracted",
+            "easyocr",
+        ),
+    )
+
+    row = hnx.parse_transaction_attachment(
+        {
+            "ticker": "DL1",
+            "market_code": "NY",
+            "market_bucket": "listed",
+            "source": hnx.SOURCE,
+            "article_url": "https://hnx.vn/article",
+            "article_path": "/m-niem-yet/tin-tuc/tx.html",
+            "attachment_index": 1,
+            "attachment_label": "1. DL1_tx.pdf",
+            "attachment_url": "https://owa.hnx.vn/dl1.pdf",
+            "attachment_filename": "DL1_tx.pdf",
+            "attachment_storage_path": str(attachment_path),
+            "attachment_sha256": "abc",
+            "attachment_bytes": 12,
+            "keyword_hits": "insider_related|transaction_notice",
+        },
+        article_lookup={"https://hnx.vn/article": {"title": "Bao cao ket qua giao dich quyen mua co phieu cua nguoi noi bo"}},
+        ocr_transaction_attachments=True,
+        ocr_languages=("vi", "en"),
+        ocr_gpu=False,
+        refresh_transaction_text_cache=False,
+    )
+
+    assert row["actor_name"] == "Nguyen Dinh Trac"
+    assert row["planned_buy_volume"] is None
+    assert row["parser_status"] == "identity_fields_extracted"
+
+
+def test_parse_transaction_attachment_can_refresh_cached_text(monkeypatch, tmp_path: Path):
+    attachment_path = tmp_path / "tx.pdf"
+    attachment_path.write_bytes(b"%PDF-1.4 mock")
+    monkeypatch.setattr(hnx, "TEXT_ROOT", tmp_path / "text")
+
+    cached_path = hnx.text_destination_path(
+        {
+            "ticker": "DL1",
+            "attachment_filename": "DL1_tx.pdf",
+            "attachment_label": "1. DL1_tx.pdf",
+        }
+    )
+    cached_path.parent.mkdir(parents=True, exist_ok=True)
+    cached_path.write_text("Ten ca nhan: Old Name\n", encoding="utf-8")
+
+    monkeypatch.setattr(
+        hnx,
+        "extract_attachment_text",
+        lambda path, *, use_ocr, ocr_languages, ocr_gpu: (
+            "Ten ca nhan: New Name\nSo luong quyen mua da thuc hien: 100.000",
+            "ocr_text_extracted",
+            "easyocr",
+        ),
+    )
+
+    row = hnx.parse_transaction_attachment(
+        {
+            "ticker": "DL1",
+            "market_code": "NY",
+            "market_bucket": "listed",
+            "source": hnx.SOURCE,
+            "article_url": "https://hnx.vn/article",
+            "article_path": "/m-niem-yet/tin-tuc/tx.html",
+            "attachment_index": 1,
+            "attachment_label": "1. DL1_tx.pdf",
+            "attachment_url": "https://owa.hnx.vn/dl1.pdf",
+            "attachment_filename": "DL1_tx.pdf",
+            "attachment_storage_path": str(attachment_path),
+            "attachment_sha256": "abc",
+            "attachment_bytes": 12,
+            "keyword_hits": "insider_related|transaction_notice",
+        },
+        article_lookup={"https://hnx.vn/article": {"title": "Bao cao ket qua giao dich quyen mua co phieu cua nguoi noi bo"}},
+        ocr_transaction_attachments=True,
+        ocr_languages=("vi", "en"),
+        ocr_gpu=False,
+        refresh_transaction_text_cache=True,
+    )
+
+    assert row["actor_name"] == "New Name"
+    assert row["text_extraction_status"] == "ocr_text_extracted"
+    assert "New Name" in cached_path.read_text(encoding="utf-8")
+
+
+def test_prepare_outputs_keep_empty_contract_shape():
+    news = hnx.prepare_news_output([])
+    attachments = hnx.prepare_attachment_output([])
+    transactions = hnx.prepare_transaction_output(news)
+
+    assert list(news.columns) == hnx.NEWS_COLUMNS
+    assert list(attachments.columns) == hnx.ATTACHMENT_COLUMNS
+    assert list(transactions.columns) == hnx.TRANSACTION_COLUMNS

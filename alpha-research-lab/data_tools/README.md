@@ -281,6 +281,7 @@ issuer-disclosure history from the HNX mobile site.
 - **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --tickers DL1 --parse-transaction-attachments`
 - **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --tickers DL1 --parse-transaction-attachments --ocr-transaction-attachments`
 - **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --rebuild-transaction-extracts-from-local --ocr-transaction-attachments`
+- **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --rebuild-transaction-extracts-from-local --ocr-transaction-attachments --refresh-transaction-text-cache`
 - **Notes:**
   - default run refreshes only the official HNX symbol universe
   - per-ticker disclosure history is fetched only when `--tickers` or `--fetch-all-linked` is supplied
@@ -288,7 +289,8 @@ issuer-disclosure history from the HNX mobile site.
   - `issuer_transaction_attachment_extracts.parquet` stores attachment-level structured metadata and parsing results for transaction-keyword PDFs
   - current local parsing first tries embedded PDF text and then can fall back to EasyOCR for scanned filings when `--ocr-transaction-attachments` is supplied
   - OCR text is cached under `data/official_disclosures/hnx/extracted_text/` so reruns can rebuild extracts locally without re-fetching HNX or re-running OCR
-  - `--rebuild-transaction-extracts-from-local` is the recovery path after an interrupted OCR run or a parser-only code change
+  - use `--refresh-transaction-text-cache` when the OCR backend changed and you want to regenerate cached text from the local PDFs
+  - `--rebuild-transaction-extracts-from-local` is the recovery path after an interrupted OCR run or a parser-only code change; the latest-run parquet outputs are rewritten to match the current request scope rather than treated as append-only history
   - article pages expose exact publication timestamps and exchange-hosted attachment links
   - the current environment requires TLS verification to be disabled for the HNX host
   - this is a raw official-disclosure acquisition surface, not a published feature contract
