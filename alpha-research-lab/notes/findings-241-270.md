@@ -1385,3 +1385,126 @@ Do not keep hand-waving the queue/open-fill branch as “almost solved.”
 Keep the next steps explicit:
 - first test the newly unlocked daily side channels
 - if that still is not enough, escalate the vendor question directly
+
+## F262: H340 Shows Same-Day Buy-Volume Pressure Is A Strong Positive-Side Rewrite Of C5, While Count-Only Pressure Fails Confirmation (2026-04-22, Session 162)
+
+Session 162 took the first honest research pass on the newly unlocked
+CafeF page-2 order-statistics surface:
+- keep the original `H108` `fwd_rel_5d` contract
+- keep the `2015-2022 / 2023-2024 / 2025` split from `H306`
+- test only a small predeclared set of positive-side `C5` rewrites using
+  same-day or lagged posted-order pressure ratios
+
+Raw `C5` stayed the baseline:
+- avg IC:
+  - `+0.0374`
+- positive years:
+  - `10 / 11`
+- validation / confirmation pooled IC:
+  - `+0.0808 / +0.0028`
+
+But same-day posted buy-volume pressure was a much stronger conditioner than
+the original raw signal:
+- best row:
+  - `c5_scale_pos_buy_vol_ratio_cap_dev_median`
+- dev support threshold:
+  - `0.1149`
+- avg IC:
+  - `+0.0693`
+- positive years:
+  - `11 / 11`
+- validation / confirmation pooled IC:
+  - `+0.0980 / +0.0576`
+- confirmation uplift vs raw `C5`:
+  - `+0.0548`
+
+Other bounded follow-through rows support the same mechanism:
+- `c5_gate_pos_buy_vol_ratio_gt_0` also passed:
+  - avg IC `+0.0688`
+  - confirmation pooled IC `+0.0565`
+- `c5_gate_pos_dual_buy_pressure_gt_0` also passed:
+  - avg IC `+0.0626`
+  - confirmation pooled IC `+0.0474`
+- lagged buy-volume support also stayed positive but weaker:
+  - avg IC `+0.0503`
+  - confirmation pooled IC `+0.0283`
+
+The non-surviving line was count-only pressure:
+- `c5_gate_pos_buy_count_ratio_gt_0`
+  - validation / confirmation pooled IC:
+    - `+0.0930 / -0.0212`
+
+### Key finding
+The useful side channel is not generic “more buy orders.”
+It is same-day **buy-volume** pressure alongside bullish insider conviction.
+That makes `H340` a stronger positive-side robustness rewrite of `C5` than the
+earlier `H306` exec-rate conditioner on the current daily contract.
+
+### Implication
+Do not reopen a broad queue/open-fill story from this result.
+Keep it where it belongs:
+- a daily side-channel rewrite of bullish `C5`
+- next honest continuation:
+  - test whether `H340` and `H306` stack additively or mostly duplicate the
+    same positive-side quality mechanism
+
+## F263: H341 Shows The H340 Buy-Volume Rewrite Already Captures The Usable Daily-State Quality, So Stacking H306 Exec-Rate Does Not Help (2026-04-22, Session 163)
+
+Session 163 took the exact narrow follow-through earned by `H340`:
+- keep the original `H108` `fwd_rel_5d` contract
+- keep the `2015-2022 / 2023-2024 / 2025` split
+- use the `H340` best row as the branch baseline
+- test only:
+  - the old `H306` best rewrite for context
+  - one soft stacked rewrite
+  - one conservative intersection gate
+
+The `H340` baseline stayed the leader:
+- baseline:
+  - `c5_scale_pos_buy_vol_ratio_cap_dev_median`
+- avg IC:
+  - `+0.0693`
+- validation / confirmation pooled IC:
+  - `+0.0980 / +0.0576`
+
+The best stacked row was close, but still worse:
+- best stacked row:
+  - `c5_scale_pos_exec_x_buy_vol_min_cap_dev_medians`
+- avg IC:
+  - `+0.0654`
+- avg IC retention vs baseline:
+  - `94.3%`
+- validation / confirmation pooled IC:
+  - `+0.0935 / +0.0548`
+- validation / confirmation uplift vs baseline:
+  - `-0.0045 / -0.0028`
+
+The conservative hard intersection gate also missed:
+- `c5_gate_pos_buy_vol_gt_0_exec_gt_0`
+  - avg IC:
+    - `+0.0649`
+  - validation / confirmation pooled IC:
+    - `+0.0931 / +0.0545`
+
+And the old exec-rate rewrite was far weaker once compared directly against the
+new buy-volume baseline:
+- `c5_scale_pos_exec_cap_dev_median`
+  - avg IC:
+    - `+0.0379`
+  - validation / confirmation pooled IC:
+    - `+0.0740 / +0.0119`
+
+### Key finding
+The new page-2 buy-volume rewrite already captures the usable daily-state
+quality on the current `C5` contract.
+Exec-rate does not add another clean layer on top of it.
+`H306` and `H340` are not independent enough to justify a default stacked
+rewrite.
+
+### Implication
+Close the `c5-pressure-exec-stack` branch on the current daily contract.
+Keep:
+- `H340` as the preferred daily-state rewrite of bullish `C5`
+- `H306` as the fallback when order-stats data is unavailable
+
+Do not spend more cycles stacking the same two daily filters.

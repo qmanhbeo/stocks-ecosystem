@@ -42,6 +42,8 @@ Inputs:
 - `data/stock/*.parquet`
 - optional helper market files in `data/stock/` and `data/fx-commodities/`
 - optional news features in `data/features/news/predictions/`
+  - may now include additive `phobert_*` whole-article sentiment columns from
+    the canonical alpha news pipeline
 - optional signal features in `data/features/signals/predictions/auto/` by default
 - optional adapted lab signal features in `data/features/signals/predictions/rl_lab_matrix/` when exported and selected explicitly
 

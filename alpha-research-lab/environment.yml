@@ -27,3 +27,5 @@ dependencies:
     - requests
     - tqdm
     - openpyxl
+    - transformers
+    - pyvi

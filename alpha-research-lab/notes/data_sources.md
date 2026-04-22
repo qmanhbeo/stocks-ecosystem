@@ -57,6 +57,8 @@ to git. Inside `alpha-research-lab/`, `data/` is only a symlink to that shared l
 | `xs_insider_features.parquet` | Rolling 5d/30d insider signal matrix | C2 features | `build_insider_features.py` |
 | `xs_news_sentiment_daily.parquet` | H89: keyword sentiment per (day, ticker) | C1 raw | `extract_news_sentiment.py` |
 | `xs_news_sentiment_rolling.parquet` | H96: 5d/30d rolling news features | C1 rolling | `build_rolling_news_sentiment.py` |
+| `features/news/datasets/phobert_article_sentiment.parquet` | whole-article local PhoBERT sentiment rows per tagged article-ticker pair | local NLP lane | `research_pipelines/news_features/core/build_phobert_sentiment_features.py` |
+| `features/news/datasets/phobert_ticker_day_sentiment.parquet` | whole-article local PhoBERT ticker-day and rolling sentiment states | local NLP lane | `research_pipelines/news_features/core/build_phobert_sentiment_features.py` |
 | `sector_classification.parquet` | ICB sector labels, 398 tickers | — | `fetch_sector_classification.py` |
 | `xs_dividend_calendar.parquet` | Ex-dividend dates and windows | — | `fetch_dividend_events.py` |
 | `macro_regime_daily.parquet` | VIX, yields, global indices regime | — | `build_macro_regime_features.py` |
@@ -84,6 +86,13 @@ conda run -n stocks python cross_sectional_wf.py \
 ```bash
 python data_tools/fetch_news_archive.py
 ```
+
+Canonical producer note:
+- the `research_pipelines/news_features/` pipeline now uses this raw CafeF
+  archive for three separate feature families:
+  - keyword/tabular features
+  - local whole-article PhoBERT sentiment
+  - hosted LLM semantic/event extraction remains separate under `data/llm_cache/`
 
 ---
 

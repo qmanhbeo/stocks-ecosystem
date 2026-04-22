@@ -9,7 +9,7 @@ from typing import Optional
 import pandas as pd
 
 from research_pipelines.news_features.config import NewsFeaturesConfig, get_default_config
-from research_pipelines.news_features.io_utils import load_feature_spec, update_manifest
+from research_pipelines.news_features.io_utils import describe_path, load_feature_spec, update_manifest
 
 
 def _keyword_score(text: str, positive_keywords: list[str], negative_keywords: list[str]) -> int:
@@ -201,7 +201,7 @@ def build_tabular_feature_exports(config: Optional[NewsFeaturesConfig] = None) -
     update_manifest(
         config=config,
         tabular_feature_rows=int(len(tabular)),
-        tabular_dataset_path=str(config.tabular_dataset_path().relative_to(config.repo_root)),
+        tabular_dataset_path=describe_path(config.tabular_dataset_path(), config=config),
     )
     overall_elapsed = perf_counter() - overall_start
     print(

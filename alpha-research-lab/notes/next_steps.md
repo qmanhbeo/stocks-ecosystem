@@ -1,7 +1,7 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_161_log.md` for the latest full session detail.
+Use `notes/session_163_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
@@ -20,6 +20,125 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 6. `foreign-room-transition-audit` — only if continuing `H95`. `H327/H328` rejected raw buy/sell/net flow ranks and high-participation / room-scarcity conditioning; `H333` also rejected room-residual discontinuity thresholding. If this branch continues, the next distinct thesis is `foreign-accumulation-change-point`, not more residual or raw-flow thresholds.
 7. `cheap-llm-surrogate-branch-parked` — `H329/H330/H331/H332` exhausted the current non-API continuation on the `2015-2017` teacher window. Novelty distillation, hybrid routing, lexical field routing, and disagreement residuals all recovered some structure, but none preserved the short-horizon contract cleanly enough to beat the old keyword baseline or justify continuation. Do not keep extending this branch without new labels, more cache coverage, or a materially different contract.
 8. `smart-exit-distillation` — only if continuing the outcome-contract branch while LLM is blocked. `H334` passed the constrained legal-exit oracle upper-bound audit, `H335/H336` failed, `H337` improved the branch to `MIXED`, `H338` diagnosed why it stalled, and `H339` tested the exact skip-aware continuation. `H339` proved that the skip-aware label ceiling is fully removable in principle: a perfect skip-aware oracle recovers `100% / 100%` of the H334 oracle on validation / confirmation. But the learned daily-state policy still failed badly: dev-selected margin `0.0200`, validation / confirmation uplift vs fixed `3d` `-0.00430 / -0.01109`, and non-best-fixed rate `95.60% / 96.04%`. Do not reopen entry-time value routing, generic hold/sell labels, or more skip-aware margin retunes on the same daily state. Park current-state daily smart-exit ML unless new post-entry state/data or a materially different nonlinear replacement-relative model is available.
+
+---
+
+## Bright-Mind Follow-Up - Official Disclosure + Side-Channel Queue (2026-04-22)
+
+This stays subordinate to `llm-cache-fill`. `H315` was parked because no local
+official-disclosure history existed, not because the mechanism was falsified.
+That changed on `2026-04-22`: HNX / UPCoM official disclosures are now locally
+crawlable with attachment OCR, but they still sit off the main HOSE research
+universe. So the honest next queue is bridge-first and structure-first, not a
+broad alpha claim yet.
+
+1. `hsx-official-bridge`
+   - claim: the highest-value continuation is not more HNX-only parsing; it is
+     resolving the HSX official-disclosure route so the official-source thesis
+     touches the existing HOSE insider / event universe
+   - why now: the HNX pipeline proves the parser / cache / OCR contract, while
+     `H315` was source-blocked rather than a failed timing result
+   - smallest honest next test: reverse-engineer one stable HSX issuer
+     disclosure listing path on a `5-10` ticker pilot, then compare official
+     notice / result rows against CafeF insider / filing rows for timing and
+     coverage
+
+2. `official-notice-result-reconciliation`
+   - claim: the real official edge may be notice / result pairing, non-fill
+     behavior, actor role, and exact filing lag, not generic recent-filing
+     density
+   - why now: `H305/H314` closed broad event conditioning, but the new official
+     source exposes state that the CafeF-first `C5` branch never separated
+     cleanly
+   - smallest honest next test: on HNX, pair official notice / result filings
+     for the same actor and instrument, then build a reconciliation table with
+     stage, actor scope, related-person flags, and publication lag
+
+3. `official-publication-time-half-life`
+   - claim: exact publication bucket (`pre-open / intraday / post-close`) and
+     filing stage (`notice / result`) may explain the surviving same-day /
+     short-half-life pockets better than coarse recent-window counts
+   - why now: `H307/H311` already hinted that timing bucket matters, and `H315`
+     is no longer source-blocked on HNX
+   - smallest honest next test: fetch HNX daily OHLCV for the crawled official
+     names, bucket filings by publication time and stage, and compare `T+1`
+     open, `T+1` close, and `T+5` reactions
+
+4. `daily-order-pressure-x-c5`
+   - `H340` result: PASSED
+   - best rewrite was `c5_scale_pos_buy_vol_ratio_cap_dev_median`:
+     avg IC `+0.0693`, `11 / 11` positive years, validation / confirmation
+     pooled IC `+0.0980 / +0.0576`, and `2025` uplift vs raw `C5`
+     `+0.0548`
+   - same-day buy-volume gate, same-day dual buy-pressure gate, and lagged
+     buy-volume gate also passed; count-only buy-pressure failed in `2025`
+   - branch consequence: same-day posted buy-volume pressure is a stronger
+     positive-side robustness rewrite of `C5` than raw `C5`; do **not**
+     reinterpret this as reopened queue / open-fill evidence
+
+5. `c5-pressure-exec-stack`
+   - `H341` result: FAILED
+   - best stacked row was `c5_scale_pos_exec_x_buy_vol_min_cap_dev_medians`,
+     but it still missed the `H340` baseline on avg IC retention
+     (`94.3%`), validation pooled IC (`+0.0935` vs `+0.0980`), and
+     confirmation pooled IC (`+0.0548` vs `+0.0576`)
+   - the hard intersection gate also failed, and `H306`'s old exec-rate rewrite
+     was much weaker than the `H340` buy-volume baseline once compared head to
+     head
+   - branch consequence: do **not** stack exec-rate on top of `H340` by
+     default; keep `H340` as the preferred daily-state rewrite of bullish `C5`
+     and treat `H306` as the fallback when order-stats data is unavailable
+
+6. `rights-exercise-commitment`
+   - claim: insider / related-person subscription-right exercises may be a
+     distinct conviction family, not just another filing in the same bucket
+   - why now: the seeded official HNX rows are already rights-specific, and
+     `H305` never had actor + instrument separation this clean
+   - smallest honest next test: after a wider HNX parse pass, isolate
+     `subscription_rights` filings and compare their post-filing path against
+     plain share purchase / sale filings inside the same official schema
+
+---
+
+## Local Vietnamese Encoder Queue (2026-04-22)
+
+Use `notes/local_bert_roadmap.md` for the durable reasoning and task split.
+This queue is complementary to the canonical LLM extractor, not a request to
+overwrite or imitate `data/llm_cache/`.
+
+1. `phobert-whole-article-sentiment`
+   - claim: the honest first local-NLP lane is whole-article Vietnamese
+     sentiment, not full semantic/event extraction
+   - contract: additive `phobert_*` datasets under
+     `data/features/news/datasets/` plus additive `phobert_*` columns in the
+     RL-ready `data/features/news/predictions/*_news_features.parquet` files
+   - guardrail: do **not** write to `data/llm_cache/` or overwrite
+     `xs_llm_news_*`
+
+2. `local-bert-distillation-lane`
+   - claim: if local encoders expand beyond sentiment, do it as separate task
+     heads distilled from the current LLM cache rather than one overloaded
+     checkpoint
+   - best first tasks:
+     - `market_news` vs `stock_news`
+     - `official_or_regulatory_source`
+     - `forward_looking` vs `backward_looking`
+   - explicitly parked until weak-label quality is audited:
+     - `rumor`
+     - `causal_impact_label`
+     - `expectation_alignment`
+     - `macro_theme`
+
+3. `bert-suitable-source-acquisition`
+   - claim: future text-source work should be chosen by encoder-task fit, not
+     by the vague hope that "more text helps"
+   - examples:
+     - CafeF article archive -> sentiment, article routing, forward-looking
+       language
+     - official exchange disclosures -> official-source, filing-stage, notice
+       vs result, rights-issue routing
+     - SSC / enforcement / legal text -> regulatory/legal routing only if that
+       branch is intentionally opened
 
 ---
 

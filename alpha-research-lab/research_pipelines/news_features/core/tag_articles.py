@@ -10,7 +10,7 @@ from typing import Dict, Iterable, List, Optional
 import pandas as pd
 
 from research_pipelines.news_features.config import NewsFeaturesConfig, get_default_config
-from research_pipelines.news_features.io_utils import discover_stock_tickers, update_manifest
+from research_pipelines.news_features.io_utils import describe_path, discover_stock_tickers, update_manifest
 
 
 def _ticker_pattern(tickers: Iterable[str]) -> Optional[re.Pattern[str]]:
@@ -123,7 +123,7 @@ def tag_articles_exports(config: Optional[NewsFeaturesConfig] = None) -> pd.Data
     update_manifest(
         config=config,
         tagged_articles=int(len(tagged)),
-        tagged_path=str(config.tagged_path().relative_to(config.repo_root)),
+        tagged_path=describe_path(config.tagged_path(), config=config),
     )
     overall_elapsed = perf_counter() - overall_start
     print(

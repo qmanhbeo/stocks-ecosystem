@@ -482,6 +482,10 @@ Extract per-ticker daily sentiment from cafef JSONL files using a keyword lexico
 - **Requires:** `data/news/` (run `fetch_news_archive.py` first)
 - **Output:** `data/features/xs_news_sentiment_daily.parquet`
 - **Coverage:** ~0.8% of (day, ticker) pairs (very sparse; this is the raw base table, not a dense feature surface)
+- **Scope note:** this is the legacy keyword baseline only. The canonical
+  `research_pipelines/news_features/` producer now also owns a separate
+  whole-article PhoBERT sentiment lane under `data/features/news/datasets/`,
+  and that additive local-encoder path does not touch `data/llm_cache/`.
 
 ### `extract_llm_news_features.py`
 Extract structured per-article features from CafeF JSONL using Google Gemini models only.
@@ -547,6 +551,10 @@ Build ticker-day and dense market-daily LLM features from `data/llm_cache/`.
   - `frac_real_estate_theme`
   - `frac_banking_theme`
   - `frac_causal_financing_negative`
+- **Separation rule:** these hosted LLM outputs remain the canonical rich
+  semantic/event contract. The local PhoBERT news lane publishes additive
+  `phobert_*` datasets and per-ticker export columns under
+  `data/features/news/`; it does not overwrite this builder's outputs.
 
 ### `build_open_close_asymmetry_features.py`
 Build dense ticker-day open/close asymmetry features from OHLC.

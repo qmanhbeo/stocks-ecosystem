@@ -101,15 +101,40 @@ standalone feature, but Session 132 `H306` showed it matters as a conditioner on
 - `c5_gate_pos_exec_gt_0`: zero positive `C5` rows when follow-through is absent.
   Avg IC `+0.0368`, `11 / 11` positive years, confirmation pooled IC `+0.0088`.
 
+**Order-pressure finding:** Session 162 `H340` showed same-day posted buy-volume pressure is
+an even stronger conditioner on the **positive side** of `C5` than exec-rate:
+- `c5_scale_pos_buy_vol_ratio_cap_dev_median`: scale positive `C5` by clipped same-day
+  buy-volume imbalance relative to the dev median support threshold. Avg IC `+0.0693`,
+  `11 / 11` positive years, confirmation pooled IC `+0.0576`.
+- `c5_gate_pos_buy_vol_ratio_gt_0`: zero positive `C5` rows when same-day posted
+  buy-volume imbalance is non-positive. Avg IC `+0.0688`, `11 / 11` positive years,
+  confirmation pooled IC `+0.0565`.
+- `c5_gate_pos_dual_buy_pressure_gt_0`: require both same-day buy-volume and buy-count
+  imbalance to stay positive. Avg IC `+0.0626`, `11 / 11` positive years,
+  confirmation pooled IC `+0.0474`.
+- `c5_gate_pos_buy_count_ratio_gt_0` failed confirmation (`-0.0212`), so count-only
+  pressure is not the surviving mechanism.
+
+**Stacking update:** Session 163 `H341` tested whether `H306` exec-rate adds
+further value on top of the new `H340` buy-volume rewrite. It did not. The best
+stacked row, `c5_scale_pos_exec_x_buy_vol_min_cap_dev_medians`, held `11 / 11`
+positive years but still missed the `H340` baseline on avg IC retention
+(`94.3%`) and on validation / confirmation pooled IC (`+0.0935 / +0.0548`
+versus `+0.0980 / +0.0576`). The hard intersection gate also failed. Treat
+`H340` as the preferred daily-state rewrite and keep `H306` only as a fallback
+when order-pressure data is unavailable.
+
 **Interpretation update:** weak bullish follow-through is a pollutant on raw `C5`, not a
-new alpha family. Prefer the soft rewrite when the branch wants the more robust form.
+new alpha family. The current preferred robustness form is the `H340`
+same-day buy-volume rewrite, with the `H306` exec-rate rewrite as a weaker
+secondary conditioner when needed.
 
 **Artifact:** `data/features/xs_insider_quality_features.parquet`
 (key column: xs_ins_relative_size_5d)
 
 **Supersedes C2:** C5 is strictly better. Use `xs_ins_relative_size_5d` as the primary
-insider signal going forward, with the `H306` positive-side follow-through rewrite as the
-preferred robustness variant when needed.
+insider signal going forward, with the `H340` positive-side buy-volume rewrite as the
+preferred robustness variant when the branch wants a more selective daily-state form.
 
 ---
 
@@ -483,6 +508,23 @@ year-to-year variance is too high (some years strongly negative).
 
 **Needed to promote to CONFIRMED:** Rolling 5d/30d aggregation to reduce sparsity (H96),
 or LLM-based scoring for higher quality (H98).
+
+### C1b — PhoBERT Whole-Article Sentiment Family
+**Status: IMPLEMENTATION LANE — not yet validated as a signal**
+
+- **Planned role:** local whole-article Vietnamese sentiment family that should
+  be richer than keyword lexicon scoring but still narrower than the full LLM
+  semantic/event schema
+- **Planned outputs:** additive `phobert_*` article probabilities, ticker-day
+  aggregates, and rolling sentiment states under the canonical
+  `data/features/news/` pipeline
+- **Why this is different from H98:** the PhoBERT lane is local, GPU-friendly,
+  and sentiment-focused; it does **not** claim to replace `event_type`,
+  `rumor`, `source_authority`, `causal_impact_label`, or the rest of the
+  hosted LLM schema
+- **Promotion rule:** do not treat this as a confirmed signal until the new
+  ticker-day surface is built and cleared against the usual standalone /
+  consistency gates
 
 ---
 

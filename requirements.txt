@@ -27,3 +27,5 @@ scipy
 seaborn
 tqdm
 openpyxl
+transformers
+pyvi

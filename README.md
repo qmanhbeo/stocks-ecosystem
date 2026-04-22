@@ -45,6 +45,8 @@ This means the root data directory is the canonical dataset surface for the whol
 
 `data/llm_cache/` is the per-day CafeF LLM extraction cache: one JSON object per filtered article, used as the input to `alpha-research-lab/data_tools/build_llm_news_features.py`.
 
+The canonical news pipeline can now also publish a separate local Vietnamese-encoder lane under `data/features/news/`: whole-article PhoBERT sentiment writes dedicated `datasets/phobert_*` artifacts and additive `phobert_*` columns in `predictions/*_news_features.parquet`. This is isolated from `data/llm_cache/` and does not overwrite the hosted LLM semantic/event surface.
+
 `data/foreign_flow/` is the historical CafeF foreign-investor-flow archive. It
 stores per-ticker daily buy/sell/net volume and value, remaining foreign room,
 and reported ownership percentage from
@@ -157,6 +159,19 @@ pip install -r requirements.lock.txt
 
 Use `requirements.txt` for a live editable dev setup. Use `requirements.lock.txt` when you want the workspace dependency surface to stay fixed.
 The lock file is intentionally Python-3.10-focused and pins the direct dependency surface only; it is not a full transitive hash lock.
+
+Optional WSL NVIDIA CUDA bootstrap:
+
+```bash
+conda activate stocks
+bash scripts/bootstrap_wsl_cuda.sh
+conda deactivate && conda activate stocks
+python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0) if torch.cuda.is_available() else None)"
+```
+
+This keeps the repo dependency contract CPU-safe by default while providing a tested CUDA profile for local WSL GPU work. The bootstrap installs the current driver-compatible `cu121` PyTorch wheel set from [requirements-cuda-cu121.txt](/home/manh/stocks-ecosystem/requirements-cuda-cu121.txt), and adds conda activation hooks so `/usr/lib/wsl/lib` is visible to CUDA-aware Python packages.
+
+Known tradeoff: packages that require newer torch floors, such as `marker-pdf` or `surya-ocr`, should live in a separate OCR-focused environment instead of the shared `stocks` env.
 
 ## Shared Market Rules
 

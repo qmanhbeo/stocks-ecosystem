@@ -103,6 +103,8 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - `notes/signal_library.md`: **the registry of confirmed and candidate signals**
 - `README_for_AGENTS.md`: exact agent loop, commands, result artifacts, data, note conventions
 - `notes/findings.md`: index for the chunked durable findings files
+- if you are working on the local Vietnamese encoder / PhoBERT lane, also read:
+  - `notes/local_bert_roadmap.md`
 - if you are continuing the active timing-research branch, then read:
   - `notes/timing_data_acquisition_plan.md`
   - `notes/timing_data_source_scorecard.csv`
@@ -129,6 +131,8 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - The lab now owns a historical CafeF proprietary-trading archive at `data/proprietary_trading/cafef/`; this is a raw daily summary surface from stock-history page 4 (`GDTuDoanh`)
 - The lab now owns a forward-only VCI board foreign-flow collector at `data/foreign_flow_forward/vci_price_board/`; this is raw acquisition data and not backtestable history
 - The lab now owns a raw official HNX / UPCoM issuer-disclosure surface at `data/official_disclosures/hnx/`; the HNX issuer universe is fetchable now, and per-ticker official disclosure history plus attachment metadata, OCR text caches, and transaction-attachment extracts are wired through `data_tools/fetch_hnx_official_disclosures.py`
+- The canonical news pipeline under `research_pipelines/news_features/` now also owns a local Vietnamese encoder lane: whole-article PhoBERT sentiment writes dedicated `data/features/news/datasets/phobert_*` datasets and additive `phobert_*` columns in `data/features/news/predictions/*_news_features.parquet`
+- Hosted LLM extraction remains the canonical rich semantic/event source; the local PhoBERT lane is additive and task-specific, not a replacement for `data/llm_cache/` or `xs_llm_news_*`
 - RL consumes that matrix through `../RL-trading-agent` via `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 - Recommendation contracts are shared with RL-adjacent consumers via `../shared-recommendation/`
 - Execution reality is shared with RL via `../docs/execution_reality.md` and `../shared-market-rules/`

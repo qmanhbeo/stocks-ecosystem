@@ -21,6 +21,18 @@ pip install -r requirements.txt
 
 The RL runtime now depends on the workspace-shared `shared-market-rules` and `shared-recommendation` packages.
 
+If you are on WSL with an NVIDIA GPU and want CUDA-enabled PyTorch in the shared `stocks` env, run the optional workspace bootstrap after the base install:
+
+```bash
+cd /home/manh/stocks
+conda activate stocks
+bash scripts/bootstrap_wsl_cuda.sh
+conda deactivate && conda activate stocks
+python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0) if torch.cuda.is_available() else None)"
+```
+
+This is intentionally optional. The repo keeps generic `torch` dependencies so CPU-only setups still install cleanly.
+
 ## Run test suite first to make sure everything is ok
 
 ```bash

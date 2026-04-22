@@ -9,7 +9,7 @@ from typing import Optional
 import pandas as pd
 
 from research_pipelines.news_features.config import NewsFeaturesConfig, get_default_config
-from research_pipelines.news_features.io_utils import update_manifest
+from research_pipelines.news_features.io_utils import describe_path, update_manifest, write_parquet_atomic
 
 
 def _news_feature_filename(ticker: str) -> str:
@@ -19,34 +19,34 @@ def _news_feature_filename(ticker: str) -> str:
 def aggregate_daily_feature_dataframe(
     tabular_df: pd.DataFrame,
     embedding_df: pd.DataFrame,
+    phobert_df: Optional[pd.DataFrame] = None,
     config: Optional[NewsFeaturesConfig] = None,
     log_progress: bool = False,
 ) -> pd.DataFrame:
     config = config or get_default_config()
-    if tabular_df.empty and embedding_df.empty:
+    phobert_df = phobert_df if phobert_df is not None else pd.DataFrame()
+    if tabular_df.empty and embedding_df.empty and phobert_df.empty:
         if log_progress:
-            print("Aggregate build skipped because both tabular and embedding datasets are empty", flush=True)
+            print("Aggregate build skipped because tabular, embedding, and PhoBERT datasets are empty", flush=True)
         return pd.DataFrame(columns=["ticker", "date", *config.default_merge_columns()])
 
-    if tabular_df.empty:
-        if log_progress:
-            print(f"Aggregate stage 1/2: using embedding-only input with {len(embedding_df)} rows", flush=True)
-        combined = embedding_df.copy()
-    elif embedding_df.empty:
-        if log_progress:
-            print(f"Aggregate stage 1/2: using tabular-only input with {len(tabular_df)} rows", flush=True)
-        combined = tabular_df.copy()
-    else:
-        if log_progress:
-            print(
-                f"Aggregate stage 1/2: merging tabular_rows={len(tabular_df)} with embedding_rows={len(embedding_df)}",
-                flush=True,
-            )
-        if tabular_df.duplicated(subset=["ticker", "date"]).any():
-            raise ValueError("Duplicate ticker/date rows found in tabular news features")
-        if embedding_df.duplicated(subset=["ticker", "date"]).any():
-            raise ValueError("Duplicate ticker/date rows found in embedding news features")
-        combined = tabular_df.merge(embedding_df, on=["ticker", "date"], how="outer", validate="one_to_one")
+    datasets = [
+        ("tabular", tabular_df),
+        ("embedding", embedding_df),
+        ("phobert", phobert_df),
+    ]
+    available = [(name, frame.copy()) for name, frame in datasets if not frame.empty]
+    if log_progress:
+        summary = ", ".join(f"{name}_rows={len(frame)}" for name, frame in available) or "none"
+        print(f"Aggregate stage 1/2: merging available datasets ({summary})", flush=True)
+
+    for name, frame in available:
+        if frame.duplicated(subset=["ticker", "date"]).any():
+            raise ValueError(f"Duplicate ticker/date rows found in {name} news features")
+
+    combined = available[0][1].copy()
+    for name, frame in available[1:]:
+        combined = combined.merge(frame, on=["ticker", "date"], how="outer", validate="one_to_one")
 
     combined = combined.sort_values(["ticker", "date"]).reset_index(drop=True)
     if log_progress:
@@ -75,17 +75,23 @@ def aggregate_daily_feature_exports(config: Optional[NewsFeaturesConfig] = None)
     load_start = perf_counter()
     tabular = pd.read_parquet(config.tabular_dataset_path()) if config.tabular_dataset_path().exists() else pd.DataFrame()
     embedding = pd.read_parquet(config.embedding_dataset_path()) if config.embedding_dataset_path().exists() else pd.DataFrame()
+    phobert = (
+        pd.read_parquet(config.phobert_ticker_day_sentiment_path())
+        if config.phobert_ticker_day_sentiment_path().exists()
+        else pd.DataFrame()
+    )
     load_elapsed = perf_counter() - load_start
     print(
-        f"Loaded tabular_rows={len(tabular)} and embedding_rows={len(embedding)} in {load_elapsed:.1f}s",
+        f"Loaded tabular_rows={len(tabular)}, embedding_rows={len(embedding)}, "
+        f"phobert_rows={len(phobert)} in {load_elapsed:.1f}s",
         flush=True,
     )
     aggregate_start = perf_counter()
-    combined = aggregate_daily_feature_dataframe(tabular, embedding, config=config, log_progress=True)
+    combined = aggregate_daily_feature_dataframe(tabular, embedding, phobert_df=phobert, config=config, log_progress=True)
     aggregate_elapsed = perf_counter() - aggregate_start
     print(f"Aggregate build completed in {aggregate_elapsed:.1f}s. Writing outputs...", flush=True)
     write_start = perf_counter()
-    combined.to_parquet(config.combined_dataset_path(), index=False)
+    write_parquet_atomic(combined, config.combined_dataset_path(), index=False)
     existing_prediction_files = {
         path.name: path
         for path in config.predictions_dir.glob("*_news_features.parquet")
@@ -112,7 +118,7 @@ def aggregate_daily_feature_exports(config: Optional[NewsFeaturesConfig] = None)
     update_manifest(
         config=config,
         combined_feature_rows=int(len(combined)),
-        combined_dataset_path=str(config.combined_dataset_path().relative_to(config.repo_root)),
+        combined_dataset_path=describe_path(config.combined_dataset_path(), config=config),
     )
     overall_elapsed = perf_counter() - overall_start
     print(

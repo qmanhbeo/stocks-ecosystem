@@ -3,3 +3,5 @@ pandas
 xgboost
 lightgbm
 gdown
+transformers
+pyvi

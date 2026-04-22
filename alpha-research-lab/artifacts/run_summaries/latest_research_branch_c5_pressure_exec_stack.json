@@ -1,0 +1,256 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260422_205307_h341_c5_pressure_exec_stack_details.json",
+    "results": "artifacts/portfolio_baselines/20260422_205307_h341_c5_pressure_exec_stack_results.parquet"
+  },
+  "metadata": {
+    "branch_contract": "H341 is a 2015-2025 follow-through audit of H340 on the original H108 5d relative-return target, using H340's best same-day buy-volume rewrite as baseline and testing one soft stacked exec+pressure rewrite plus one conservative intersection gate.",
+    "candidate_definitions": {
+      "c5_gate_pos_buy_vol_gt_0_exec_gt_0": "Conservative intersection gate: zero positive C5 rows unless same-day buy-volume imbalance and exec-rate are both positive.",
+      "c5_raw_reference": "Raw C5 reference row for context only.",
+      "c5_scale_pos_buy_vol_ratio_cap_dev_median": "H340 baseline: scale positive C5 by clipped same-day buy-volume imbalance relative to the dev median support threshold.",
+      "c5_scale_pos_exec_cap_dev_median": "H306 context row: scale positive C5 by clipped exec-rate relative to the dev median threshold.",
+      "c5_scale_pos_exec_x_buy_vol_min_cap_dev_medians": "Soft stack: scale positive C5 by the weaker of the clipped exec-rate and buy-volume support scores."
+    },
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "session": 163
+  },
+  "mode": "research_branch_c5_pressure_exec_stack",
+  "name": "h341_c5_pressure_exec_stack",
+  "summary": {
+    "baseline_row": {
+      "avg_ic": 0.06932235963571882,
+      "avg_ic_retention_vs_baseline": 1.0,
+      "candidate_decision": "BASELINE",
+      "confirmation_ic_uplift_vs_baseline": 0.0,
+      "confirmation_pooled_ic": 0.0576202205215894,
+      "confirmation_rows": 1417,
+      "corr_with_s1": -0.02056731089567147,
+      "coverage_pct": 2.6115682478218782,
+      "dev_pooled_ic": 0.056965393033401805,
+      "dev_rows": 17183,
+      "fire_rows": 21582,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.0576202205215894,
+          "rows": 1417
+        },
+        "dev": {
+          "pooled_ic": 0.056965393033401805,
+          "rows": 17183
+        },
+        "validation": {
+          "pooled_ic": 0.09801121903806485,
+          "rows": 2982
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_scale_pos_buy_vol_ratio_cap_dev_median",
+      "validation_ic_uplift_vs_baseline": 0.0,
+      "validation_pooled_ic": 0.09801121903806485,
+      "validation_rows": 2982,
+      "yearly": [
+        {
+          "ic": 0.062201214484779284,
+          "n": 1547,
+          "p_value": 0.014409670571461582,
+          "year": 2015
+        },
+        {
+          "ic": 0.06284240461898136,
+          "n": 1877,
+          "p_value": 0.006459710129870844,
+          "year": 2016
+        },
+        {
+          "ic": 0.0258028030485422,
+          "n": 2278,
+          "p_value": 0.21830211888021062,
+          "year": 2017
+        },
+        {
+          "ic": 0.06620294085856997,
+          "n": 1859,
+          "p_value": 0.004295190580348882,
+          "year": 2018
+        },
+        {
+          "ic": 0.11470708422357083,
+          "n": 1996,
+          "p_value": 2.769656191526309e-07,
+          "year": 2019
+        },
+        {
+          "ic": 0.08477100617857482,
+          "n": 2264,
+          "p_value": 5.377671743403547e-05,
+          "year": 2020
+        },
+        {
+          "ic": 0.046043431812036614,
+          "n": 3404,
+          "p_value": 0.00721428439278417,
+          "year": 2021
+        },
+        {
+          "ic": 0.037239503819161184,
+          "n": 1958,
+          "p_value": 0.09948800873724405,
+          "year": 2022
+        },
+        {
+          "ic": 0.1342161025159821,
+          "n": 1284,
+          "p_value": 1.3893444695775e-06,
+          "year": 2023
+        },
+        {
+          "ic": 0.07089924391111933,
+          "n": 1698,
+          "p_value": 0.0034661180845158624,
+          "year": 2024
+        },
+        {
+          "ic": 0.0576202205215894,
+          "n": 1417,
+          "p_value": 0.030091083819045447,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    "best_candidate": {
+      "avg_ic": 0.06536805303980929,
+      "avg_ic_retention_vs_baseline": 0.9429577034496666,
+      "candidate_decision": "FAILED",
+      "confirmation_ic_uplift_vs_baseline": -0.0028146621994854792,
+      "confirmation_pooled_ic": 0.054805558322103924,
+      "confirmation_rows": 1374,
+      "corr_with_s1": -0.020691989559018884,
+      "coverage_pct": 2.550459825750242,
+      "dev_pooled_ic": 0.05182161758248743,
+      "dev_rows": 16780,
+      "fire_rows": 21077,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.054805558322103924,
+          "rows": 1374
+        },
+        "dev": {
+          "pooled_ic": 0.05182161758248743,
+          "rows": 16780
+        },
+        "validation": {
+          "pooled_ic": 0.09348660710960931,
+          "rows": 2923
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_scale_pos_exec_x_buy_vol_min_cap_dev_medians",
+      "validation_ic_uplift_vs_baseline": -0.004524611928455546,
+      "validation_pooled_ic": 0.09348660710960931,
+      "validation_rows": 2923,
+      "yearly": [
+        {
+          "ic": 0.06306847208036695,
+          "n": 1533,
+          "p_value": 0.013518902125847275,
+          "year": 2015
+        },
+        {
+          "ic": 0.06697923335019505,
+          "n": 1848,
+          "p_value": 0.003969000713111492,
+          "year": 2016
+        },
+        {
+          "ic": 0.02274475115438711,
+          "n": 2243,
+          "p_value": 0.2815975404065526,
+          "year": 2017
+        },
+        {
+          "ic": 0.06306965221659117,
+          "n": 1795,
+          "p_value": 0.007519875223595098,
+          "year": 2018
+        },
+        {
+          "ic": 0.11070700332217198,
+          "n": 1956,
+          "p_value": 9.193121760298562e-07,
+          "year": 2019
+        },
+        {
+          "ic": 0.07940453598014703,
+          "n": 2191,
+          "p_value": 0.00019880391337408882,
+          "year": 2020
+        },
+        {
+          "ic": 0.03598011085295383,
+          "n": 3314,
+          "p_value": 0.03834301557639499,
+          "year": 2021
+        },
+        {
+          "ic": 0.028137365984461364,
+          "n": 1900,
+          "p_value": 0.2202306937831365,
+          "year": 2022
+        },
+        {
+          "ic": 0.11700079635607627,
+          "n": 1253,
+          "p_value": 3.300194939795152e-05,
+          "year": 2023
+        },
+        {
+          "ic": 0.07715110381844757,
+          "n": 1670,
+          "p_value": 0.0016040375637670315,
+          "year": 2024
+        },
+        {
+          "ic": 0.054805558322103924,
+          "n": 1374,
+          "p_value": 0.04223642496241587,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    "branch_decision": "Stacking exec-rate on top of H340 does not improve the stronger buy-volume rewrite. Keep H340 as the preferred daily-state form and treat H306 as an alternative when order-pressure data is unavailable.",
+    "decision": "FAILED",
+    "dev_exec_threshold": 0.2,
+    "dev_volume_support_threshold": 0.11492539052329089,
+    "mixed_candidate_count": 0,
+    "pass_candidate_count": 0,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "ts": "20260422_205307"
+}

@@ -12,7 +12,7 @@ import pandas as pd
 from sklearn.decomposition import PCA
 
 from research_pipelines.news_features.config import NewsFeaturesConfig, get_default_config
-from research_pipelines.news_features.io_utils import update_manifest
+from research_pipelines.news_features.io_utils import describe_path, update_manifest
 
 
 EncoderFn = Callable[[list[str]], np.ndarray]
@@ -173,7 +173,7 @@ def build_embedding_feature_exports(
     update_manifest(
         config=config,
         embedding_feature_rows=int(len(daily_reduced)),
-        embedding_dataset_path=str(config.embedding_dataset_path().relative_to(config.repo_root)),
+        embedding_dataset_path=describe_path(config.embedding_dataset_path(), config=config),
     )
     print(f"Built {len(daily_reduced)} embedding feature rows -> {config.embedding_dataset_path()}")
     return daily_reduced

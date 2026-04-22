@@ -75,6 +75,30 @@ Important limitations:
 - this is a raw official source surface, not a published feature contract
 - HSX official disclosures are still source-blocked here because the current HSX SPA/API route has not yet been resolved into a stable crawler contract
 
+## News Feature Subcontract
+
+### `data/features/news/`
+
+Purpose:
+- canonical published news features for RL and research-side merges
+- article-level and ticker-day local encoder outputs that stay separate from
+  hosted LLM cache artifacts
+
+Current contract:
+- `datasets/news_tabular_features.parquet`
+- `datasets/news_embedding_features.parquet`
+- `datasets/article_embeddings.parquet`
+- `datasets/phobert_article_sentiment.parquet`
+- `datasets/phobert_ticker_day_sentiment.parquet`
+- `predictions/*_news_features.parquet`
+
+Important notes:
+- `phobert_*` datasets are whole-article local Vietnamese sentiment outputs from
+  the canonical `research_pipelines/news_features/` producer
+- they are additive to the existing keyword and embedding news features
+- they do **not** overwrite `data/llm_cache/`, `xs_llm_news_ticker_day.parquet`,
+  or `xs_llm_news_market_daily.parquet`
+
 ## Unavailable Or Still Blocked
 
 | Desired data | Current state | Reason / note |

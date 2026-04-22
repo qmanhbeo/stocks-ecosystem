@@ -10,7 +10,13 @@ from typing import Optional
 import pandas as pd
 
 from research_pipelines.news_features.config import NewsFeaturesConfig, get_default_config
-from research_pipelines.news_features.io_utils import canonicalize_url, list_raw_news_files, load_raw_news_dataframe, update_manifest
+from research_pipelines.news_features.io_utils import (
+    canonicalize_url,
+    describe_path,
+    list_raw_news_files,
+    load_raw_news_dataframe,
+    update_manifest,
+)
 
 
 WHITESPACE_RE = re.compile(r"\s+")
@@ -209,7 +215,7 @@ def preprocess_news_exports(
     update_manifest(
         config=config,
         normalized_articles=int(len(normalized)),
-        normalized_path=str(config.normalized_path().relative_to(config.repo_root)),
+        normalized_path=describe_path(config.normalized_path(), config=config),
     )
     print(
         "Preprocess summary: "

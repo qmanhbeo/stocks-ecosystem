@@ -48,6 +48,10 @@ class NewsFeaturesConfig:
     embedding_batch_size: int = 16
     embedding_text_max_chars: int = 2000
     pca_random_seed: int = 1208
+    phobert_model_name: str = "Angelectronic/phobert-base-vietnamese-sentiment"
+    phobert_batch_size: int = 16
+    phobert_max_length: int = 256
+    phobert_precision: str = "auto"
     feature_prefix: str = "news_"
     embedding_prefix: str = "news_embed_"
     missing_fill_value: float = 0.0
@@ -63,6 +67,8 @@ class NewsFeaturesConfig:
     tabular_dataset_filename: str = "news_tabular_features.parquet"
     embedding_dataset_filename: str = "news_embedding_features.parquet"
     article_embeddings_filename: str = "article_embeddings.parquet"
+    phobert_article_sentiment_filename: str = "phobert_article_sentiment.parquet"
+    phobert_ticker_day_sentiment_filename: str = "phobert_ticker_day_sentiment.parquet"
     combined_dataset_filename: str = "news_daily_features.parquet"
     embedding_metadata_filename: str = "embedding_metadata.json"
     pca_model_filename: str = "news_embedding_pca.joblib"
@@ -117,6 +123,12 @@ class NewsFeaturesConfig:
     def article_embeddings_path(self) -> Path:
         return self.datasets_dir / self.article_embeddings_filename
 
+    def phobert_article_sentiment_path(self) -> Path:
+        return self.datasets_dir / self.phobert_article_sentiment_filename
+
+    def phobert_ticker_day_sentiment_path(self) -> Path:
+        return self.datasets_dir / self.phobert_ticker_day_sentiment_filename
+
     def combined_dataset_path(self) -> Path:
         return self.datasets_dir / self.combined_dataset_filename
 
@@ -141,11 +153,31 @@ class NewsFeaturesConfig:
             "news_sentiment_keyword_score_mean",
         ]
         columns.extend(f"news_article_count_{window}d" for window in self.rolling_windows)
+        columns.extend(self.phobert_daily_columns())
         columns.extend(self.embedding_columns())
         return columns
 
     def embedding_columns(self) -> List[str]:
         return [f"{self.embedding_prefix}{index:02d}" for index in range(self.embedding_output_dim)]
+
+    def phobert_daily_columns(self) -> List[str]:
+        return [
+            "phobert_article_count_1d",
+            "phobert_sentiment_score_mean",
+            "phobert_sentiment_score_sum",
+            "phobert_sentiment_conf_weighted_mean",
+            "phobert_sentiment_conf_weighted_sum",
+            "phobert_prob_pos_mean",
+            "phobert_prob_neu_mean",
+            "phobert_prob_neg_mean",
+            "phobert_pos_share",
+            "phobert_neu_share",
+            "phobert_neg_share",
+            "phobert_article_count_5d",
+            "phobert_article_count_30d",
+            "phobert_sentiment_5d",
+            "phobert_sentiment_30d",
+        ]
 
     def to_dict(self) -> Dict[str, object]:
         raw = asdict(self)

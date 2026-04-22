@@ -1,6 +1,6 @@
 # News Features
 
-`research_pipelines/news_features/` is the canonical news producer for the workspace. It reads shared raw news from `stocks/data/news/`, tags articles against the shared stock universe, builds daily tabular and embedding features, and exports per-ticker parquet files for RL consumption.
+`research_pipelines/news_features/` is the canonical news producer for the workspace. It reads shared raw news from `stocks/data/news/`, tags articles against the shared stock universe, builds daily tabular features, whole-article local PhoBERT sentiment features, transformer embeddings, and exports per-ticker parquet files for RL consumption.
 
 By default the pipeline resolves shared data under `/home/manh/stocks/data`. Override that with `STOCKS_DATA_ROOT` if you need a different workspace data root.
 
@@ -11,8 +11,9 @@ By default the pipeline resolves shared data under `/home/manh/stocks/data`. Ove
    Normalized `published_at` and derived `date` use Hanoi time (`Asia/Ho_Chi_Minh`, GMT+7).
 3. Tag articles to one or more tickers.
 4. Build daily tabular text features.
-5. Build daily transformer embedding features and compress them with PCA.
-6. Export combined RL-ready daily feature files.
+5. Build whole-article PhoBERT sentiment datasets from normalized title + summary + body text.
+6. Build daily transformer embedding features and compress them with PCA.
+7. Export combined RL-ready daily feature files.
 
 ## Commands
 
@@ -30,6 +31,7 @@ python -m research_pipelines.news_features.core.add_section_to_missing --source 
 python -m research_pipelines.news_features.core.preprocess_news
 python -m research_pipelines.news_features.core.tag_articles
 python -m research_pipelines.news_features.core.build_tabular_features
+python -m research_pipelines.news_features.core.build_phobert_sentiment_features
 python -m research_pipelines.news_features.core.build_embedding_features
 python -m research_pipelines.news_features.core.aggregate_daily_features
 ```
@@ -47,8 +49,15 @@ python -m research_pipelines.news_features
 - Normalized articles: `data/features/news/normalized/`
 - Tagged articles: `data/features/news/tagged/`
 - Daily datasets: `data/features/news/datasets/`
+  This now includes dedicated local PhoBERT datasets:
+  - `phobert_article_sentiment.parquet`
+  - `phobert_ticker_day_sentiment.parquet`
 - Per-ticker RL-ready files: `data/features/news/predictions/`
 
 ## RL Integration
 
 RL now consumes these exports through its own adapter layer. The producer-side merge helper remains `research_pipelines.news_features.core.merge_news_features.merge_news_features(...)`.
+
+The PhoBERT lane is additive and isolated from the hosted LLM stack:
+- PhoBERT outputs live under `data/features/news/`
+- hosted LLM semantic/event extraction remains under `data/llm_cache/` and `data/features/xs_llm_news_*`

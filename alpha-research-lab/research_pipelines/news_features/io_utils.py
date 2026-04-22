@@ -6,6 +6,7 @@ import json
 import re
 from hashlib import md5
 from pathlib import Path
+import tempfile
 from typing import Dict, Iterable, List, Optional
 
 import pandas as pd
@@ -27,6 +28,18 @@ def load_yaml_file(path: Path) -> Dict[str, object]:
 def dump_json(path: Path, payload: Dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def write_parquet_atomic(df: pd.DataFrame, path: Path, **kwargs: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(dir=path.parent, suffix=".parquet", delete=False) as handle:
+        temp_path = Path(handle.name)
+    try:
+        df.to_parquet(temp_path, **kwargs)
+        temp_path.replace(path)
+    finally:
+        if temp_path.exists():
+            temp_path.unlink(missing_ok=True)
 
 
 def read_json(path: Path) -> Dict[str, object]:
@@ -168,3 +181,17 @@ def discover_stock_tickers(stock_dir: Optional[Path] = None, config: Optional[Ne
 
 def normalize_date_strings(series: pd.Series) -> pd.Series:
     return pd.to_datetime(series, utc=True, errors="coerce").dt.strftime("%Y-%m-%d")
+
+
+def describe_path(path: Path, config: Optional[NewsFeaturesConfig] = None) -> str:
+    config = config or get_default_config()
+    candidates = [
+        config.repo_root.parent,
+        config.repo_root,
+    ]
+    for root in candidates:
+        try:
+            return str(path.relative_to(root))
+        except ValueError:
+            continue
+    return str(path)
