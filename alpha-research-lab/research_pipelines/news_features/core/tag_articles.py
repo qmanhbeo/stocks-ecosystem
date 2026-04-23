@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 import re
 from time import perf_counter
+import tempfile
 from typing import Dict, Iterable, List, Optional
 
 import pandas as pd
@@ -28,6 +30,22 @@ def tag_articles_dataframe(
     progress_every_articles: int = 50000,
 ) -> pd.DataFrame:
     pattern = _ticker_pattern(tickers)
+    return _tag_articles_dataframe_with_pattern(
+        normalized_df=normalized_df,
+        pattern=pattern,
+        tickers=tickers,
+        log_progress=log_progress,
+        progress_every_articles=progress_every_articles,
+    )
+
+
+def _tag_articles_dataframe_with_pattern(
+    normalized_df: pd.DataFrame,
+    pattern: Optional[re.Pattern[str]],
+    tickers: Iterable[str],
+    log_progress: bool = False,
+    progress_every_articles: int = 50000,
+) -> pd.DataFrame:
     if pattern is None or normalized_df.empty:
         return pd.DataFrame(
             columns=["article_id", "ticker", "date", "url", "source", "match_source", "title_hit", "body_hit"]
@@ -103,26 +121,106 @@ def tag_articles_dataframe(
 
 def tag_articles_exports(config: Optional[NewsFeaturesConfig] = None) -> pd.DataFrame:
     config = config or get_default_config()
+    config.ensure_directories()
     overall_start = perf_counter()
     load_start = perf_counter()
-    normalized = pd.read_parquet(config.normalized_path()) if config.normalized_path().exists() else pd.DataFrame()
+    if not config.normalized_path().exists():
+        return pd.DataFrame(
+            columns=["article_id", "ticker", "date", "url", "source", "match_source", "title_hit", "body_hit"]
+        )
+
+    try:
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+    except ImportError as exc:
+        raise ImportError("Streaming ticker tagging requires pyarrow.") from exc
+
+    parquet_file = pq.ParquetFile(config.normalized_path())
+    normalized_rows = parquet_file.metadata.num_rows
     load_elapsed = perf_counter() - load_start
     tickers = discover_stock_tickers(config=config)
+    pattern = _ticker_pattern(tickers)
     print(
-        f"Loaded {len(normalized)} normalized articles from {config.normalized_path()} in {load_elapsed:.1f}s",
+        f"Loaded {normalized_rows} normalized articles from {config.normalized_path()} in {load_elapsed:.1f}s",
         flush=True,
     )
     print(f"Discovered {len(tickers)} stock tickers from {config.raw_stock_dir}", flush=True)
+
+    tagged_columns = ["article_id", "ticker", "date", "url", "source", "match_source", "title_hit", "body_hit"]
+    schema = pa.schema(
+        [
+            ("article_id", pa.string()),
+            ("ticker", pa.string()),
+            ("date", pa.string()),
+            ("url", pa.string()),
+            ("source", pa.string()),
+            ("match_source", pa.string()),
+            ("title_hit", pa.int64()),
+            ("body_hit", pa.int64()),
+        ]
+    )
     tag_start = perf_counter()
-    tagged = tag_articles_dataframe(normalized, tickers, log_progress=True)
-    tag_elapsed = perf_counter() - tag_start
-    print(f"Ticker tagging completed in {tag_elapsed:.1f}s. Writing parquet...", flush=True)
-    write_start = perf_counter()
-    tagged.to_parquet(config.tagged_path(), index=False)
-    write_elapsed = perf_counter() - write_start
+    writer = None
+    temp_path = None
+    total_tagged_rows = 0
+    processed_articles = 0
+    progress_interval = 50000
+    try:
+        with tempfile.NamedTemporaryFile(
+            dir=config.tagged_path().parent,
+            suffix=".parquet",
+            delete=False,
+        ) as handle:
+            temp_path = Path(handle.name)
+
+        for batch in parquet_file.iter_batches(
+            batch_size=5000,
+            columns=["article_id", "date", "url", "source", "clean_title", "clean_summary", "clean_body_text"],
+        ):
+            batch_df = batch.to_pandas()
+            processed_articles += len(batch_df)
+            tagged_batch = _tag_articles_dataframe_with_pattern(
+                normalized_df=batch_df,
+                pattern=pattern,
+                tickers=tickers,
+                log_progress=False,
+            )
+            if not tagged_batch.empty:
+                table = pa.Table.from_pandas(tagged_batch[tagged_columns], preserve_index=False, schema=schema)
+                if writer is None:
+                    writer = pq.ParquetWriter(temp_path, schema=table.schema)
+                writer.write_table(table)
+                total_tagged_rows += len(tagged_batch)
+            if (
+                processed_articles == len(batch_df)
+                or processed_articles % progress_interval == 0
+                or processed_articles >= normalized_rows
+            ):
+                print(
+                    f"Tagged article scan {processed_articles}/{normalized_rows}; "
+                    f"accumulated_article_ticker_rows={total_tagged_rows}",
+                    flush=True,
+                )
+
+        tag_elapsed = perf_counter() - tag_start
+        print(f"Ticker tagging completed in {tag_elapsed:.1f}s. Writing parquet...", flush=True)
+        write_start = perf_counter()
+        if writer is not None and temp_path is not None:
+            writer.close()
+            writer = None
+            temp_path.replace(config.tagged_path())
+        else:
+            pd.DataFrame(columns=tagged_columns).to_parquet(config.tagged_path(), index=False)
+        write_elapsed = perf_counter() - write_start
+    finally:
+        if writer is not None:
+            writer.close()
+        if temp_path is not None and temp_path.exists():
+            temp_path.unlink(missing_ok=True)
+
     update_manifest(
         config=config,
-        tagged_articles=int(len(tagged)),
+        tagged_articles=int(total_tagged_rows),
         tagged_path=describe_path(config.tagged_path(), config=config),
     )
     overall_elapsed = perf_counter() - overall_start
@@ -131,8 +229,8 @@ def tag_articles_exports(config: Optional[NewsFeaturesConfig] = None) -> pd.Data
         f"write={write_elapsed:.1f}s, total={overall_elapsed:.1f}s",
         flush=True,
     )
-    print(f"Tagged {len(tagged)} article-ticker rows -> {config.tagged_path()}")
-    return tagged
+    print(f"Tagged {total_tagged_rows} article-ticker rows -> {config.tagged_path()}")
+    return pd.read_parquet(config.tagged_path())
 
 
 def build_arg_parser() -> argparse.ArgumentParser:

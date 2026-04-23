@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import argparse
 import re
+from pathlib import Path
 from time import perf_counter
+import tempfile
 from typing import Optional
 
 import pandas as pd
@@ -14,7 +16,7 @@ from research_pipelines.news_features.io_utils import (
     canonicalize_url,
     describe_path,
     list_raw_news_files,
-    load_raw_news_dataframe,
+    read_jsonl,
     update_manifest,
 )
 
@@ -187,6 +189,7 @@ def preprocess_news_exports(
     config: Optional[NewsFeaturesConfig] = None,
 ) -> pd.DataFrame:
     config = config or get_default_config()
+    config.ensure_directories()
     selected_source = source or config.default_source
     raw_files = list_raw_news_files(source=selected_source, config=config)
     overall_start = perf_counter()
@@ -194,27 +197,152 @@ def preprocess_news_exports(
         f"Loading raw news for source={selected_source} from {len(raw_files)} JSONL files under {config.source_raw_dir(selected_source)}",
         flush=True,
     )
+    try:
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+    except ImportError as exc:
+        raise ImportError("Streaming news preprocess requires pyarrow.") from exc
+
+    normalized_columns = list(_empty_normalized_dataframe().columns)
+    schema = pa.schema(
+        [
+            ("article_id", pa.string()),
+            ("source", pa.string()),
+            ("url", pa.string()),
+            ("title", pa.string()),
+            ("summary", pa.string()),
+            ("body_text", pa.string()),
+            ("clean_title", pa.string()),
+            ("clean_summary", pa.string()),
+            ("clean_body_text", pa.string()),
+            ("published_at", pa.string()),
+            ("date", pa.string()),
+            ("author", pa.string()),
+            ("section_name", pa.string()),
+            ("tags", pa.list_(pa.string())),
+        ]
+    )
+
+    stats: dict[str, object] = {
+        "input_rows": 0,
+        "dropped_invalid_identity_rows": 0,
+        "dropped_unparseable_timestamp_rows": 0,
+        "dropped_empty_text_rows": 0,
+        "dropped_duplicate_article_rows": 0,
+        "dropped_cross_file_duplicate_article_rows": 0,
+        "normalized_rows": 0,
+        "rows_with_section_name": 0,
+        "date_min": None,
+        "date_max": None,
+    }
+    seen_article_ids: set[str] = set()
+    raw_rows = 0
     load_start = perf_counter()
-    raw_df = load_raw_news_dataframe(
-        source=selected_source,
-        config=config,
-        log_progress=True,
-    )
-    load_elapsed = perf_counter() - load_start
-    print(
-        f"Loaded {len(raw_df)} raw news rows in {load_elapsed:.1f}s. Normalizing and deduplicating...",
-        flush=True,
-    )
-    normalize_start = perf_counter()
-    normalized, stats = _preprocess_news_dataframe_with_stats(raw_df, config=config, log_progress=True)
-    normalize_elapsed = perf_counter() - normalize_start
-    print(f"Normalization completed in {normalize_elapsed:.1f}s. Writing parquet...", flush=True)
-    write_start = perf_counter()
-    normalized.to_parquet(config.normalized_path(), index=False)
-    write_elapsed = perf_counter() - write_start
+    normalize_elapsed = 0.0
+    progress_interval = 100
+    normalized = _empty_normalized_dataframe()
+    writer = None
+    temp_path = None
+    write_elapsed = 0.0
+    try:
+        with tempfile.NamedTemporaryFile(
+            dir=config.normalized_path().parent,
+            suffix=".parquet",
+            delete=False,
+        ) as handle:
+            temp_path = Path(handle.name)
+
+        for index, path in enumerate(raw_files, start=1):
+            file_rows = read_jsonl(path)
+            raw_rows += len(file_rows)
+            stats["input_rows"] = int(stats["input_rows"]) + len(file_rows)
+            if index == 1 or index % progress_interval == 0 or index == len(raw_files):
+                print(
+                    f"Loaded raw news file {index}/{len(raw_files)}: {path.name} "
+                    f"(rows_in_file={len(file_rows)}, accumulated_rows={raw_rows})",
+                    flush=True,
+                )
+
+            chunk_df = pd.DataFrame(file_rows)
+            chunk_start = perf_counter()
+            normalized_chunk, chunk_stats = _preprocess_news_dataframe_with_stats(
+                raw_df=chunk_df,
+                config=config,
+                log_progress=False,
+            )
+            normalize_elapsed += perf_counter() - chunk_start
+            for key in (
+                "dropped_invalid_identity_rows",
+                "dropped_unparseable_timestamp_rows",
+                "dropped_empty_text_rows",
+                "dropped_duplicate_article_rows",
+                "rows_with_section_name",
+            ):
+                stats[key] = int(stats[key]) + int(chunk_stats.get(key, 0))
+
+            if not normalized_chunk.empty:
+                dedupe_mask = ~normalized_chunk["article_id"].isin(seen_article_ids)
+                cross_file_dropped = int((~dedupe_mask).sum())
+                stats["dropped_cross_file_duplicate_article_rows"] = int(
+                    stats["dropped_cross_file_duplicate_article_rows"]
+                ) + cross_file_dropped
+                normalized_chunk = normalized_chunk.loc[dedupe_mask, normalized_columns].copy()
+
+            if normalized_chunk.empty:
+                continue
+
+            seen_article_ids.update(normalized_chunk["article_id"].tolist())
+            stats["normalized_rows"] = int(stats["normalized_rows"]) + len(normalized_chunk)
+            chunk_date_min = str(normalized_chunk["date"].min())
+            chunk_date_max = str(normalized_chunk["date"].max())
+            stats["date_min"] = chunk_date_min if stats["date_min"] is None else min(str(stats["date_min"]), chunk_date_min)
+            stats["date_max"] = chunk_date_max if stats["date_max"] is None else max(str(stats["date_max"]), chunk_date_max)
+
+            normalized_chunk["tags"] = normalized_chunk["tags"].map(
+                lambda value: [str(item) for item in (value or [])]
+            )
+            for column in normalized_columns:
+                if column == "tags":
+                    continue
+                normalized_chunk[column] = normalized_chunk[column].where(
+                    normalized_chunk[column].notna(), None
+                )
+            table = pa.Table.from_pandas(normalized_chunk[normalized_columns], preserve_index=False, schema=schema)
+            if writer is None:
+                writer = pq.ParquetWriter(temp_path, schema=table.schema)
+            writer.write_table(table)
+
+            if index == 1 or index % progress_interval == 0 or index == len(raw_files):
+                print(
+                    f"Preprocess progress {index}/{len(raw_files)}: "
+                    f"normalized_rows={stats['normalized_rows']}, "
+                    f"cross_file_dropped={stats['dropped_cross_file_duplicate_article_rows']}",
+                    flush=True,
+                )
+
+        load_elapsed = perf_counter() - load_start
+        print(
+            f"Loaded {raw_rows} raw news rows in {load_elapsed:.1f}s. Normalizing and deduplicating...",
+            flush=True,
+        )
+        print(f"Normalization completed in {normalize_elapsed:.1f}s. Writing parquet...", flush=True)
+        write_start = perf_counter()
+        if writer is not None and temp_path is not None:
+            writer.close()
+            writer = None
+            temp_path.replace(config.normalized_path())
+        else:
+            normalized.to_parquet(config.normalized_path(), index=False)
+        write_elapsed = perf_counter() - write_start
+    finally:
+        if writer is not None:
+            writer.close()
+        if temp_path is not None and temp_path.exists():
+            temp_path.unlink(missing_ok=True)
+
     update_manifest(
         config=config,
-        normalized_articles=int(len(normalized)),
+        normalized_articles=int(stats["normalized_rows"]),
         normalized_path=describe_path(config.normalized_path(), config=config),
     )
     print(
@@ -239,8 +367,8 @@ def preprocess_news_exports(
         f"write={write_elapsed:.1f}s, total={overall_elapsed:.1f}s",
         flush=True,
     )
-    print(f"Normalized {len(normalized)} news articles -> {config.normalized_path()}")
-    return normalized
+    print(f"Normalized {stats['normalized_rows']} news articles -> {config.normalized_path()}")
+    return pd.read_parquet(config.normalized_path())
 
 
 def build_arg_parser() -> argparse.ArgumentParser:

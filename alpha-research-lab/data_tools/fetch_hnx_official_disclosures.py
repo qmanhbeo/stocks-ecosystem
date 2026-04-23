@@ -1111,6 +1111,7 @@ def fetch_ticker_history(
     parse_transaction_attachments: bool,
     timeout: float,
     sleep: float,
+    log_progress: bool = False,
 ) -> tuple[list[dict[str, object]], list[dict[str, object]], int]:
     ticker_news: list[dict[str, object]] = []
     ticker_attachments: list[dict[str, object]] = []
@@ -1128,6 +1129,8 @@ def fetch_ticker_history(
         listing_rows, next_page = parse_listing_html(response.text, ticker=ticker, market_code=market_code, page=page)
         pages_fetched += 1
         if not listing_rows:
+            if log_progress:
+                print(f"[{ticker}] page {page}: no disclosure rows returned; stopping ticker crawl", flush=True)
             break
 
         for listing_row in listing_rows:
@@ -1151,6 +1154,13 @@ def fetch_ticker_history(
             ]
             ticker_news.append(news_row)
             ticker_attachments.extend(attachments)
+
+        if log_progress and (pages_fetched == 1 or pages_fetched % 10 == 0 or next_page is None):
+            print(
+                f"[{ticker}] page {page}: rows={len(listing_rows)}, "
+                f"accumulated_news={len(ticker_news)}, accumulated_attachments={len(ticker_attachments)}",
+                flush=True,
+            )
 
         if sleep > 0:
             time.sleep(sleep)
@@ -1176,6 +1186,7 @@ def build_transaction_extracts(
     ocr_languages: tuple[str, ...],
     ocr_gpu: bool,
     refresh_transaction_text_cache: bool,
+    log_progress: bool = False,
 ) -> pd.DataFrame:
     if news.empty or attachments.empty:
         return ensure_contract_shape(pd.DataFrame(), TRANSACTION_ATTACHMENT_EXTRACT_COLUMNS)
@@ -1183,17 +1194,30 @@ def build_transaction_extracts(
     transaction_attachments = attachments[
         attachments["has_transaction_keywords"].fillna(False) & attachments["attachment_is_pdf"].fillna(False)
     ].copy()
-    extract_rows = [
-        parse_transaction_attachment(
-            row,
-            article_lookup=article_lookup,
-            ocr_transaction_attachments=ocr_transaction_attachments,
-            ocr_languages=ocr_languages,
-            ocr_gpu=ocr_gpu,
-            refresh_transaction_text_cache=refresh_transaction_text_cache,
+    transaction_attachment_rows = transaction_attachments.to_dict(orient="records")
+    total_attachments = len(transaction_attachment_rows)
+    progress_interval = 1 if total_attachments <= 10 else 10
+    extract_rows = []
+    for index, row in enumerate(transaction_attachment_rows, start=1):
+        extract_rows.append(
+            parse_transaction_attachment(
+                row,
+                article_lookup=article_lookup,
+                ocr_transaction_attachments=ocr_transaction_attachments,
+                ocr_languages=ocr_languages,
+                ocr_gpu=ocr_gpu,
+                refresh_transaction_text_cache=refresh_transaction_text_cache,
+            )
         )
-        for row in transaction_attachments.to_dict(orient="records")
-    ]
+        if log_progress and (
+            index == 1
+            or index % progress_interval == 0
+            or index == total_attachments
+        ):
+            print(
+                f"Transaction attachment parse {index}/{total_attachments}",
+                flush=True,
+            )
     extracts = ensure_contract_shape(pd.DataFrame(extract_rows), TRANSACTION_ATTACHMENT_EXTRACT_COLUMNS)
     if extracts.empty:
         return extracts
@@ -1244,6 +1268,7 @@ def main() -> None:
     manifest_path = output_root / "manifest.json"
 
     if args.rebuild_transaction_extracts_from_local:
+        print("HNX local transaction extract rebuild: loading cached news and attachment parquets", flush=True)
         news = ensure_contract_shape(
             pd.read_parquet(news_parquet_path) if news_parquet_path.exists() else pd.DataFrame(),
             NEWS_COLUMNS,
@@ -1259,6 +1284,7 @@ def main() -> None:
             ocr_languages=ocr_languages,
             ocr_gpu=args.ocr_gpu,
             refresh_transaction_text_cache=args.refresh_transaction_text_cache,
+            log_progress=True,
         )
         atomic_write_parquet(transaction_extracts, transaction_extract_path)
 
@@ -1303,6 +1329,7 @@ def main() -> None:
 
     session = build_session()
     started_at_utc = utc_now_iso()
+    print("Refreshing HNX official issuer universe...", flush=True)
 
     universe = fetch_universe(session, timeout=args.timeout)
     universe_payload = {
@@ -1349,34 +1376,65 @@ def main() -> None:
     if args.max_tickers:
         target = target.head(args.max_tickers)
 
+    print(
+        f"HNX official disclosure fetch starting: target_tickers={len(target)}, "
+        f"max_pages_per_ticker={args.max_pages_per_ticker}, "
+        f"download_tx_pdfs={bool(args.download_transaction_attachments)}, "
+        f"parse_tx_attachments={bool(args.parse_transaction_attachments)}",
+        flush=True,
+    )
+
     news_rows: list[dict[str, object]] = []
     attachment_rows: list[dict[str, object]] = []
     pages_fetched = 0
     failures: list[dict[str, object]] = []
+    total_targets = len(target)
+    ticker_start_time = time.perf_counter()
 
-    for row in target.to_dict(orient="records"):
+    for ticker_index, row in enumerate(target.to_dict(orient="records"), start=1):
+        ticker = str(row["ticker"])
+        market_code = str(row["market_code"])
+        print(
+            f"HNX ticker {ticker_index}/{total_targets}: {ticker} ({market_code})",
+            flush=True,
+        )
+        ticker_started = time.perf_counter()
         try:
             ticker_news, ticker_attachments, ticker_pages = fetch_ticker_history(
                 session,
-                ticker=str(row["ticker"]),
-                market_code=str(row["market_code"]),
+                ticker=ticker,
+                market_code=market_code,
                 max_pages_per_ticker=args.max_pages_per_ticker,
                 download_attachments=args.download_attachments,
                 download_transaction_attachments=args.download_transaction_attachments,
                 parse_transaction_attachments=args.parse_transaction_attachments,
                 timeout=args.timeout,
                 sleep=args.sleep,
+                log_progress=True,
             )
             news_rows.extend(ticker_news)
             attachment_rows.extend(ticker_attachments)
             pages_fetched += ticker_pages
+            ticker_elapsed = time.perf_counter() - ticker_started
+            ticker_transaction_rows = sum(1 for item in ticker_news if item.get("has_transaction_keywords"))
+            print(
+                f"HNX ticker {ticker_index}/{total_targets} complete: {ticker} "
+                f"pages={ticker_pages}, news={len(ticker_news)}, attachments={len(ticker_attachments)}, "
+                f"transaction_rows={ticker_transaction_rows}, elapsed={ticker_elapsed:.1f}s, "
+                f"cumulative_news={len(news_rows)}, cumulative_attachments={len(attachment_rows)}",
+                flush=True,
+            )
         except Exception as exc:
             failures.append(
                 {
-                    "ticker": row["ticker"],
-                    "market_code": row["market_code"],
+                    "ticker": ticker,
+                    "market_code": market_code,
                     "error": str(exc),
                 }
+            )
+            print(
+                f"HNX ticker {ticker_index}/{total_targets} failed: {ticker} ({market_code}) error={exc}",
+                flush=True,
             )
 
     news = prepare_news_output(news_rows)
@@ -1390,6 +1448,10 @@ def main() -> None:
 
     transaction_extracts = ensure_contract_shape(pd.DataFrame(), TRANSACTION_ATTACHMENT_EXTRACT_COLUMNS)
     if args.parse_transaction_attachments:
+        print(
+            f"Building transaction attachment extracts from {len(attachments)} attachment rows",
+            flush=True,
+        )
         transaction_extracts = build_transaction_extracts(
             news=news,
             attachments=attachments,
@@ -1397,6 +1459,7 @@ def main() -> None:
             ocr_languages=ocr_languages,
             ocr_gpu=args.ocr_gpu,
             refresh_transaction_text_cache=args.refresh_transaction_text_cache,
+            log_progress=True,
         )
     atomic_write_parquet(transaction_extracts, transaction_extract_path)
 
@@ -1447,6 +1510,7 @@ def main() -> None:
     }
     atomic_write_json(manifest, manifest_path)
 
+    total_elapsed = time.perf_counter() - ticker_start_time
     print("HNX official disclosure fetch complete")
     print(f"Universe rows       : {len(universe)}")
     print(f"Target tickers      : {len(target)}")
@@ -1455,6 +1519,7 @@ def main() -> None:
     print(f"Transaction rows    : {len(transactions)}")
     print(f"Transaction extracts: {len(transaction_extracts)}")
     print(f"Failures            : {len(failures)}")
+    print(f"Elapsed seconds     : {total_elapsed:.1f}")
 
 
 if __name__ == "__main__":
