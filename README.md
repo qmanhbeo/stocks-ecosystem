@@ -45,7 +45,7 @@ This means the root data directory is the canonical dataset surface for the whol
 
 `data/llm_cache/` is the per-day CafeF LLM extraction cache: one JSON object per filtered article, used as the input to `alpha-research-lab/data_tools/build_llm_news_features.py`.
 
-The canonical news pipeline can now also publish a separate local Vietnamese-encoder lane under `data/features/news/`: whole-article PhoBERT sentiment writes dedicated `datasets/phobert_*` artifacts and additive `phobert_*` columns in `predictions/*_news_features.parquet`. This is isolated from `data/llm_cache/` and does not overwrite the hosted LLM semantic/event surface.
+The canonical news pipeline can now also publish a separate local Vietnamese-encoder lane under `data/features/news/`: whole-article PhoBERT sentiment writes dedicated `datasets/phobert_*` artifacts, uses a tagged-only `phobert_input_articles.parquet` staging cache plus resumable checkpoint shards for long backfills, and publishes additive `phobert_*` columns in `predictions/*_news_features.parquet`. This is isolated from `data/llm_cache/` and does not overwrite the hosted LLM semantic/event surface.
 
 `data/foreign_flow/` is the historical CafeF foreign-investor-flow archive. It
 stores per-ticker daily buy/sell/net volume and value, remaining foreign room,

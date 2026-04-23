@@ -57,6 +57,7 @@ to git. Inside `alpha-research-lab/`, `data/` is only a symlink to that shared l
 | `xs_insider_features.parquet` | Rolling 5d/30d insider signal matrix | C2 features | `build_insider_features.py` |
 | `xs_news_sentiment_daily.parquet` | H89: keyword sentiment per (day, ticker) | C1 raw | `extract_news_sentiment.py` |
 | `xs_news_sentiment_rolling.parquet` | H96: 5d/30d rolling news features | C1 rolling | `build_rolling_news_sentiment.py` |
+| `features/news/datasets/phobert_input_articles.parquet` | tagged-only PhoBERT staging cache used to avoid rescanning the full normalized archive on restart | local NLP lane internal cache | `research_pipelines/news_features/core/build_phobert_sentiment_features.py` |
 | `features/news/datasets/phobert_article_sentiment.parquet` | whole-article local PhoBERT sentiment rows per tagged article-ticker pair | local NLP lane | `research_pipelines/news_features/core/build_phobert_sentiment_features.py` |
 | `features/news/datasets/phobert_ticker_day_sentiment.parquet` | whole-article local PhoBERT ticker-day and rolling sentiment states | local NLP lane | `research_pipelines/news_features/core/build_phobert_sentiment_features.py` |
 | `sector_classification.parquet` | ICB sector labels, 398 tickers | — | `fetch_sector_classification.py` |

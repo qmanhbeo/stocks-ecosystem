@@ -90,11 +90,21 @@ Current contract:
 - `datasets/article_embeddings.parquet`
 - `datasets/phobert_article_sentiment.parquet`
 - `datasets/phobert_ticker_day_sentiment.parquet`
+- `datasets/phobert_input_articles.parquet`
+- `datasets/phobert_input_articles_manifest.json`
+- `datasets/phobert_checkpoint/`
 - `predictions/*_news_features.parquet`
 
 Important notes:
 - `phobert_*` datasets are whole-article local Vietnamese sentiment outputs from
   the canonical `research_pipelines/news_features/` producer
+- `datasets/phobert_input_articles.parquet` is a tagged-only PhoBERT staging
+  cache so long backfills do not rescan the full normalized article archive on
+  every restart; it is an internal producer cache, not a consumer feature
+  contract
+- `datasets/phobert_checkpoint/` is the resumable batch-checkpoint surface for
+  long PhoBERT backfills; it is an internal producer cache, not a consumer
+  feature contract
 - they are additive to the existing keyword and embedding news features
 - they do **not** overwrite `data/llm_cache/`, `xs_llm_news_ticker_day.parquet`,
   or `xs_llm_news_market_daily.parquet`

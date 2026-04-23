@@ -36,6 +36,23 @@ python -m research_pipelines.news_features.core.build_embedding_features
 python -m research_pipelines.news_features.core.aggregate_daily_features
 ```
 
+PhoBERT whole-article scoring is now checkpointed and resumable by default. The
+builder first materializes a tagged-only PhoBERT input cache under
+`data/features/news/datasets/phobert_input_articles.parquet`, then writes
+per-batch checkpoint shards under `data/features/news/datasets/phobert_checkpoint/`.
+It only publishes the final `phobert_article_sentiment.parquet` and
+`phobert_ticker_day_sentiment.parquet` after all batches are complete.
+
+Operational rule:
+- if a PhoBERT backfill is interrupted, rerun `python -m research_pipelines.news_features.core.build_phobert_sentiment_features`
+- the builder reuses `phobert_input_articles.parquet` when the normalized/tagged
+  inputs have not changed, so restarts skip both the full normalized scan and
+  completed checkpoint shards
+- the builder will skip completed checkpoint batches when the normalized/tagged
+  inputs and PhoBERT config signature still match
+- on successful finalization, the checkpoint shard files are cleaned up and the
+  manifest stays as the resume record
+
 Run the full feature pipeline after raw news already exists:
 
 ```bash
@@ -52,6 +69,9 @@ python -m research_pipelines.news_features
   This now includes dedicated local PhoBERT datasets:
   - `phobert_article_sentiment.parquet`
   - `phobert_ticker_day_sentiment.parquet`
+  - `phobert_input_articles.parquet`
+  - `phobert_input_articles_manifest.json`
+  - `phobert_checkpoint/` for resumable batch shards and checkpoint metadata
 - Per-ticker RL-ready files: `data/features/news/predictions/`
 
 ## RL Integration

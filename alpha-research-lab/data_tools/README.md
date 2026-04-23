@@ -485,7 +485,9 @@ Extract per-ticker daily sentiment from cafef JSONL files using a keyword lexico
 - **Scope note:** this is the legacy keyword baseline only. The canonical
   `research_pipelines/news_features/` producer now also owns a separate
   whole-article PhoBERT sentiment lane under `data/features/news/datasets/`,
-  and that additive local-encoder path does not touch `data/llm_cache/`.
+  with a tagged-only `phobert_input_articles.parquet` staging cache plus
+  resumable checkpoint shards, and that additive local-encoder path does not
+  touch `data/llm_cache/`.
 
 ### `extract_llm_news_features.py`
 Extract structured per-article features from CafeF JSONL using Google Gemini models only.

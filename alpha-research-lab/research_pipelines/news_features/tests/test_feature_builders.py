@@ -56,6 +56,28 @@ def _normalized_df() -> pd.DataFrame:
     )
 
 
+def _normalized_with_untagged_df() -> pd.DataFrame:
+    return pd.concat(
+        [
+            _normalized_df(),
+            pd.DataFrame(
+                [
+                    {
+                        "article_id": "a4",
+                        "source": "cafef",
+                        "url": "https://cafef.vn/a4.chn",
+                        "clean_title": "Bai viet khong gan ticker",
+                        "clean_summary": "",
+                        "clean_body_text": "chi dung de kiem tra cache dau vao",
+                        "date": "2026-03-13",
+                    }
+                ]
+            ),
+        ],
+        ignore_index=True,
+    )
+
+
 def _tagged_df() -> pd.DataFrame:
     return pd.DataFrame(
         [
@@ -262,6 +284,101 @@ def test_build_phobert_exports_writes_datasets_and_manifest_entries(tmp_path):
     assert config.phobert_ticker_day_sentiment_path().exists()
     manifest = json.loads(config.manifest_path.read_text(encoding="utf-8"))
     assert manifest["phobert_model_id"] == "fake-phobert"
+
+
+def test_build_phobert_exports_resume_from_checkpoints(tmp_path):
+    root = tmp_path
+    config = NewsFeaturesConfig(
+        repo_root=root / "alpha-research-lab",
+        package_root=root / "alpha-research-lab" / "research_pipelines" / "news_features",
+        data_root=root / "data",
+        feature_root=root / "data" / "features" / "news",
+        raw_news_dir=root / "data" / "news",
+        raw_stock_dir=root / "data" / "stock",
+        artifacts_dir=root / "data" / "features" / "news",
+        configs_dir=root / "alpha-research-lab" / "research_pipelines" / "news_features" / "configs",
+        normalized_dir=root / "data" / "features" / "news" / "normalized",
+        tagged_dir=root / "data" / "features" / "news" / "tagged",
+        datasets_dir=root / "data" / "features" / "news" / "datasets",
+        predictions_dir=root / "data" / "features" / "news" / "predictions",
+        manifest_path=root / "data" / "features" / "news" / "manifest.json",
+        phobert_checkpoint_rows=2,
+    )
+    config.ensure_directories()
+
+    _normalized_df().assign(published_at="2026-03-10T09:00:00+07:00").to_parquet(config.normalized_path(), index=False)
+    _tagged_df().to_parquet(config.tagged_path(), index=False)
+
+    partial_daily = build_phobert_sentiment_exports(
+        config=config,
+        scorer=_fake_phobert_scorer,
+        scorer_metadata={"phobert_model_id": "fake-phobert"},
+        checkpoint_batch_limit=1,
+    )
+    checkpoint_manifest = json.loads(config.phobert_checkpoint_manifest_path().read_text(encoding="utf-8"))
+    shard_paths = list(config.phobert_checkpoint_dir().glob("article_shard_*.parquet"))
+
+    assert partial_daily.empty
+    assert checkpoint_manifest["status"] == "in_progress"
+    assert checkpoint_manifest["completed_batch_count"] == 1
+    assert len(shard_paths) == 1
+    assert not config.phobert_article_sentiment_path().exists()
+    assert not config.phobert_ticker_day_sentiment_path().exists()
+
+    resumed_daily = build_phobert_sentiment_exports(
+        config=config,
+        scorer=_fake_phobert_scorer,
+        scorer_metadata={"phobert_model_id": "fake-phobert"},
+    )
+    checkpoint_manifest = json.loads(config.phobert_checkpoint_manifest_path().read_text(encoding="utf-8"))
+
+    assert len(resumed_daily) > 0
+    assert checkpoint_manifest["status"] == "complete"
+    assert config.phobert_article_sentiment_path().exists()
+    assert config.phobert_ticker_day_sentiment_path().exists()
+    assert list(config.phobert_checkpoint_dir().glob("article_shard_*.parquet")) == []
+
+
+def test_build_phobert_exports_materializes_tagged_only_input_cache(tmp_path):
+    root = tmp_path
+    config = NewsFeaturesConfig(
+        repo_root=root / "alpha-research-lab",
+        package_root=root / "alpha-research-lab" / "research_pipelines" / "news_features",
+        data_root=root / "data",
+        feature_root=root / "data" / "features" / "news",
+        raw_news_dir=root / "data" / "news",
+        raw_stock_dir=root / "data" / "stock",
+        artifacts_dir=root / "data" / "features" / "news",
+        configs_dir=root / "alpha-research-lab" / "research_pipelines" / "news_features" / "configs",
+        normalized_dir=root / "data" / "features" / "news" / "normalized",
+        tagged_dir=root / "data" / "features" / "news" / "tagged",
+        datasets_dir=root / "data" / "features" / "news" / "datasets",
+        predictions_dir=root / "data" / "features" / "news" / "predictions",
+        manifest_path=root / "data" / "features" / "news" / "manifest.json",
+        phobert_checkpoint_rows=2,
+    )
+    config.ensure_directories()
+
+    _normalized_with_untagged_df().assign(published_at="2026-03-10T09:00:00+07:00").to_parquet(
+        config.normalized_path(),
+        index=False,
+    )
+    _tagged_df().to_parquet(config.tagged_path(), index=False)
+
+    build_phobert_sentiment_exports(
+        config=config,
+        scorer=_fake_phobert_scorer,
+        scorer_metadata={"phobert_model_id": "fake-phobert"},
+        checkpoint_batch_limit=1,
+    )
+
+    input_cache = pd.read_parquet(config.phobert_input_articles_path())
+    input_manifest = json.loads(config.phobert_input_manifest_path().read_text(encoding="utf-8"))
+    checkpoint_manifest = json.loads(config.phobert_checkpoint_manifest_path().read_text(encoding="utf-8"))
+
+    assert sorted(input_cache["article_id"].tolist()) == ["a1", "a2", "a3"]
+    assert input_manifest["input_rows"] == 3
+    assert checkpoint_manifest["total_batches"] == 2
 
 
 def test_aggregate_daily_feature_exports_removes_stale_per_ticker_files():

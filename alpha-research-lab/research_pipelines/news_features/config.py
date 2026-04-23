@@ -49,9 +49,11 @@ class NewsFeaturesConfig:
     embedding_text_max_chars: int = 2000
     pca_random_seed: int = 1208
     phobert_model_name: str = "Angelectronic/phobert-base-vietnamese-sentiment"
-    phobert_batch_size: int = 16
+    phobert_batch_size: int = 64
     phobert_max_length: int = 256
     phobert_precision: str = "auto"
+    phobert_checkpoint_rows: int = 2000
+    phobert_prefer_local_files: bool = True
     feature_prefix: str = "news_"
     embedding_prefix: str = "news_embed_"
     missing_fill_value: float = 0.0
@@ -69,9 +71,13 @@ class NewsFeaturesConfig:
     article_embeddings_filename: str = "article_embeddings.parquet"
     phobert_article_sentiment_filename: str = "phobert_article_sentiment.parquet"
     phobert_ticker_day_sentiment_filename: str = "phobert_ticker_day_sentiment.parquet"
+    phobert_input_articles_filename: str = "phobert_input_articles.parquet"
     combined_dataset_filename: str = "news_daily_features.parquet"
     embedding_metadata_filename: str = "embedding_metadata.json"
     pca_model_filename: str = "news_embedding_pca.joblib"
+    phobert_checkpoint_dirname: str = "phobert_checkpoint"
+    phobert_checkpoint_manifest_filename: str = "phobert_checkpoint_manifest.json"
+    phobert_input_manifest_filename: str = "phobert_input_articles_manifest.json"
 
     def ensure_directories(self) -> None:
         directories = (
@@ -82,6 +88,7 @@ class NewsFeaturesConfig:
             self.tagged_dir,
             self.datasets_dir,
             self.predictions_dir,
+            self.phobert_checkpoint_dir(),
         )
         for directory in directories:
             directory.mkdir(parents=True, exist_ok=True)
@@ -128,6 +135,21 @@ class NewsFeaturesConfig:
 
     def phobert_ticker_day_sentiment_path(self) -> Path:
         return self.datasets_dir / self.phobert_ticker_day_sentiment_filename
+
+    def phobert_input_articles_path(self) -> Path:
+        return self.datasets_dir / self.phobert_input_articles_filename
+
+    def phobert_input_manifest_path(self) -> Path:
+        return self.datasets_dir / self.phobert_input_manifest_filename
+
+    def phobert_checkpoint_dir(self) -> Path:
+        return self.datasets_dir / self.phobert_checkpoint_dirname
+
+    def phobert_checkpoint_manifest_path(self) -> Path:
+        return self.phobert_checkpoint_dir() / self.phobert_checkpoint_manifest_filename
+
+    def phobert_checkpoint_shard_path(self, batch_index: int) -> Path:
+        return self.phobert_checkpoint_dir() / f"article_shard_{int(batch_index):06d}.parquet"
 
     def combined_dataset_path(self) -> Path:
         return self.datasets_dir / self.combined_dataset_filename
