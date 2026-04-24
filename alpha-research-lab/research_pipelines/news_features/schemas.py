@@ -136,3 +136,44 @@ class PhoBertDailyFeatureRow:
 
     def to_dict(self) -> Dict[str, object]:
         return asdict(self)
+
+
+@dataclass(slots=True)
+class OllamaGuardedArticleFeatureRow:
+    article_id: str
+    ticker: str
+    date: str
+    published_at: Optional[str]
+    url: str
+    source: str
+    match_source: str
+    title_hit: int
+    body_hit: int
+    local_model_name: str
+    ollama_guarded_input_text_length: float
+    ollama_guarded_confidence: Optional[float]
+    ollama_guarded_is_forward_looking: Optional[bool]
+    ollama_guarded_is_rumor: Optional[bool]
+    local_parse_ok: bool
+    local_abstained: bool
+    local_error: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, object]:
+        return asdict(self)
+
+
+@dataclass(slots=True)
+class OllamaGuardedDailyFeatureRow:
+    ticker: str
+    date: str
+    ollama_guarded_article_count_1d: float
+    ollama_guarded_article_count_5d: float
+    ollama_guarded_article_count_30d: float
+    ollama_guarded_confidence_mean: float
+    ollama_guarded_forward_looking_share: float
+    ollama_guarded_rumor_share: float
+    ollama_guarded_abstain_share: float
+    ollama_guarded_parse_fail_share: float
+
+    def to_dict(self) -> Dict[str, object]:
+        return asdict(self)

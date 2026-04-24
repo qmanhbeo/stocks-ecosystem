@@ -132,6 +132,44 @@ def test_parse_openai_chat_array_ignores_bracket_noise() -> None:
     assert arr == [{"id": "2026-03-13_0001", "tickers": ["FPT"], "sentiment": 1}]
 
 
+def test_call_ollama_disables_thinking_mode(monkeypatch) -> None:
+    captured: dict[str, object] = {}
+
+    class _FakeResponse:
+        def read(self) -> bytes:
+            return b'{"response":"OK"}'
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb) -> bool:
+            return False
+
+    def fake_urlopen(request, timeout: int):
+        captured["timeout"] = timeout
+        captured["body"] = json.loads(request.data.decode("utf-8"))
+        return _FakeResponse()
+
+    monkeypatch.setattr(legacy.urllib.request, "urlopen", fake_urlopen)
+
+    response = legacy._call_ollama(
+        prompt="Reply with only OK.",
+        model="qwen2.5:1.5b",
+        timeout=12,
+        num_predict=16,
+    )
+
+    assert response == "OK"
+    assert captured["timeout"] == 12
+    assert captured["body"] == {
+        "model": "qwen2.5:1.5b",
+        "prompt": "Reply with only OK.",
+        "stream": False,
+        "think": False,
+        "options": {"temperature": 0, "num_predict": 16},
+    }
+
+
 def test_cache_has_successful_rows_rejects_error_only_cache(tmp_path) -> None:
     cache_path = tmp_path / "2026-03-13.jsonl"
     _write_jsonl(

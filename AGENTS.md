@@ -46,12 +46,51 @@ Current responsibilities:
 - Do not reintroduce duplicate data stores inside child repos unless explicitly requested
 - Treat cross-project path contracts as ecosystem-level contracts
 - Treat `data/features/recommendations/` as a shared published surface, not an alpha-only private output
+- Treat internal news-builder stage/checkpoint artifacts under `data/features/news/datasets/` such as `news_tabular_article_stage.parquet`, `embedding_input_articles.parquet`, `embedding_checkpoint/`, `phobert_input_articles.parquet`, `phobert_checkpoint/`, `ollama_guarded_input_articles.parquet`, and `ollama_guarded_checkpoint/` as producer-side caches, not shared consumer contracts
+- Treat `data/model_checkpoints/` as durable producer-side checkpoint state, not a shared consumer contract
 - Treat `data/foreign_flow/` as a raw source surface until a research-owned feature artifact is published from it
 - Treat `data/order_stats/` as a raw source surface until a research-owned feature artifact is published from it
 - Treat `data/proprietary_trading/` as a raw source surface until a research-owned feature artifact is published from it
 - Treat `data/foreign_flow_forward/` as forward-only raw data; do not use it in historical alpha tests until enough post-collection history exists
 - Treat `data/official_disclosures/` as a raw source surface; do not assume exchange-hosted disclosures are a published event feature contract yet
 - When changing producer/consumer boundaries, update docs in both the producer and consumer project
+
+## Lightweight-First Rule
+
+Treat constrained local execution as a hard workspace constraint.
+
+- Prefer modular, incremental, shard-based, or publish-only commands over full rebuilds
+- Do not route a narrow refresh through a heavyweight aggregate pipeline when a direct producer or publish step is enough
+- If a script is a true full rebuild, name or document it that way explicitly
+- If a lighter publish-only or source-specific path exists, use it by default
+- When adding a new pipeline, split heavyweight rebuilds from lightweight publish/export steps instead of making one command do everything
+- When touching an existing heavy pipeline, prefer adding guardrails or a dedicated lightweight wrapper rather than teaching users to remember the dangerous path
+- Keep the user's `10GB RAM` WSL planning constraint in mind; avoid designs that require large all-at-once in-memory joins when a modular path can produce the same published contract
+
+## Thin-Orchestrator Rule
+
+Treat maintainability and token discipline as hard workspace constraints.
+
+- For any non-trivial new pipeline or major refactor, keep one stable
+  user-facing entrypoint and split the real logic into focused stage or concern
+  modules
+- Prefer a thin master/orchestrator script that calls teacher/build/train/publish
+  modules rather than one large mixed-responsibility file
+- Do not add new `800-1000+` line monolith scripts when the work naturally
+  separates into stages
+- Optimize file boundaries so a future agent or engineer can inspect only the
+  relevant stage instead of rereading unrelated code
+- This is partly a token-usage rule: smaller, focused modules reduce repeated
+  context-loading and make handoff/recovery cheaper
+- Do not overcorrect into dozens of tiny files; prefer a small number of
+  focused modules with clear ownership and one canonical entrypoint
+
+## Repo Skill Specs
+
+Repo-owned skill specifications live under `/home/manh/stocks-ecosystem/.skill-build/`.
+
+- `low-resource-data-pipeline`: low-RAM, checkpoint-first data-tool and builder work
+- `low-resource-local-ml`: low-VRAM, sequential local-model and distillation work
 
 ## Change Map
 

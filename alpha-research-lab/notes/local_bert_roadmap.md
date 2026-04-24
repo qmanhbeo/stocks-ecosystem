@@ -7,7 +7,12 @@ Purpose:
 
 ## Locked Decisions
 
-### 1. Immediate local-model lane
+### 1. Canonical local path on the current workstation
+
+Treat constrained local hardware as the roadmap anchor:
+- target box: plan against roughly `3GB VRAM` and `10GB RAM` on WSL
+- prefer encoder-style classification heads over small local generators for any repeated production inference
+- keep small local generators as optional audit / prototyping tools, not as the mainline local semantic stack
 
 Use PhoBERT for whole-article sentiment only.
 
@@ -23,7 +28,19 @@ Why:
 - whole-article scoring should dominate title-only or keyword-only sentiment
 - the local GPU path is now feasible on the WSL workstation
 
-### 2. What PhoBERT should not pretend to do
+The first expansion beyond sentiment is now:
+- a separate PhoBERT `forward_looking` binary head distilled from `data/llm_cache/`
+- trained sequentially through the local winner-selection lane
+- published as additive `phobert_forward_looking_*` datasets and merged
+  prediction columns
+- still not a wider generator prompt
+- still not a multi-task checkpoint that tries to absorb unrelated fields
+
+For any future local encoder head, treat confidence like this by default:
+- use model probability / calibration as the confidence surface
+- do **not** make the first expansion step a separate semantic `0/1/2` confidence head
+
+### 2. What the current sentiment checkpoint should not pretend to do
 
 Do not treat a sentiment-finetuned PhoBERT checkpoint as a drop-in replacement for the full LLM schema.
 
@@ -48,7 +65,6 @@ If the local encoder branch keeps paying off, expand it with separate task heads
 Best first candidates:
 - `market_news` vs `stock_news`
 - `official_or_regulatory_source`
-- `forward_looking` vs `backward_looking`
 
 Park these until label quality is audited:
 - `rumor`
@@ -59,6 +75,7 @@ Park these until label quality is audited:
 Preferred supervision source:
 - weak labels from the current `data/llm_cache/` contract
 - one head or classifier per task family
+- date-split evaluation rather than random article splits
 
 ## Model Family Notes
 
@@ -78,6 +95,38 @@ Use only when the source text actually matches the domain:
 - official disclosures may justify a specialized filing-stage / source-type head
 
 Do not add a domain model just because it exists; tie it to a concrete source and task.
+
+## Small Local Ollama Generator Note
+
+This roadmap is still encoder-first, but the workspace now also has a durable
+record of the cheap local Ollama generator probes:
+- see `notes/ollama_model_probe_log.md`
+
+Locked takeaways from that probe ledger:
+- cheapest current all-round local winner for single-article schema extraction:
+  - `qwen2.5-coder:3b`
+- strongest lower-level judgment fields:
+  - `phi4-mini`
+  - but it made a bad ticker extraction miss and is not safe as a direct
+    extractor replacement
+- no tested small local Ollama model is trustworthy enough to replace the
+  hosted full-schema extractor end to end
+
+Practical consequence:
+- keep PhoBERT as the honest local default for the narrow sentiment lane
+- if the local lane expands, prefer separate PhoBERT heads before expanding
+  the guarded Ollama contract
+- use Ollama as a teacher-probe / audit / weak-label-check path only
+  unless a later benchmark proves otherwise on the target workstation
+
+### Canonical order of operations
+
+1. Keep hosted LLM extraction as the teacher and canonical rich schema.
+2. Keep PhoBERT sentiment as the main local production lane.
+3. Add `forward_looking` as the first separate PhoBERT head.
+4. Use model probability as the first local confidence surface.
+5. Audit weak-label quality before attempting `rumor`.
+6. Keep the guarded Ollama lane additive and non-canonical for repeated local inference.
 
 ## Source-Acquisition Rule
 

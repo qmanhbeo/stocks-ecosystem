@@ -82,6 +82,38 @@ This lab is permanently long-only.
 
 Do not suggest synthetic hedge diagnostics as a fallback. If long-only fails, document that plainly and search for a better long-only construction instead.
 
+## Hard Resource Rule
+
+Treat constrained local execution as a real lab constraint.
+
+- prefer modular, incremental, checkpointed, or publish-only commands over full rebuilds
+- do not route a narrow refresh through a heavyweight aggregate pipeline when a direct producer/export step is enough
+- if a command is a true full rebuild, make that explicit in the name, docs, or required flags
+- if a lighter path exists, use it by default
+- when adding or refactoring pipelines, split heavyweight rebuild stages from lightweight publish stages instead of letting one entrypoint do everything
+
+Assume local WSL RAM is limited unless the user says otherwise. Avoid large all-at-once joins and rebuilds when a narrower contract-preserving path exists.
+
+## Hard Structure Rule
+
+Treat separation of concerns as a hard lab rule when building or refactoring
+non-trivial pipelines.
+
+- keep one canonical operator entrypoint, but move real stage logic into focused
+  modules
+- prefer a thin orchestrator plus stage files over a single large pipeline
+  script
+- if the work naturally separates into teacher/stage/train/publish concerns,
+  the code should reflect that separation
+- do not create new large mixed-responsibility files when a stage split would
+  make recovery and review easier
+- do not over-split into tiny abstractions either; aim for a small number of
+  modules that map to real operational stages
+
+This is explicitly a maintenance and token-discipline rule. Future sessions
+should be able to inspect one stage without loading an entire monolith back
+into context.
+
 ---
 
 ## Primary Goal

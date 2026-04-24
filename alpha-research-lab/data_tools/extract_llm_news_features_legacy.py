@@ -1,6 +1,9 @@
 """
 Extract structured LLM features from CafeF daily news JSONL files.
 
+Compatibility surface. Preferred operator alias:
+`extract_news_teacher_features_legacy.py`.
+
 Input:
 - data/news/cafef/raw/YYYY-MM-DD.jsonl
 
@@ -65,6 +68,18 @@ from path_utils import data_path, workspace_path
 from typing import Iterable
 from src.repo_paths import artifact_path
 from urllib.parse import urlparse
+from data_tools.news_runtime.llm_extract.legacy_day_runner import process_day as _runtime_process_day
+from data_tools.news_runtime.llm_extract.legacy_scheduler import (
+    HostedModelScheduler,
+    HostedModelSpec,
+    provider_cooldown_seconds as _runtime_provider_cooldown_seconds,
+    remote_cooldown_seconds as _runtime_remote_cooldown_seconds,
+)
+
+try:
+    from job_status import JobStatusTracker
+except ModuleNotFoundError:
+    from data_tools.job_status import JobStatusTracker
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -1044,6 +1059,7 @@ def _call_ollama(prompt: str, model: str, timeout: int, num_predict: int) -> str
         "model": model,
         "prompt": prompt,
         "stream": False,
+        "think": False,
         "options": {"temperature": 0, "num_predict": num_predict},
     }
     req = urllib.request.Request(
@@ -1761,338 +1777,40 @@ def process_day(
     api_key_ordinals: dict[str, int] | None = None,
     workers: int = 1,
 ) -> dict:
-    date = path.stem
-    day_t0 = time.time()
-    _log(f"[{date}] start")
-    articles = _load_articles(path)
-    filtered = [a for a in articles if _is_financial_article(a)]
-    for i, a in enumerate(filtered, start=1):
-        a["id"] = f"{date}_{i:04d}"
-    _log(f"[{date}] loaded total={len(articles):,} filtered={len(filtered):,}")
-    article_meta = {a["id"]: _article_enrichment(a) for a in filtered}
-
-    parsed_ok = 0
-    parse_fail = 0
-    timeout_fail = 0
-    pool_exhausted = False
-    rows: list[dict] = []
-    batches = list(enumerate(_chunk(filtered, batch_size), start=1))
-    n_batches = len(batches)
-    done_batches = 0
-    hosted_mode = provider in HOSTED_PROVIDERS
-    abort_event = threading.Event()
-
-    def _abort_batch(batch: list[dict], err: str) -> tuple[list[dict], int, int, int, bool, str, str]:
-        return ([_blank_record_with_enrichment(a, err) for a in batch], 0, 0, 0, True, provider, model)
-
-    def _run_batch(batch: list[dict], depth: int = 0) -> tuple[list[dict], int, int, int, bool, str, str]:
-        if abort_event.is_set():
-            return _abort_batch(batch, "pool_exhausted")
-        prompt = _build_prompt(batch, max_summary_chars=max_summary_chars)
-        by_id = {a["id"]: a for a in batch}
-        model_used = model
-        provider_used = provider
-        summary_provider = provider_used
-        summary_model = model_used
-        spec_used: HostedModelSpec | None = None
-        max_hosted_retries = len(rate_limiter.specs()) if rate_limiter is not None else 0
-
-        try:
-            if abort_event.is_set():
-                return _abort_batch(batch, "pool_exhausted")
-            if hosted_mode:
-                if rate_limiter is not None:
-                    spec_used = rate_limiter.acquire_spec(acquire_timeout=300.0)
-                    if spec_used is None:
-                        abort_event.set()
-                        return _abort_batch(batch, "pool_exhausted")
-                else:
-                    if provider == "auto":
-                        raise ValueError("provider=auto requires a hosted scheduler")
-                    spec_used = _spec_from_name(provider, model)
-                provider_used = spec_used.provider
-                model_used = spec_used.name
-                resolved_api_key = (api_keys or {}).get(spec_used.key, "")
-                if not resolved_api_key:
-                    resolved_api_key = _resolve_provider_api_key(provider_used, api_key, model_name=model_used)
-                if not resolved_api_key:
-                    raise ValueError(f"missing_api_key:{provider_used}")
-                call_t0 = time.time()
-                api_key_label = ""
-                if api_key_ordinals:
-                    api_key_label = _ordinal_label(api_key_ordinals.get(resolved_api_key, 0), len(api_key_ordinals))
-                    _log(
-                        f"[{date}] calling provider={provider_used} model={model_used} "
-                        f"api_key={api_key_label} size={len(batch)} depth={depth}"
-                    )
-                arr = _call_hosted_model(
-                    prompt=prompt,
-                    spec=spec_used,
-                    api_key=resolved_api_key,
-                    timeout=timeout,
-                    max_output_tokens=num_predict,
-                )
-                if rate_limiter is not None and arr:
-                    rate_limiter.record_success(spec_used.key, time.time() - call_t0)
-                summary_provider = provider_used
-                summary_model = model_used
-            else:
-                resp = _call_ollama(prompt, model=model, timeout=timeout, num_predict=num_predict)
-                arr = _extract_json_array(resp) or []
-        except Exception as e:
-            if hosted_mode and rate_limiter is not None and spec_used is not None:
-                rate_limiter.record_failure(
-                    spec_used.key,
-                    cooldown_seconds=_remote_cooldown_seconds(e),
-                    provider_cooldown_seconds=_provider_cooldown_seconds(e),
-                )
-            if abort_event.is_set():
-                return _abort_batch(batch, "pool_exhausted")
-            if hosted_mode and rate_limiter is not None and len(batch) == 1 and depth < max_hosted_retries:
-                _log(
-                    f"[{date}] batch error provider={provider_used} model={model_used} size=1 "
-                    f"depth={depth} err={type(e).__name__}: {e} | retrying alternate model"
-                )
-                return _run_batch(batch, depth=depth + 1)
-            if len(batch) > 1:
-                split_at = max(1, len(batch) // 2)
-                _log(
-                    f"[{date}] batch error provider={provider_used} model={model_used} size={len(batch)} "
-                    f"depth={depth} err={type(e).__name__}: {e} | retrying smaller slices"
-                )
-                left_rows, left_ok, left_pf, left_tf, left_pool, left_provider, left_model = _run_batch(
-                    batch[:split_at], depth=depth + 1
-                )
-                if left_pool:
-                    remaining = [_blank_record_with_enrichment(a, "pool_exhausted") for a in batch[split_at:]]
-                    return (left_rows + remaining, left_ok, left_pf, left_tf, True, left_provider, left_model)
-                right_rows, right_ok, right_pf, right_tf, right_pool, right_provider, right_model = _run_batch(
-                    batch[split_at:], depth=depth + 1
-                )
-                return (
-                    left_rows + right_rows,
-                    left_ok + right_ok,
-                    left_pf + right_pf,
-                    left_tf + right_tf,
-                    right_pool,
-                    right_provider,
-                    right_model,
-                )
-            err_prefix = _provider_error_prefix(provider_used)
-            return ([_blank_record_with_enrichment(batch[0], f"{err_prefix}:{e}")], 0, 0, 1, False, provider_used, model_used)
-
-        if not arr:
-            if hosted_mode and rate_limiter is not None and spec_used is not None:
-                rate_limiter.record_failure(spec_used.key, cooldown_seconds=43200.0)
-            if abort_event.is_set():
-                return _abort_batch(batch, "pool_exhausted")
-            if hosted_mode and rate_limiter is not None and len(batch) == 1 and depth < max_hosted_retries:
-                _log(
-                    f"[{date}] empty/invalid JSON provider={provider_used} model={model_used} size=1 "
-                    f"depth={depth} | retrying alternate model"
-                )
-                return _run_batch(batch, depth=depth + 1)
-            if len(batch) > 1:
-                split_at = max(1, len(batch) // 2)
-                _log(
-                    f"[{date}] empty/invalid JSON provider={provider_used} model={model_used} size={len(batch)} "
-                    f"depth={depth} | retrying smaller slices"
-                )
-                left_rows, left_ok, left_pf, left_tf, left_pool, left_provider, left_model = _run_batch(
-                    batch[:split_at], depth=depth + 1
-                )
-                if left_pool:
-                    remaining = [_blank_record_with_enrichment(a, "pool_exhausted") for a in batch[split_at:]]
-                    return (left_rows + remaining, left_ok, left_pf, left_tf, True, left_provider, left_model)
-                right_rows, right_ok, right_pf, right_tf, right_pool, right_provider, right_model = _run_batch(
-                    batch[split_at:], depth=depth + 1
-                )
-                return (
-                    left_rows + right_rows,
-                    left_ok + right_ok,
-                    left_pf + right_pf,
-                    left_tf + right_tf,
-                    right_pool,
-                    right_provider,
-                    right_model,
-                )
-            return ([_blank_record_with_enrichment(batch[0], "json_parse_fail")], 0, 1, 0, False, provider_used, model_used)
-
-        batch_rows: list[dict] = []
-        seen: set[str] = set()
-        batch_ok = 0
-        for obj in arr:
-            rid = str(obj.get("id", "") or "").strip()
-            if rid in by_id and rid not in seen:
-                norm = _normalize_record(obj, rid)
-                norm.update(article_meta.get(rid, {}))
-                norm["llm_error"] = None
-                batch_rows.append(norm)
-                seen.add(rid)
-                batch_ok += 1
-
-        missing = [a for a in batch if a["id"] not in seen]
-        if missing and len(batch) > 1:
-            if abort_event.is_set():
-                return _abort_batch(batch, "pool_exhausted")
-            _log(
-                f"[{date}] partial batch response provider={provider_used} model={model_used} size={len(batch)} "
-                f"matched={len(seen)} missing={len(missing)} depth={depth} | retrying missing subset"
-            )
-            retry_rows, retry_ok, retry_pf, retry_tf, retry_pool, retry_provider, retry_model = _run_batch(
-                missing, depth=depth + 1
-            )
-            return (
-                batch_rows + retry_rows,
-                batch_ok + retry_ok,
-                retry_pf,
-                retry_tf,
-                retry_pool,
-                retry_provider,
-                retry_model,
-            )
-
-        if missing and hosted_mode and rate_limiter is not None and spec_used is not None:
-            rate_limiter.record_failure(spec_used.key, cooldown_seconds=60.0)
-        if abort_event.is_set():
-            return _abort_batch(batch, "pool_exhausted")
-        if missing and hosted_mode and rate_limiter is not None and len(batch) == 1 and depth < max_hosted_retries:
-            _log(
-                f"[{date}] missing object provider={provider_used} model={model_used} size=1 "
-                f"depth={depth} | retrying alternate model"
-            )
-            return _run_batch(batch, depth=depth + 1)
-        for article in missing:
-            blank = _blank_record_with_enrichment(article, "missing_object_in_batch")
-            blank.update(article_meta.get(article["id"], {}))
-            batch_rows.append(blank)
-
-        return (batch_rows, batch_ok, len(missing), 0, False, summary_provider, summary_model)
-
-    if workers <= 1 or n_batches <= 1:
-        for batch_idx, batch in batches:
-            b_t0 = time.time()
-            batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted, batch_provider, batch_model = _run_batch(batch)
-            rows.extend(batch_rows)
-            parsed_ok += batch_ok
-            parse_fail += batch_pf
-            timeout_fail += batch_tf
-            done_batches += 1
-            if batch_pool_exhausted:
-                pool_exhausted = True
-                abort_event.set()
-                if rate_limiter is not None:
-                    _log(f"[{date}] all model daily limits exhausted — stopping | {rate_limiter.status()}")
-                break
-            if log_every_batches > 0 and (
-                done_batches == 1
-                or done_batches % log_every_batches == 0
-                or done_batches == n_batches
-            ):
-                elapsed = time.time() - day_t0
-                b_elapsed = time.time() - b_t0
-                done_items = parsed_ok + parse_fail + timeout_fail
-                rate = done_items / elapsed if elapsed > 0 else 0.0
-                rem = max(0, len(filtered) - done_items)
-                eta = rem / rate if rate > 0 else float("inf")
-                eta_s = "inf" if not math.isfinite(eta) else f"{eta:.1f}s"
-                _log(
-                    f"[{date}] batch {done_batches}/{n_batches} "
-                    f"provider={batch_provider} model={batch_model} "
-                    f"batch_sec={b_elapsed:.2f} elapsed={elapsed:.1f}s "
-                    f"done={done_items:,}/{len(filtered):,} rate={rate:.2f} art/s eta={eta_s} "
-                    f"ok={parsed_ok:,} parse_fail={parse_fail:,} timeout={timeout_fail:,}"
-                )
-    else:
-        with cf.ThreadPoolExecutor(max_workers=workers, thread_name_prefix=f"llm-{date}-batch") as ex:
-            inflight: dict[cf.Future, tuple[int, list[dict], float]] = {}
-            next_batch = 0
-
-            def _submit_next() -> bool:
-                nonlocal next_batch
-                if abort_event.is_set() or next_batch >= n_batches:
-                    return False
-                batch_idx, batch = batches[next_batch]
-                next_batch += 1
-                inflight[ex.submit(_run_batch, batch)] = (batch_idx, batch, time.time())
-                return True
-
-            for _ in range(min(workers, n_batches)):
-                _submit_next()
-
-            while inflight:
-                done, _ = cf.wait(list(inflight.keys()), return_when=cf.FIRST_COMPLETED)
-                for fut in done:
-                    batch_idx, batch, submit_t0 = inflight.pop(fut)
-                    b_elapsed = time.time() - submit_t0
-                    if fut.cancelled():
-                        batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted, batch_provider, batch_model = _abort_batch(batch, "pool_exhausted")
-                    else:
-                        batch_rows, batch_ok, batch_pf, batch_tf, batch_pool_exhausted, batch_provider, batch_model = fut.result()
-                    rows.extend(batch_rows)
-                    parsed_ok += batch_ok
-                    parse_fail += batch_pf
-                    timeout_fail += batch_tf
-                    done_batches += 1
-                    if batch_pool_exhausted:
-                        pool_exhausted = True
-                        abort_event.set()
-                        if rate_limiter is not None:
-                            _log(f"[{date}] all model daily limits exhausted — stopping | {rate_limiter.status()}")
-                        for pending_fut in inflight:
-                            pending_fut.cancel()
-                    if log_every_batches > 0 and (
-                        done_batches == 1
-                        or done_batches % log_every_batches == 0
-                        or done_batches == n_batches
-                    ):
-                        elapsed = time.time() - day_t0
-                        done_items = parsed_ok + parse_fail + timeout_fail
-                        rate = done_items / elapsed if elapsed > 0 else 0.0
-                        rem = max(0, len(filtered) - done_items)
-                        eta = rem / rate if rate > 0 else float("inf")
-                        eta_s = "inf" if not math.isfinite(eta) else f"{eta:.1f}s"
-                        _log(
-                            f"[{date}] batch {done_batches}/{n_batches} "
-                            f"provider={batch_provider} model={batch_model} "
-                            f"batch_sec={b_elapsed:.2f} elapsed={elapsed:.1f}s "
-                            f"done={done_items:,}/{len(filtered):,} rate={rate:.2f} art/s eta={eta_s} "
-                            f"ok={parsed_ok:,} parse_fail={parse_fail:,} timeout={timeout_fail:,}"
-                        )
-                while not abort_event.is_set() and len(inflight) < workers and next_batch < n_batches:
-                    _submit_next()
-
-    # Keep deterministic order.
-    order = {a["id"]: i for i, a in enumerate(filtered)}
-    rows.sort(key=lambda x: order.get(x["id"], 10**9))
-
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    tmp = CACHE_DIR / f"{date}.jsonl.tmp"
-    out = CACHE_DIR / f"{date}.jsonl"
-    with tmp.open("w", encoding="utf-8") as f:
-        for r in rows:
-            f.write(json.dumps(r, ensure_ascii=False) + "\n")
-    tmp.replace(out)
-    day_elapsed = time.time() - day_t0
-    done_items = parsed_ok + parse_fail + timeout_fail
-    rate = done_items / day_elapsed if day_elapsed > 0 else 0.0
-    _log(
-        f"[{date}] done sec={day_elapsed:.1f} total={len(articles):,} filtered={len(filtered):,} "
-        f"ok={parsed_ok:,} parse_fail={parse_fail:,} timeout={timeout_fail:,} "
-        f"rate={rate:.2f} art/s out={out}"
+    return _runtime_process_day(
+        path,
+        batch_size=batch_size,
+        provider=provider,
+        model=model,
+        api_key=api_key,
+        timeout=timeout,
+        num_predict=num_predict,
+        max_summary_chars=max_summary_chars,
+        log_every_batches=log_every_batches,
+        rate_limiter=rate_limiter,
+        api_keys=api_keys,
+        api_key_ordinals=api_key_ordinals,
+        workers=workers,
+        hosted_providers=HOSTED_PROVIDERS,
+        provider_error_prefix=_provider_error_prefix,
+        default_models=DEFAULT_MODELS,
+        resolve_provider_api_key=_resolve_provider_api_key,
+        build_prompt=_build_prompt,
+        load_articles=_load_articles,
+        is_financial_article=_is_financial_article,
+        article_enrichment=_article_enrichment,
+        log=_log,
+        chunk=_chunk,
+        call_ollama=_call_ollama,
+        call_hosted_model=_call_hosted_model,
+        extract_json_array=_extract_json_array,
+        normalize_record=_normalize_record,
+        blank_record_with_enrichment=_blank_record_with_enrichment,
+        remote_cooldown_seconds=_runtime_remote_cooldown_seconds,
+        provider_cooldown_seconds=_runtime_provider_cooldown_seconds,
+        spec_from_name=_spec_from_name,
+        cache_dir=CACHE_DIR,
     )
-
-    return {
-        "date": date,
-        "articles_total": len(articles),
-        "articles_filtered": len(filtered),
-        "parsed_ok": parsed_ok,
-        "parse_fail": parse_fail,
-        "timeout_fail": timeout_fail,
-        "pool_exhausted": pool_exhausted,
-        "out_path": str(out),
-        "elapsed_sec": day_elapsed,
-    }
 
 
 def main():
@@ -2170,8 +1888,20 @@ def main():
         rate_limiter = HostedModelScheduler(model_pool, stats_path=HOSTED_MODEL_STATS_PATH)
         _log(f"Model pool: {[spec.key for spec in rate_limiter.specs()]}")
 
+    tracker = JobStatusTracker(
+        "extract_llm_news_features_legacy",
+        artifacts={
+            "cache_dir": CACHE_DIR,
+            "model_stats": HOSTED_MODEL_STATS_PATH,
+        },
+    )
     files = _iter_dates(args.date_from, args.date_to)
     if not files:
+        tracker.write(
+            status="complete",
+            phase="idle",
+            progress={"pending_days": [], "completed_days": [], "retry_only_days": [], "current_day": None},
+        )
         print("No input files matched date filters.")
         return
 
@@ -2210,46 +1940,129 @@ def main():
         else:
             pending.append(p)
 
+    retry_only_days = [p.stem for p in pending if (CACHE_DIR / f"{p.stem}.jsonl").exists()]
+    completed_days = [p.stem for p in files if p not in pending]
     _log(
         f"Days pending={len(pending)} skipped_existing={skipped} "
         f"retry_error_only={retry_error_only}"
     )
+    tracker.write(
+        status="running",
+        phase="extract",
+        progress={
+            "pending_days": [p.stem for p in pending],
+            "completed_days": completed_days,
+            "retry_only_days": retry_only_days,
+            "current_day": None,
+            "skipped_existing_days": skipped,
+            "aggregate_counts": {
+                "filtered_articles": total_filtered,
+                "parsed_ok": total_ok,
+                "parse_fail": total_fail,
+                "timeout_fail": total_timeout,
+            },
+        },
+    )
 
     start = time.time()
-    for i, p in enumerate(pending, start=1):
-        stats = process_day(
-            p,
-            batch_size=args.batch_size,
-            workers=args.workers,
-            provider=args.provider,
-            model=args.model,
-            api_key=args.api_key,
-            timeout=args.timeout,
-            num_predict=args.num_predict,
-            max_summary_chars=args.max_summary_chars,
-            log_every_batches=args.log_every_batches,
-            rate_limiter=rate_limiter,
-            api_keys=api_keys_by_model,
+    try:
+        for i, p in enumerate(pending, start=1):
+            tracker.write(
+                status="running",
+                phase="extract",
+                progress={
+                    "pending_days": [item.stem for item in pending[i - 1 :]],
+                    "completed_days": completed_days,
+                    "retry_only_days": retry_only_days,
+                    "current_day": p.stem,
+                    "current_index": i,
+                    "total_pending_days": len(pending),
+                    "skipped_existing_days": skipped,
+                    "aggregate_counts": {
+                        "filtered_articles": total_filtered,
+                        "parsed_ok": total_ok,
+                        "parse_fail": total_fail,
+                        "timeout_fail": total_timeout,
+                    },
+                },
+            )
+            stats = process_day(
+                p,
+                batch_size=args.batch_size,
+                workers=args.workers,
+                provider=args.provider,
+                model=args.model,
+                api_key=args.api_key,
+                timeout=args.timeout,
+                num_predict=args.num_predict,
+                max_summary_chars=args.max_summary_chars,
+                log_every_batches=args.log_every_batches,
+                rate_limiter=rate_limiter,
+                api_keys=api_keys_by_model,
+            )
+            total_days += 1
+            total_filtered += stats["articles_filtered"]
+            total_ok += stats["parsed_ok"]
+            total_fail += stats["parse_fail"]
+            total_timeout += stats["timeout_fail"]
+            total_elapsed += stats["elapsed_sec"]
+            completed_days.append(p.stem)
+            wall = time.time() - start
+            day_rate = total_days / wall if wall > 0 else 0.0
+            rem_days = len(pending) - total_days
+            eta_days = rem_days / day_rate if day_rate > 0 else float("inf")
+            eta_s = "inf" if not math.isfinite(eta_days) else f"{eta_days/60:.1f}m"
+            _log(
+                f"[progress] {i}/{len(pending)} days done | "
+                f"filtered={total_filtered:,} ok={total_ok:,} parse_fail={total_fail:,} timeout={total_timeout:,} "
+                f"day_rate={day_rate:.3f} days/s eta={eta_s}"
+            )
+            tracker.write(
+                status="running",
+                phase="extract",
+                progress={
+                    "pending_days": [item.stem for item in pending[i:]],
+                    "completed_days": completed_days,
+                    "retry_only_days": retry_only_days,
+                    "current_day": None,
+                    "current_index": i,
+                    "total_pending_days": len(pending),
+                    "skipped_existing_days": skipped,
+                    "aggregate_counts": {
+                        "filtered_articles": total_filtered,
+                        "parsed_ok": total_ok,
+                        "parse_fail": total_fail,
+                        "timeout_fail": total_timeout,
+                    },
+                },
+                throughput={
+                    "days_per_second": day_rate,
+                    "filtered_articles_per_second": (total_filtered / wall) if wall > 0 else 0.0,
+                },
+            )
+            if stats.get("pool_exhausted"):
+                _log(f"All model daily limits exhausted after {total_days} days — stopping early.")
+                break
+    except Exception as exc:
+        tracker.write(
+            status="failed",
+            phase="extract",
+            progress={
+                "pending_days": [item.stem for item in pending[max(total_days, 0):]],
+                "completed_days": completed_days,
+                "retry_only_days": retry_only_days,
+                "current_day": pending[total_days].stem if total_days < len(pending) else None,
+                "skipped_existing_days": skipped,
+                "aggregate_counts": {
+                    "filtered_articles": total_filtered,
+                    "parsed_ok": total_ok,
+                    "parse_fail": total_fail,
+                    "timeout_fail": total_timeout,
+                },
+            },
+            error={"message": str(exc), "type": exc.__class__.__name__},
         )
-        total_days += 1
-        total_filtered += stats["articles_filtered"]
-        total_ok += stats["parsed_ok"]
-        total_fail += stats["parse_fail"]
-        total_timeout += stats["timeout_fail"]
-        total_elapsed += stats["elapsed_sec"]
-        wall = time.time() - start
-        day_rate = total_days / wall if wall > 0 else 0.0
-        rem_days = len(pending) - total_days
-        eta_days = rem_days / day_rate if day_rate > 0 else float("inf")
-        eta_s = "inf" if not math.isfinite(eta_days) else f"{eta_days/60:.1f}m"
-        _log(
-            f"[progress] {i}/{len(pending)} days done | "
-            f"filtered={total_filtered:,} ok={total_ok:,} parse_fail={total_fail:,} timeout={total_timeout:,} "
-            f"day_rate={day_rate:.3f} days/s eta={eta_s}"
-        )
-        if stats.get("pool_exhausted"):
-            _log(f"All model daily limits exhausted after {total_days} days — stopping early.")
-            break
+        raise
 
     wall_total = time.time() - start
     art_rate_wall = total_filtered / wall_total if wall_total > 0 else 0.0
@@ -2260,6 +2073,27 @@ def main():
     _log(
         f"Wall time: {wall_total:.1f}s | sum(day elapsed): {total_elapsed:.1f}s | "
         f"wall throughput: {art_rate_wall:.2f} filtered art/s"
+    )
+    tracker.write(
+        status="complete",
+        phase="complete",
+        progress={
+            "pending_days": [item.stem for item in pending[total_days:]],
+            "completed_days": completed_days,
+            "retry_only_days": retry_only_days,
+            "current_day": None,
+            "skipped_existing_days": skipped,
+            "aggregate_counts": {
+                "filtered_articles": total_filtered,
+                "parsed_ok": total_ok,
+                "parse_fail": total_fail,
+                "timeout_fail": total_timeout,
+            },
+        },
+        throughput={
+            "days_per_second": (total_days / wall_total) if wall_total > 0 else 0.0,
+            "filtered_articles_per_second": art_rate_wall,
+        },
     )
 
 

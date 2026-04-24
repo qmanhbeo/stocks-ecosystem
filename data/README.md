@@ -86,13 +86,28 @@ Purpose:
 
 Current contract:
 - `datasets/news_tabular_features.parquet`
+- `datasets/news_tabular_article_stage.parquet`
+- `datasets/news_tabular_article_stage_manifest.json`
 - `datasets/news_embedding_features.parquet`
 - `datasets/article_embeddings.parquet`
+- `datasets/embedding_input_articles.parquet`
+- `datasets/embedding_input_articles_manifest.json`
+- `datasets/embedding_checkpoint/`
 - `datasets/phobert_article_sentiment.parquet`
 - `datasets/phobert_ticker_day_sentiment.parquet`
 - `datasets/phobert_input_articles.parquet`
 - `datasets/phobert_input_articles_manifest.json`
 - `datasets/phobert_checkpoint/`
+- `datasets/phobert_forward_looking_article_features.parquet`
+- `datasets/phobert_forward_looking_ticker_day_features.parquet`
+- `datasets/phobert_forward_looking_checkpoint/`
+- `datasets/phobert_forward_looking_checkpoint/phobert_forward_looking_checkpoint_manifest.json`
+- `datasets/ollama_guarded_article_features.parquet`
+- `datasets/ollama_guarded_ticker_day_features.parquet`
+- `datasets/ollama_guarded_input_articles.parquet`
+- `datasets/ollama_guarded_input_manifest.json`
+- `datasets/ollama_guarded_checkpoint/`
+- `datasets/ollama_guarded_checkpoint_manifest.json`
 - `predictions/*_news_features.parquet`
 
 Important notes:
@@ -102,12 +117,66 @@ Important notes:
   cache so long backfills do not rescan the full normalized article archive on
   every restart; it is an internal producer cache, not a consumer feature
   contract
+- `datasets/news_tabular_article_stage.parquet` is the streamed article-ticker
+  staging cache used to rebuild the published tabular ticker-day dataset
+  without reloading the whole normalized news corpus into memory; it is an
+  internal producer cache, not a consumer feature contract
+- `datasets/embedding_input_articles.parquet` and `datasets/embedding_checkpoint/`
+  are the tagged-only input cache and resumable raw-embedding checkpoint
+  surface for long embedding backfills; they are internal producer caches, not
+  consumer feature contracts
 - `datasets/phobert_checkpoint/` is the resumable batch-checkpoint surface for
   long PhoBERT backfills; it is an internal producer cache, not a consumer
   feature contract
+- `datasets/phobert_forward_looking_teacher_labels.parquet` and
+  `datasets/phobert_forward_looking_stage_articles.parquet` are the sequential
+  teacher-label and tagged-text staging datasets for the separate PhoBERT
+  `forward_looking` distillation lane; their matching `*_manifest.json` files
+  and downstream model bundles are producer-side handoff artifacts, not
+  consumer feature contracts
+- once the forward-looking lane has a local winner, it also publishes additive
+  consumer-facing datasets:
+  - `datasets/phobert_forward_looking_article_features.parquet`
+  - `datasets/phobert_forward_looking_ticker_day_features.parquet`
+  - additive `phobert_forward_looking_*` columns in
+    `predictions/*_news_features.parquet`
+- `datasets/phobert_forward_looking_checkpoint/` is the resumable publish
+  checkpoint surface for that additive local head; it is an internal producer
+  cache, not a consumer feature contract
+- `datasets/ollama_guarded_article_features.parquet` and
+  `datasets/ollama_guarded_ticker_day_features.parquet` are additive local
+  guarded-generator datasets built from deterministic tagged article-ticker
+  linkage; in phase 1 they publish only coarse non-sentiment fields
+  (`ollama_guarded_confidence`, `ollama_guarded_is_forward_looking`,
+  `ollama_guarded_is_rumor`, and coverage diagnostics), remain dataset-only
+  surfaces, and are not merged into `predictions/*_news_features.parquet`
+- `datasets/ollama_guarded_input_articles.parquet` and
+  `datasets/ollama_guarded_checkpoint/` are the tagged-only input cache and
+  resumable checkpoint surface for that guarded local lane; they are internal
+  producer caches, not consumer feature contracts
 - they are additive to the existing keyword and embedding news features
 - they do **not** overwrite `data/llm_cache/`, `xs_llm_news_ticker_day.parquet`,
   or `xs_llm_news_market_daily.parquet`
+
+### `data/model_checkpoints/`
+
+Purpose:
+- durable producer-side model checkpoints and winner bundles for local training
+  lanes that are expensive to recreate
+- included in the canonical shared `data/` snapshot backup path
+
+Current contract:
+- `news/phobert_forward_looking/training_manifest.json`
+- `news/phobert_forward_looking/latest_winner.json`
+- `news/phobert_forward_looking/runs/<run_id>/<candidate>/model/`
+- `news/phobert_forward_looking/runs/<run_id>/<candidate>/candidate_state.json`
+- `news/phobert_forward_looking/runs/<run_id>/<candidate>/metrics.json`
+
+Important notes:
+- this is durable producer state, not a shared consumer feature contract
+- keep machine-readable job status and run summaries under
+  `alpha-research-lab/artifacts/`
+- the current first user is the news PhoBERT `forward_looking` lane
 
 ## Unavailable Or Still Blocked
 

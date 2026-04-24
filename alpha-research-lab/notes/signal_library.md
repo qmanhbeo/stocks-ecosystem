@@ -512,10 +512,24 @@ or LLM-based scoring for higher quality (H98).
 ### C1b — PhoBERT Whole-Article Sentiment Family
 **Status: IMPLEMENTATION LANE — not yet validated as a signal**
 
-- **Planned role:** local whole-article Vietnamese sentiment family that should
+- **Current implementation state:** full historical backfill completed on the
+  tagged CafeF archive:
+  - `342,135` unique tagged articles in
+    `data/features/news/datasets/phobert_input_articles.parquet`
+  - `660,255` article-ticker sentiment rows in
+    `data/features/news/datasets/phobert_article_sentiment.parquet`
+  - `1,436,996` dense ticker-day rows in
+    `data/features/news/datasets/phobert_ticker_day_sentiment.parquet`
+  - article label mix:
+    - `POS 51.2%`
+    - `NEU 27.8%`
+    - `NEG 21.0%`
+  - mean article confidence:
+    - `0.817`
+- **Role:** local whole-article Vietnamese sentiment family that should
   be richer than keyword lexicon scoring but still narrower than the full LLM
   semantic/event schema
-- **Planned outputs:** additive `phobert_*` article probabilities, ticker-day
+- **Outputs:** additive `phobert_*` article probabilities, ticker-day
   aggregates, and rolling sentiment states under the canonical
   `data/features/news/` pipeline
 - **Why this is different from H98:** the PhoBERT lane is local, GPU-friendly,
@@ -523,7 +537,7 @@ or LLM-based scoring for higher quality (H98).
   `rumor`, `source_authority`, `causal_impact_label`, or the rest of the
   hosted LLM schema
 - **Promotion rule:** do not treat this as a confirmed signal until the new
-  ticker-day surface is built and cleared against the usual standalone /
+  ticker-day surface is cleared against the usual standalone /
   consistency gates
 
 ---

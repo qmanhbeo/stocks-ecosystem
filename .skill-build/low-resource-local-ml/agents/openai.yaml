@@ -1,0 +1,4 @@
+interface:
+  display_name: "Low-Resource Local ML"
+  short_description: "Run abort-safe local ML with checkpoints, incremental state, and logs"
+  default_prompt: "Use $low-resource-local-ml to plan, probe, implement, or verify an abort-safe, checkpointed, observable local-model workflow for this repo under the hard 10GB RAM and 3GB VRAM WSL limits."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Job Watchdog"
+  short_description: "Supervise abort-safe heavy scripts with status, logs, and checkpoints"
+  default_prompt: "Use $job-watchdog to enforce the heavy-script runtime contract, monitor a long job through structured state and hardware signals, require abort-safe incremental durable progress on long runs, auto-recover safely within the local job surface, and write material interventions back into the managed repo notes."

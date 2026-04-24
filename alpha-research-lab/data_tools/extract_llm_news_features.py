@@ -2,6 +2,7 @@
 Canonical CafeF LLM extractor.
 
 Supported providers: google, nvidia, cerebras, groq, mistral.
+Preferred operator alias: `extract_news_teacher_features.py`.
 The older multi-provider implementation has been moved to
 `extract_llm_news_features_legacy.py` for compatibility and historical rebuilds.
 """
@@ -21,11 +22,23 @@ from pathlib import Path
 
 from path_utils import data_path
 from src.repo_paths import artifact_path
+from data_tools.news_runtime.llm_extract.canonical_orchestrator import run_canonical_extraction
+from data_tools.news_runtime.llm_extract.contracts import CanonicalExtractOptions
+from data_tools.news_runtime.llm_extract.day_runner import run_day as _runtime_run_day
+from data_tools.news_runtime.llm_extract.status import classify_days
 
 try:  # pragma: no cover - import style depends on script vs package execution
     from . import extract_llm_news_features_legacy as legacy
 except ImportError:  # pragma: no cover
     import extract_llm_news_features_legacy as legacy
+
+try:
+    from .job_status import JobStatusTracker
+except ImportError:  # pragma: no cover
+    try:
+        from job_status import JobStatusTracker
+    except ModuleNotFoundError:
+        from data_tools.job_status import JobStatusTracker
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = data_path("news/cafef/raw")
@@ -789,25 +802,16 @@ def process_day(
         raise ValueError(
             f"canonical extractor supports {sorted(_ALL_PROVIDER_CHOICES)}, got {provider!r}"
         )
-    _sync_legacy_runtime()
     if rate_limiter is None:
-        api_key, api_keys_map, rate_limiter, model_pool, api_key_ordinals = _build_rate_limiter(
-            provider, model, api_key
-        )
-        resolved_model = (
-            model or (DEFAULT_MODELS.get(provider, "") if provider in _SIMPLE_PROVIDERS else DEFAULT_MODEL)
-        )
+        api_key, api_keys_map, rate_limiter, _model_pool, api_key_ordinals = _build_rate_limiter(provider, model, api_key)
     else:
         api_keys_map = api_keys or {spec.key: api_key for spec in rate_limiter.specs() if api_key}
         api_key_ordinals = {api_key: 1} if api_key and provider not in ("auto", "google") else {}
-        resolved_model = (
-            model or (DEFAULT_MODELS.get(provider, "") if provider in _SIMPLE_PROVIDERS else DEFAULT_MODEL)
-        )
-    return legacy.process_day(
-        path,
+    return _runtime_run_day(
+        path=path,
         batch_size=batch_size,
         provider=provider,
-        model=resolved_model,
+        model=model,
         api_key=api_key,
         timeout=timeout,
         num_predict=num_predict,
@@ -817,6 +821,11 @@ def process_day(
         api_keys=api_keys_map,
         api_key_ordinals=api_key_ordinals if api_key_ordinals else None,
         workers=workers,
+        sync_legacy_runtime=_sync_legacy_runtime,
+        legacy_process_day=legacy.process_day,
+        default_models=DEFAULT_MODELS,
+        default_model=DEFAULT_MODEL,
+        simple_providers=_SIMPLE_PROVIDERS,
     )
 
 
@@ -874,10 +883,24 @@ def main() -> None:
     args = ap.parse_args()
     if args.workers <= 0:
         raise SystemExit("ERROR: --workers must be positive")
+    options = CanonicalExtractOptions(
+        date_from=args.date_from,
+        date_to=args.date_to,
+        batch_size=args.batch_size,
+        provider=args.provider,
+        model=args.model,
+        api_key=args.api_key,
+        timeout=args.timeout,
+        num_predict=args.num_predict,
+        overwrite=bool(args.overwrite),
+        workers=args.workers,
+        max_summary_chars=args.max_summary_chars,
+        log_every_batches=args.log_every_batches,
+    )
 
     try:
         api_key, api_keys_by_model, rate_limiter, model_pool, _ = _build_rate_limiter(
-            args.provider, args.model, args.api_key
+            options.provider, options.model, options.api_key
         )
     except ValueError as exc:
         raise SystemExit(f"ERROR: {exc}") from exc
@@ -896,89 +919,60 @@ def main() -> None:
     else:
         _log(f"Provider: {args.provider} | Model pool: {model_pool_keys}")
 
-    files = _iter_dates(args.date_from, args.date_to)
+    tracker = JobStatusTracker(
+        "extract_llm_news_features",
+        artifacts={
+            "cache_dir": CACHE_DIR,
+            "model_stats": HOSTED_MODEL_STATS_PATH,
+        },
+    )
+    files = _iter_dates(options.date_from, options.date_to)
     if not files:
+        tracker.write(
+            status="complete",
+            phase="idle",
+            progress={"pending_days": [], "completed_days": [], "retry_only_days": [], "current_day": None},
+        )
         print("No input files matched date filters.")
         return
 
-    run_model = args.model if args.model else f"{args.provider}_pool"
+    run_model = options.model if options.model else f"{options.provider}_pool"
     _log(
-        f"Run config: files={len(files)} from={args.date_from or '-'} to={args.date_to or '-'} "
-        f"provider={args.provider} model={run_model} batch_size={args.batch_size} batch_workers={args.workers} "
-        f"timeout={args.timeout}s num_predict={args.num_predict} "
-        f"max_summary_chars={args.max_summary_chars} overwrite={args.overwrite}"
+        f"Run config: files={len(files)} from={options.date_from or '-'} to={options.date_to or '-'} "
+        f"provider={options.provider} model={run_model} batch_size={options.batch_size} batch_workers={options.workers} "
+        f"timeout={options.timeout}s num_predict={options.num_predict} "
+        f"max_summary_chars={options.max_summary_chars} overwrite={options.overwrite}"
     )
-
-    total_days = 0
-    total_filtered = 0
-    total_ok = 0
-    total_fail = 0
-    total_timeout = 0
-    total_elapsed = 0.0
-    skipped = 0
-    retry_error_only = 0
-    pending: list[Path] = []
-    for p in files:
-        out = CACHE_DIR / f"{p.stem}.jsonl"
-        if out.exists() and not args.overwrite:
-            if _cache_has_successful_rows(out):
-                skipped += 1
-            else:
-                retry_error_only += 1
-                pending.append(p)
-        else:
-            pending.append(p)
-
-    _log(
-        f"Days pending={len(pending)} skipped_existing={skipped} "
-        f"retry_error_only={retry_error_only}"
+    classification = classify_days(
+        files,
+        cache_dir=CACHE_DIR,
+        overwrite=options.overwrite,
+        cache_has_successful_rows=_cache_has_successful_rows,
     )
-
-    start = time.time()
-    for i, p in enumerate(pending, start=1):
-        stats = process_day(
-            p,
-            batch_size=args.batch_size,
-            provider=args.provider,
-            model=args.model,
-            api_key=api_key,
-            timeout=args.timeout,
-            num_predict=args.num_predict,
-            max_summary_chars=args.max_summary_chars,
-            log_every_batches=args.log_every_batches,
-            rate_limiter=rate_limiter,
-            api_keys=api_keys_by_model,
-            workers=args.workers,
-        )
-        total_days += 1
-        total_filtered += stats["articles_filtered"]
-        total_ok += stats["parsed_ok"]
-        total_fail += stats["parse_fail"]
-        total_timeout += stats["timeout_fail"]
-        total_elapsed += stats["elapsed_sec"]
-        wall = time.time() - start
-        day_rate = total_days / wall if wall > 0 else 0.0
-        rem_days = len(pending) - total_days
-        eta_days = rem_days / day_rate if day_rate > 0 else float("inf")
-        eta_s = "inf" if not math.isfinite(eta_days) else f"{eta_days/60:.1f}m"
-        _log(
-            f"[progress] {i}/{len(pending)} days done | "
-            f"filtered={total_filtered:,} ok={total_ok:,} parse_fail={total_fail:,} timeout={total_timeout:,} "
-            f"day_rate={day_rate:.3f} days/s eta={eta_s}"
-        )
-        if stats.get("pool_exhausted"):
-            _log(f"All {args.provider} model daily limits exhausted after {total_days} days — stopping early.")
-            break
-
-    wall_total = time.time() - start
-    art_rate_wall = total_filtered / wall_total if wall_total > 0 else 0.0
-    _log("Done.")
-    _log(f"Processed days: {total_days} | skipped existing: {skipped}")
-    _log(f"Filtered articles: {total_filtered:,}")
-    _log(f"Parsed ok: {total_ok:,} | parse_fail: {total_fail:,} | timeout_fail: {total_timeout:,}")
     _log(
-        f"Wall time: {wall_total:.1f}s | sum(day elapsed): {total_elapsed:.1f}s | "
-        f"wall throughput: {art_rate_wall:.2f} filtered art/s"
+        f"Days pending={len(classification.pending)} skipped_existing={classification.skipped_existing_days} "
+        f"retry_error_only={len(classification.retry_only_days)}"
+    )
+    run_canonical_extraction(
+        files=files,
+        pending=classification.pending,
+        completed_days=classification.completed_days,
+        retry_only_days=classification.retry_only_days,
+        skipped_existing_days=classification.skipped_existing_days,
+        process_day=process_day,
+        tracker=tracker,
+        log=_log,
+        provider=options.provider,
+        model=options.model,
+        batch_size=options.batch_size,
+        api_key=api_key,
+        timeout=options.timeout,
+        num_predict=options.num_predict,
+        max_summary_chars=options.max_summary_chars,
+        log_every_batches=options.log_every_batches,
+        rate_limiter=rate_limiter,
+        api_keys_by_model=api_keys_by_model,
+        workers=options.workers,
     )
 
 

@@ -1,14 +1,14 @@
 # Next Steps & Session History
 
 This is the live small-brain file for current state, recent direction, and next priorities.
-Use `notes/session_163_log.md` for the latest full session detail.
+Use `notes/session_168_log.md` for the latest full session detail.
 Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when deciding whether a branch outcome is a live promotion, offline evidence promotion, or a branch kill / park.
 
 ---
 
 ## Immediate Follow-Up (2026-04-10)
 
-1. `llm-cache-fill` — resume the patched Google workhorse backfill with `python -u data_tools/extract_llm_news_features.py --provider google --model gemini-3.1-flash-lite-preview --workers 4 --batch-size 10 --timeout 45` after limits clear. Current state: cache `767 / 3750`, last completed cache day `2018-01-29.jsonl`, no extractor process live, and the canonical extractor now fans the surviving Google model across all configured `GOOGLE_API_KEY*` slots via `@gk*` pool specs. The command skips existing cache days automatically.
+1. `llm-cache-fill` — resume the patched Google workhorse backfill with `python -u data_tools/extract_news_teacher_features.py --provider google --model gemini-3.1-flash-lite-preview --workers 4 --batch-size 10 --timeout 45` after limits clear. Current state: cache `767 / 3750`, last completed cache day `2018-01-29.jsonl`, no extractor process live, and the canonical extractor now fans the surviving Google model across all configured `GOOGLE_API_KEY*` slots via `@gk*` pool specs. The command skips existing cache days automatically.
 2. `llm-feature-refresh` — only after cache reaches the active-book years (`2018+`), rebuild `xs_llm_news_ticker_day.parquet`, rerun `H294`, and then reconsider `news-marginal-slot`.
 3. `daily-order-pressure-and-proprietary-side-channels` — new acquisition follow-through after Sessions 160-161. CafeF page 2 (`ThongKeDL`) and page 4 (`GDTuDoanh`) are now wired as raw historical daily summaries, and the first full order-stats backfill completed cleanly: `404` tickers, `1,340,619` rows, `2007-07-02` through `2026-04-10`. The first proprietary-trading backfill also completed with source-side holes: `50,918` rows, `343` tickers, `2022-11-01` through `2026-04-09`, plus `29` CafeF `Success=false` failures. Use these surfaces for daily order-pressure, implementation-pain, proprietary-flow, and cross-flow divergence audits. Do **not** misclassify this as reopened queue/open-fill or auction-resolution work.
 4. `timing-vendor-source-decision` — only if the branch still needs more than daily side channels and reduced-shape intraday before the LLM cache is ready. Session 161 split the outside options cleanly:
@@ -22,6 +22,193 @@ Use the branch-result buckets in `README.md` and `README_for_AGENTS.md` when dec
 8. `smart-exit-distillation` — only if continuing the outcome-contract branch while LLM is blocked. `H334` passed the constrained legal-exit oracle upper-bound audit, `H335/H336` failed, `H337` improved the branch to `MIXED`, `H338` diagnosed why it stalled, and `H339` tested the exact skip-aware continuation. `H339` proved that the skip-aware label ceiling is fully removable in principle: a perfect skip-aware oracle recovers `100% / 100%` of the H334 oracle on validation / confirmation. But the learned daily-state policy still failed badly: dev-selected margin `0.0200`, validation / confirmation uplift vs fixed `3d` `-0.00430 / -0.01109`, and non-best-fixed rate `95.60% / 96.04%`. Do not reopen entry-time value routing, generic hold/sell labels, or more skip-aware margin retunes on the same daily state. Park current-state daily smart-exit ML unless new post-entry state/data or a materially different nonlinear replacement-relative model is available.
 
 ---
+
+## Session 167 — Local Hardware Safety Budget Tightened (2026-04-24)
+
+1. `what changed`
+   - repo docs and local-ML assumptions now plan against a tighter local safety
+     budget:
+     - `3GB VRAM`
+     - `10GB RAM`
+   - this is a planning constraint, not a claim that the box only exposes those
+     exact totals
+- the point is to leave the remaining visible headroom as safety margin for
+  WSL overhead, background work, allocator spikes, and watchdog recovery
+
+## Session 168 — Strict `data_tools/` Runtime Hardening Wave (2026-04-24)
+
+1. `what landed`
+   - the five targeted long-job scripts now expose canonical machine-readable
+     status files under `alpha-research-lab/artifacts/job_status/`:
+     - `fetch_hnx_official_disclosures.json`
+     - `build_llm_news_features.json`
+     - `extract_llm_news_features.json`
+     - `extract_llm_news_features_legacy.json`
+     - `fetch_news.json`
+   - `fetch_hnx_official_disclosures.py` now persists per-ticker durable shard
+     state under `data/official_disclosures/hnx/per_ticker/`, rebuilds the
+     latest aggregate outputs from that state, and skips already-satisfied
+     tickers on rerun unless the operator explicitly refreshes transaction text
+   - `build_llm_news_features.py` now stages per-day aggregated inputs under
+     `data/features/_llm_news_build_stage/` and atomically promotes the final
+     published parquet outputs only during finalize
+   - both LLM extractors now write structured pending/completed/retry-only day
+     state so resume can be discovered mechanically without reading logs
+   - `fetch_news.py` now writes structured crawler progress alongside its
+     existing incremental raw JSONL saves
+
+2. `current operator consequence`
+   - completed heavy-script work now survives interruption at the natural
+     script boundary:
+     - HNX: ticker
+     - LLM extractor: day
+     - LLM builder: staged day aggregate
+     - news crawler: flushed raw batch
+   - the canonical restart posture is now:
+     - rerun the same command first
+     - inspect the matching `artifacts/job_status/*.json` file before widening
+       scope or deleting state
+
+3. `next exact step`
+   - keep `llm-cache-fill` as the main blocked queue item, but use
+     `alpha-research-lab/artifacts/job_status/extract_llm_news_features.json`
+     as the first recovery surface when the Google window reopens
+   - if the HNX crawler is resumed, inspect
+     `alpha-research-lab/artifacts/job_status/fetch_hnx_official_disclosures.json`
+     and the per-ticker shard directory before forcing any refresh
+
+2. `where this now applies`
+   - `README.md`
+   - `notes/local_bert_roadmap.md`
+   - `research_pipelines/news_features/README.md`
+   - local-ML skill surfaces
+   - watchdog workspace example surfaces
+
+3. `current practical consequence`
+   - keep the current PhoBERT forward-looking canary sequential
+   - do not widen local-ML parallelism based on the observed `4GB` VRAM and
+     `~12GB` RAM totals
+   - continue designing new local-ML work as if only `3GB VRAM / 10GB RAM`
+     were safely usable
+
+---
+
+## Session 166 — PhoBERT Forward-Looking Watchdog Canary (2026-04-24)
+
+1. `what landed`
+   - the forward-looking PhoBERT lane now emits the canonical watchdog heartbeat
+     at
+     `alpha-research-lab/artifacts/job_status/phobert_forward_looking_train.json`
+     plus milestone progress logs for teacher, stage, candidate train, and
+     winner selection
+   - training preflight now reuses the stage manifest instead of loading the
+     full stage parquet back into RAM just to check whether training should
+     start
+   - the first real canary on the production roots forced two local runtime
+     repairs:
+     - trusted `.bin` PhoBERT backbone loads now retry with
+       `weights_only=False` on the current `transformers 4.57.6 / torch 2.5.1`
+       stack
+     - mixed-precision training now keeps the model load in FP32 and lets AMP
+       own the precision change
+
+2. `current canary state`
+   - production teacher labels completed cleanly:
+     - `79,284` rows
+   - production stage dataset completed cleanly:
+     - `40,065` rows
+     - split counts:
+       - `train 26,113`
+       - `val 6,736`
+       - `test 7,216`
+   - the real canary command is now running under the repaired lane:
+     - `python -m research_pipelines.news_features.core.train_phobert_forward_looking --stages teacher,stage,train --candidate-name phobert_base --rerun-failed`
+   - current watchdog state:
+     - `status=running`
+     - `phase=train`
+     - `candidate=phobert_base`
+     - `run_id=7abc8627d84b`
+   - important watchdog caveat:
+     - the training heartbeat is still epoch-level, so the status file can stay
+       stale during a long first epoch; verify the live process before calling
+       the canary stalled
+
+3. `next exact operator step`
+   - let the current `phobert_base` canary finish
+   - if it completes, inspect
+     `artifacts/run_summaries/latest_news_forward_looking_candidate_train.json`
+     plus
+     `artifacts/run_summaries/latest_news_forward_looking_winner_selection.json`,
+     then expand to the full candidate set by dropping `--candidate-name`
+   - if it fails again, inspect
+     `data/model_checkpoints/news/phobert_forward_looking/training_manifest.json`
+     and patch only the local training surface before relaunching
+
+---
+
+## Session 164 — PhoBERT Forward-Looking Distillation Bootstrap (2026-04-24)
+
+1. `what landed`
+   - `python -m research_pipelines.news_features.core.train_phobert_forward_looking`
+     now exists as the first sequential encoder-distillation lane for the
+     constrained `3GB VRAM / 10GB RAM` planning box
+   - stage 1 reconstructs `article_id`-safe weak labels day by day from
+     `data/llm_cache/` into
+     `data/features/news/datasets/phobert_forward_looking_teacher_labels.parquet`
+     plus `phobert_forward_looking_teacher_manifest.json`
+   - stage 2 joins those labels onto the tagged-only PhoBERT article cache,
+     locks date-based `train` / `val` / `test` splits, and writes
+     `phobert_forward_looking_stage_articles.parquet` plus
+     `phobert_forward_looking_stage_manifest.json`
+   - stage 3 trains one candidate at a time only, records per-candidate state
+     under `data/model_checkpoints/news/phobert_forward_looking/`,
+     and leaves machine-readable handoff summaries under
+     `alpha-research-lab/artifacts/run_summaries/`
+
+2. `how to resume safely`
+   - rerun the same command; completed teacher/stage artifacts and completed
+     candidate runs are reused
+   - if a candidate fails, inspect
+     `artifacts/run_summaries/latest_news_forward_looking_candidate_train.json`
+     before widening the search or changing hyperparameters
+   - keep the process sequential on this box; do not run multiple candidate
+     trainings in parallel
+
+3. `next exact operator step`
+   - run the first real forward-looking pass with either
+     `python -m research_pipelines.news_features.core.train_phobert_forward_looking`
+     or, for stage-by-stage control,
+     `python -m research_pipelines.news_features.core.train_phobert_forward_looking --stages teacher,stage,train`
+   - if the alternate base checkpoint is not available locally, let the first
+     candidate finish and review the winner-selection summary before adding more
+     model breadth
+
+---
+
+## Session 165 — Repo-Wide Thin-Orchestrator Rule (2026-04-24)
+
+1. `hard rule adopted`
+   - repo-wide default for non-trivial pipelines is now:
+     - one stable user-facing entrypoint
+     - focused stage modules behind it
+     - no new mixed-responsibility monoliths when the work naturally separates
+
+2. `why this is now hard policy`
+   - easier maintenance and lower failure-recovery cost
+   - clearer ownership when another engineer needs to resume midway
+   - lower future agent token burn because sessions can load one stage instead
+     of rereading a giant script
+
+3. `what this does not mean`
+   - do not explode simple code into many tiny files
+   - the target is a small number of real stage/concern modules plus one thin
+     orchestrator, not a framework
+
+4. `repo-owned skill specs added`
+   - `.skill-build/low-resource-data-pipeline`
+   - `.skill-build/low-resource-local-ml`
+   - both skills point back to the repo hard rules and are intended to reduce
+     repeated context loading on constrained-pipeline and local-ML work
 
 ## Bright-Mind Follow-Up - Official Disclosure + Side-Channel Queue (2026-04-22)
 
@@ -106,30 +293,111 @@ Use `notes/local_bert_roadmap.md` for the durable reasoning and task split.
 This queue is complementary to the canonical LLM extractor, not a request to
 overwrite or imitate `data/llm_cache/`.
 
-1. `phobert-whole-article-sentiment`
-   - claim: the honest first local-NLP lane is whole-article Vietnamese
-     sentiment, not full semantic/event extraction
-   - contract: additive `phobert_*` datasets under
-     `data/features/news/datasets/` plus additive `phobert_*` columns in the
-     RL-ready `data/features/news/predictions/*_news_features.parquet` files
-   - guardrail: do **not** write to `data/llm_cache/` or overwrite
-     `xs_llm_news_*`
+Completed local Ollama comparison history now lives in
+`notes/ollama_model_probe_log.md`.
+Current machine-specific conclusion under the `10GB RAM / 3GB VRAM` planning
+budget:
+- cheapest all-round local generator winner:
+  - `qwen2.5-coder:3b`
+- important guardrail:
+  - no tested small local model is trustworthy enough to replace the hosted
+    extractor end to end
 
-2. `local-bert-distillation-lane`
+Current local state after the first full PhoBERT backfill:
+- `data/features/news/datasets/phobert_input_articles.parquet`
+  - `342,135` unique tagged articles
+- `data/features/news/datasets/phobert_article_sentiment.parquet`
+  - `660,255` article-ticker rows
+- `data/features/news/datasets/phobert_ticker_day_sentiment.parquet`
+  - `1,436,996` dense ticker-day rows
+- article label mix:
+  - `POS 51.2%`
+  - `NEU 27.8%`
+  - `NEG 21.0%`
+- mean article confidence:
+  - `0.817`
+- direct consequence:
+  - whole-article sentiment is now a real research surface, not just an
+    implementation plan
+  - RL-ready merged `data/features/news/predictions/*_news_features.parquet`
+    exports have **not** been refreshed yet, so this currently unblocks signal
+    audits first, not downstream consumer use
+
+1. `phobert-whole-article-sentiment`
+   - status: IMPLEMENTED
+   - result: whole-article PhoBERT backfill completed on the full tagged CafeF
+     archive; additive `phobert_*` datasets now exist under
+     `data/features/news/datasets/`
+   - next honest action: validate the new ticker-day surface as a signal family
+     before treating it as a consumer-facing contract
+
+2. `phobert-export-refresh`
+   - claim: before RL or downstream merges can consume PhoBERT, the canonical
+     `data/features/news/predictions/*_news_features.parquet` exports must be
+     rebuilt from the completed datasets
+   - smallest honest next test: rerun the missing tabular / aggregate builder
+     steps and verify one or more per-ticker exports actually contain
+     `phobert_*` columns
+
+3. `phobert-raw-vs-keyword-audit`
+   - claim: the first honest audit is not another semantic task; it is whether
+     whole-article PhoBERT beats or stabilizes the dead keyword-news family on
+     the same short-horizon contracts
+   - why now: keyword sentiment died mainly on sparsity and crude lexicon
+     quality; PhoBERT now covers `17.0%` of ticker-days directly and `34.8%`
+     on the rolling `5d` state
+   - smallest honest next test: compare raw / `5d` / `30d` PhoBERT states
+     against `H89/H96` keyword-news baselines on the frozen standalone news
+     contract before mixing PhoBERT with stronger branches
+
+4. `phobert-negative-attention-shock`
+   - claim: Vietnamese stock news is structurally positivity-biased, so the
+     informative tail may be high-attention negative sentiment rather than raw
+     positive tone
+   - why now: the completed article mix is `POS 51.2%`, `NEG 21.0%`,
+     `NEU 27.8%`, so pooled raw sentiment is likely biased upward
+   - smallest honest next test: condition negative sentiment intensity on same-
+     day article-count shock and compare it against raw positive PhoBERT states
+
+5. `phobert-x-order-pressure`
+   - claim: PhoBERT sentiment may become materially cleaner when gated by the
+     `H340` daily order-pressure state, not in pooled form
+   - why now: `H340` already proved same-day posted buy-volume pressure is the
+     strongest positive-side `C5` rewrite, and PhoBERT now gives a dense
+     same-day information state to test alongside it
+   - smallest honest next test: compare bullish PhoBERT under same-day
+     buy-volume confirmation versus pooled PhoBERT and pooled `H340`
+
+6. `phobert-disagreement-residual`
+   - claim: the informative part of PhoBERT may be where contextual whole-
+     article sentiment disagrees with the old lexicon baseline, not where both
+     say the same thing
+   - why now: the cheap-LLM surrogate disagreement branch failed on a broader
+     semantic contract, but whole-article contextual sentiment vs keyword
+     sentiment is a materially narrower disagreement surface
+   - smallest honest next test: build a PhoBERT-minus-keyword disagreement
+     state and audit whether the disagreement tail outperforms raw PhoBERT
+
+7. `local-bert-distillation-lane`
    - claim: if local encoders expand beyond sentiment, do it as separate task
      heads distilled from the current LLM cache rather than one overloaded
      checkpoint
    - best first tasks:
+     - `forward_looking` vs `backward_looking`
      - `market_news` vs `stock_news`
      - `official_or_regulatory_source`
-     - `forward_looking` vs `backward_looking`
+   - first canonical implementation on the current `3GB VRAM / 10GB RAM`
+     planning box:
+     - train a separate PhoBERT `forward_looking` head
+     - use model probability / calibration as confidence
+     - do not add a semantic `0/1/2` confidence head first
    - explicitly parked until weak-label quality is audited:
      - `rumor`
      - `causal_impact_label`
      - `expectation_alignment`
      - `macro_theme`
 
-3. `bert-suitable-source-acquisition`
+8. `bert-suitable-source-acquisition`
    - claim: future text-source work should be chosen by encoder-task fit, not
      by the vague hope that "more text helps"
    - examples:

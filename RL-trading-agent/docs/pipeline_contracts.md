@@ -4,8 +4,8 @@ This file is a compact input/output map for the main pipelines.
 
 ## Shared Rules
 
-- `/home/manh/stocks/data` stores durable datasets and generated features.
-- `artifacts/` stores runtime outputs and trained models.
+- `/home/manh/stocks/data` stores durable datasets, generated features, and producer-side model checkpoints.
+- `artifacts/` stores runtime outputs and lightweight run metadata.
 - Producer pipelines live outside this repo.
 - Signal prediction parquet files are RL-consumable features.
 
@@ -31,6 +31,7 @@ Key exported inputs:
 - execution tradability flags: `data/features/execution/tradability_daily.parquet`
 - raw historical foreign-flow archive: `data/foreign_flow/cafef/` (not consumed by RL directly; raw source only)
 - forward-only foreign-flow board snapshots: `data/foreign_flow_forward/vci_price_board/` (raw acquisition surface, not consumed by RL and not historical/backtestable yet)
+- producer-side checkpoint bundles: `data/model_checkpoints/` (not consumed by RL directly)
 
 ## RL Training / Evaluation
 

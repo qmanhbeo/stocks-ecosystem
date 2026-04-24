@@ -60,6 +60,11 @@ to git. Inside `alpha-research-lab/`, `data/` is only a symlink to that shared l
 | `features/news/datasets/phobert_input_articles.parquet` | tagged-only PhoBERT staging cache used to avoid rescanning the full normalized archive on restart | local NLP lane internal cache | `research_pipelines/news_features/core/build_phobert_sentiment_features.py` |
 | `features/news/datasets/phobert_article_sentiment.parquet` | whole-article local PhoBERT sentiment rows per tagged article-ticker pair | local NLP lane | `research_pipelines/news_features/core/build_phobert_sentiment_features.py` |
 | `features/news/datasets/phobert_ticker_day_sentiment.parquet` | whole-article local PhoBERT ticker-day and rolling sentiment states | local NLP lane | `research_pipelines/news_features/core/build_phobert_sentiment_features.py` |
+| `features/news/datasets/phobert_forward_looking_teacher_labels.parquet` | sequential weak-label cache for the separate PhoBERT `forward_looking` head, reconstructed day by day from `data/llm_cache/` and raw CafeF article ids | local NLP distillation internal cache | `research_pipelines/news_features/core/train_phobert_forward_looking.py` |
+| `features/news/datasets/phobert_forward_looking_stage_articles.parquet` | tagged-only article-text stage with locked date splits for sequential PhoBERT `forward_looking` training | local NLP distillation internal cache | `research_pipelines/news_features/core/train_phobert_forward_looking.py` |
+| `features/news/datasets/ollama_guarded_input_articles.parquet` | tagged-only guarded Ollama staging cache for deterministic article text reuse and resume | local guarded lane internal cache | `research_pipelines/news_features/core/build_ollama_guarded_features.py` |
+| `features/news/datasets/ollama_guarded_article_features.parquet` | additive guarded local article-ticker rows with coarse confidence / forward-looking / rumor fields plus abstention diagnostics; sentiment remains in the PhoBERT lane | local guarded lane | `research_pipelines/news_features/core/build_ollama_guarded_features.py` |
+| `features/news/datasets/ollama_guarded_ticker_day_features.parquet` | additive guarded local ticker-day and rolling coarse-news features for confidence, forward-looking share, rumor share, and coverage diagnostics | local guarded lane | `research_pipelines/news_features/core/build_ollama_guarded_features.py` |
 | `sector_classification.parquet` | ICB sector labels, 398 tickers | — | `fetch_sector_classification.py` |
 | `xs_dividend_calendar.parquet` | Ex-dividend dates and windows | — | `fetch_dividend_events.py` |
 | `macro_regime_daily.parquet` | VIX, yields, global indices regime | — | `build_macro_regime_features.py` |
@@ -90,9 +95,10 @@ python data_tools/fetch_news_archive.py
 
 Canonical producer note:
 - the `research_pipelines/news_features/` pipeline now uses this raw CafeF
-  archive for three separate feature families:
+  archive for four separate feature families:
   - keyword/tabular features
   - local whole-article PhoBERT sentiment
+  - additive guarded local Ollama article and ticker-day datasets
   - hosted LLM semantic/event extraction remains separate under `data/llm_cache/`
 
 ---

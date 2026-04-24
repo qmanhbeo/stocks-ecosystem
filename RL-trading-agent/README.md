@@ -50,12 +50,31 @@ python -m vn_stock_rl.data_tools.inspect_research_exports --require-news --requi
 
 ```bash
 cd ../alpha-research-lab
-python -m research_pipelines.news_features
+python -m research_pipelines.news_features --full-rebuild
 python -m research_pipelines.signal_labelling.auto_label
 python -m research_pipelines.supervised_label.core.rebuild_bar_labels
 python -m research_pipelines.supervised_label.core.export_supervised_dataset
 python -m research_pipelines.supervised_label.models.train_signal_model
 python -m research_pipelines.supervised_label.models.generate_signal_probs
+```
+
+Workspace rule: prefer the narrowest producer command that publishes the needed
+artifact. Use the full `research_pipelines.news_features --full-rebuild` path
+only when upstream raw/normalized/tagged news inputs or the legacy keyword /
+embedding contracts actually need a full rebuild. For PhoBERT-only news export
+refreshes, use:
+
+```bash
+cd ../alpha-research-lab
+python -m research_pipelines.news_features.core.publish_phobert_exports
+```
+
+For the additive forward-looking PhoBERT head after a winner already exists,
+use:
+
+```bash
+cd ../alpha-research-lab
+python -m research_pipelines.news_features.core.publish_phobert_forward_looking_features
 ```
 
 For manual buy-zone labelling:
@@ -67,6 +86,7 @@ python -m manual_label_factory.manual_label
 
 RL defaults to shared `data/features/news/predictions/` and `data/features/signals/predictions/auto/` when `--news-prediction-dir` / `--signal-prediction-dir` are omitted.
 Those default paths are now resolved through the shared artifact registry in `../shared-recommendation/`, so alpha and RL consume the same workspace path contract.
+Producer-side model checkpoints under `../data/model_checkpoints/` are not consumed by RL directly.
 
 ## Consume the lab RL signal matrix
 

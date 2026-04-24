@@ -72,7 +72,25 @@ try:
 except ModuleNotFoundError:
     from data_tools.stock_refresh_utils import atomic_write_parquet
 
+try:
+    from job_status import JobStatusTracker
+except ModuleNotFoundError:
+    from data_tools.job_status import JobStatusTracker
+
 from path_utils import data_path
+from data_tools.news_runtime.hnx_disclosures.cli_contract import options_from_namespace, resolve_run_mode
+from data_tools.news_runtime.hnx_disclosures.orchestrator import run_local_rebuild, run_network_fetch
+from data_tools.news_runtime.hnx_disclosures.state import (
+    load_existing_ticker_frame as _runtime_load_existing_ticker_frame,
+    load_ticker_state as _runtime_load_ticker_state,
+    per_ticker_attachment_path as _runtime_per_ticker_attachment_path,
+    per_ticker_extract_path as _runtime_per_ticker_extract_path,
+    per_ticker_news_path as _runtime_per_ticker_news_path,
+    per_ticker_state_path as _runtime_per_ticker_state_path,
+    rebuild_aggregate_outputs as _runtime_rebuild_aggregate_outputs,
+    ticker_state_satisfies_run as _runtime_ticker_state_satisfies_run,
+    write_ticker_state as _runtime_write_ticker_state,
+)
 
 
 BASE_URL = "https://hnx.vn"
@@ -83,6 +101,7 @@ OUTPUT_ROOT = data_path("official_disclosures/hnx")
 ATTACHMENTS_ROOT = OUTPUT_ROOT / "attachments"
 TEXT_ROOT = OUTPUT_ROOT / "extracted_text"
 OCR_MODEL_ROOT = OUTPUT_ROOT / "_easyocr_models"
+PER_TICKER_ROOT = OUTPUT_ROOT / "per_ticker"
 
 LOCAL_TZ = timezone(timedelta(hours=7))
 USER_AGENT = (
@@ -1253,11 +1272,82 @@ def prepare_transaction_output(news: pd.DataFrame) -> pd.DataFrame:
     return ensure_contract_shape(transactions.reset_index(drop=True), TRANSACTION_COLUMNS)
 
 
+def per_ticker_news_path(ticker: str) -> Path:
+    return _runtime_per_ticker_news_path(ticker, per_ticker_root=PER_TICKER_ROOT)
+
+
+def per_ticker_attachment_path(ticker: str) -> Path:
+    return _runtime_per_ticker_attachment_path(ticker, per_ticker_root=PER_TICKER_ROOT)
+
+
+def per_ticker_extract_path(ticker: str) -> Path:
+    return _runtime_per_ticker_extract_path(ticker, per_ticker_root=PER_TICKER_ROOT)
+
+
+def per_ticker_state_path(ticker: str) -> Path:
+    return _runtime_per_ticker_state_path(ticker, per_ticker_root=PER_TICKER_ROOT)
+
+
+def load_ticker_state(ticker: str) -> dict[str, object]:
+    return _runtime_load_ticker_state(ticker, per_ticker_root=PER_TICKER_ROOT)
+
+
+def write_ticker_state(ticker: str, payload: dict[str, object]) -> None:
+    _runtime_write_ticker_state(
+        ticker,
+        payload,
+        per_ticker_root=PER_TICKER_ROOT,
+        atomic_write_json=atomic_write_json,
+    )
+
+
+def ticker_state_satisfies_run(ticker_state: dict[str, object], args: argparse.Namespace) -> bool:
+    return _runtime_ticker_state_satisfies_run(ticker_state, args, per_ticker_root=PER_TICKER_ROOT)
+
+
+def _load_existing_ticker_frame(path: Path, columns: list[str]) -> pd.DataFrame:
+    return _runtime_load_existing_ticker_frame(path, columns, ensure_contract_shape=ensure_contract_shape)
+
+
+def rebuild_aggregate_outputs(
+    *,
+    target_tickers: list[str],
+    news_parquet_path: Path,
+    attachment_parquet_path: Path,
+    transaction_parquet_path: Path,
+    transaction_extract_path: Path,
+    parse_transaction_attachments: bool,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    return _runtime_rebuild_aggregate_outputs(
+        target_tickers=target_tickers,
+        news_parquet_path=news_parquet_path,
+        attachment_parquet_path=attachment_parquet_path,
+        transaction_parquet_path=transaction_parquet_path,
+        transaction_extract_path=transaction_extract_path,
+        parse_transaction_attachments=parse_transaction_attachments,
+        per_ticker_root=PER_TICKER_ROOT,
+        news_columns=NEWS_COLUMNS,
+        attachment_columns=ATTACHMENT_COLUMNS,
+        transaction_attachment_extract_columns=TRANSACTION_ATTACHMENT_EXTRACT_COLUMNS,
+        ensure_contract_shape=ensure_contract_shape,
+        prepare_news_output=prepare_news_output,
+        prepare_attachment_output=prepare_attachment_output,
+        prepare_transaction_output=prepare_transaction_output,
+        atomic_write_parquet=atomic_write_parquet,
+    )
+
+
 def main() -> None:
     args = parse_args()
-    ocr_languages = parse_language_list(args.ocr_languages)
+    options = options_from_namespace(
+        args,
+        parse_tickers=parse_tickers,
+        parse_language_list=parse_language_list,
+    )
+    ocr_languages = options.ocr_languages
     output_root = Path(OUTPUT_ROOT)
     output_root.mkdir(parents=True, exist_ok=True)
+    PER_TICKER_ROOT.mkdir(parents=True, exist_ok=True)
 
     universe_json_path = output_root / "issuer_universe.json"
     universe_parquet_path = output_root / "issuer_universe.parquet"
@@ -1266,260 +1356,80 @@ def main() -> None:
     transaction_parquet_path = output_root / "issuer_transaction_disclosures.parquet"
     transaction_extract_path = output_root / "issuer_transaction_attachment_extracts.parquet"
     manifest_path = output_root / "manifest.json"
+    tracker = JobStatusTracker(
+        "fetch_hnx_official_disclosures",
+        artifacts={
+            "universe_json": universe_json_path,
+            "universe_parquet": universe_parquet_path,
+            "news_parquet": news_parquet_path,
+            "attachments_parquet": attachment_parquet_path,
+            "transaction_parquet": transaction_parquet_path,
+            "transaction_extract_parquet": transaction_extract_path,
+            "manifest": manifest_path,
+            "per_ticker_dir": PER_TICKER_ROOT,
+        },
+    )
 
-    if args.rebuild_transaction_extracts_from_local:
-        print("HNX local transaction extract rebuild: loading cached news and attachment parquets", flush=True)
-        news = ensure_contract_shape(
-            pd.read_parquet(news_parquet_path) if news_parquet_path.exists() else pd.DataFrame(),
-            NEWS_COLUMNS,
-        )
-        attachments = ensure_contract_shape(
-            pd.read_parquet(attachment_parquet_path) if attachment_parquet_path.exists() else pd.DataFrame(),
-            ATTACHMENT_COLUMNS,
-        )
-        transaction_extracts = build_transaction_extracts(
-            news=news,
-            attachments=attachments,
-            ocr_transaction_attachments=args.ocr_transaction_attachments,
+    run_mode = resolve_run_mode(options)
+    if run_mode == "local_rebuild_transaction_extracts":
+        run_local_rebuild(
+            args=args,
             ocr_languages=ocr_languages,
-            ocr_gpu=args.ocr_gpu,
-            refresh_transaction_text_cache=args.refresh_transaction_text_cache,
-            log_progress=True,
+            tracker=tracker,
+            manifest_path=manifest_path,
+            news_parquet_path=news_parquet_path,
+            attachment_parquet_path=attachment_parquet_path,
+            transaction_extract_path=transaction_extract_path,
+            per_ticker_extract_path=per_ticker_extract_path,
+            ensure_contract_shape=ensure_contract_shape,
+            build_transaction_extracts=build_transaction_extracts,
+            atomic_write_parquet=atomic_write_parquet,
+            atomic_write_json=atomic_write_json,
+            per_ticker_root=PER_TICKER_ROOT,
+            news_columns=NEWS_COLUMNS,
+            attachment_columns=ATTACHMENT_COLUMNS,
+            transaction_attachment_extract_columns=TRANSACTION_ATTACHMENT_EXTRACT_COLUMNS,
+            source=SOURCE,
+            utc_now_iso=utc_now_iso,
         )
-        atomic_write_parquet(transaction_extracts, transaction_extract_path)
-
-        manifest = {}
-        if manifest_path.exists():
-            try:
-                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-            except Exception:
-                manifest = {}
-        notes = list(manifest.get("notes") or [])
-        local_note = "Transaction attachment extracts can be rebuilt locally from cached news/attachment parquets plus any saved OCR text files."
-        if local_note not in notes:
-            notes.append(local_note)
-        manifest.update(
-            {
-                "fetched_at_utc": utc_now_iso(),
-                "source": SOURCE,
-                "notes": notes,
-                "run_mode": "local_rebuild_transaction_extracts",
-                "ocr_transaction_attachments": bool(args.ocr_transaction_attachments),
-                "refresh_transaction_text_cache": bool(args.refresh_transaction_text_cache),
-                "ocr_languages": list(ocr_languages),
-                "outputs": {
-                    **(manifest.get("outputs") or {}),
-                    "issuer_transaction_attachment_extracts_parquet": str(transaction_extract_path)
-                    if transaction_extract_path.exists()
-                    else None,
-                },
-                "transaction_attachment_extract_rows": int(len(transaction_extracts)),
-                "transaction_attachment_extract_status_counts": transaction_extracts["parser_status"].value_counts(dropna=False).to_dict()
-                if not transaction_extracts.empty
-                else {},
-                "transaction_text_extraction_status_counts": transaction_extracts["text_extraction_status"].value_counts(dropna=False).to_dict()
-                if not transaction_extracts.empty
-                else {},
-            }
-        )
-        atomic_write_json(manifest, manifest_path)
-        print("HNX local transaction extract rebuild complete")
-        print(f"Transaction extracts: {len(transaction_extracts)}")
         return
 
     session = build_session()
-    started_at_utc = utc_now_iso()
-    print("Refreshing HNX official issuer universe...", flush=True)
-
-    universe = fetch_universe(session, timeout=args.timeout)
-    universe_payload = {
-        "fetched_at_utc": started_at_utc,
-        "source": SOURCE,
-        "row_count": int(len(universe)),
-        "market_counts": universe["market_code"].value_counts(dropna=False).to_dict(),
-        "items": universe.to_dict(orient="records"),
-    }
-
-    if args.dry_run:
-        target = universe.copy()
-        if args.fetch_all_linked:
-            target = target[target["detail_url"].notna()].copy()
-        elif args.tickers:
-            requested = parse_tickers(args.tickers)
-            target = target[target["ticker"].isin(requested)].copy()
-        else:
-            target = target.iloc[0:0].copy()
-        if args.max_tickers:
-            target = target.head(args.max_tickers)
-        print("HNX official disclosure fetch dry run")
-        print(f"universe rows         : {len(universe)}")
-        print(f"tickers to crawl      : {len(target)}")
-        print(f"max pages per ticker  : {args.max_pages_per_ticker}")
-        print(f"download attachments  : {args.download_attachments}")
-        print(f"download tx pdfs      : {args.download_transaction_attachments}")
-        print(f"parse tx attachments  : {args.parse_transaction_attachments}")
-        print(f"ocr tx attachments    : {args.ocr_transaction_attachments}")
-        print(f"refresh text cache    : {args.refresh_transaction_text_cache}")
-        print(f"ocr languages         : {','.join(ocr_languages)}")
-        return
-
-    atomic_write_json(universe_payload, universe_json_path)
-    atomic_write_parquet(universe, universe_parquet_path)
-
-    requested_tickers = parse_tickers(args.tickers)
-    if args.fetch_all_linked:
-        target = universe[universe["detail_url"].notna()].copy()
-    elif requested_tickers:
-        target = universe[universe["ticker"].isin(requested_tickers)].copy()
-    else:
-        target = universe.iloc[0:0].copy()
-    if args.max_tickers:
-        target = target.head(args.max_tickers)
-
-    print(
-        f"HNX official disclosure fetch starting: target_tickers={len(target)}, "
-        f"max_pages_per_ticker={args.max_pages_per_ticker}, "
-        f"download_tx_pdfs={bool(args.download_transaction_attachments)}, "
-        f"parse_tx_attachments={bool(args.parse_transaction_attachments)}",
-        flush=True,
+    run_network_fetch(
+        args=args,
+        ocr_languages=ocr_languages,
+        tracker=tracker,
+        session=session,
+        universe_json_path=universe_json_path,
+        universe_parquet_path=universe_parquet_path,
+        news_parquet_path=news_parquet_path,
+        attachment_parquet_path=attachment_parquet_path,
+        transaction_parquet_path=transaction_parquet_path,
+        transaction_extract_path=transaction_extract_path,
+        manifest_path=manifest_path,
+        source=SOURCE,
+        parse_tickers=parse_tickers,
+        fetch_universe=fetch_universe,
+        atomic_write_json=atomic_write_json,
+        atomic_write_parquet=atomic_write_parquet,
+        load_ticker_state=load_ticker_state,
+        ticker_state_satisfies_run=ticker_state_satisfies_run,
+        fetch_ticker_history=fetch_ticker_history,
+        prepare_news_output=prepare_news_output,
+        prepare_attachment_output=prepare_attachment_output,
+        write_ticker_state=write_ticker_state,
+        per_ticker_news_path=per_ticker_news_path,
+        per_ticker_attachment_path=per_ticker_attachment_path,
+        per_ticker_extract_path=per_ticker_extract_path,
+        load_existing_ticker_frame=_load_existing_ticker_frame,
+        ensure_contract_shape=ensure_contract_shape,
+        build_transaction_extracts=build_transaction_extracts,
+        rebuild_aggregate_outputs=rebuild_aggregate_outputs,
+        news_columns=NEWS_COLUMNS,
+        attachment_columns=ATTACHMENT_COLUMNS,
+        transaction_attachment_extract_columns=TRANSACTION_ATTACHMENT_EXTRACT_COLUMNS,
+        utc_now_iso=utc_now_iso,
     )
-
-    news_rows: list[dict[str, object]] = []
-    attachment_rows: list[dict[str, object]] = []
-    pages_fetched = 0
-    failures: list[dict[str, object]] = []
-    total_targets = len(target)
-    ticker_start_time = time.perf_counter()
-
-    for ticker_index, row in enumerate(target.to_dict(orient="records"), start=1):
-        ticker = str(row["ticker"])
-        market_code = str(row["market_code"])
-        print(
-            f"HNX ticker {ticker_index}/{total_targets}: {ticker} ({market_code})",
-            flush=True,
-        )
-        ticker_started = time.perf_counter()
-        try:
-            ticker_news, ticker_attachments, ticker_pages = fetch_ticker_history(
-                session,
-                ticker=ticker,
-                market_code=market_code,
-                max_pages_per_ticker=args.max_pages_per_ticker,
-                download_attachments=args.download_attachments,
-                download_transaction_attachments=args.download_transaction_attachments,
-                parse_transaction_attachments=args.parse_transaction_attachments,
-                timeout=args.timeout,
-                sleep=args.sleep,
-                log_progress=True,
-            )
-            news_rows.extend(ticker_news)
-            attachment_rows.extend(ticker_attachments)
-            pages_fetched += ticker_pages
-            ticker_elapsed = time.perf_counter() - ticker_started
-            ticker_transaction_rows = sum(1 for item in ticker_news if item.get("has_transaction_keywords"))
-            print(
-                f"HNX ticker {ticker_index}/{total_targets} complete: {ticker} "
-                f"pages={ticker_pages}, news={len(ticker_news)}, attachments={len(ticker_attachments)}, "
-                f"transaction_rows={ticker_transaction_rows}, elapsed={ticker_elapsed:.1f}s, "
-                f"cumulative_news={len(news_rows)}, cumulative_attachments={len(attachment_rows)}",
-                flush=True,
-            )
-        except Exception as exc:
-            failures.append(
-                {
-                    "ticker": ticker,
-                    "market_code": market_code,
-                    "error": str(exc),
-                }
-            )
-            print(
-                f"HNX ticker {ticker_index}/{total_targets} failed: {ticker} ({market_code}) error={exc}",
-                flush=True,
-            )
-
-    news = prepare_news_output(news_rows)
-    atomic_write_parquet(news, news_parquet_path)
-
-    attachments = prepare_attachment_output(attachment_rows)
-    atomic_write_parquet(attachments, attachment_parquet_path)
-
-    transactions = prepare_transaction_output(news)
-    atomic_write_parquet(transactions, transaction_parquet_path)
-
-    transaction_extracts = ensure_contract_shape(pd.DataFrame(), TRANSACTION_ATTACHMENT_EXTRACT_COLUMNS)
-    if args.parse_transaction_attachments:
-        print(
-            f"Building transaction attachment extracts from {len(attachments)} attachment rows",
-            flush=True,
-        )
-        transaction_extracts = build_transaction_extracts(
-            news=news,
-            attachments=attachments,
-            ocr_transaction_attachments=args.ocr_transaction_attachments,
-            ocr_languages=ocr_languages,
-            ocr_gpu=args.ocr_gpu,
-            refresh_transaction_text_cache=args.refresh_transaction_text_cache,
-            log_progress=True,
-        )
-    atomic_write_parquet(transaction_extracts, transaction_extract_path)
-
-    manifest = {
-        "fetched_at_utc": utc_now_iso(),
-        "started_at_utc": started_at_utc,
-        "source": SOURCE,
-        "run_mode": "network_fetch",
-        "requested_tickers": requested_tickers,
-        "resolved_target_tickers": target["ticker"].tolist(),
-        "fetch_all_linked": bool(args.fetch_all_linked),
-        "max_tickers": args.max_tickers,
-        "max_pages_per_ticker": int(args.max_pages_per_ticker),
-        "parse_transaction_attachments": bool(args.parse_transaction_attachments),
-        "ocr_transaction_attachments": bool(args.ocr_transaction_attachments),
-        "refresh_transaction_text_cache": bool(args.refresh_transaction_text_cache),
-        "ocr_languages": list(ocr_languages),
-        "notes": [
-            "Universe refresh is full; per-ticker disclosure history is only fetched for the requested ticker set.",
-            "The HNX mobile site requires TLS verification to be disabled in this environment.",
-            "HSX official disclosures are not part of this fetcher because the current HSX SPA/API route is still unresolved.",
-            "Latest-run parquet outputs are rewritten to match the current request scope; they are not append-only history stores.",
-        ],
-        "outputs": {
-            "issuer_universe_json": str(universe_json_path),
-            "issuer_universe_parquet": str(universe_parquet_path),
-            "issuer_news_parquet": str(news_parquet_path),
-            "issuer_news_attachments_parquet": str(attachment_parquet_path),
-            "issuer_transaction_disclosures_parquet": str(transaction_parquet_path),
-            "issuer_transaction_attachment_extracts_parquet": str(transaction_extract_path),
-        },
-        "universe_rows": int(len(universe)),
-        "target_tickers": int(len(target)),
-        "pages_fetched": int(pages_fetched),
-        "news_rows": int(len(news)),
-        "attachment_rows": int(len(attachments)),
-        "transaction_rows": int(len(transactions)),
-        "transaction_attachment_extract_rows": int(len(transaction_extracts)),
-        "attachments_downloaded": int(attachments["attachment_storage_path"].notna().sum()) if not attachments.empty else 0,
-        "transaction_attachment_extract_status_counts": transaction_extracts["parser_status"].value_counts(dropna=False).to_dict()
-        if not transaction_extracts.empty
-        else {},
-        "transaction_text_extraction_status_counts": transaction_extracts["text_extraction_status"].value_counts(dropna=False).to_dict()
-        if not transaction_extracts.empty
-        else {},
-        "failures": failures,
-        "status": "success" if not failures else "partial",
-    }
-    atomic_write_json(manifest, manifest_path)
-
-    total_elapsed = time.perf_counter() - ticker_start_time
-    print("HNX official disclosure fetch complete")
-    print(f"Universe rows       : {len(universe)}")
-    print(f"Target tickers      : {len(target)}")
-    print(f"News rows           : {len(news)}")
-    print(f"Attachment rows     : {len(attachments)}")
-    print(f"Transaction rows    : {len(transactions)}")
-    print(f"Transaction extracts: {len(transaction_extracts)}")
-    print(f"Failures            : {len(failures)}")
-    print(f"Elapsed seconds     : {total_elapsed:.1f}")
 
 
 if __name__ == "__main__":

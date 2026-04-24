@@ -39,6 +39,19 @@ data/news/
 # wf_results.jsonl        <- TRACKED
 # xs_wf_results.jsonl     <- TRACKED
 
+# Runtime job state and watchdog snapshots
+artifacts/job_status/*.json
+artifacts/job_status/*.jsonl
+
+# Mutable latest pointers; keep timestamped summaries tracked
+artifacts/run_summaries/latest_*.json
+
+# Deprecated local checkpoint root; durable model checkpoints now live in data/
+artifacts/news_models/
+
+# Test scratch space
+tests/.tmp/
+
 # OS / IDE
 .DS_Store
 Thumbs.db

@@ -33,6 +33,34 @@ from research_pipelines.news_features.io_utils import (
     write_jsonl_records,
 )
 
+try:
+    from job_status import JobStatusTracker
+except ModuleNotFoundError:
+    from data_tools.job_status import JobStatusTracker
+
+from data_tools.news_runtime.fetch_news.cli_contract import options_from_namespace
+from data_tools.news_runtime.fetch_news.discovery import (
+    candidate_urls_from_sitemap_response as _runtime_candidate_urls_from_sitemap_response,
+    candidate_urls_from_sitemaps as _runtime_candidate_urls_from_sitemaps,
+    collect_listing_urls as _runtime_collect_listing_urls,
+    collect_ticker_listing_urls as _runtime_collect_ticker_listing_urls,
+    current_utc_timestamp as _runtime_current_utc_timestamp,
+    parse_input_bound as _runtime_parse_input_bound,
+    parse_ticker_argument as _runtime_parse_ticker_argument,
+    parse_timestamp as _runtime_parse_timestamp,
+    response_links as _runtime_response_links,
+    select_sitemap_urls as _runtime_select_sitemap_urls,
+    should_rescan_sitemap as _runtime_should_rescan_sitemap,
+)
+from data_tools.news_runtime.fetch_news.orchestrator import fetch_news as _runtime_fetch_news
+from data_tools.news_runtime.fetch_news.persistence import (
+    append_scanned_sitemap as _runtime_append_scanned_sitemap,
+    append_seen_urls as _runtime_append_seen_urls,
+    iter_existing_urls as _runtime_iter_existing_urls,
+    iter_scanned_sitemaps as _runtime_iter_scanned_sitemaps,
+    save_fetched_news as _runtime_save_fetched_news,
+)
+
 
 ARTICLE_URL_RE = re.compile(r"^https://cafef\.vn/.+-\d+\.chn$")
 SITEMAP_RANGE_RE = re.compile(r"sitemaps-(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<start>\d{1,2})-(?P<end>\d{1,2})\.xml$")
@@ -323,51 +351,30 @@ def parse_cafef_article(html: str, url: str) -> Optional[dict[str, object]]:
 
 
 def _iter_existing_urls(source: str) -> set[str]:
-    config = get_default_config()
-    index_path = config.source_seen_urls_path(source)
-    if index_path.exists():
-        return {
-            canonicalize_url(line.strip())
-            for line in index_path.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        }
-
-    seen: set[str] = set()
-    for path in config.source_raw_dir(source).glob("*.jsonl"):
-        for row in read_jsonl(path):
-            url = row.get("url")
-            if url:
-                seen.add(canonicalize_url(str(url)))
-    if seen:
-        index_path.write_text("\n".join(sorted(seen)) + "\n", encoding="utf-8")
-    return seen
+    return _runtime_iter_existing_urls(
+        source,
+        config=get_default_config(),
+        canonicalize_url=canonicalize_url,
+        get_default_config=get_default_config,
+        read_jsonl=read_jsonl,
+    )
 
 
 def _append_seen_urls(source: str, urls: List[str]) -> None:
-    if not urls:
-        return
-    config = get_default_config()
-    index_path = config.source_seen_urls_path(source)
-    index_path.parent.mkdir(parents=True, exist_ok=True)
-    with index_path.open("a", encoding="utf-8") as handle:
-        for url in urls:
-            handle.write(f"{canonicalize_url(url)}\n")
+    _runtime_append_seen_urls(
+        source,
+        urls,
+        config=get_default_config(),
+        canonicalize_url=canonicalize_url,
+    )
 
 
 def _iter_scanned_sitemaps(source: str) -> set[str]:
-    config = get_default_config()
-    path = config.source_scanned_sitemaps_path(source)
-    if not path.exists():
-        return set()
-    return {line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()}
+    return _runtime_iter_scanned_sitemaps(source, config=get_default_config())
 
 
 def _append_scanned_sitemap(source: str, sitemap_url: str) -> None:
-    config = get_default_config()
-    path = config.source_scanned_sitemaps_path(source)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a", encoding="utf-8") as handle:
-        handle.write(f"{sitemap_url.strip()}\n")
+    _runtime_append_scanned_sitemap(source, sitemap_url, config=get_default_config())
 
 
 def _make_thread_session_getter(user_agent: str):
@@ -460,26 +467,11 @@ def _candidate_urls_from_sitemap_response(
 
 
 def _collect_listing_urls(source_spec: dict[str, object], max_pages: int) -> List[str]:
-    urls: List[str] = []
-    category_url = str(source_spec.get("category_url", "")).strip()
-    rss_url = str(source_spec.get("rss_url", "")).strip()
-    if category_url:
-        urls.append(category_url)
-    if rss_url:
-        urls.append(rss_url)
-
-    template = str(source_spec.get("listing_url_template", "")).strip()
-    if template:
-        for page in range(2, max_pages + 1):
-            urls.append(template.format(page=page))
-    return list(dict.fromkeys(urls))
+    return _runtime_collect_listing_urls(source_spec, max_pages)
 
 
 def _parse_ticker_argument(value: Optional[str]) -> List[str]:
-    if not value:
-        return []
-    parts = re.split(r"[\s,]+", str(value).strip())
-    return [part.upper() for part in parts if part.strip()]
+    return _runtime_parse_ticker_argument(value)
 
 
 def _collect_ticker_listing_urls(
@@ -488,56 +480,19 @@ def _collect_ticker_listing_urls(
     max_pages: int,
     default_max_pages: int,
 ) -> List[tuple[str, str]]:
-    template = str(source_spec.get("ticker_listing_url_template", "")).strip()
-    if not template:
-        return []
-    pages_per_ticker = max_pages if max_pages > 0 else max(int(default_max_pages), 1)
-    urls: List[tuple[str, str]] = []
-    seen: set[tuple[str, str]] = set()
-    for ticker in tickers:
-        for page in range(1, pages_per_ticker + 1):
-            item = (
-                ticker,
-                template.format(
-                    ticker=ticker,
-                    ticker_lower=ticker.lower(),
-                    ticker_upper=ticker.upper(),
-                    page=page,
-                ),
-            )
-            if item in seen:
-                continue
-            seen.add(item)
-            urls.append(item)
-    return urls
+    return _runtime_collect_ticker_listing_urls(source_spec, tickers, max_pages, default_max_pages)
 
 
 def _parse_timestamp(value: Optional[str]) -> pd.Timestamp | None:
-    if not value:
-        return None
-    text = str(value).strip()
-    is_iso_like = bool(re.match(r"^\d{4}-\d{1,2}-\d{1,2}", text))
-    dayfirst = "T" not in text and not is_iso_like
-    timestamp = pd.to_datetime(text, utc=True, errors="coerce", dayfirst=dayfirst)
-    if pd.isna(timestamp):
-        return None
-    return timestamp
+    return _runtime_parse_timestamp(value)
 
 
 def _parse_input_bound(value: Optional[str], is_end: bool) -> pd.Timestamp | None:
-    timestamp = _parse_timestamp(value)
-    if timestamp is None:
-        return None
-    text = str(value).strip()
-    if "T" not in text and " " not in text:
-        if is_end:
-            return timestamp + pd.Timedelta(days=1) - pd.Timedelta(seconds=1)
-        return timestamp
-    return timestamp
+    return _runtime_parse_input_bound(value, is_end)
 
 
 def _current_utc_timestamp() -> pd.Timestamp:
-    return pd.Timestamp.now(tz="UTC")
+    return _runtime_current_utc_timestamp()
 
 
 def _sitemap_range(loc: str) -> tuple[pd.Timestamp, pd.Timestamp] | None:
@@ -569,14 +524,12 @@ def _should_rescan_sitemap(
     now_ts: pd.Timestamp,
     recent_days: int,
 ) -> bool:
-    if recent_days <= 0:
-        return False
-    range_info = _sitemap_range(sitemap_url)
-    if range_info is None:
-        return True
-    _range_start, range_end = range_info
-    cutoff = now_ts - pd.Timedelta(days=recent_days)
-    return range_end >= cutoff
+    return _runtime_should_rescan_sitemap(
+        sitemap_url,
+        now_ts,
+        recent_days,
+        sitemap_range_re=SITEMAP_RANGE_RE,
+    )
 
 
 def _select_sitemap_urls(
@@ -585,27 +538,13 @@ def _select_sitemap_urls(
     end_ts: Optional[pd.Timestamp],
     max_documents: int,
 ) -> List[str]:
-    selected: List[tuple[pd.Timestamp, str]] = []
-    fallback_recent: List[tuple[pd.Timestamp, str]] = []
-    for row in index_rows:
-        loc = row["loc"]
-        row_lastmod = _parse_timestamp(row.get("lastmod")) or pd.Timestamp("1970-01-01", tz="UTC")
-        range_info = _sitemap_range(loc)
-        if range_info is not None:
-            range_start, range_end = range_info
-            if _ranges_overlap(start_ts, end_ts, range_start, range_end):
-                selected.append((range_end, loc))
-            continue
-
-        if any(token in loc for token in ("latest-news-sitemap.xml", "google-news-sitemap.xml", "category.rss")):
-            fallback_recent.append((row_lastmod, loc))
-
-    ordered = [loc for _ts, loc in sorted(dict.fromkeys(selected), reverse=True)]
-    if not ordered:
-        ordered = [loc for _ts, loc in sorted(dict.fromkeys(fallback_recent), reverse=True)]
-    if max_documents > 0:
-        ordered = ordered[:max_documents]
-    return ordered
+    return _runtime_select_sitemap_urls(
+        index_rows,
+        start_ts,
+        end_ts,
+        max_documents,
+        sitemap_range_re=SITEMAP_RANGE_RE,
+    )
 
 
 def _candidate_urls_from_sitemaps(
@@ -617,47 +556,26 @@ def _candidate_urls_from_sitemaps(
     retry_attempts: int = 3,
     retry_backoff_seconds: float = 1.0,
 ) -> List[str]:
-    urls: List[str] = []
-    seen_urls: set[str] = set()
-    total_sitemaps = len(sitemap_urls)
-    progress_every = 1 if total_sitemaps <= 10 else 10
-
-    for index, sitemap_url in enumerate(sitemap_urls, start=1):
-        try:
-            response = _get_with_retries(
-                session=session,
-                url=sitemap_url,
-                timeout=timeout,
-                retry_attempts=retry_attempts,
-                retry_backoff_seconds=retry_backoff_seconds,
-                request_label="Sitemap",
-            )
-        except requests.RequestException:
-            print(f"Skipping failed sitemap URL after retries: {sitemap_url}", flush=True)
-            continue
-        if response.status_code == 404:
-            print(f"Skipping missing sitemap URL: {sitemap_url}")
-            continue
-        response.raise_for_status()
-        for loc in _candidate_urls_from_sitemap_response(sitemap_url, response, start_ts, end_ts):
-            if loc in seen_urls:
-                continue
-            seen_urls.add(loc)
-            urls.append(loc)
-
-        if index == 1 or index % progress_every == 0 or index == total_sitemaps:
-            print(
-                f"Scanned {index}/{total_sitemaps} sitemap documents, accumulated {len(urls)} candidate article URLs",
-                flush=True,
-            )
-    return urls
+    return _runtime_candidate_urls_from_sitemaps(
+        session,
+        sitemap_urls,
+        start_ts,
+        end_ts,
+        timeout,
+        get_with_retries=_get_with_retries,
+        candidate_urls_from_sitemap_response_fn=_candidate_urls_from_sitemap_response,
+        retry_attempts=retry_attempts,
+        retry_backoff_seconds=retry_backoff_seconds,
+    )
 
 
 def _response_links(response: Response, base_url: str) -> List[str]:
-    content_type = response.headers.get("Content-Type", "").lower()
-    if "xml" in content_type or response.text.lstrip().startswith("<?xml"):
-        return extract_rss_article_links(response.text, base_url=base_url)
-    return extract_article_links(response.text, base_url=base_url)
+    return _runtime_response_links(
+        response,
+        base_url,
+        extract_rss_article_links=extract_rss_article_links,
+        extract_article_links=extract_article_links,
+    )
 
 
 def fetch_news(
@@ -669,336 +587,59 @@ def fetch_news(
     tickers: Optional[List[str]] = None,
     workers: int = 1,
     overwrite: bool = False,
+    progress_callback: Optional[callable] = None,
 ) -> List[dict[str, object]]:
     config = get_default_config()
     specs = load_source_specs(config=config)
     source_spec = specs.get(source)
     if source_spec is None:
         raise ValueError(f"Unsupported source: {source}")
-    config.source_raw_dir(source).mkdir(parents=True, exist_ok=True)
-    config.source_dir(source).mkdir(parents=True, exist_ok=True)
-    if overwrite:
-        for path in config.source_raw_dir(source).glob("*.jsonl"):
-            path.unlink()
-        seen_urls_path = config.source_seen_urls_path(source)
-        if seen_urls_path.exists():
-            seen_urls_path.unlink()
-        scanned_sitemaps_path = config.source_scanned_sitemaps_path(source)
-        if scanned_sitemaps_path.exists():
-            scanned_sitemaps_path.unlink()
-
-    user_agent = str(source_spec.get("user_agent", "Mozilla/5.0"))
-    session = _build_http_session(user_agent)
-
-    start_ts = _parse_input_bound(start_date, is_end=False)
-    end_ts = _parse_input_bound(end_date, is_end=True)
-    existing_urls = _iter_existing_urls(source)
-    scanned_sitemaps = _iter_scanned_sitemaps(source)
-
-    base_url = str(source_spec["base_url"])
-    records: List[dict[str, object]] = []
-    seen_urls: set[str] = set()
-    processed_candidates = 0
-    discovered_candidates = 0
-    skipped_missing_articles = 0
-    saved_records_count = 0
-    pending_records: List[dict[str, object]] = []
-    selected_sitemap_count = 0
-    ticker_list = [ticker.upper() for ticker in (tickers or []) if str(ticker).strip()]
-    used_ticker_mode = bool(ticker_list)
-    now_ts = _current_utc_timestamp()
-    article_workers = max(int(workers), 1)
-    thread_session_getter = _make_thread_session_getter(user_agent)
-    if article_workers > 1:
-        print(f"Parallel article fetching enabled with {article_workers} workers", flush=True)
-    try:
-        def process_candidate_urls(candidate_urls: List[str]) -> None:
-            nonlocal processed_candidates
-            nonlocal skipped_missing_articles
-            nonlocal saved_records_count
-            nonlocal pending_records
-            nonlocal discovered_candidates
-
-            urls_to_fetch: List[str] = []
-            for article_url in candidate_urls:
-                canonical_url = canonicalize_url(article_url)
-                if canonical_url in seen_urls or canonical_url in existing_urls:
-                    processed_candidates += 1
-                    if processed_candidates == 1 or processed_candidates % 50 == 0:
-                        print(
-                            f"Processed {processed_candidates} discovered article URLs so far, kept {len(records)} records, saved={saved_records_count}, skipped_missing={skipped_missing_articles}",
-                            flush=True,
-                        )
-                    continue
-                seen_urls.add(canonical_url)
-                urls_to_fetch.append(article_url)
-
-            discovered_candidates += len(urls_to_fetch)
-
-            def handle_result(result: dict[str, object], count_as_processed: bool = True) -> None:
-                nonlocal processed_candidates
-                nonlocal skipped_missing_articles
-                nonlocal saved_records_count
-                nonlocal pending_records
-
-                if count_as_processed:
-                    processed_candidates += 1
-                status = str(result["status"])
-                article_url = str(result["url"])
-                if status == "failed":
-                    print(f"Skipping failed article URL after retries: {article_url}", flush=True)
-                elif status == "missing":
-                    skipped_missing_articles += 1
-                    if skipped_missing_articles <= 3 or skipped_missing_articles % 25 == 0:
-                        print(
-                            f"Skipping missing article URL ({result['status_code']}): {article_url}",
-                            flush=True,
-                        )
-                elif status == "ok":
-                    record = dict(result["record"])
-                    records.append(record)
-                    pending_records.append(record)
-                    if len(pending_records) >= config.raw_save_batch_size:
-                        saved_records_count += save_fetched_news(pending_records, source=source)
-                        pending_records = []
-                    sleep(delay)
-                if processed_candidates == 1 or processed_candidates % 50 == 0:
-                    print(
-                        f"Processed {processed_candidates} discovered article URLs so far, kept {len(records)} records, saved={saved_records_count}, skipped_missing={skipped_missing_articles}",
-                        flush=True,
-                    )
-
-            if article_workers <= 1 or len(urls_to_fetch) <= 1:
-                for article_url in urls_to_fetch:
-                    processed_candidates += 1
-                    handle_result(
-                        _fetch_article_result(
-                            article_url=article_url,
-                            start_ts=start_ts,
-                            end_ts=end_ts,
-                            timeout=config.source_timeout_seconds,
-                            retry_attempts=config.request_retry_attempts,
-                            retry_backoff_seconds=config.request_retry_backoff_seconds,
-                            get_session=thread_session_getter,
-                        ),
-                        count_as_processed=False,
-                    )
-                return
-
-            with ThreadPoolExecutor(max_workers=article_workers, thread_name_prefix="news-fetch") as executor:
-                for result in executor.map(
-                    lambda url: _fetch_article_result(
-                        article_url=url,
-                        start_ts=start_ts,
-                        end_ts=end_ts,
-                        timeout=config.source_timeout_seconds,
-                        retry_attempts=config.request_retry_attempts,
-                        retry_backoff_seconds=config.request_retry_backoff_seconds,
-                        get_session=thread_session_getter,
-                    ),
-                    urls_to_fetch,
-                ):
-                    handle_result(result)
-
-        sitemap_index_url = str(source_spec.get("sitemap_index_url", "")).strip()
-        if ticker_list:
-            ticker_listing_urls = _collect_ticker_listing_urls(
-                source_spec=source_spec,
-                tickers=ticker_list,
-                max_pages=max_pages,
-                default_max_pages=config.max_listing_pages,
-            )
-            print(
-                f"Ticker mode enabled for {', '.join(ticker_list)} across {len(ticker_listing_urls)} listing pages",
-                flush=True,
-            )
-            for listing_index, (ticker, listing_url) in enumerate(ticker_listing_urls, start=1):
-                try:
-                    response = _get_with_retries(
-                        session=session,
-                        url=listing_url,
-                        timeout=config.source_timeout_seconds,
-                        retry_attempts=config.request_retry_attempts,
-                        retry_backoff_seconds=config.request_retry_backoff_seconds,
-                        request_label=f"Ticker listing {ticker}",
-                    )
-                except requests.RequestException:
-                    print(f"Skipping failed ticker listing URL after retries: {listing_url}", flush=True)
-                    continue
-                if response.status_code == 404:
-                    print(f"Skipping missing ticker listing URL: {listing_url}", flush=True)
-                    continue
-                response.raise_for_status()
-                ticker_candidate_urls = _response_links(response, base_url=base_url)
-                print(
-                    f"Ticker listing {listing_index}/{len(ticker_listing_urls)} for {ticker} yielded {len(ticker_candidate_urls)} candidate article URLs",
-                    flush=True,
-                )
-                process_candidate_urls(ticker_candidate_urls)
-        elif sitemap_index_url:
-            try:
-                sitemap_index_response = _get_with_retries(
-                    session=session,
-                    url=sitemap_index_url,
-                    timeout=config.source_timeout_seconds,
-                    retry_attempts=config.request_retry_attempts,
-                    retry_backoff_seconds=config.request_retry_backoff_seconds,
-                    request_label="Sitemap index",
-                )
-            except requests.RequestException:
-                print(
-                    f"Failed to load sitemap index after retries: {sitemap_index_url}. Falling back to listing pages.",
-                    flush=True,
-                )
-            else:
-                index_rows = parse_sitemap_index(sitemap_index_response.text)
-                sitemap_urls = _select_sitemap_urls(index_rows, start_ts=start_ts, end_ts=end_ts, max_documents=max_pages)
-                selected_sitemap_count = len(sitemap_urls)
-                print(f"Selected {len(sitemap_urls)} sitemap documents from {sitemap_index_url}", flush=True)
-                if sitemap_urls:
-                    print("Streaming sitemap scan and article fetch...", flush=True)
-                progress_every = 1 if len(sitemap_urls) <= 10 else 10
-                for sitemap_index, sitemap_url in enumerate(sitemap_urls, start=1):
-                    should_recheck_recent = sitemap_url in scanned_sitemaps and _should_rescan_sitemap(
-                        sitemap_url,
-                        now_ts=now_ts,
-                        recent_days=config.rescan_recent_sitemap_days,
-                    )
-                    if sitemap_url in scanned_sitemaps and not should_recheck_recent:
-                        if (
-                            sitemap_index == 1
-                            or sitemap_index % progress_every == 0
-                            or sitemap_index == len(sitemap_urls)
-                        ):
-                            print(
-                                f"Sitemap {sitemap_index}/{len(sitemap_urls)} already scanned, skipping",
-                                flush=True,
-                            )
-                        continue
-                    if should_recheck_recent:
-                        print(
-                            f"Sitemap {sitemap_index}/{len(sitemap_urls)} was scanned before but is still recent, rechecking",
-                            flush=True,
-                        )
-                    try:
-                        response = _get_with_retries(
-                            session=session,
-                            url=sitemap_url,
-                            timeout=config.source_timeout_seconds,
-                            retry_attempts=config.request_retry_attempts,
-                            retry_backoff_seconds=config.request_retry_backoff_seconds,
-                            request_label="Sitemap",
-                        )
-                    except requests.RequestException:
-                        print(f"Skipping failed sitemap URL after retries: {sitemap_url}", flush=True)
-                        continue
-                    if response.status_code == 404:
-                        print(f"Skipping missing sitemap URL: {sitemap_url}", flush=True)
-                        continue
-                    response.raise_for_status()
-                    sitemap_candidate_urls = _candidate_urls_from_sitemap_response(
-                        sitemap_url,
-                        response,
-                        start_ts,
-                        end_ts,
-                    )
-                    print(
-                        f"Sitemap {sitemap_index}/{len(sitemap_urls)} yielded {len(sitemap_candidate_urls)} candidate article URLs; discovered={discovered_candidates + len(sitemap_candidate_urls)}",
-                        flush=True,
-                    )
-                    process_candidate_urls(sitemap_candidate_urls)
-                    if sitemap_url not in scanned_sitemaps:
-                        _append_scanned_sitemap(source, sitemap_url)
-                        scanned_sitemaps.add(sitemap_url)
-                    if (
-                        sitemap_index == 1
-                        or sitemap_index % progress_every == 0
-                        or sitemap_index == len(sitemap_urls)
-                    ):
-                        print(
-                            f"Completed sitemap {sitemap_index}/{len(sitemap_urls)}; processed={processed_candidates}, saved={saved_records_count}",
-                            flush=True,
-                        )
-
-        if not used_ticker_mode and selected_sitemap_count == 0:
-            listing_urls = _collect_listing_urls(source_spec, max_pages=max_pages)
-            for listing_index, listing_url in enumerate(listing_urls, start=1):
-                try:
-                    response = _get_with_retries(
-                        session=session,
-                        url=listing_url,
-                        timeout=config.source_timeout_seconds,
-                        retry_attempts=config.request_retry_attempts,
-                        retry_backoff_seconds=config.request_retry_backoff_seconds,
-                        request_label="Listing",
-                    )
-                except requests.RequestException:
-                    print(f"Skipping failed listing URL after retries: {listing_url}", flush=True)
-                    continue
-                if response.status_code == 404:
-                    print(f"Skipping missing listing URL: {listing_url}")
-                    continue
-                response.raise_for_status()
-                listing_candidate_urls = _response_links(response, base_url=base_url)
-                print(
-                    f"Listing {listing_index}/{len(listing_urls)} yielded {len(listing_candidate_urls)} candidate article URLs",
-                    flush=True,
-                )
-                process_candidate_urls(listing_candidate_urls)
-        if pending_records:
-            saved_records_count += save_fetched_news(pending_records, source=source)
-        return records
-    except KeyboardInterrupt as exc:
-        if pending_records:
-            saved_records_count += save_fetched_news(pending_records, source=source)
-        raise NewsFetchInterrupted(
-            records=records,
-            output_dir=str(config.source_raw_dir(source)),
-            processed_candidates=processed_candidates,
-            total_candidates=discovered_candidates,
-            saved_records_count=saved_records_count,
-        ) from exc
+    return _runtime_fetch_news(
+        source=source,
+        start_date=start_date,
+        end_date=end_date,
+        max_pages=max_pages,
+        delay=delay,
+        tickers=tickers,
+        workers=workers,
+        overwrite=overwrite,
+        progress_callback=progress_callback,
+        config=config,
+        source_spec=source_spec,
+        build_http_session=_build_http_session,
+        make_thread_session_getter=_make_thread_session_getter,
+        fetch_article_result=_fetch_article_result,
+        canonicalize_url=canonicalize_url,
+        parse_sitemap_index=parse_sitemap_index,
+        parse_input_bound=_parse_input_bound,
+        iter_existing_urls=_iter_existing_urls,
+        iter_scanned_sitemaps=_iter_scanned_sitemaps,
+        append_scanned_sitemap=_append_scanned_sitemap,
+        collect_ticker_listing_urls=_collect_ticker_listing_urls,
+        collect_listing_urls=_collect_listing_urls,
+        current_utc_timestamp=_current_utc_timestamp,
+        select_sitemap_urls=_select_sitemap_urls,
+        should_rescan_sitemap=_should_rescan_sitemap,
+        response_links=_response_links,
+        candidate_urls_from_sitemap_response=_candidate_urls_from_sitemap_response,
+        get_with_retries=_get_with_retries,
+        save_fetched_news=save_fetched_news,
+        interrupted_exception_cls=NewsFetchInterrupted,
+    )
 
 
 def save_fetched_news(records: List[dict[str, object]], source: str) -> int:
-    config = get_default_config()
-    tracked_urls = _iter_existing_urls(source)
-    unique_records: List[dict[str, object]] = []
-    new_urls: List[str] = []
-    for record in records:
-        canonical_url = canonicalize_url(str(record.get("url", "")))
-        if not canonical_url or canonical_url in tracked_urls:
-            continue
-        tracked_urls.add(canonical_url)
-        payload = dict(record)
-        payload["url"] = canonical_url
-        unique_records.append(payload)
-        new_urls.append(canonical_url)
-
-    grouped: dict[str, list[dict[str, object]]] = {}
-    for record in unique_records:
-        published_ts = pd.to_datetime(record.get("published_at"), utc=True, errors="coerce")
-        if pd.isna(published_ts):
-            date_key = UNPARSABLE_RAW_BUCKET
-        else:
-            date_key = pd.Timestamp(published_ts).strftime("%Y-%m-%d")
-        grouped.setdefault(date_key, []).append(record)
-    for date_key, rows in grouped.items():
-        path = config.source_raw_dir(source) / f"{date_key}.jsonl"
-        write_jsonl_records(path, rows, append=path.exists())
-    _append_seen_urls(source, new_urls)
-    update_source_manifest(
-        source=source,
-        payload={
-            "source": source,
-            "raw_file_count": len(list(config.source_raw_dir(source).glob("*.jsonl"))),
-            "article_count": len(tracked_urls),
-            "last_saved_batch_count": len(unique_records),
-            "last_fetch_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        },
-        config=config,
+    return _runtime_save_fetched_news(
+        records,
+        source,
+        config=get_default_config(),
+        canonicalize_url=canonicalize_url,
+        iter_existing_urls_fn=_iter_existing_urls,
+        append_seen_urls_fn=_append_seen_urls,
+        update_source_manifest=update_source_manifest,
+        write_jsonl_records=write_jsonl_records,
+        unparsable_raw_bucket=UNPARSABLE_RAW_BUCKET,
     )
-    return len(unique_records)
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -1030,20 +671,82 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = build_arg_parser().parse_args()
+    options = options_from_namespace(args, parse_ticker_argument=_parse_ticker_argument)
+    tracker = JobStatusTracker(
+        "fetch_news",
+        artifacts={
+            "raw_dir": get_default_config().source_raw_dir(args.source),
+            "source_manifest": get_default_config().source_manifest_path(args.source),
+        },
+    )
+    def progress_callback(payload: dict[str, object]) -> None:
+        tracker.write(
+            status="running",
+            phase=str(payload.get("phase", "fetch")),
+            progress={
+                "source": args.source,
+                "tickers": options.tickers,
+                "start_date": options.start_date,
+                "end_date": options.end_date,
+                "max_pages": options.max_pages,
+                "workers": options.workers,
+                **payload,
+            },
+        )
     try:
+        tracker.write(
+            status="running",
+            phase="start",
+            progress={
+                "source": args.source,
+                "tickers": options.tickers,
+                "start_date": options.start_date,
+                "end_date": options.end_date,
+                "max_pages": options.max_pages,
+                "workers": options.workers,
+                "overwrite": options.overwrite,
+                "processed_candidates": 0,
+                "saved_records_count": 0,
+            },
+        )
         records = fetch_news(
-            source=args.source,
-            start_date=args.start_date,
-            end_date=args.end_date,
-            max_pages=args.max_pages,
-            delay=args.delay,
-            tickers=_parse_ticker_argument(args.tickers),
-            workers=args.workers,
-            overwrite=args.overwrite,
+            source=options.source,
+            start_date=options.start_date,
+            end_date=options.end_date,
+            max_pages=options.max_pages,
+            delay=options.delay,
+            tickers=options.tickers,
+            workers=options.workers,
+            overwrite=options.overwrite,
+            progress_callback=progress_callback,
+        )
+        tracker.write(
+            status="complete",
+            phase="complete",
+            progress={
+                "source": args.source,
+                "tickers": options.tickers,
+                "start_date": options.start_date,
+                "end_date": options.end_date,
+                "max_pages": options.max_pages,
+                "workers": options.workers,
+                "saved_records_count": len(records),
+            },
         )
         print(f"Fetched {len(records)} raw articles into data/news/{args.source}/raw")
         return 0
     except NewsFetchInterrupted as exc:
+        tracker.write(
+            status="interrupted",
+            phase="interrupted",
+            progress={
+                "source": args.source,
+                "tickers": options.tickers,
+                "processed_candidates": exc.processed_candidates,
+                "total_candidates": exc.total_candidates,
+                "saved_records_count": exc.saved_records_count,
+            },
+        )
         print("\nCancellation requested. Partial raw news records were already saved.", flush=True)
         print(
             f"Fetch cancelled after processing {exc.processed_candidates}/{exc.total_candidates} candidate article pages.",
@@ -1051,6 +754,17 @@ def main() -> int:
         )
         print(f"Saved {exc.saved_records_count} raw articles so far into {exc.output_dir}", flush=True)
         return 130
+    except Exception as exc:
+        tracker.write(
+            status="failed",
+            phase="failed",
+            progress={
+                "source": args.source,
+                "tickers": options.tickers,
+            },
+            error={"message": str(exc), "type": exc.__class__.__name__},
+        )
+        raise
 
 
 if __name__ == "__main__":

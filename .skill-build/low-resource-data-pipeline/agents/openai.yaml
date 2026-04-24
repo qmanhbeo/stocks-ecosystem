@@ -1,0 +1,4 @@
+interface:
+  display_name: "Low-Resource Data Pipeline"
+  short_description: "Design abort-safe data tools with checkpoints and incremental outputs"
+  default_prompt: "Use $low-resource-data-pipeline to design, probe, refactor, or validate an abort-safe, checkpointed, observable data pipeline with incremental outputs for this repo under the hard local RAM and VRAM limits."

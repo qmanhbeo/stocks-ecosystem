@@ -45,7 +45,10 @@ This means the root data directory is the canonical dataset surface for the whol
 
 `data/llm_cache/` is the per-day CafeF LLM extraction cache: one JSON object per filtered article, used as the input to `alpha-research-lab/data_tools/build_llm_news_features.py`.
 
-The canonical news pipeline can now also publish a separate local Vietnamese-encoder lane under `data/features/news/`: whole-article PhoBERT sentiment writes dedicated `datasets/phobert_*` artifacts, uses a tagged-only `phobert_input_articles.parquet` staging cache plus resumable checkpoint shards for long backfills, and publishes additive `phobert_*` columns in `predictions/*_news_features.parquet`. This is isolated from `data/llm_cache/` and does not overwrite the hosted LLM semantic/event surface.
+The canonical news pipeline can now also publish separate additive local lanes under `data/features/news/`: whole-article PhoBERT sentiment writes dedicated `datasets/phobert_*` artifacts, uses a tagged-only `phobert_input_articles.parquet` staging cache plus resumable checkpoint shards for long backfills, and publishes additive `phobert_*` columns in `predictions/*_news_features.parquet`. A second local Ollama probe lane writes dedicated `datasets/ollama_guarded_*` article and ticker-day datasets from deterministic tagged article-ticker linkage, with its own tagged-only input cache and resumable checkpoint shards, but it is intentionally limited to coarse non-sentiment fields such as confidence, `is_forward_looking`, `is_rumor`, and coverage diagnostics. On the current constrained workstation, the canonical local expansion path is still encoder-first: keep PhoBERT as the main local production lane, make a separate PhoBERT `forward_looking` head the first expansion beyond sentiment, and treat the Ollama probe lane as additive audit infrastructure rather than the preferred long-run local inference path. Both lanes stay isolated from `data/llm_cache/` and do not overwrite the hosted LLM semantic/event surface.
+The first encoder-distillation path now has a dedicated sequential entrypoint, `python -m research_pipelines.news_features.core.train_phobert_forward_looking`, which writes internal `datasets/phobert_forward_looking_*` teacher/stage artifacts under `data/features/news/`, keeps durable training manifests and winner bundles under `data/model_checkpoints/news/phobert_forward_looking/`, and records handoff summaries under `alpha-research-lab/artifacts/`. Once that lane has a winner, `python -m research_pipelines.news_features.core.publish_phobert_forward_looking_features` scores the full tagged article universe through the local winner, writes additive `datasets/phobert_forward_looking_*` article and ticker-day datasets plus resumable publish checkpoints, and overlays additive `phobert_forward_looking_*` columns onto `predictions/*_news_features.parquet` without wiping the existing tabular, sentiment, or embedding lanes.
+
+The same pipeline now stages the two legacy heavyweight rebuilds as well: tabular feature rebuilds reuse an internal `news_tabular_article_stage.parquet` cache, and embedding rebuilds reuse an internal `embedding_input_articles.parquet` cache plus resumable `embedding_checkpoint/` shards. These are producer-side caches only; the published contracts remain `news_tabular_features.parquet`, `article_embeddings.parquet`, and `news_embedding_features.parquet`.
 
 `data/foreign_flow/` is the historical CafeF foreign-investor-flow archive. It
 stores per-ticker daily buy/sell/net volume and value, remaining foreign room,
@@ -92,6 +95,35 @@ re-fetching HNX.
 6. The lab now also publishes the canonical corporate-event surface at `data/features/event_surface_daily.parquet`
 7. The lab can publish canonical model-agnostic recommendation candidates at `data/features/recommendations/<profile>/latest_candidates.parquet`
 8. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
+
+## Lightweight-First Execution Rule
+
+This workspace treats constrained local execution as a real contract, not a convenience preference.
+
+- prefer incremental, shard-based, and publish-only commands over full rebuilds
+- do not run a heavyweight aggregate pipeline when a narrower producer or export step can publish the same contract
+- if a command is a true full rebuild, it should be named or gated explicitly as a full rebuild
+- if a lighter path exists, it is the default path
+
+This matters on local WSL machines with modest RAM. The intended posture is modular pipelines first, heavyweight rebuilds only when upstream contracts actually changed.
+
+## Structure And Token Rule
+
+This workspace also treats maintainability and AI-token efficiency as real
+engineering constraints.
+
+- keep one stable user-facing command for a pipeline, but split non-trivial
+  logic into focused stage modules
+- prefer thin orchestrators over large mixed-responsibility scripts
+- avoid introducing new monolith files when teacher/build/train/publish concerns
+  can be separated cleanly
+- do not split code into excessive micro-files either; the target is a small
+  set of readable modules with clear ownership
+
+The reason is practical rather than aesthetic: smaller, stage-shaped modules
+are easier to resume after failures, easier for another engineer to pick up,
+and materially cheaper for future agent sessions because less unrelated code has
+to be reloaded into context.
 
 ## Fresh Start
 

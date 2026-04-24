@@ -5,6 +5,19 @@ state of each data source. Read this before running experiments or wondering why
 
 ---
 
+## Lightweight-First Rule
+
+Treat local execution limits as a real operator constraint.
+
+- prefer incremental refresh, partial rebuild, checkpointed backfill, or publish-only commands over full rebuilds
+- do not use a heavyweight aggregate pipeline when a narrower producer or export step can publish the same maintained artifact
+- if a script is a true full rebuild, it should say so clearly in the docs or command shape
+- if a lighter path exists for the same consumer contract, that lighter path is the default operator path
+
+This matters on local WSL setups with modest RAM. Keep producer workflows modular whenever possible.
+
+---
+
 ## Quick Status Table
 
 | Data | In git? | In repo now? | Restore command |
@@ -282,9 +295,14 @@ issuer-disclosure history from the HNX mobile site.
 - **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --tickers DL1 --parse-transaction-attachments --ocr-transaction-attachments`
 - **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --rebuild-transaction-extracts-from-local --ocr-transaction-attachments`
 - **Usage:** `python data_tools/fetch_hnx_official_disclosures.py --rebuild-transaction-extracts-from-local --ocr-transaction-attachments --refresh-transaction-text-cache`
+- **Structure note:** the CLI contract and durable per-ticker rebuild logic now sit behind the private `data_tools/news_runtime/hnx_disclosures/` package, but run modes, output tables, per-ticker state files, and operator flags are unchanged
 - **Notes:**
   - default run refreshes only the official HNX symbol universe
   - per-ticker disclosure history is fetched only when `--tickers` or `--fetch-all-linked` is supplied
+  - **Status file:** `alpha-research-lab/artifacts/job_status/fetch_hnx_official_disclosures.json`
+  - **Durable partial state:** per-ticker shard files and state sidecars now live under `data/official_disclosures/hnx/per_ticker/`
+  - **Resume behavior:** reruns skip tickers whose durable shard/state already satisfies the current fetch flags; `--refresh-transaction-text-cache` forces transaction-extract rebuilds instead of reuse
+  - **Restart safety:** latest-run aggregate parquets are rebuilt from durable per-ticker state, so completed tickers survive aborts
   - attachment PDFs are downloaded only when `--download-attachments`, `--download-transaction-attachments`, or `--parse-transaction-attachments` is supplied
   - `issuer_transaction_attachment_extracts.parquet` stores attachment-level structured metadata and parsing results for transaction-keyword PDFs
   - current local parsing first tries embedded PDF text and then can fall back to EasyOCR for scanned filings when `--ocr-transaction-attachments` is supplied
@@ -412,6 +430,11 @@ Crawl raw news articles from cafef.vn into `data/news/cafef/raw/`.
 - **Status:** Active
 - **Output:** `data/news/cafef/raw/YYYY-MM-DD.jsonl` (one JSON object per article)
 - **Role:** live/incremental crawler; use alongside the archive restore on fresh clones
+- **Status file:** `alpha-research-lab/artifacts/job_status/fetch_news.json`
+- **Durable partial state:** raw JSONL saves happen incrementally in batch flushes during the run; source manifests update after each flush
+- **Resume behavior:** reruns reuse the existing raw day files, `scraped_urls.txt`, and scanned sitemap ledger; `--overwrite` resets those local crawler surfaces first
+- **Restart safety:** safe by default because completed raw batches stay on disk; the status file exposes processed candidates, discovered candidates, saved rows, and the current sitemap/listing phase
+- **Structure note:** the public entrypoint now stays thin; crawler discovery, persistence, and orchestration internals live under the private `data_tools/news_runtime/fetch_news/` package so operator CLI and output paths stay unchanged while the runtime is easier to inspect stage-by-stage
 
 ### `fetch_news_archive.py`
 Restore the full 2016–2026 cafef news archive from Google Drive.
@@ -483,21 +506,25 @@ Extract per-ticker daily sentiment from cafef JSONL files using a keyword lexico
 - **Output:** `data/features/xs_news_sentiment_daily.parquet`
 - **Coverage:** ~0.8% of (day, ticker) pairs (very sparse; this is the raw base table, not a dense feature surface)
 - **Scope note:** this is the legacy keyword baseline only. The canonical
-  `research_pipelines/news_features/` producer now also owns a separate
-  whole-article PhoBERT sentiment lane under `data/features/news/datasets/`,
-  with a tagged-only `phobert_input_articles.parquet` staging cache plus
-  resumable checkpoint shards, and that additive local-encoder path does not
-  touch `data/llm_cache/`.
+  `research_pipelines/news_features/` producer now also owns two separate
+  local lanes under `data/features/news/datasets/`:
+  - whole-article PhoBERT sentiment with tagged-only
+    `phobert_input_articles.parquet` staging plus resumable checkpoint shards
+  - a guarded local Ollama lane with deterministic tagged ticker linkage,
+    `ollama_guarded_input_articles.parquet`, resumable checkpoint shards, and
+    only coarse non-sentiment local fields (`confidence`,
+    `is_forward_looking`, `is_rumor`, plus coverage diagnostics)
+  neither additive local lane touches `data/llm_cache/`.
 
-### `extract_llm_news_features.py`
-Extract structured per-article features from CafeF JSONL using Google Gemini models only.
+### `extract_news_teacher_features.py`
+Preferred operator name for the hosted CafeF teacher-feature extractor.
 - **Status:** Active canonical extractor
 - **Input:** `data/news/cafef/raw/YYYY-MM-DD.jsonl`
 - **Output:** `data/llm_cache/YYYY-MM-DD.jsonl` (resume-safe, atomic write; one JSON object per filtered article)
-- **Usage:** `python data_tools/extract_llm_news_features.py --date-from 2023-01-01 --date-to 2023-01-03`
-- **Typical Google-only run:** `python data_tools/extract_llm_news_features.py --workers 8`
-- **Recommended frontier backfill:** `python data_tools/extract_llm_news_features.py --provider google --model gemini-3.1-flash-lite-preview --workers 4 --batch-size 10 --timeout 45`
-- **Typical single-model smoke test:** `python data_tools/extract_llm_news_features.py --model gemini-2.5-flash-lite --workers 1 --date-from 2016-01-01 --date-to 2016-01-03`
+- **Usage:** `python data_tools/extract_news_teacher_features.py --date-from 2023-01-01 --date-to 2023-01-03`
+- **Typical Google-only run:** `python data_tools/extract_news_teacher_features.py --workers 8`
+- **Recommended frontier backfill:** `python data_tools/extract_news_teacher_features.py --provider google --model gemini-3.1-flash-lite-preview --workers 4 --batch-size 10 --timeout 45`
+- **Typical single-model smoke test:** `python data_tools/extract_news_teacher_features.py --model gemini-2.5-flash-lite --workers 1 --date-from 2016-01-01 --date-to 2016-01-03`
 - **Provider notes:** the canonical script is pinned to the Google/Gemini model pool; model overrides accept comma-separated Google model names via `--model`
 - **Credentials:** canonical runs read `GOOGLE_API_KEY`, `GOOGLE_API_KEY_2`, `GOOGLE_API_KEY_3`, or `GOOGLE_API_KEYS` from the shell or `.env`
 - **Rotation:** Google keys are consumed in order and failed keys are cooled down before the next request retries on another key; when one Google model is the only healthy survivor, the extractor now fans that model out across all configured `GOOGLE_API_KEY*` slots (`@gk1`, `@gk2`, ...) so keys are not stranded on dead models
@@ -505,16 +532,26 @@ Extract structured per-article features from CafeF JSONL using Google Gemini mod
 - **Speed knobs:** `--workers`, `--batch-size`, `--num-predict`, `--max-summary-chars`
 - **Concurrency note:** `--workers` is same-day batch concurrency. Days are processed serially so cancellation stops before later days start.
 - **Progress logs:** timestamped day/batch progress, rates, ETA, error counts
+- **Status file:** `alpha-research-lab/artifacts/job_status/extract_llm_news_features.json`
+- **Structured run state:** pending days, completed days, retry-only days, current day, skipped-existing count, and aggregate parsed/error totals are now written mechanically during the run
 - **Reliability:** auto-retries failed or partial batches with smaller slices, falls through to alternate hosted models on single-item failures, and reprocesses existing error-only cache days automatically
 - **Cache schema:** each cache row keeps the LLM semantic fields plus deterministic CafeF metadata. LLM fields are `id`, `tickers`, `related_tickers`, `sentiment`, `confidence`, `event_type`, `magnitude`, `is_forward_looking`, `market_tone`, `is_rumor`, `surprise_direction`, `impact_scope`, `named_persons`, `expectation_alignment`, `information_novelty`, `macro_theme`, `source_authority`, and `causal_impact_label`.
 - **Deterministic enrichments:** the extractor also adds `published_at`, `source_domain`, `event_time_type`, `article_text_length`, `article_has_numbers`, and `article_mentions_percent` in Python, not via the LLM.
 - **Schema rules:** invalid enum values are normalized to null/empty-compatible values in code, and historical cache files without the newer fields remain valid inputs to the builder.
+- **Restart safety:** safe by default because day outputs remain one-file-per-day and the status file exposes the exact remaining day list without reading logs
+- **Structure note:** the operator-facing script stays canonical, but the private `data_tools/news_runtime/llm_extract/` package now owns day classification, status bookkeeping, and per-day runtime boundaries so new maintenance work can stay off the entrypoint
+- **Compatibility alias:** `python data_tools/extract_llm_news_features.py ...` still resolves to the same implementation and status/output paths
 
-### `extract_llm_news_features_legacy.py`
-Legacy multi-provider extractor retained for historical rebuilds and debugging.
+### `extract_news_teacher_features_legacy.py`
+Preferred compatibility name for the older multi-provider / Ollama teacher surface.
 - **Status:** Legacy compatibility copy
 - **Behavior:** keeps the older hosted-provider pool, `auto` routing, and local Ollama path
 - **Use when:** you need to reproduce an older multi-provider run or inspect provider-pool behavior directly
+- **Status file:** `alpha-research-lab/artifacts/job_status/extract_llm_news_features_legacy.json`
+- **Resume behavior:** same day-level cache reuse contract as the canonical extractor, with structured pending/completed/retry-only state now written for watchdog compatibility
+- **Legacy limit:** keep new default operational work on `extract_news_teacher_features.py`; the legacy file remains compatibility-oriented, not the preferred extension surface
+- **Structure note:** compatibility-heavy helpers still remain importable from the legacy entrypoint, but the largest runtime blocks now delegate into private `data_tools/news_runtime/llm_extract/legacy_*` modules so the legacy surface can stay stable without keeping all execution logic in one file
+- **Compatibility alias:** `python data_tools/extract_llm_news_features_legacy.py ...` still resolves to the same implementation and status/output paths
 
 ### `test_model_pool.py`
 Probe hosted model pools without writing cache outputs.
@@ -530,6 +567,10 @@ Build ticker-day and dense market-daily LLM features from `data/llm_cache/`.
   - `data/features/xs_llm_news_market_daily.parquet`
 - **Usage:** `python data_tools/build_llm_news_features.py`
 - **Compatibility:** historical cache files are safe; missing fields are filled with nulls or zeros where appropriate.
+- **Status file:** `alpha-research-lab/artifacts/job_status/build_llm_news_features.json`
+- **Durable partial state:** per-day staged aggregates now write under `data/features/_llm_news_build_stage/`
+- **Resume behavior:** reruns reuse current staged day shards when the shard is newer than the source cache day, then finalize the published outputs from the staged daily surface
+- **Restart safety:** published outputs are atomically replaced only during finalize; staged daily shards survive interruption
 - **Ticker-day outputs:** the dense ticker-day surface includes the base sentiment fields plus these rolling 5d features:
   - `llm_expectation_beats_5d`
   - `llm_expectation_misses_5d`
@@ -554,9 +595,11 @@ Build ticker-day and dense market-daily LLM features from `data/llm_cache/`.
   - `frac_banking_theme`
   - `frac_causal_financing_negative`
 - **Separation rule:** these hosted LLM outputs remain the canonical rich
-  semantic/event contract. The local PhoBERT news lane publishes additive
-  `phobert_*` datasets and per-ticker export columns under
-  `data/features/news/`; it does not overwrite this builder's outputs.
+  semantic/event contract. The local PhoBERT lane publishes additive
+  `phobert_*` datasets plus per-ticker export columns under
+  `data/features/news/`, and the guarded local Ollama lane publishes additive
+  `ollama_guarded_*` datasets only; neither path overwrites this builder's
+  outputs.
 
 ### `build_open_close_asymmetry_features.py`
 Build dense ticker-day open/close asymmetry features from OHLC.
