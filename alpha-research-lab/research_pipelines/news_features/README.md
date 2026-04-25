@@ -1,6 +1,6 @@
 # News Features
 
-`research_pipelines/news_features/` is the canonical news producer for the workspace. It reads shared raw news from `stocks/data/news/`, tags articles against the shared stock universe, builds daily tabular features, whole-article local PhoBERT sentiment features, transformer embeddings, and exports per-ticker parquet files for RL consumption where applicable. Optional side lanes still exist for forward-looking PhoBERT distillation and local Ollama probes, but the main production path is now encoder-first.
+`research_pipelines/news_features/` is the canonical news producer for the workspace. It reads shared raw news from `stocks/data/news/`, tags articles against the shared stock universe, builds daily tabular features, whole-article local PhoBERT sentiment features, a separate PhoBERT forward-looking lane, transformer embeddings, and exports per-ticker parquet files for RL consumption where applicable. A smaller Ollama residual lane now handles only the local semantic fields that are still awkward for PhoBERT. The main production path is local-first and encoder-first.
 
 By default the pipeline resolves shared data under `/home/manh/stocks/data`. Override that with `STOCKS_DATA_ROOT` if you need a different workspace data root.
 
@@ -36,16 +36,20 @@ python -m research_pipelines.news_features.core.build_embedding_features
 python -m research_pipelines.news_features.core.aggregate_daily_features
 ```
 
-Optional side lanes with clearer preferred names:
+Local-first semantic side lanes with clearer preferred names:
 
 ```bash
 python -m research_pipelines.news_features.core.train_phobert_forward_looking
 python -m research_pipelines.news_features.core.publish_phobert_forward_looking_features
+python -m research_pipelines.news_features.core.train_phobert_article_scope
+python -m research_pipelines.news_features.core.build_phobert_article_scope_features
+python -m research_pipelines.news_features.core.train_phobert_source_type
+python -m research_pipelines.news_features.core.build_phobert_source_type_features
 python -m research_pipelines.news_features.core.build_ollama_probe_features
 ```
 
 Compatibility note:
-- `build_ollama_guarded_features` still works, but `build_ollama_probe_features` is the preferred operator name because this lane is not part of the main published feature surface today
+- `build_ollama_guarded_features` still works, but `build_ollama_probe_features` is the preferred operator name
 - `publish_phobert_forward_looking_exports` still works, but `publish_phobert_forward_looking_features` is the clearer preferred alias
 
 Hard operating rule:
@@ -71,7 +75,7 @@ python -m research_pipelines.news_features.core.publish_phobert_forward_looking_
 Advanced equivalent:
 
 ```bash
-python -m research_pipelines.news_features.core.aggregate_daily_features --sources phobert
+python -m research_pipelines.news_features.core.aggregate_daily_features --sources phobert phobert_forward_looking ollama_guarded
 ```
 
 Use the full pipeline only when upstream raw/normalized/tagged inputs or the
@@ -90,22 +94,41 @@ staying separate from `data/llm_cache/`. It first materializes a tagged-only
 with deterministic ticker linkage from tagged rows, writes resumable shards
 under `ollama_guarded_checkpoint/`, and only then publishes
 `ollama_guarded_article_features.parquet` plus
-`ollama_guarded_ticker_day_features.parquet`. In phase 1 this guarded lane is
-restricted to coarse non-sentiment fields: local confidence,
-`is_forward_looking`, `is_rumor`, and coverage / abstention diagnostics.
-Sentiment stays in the separate PhoBERT lane. These guarded local outputs are
-dataset-only and are not merged into `predictions/*_news_features.parquet`.
+`ollama_guarded_ticker_day_features.parquet`. This guarded lane is now the
+minimal local residual semantic contract:
+- local confidence
+- `event_family`
+- `impact_scope`
+- `source_authority`
+- `is_rumor`
+- coverage / abstention diagnostics
+
+Sentiment and forward-looking stay in the separate PhoBERT lanes. The guarded
+local daily aggregates now merge into `predictions/*_news_features.parquet`.
 
 Canonical roadmap on the current constrained workstation:
 - keep PhoBERT sentiment as the main local production lane
-- if expanding beyond sentiment, add separate PhoBERT heads rather than a
-  broader guarded-generator contract
-- the first such head should be `forward_looking`
+- keep PhoBERT forward-looking as the first separate local head
+- if expanding beyond that, add separate PhoBERT heads rather than a broader
+  guarded-generator contract
 - treat model probability as the first local confidence surface
-- keep `rumor` parked until weak-label quality is audited
-- keep the guarded Ollama lane as additive audit / probe infrastructure, not
-  the preferred long-run local inference path on the `3GB VRAM / 10GB RAM`
-  planning box
+- keep the Ollama lane minimal and residual rather than broad-schema
+- keep deterministic ticker linkage outside the model
+- use the locally proven best residual model on the `3GB VRAM / 10GB RAM`
+  planning box rather than forcing a nominally larger model class
+
+The semantic binary heads now use a slightly different training contract from
+the forward-looking lane where that is justified by the task:
+- `article_scope` and `source_type` stage datasets can use head-specific split
+  strategies instead of inheriting the forward-looking date split blindly
+- training calibrates a per-head positive decision threshold on the validation
+  split rather than assuming a hard `0.5` cutoff
+- heads can also enable train-time positive class weighting when label balance
+  is materially skewed
+
+That means the saved winner contract for the binary heads now includes the
+calibrated decision threshold, and publish uses that threshold when writing the
+article-level boolean label and daily positive-count/share surfaces.
 
 The first encoder-distillation builder is
 `python -m research_pipelines.news_features.core.train_phobert_forward_looking`.
@@ -151,6 +174,37 @@ python -m research_pipelines.news_features.core.train_phobert_forward_looking \
 
 - after the canary writes healthy teacher / stage / training state, rerun
   without `--candidate-name` to expand to the full candidate set
+
+The same canary rule now applies to the two new binary heads:
+
+```bash
+python -m research_pipelines.news_features.core.train_phobert_article_scope \
+  --candidate-name phobert_base
+
+python -m research_pipelines.news_features.core.build_phobert_article_scope_features
+
+python -m research_pipelines.news_features.core.train_phobert_source_type \
+  --candidate-name phobert_base
+
+python -m research_pipelines.news_features.core.build_phobert_source_type_features
+```
+
+Operator note:
+- these binary heads now mirror the forward-looking lane more closely at the
+  trainer/runtime level too
+- expect epoch-level training logs and per-epoch status updates instead of a
+  long silent gap after model load
+- the binary-head publish path now mirrors the forward-looking lane too:
+  article scoring is shard-checkpointed under the head-specific checkpoint
+  directory and final article / ticker-day outputs are only promoted after
+  finalize succeeds
+- the CLI wrappers now apply the local offline-transformers defaults
+  automatically when the repo is configured for local-file-first PhoBERT loads
+- the heavy PhoBERT train/publish paths now also prepend `/usr/lib/wsl/lib`
+  into `PATH` and `LD_LIBRARY_PATH` when present
+- on this WSL workstation, PhoBERT train/publish now fail fast if CUDA is
+  expected but hidden by a sandbox/container; use `NEWS_FEATURES_ALLOW_CPU=1`
+  only for an explicit CPU fallback
 
 Resume / watchdog surfaces for this lane:
 - machine-readable heartbeat:
@@ -238,4 +292,4 @@ RL now consumes these exports through its own adapter layer. The producer-side m
 
 The additive local lanes are isolated from the hosted LLM stack:
 - PhoBERT outputs and guarded Ollama datasets live under `data/features/news/`
-- hosted LLM semantic/event extraction remains under `data/llm_cache/` and `data/features/xs_llm_news_*`
+- hosted LLM semantic/event extraction remains under `data/llm_cache/` and `data/features/xs_llm_news_*` as a legacy bootstrap surface, not the default production dependency for the local-news path

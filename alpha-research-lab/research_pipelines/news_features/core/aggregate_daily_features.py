@@ -12,7 +12,15 @@ from research_pipelines.news_features.config import NewsFeaturesConfig, get_defa
 from research_pipelines.news_features.io_utils import describe_path, update_manifest, write_parquet_atomic
 
 
-AGGREGATE_SOURCE_CHOICES = ("tabular", "embedding", "phobert", "phobert_forward_looking")
+AGGREGATE_SOURCE_CHOICES = (
+    "tabular",
+    "embedding",
+    "phobert",
+    "phobert_forward_looking",
+    "phobert_article_scope",
+    "phobert_source_type",
+    "ollama_guarded",
+)
 
 
 def _news_feature_filename(ticker: str) -> str:
@@ -50,6 +58,12 @@ def _source_merge_columns(source: str, config: NewsFeaturesConfig) -> list[str]:
         return list(config.phobert_daily_columns())
     if source == "phobert_forward_looking":
         return list(config.phobert_forward_looking_daily_columns())
+    if source == "phobert_article_scope":
+        return list(config.phobert_article_scope_daily_columns())
+    if source == "phobert_source_type":
+        return list(config.phobert_source_type_daily_columns())
+    if source == "ollama_guarded":
+        return list(config.ollama_guarded_daily_columns())
     raise ValueError(f"Unknown aggregate source: {source}")
 
 
@@ -62,6 +76,12 @@ def _load_source_frame(source: str, config: NewsFeaturesConfig) -> pd.DataFrame:
         return pd.read_parquet(config.phobert_ticker_day_sentiment_path())
     if source == "phobert_forward_looking" and config.phobert_forward_looking_ticker_day_features_path().exists():
         return pd.read_parquet(config.phobert_forward_looking_ticker_day_features_path())
+    if source == "phobert_article_scope" and config.phobert_article_scope_ticker_day_features_path().exists():
+        return pd.read_parquet(config.phobert_article_scope_ticker_day_features_path())
+    if source == "phobert_source_type" and config.phobert_source_type_ticker_day_features_path().exists():
+        return pd.read_parquet(config.phobert_source_type_ticker_day_features_path())
+    if source == "ollama_guarded" and config.ollama_guarded_ticker_day_features_path().exists():
+        return pd.read_parquet(config.ollama_guarded_ticker_day_features_path())
     return pd.DataFrame()
 
 
@@ -178,6 +198,9 @@ def aggregate_daily_feature_dataframe(
     embedding_df: pd.DataFrame,
     phobert_df: Optional[pd.DataFrame] = None,
     phobert_forward_looking_df: Optional[pd.DataFrame] = None,
+    phobert_article_scope_df: Optional[pd.DataFrame] = None,
+    phobert_source_type_df: Optional[pd.DataFrame] = None,
+    ollama_guarded_df: Optional[pd.DataFrame] = None,
     config: Optional[NewsFeaturesConfig] = None,
     log_progress: bool = False,
 ) -> pd.DataFrame:
@@ -186,10 +209,21 @@ def aggregate_daily_feature_dataframe(
     phobert_forward_looking_df = (
         phobert_forward_looking_df if phobert_forward_looking_df is not None else pd.DataFrame()
     )
-    if tabular_df.empty and embedding_df.empty and phobert_df.empty and phobert_forward_looking_df.empty:
+    phobert_article_scope_df = phobert_article_scope_df if phobert_article_scope_df is not None else pd.DataFrame()
+    phobert_source_type_df = phobert_source_type_df if phobert_source_type_df is not None else pd.DataFrame()
+    ollama_guarded_df = ollama_guarded_df if ollama_guarded_df is not None else pd.DataFrame()
+    if (
+        tabular_df.empty
+        and embedding_df.empty
+        and phobert_df.empty
+        and phobert_forward_looking_df.empty
+        and phobert_article_scope_df.empty
+        and phobert_source_type_df.empty
+        and ollama_guarded_df.empty
+    ):
         if log_progress:
             print(
-                "Aggregate build skipped because tabular, embedding, PhoBERT, and forward-looking datasets are empty",
+                "Aggregate build skipped because tabular, embedding, PhoBERT, forward-looking, article-scope, source-type, and Ollama residual datasets are empty",
                 flush=True,
             )
         return pd.DataFrame(columns=["ticker", "date", *config.default_merge_columns()])
@@ -199,6 +233,9 @@ def aggregate_daily_feature_dataframe(
         ("embedding", embedding_df),
         ("phobert", phobert_df),
         ("phobert_forward_looking", phobert_forward_looking_df),
+        ("phobert_article_scope", phobert_article_scope_df),
+        ("phobert_source_type", phobert_source_type_df),
+        ("ollama_guarded", ollama_guarded_df),
     ]
     available = [(name, frame.copy()) for name, frame in datasets if not frame.empty]
     if log_progress:
@@ -261,6 +298,9 @@ def aggregate_daily_feature_exports(
             source_frames.get("embedding", pd.DataFrame()),
             phobert_df=source_frames.get("phobert", pd.DataFrame()),
             phobert_forward_looking_df=source_frames.get("phobert_forward_looking", pd.DataFrame()),
+            phobert_article_scope_df=source_frames.get("phobert_article_scope", pd.DataFrame()),
+            phobert_source_type_df=source_frames.get("phobert_source_type", pd.DataFrame()),
+            ollama_guarded_df=source_frames.get("ollama_guarded", pd.DataFrame()),
             config=config,
             log_progress=True,
         )

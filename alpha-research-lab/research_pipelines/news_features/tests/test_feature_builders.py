@@ -1,4 +1,5 @@
 import numpy as np
+import os
 import pandas as pd
 import tempfile
 import json
@@ -9,6 +10,11 @@ import pytest
 
 from research_pipelines.news_features import __main__ as news_main
 from research_pipelines.news_features.config import NewsFeaturesConfig
+from research_pipelines.news_features import local_runtime as local_runtime_module
+from research_pipelines.news_features.local_runtime import (
+    apply_local_transformers_runtime_defaults,
+    ensure_expected_cuda_runtime,
+)
 from research_pipelines.news_features.core.aggregate_daily_features import (
     aggregate_daily_feature_dataframe,
     aggregate_daily_feature_exports,
@@ -24,6 +30,25 @@ from research_pipelines.news_features.core.build_ollama_guarded_features import 
 )
 from research_pipelines.news_features.core.build_phobert_forward_looking_features import (
     build_phobert_forward_looking_feature_exports,
+)
+from research_pipelines.news_features.core.phobert_binary_head_common import (
+    ARTICLE_SCOPE_SPEC,
+    SOURCE_TYPE_SPEC,
+)
+from research_pipelines.news_features.core.phobert_binary_head_publish import (
+    build_binary_head_feature_exports,
+)
+from research_pipelines.news_features.core.phobert_binary_head_teacher_stage import (
+    build_binary_head_stage_dataset,
+    build_binary_head_teacher_labels,
+    resolve_binary_head_splits,
+)
+from research_pipelines.news_features.core.phobert_binary_head_train import (
+    BinaryHeadCandidateSpec,
+    calibrate_positive_threshold,
+    load_training_checkpoint_state,
+    mark_training_checkpoint_complete,
+    save_training_checkpoint,
 )
 from research_pipelines.news_features.core.build_phobert_sentiment_features import (
     build_phobert_article_sentiment_dataframe,
@@ -57,6 +82,7 @@ def _normalized_df() -> pd.DataFrame:
                 "clean_summary": "ket qua tot",
                 "clean_body_text": "ACB but pha",
                 "date": "2026-03-10",
+                "published_at": "2026-03-10T02:00:00Z",
             },
             {
                 "article_id": "a2",
@@ -66,6 +92,7 @@ def _normalized_df() -> pd.DataFrame:
                 "clean_summary": "",
                 "clean_body_text": "rui ro ngan han",
                 "date": "2026-03-11",
+                "published_at": "2026-03-11T02:00:00Z",
             },
             {
                 "article_id": "a3",
@@ -75,6 +102,7 @@ def _normalized_df() -> pd.DataFrame:
                 "clean_summary": "",
                 "clean_body_text": "but pha nhưng cung co ap luc",
                 "date": "2026-03-12",
+                "published_at": "2026-03-12T02:00:00Z",
             },
         ]
     )
@@ -94,6 +122,7 @@ def _normalized_with_untagged_df() -> pd.DataFrame:
                         "clean_summary": "",
                         "clean_body_text": "chi dung de kiem tra cache dau vao",
                         "date": "2026-03-13",
+                        "published_at": "2026-03-13T02:00:00Z",
                     }
                 ]
             ),
@@ -215,6 +244,48 @@ def _fake_forward_looking_scorer(texts: list[str]) -> list[dict[str, object]]:
     return rows
 
 
+def _fake_article_scope_scorer(texts: list[str]) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for text in texts:
+        lower = text.lower()
+        is_stock_news = "acb" in lower or "hpg" in lower
+        positive_prob = 0.82 if is_stock_news else 0.21
+        rows.append(
+            {
+                "phobert_article_scope_input_text_length": len(text),
+                "phobert_article_scope_token_count": len(text.split()) + 2,
+                "phobert_article_scope_predicted_label": "STOCK_NEWS" if is_stock_news else "MARKET_NEWS",
+                "phobert_article_scope_is_positive": is_stock_news,
+                "phobert_article_scope_confidence": max(positive_prob, 1.0 - positive_prob),
+                "phobert_article_scope_prob_negative": 1.0 - positive_prob,
+                "phobert_article_scope_prob_positive": positive_prob,
+            }
+        )
+    return rows
+
+
+def _fake_source_type_scorer(texts: list[str]) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for text in texts:
+        lower = text.lower()
+        is_official = "cong bo" in lower or "ke hoach" in lower or "du kien" in lower
+        positive_prob = 0.79 if is_official else 0.24
+        rows.append(
+            {
+                "phobert_source_type_input_text_length": len(text),
+                "phobert_source_type_token_count": len(text.split()) + 2,
+                "phobert_source_type_predicted_label": (
+                    "OFFICIAL_OR_REGULATORY" if is_official else "MEDIA_OR_COMMENTARY"
+                ),
+                "phobert_source_type_is_positive": is_official,
+                "phobert_source_type_confidence": max(positive_prob, 1.0 - positive_prob),
+                "phobert_source_type_prob_negative": 1.0 - positive_prob,
+                "phobert_source_type_prob_positive": positive_prob,
+            }
+        )
+    return rows
+
+
 def _deterministic_text_encoder(texts: list[str]) -> np.ndarray:
     rows = []
     for text in texts:
@@ -254,6 +325,105 @@ def _temp_config(tmp_path: Path, **overrides: object) -> NewsFeaturesConfig:
     return config
 
 
+def test_apply_local_transformers_runtime_defaults_sets_offline_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(local_runtime_module, "WSL_CUDA_LIB_DIR", Path("/definitely-missing-wsl-lib"))
+    monkeypatch.delenv("HF_HUB_OFFLINE", raising=False)
+    monkeypatch.delenv("TRANSFORMERS_OFFLINE", raising=False)
+
+    applied = apply_local_transformers_runtime_defaults(_config())
+
+    assert applied == {"HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1"}
+
+
+def test_apply_local_transformers_runtime_defaults_respects_non_local_config(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(local_runtime_module, "WSL_CUDA_LIB_DIR", Path("/definitely-missing-wsl-lib"))
+    monkeypatch.delenv("HF_HUB_OFFLINE", raising=False)
+    monkeypatch.delenv("TRANSFORMERS_OFFLINE", raising=False)
+    config = _temp_config(
+        tmp_path,
+        phobert_prefer_local_files=False,
+        phobert_forward_looking_prefer_local_files=False,
+    )
+
+    applied = apply_local_transformers_runtime_defaults(config)
+
+    assert applied == {}
+
+
+def test_apply_local_transformers_runtime_defaults_prepends_wsl_cuda_lib_dir(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fake_wsl_lib_dir = tmp_path / "wsl-lib"
+    fake_wsl_lib_dir.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(local_runtime_module, "WSL_CUDA_LIB_DIR", fake_wsl_lib_dir)
+    monkeypatch.setenv("PATH", "/usr/bin")
+    monkeypatch.setenv("LD_LIBRARY_PATH", "/lib")
+    monkeypatch.delenv("HF_HUB_OFFLINE", raising=False)
+    monkeypatch.delenv("TRANSFORMERS_OFFLINE", raising=False)
+
+    applied = apply_local_transformers_runtime_defaults(_config())
+
+    assert os.environ["PATH"].split(":")[0] == str(fake_wsl_lib_dir)
+    assert os.environ["LD_LIBRARY_PATH"].split(":")[0] == str(fake_wsl_lib_dir)
+    assert applied["PATH"].split(":")[0] == str(fake_wsl_lib_dir)
+    assert applied["LD_LIBRARY_PATH"].split(":")[0] == str(fake_wsl_lib_dir)
+
+
+class _FakeCudaModule:
+    def __init__(self, *, available: bool, device_count: int) -> None:
+        self._available = available
+        self._device_count = device_count
+
+    def is_available(self) -> bool:
+        return self._available
+
+    def device_count(self) -> int:
+        return self._device_count
+
+
+class _FakeTorch:
+    def __init__(self, *, available: bool, device_count: int = 0, cuda_version: str | None = "12.1") -> None:
+        self.cuda = _FakeCudaModule(available=available, device_count=device_count)
+        self.version = SimpleNamespace(cuda=cuda_version)
+
+
+def test_ensure_expected_cuda_runtime_raises_when_wsl_gpu_hidden(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fake_wsl_lib_dir = tmp_path / "wsl-lib"
+    fake_wsl_lib_dir.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(local_runtime_module, "WSL_CUDA_LIB_DIR", fake_wsl_lib_dir)
+    monkeypatch.setattr(local_runtime_module, "_is_wsl_runtime", lambda: True)
+    monkeypatch.setattr(
+        local_runtime_module,
+        "_path_exists",
+        lambda path: False if Path(path) == Path("/dev/dxg") else Path(path).exists(),
+    )
+    monkeypatch.delenv(local_runtime_module.ALLOW_CPU_OVERRIDE_ENV, raising=False)
+
+    with pytest.raises(RuntimeError, match="/dev/dxg is not visible"):
+        ensure_expected_cuda_runtime(_FakeTorch(available=False), context="test cuda guard")
+
+
+def test_ensure_expected_cuda_runtime_allows_override(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fake_wsl_lib_dir = tmp_path / "wsl-lib"
+    fake_wsl_lib_dir.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(local_runtime_module, "WSL_CUDA_LIB_DIR", fake_wsl_lib_dir)
+    monkeypatch.setattr(local_runtime_module, "_is_wsl_runtime", lambda: True)
+    monkeypatch.setattr(local_runtime_module, "_path_exists", lambda path: True)
+    monkeypatch.setenv(local_runtime_module.ALLOW_CPU_OVERRIDE_ENV, "1")
+
+    ensure_expected_cuda_runtime(_FakeTorch(available=False), context="test cuda guard")
+
+
 @pytest.fixture(autouse=True)
 def _redirect_run_summaries(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     run_summary_dir = tmp_path / "alpha-research-lab" / "artifacts" / "run_summaries"
@@ -267,7 +437,9 @@ def _fake_guarded_raw_response(article: dict[str, object]) -> str:
                 "id": "a1",
                 "tickers": ["ZZZ"],
                 "confidence": 2,
-                "is_forward_looking": True,
+                "event_family": "guidance",
+                "impact_scope": "stock",
+                "source_authority": "official",
                 "is_rumor": False,
             }
         ),
@@ -275,7 +447,9 @@ def _fake_guarded_raw_response(article: dict[str, object]) -> str:
             {
                 "id": "a2",
                 "confidence": "medium",
-                "is_forward_looking": "maybe",
+                "event_family": "macro_policy",
+                "impact_scope": "market",
+                "source_authority": "analyst",
                 "is_rumor": "no",
             }
         ),
@@ -352,6 +526,106 @@ def _write_forward_looking_teacher_fixture(config: NewsFeaturesConfig, *, includ
         path.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8")
 
 
+def _write_binary_head_teacher_fixture(config: NewsFeaturesConfig, *, include_untagged: bool = False) -> None:
+    raw_dir = config.source_raw_dir(config.default_source)
+    cache_dir = config.data_root / "llm_cache"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
+    raw_by_day = {
+        "2026-03-10": [
+            {
+                "article_id": "a1",
+                "source": "cafef",
+                "url": "https://cafef.vn/a1.chn",
+                "title": "ACB du kien mo rong tang truong",
+                "summary": "ke hoach sap toi",
+                "body_text": "ACB dat muc tieu loi nhuan nam toi",
+                "published_at": "2026-03-10T02:00:00Z",
+            }
+        ],
+        "2026-03-11": [
+            {
+                "article_id": "a2",
+                "source": "cafef",
+                "url": "https://cafef.vn/a2.chn",
+                "title": "HPG cong bo ket qua hien tai",
+                "summary": "cap nhat doanh nghiep hien trang",
+                "body_text": "Khong co du bao moi cho co phieu nhung la tin tai chinh",
+                "published_at": "2026-03-11T02:00:00Z",
+            }
+        ],
+        "2026-03-12": [
+            {
+                "article_id": "a3",
+                "source": "cafef",
+                "url": "https://cafef.vn/a3.chn",
+                "title": "Thi truong va nhom thep cung duoc nhac den",
+                "summary": "dien bien nganh va thi truong",
+                "body_text": "Cau chuyen rong hon mot ma co phieu rieng le",
+                "published_at": "2026-03-12T02:00:00Z",
+            }
+        ],
+    }
+    cache_by_day = {
+        "2026-03-10": [
+            {
+                "id": "2026-03-10_0001",
+                "tickers": ["ACB"],
+                "impact_scope": "stock",
+                "source_authority": "media_report",
+                "macro_theme": "",
+            }
+        ],
+        "2026-03-11": [
+            {
+                "id": "2026-03-11_0001",
+                "tickers": ["HPG"],
+                "impact_scope": "stock",
+                "source_authority": "official",
+                "macro_theme": "",
+            }
+        ],
+        "2026-03-12": [
+            {
+                "id": "2026-03-12_0001",
+                "tickers": ["ACB", "HPG"],
+                "impact_scope": "market",
+                "source_authority": "media_report",
+                "macro_theme": ["steel"],
+            }
+        ],
+    }
+    if include_untagged:
+        raw_by_day["2026-03-13"] = [
+            {
+                "article_id": "a4",
+                "source": "cafef",
+                "url": "https://cafef.vn/a4.chn",
+                "title": "Bai viet khong gan ticker nhung la cong bo",
+                "summary": "thong tin doanh nghiep",
+                "body_text": "Van la thong tin cong bo nhung khong co ma",
+                "published_at": "2026-03-13T02:00:00Z",
+            }
+        ]
+        cache_by_day["2026-03-13"] = [
+            {
+                "id": "2026-03-13_0001",
+                "tickers": ["ZZZ"],
+                "impact_scope": "stock",
+                "source_authority": "official",
+                "macro_theme": "",
+            }
+        ]
+
+    for day, rows in raw_by_day.items():
+        path = raw_dir / f"{day}.jsonl"
+        path.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8")
+    for day, rows in cache_by_day.items():
+        path = cache_dir / f"{day}.jsonl"
+        path.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8")
+
+
 def _write_forward_looking_winner_fixture(config: NewsFeaturesConfig) -> None:
     model_dir = (
         config.phobert_forward_looking_model_artifacts_dir()
@@ -385,6 +659,51 @@ def _write_forward_looking_winner_fixture(config: NewsFeaturesConfig) -> None:
         encoding="utf-8",
     )
     config.phobert_forward_looking_training_manifest_path().write_text(
+        json.dumps(training_manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _write_binary_head_winner_fixture(
+    config: NewsFeaturesConfig,
+    spec,
+    *,
+    run_id: str = "fixture_run",
+    decision_threshold: float | None = None,
+) -> None:
+    model_dir = (
+        getattr(config, f"{spec.dataset_prefix}_model_artifacts_dir")()
+        / "runs"
+        / run_id
+        / "phobert_base"
+        / "model"
+    )
+    model_dir.mkdir(parents=True, exist_ok=True)
+    (model_dir / "config.json").write_text(
+        json.dumps(
+            {
+                "id2label": {"0": spec.negative_label_name.upper(), "1": spec.positive_label_name.upper()},
+                "label2id": {spec.negative_label_name.upper(): 0, spec.positive_label_name.upper(): 1},
+            }
+        ),
+        encoding="utf-8",
+    )
+    latest_winner = {
+        "candidate_name": "phobert_base",
+        "model_name": "vinai/phobert-base",
+        "model_dir": str(model_dir),
+        "decision_threshold": (
+            float(decision_threshold)
+            if decision_threshold is not None
+            else float(config.phobert_binary_head_default_positive_threshold(spec.name))
+        ),
+    }
+    training_manifest = {"status": "complete", "run_id": run_id, "winner": latest_winner}
+    getattr(config, f"{spec.dataset_prefix}_latest_winner_path")().write_text(
+        json.dumps(latest_winner, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    getattr(config, f"{spec.dataset_prefix}_training_manifest_path")().write_text(
         json.dumps(training_manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
@@ -625,9 +944,20 @@ def test_build_ollama_guarded_features_use_tagged_tickers_and_abstain_on_parse_f
     assert metadata["local_model_name"] == config.ollama_guarded_model_name
     assert set(article_rows.loc[article_rows["article_id"] == "a1", "ticker"]) == {"ACB"}
     assert article_rows.loc[article_rows["article_id"] == "a1", "ollama_guarded_confidence"].iloc[0] == 2.0
+    assert article_rows.loc[article_rows["article_id"] == "a1", "ollama_guarded_event_family"].iloc[0] == "guidance"
+    assert article_rows.loc[article_rows["article_id"] == "a1", "ollama_guarded_impact_scope"].iloc[0] == "stock"
+    assert (
+        article_rows.loc[article_rows["article_id"] == "a1", "ollama_guarded_source_authority"].iloc[0] == "official"
+    )
     assert article_rows.loc[article_rows["article_id"] == "a2", "ollama_guarded_confidence"].iloc[0] == 1.0
-    assert pd.isna(
-        article_rows.loc[article_rows["article_id"] == "a2", "ollama_guarded_is_forward_looking"].iloc[0]
+    assert (
+        article_rows.loc[article_rows["article_id"] == "a2", "ollama_guarded_event_family"].iloc[0]
+        == "macro_or_sector"
+    )
+    assert article_rows.loc[article_rows["article_id"] == "a2", "ollama_guarded_impact_scope"].iloc[0] == "market"
+    assert (
+        article_rows.loc[article_rows["article_id"] == "a2", "ollama_guarded_source_authority"].iloc[0]
+        == "media_report"
     )
     assert article_rows.loc[article_rows["article_id"] == "a2", "ollama_guarded_is_rumor"].iloc[0] is False
 
@@ -655,17 +985,24 @@ def test_build_ollama_guarded_daily_features_create_rolling_counts_and_coverage_
     assert acb["ollama_guarded_article_count_1d"].tolist() == [1.0, 0.0, 1.0]
     assert acb["ollama_guarded_article_count_5d"].tolist() == [1.0, 1.0, 2.0]
     assert acb["ollama_guarded_confidence_mean"].tolist() == [2.0, 0.0, 0.0]
-    assert acb["ollama_guarded_forward_looking_share"].tolist() == [1.0, 0.0, 0.0]
+    assert acb["ollama_guarded_event_family_guidance_share"].tolist() == [1.0, 0.0, 0.0]
+    assert acb["ollama_guarded_impact_scope_stock_share"].tolist() == [1.0, 0.0, 0.0]
+    assert acb["ollama_guarded_source_authority_official_share"].tolist() == [1.0, 0.0, 0.0]
     assert acb["ollama_guarded_abstain_share"].tolist() == [0.0, 0.0, 1.0]
     assert acb["ollama_guarded_parse_fail_share"].tolist() == [0.0, 0.0, 1.0]
 
     assert hpg["date"].tolist() == ["2026-03-11", "2026-03-12"]
     assert hpg["ollama_guarded_confidence_mean"].tolist() == [1.0, 0.0]
     assert hpg["ollama_guarded_rumor_share"].tolist() == [0.0, 0.0]
+    assert hpg["ollama_guarded_event_family_macro_or_sector_share"].tolist() == [1.0, 0.0]
+    assert hpg["ollama_guarded_impact_scope_market_share"].tolist() == [1.0, 0.0]
+    assert hpg["ollama_guarded_source_authority_media_report_share"].tolist() == [1.0, 0.0]
 
 
-def test_aggregate_daily_features_merges_phobert_columns():
-    config = _config()
+def test_aggregate_daily_features_merges_phobert_columns(tmp_path):
+    config = _temp_config(tmp_path)
+    _normalized_df().to_parquet(config.normalized_path(), index=False)
+    _tagged_df().to_parquet(config.tagged_path(), index=False)
 
     def fake_encoder(texts: list[str]) -> np.ndarray:
         return np.array([[len(text), len(text) / 2.0, index + 1.0, 1.0] for index, text in enumerate(texts)], dtype=float)
@@ -685,11 +1022,43 @@ def test_aggregate_daily_features_merges_phobert_columns():
         scorer_metadata={"phobert_model_id": "fake-phobert"},
     )
     phobert_daily = build_phobert_daily_sentiment_dataframe(article_rows, config=config)
+    article_scope_daily = build_binary_head_feature_exports(
+        ARTICLE_SCOPE_SPEC,
+        config=config,
+        scorer=_fake_article_scope_scorer,
+        scorer_metadata={"phobert_article_scope_model_id": "fake-article-scope"},
+    )
+    source_type_daily = build_binary_head_feature_exports(
+        SOURCE_TYPE_SPEC,
+        config=config,
+        scorer=_fake_source_type_scorer,
+        scorer_metadata={"phobert_source_type_model_id": "fake-source-type"},
+    )
+    guarded_rows, _ = build_ollama_guarded_article_feature_dataframe(
+        _normalized_df(),
+        _tagged_df(),
+        config=config,
+        raw_response_fn=_fake_guarded_raw_response,
+    )
+    guarded_daily = build_ollama_guarded_daily_feature_dataframe(guarded_rows, config=config)
 
-    combined = aggregate_daily_feature_dataframe(tabular, embeddings, phobert_df=phobert_daily, config=config)
+    combined = aggregate_daily_feature_dataframe(
+        tabular,
+        embeddings,
+        phobert_df=phobert_daily,
+        phobert_article_scope_df=article_scope_daily,
+        phobert_source_type_df=source_type_daily,
+        ollama_guarded_df=guarded_daily,
+        config=config,
+    )
     assert "phobert_sentiment_5d" in combined.columns
+    assert "phobert_article_scope_stock_news_share" in combined.columns
+    assert "phobert_source_type_official_or_regulatory_share" in combined.columns
+    assert "ollama_guarded_event_family_guidance_share" in combined.columns
     acb_2026_03_10 = combined.loc[(combined["ticker"] == "ACB") & (combined["date"] == "2026-03-10")]
     assert acb_2026_03_10["phobert_article_count_1d"].iloc[0] == 1.0
+    assert acb_2026_03_10["phobert_article_scope_stock_news_share"].iloc[0] == 1.0
+    assert acb_2026_03_10["ollama_guarded_event_family_guidance_share"].iloc[0] == 1.0
 
 
 def test_aggregate_daily_features_phobert_only_keeps_full_schema():
@@ -715,6 +1084,9 @@ def test_aggregate_daily_features_phobert_only_keeps_full_schema():
     assert acb_2026_03_10["phobert_article_count_1d"].iloc[0] == 1.0
     assert acb_2026_03_10["news_article_count_1d"].iloc[0] == 0.0
     assert acb_2026_03_10["news_embed_00"].iloc[0] == 0.0
+    assert acb_2026_03_10["phobert_article_scope_stock_news_share"].iloc[0] == 0.0
+    assert acb_2026_03_10["phobert_source_type_official_or_regulatory_share"].iloc[0] == 0.0
+    assert acb_2026_03_10["ollama_guarded_event_family_guidance_share"].iloc[0] == 0.0
 
 
 def test_build_phobert_exports_writes_datasets_and_manifest_entries(tmp_path):
@@ -896,6 +1268,25 @@ def test_build_phobert_forward_looking_teacher_labels_reconstructs_article_ids_f
 
     assert teacher["article_id"].tolist() == ["a1", "a2", "a3"]
     assert teacher["phobert_forward_looking_label"].tolist() == [1, 0, 1]
+
+
+def test_build_phobert_article_scope_teacher_labels_map_scope_from_teacher_cache(tmp_path):
+    config = _temp_config(tmp_path)
+    _write_binary_head_teacher_fixture(config)
+    teacher = build_binary_head_teacher_labels(ARTICLE_SCOPE_SPEC, config=config)
+    manifest = json.loads(config.phobert_article_scope_teacher_manifest_path().read_text(encoding="utf-8"))
+    assert teacher["phobert_article_scope_label"].tolist() == [1, 1, 0]
+    assert manifest["teacher_rows"] == 3
+    assert manifest["cache_days_seen"] == 3
+    assert manifest["missing_raw_article_count"] == 0
+
+
+def test_build_phobert_source_type_teacher_labels_map_authority_from_teacher_cache(tmp_path):
+    config = _temp_config(tmp_path)
+    _write_binary_head_teacher_fixture(config)
+    teacher = build_binary_head_teacher_labels(SOURCE_TYPE_SPEC, config=config)
+    manifest = json.loads(config.phobert_source_type_teacher_manifest_path().read_text(encoding="utf-8"))
+    assert teacher["phobert_source_type_label"].tolist() == [0, 1, 0]
     assert manifest["teacher_rows"] == 3
     assert manifest["cache_days_seen"] == 3
     assert manifest["missing_raw_article_count"] == 0
@@ -916,9 +1307,115 @@ def test_build_phobert_forward_looking_stage_dataset_keeps_tagged_articles_and_a
     assert stage["article_id"].tolist() == ["a1", "a2", "a3"]
     assert stage["phobert_forward_looking_label"].tolist() == [1, 0, 1]
     assert stage["phobert_forward_looking_split"].tolist() == ["train", "val", "test"]
+
+
+def test_build_phobert_binary_head_stage_dataset_keeps_tagged_articles_and_assigns_date_splits(tmp_path):
+    config = _temp_config(tmp_path, phobert_source_type_split_strategy_value="time")
+    _normalized_with_untagged_df().to_parquet(config.normalized_path(), index=False)
+    _tagged_df().to_parquet(config.tagged_path(), index=False)
+    _write_binary_head_teacher_fixture(config, include_untagged=True)
+    stage = build_binary_head_stage_dataset(SOURCE_TYPE_SPEC, config=config)
+    manifest = json.loads(config.phobert_source_type_stage_manifest_path().read_text(encoding="utf-8"))
+    assert stage["phobert_source_type_label"].tolist() == [0, 1, 0]
+    assert stage["phobert_source_type_split"].tolist() == ["train", "val", "test"]
+    assert manifest["split_strategy"] == "time"
     assert manifest["untagged_teacher_article_count"] == 1
     assert manifest["split_counts"] == {"train": 1, "val": 1, "test": 1}
     assert config.phobert_input_articles_path().exists()
+
+
+def test_resolve_binary_head_splits_supports_stratified_random_strategy(tmp_path):
+    config = _temp_config(tmp_path, phobert_article_scope_split_strategy_value="stratified_random")
+    frame = pd.DataFrame(
+        {
+            "article_id": [f"a{i:02d}" for i in range(12)],
+            "date": [f"2026-03-{(i % 6) + 10:02d}" for i in range(12)],
+            "phobert_article_scope_label": [1] * 4 + [0] * 8,
+        }
+    )
+
+    split_info = resolve_binary_head_splits(
+        ARTICLE_SCOPE_SPEC,
+        frame,
+        config=config,
+        label_column="phobert_article_scope_label",
+    )
+    assigned = frame.assign(split=frame["article_id"].map(split_info["split_by_article_id"]))
+    split_rates = assigned.groupby("split")["phobert_article_scope_label"].mean().to_dict()
+
+    assert split_info["strategy"] == "stratified_random"
+    assert set(assigned["split"]) == {"train", "val", "test"}
+    assert split_rates["train"] > 0.0
+    assert split_rates["test"] > 0.0
+
+
+def test_calibrate_positive_threshold_can_fix_low_probability_binary_head(tmp_path):
+    config = _temp_config(tmp_path)
+    y_true = np.asarray([1, 1, 1, 0, 0, 0], dtype=int)
+    y_prob = np.asarray([0.08, 0.06, 0.05, 0.03, 0.02, 0.01], dtype=float)
+
+    calibrated = calibrate_positive_threshold(
+        config=config,
+        spec=ARTICLE_SCOPE_SPEC,
+        y_true=y_true,
+        y_prob=y_prob,
+    )
+
+    assert calibrated["decision_threshold"] < 0.5
+    assert calibrated["metrics"]["f1"] > 0.0
+
+
+def test_binary_head_training_checkpoint_round_trips_resume_state(tmp_path):
+    torch = pytest.importorskip("torch")
+
+    class TinyModel(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.tensor([1.0]))
+
+        def save_pretrained(self, path, safe_serialization=True):
+            Path(path).mkdir(parents=True, exist_ok=True)
+            torch.save({"weight": self.weight.detach().cpu()}, Path(path) / "pytorch_model.bin")
+
+    class TinyTokenizer:
+        def save_pretrained(self, path):
+            Path(path).mkdir(parents=True, exist_ok=True)
+            (Path(path) / "tokenizer_config.json").write_text("{}", encoding="utf-8")
+
+    output_dir = tmp_path / "candidate"
+    model = TinyModel()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+
+    state = save_training_checkpoint(
+        spec=ARTICLE_SCOPE_SPEC,
+        output_dir=output_dir,
+        candidate=BinaryHeadCandidateSpec("phobert_base", "vinai/phobert-base"),
+        model=model,
+        tokenizer=TinyTokenizer(),
+        optimizer=optimizer,
+        scaler=None,
+        torch=torch,
+        use_amp=False,
+        epoch_history=[{"epoch": 1, "train_rows": 16}],
+        next_epoch=2,
+        epoch_rows_to_skip=0,
+        epoch_loss_sum=0.0,
+        epoch_optimizer_steps=0,
+        global_optimizer_steps=250,
+        best_epoch=1,
+        best_val_f1=0.42,
+        checkpoint_reason="test",
+    )
+
+    loaded = load_training_checkpoint_state(output_dir)
+    assert state["status"] == "in_progress"
+    assert loaded["next_epoch"] == 2
+    assert loaded["global_optimizer_steps"] == 250
+    assert (output_dir / "training_checkpoint" / "model" / "tokenizer_config.json").exists()
+    assert (output_dir / "training_checkpoint" / "optimizer.pt").exists()
+
+    mark_training_checkpoint_complete(output_dir, result={"candidate_name": "phobert_base", "best_epoch": 1})
+    assert load_training_checkpoint_state(output_dir) == {}
 
 
 def test_build_phobert_forward_looking_feature_exports_resume_from_checkpoints(tmp_path):
@@ -968,6 +1465,111 @@ def test_build_phobert_forward_looking_feature_exports_resume_from_checkpoints(t
     acb = resumed.loc[resumed["ticker"] == "ACB"].reset_index(drop=True)
     assert acb["phobert_forward_looking_article_count_1d"].tolist() == [1.0, 0.0, 1.0]
     assert acb["phobert_forward_looking_prob_5d"].tolist() == [0.84, 0.84, 1.68]
+
+
+def test_build_phobert_article_scope_feature_exports_resume_from_checkpoints(tmp_path):
+    config = _temp_config(
+        tmp_path,
+        phobert_forward_looking_publish_checkpoint_rows=2,
+        repo_root=tmp_path,
+        package_root=tmp_path / "pkg",
+        configs_dir=tmp_path / "configs",
+    )
+    _normalized_df().assign(published_at="2026-03-10T09:00:00+07:00").to_parquet(config.normalized_path(), index=False)
+    _tagged_df().to_parquet(config.tagged_path(), index=False)
+    _write_binary_head_winner_fixture(config, ARTICLE_SCOPE_SPEC)
+
+    partial = build_binary_head_feature_exports(
+        ARTICLE_SCOPE_SPEC,
+        config=config,
+        scorer=_fake_article_scope_scorer,
+        scorer_metadata={"phobert_article_scope_model_id": "fake-article-scope"},
+        checkpoint_batch_limit=1,
+    )
+    checkpoint_manifest = json.loads(
+        config.phobert_article_scope_publish_checkpoint_manifest_path().read_text(encoding="utf-8")
+    )
+
+    assert partial.empty
+    assert checkpoint_manifest["status"] == "in_progress"
+    assert checkpoint_manifest["completed_batch_count"] == 1
+    assert len(list(config.phobert_article_scope_publish_checkpoint_dir().glob("article_shard_*.parquet"))) == 1
+    assert not config.phobert_article_scope_article_features_path().exists()
+    assert not config.phobert_article_scope_ticker_day_features_path().exists()
+
+    resumed = build_binary_head_feature_exports(
+        ARTICLE_SCOPE_SPEC,
+        config=config,
+        scorer=_fake_article_scope_scorer,
+        scorer_metadata={"phobert_article_scope_model_id": "fake-article-scope"},
+    )
+    checkpoint_manifest = json.loads(
+        config.phobert_article_scope_publish_checkpoint_manifest_path().read_text(encoding="utf-8")
+    )
+    actual_articles = pd.read_parquet(config.phobert_article_scope_article_features_path())
+
+    assert checkpoint_manifest["status"] == "complete"
+    assert list(config.phobert_article_scope_publish_checkpoint_dir().glob("article_shard_*.parquet")) == []
+    assert len(resumed) > 0
+    assert set(config.phobert_article_scope_daily_columns()) <= set(resumed.columns)
+    assert actual_articles["phobert_article_scope_is_positive"].sum() == 4
+    acb = resumed.loc[resumed["ticker"] == "ACB"].reset_index(drop=True)
+    assert acb["phobert_article_scope_article_count_1d"].tolist() == [1.0, 0.0, 1.0]
+    assert acb["phobert_article_scope_stock_news_prob_5d"].tolist() == [0.82, 0.82, 1.64]
+
+
+def test_build_phobert_article_scope_feature_exports_publish_daily_columns(tmp_path):
+    config = _temp_config(tmp_path)
+    _normalized_df().to_parquet(config.normalized_path(), index=False)
+    _tagged_df().to_parquet(config.tagged_path(), index=False)
+    _write_binary_head_winner_fixture(config, ARTICLE_SCOPE_SPEC)
+    daily = build_binary_head_feature_exports(
+        ARTICLE_SCOPE_SPEC,
+        config=config,
+        scorer=_fake_article_scope_scorer,
+        scorer_metadata={"phobert_article_scope_model_id": "fake-article-scope"},
+    )
+    assert set(config.phobert_article_scope_daily_columns()) <= set(daily.columns)
+    acb = daily.loc[daily["ticker"] == "ACB"].reset_index(drop=True)
+    assert acb["phobert_article_scope_article_count_1d"].tolist() == [1.0, 0.0, 1.0]
+    assert acb["phobert_article_scope_stock_news_share"].tolist() == [1.0, 0.0, 1.0]
+
+
+def test_build_phobert_article_scope_feature_exports_use_winner_threshold_for_labels(tmp_path):
+    config = _temp_config(tmp_path)
+    _normalized_df().to_parquet(config.normalized_path(), index=False)
+    _tagged_df().to_parquet(config.tagged_path(), index=False)
+    _write_binary_head_winner_fixture(config, ARTICLE_SCOPE_SPEC, decision_threshold=0.9)
+
+    daily = build_binary_head_feature_exports(
+        ARTICLE_SCOPE_SPEC,
+        config=config,
+        scorer=_fake_article_scope_scorer,
+        scorer_metadata={"phobert_article_scope_model_id": "fake-article-scope"},
+    )
+    article_rows = pd.read_parquet(config.phobert_article_scope_article_features_path())
+    metadata = json.loads(config.phobert_article_scope_metadata_path().read_text(encoding="utf-8"))
+
+    assert article_rows["phobert_article_scope_is_positive"].sum() == 0
+    assert daily["phobert_article_scope_stock_news_count_1d"].sum() == 0.0
+    assert metadata["phobert_article_scope_decision_threshold"] == 0.9
+
+
+def test_build_phobert_source_type_feature_exports_publish_daily_columns(tmp_path):
+    config = _temp_config(tmp_path)
+    _normalized_df().to_parquet(config.normalized_path(), index=False)
+    _tagged_df().to_parquet(config.tagged_path(), index=False)
+    _write_binary_head_winner_fixture(config, SOURCE_TYPE_SPEC)
+    daily = build_binary_head_feature_exports(
+        SOURCE_TYPE_SPEC,
+        config=config,
+        scorer=_fake_source_type_scorer,
+        scorer_metadata={"phobert_source_type_model_id": "fake-source-type"},
+    )
+    assert set(config.phobert_source_type_daily_columns()) <= set(daily.columns)
+    hpg = daily.loc[daily["ticker"] == "HPG"].reset_index(drop=True)
+    assert hpg["phobert_source_type_article_count_1d"].tolist() == [1.0, 1.0]
+    assert hpg["phobert_source_type_official_or_regulatory_share"].tolist() == [0.0, 0.0]
 
 
 def test_config_migrates_legacy_forward_looking_checkpoint_root_into_data_root(tmp_path):

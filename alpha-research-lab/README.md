@@ -110,7 +110,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 
 ## Start Here
 
-- `notes/next_steps.md`: live system state, current priorities, session history
+- `notes/next_steps.md`: live system state, current priorities, short recent digest
 - `notes/signal_library.md`: **the registry of confirmed and candidate signals**
 - `README_for_AGENTS.md`: exact agent loop, commands, result artifacts, data, note conventions
 - `notes/findings.md`: index for the chunked durable findings files
@@ -147,13 +147,13 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - The lab now owns a raw official HNX / UPCoM issuer-disclosure surface at `data/official_disclosures/hnx/`; the HNX issuer universe is fetchable now, and per-ticker official disclosure history plus attachment metadata, OCR text caches, and transaction-attachment extracts are wired through `data_tools/fetch_hnx_official_disclosures.py`
 - The canonical news pipeline under `research_pipelines/news_features/` now also owns a local Vietnamese encoder lane: whole-article PhoBERT sentiment writes dedicated `data/features/news/datasets/phobert_*` datasets and additive `phobert_*` columns in `data/features/news/predictions/*_news_features.parquet`
 - Long PhoBERT backfills now stage a tagged-only input cache at `data/features/news/datasets/phobert_input_articles.parquet` and resumable batch shards under `data/features/news/datasets/phobert_checkpoint/`; the final published `phobert_*` datasets are only written after all checkpoint shards complete
-- The same canonical news pipeline now also owns an additive local Ollama probe lane: it writes deterministic ticker-linked `data/features/news/datasets/ollama_guarded_article_features.parquet` and `ollama_guarded_ticker_day_features.parquet` datasets from tagged article-ticker rows, uses its own tagged-only `ollama_guarded_input_articles.parquet` cache plus resumable `ollama_guarded_checkpoint/` shards, limits the local generator task to coarse non-sentiment fields (`confidence`, `is_forward_looking`, `is_rumor`, plus coverage diagnostics), and does not publish merged export columns in phase 1. Preferred command name: `python -m research_pipelines.news_features.core.build_ollama_probe_features`
-- Canonical local-roadmap rule on the current `3GB VRAM / 10GB RAM` planning box: keep PhoBERT as the main local production path, make a separate PhoBERT `forward_looking` head the first expansion beyond sentiment, use model probability as confidence by default, and treat the guarded Ollama lane as additive audit / probe infrastructure rather than the preferred long-run local inference path
+- The same canonical news pipeline now also owns a narrowed local Ollama residual lane: it writes deterministic ticker-linked `data/features/news/datasets/ollama_guarded_article_features.parquet` and `ollama_guarded_ticker_day_features.parquet` datasets from tagged article-ticker rows, uses its own tagged-only `ollama_guarded_input_articles.parquet` cache plus resumable `ollama_guarded_checkpoint/` shards, limits the local generator task to the residual semantic fields (`event_family`, `impact_scope`, `source_authority`, `is_rumor`, plus confidence / abstention diagnostics), and now publishes merged daily export columns through the aggregate news exporter. Preferred command name: `python -m research_pipelines.news_features.core.build_ollama_probe_features`
+- Canonical local-roadmap rule on the current `3GB VRAM / 10GB RAM` planning box: keep PhoBERT as the main local production path, keep a separate PhoBERT `forward_looking` head as the first expansion beyond sentiment, use model probability as confidence by default, and keep the guarded Ollama lane narrow and residual rather than as a broad local replacement schema
 - The first sequential encoder-distillation implementation is `python -m research_pipelines.news_features.core.train_phobert_forward_looking`: it builds internal `phobert_forward_looking_teacher_labels.parquet` and `phobert_forward_looking_stage_articles.parquet` datasets under `data/features/news/datasets/`, then trains one PhoBERT candidate at a time and writes durable model checkpoints plus resumable training manifests under `data/model_checkpoints/news/phobert_forward_looking/` and handoff-ready summaries under `artifacts/run_summaries/`
 - Once that lane has a winner, `python -m research_pipelines.news_features.core.publish_phobert_forward_looking_features` scores the full tagged article universe through the local winner, writes additive `phobert_forward_looking_article_features.parquet` and `phobert_forward_looking_ticker_day_features.parquet` datasets plus resumable publish checkpoints, and overlays additive `phobert_forward_looking_*` columns onto `data/features/news/predictions/*_news_features.parquet`
 - The heavyweight legacy tabular and embedding news rebuilds now also use internal producer caches under `data/features/news/datasets/`: `news_tabular_article_stage.parquet` for streamed tabular staging, plus `embedding_input_articles.parquet` and `embedding_checkpoint/` for resumable embedding backfills; these are internal caches only and do not change the published `news_tabular_features.parquet`, `article_embeddings.parquet`, or `news_embedding_features.parquet` contracts
 - Hard operating rule for the local PhoBERT lane: once `data/features/news/datasets/phobert_ticker_day_sentiment.parquet` exists, export refreshes must use the dedicated lightweight publish path (`python -m research_pipelines.news_features.core.publish_phobert_exports`) rather than the heavyweight full-pipeline / tabular rebuild path
-- Hosted LLM extraction remains the canonical rich semantic/event source; the local PhoBERT and guarded Ollama lanes are additive and task-specific, not replacements for `data/llm_cache/` or `xs_llm_news_*`
+- Hosted LLM extraction remains available as a legacy bootstrap surface, but the local-news production path now defaults to PhoBERT plus the narrow Ollama residual lane rather than treating `data/llm_cache/` or `xs_llm_news_*` as the required next dependency
 - RL consumes that matrix through `../RL-trading-agent` via `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 - Recommendation contracts are shared with RL-adjacent consumers via `../shared-recommendation/`
 - Execution reality is shared with RL via `../docs/execution_reality.md` and `../shared-market-rules/`
@@ -612,7 +612,7 @@ The repo treats `notes/` as a permanent scientific record:
 - `findings.md` is the index for the durable truth layer
 - `findings-*.md` are the chunked durable truth files
 - `signal_library.md` is the signal registry — the primary deliverable
-- `next_steps.md` is the active queue
+- `next_steps.md` is the active queue plus a short recent digest
 - Failed ideas stay documented instead of being erased
 
 See `README_for_AGENTS.md` for the working convention and agent protocol.

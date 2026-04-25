@@ -1,0 +1,50 @@
+{
+  "artifacts": {
+    "stage_dataset": "tests/.tmp/news_features/pytest-2acf4213ea664d3fb402ebea9e54dc23/data/features/news/datasets/phobert_forward_looking_stage_articles.parquet",
+    "stage_manifest": "tests/.tmp/news_features/pytest-2acf4213ea664d3fb402ebea9e54dc23/data/features/news/datasets/phobert_forward_looking_stage_manifest.json"
+  },
+  "metadata": {
+    "source_signature": {
+      "phobert_input_articles": {
+        "exists": true,
+        "mtime_ns": 1777023333622726186,
+        "path": "tests/.tmp/news_features/pytest-2acf4213ea664d3fb402ebea9e54dc23/data/features/news/datasets/phobert_input_articles.parquet",
+        "size": 3621
+      },
+      "stage_version": 1,
+      "tagged_articles": {
+        "exists": true,
+        "mtime_ns": 1777023333612726988,
+        "path": "tests/.tmp/news_features/pytest-2acf4213ea664d3fb402ebea9e54dc23/data/features/news/tagged/tagged_articles.parquet",
+        "size": 4850
+      },
+      "teacher_labels": {
+        "exists": true,
+        "mtime_ns": 1777023333612726988,
+        "path": "tests/.tmp/news_features/pytest-2acf4213ea664d3fb402ebea9e54dc23/data/features/news/datasets/phobert_forward_looking_teacher_labels.parquet",
+        "size": 4995
+      },
+      "train_fraction": 0.7,
+      "val_fraction": 0.15
+    }
+  },
+  "mode": "news_forward_looking_stage_build",
+  "name": "phobert_forward_looking_stage_build",
+  "summary": {
+    "label_distribution": {
+      "count": 3,
+      "negative": 1,
+      "positive": 2
+    },
+    "split_counts": {
+      "test": 1,
+      "train": 1,
+      "val": 1
+    },
+    "stage_rows": 3,
+    "status": "complete",
+    "teacher_conflict_article_count": 0,
+    "untagged_teacher_article_count": 0
+  },
+  "ts": "20260424_093533"
+}

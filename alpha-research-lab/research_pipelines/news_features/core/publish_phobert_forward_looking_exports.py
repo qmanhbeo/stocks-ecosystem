@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 
 from research_pipelines.news_features.config import get_default_config
+from research_pipelines.news_features.local_runtime import apply_local_transformers_runtime_defaults
 from research_pipelines.news_features.core.aggregate_daily_features import aggregate_daily_feature_exports
 from research_pipelines.news_features.core.build_phobert_forward_looking_features import (
     build_phobert_forward_looking_feature_exports,
@@ -27,6 +28,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 def main() -> None:
     build_arg_parser().parse_args()
     config = get_default_config()
+    apply_local_transformers_runtime_defaults(config)
     build_phobert_forward_looking_feature_exports(config=config)
     aggregate_daily_feature_exports(config=config, sources=["phobert_forward_looking"])
     print(

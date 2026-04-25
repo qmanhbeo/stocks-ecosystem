@@ -152,7 +152,9 @@ class OllamaGuardedArticleFeatureRow:
     local_model_name: str
     ollama_guarded_input_text_length: float
     ollama_guarded_confidence: Optional[float]
-    ollama_guarded_is_forward_looking: Optional[bool]
+    ollama_guarded_event_family: Optional[str]
+    ollama_guarded_impact_scope: Optional[str]
+    ollama_guarded_source_authority: Optional[str]
     ollama_guarded_is_rumor: Optional[bool]
     local_parse_ok: bool
     local_abstained: bool
@@ -170,8 +172,25 @@ class OllamaGuardedDailyFeatureRow:
     ollama_guarded_article_count_5d: float
     ollama_guarded_article_count_30d: float
     ollama_guarded_confidence_mean: float
-    ollama_guarded_forward_looking_share: float
     ollama_guarded_rumor_share: float
+    ollama_guarded_event_family_unknown_share: float
+    ollama_guarded_event_family_earnings_share: float
+    ollama_guarded_event_family_dividend_share: float
+    ollama_guarded_event_family_guidance_share: float
+    ollama_guarded_event_family_capital_raise_or_debt_share: float
+    ollama_guarded_event_family_mna_or_asset_share: float
+    ollama_guarded_event_family_regulatory_or_legal_share: float
+    ollama_guarded_event_family_other_company_event_share: float
+    ollama_guarded_event_family_macro_or_sector_share: float
+    ollama_guarded_impact_scope_unknown_share: float
+    ollama_guarded_impact_scope_stock_share: float
+    ollama_guarded_impact_scope_sector_share: float
+    ollama_guarded_impact_scope_market_share: float
+    ollama_guarded_impact_scope_macro_share: float
+    ollama_guarded_source_authority_unknown_share: float
+    ollama_guarded_source_authority_official_share: float
+    ollama_guarded_source_authority_media_report_share: float
+    ollama_guarded_source_authority_rumor_or_unsourced_share: float
     ollama_guarded_abstain_share: float
     ollama_guarded_parse_fail_share: float
 

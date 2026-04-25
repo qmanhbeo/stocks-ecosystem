@@ -14,6 +14,10 @@ from typing import Callable, Optional
 import pandas as pd
 
 from research_pipelines.news_features.config import NewsFeaturesConfig, get_default_config
+from research_pipelines.news_features.local_runtime import (
+    apply_local_transformers_runtime_defaults,
+    ensure_expected_cuda_runtime,
+)
 from research_pipelines.news_features.core.build_phobert_sentiment_features import (
     PHOBERT_INPUT_COLUMNS,
     _prepare_phobert_input_articles_cache,
@@ -121,6 +125,7 @@ def _load_forward_looking_scorer(
     *,
     log_progress: bool = False,
 ) -> tuple[ForwardLookingScoreFn, dict[str, object]]:
+    apply_local_transformers_runtime_defaults(config)
     try:
         import torch
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -128,6 +133,7 @@ def _load_forward_looking_scorer(
         raise ImportError(
             "Forward-looking PhoBERT publish requires torch and transformers. Install project dependencies first."
         ) from exc
+    ensure_expected_cuda_runtime(torch, context="PhoBERT forward-looking publish")
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if config.phobert_forward_looking_precision == "fp16":

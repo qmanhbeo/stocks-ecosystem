@@ -1,4 +1,4 @@
-# Session 19: Regression Target vs Binary Classifier
+# Session 19 Log - Regression Target vs Binary Classifier
 
 ## Hypothesis
 Replace binary triple-barrier labels with continuous excess return as regression target.

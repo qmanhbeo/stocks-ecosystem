@@ -1,0 +1,41 @@
+{
+  "artifacts": {
+    "teacher_labels": "tests/.tmp/news_features/pytest-4ec44ee507bd4ee0b2706910e28d6217/data/features/news/datasets/phobert_forward_looking_teacher_labels.parquet",
+    "teacher_manifest": "tests/.tmp/news_features/pytest-4ec44ee507bd4ee0b2706910e28d6217/data/features/news/datasets/phobert_forward_looking_teacher_manifest.json"
+  },
+  "metadata": {
+    "source_signature": {
+      "llm_cache": {
+        "file_count": 3,
+        "label": "llm_cache",
+        "latest_mtime_ns": 1777023300125396225,
+        "signature": "1731f1587aad579e6f2aa2e8d1f8f741",
+        "total_size": 163
+      },
+      "raw_news": {
+        "file_count": 3,
+        "label": "raw_news",
+        "latest_mtime_ns": 1777023300125396225,
+        "signature": "67d20cd404f9df7407e84ef9e7eded7b",
+        "total_size": 717
+      },
+      "teacher_version": 1
+    }
+  },
+  "mode": "news_forward_looking_teacher_labels",
+  "name": "phobert_forward_looking_teacher_labels",
+  "summary": {
+    "cache_days_seen": 3,
+    "cache_rows_seen": 3,
+    "label_distribution": {
+      "count": 2,
+      "negative": 0,
+      "positive": 2
+    },
+    "missing_raw_article_count": 1,
+    "missing_raw_day_count": 0,
+    "status": "complete",
+    "teacher_rows": 2
+  },
+  "ts": "20260424_093500"
+}

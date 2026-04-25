@@ -1,0 +1,39 @@
+{
+  "artifacts": {
+    "teacher_labels": "data/features/news/datasets/phobert_article_scope_teacher_labels.parquet",
+    "teacher_manifest": "data/features/news/datasets/phobert_article_scope_teacher_manifest.json"
+  },
+  "metadata": {
+    "source_signature": {
+      "llm_cache": {
+        "file_count": 767,
+        "label": "llm_cache",
+        "latest_mtime_ns": 1775824246575762360,
+        "signature": "f72a27889938f64c97267277ecde6b38",
+        "total_size": 53230645
+      },
+      "raw_news": {
+        "file_count": 3751,
+        "label": "raw_news",
+        "latest_mtime_ns": 1775135462243849167,
+        "signature": "1771f47348b57b4264277b4657bcdb26",
+        "total_size": 3878068098
+      },
+      "teacher_version": 1
+    }
+  },
+  "mode": "news_article_scope_teacher_labels",
+  "name": "phobert_article_scope_teacher_labels",
+  "summary": {
+    "cache_days_seen": 767,
+    "cache_rows_seen": 79927,
+    "label_distribution": {
+      "count": 79448,
+      "negative": 69208,
+      "positive": 10240
+    },
+    "status": "complete",
+    "teacher_rows": 79448
+  },
+  "ts": "20260424_212843"
+}

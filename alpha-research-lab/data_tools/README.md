@@ -512,8 +512,9 @@ Extract per-ticker daily sentiment from cafef JSONL files using a keyword lexico
     `phobert_input_articles.parquet` staging plus resumable checkpoint shards
   - a guarded local Ollama lane with deterministic tagged ticker linkage,
     `ollama_guarded_input_articles.parquet`, resumable checkpoint shards, and
-    only coarse non-sentiment local fields (`confidence`,
-    `is_forward_looking`, `is_rumor`, plus coverage diagnostics)
+    only the narrowed residual semantic fields (`event_family`,
+    `impact_scope`, `source_authority`, `is_rumor`, confidence, plus coverage
+    diagnostics)
   neither additive local lane touches `data/llm_cache/`.
 
 ### `extract_news_teacher_features.py`

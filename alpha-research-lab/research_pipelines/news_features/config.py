@@ -78,7 +78,16 @@ class NewsFeaturesConfig:
     phobert_forward_looking_train_fraction: float = 0.70
     phobert_forward_looking_val_fraction: float = 0.15
     phobert_forward_looking_enable_gradient_checkpointing: bool = True
-    phobert_forward_looking_prefer_local_files: bool = False
+    phobert_forward_looking_prefer_local_files: bool = True
+    phobert_binary_head_training_checkpoint_steps: int = 250
+    phobert_binary_head_default_positive_threshold_value: float = 0.5
+    phobert_binary_head_threshold_search_min: float = 0.01
+    phobert_binary_head_threshold_search_max: float = 0.99
+    phobert_binary_head_threshold_search_step: float = 0.01
+    phobert_article_scope_split_strategy_value: str = "stratified_random"
+    phobert_source_type_split_strategy_value: str = "stratified_random"
+    phobert_article_scope_enable_class_weighting: bool = True
+    phobert_source_type_enable_class_weighting: bool = False
     ollama_guarded_model_name: str = "qwen2.5-coder:3b"
     ollama_guarded_timeout_seconds: int = 180
     ollama_guarded_num_predict: int = 256
@@ -115,6 +124,20 @@ class NewsFeaturesConfig:
     phobert_forward_looking_article_features_filename: str = "phobert_forward_looking_article_features.parquet"
     phobert_forward_looking_ticker_day_features_filename: str = "phobert_forward_looking_ticker_day_features.parquet"
     phobert_forward_looking_metadata_filename: str = "phobert_forward_looking_metadata.json"
+    phobert_article_scope_teacher_labels_filename: str = "phobert_article_scope_teacher_labels.parquet"
+    phobert_article_scope_teacher_manifest_filename: str = "phobert_article_scope_teacher_manifest.json"
+    phobert_article_scope_stage_filename: str = "phobert_article_scope_stage_articles.parquet"
+    phobert_article_scope_stage_manifest_filename: str = "phobert_article_scope_stage_manifest.json"
+    phobert_article_scope_article_features_filename: str = "phobert_article_scope_article_features.parquet"
+    phobert_article_scope_ticker_day_features_filename: str = "phobert_article_scope_ticker_day_features.parquet"
+    phobert_article_scope_metadata_filename: str = "phobert_article_scope_metadata.json"
+    phobert_source_type_teacher_labels_filename: str = "phobert_source_type_teacher_labels.parquet"
+    phobert_source_type_teacher_manifest_filename: str = "phobert_source_type_teacher_manifest.json"
+    phobert_source_type_stage_filename: str = "phobert_source_type_stage_articles.parquet"
+    phobert_source_type_stage_manifest_filename: str = "phobert_source_type_stage_manifest.json"
+    phobert_source_type_article_features_filename: str = "phobert_source_type_article_features.parquet"
+    phobert_source_type_ticker_day_features_filename: str = "phobert_source_type_ticker_day_features.parquet"
+    phobert_source_type_metadata_filename: str = "phobert_source_type_metadata.json"
     ollama_guarded_article_features_filename: str = "ollama_guarded_article_features.parquet"
     ollama_guarded_ticker_day_features_filename: str = "ollama_guarded_ticker_day_features.parquet"
     ollama_guarded_input_articles_filename: str = "ollama_guarded_input_articles.parquet"
@@ -134,6 +157,12 @@ class NewsFeaturesConfig:
     phobert_forward_looking_legacy_model_dirname: str = "news_models/phobert_forward_looking"
     phobert_forward_looking_training_manifest_filename: str = "training_manifest.json"
     phobert_forward_looking_latest_winner_filename: str = "latest_winner.json"
+    phobert_article_scope_publish_checkpoint_dirname: str = "phobert_article_scope_checkpoint"
+    phobert_article_scope_publish_checkpoint_manifest_filename: str = "phobert_article_scope_checkpoint_manifest.json"
+    phobert_article_scope_model_dirname: str = "news/phobert_article_scope"
+    phobert_source_type_publish_checkpoint_dirname: str = "phobert_source_type_checkpoint"
+    phobert_source_type_publish_checkpoint_manifest_filename: str = "phobert_source_type_checkpoint_manifest.json"
+    phobert_source_type_model_dirname: str = "news/phobert_source_type"
     job_status_dirname: str = "job_status"
     ollama_guarded_checkpoint_dirname: str = "ollama_guarded_checkpoint"
     ollama_guarded_checkpoint_manifest_filename: str = "ollama_guarded_checkpoint_manifest.json"
@@ -259,6 +288,88 @@ class NewsFeaturesConfig:
     def phobert_forward_looking_metadata_path(self) -> Path:
         return self.datasets_dir / self.phobert_forward_looking_metadata_filename
 
+    def phobert_article_scope_teacher_labels_path(self) -> Path:
+        return self.datasets_dir / self.phobert_article_scope_teacher_labels_filename
+
+    def phobert_article_scope_teacher_manifest_path(self) -> Path:
+        return self.datasets_dir / self.phobert_article_scope_teacher_manifest_filename
+
+    def phobert_article_scope_stage_path(self) -> Path:
+        return self.datasets_dir / self.phobert_article_scope_stage_filename
+
+    def phobert_article_scope_stage_manifest_path(self) -> Path:
+        return self.datasets_dir / self.phobert_article_scope_stage_manifest_filename
+
+    def phobert_article_scope_article_features_path(self) -> Path:
+        return self.datasets_dir / self.phobert_article_scope_article_features_filename
+
+    def phobert_article_scope_ticker_day_features_path(self) -> Path:
+        return self.datasets_dir / self.phobert_article_scope_ticker_day_features_filename
+
+    def phobert_article_scope_metadata_path(self) -> Path:
+        return self.datasets_dir / self.phobert_article_scope_metadata_filename
+
+    def phobert_article_scope_publish_checkpoint_dir(self) -> Path:
+        return self.datasets_dir / self.phobert_article_scope_publish_checkpoint_dirname
+
+    def phobert_article_scope_publish_checkpoint_manifest_path(self) -> Path:
+        return self.phobert_article_scope_publish_checkpoint_dir() / (
+            self.phobert_article_scope_publish_checkpoint_manifest_filename
+        )
+
+    def phobert_article_scope_publish_checkpoint_shard_path(self, batch_index: int) -> Path:
+        return self.phobert_article_scope_publish_checkpoint_dir() / f"article_shard_{int(batch_index):06d}.parquet"
+
+    def phobert_article_scope_model_artifacts_dir(self) -> Path:
+        return self.model_checkpoints_root / self.phobert_article_scope_model_dirname
+
+    def phobert_article_scope_training_manifest_path(self) -> Path:
+        return self.phobert_article_scope_model_artifacts_dir() / self.phobert_forward_looking_training_manifest_filename
+
+    def phobert_article_scope_latest_winner_path(self) -> Path:
+        return self.phobert_article_scope_model_artifacts_dir() / self.phobert_forward_looking_latest_winner_filename
+
+    def phobert_source_type_teacher_labels_path(self) -> Path:
+        return self.datasets_dir / self.phobert_source_type_teacher_labels_filename
+
+    def phobert_source_type_teacher_manifest_path(self) -> Path:
+        return self.datasets_dir / self.phobert_source_type_teacher_manifest_filename
+
+    def phobert_source_type_stage_path(self) -> Path:
+        return self.datasets_dir / self.phobert_source_type_stage_filename
+
+    def phobert_source_type_stage_manifest_path(self) -> Path:
+        return self.datasets_dir / self.phobert_source_type_stage_manifest_filename
+
+    def phobert_source_type_article_features_path(self) -> Path:
+        return self.datasets_dir / self.phobert_source_type_article_features_filename
+
+    def phobert_source_type_ticker_day_features_path(self) -> Path:
+        return self.datasets_dir / self.phobert_source_type_ticker_day_features_filename
+
+    def phobert_source_type_metadata_path(self) -> Path:
+        return self.datasets_dir / self.phobert_source_type_metadata_filename
+
+    def phobert_source_type_publish_checkpoint_dir(self) -> Path:
+        return self.datasets_dir / self.phobert_source_type_publish_checkpoint_dirname
+
+    def phobert_source_type_publish_checkpoint_manifest_path(self) -> Path:
+        return self.phobert_source_type_publish_checkpoint_dir() / (
+            self.phobert_source_type_publish_checkpoint_manifest_filename
+        )
+
+    def phobert_source_type_publish_checkpoint_shard_path(self, batch_index: int) -> Path:
+        return self.phobert_source_type_publish_checkpoint_dir() / f"article_shard_{int(batch_index):06d}.parquet"
+
+    def phobert_source_type_model_artifacts_dir(self) -> Path:
+        return self.model_checkpoints_root / self.phobert_source_type_model_dirname
+
+    def phobert_source_type_training_manifest_path(self) -> Path:
+        return self.phobert_source_type_model_artifacts_dir() / self.phobert_forward_looking_training_manifest_filename
+
+    def phobert_source_type_latest_winner_path(self) -> Path:
+        return self.phobert_source_type_model_artifacts_dir() / self.phobert_forward_looking_latest_winner_filename
+
     def phobert_forward_looking_publish_checkpoint_dir(self) -> Path:
         return self.datasets_dir / self.phobert_forward_looking_publish_checkpoint_dirname
 
@@ -360,6 +471,18 @@ class NewsFeaturesConfig:
     def phobert_forward_looking_publish_job_status_path(self) -> Path:
         return self.job_status_dir() / "phobert_forward_looking_publish.json"
 
+    def phobert_article_scope_job_status_path(self) -> Path:
+        return self.job_status_dir() / "phobert_article_scope_train.json"
+
+    def phobert_article_scope_publish_job_status_path(self) -> Path:
+        return self.job_status_dir() / "phobert_article_scope_publish.json"
+
+    def phobert_source_type_job_status_path(self) -> Path:
+        return self.job_status_dir() / "phobert_source_type_train.json"
+
+    def phobert_source_type_publish_job_status_path(self) -> Path:
+        return self.job_status_dir() / "phobert_source_type_publish.json"
+
     def ollama_guarded_article_features_path(self) -> Path:
         return self.datasets_dir / self.ollama_guarded_article_features_filename
 
@@ -407,6 +530,9 @@ class NewsFeaturesConfig:
         columns.extend(f"news_article_count_{window}d" for window in self.rolling_windows)
         columns.extend(self.phobert_daily_columns())
         columns.extend(self.phobert_forward_looking_daily_columns())
+        columns.extend(self.phobert_article_scope_daily_columns())
+        columns.extend(self.phobert_source_type_daily_columns())
+        columns.extend(self.ollama_guarded_daily_columns())
         columns.extend(self.embedding_columns())
         return columns
 
@@ -438,8 +564,25 @@ class NewsFeaturesConfig:
             "ollama_guarded_article_count_5d",
             "ollama_guarded_article_count_30d",
             "ollama_guarded_confidence_mean",
-            "ollama_guarded_forward_looking_share",
             "ollama_guarded_rumor_share",
+            "ollama_guarded_event_family_unknown_share",
+            "ollama_guarded_event_family_earnings_share",
+            "ollama_guarded_event_family_dividend_share",
+            "ollama_guarded_event_family_guidance_share",
+            "ollama_guarded_event_family_capital_raise_or_debt_share",
+            "ollama_guarded_event_family_mna_or_asset_share",
+            "ollama_guarded_event_family_regulatory_or_legal_share",
+            "ollama_guarded_event_family_other_company_event_share",
+            "ollama_guarded_event_family_macro_or_sector_share",
+            "ollama_guarded_impact_scope_unknown_share",
+            "ollama_guarded_impact_scope_stock_share",
+            "ollama_guarded_impact_scope_sector_share",
+            "ollama_guarded_impact_scope_market_share",
+            "ollama_guarded_impact_scope_macro_share",
+            "ollama_guarded_source_authority_unknown_share",
+            "ollama_guarded_source_authority_official_share",
+            "ollama_guarded_source_authority_media_report_share",
+            "ollama_guarded_source_authority_rumor_or_unsourced_share",
             "ollama_guarded_abstain_share",
             "ollama_guarded_parse_fail_share",
         ]
@@ -457,6 +600,46 @@ class NewsFeaturesConfig:
             "phobert_forward_looking_prob_5d",
             "phobert_forward_looking_prob_30d",
         ]
+
+    def phobert_article_scope_daily_columns(self) -> List[str]:
+        return [
+            "phobert_article_scope_article_count_1d",
+            "phobert_article_scope_stock_news_count_1d",
+            "phobert_article_scope_stock_news_share",
+            "phobert_article_scope_stock_news_prob_mean",
+            "phobert_article_scope_stock_news_prob_sum",
+            "phobert_article_scope_confidence_mean",
+            "phobert_article_scope_article_count_5d",
+            "phobert_article_scope_article_count_30d",
+            "phobert_article_scope_stock_news_prob_5d",
+            "phobert_article_scope_stock_news_prob_30d",
+        ]
+
+    def phobert_source_type_daily_columns(self) -> List[str]:
+        return [
+            "phobert_source_type_article_count_1d",
+            "phobert_source_type_official_or_regulatory_count_1d",
+            "phobert_source_type_official_or_regulatory_share",
+            "phobert_source_type_official_or_regulatory_prob_mean",
+            "phobert_source_type_official_or_regulatory_prob_sum",
+            "phobert_source_type_confidence_mean",
+            "phobert_source_type_article_count_5d",
+            "phobert_source_type_article_count_30d",
+            "phobert_source_type_official_or_regulatory_prob_5d",
+            "phobert_source_type_official_or_regulatory_prob_30d",
+        ]
+
+    def phobert_binary_head_split_strategy(self, head_name: str) -> str:
+        value = getattr(self, f"phobert_{str(head_name)}_split_strategy_value", "time")
+        normalized = str(value or "time").strip().lower()
+        return normalized if normalized else "time"
+
+    def phobert_binary_head_enable_class_weighting(self, head_name: str) -> bool:
+        return bool(getattr(self, f"phobert_{str(head_name)}_enable_class_weighting", False))
+
+    def phobert_binary_head_default_positive_threshold(self, head_name: str) -> float:
+        _ = str(head_name)
+        return float(self.phobert_binary_head_default_positive_threshold_value)
 
     def to_dict(self) -> Dict[str, object]:
         raw = asdict(self)

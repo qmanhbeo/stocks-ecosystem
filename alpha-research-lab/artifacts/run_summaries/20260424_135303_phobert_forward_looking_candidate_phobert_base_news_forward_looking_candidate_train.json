@@ -1,0 +1,30 @@
+{
+  "artifacts": {
+    "candidate_output_dir": "artifacts/news_models/phobert_forward_looking/runs/7abc8627d84b/phobert_base",
+    "training_manifest": "artifacts/news_models/phobert_forward_looking/training_manifest.json"
+  },
+  "metadata": {},
+  "mode": "news_forward_looking_candidate_train",
+  "name": "phobert_forward_looking_candidate_phobert_base",
+  "summary": {
+    "best_epoch": 2,
+    "candidate_name": "phobert_base",
+    "model_name": "vinai/phobert-base",
+    "status": "complete",
+    "test_metrics": {
+      "accuracy": 0.8357815964523282,
+      "f1": 0.8028614207286641,
+      "precision": 0.7665184243964421,
+      "recall": 0.8428222144603563,
+      "roc_auc": 0.9163465699359501
+    },
+    "val_metrics": {
+      "accuracy": 0.8413004750593824,
+      "f1": 0.8065858512755564,
+      "precision": 0.7604912998976459,
+      "recall": 0.8586286594761171,
+      "roc_auc": 0.9184017310168746
+    }
+  },
+  "ts": "20260424_135303"
+}

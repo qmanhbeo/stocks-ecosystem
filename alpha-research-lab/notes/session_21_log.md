@@ -1,4 +1,4 @@
-# Session 21: Kill Tests — Hostile Reviewer Battery (H66)
+# Session 21 Log - Kill Tests — Hostile Reviewer Battery (H66)
 
 ## Context
 After Session 20 confirmed the signal survives execution reality tests, Session 21

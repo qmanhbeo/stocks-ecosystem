@@ -7,6 +7,7 @@ import json
 from time import perf_counter
 
 from research_pipelines.news_features.config import get_default_config
+from research_pipelines.news_features.local_runtime import apply_local_transformers_runtime_defaults
 from research_pipelines.news_features.core.phobert_forward_looking_common import (
     ForwardLookingCandidateSpec,
     ForwardLookingTrainerFn,
@@ -70,6 +71,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 def main() -> None:
     args = build_arg_parser().parse_args()
     config = get_default_config()
+    apply_local_transformers_runtime_defaults(config)
     overall_start = perf_counter()
     result = run_phobert_forward_looking_pipeline(
         config=config,

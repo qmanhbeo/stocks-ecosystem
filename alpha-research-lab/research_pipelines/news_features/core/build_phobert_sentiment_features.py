@@ -14,6 +14,10 @@ from typing import Callable, Optional
 import pandas as pd
 
 from research_pipelines.news_features.config import NewsFeaturesConfig, get_default_config
+from research_pipelines.news_features.local_runtime import (
+    apply_local_transformers_runtime_defaults,
+    ensure_expected_cuda_runtime,
+)
 from research_pipelines.news_features.io_utils import describe_path, update_manifest, write_parquet_atomic
 
 
@@ -121,6 +125,7 @@ def _load_phobert_scorer(
     *,
     log_progress: bool = False,
 ) -> tuple[PhoBertScoreFn, dict[str, object]]:
+    apply_local_transformers_runtime_defaults(config)
     try:
         import torch
         from pyvi import ViTokenizer
@@ -129,6 +134,7 @@ def _load_phobert_scorer(
         raise ImportError(
             "PhoBERT sentiment features require torch, transformers, and pyvi. Install project dependencies first."
         ) from exc
+    ensure_expected_cuda_runtime(torch, context="PhoBERT sentiment publish")
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if config.phobert_precision == "fp16":

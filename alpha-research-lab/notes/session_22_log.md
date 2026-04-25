@@ -1,4 +1,4 @@
-# Session 22: Pre-2026 Cleanup — H67–H71
+# Session 22 Log - Pre-2026 Cleanup — H67–H71
 
 ## Context
 After Session 21 kill tests passed, identified 5 improvements to implement before

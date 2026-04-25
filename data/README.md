@@ -146,10 +146,11 @@ Important notes:
 - `datasets/ollama_guarded_article_features.parquet` and
   `datasets/ollama_guarded_ticker_day_features.parquet` are additive local
   guarded-generator datasets built from deterministic tagged article-ticker
-  linkage; in phase 1 they publish only coarse non-sentiment fields
-  (`ollama_guarded_confidence`, `ollama_guarded_is_forward_looking`,
-  `ollama_guarded_is_rumor`, and coverage diagnostics), remain dataset-only
-  surfaces, and are not merged into `predictions/*_news_features.parquet`
+  linkage; they now publish only the narrowed residual semantic fields
+  (`ollama_guarded_event_family`, `ollama_guarded_impact_scope`,
+  `ollama_guarded_source_authority`, `ollama_guarded_is_rumor`,
+  `ollama_guarded_confidence`, and coverage diagnostics) and their ticker-day
+  aggregates now merge into `predictions/*_news_features.parquet`
 - `datasets/ollama_guarded_input_articles.parquet` and
   `datasets/ollama_guarded_checkpoint/` are the tagged-only input cache and
   resumable checkpoint surface for that guarded local lane; they are internal

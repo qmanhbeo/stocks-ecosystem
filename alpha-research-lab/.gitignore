@@ -46,6 +46,9 @@ artifacts/job_status/*.jsonl
 # Mutable latest pointers; keep timestamped summaries tracked
 artifacts/run_summaries/latest_*.json
 
+# Local model/probe dumps are disposable unless explicitly promoted
+artifacts/ollama_probes/
+
 # Deprecated local checkpoint root; durable model checkpoints now live in data/
 artifacts/news_models/
 

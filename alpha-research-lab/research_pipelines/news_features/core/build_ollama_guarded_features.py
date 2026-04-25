@@ -44,12 +44,49 @@ ARTICLE_COLUMNS = [
     "local_model_name",
     "ollama_guarded_input_text_length",
     "ollama_guarded_confidence",
-    "ollama_guarded_is_forward_looking",
+    "ollama_guarded_event_family",
+    "ollama_guarded_impact_scope",
+    "ollama_guarded_source_authority",
     "ollama_guarded_is_rumor",
     "local_parse_ok",
     "local_abstained",
     "local_error",
 ]
+
+EVENT_FAMILY_VALUES = (
+    "unknown",
+    "earnings",
+    "dividend",
+    "guidance",
+    "capital_raise_or_debt",
+    "mna_or_asset",
+    "regulatory_or_legal",
+    "other_company_event",
+    "macro_or_sector",
+)
+IMPACT_SCOPE_VALUES = ("unknown", "stock", "sector", "market", "macro")
+SOURCE_AUTHORITY_VALUES = ("unknown", "official", "media_report", "rumor_or_unsourced")
+
+EVENT_TYPE_TO_FAMILY = {
+    "earnings_beat": "earnings",
+    "earnings_miss": "earnings",
+    "earnings_preview": "earnings",
+    "dividend_announce": "dividend",
+    "guidance_raise": "guidance",
+    "guidance_cut": "guidance",
+    "capital_raise": "capital_raise_or_debt",
+    "debt_issue": "capital_raise_or_debt",
+    "share_buyback": "capital_raise_or_debt",
+    "ipo_listing": "capital_raise_or_debt",
+    "merger_acquisition": "mna_or_asset",
+    "asset_sale": "mna_or_asset",
+    "legal_issue": "regulatory_or_legal",
+    "regulatory_approval": "regulatory_or_legal",
+    "leadership_change": "other_company_event",
+    "partnership": "other_company_event",
+    "sector_news": "macro_or_sector",
+    "macro_policy": "macro_or_sector",
+}
 
 OLLAMA_GUARDED_INPUT_CACHE_VERSION = 1
 OLLAMA_GUARDED_CHECKPOINT_VERSION = 1
@@ -74,13 +111,17 @@ def _ollama_guarded_json_schema() -> dict[str, object]:
         "properties": {
             "id": {"type": "string"},
             "confidence": _nullable_schema("integer"),
-            "is_forward_looking": _nullable_schema("boolean"),
+            "event_family": _nullable_schema("string"),
+            "impact_scope": _nullable_schema("string"),
+            "source_authority": _nullable_schema("string"),
             "is_rumor": _nullable_schema("boolean"),
         },
         "required": [
             "id",
             "confidence",
-            "is_forward_looking",
+            "event_family",
+            "impact_scope",
+            "source_authority",
             "is_rumor",
         ],
         "additionalProperties": True,
@@ -137,16 +178,18 @@ def _build_ollama_guarded_prompt(article: dict[str, object]) -> str:
     return "\n".join(
         [
             "You are reading one Vietnamese CafeF financial news article.",
-            "Score only three coarse local fields from the article text itself.",
+            "Score only the minimal residual semantic fields from the article text itself.",
             "Do not extract or invent tickers. Ticker linkage is handled separately and is not part of this task.",
-            "Do not score sentiment here. Sentiment is handled by a separate PhoBERT lane.",
+            "Do not score sentiment or forward-looking wording here. Those are handled by separate PhoBERT lanes.",
             "If a field is unclear, contradictory, or unsupported by the article, return null.",
             "Return one JSON object only. No markdown. No prose. No reasoning.",
             "",
             "Output fields:",
             "- id",
             "- confidence: 0 | 1 | 2 | null",
-            "- is_forward_looking: true | false | null",
+            "- event_family: earnings | dividend | guidance | capital_raise_or_debt | mna_or_asset | regulatory_or_legal | other_company_event | macro_or_sector | unknown | null",
+            "- impact_scope: stock | sector | market | macro | unknown | null",
+            "- source_authority: official | media_report | rumor_or_unsourced | unknown | null",
             "- is_rumor: true | false | null",
             "",
             f"Article id: {article['article_id']}",
@@ -206,12 +249,90 @@ def _blank_inference_result(
         "local_model_name": config.ollama_guarded_model_name,
         "ollama_guarded_input_text_length": int(input_text_length),
         "ollama_guarded_confidence": None,
-        "ollama_guarded_is_forward_looking": None,
+        "ollama_guarded_event_family": None,
+        "ollama_guarded_impact_scope": None,
+        "ollama_guarded_source_authority": None,
         "ollama_guarded_is_rumor": None,
         "local_parse_ok": bool(parse_ok),
         "local_abstained": True,
         "local_error": error,
     }
+
+
+def _norm_guarded_event_family(value: object) -> str | None:
+    raw = str(value or "").strip().lower()
+    if not raw:
+        return None
+    if raw in EVENT_FAMILY_VALUES:
+        return raw
+    if raw in EVENT_TYPE_TO_FAMILY:
+        return EVENT_TYPE_TO_FAMILY[raw]
+    normalized = raw.replace("-", "_").replace("/", "_").replace(" ", "_")
+    if normalized in EVENT_FAMILY_VALUES:
+        return normalized
+    if normalized in EVENT_TYPE_TO_FAMILY:
+        return EVENT_TYPE_TO_FAMILY[normalized]
+    if "earning" in normalized or "profit" in normalized or "result" in normalized:
+        return "earnings"
+    if "dividend" in normalized or "co_tuc" in normalized:
+        return "dividend"
+    if "guidance" in normalized or "plan" in normalized or "forecast" in normalized:
+        return "guidance"
+    if "debt" in normalized or "bond" in normalized or "raise" in normalized or "issue" in normalized:
+        return "capital_raise_or_debt"
+    if "merger" in normalized or "acquisition" in normalized or "asset" in normalized or "mna" in normalized:
+        return "mna_or_asset"
+    if "legal" in normalized or "regulatory" in normalized or "approval" in normalized:
+        return "regulatory_or_legal"
+    if "macro" in normalized or "sector" in normalized or "policy" in normalized:
+        return "macro_or_sector"
+    return "other_company_event"
+
+
+def _norm_guarded_impact_scope(value: object) -> str | None:
+    raw = str(value or "").strip().lower()
+    if not raw:
+        return None
+    normalized = legacy._norm_impact_scope(value)
+    if normalized in {"stock", "sector", "market"}:
+        return normalized
+    normalized = raw.replace("-", "_").replace("/", "_").replace(" ", "_")
+    if normalized in IMPACT_SCOPE_VALUES:
+        return normalized
+    if "macro" in normalized:
+        return "macro"
+    if "stock" in normalized or "company" in normalized:
+        return "stock"
+    if "sector" in normalized or "industry" in normalized:
+        return "sector"
+    if "market" in normalized or "index" in normalized:
+        return "market"
+    return "unknown"
+
+
+def _norm_guarded_source_authority(value: object) -> str | None:
+    raw = str(value or "").strip().lower()
+    if not raw:
+        return None
+    normalized = legacy._norm_enum(value, legacy.SOURCE_AUTHORITIES)
+    if normalized in {"official", "management"}:
+        return "official"
+    if normalized in {"media_report", "analyst"}:
+        return "media_report"
+    if normalized == "rumor_source":
+        return "rumor_or_unsourced"
+    if normalized == "unclear":
+        return "unknown"
+    normalized = raw.replace("-", "_").replace("/", "_").replace(" ", "_")
+    if normalized in SOURCE_AUTHORITY_VALUES:
+        return normalized
+    if "official" in normalized or "management" in normalized or "regulatory" in normalized:
+        return "official"
+    if "media" in normalized or "report" in normalized or "analyst" in normalized:
+        return "media_report"
+    if "rumor" in normalized or "unsourced" in normalized:
+        return "rumor_or_unsourced"
+    return "unknown"
 
 
 def _normalize_guarded_response(
@@ -246,14 +367,24 @@ def _normalize_guarded_response(
 
     normalized = legacy._normalize_record(raw_obj, article_id)
     confidence = normalized.get("confidence")
-    is_forward_looking = normalized.get("is_forward_looking")
+    event_family = _norm_guarded_event_family(raw_obj.get("event_family"))
+    if event_family is None:
+        event_family = _norm_guarded_event_family(normalized.get("event_type"))
+    impact_scope = _norm_guarded_impact_scope(raw_obj.get("impact_scope"))
+    if impact_scope is None:
+        impact_scope = _norm_guarded_impact_scope(normalized.get("impact_scope"))
+    source_authority = _norm_guarded_source_authority(raw_obj.get("source_authority"))
+    if source_authority is None:
+        source_authority = _norm_guarded_source_authority(normalized.get("source_authority"))
     is_rumor = normalized.get("is_rumor")
-    has_signal = any(value is not None for value in [confidence, is_forward_looking, is_rumor])
+    has_signal = any(value is not None for value in [confidence, event_family, impact_scope, source_authority, is_rumor])
     return {
         "local_model_name": config.ollama_guarded_model_name,
         "ollama_guarded_input_text_length": int(input_text_length),
         "ollama_guarded_confidence": float(confidence) if confidence is not None else None,
-        "ollama_guarded_is_forward_looking": is_forward_looking,
+        "ollama_guarded_event_family": event_family,
+        "ollama_guarded_impact_scope": impact_scope,
+        "ollama_guarded_source_authority": source_authority,
         "ollama_guarded_is_rumor": is_rumor,
         "local_parse_ok": True,
         "local_abstained": not has_signal,
@@ -461,42 +592,49 @@ def build_ollama_guarded_daily_feature_dataframe(
         return _empty_daily_dataframe(config)
 
     working = article_df.copy()
-    forward_flags = working["ollama_guarded_is_forward_looking"].astype("boolean")
     rumor_flags = working["ollama_guarded_is_rumor"].astype("boolean")
     working["_confidence_valid"] = working["ollama_guarded_confidence"].notna().astype(float)
-    working["_forward_valid"] = forward_flags.notna().astype(float)
-    working["_forward_true"] = forward_flags.fillna(False).astype(float)
     working["_rumor_valid"] = rumor_flags.notna().astype(float)
     working["_rumor_true"] = rumor_flags.fillna(False).astype(float)
     working["_abstained"] = working["local_abstained"].astype(float)
     working["_parse_fail"] = (~working["local_parse_ok"]).astype(float)
+    for event_family in EVENT_FAMILY_VALUES:
+        working[f"_event_family__{event_family}"] = (
+            working["ollama_guarded_event_family"].fillna("unknown").eq(event_family).astype(float)
+        )
+    for impact_scope in IMPACT_SCOPE_VALUES:
+        working[f"_impact_scope__{impact_scope}"] = (
+            working["ollama_guarded_impact_scope"].fillna("unknown").eq(impact_scope).astype(float)
+        )
+    for authority in SOURCE_AUTHORITY_VALUES:
+        working[f"_source_authority__{authority}"] = (
+            working["ollama_guarded_source_authority"].fillna("unknown").eq(authority).astype(float)
+        )
 
     if log_progress:
         print(
             f"Ollama guarded daily aggregation: grouping {len(working)} article-ticker rows",
             flush=True,
         )
-    daily = (
-        working.groupby(["ticker", "date"], as_index=False)
-        .agg(
-            ollama_guarded_article_count_1d=("article_id", "size"),
-            _confidence_sum=("ollama_guarded_confidence", "sum"),
-            _confidence_count=("_confidence_valid", "sum"),
-            _forward_true_sum=("_forward_true", "sum"),
-            _forward_valid_count=("_forward_valid", "sum"),
-            _rumor_true_sum=("_rumor_true", "sum"),
-            _rumor_valid_count=("_rumor_valid", "sum"),
-            _abstain_count=("_abstained", "sum"),
-            _parse_fail_count=("_parse_fail", "sum"),
-        )
-        .sort_values(["ticker", "date"])
-        .reset_index(drop=True)
-    )
+    aggregate_spec: dict[str, tuple[str, str]] = {
+        "ollama_guarded_article_count_1d": ("article_id", "size"),
+        "_confidence_sum": ("ollama_guarded_confidence", "sum"),
+        "_confidence_count": ("_confidence_valid", "sum"),
+        "_rumor_true_sum": ("_rumor_true", "sum"),
+        "_rumor_valid_count": ("_rumor_valid", "sum"),
+        "_abstain_count": ("_abstained", "sum"),
+        "_parse_fail_count": ("_parse_fail", "sum"),
+    }
+    for event_family in EVENT_FAMILY_VALUES:
+        aggregate_spec[f"_event_family__{event_family}__sum"] = (f"_event_family__{event_family}", "sum")
+    for impact_scope in IMPACT_SCOPE_VALUES:
+        aggregate_spec[f"_impact_scope__{impact_scope}__sum"] = (f"_impact_scope__{impact_scope}", "sum")
+    for authority in SOURCE_AUTHORITY_VALUES:
+        aggregate_spec[f"_source_authority__{authority}__sum"] = (f"_source_authority__{authority}", "sum")
+    daily = working.groupby(["ticker", "date"], as_index=False).agg(**aggregate_spec).sort_values(
+        ["ticker", "date"]
+    ).reset_index(drop=True)
     daily["ollama_guarded_confidence_mean"] = daily["_confidence_sum"] / daily["_confidence_count"].replace(
-        0.0,
-        pd.NA,
-    )
-    daily["ollama_guarded_forward_looking_share"] = daily["_forward_true_sum"] / daily["_forward_valid_count"].replace(
         0.0,
         pd.NA,
     )
@@ -504,6 +642,18 @@ def build_ollama_guarded_daily_feature_dataframe(
         0.0,
         pd.NA,
     )
+    for event_family in EVENT_FAMILY_VALUES:
+        daily[f"ollama_guarded_event_family_{event_family}_share"] = (
+            daily[f"_event_family__{event_family}__sum"] / daily["ollama_guarded_article_count_1d"]
+        )
+    for impact_scope in IMPACT_SCOPE_VALUES:
+        daily[f"ollama_guarded_impact_scope_{impact_scope}_share"] = (
+            daily[f"_impact_scope__{impact_scope}__sum"] / daily["ollama_guarded_article_count_1d"]
+        )
+    for authority in SOURCE_AUTHORITY_VALUES:
+        daily[f"ollama_guarded_source_authority_{authority}_share"] = (
+            daily[f"_source_authority__{authority}__sum"] / daily["ollama_guarded_article_count_1d"]
+        )
     daily["ollama_guarded_abstain_share"] = daily["_abstain_count"] / daily["ollama_guarded_article_count_1d"]
     daily["ollama_guarded_parse_fail_share"] = daily["_parse_fail_count"] / daily["ollama_guarded_article_count_1d"]
     daily["date"] = pd.to_datetime(daily["date"])
@@ -515,10 +665,12 @@ def build_ollama_guarded_daily_feature_dataframe(
     value_columns = [
         "ollama_guarded_article_count_1d",
         "ollama_guarded_confidence_mean",
-        "ollama_guarded_forward_looking_share",
         "ollama_guarded_rumor_share",
         "ollama_guarded_abstain_share",
         "ollama_guarded_parse_fail_share",
+        *(f"ollama_guarded_event_family_{event_family}_share" for event_family in EVENT_FAMILY_VALUES),
+        *(f"ollama_guarded_impact_scope_{impact_scope}_share" for impact_scope in IMPACT_SCOPE_VALUES),
+        *(f"ollama_guarded_source_authority_{authority}_share" for authority in SOURCE_AUTHORITY_VALUES),
     ]
     for ticker_index, (ticker, group) in enumerate(ticker_groups, start=1):
         group = group.sort_values("date").reset_index(drop=True)
@@ -799,16 +951,29 @@ def _daily_feature_frame_from_state(
                     if state["confidence_count"] > 0
                     else float("nan")
                 ),
-                "ollama_guarded_forward_looking_share": (
-                    state["forward_true_sum"] / state["forward_valid_count"]
-                    if state["forward_valid_count"] > 0
-                    else float("nan")
-                ),
                 "ollama_guarded_rumor_share": (
                     state["rumor_true_sum"] / state["rumor_valid_count"]
                     if state["rumor_valid_count"] > 0
                     else float("nan")
                 ),
+                **{
+                    f"ollama_guarded_event_family_{event_family}_share": (
+                        state.get(f"event_family__{event_family}", 0.0) / state["article_count"]
+                    )
+                    for event_family in EVENT_FAMILY_VALUES
+                },
+                **{
+                    f"ollama_guarded_impact_scope_{impact_scope}_share": (
+                        state.get(f"impact_scope__{impact_scope}", 0.0) / state["article_count"]
+                    )
+                    for impact_scope in IMPACT_SCOPE_VALUES
+                },
+                **{
+                    f"ollama_guarded_source_authority_{authority}_share": (
+                        state.get(f"source_authority__{authority}", 0.0) / state["article_count"]
+                    )
+                    for authority in SOURCE_AUTHORITY_VALUES
+                },
                 "ollama_guarded_abstain_share": state["abstain_count"] / state["article_count"],
                 "ollama_guarded_parse_fail_share": state["parse_fail_count"] / state["article_count"],
             }
@@ -824,10 +989,12 @@ def _daily_feature_frame_from_state(
     fill_columns = [
         "ollama_guarded_article_count_1d",
         "ollama_guarded_confidence_mean",
-        "ollama_guarded_forward_looking_share",
         "ollama_guarded_rumor_share",
         "ollama_guarded_abstain_share",
         "ollama_guarded_parse_fail_share",
+        *(f"ollama_guarded_event_family_{event_family}_share" for event_family in EVENT_FAMILY_VALUES),
+        *(f"ollama_guarded_impact_scope_{impact_scope}_share" for impact_scope in IMPACT_SCOPE_VALUES),
+        *(f"ollama_guarded_source_authority_{authority}_share" for authority in SOURCE_AUTHORITY_VALUES),
     ]
     for ticker_index, (ticker, group) in enumerate(ticker_groups, start=1):
         group = group.sort_values("date").reset_index(drop=True)
@@ -883,7 +1050,9 @@ def _finalize_ollama_guarded_from_checkpoints(
             ("local_model_name", pa.string()),
             ("ollama_guarded_input_text_length", pa.int64()),
             ("ollama_guarded_confidence", pa.float64()),
-            ("ollama_guarded_is_forward_looking", pa.bool_()),
+            ("ollama_guarded_event_family", pa.string()),
+            ("ollama_guarded_impact_scope", pa.string()),
+            ("ollama_guarded_source_authority", pa.string()),
             ("ollama_guarded_is_rumor", pa.bool_()),
             ("local_parse_ok", pa.bool_()),
             ("local_abstained", pa.bool_()),
@@ -925,13 +1094,22 @@ def _finalize_ollama_guarded_from_checkpoints(
                     writer = pq.ParquetWriter(temp_article_path, schema=article_schema)
                 writer.write_table(table)
 
-                forward_flags = shard_df["ollama_guarded_is_forward_looking"].astype("boolean")
                 rumor_flags = shard_df["ollama_guarded_is_rumor"].astype("boolean")
+                for event_family in EVENT_FAMILY_VALUES:
+                    shard_df[f"_event_family__{event_family}"] = (
+                        shard_df["ollama_guarded_event_family"].fillna("unknown").eq(event_family).astype(float)
+                    )
+                for impact_scope in IMPACT_SCOPE_VALUES:
+                    shard_df[f"_impact_scope__{impact_scope}"] = (
+                        shard_df["ollama_guarded_impact_scope"].fillna("unknown").eq(impact_scope).astype(float)
+                    )
+                for authority in SOURCE_AUTHORITY_VALUES:
+                    shard_df[f"_source_authority__{authority}"] = (
+                        shard_df["ollama_guarded_source_authority"].fillna("unknown").eq(authority).astype(float)
+                    )
                 grouped = (
                     shard_df.assign(
                         _confidence_valid=shard_df["ollama_guarded_confidence"].notna().astype(float),
-                        _forward_valid=forward_flags.notna().astype(float),
-                        _forward_true=forward_flags.fillna(False).astype(float),
                         _rumor_valid=rumor_flags.notna().astype(float),
                         _rumor_true=rumor_flags.fillna(False).astype(float),
                         _abstain_count=shard_df["local_abstained"].astype(float),
@@ -942,12 +1120,22 @@ def _finalize_ollama_guarded_from_checkpoints(
                         article_count=("article_id", "size"),
                         confidence_sum=("ollama_guarded_confidence", "sum"),
                         confidence_count=("_confidence_valid", "sum"),
-                        forward_true_sum=("_forward_true", "sum"),
-                        forward_valid_count=("_forward_valid", "sum"),
                         rumor_true_sum=("_rumor_true", "sum"),
                         rumor_valid_count=("_rumor_valid", "sum"),
                         abstain_count=("_abstain_count", "sum"),
                         parse_fail_count=("_parse_fail_count", "sum"),
+                        **{
+                            f"event_family__{event_family}": (f"_event_family__{event_family}", "sum")
+                            for event_family in EVENT_FAMILY_VALUES
+                        },
+                        **{
+                            f"impact_scope__{impact_scope}": (f"_impact_scope__{impact_scope}", "sum")
+                            for impact_scope in IMPACT_SCOPE_VALUES
+                        },
+                        **{
+                            f"source_authority__{authority}": (f"_source_authority__{authority}", "sum")
+                            for authority in SOURCE_AUTHORITY_VALUES
+                        },
                     )
                 )
                 for row in grouped.to_dict(orient="records"):
@@ -958,12 +1146,16 @@ def _finalize_ollama_guarded_from_checkpoints(
                             "article_count": 0.0,
                             "confidence_sum": 0.0,
                             "confidence_count": 0.0,
-                            "forward_true_sum": 0.0,
-                            "forward_valid_count": 0.0,
                             "rumor_true_sum": 0.0,
                             "rumor_valid_count": 0.0,
                             "abstain_count": 0.0,
                             "parse_fail_count": 0.0,
+                            **{f"event_family__{event_family}": 0.0 for event_family in EVENT_FAMILY_VALUES},
+                            **{f"impact_scope__{impact_scope}": 0.0 for impact_scope in IMPACT_SCOPE_VALUES},
+                            **{
+                                f"source_authority__{authority}": 0.0
+                                for authority in SOURCE_AUTHORITY_VALUES
+                            },
                         },
                     )
                     for field in state:

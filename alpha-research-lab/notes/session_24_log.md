@@ -1,4 +1,4 @@
-# Session 24: Proposed Experiments — Alpha Improvement Roadmap
+# Session 24 Log - Proposed Experiments — Alpha Improvement Roadmap
 
 ## Context
 

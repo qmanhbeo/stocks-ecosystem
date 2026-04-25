@@ -1,0 +1,15 @@
+{
+  "artifacts": {
+    "training_manifest": "artifacts/news_models/phobert_forward_looking/training_manifest.json"
+  },
+  "metadata": {},
+  "mode": "news_forward_looking_winner_selection",
+  "name": "phobert_forward_looking_winner_selection",
+  "summary": {
+    "completed_candidates": 0,
+    "failed_candidates": 1,
+    "status": "no_winner",
+    "winner": null
+  },
+  "ts": "20260424_130143"
+}

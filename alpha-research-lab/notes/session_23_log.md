@@ -1,4 +1,4 @@
-# Session 23: 2026 Held-Out Test — H75
+# Session 23 Log - 2026 Held-Out Test — H75
 
 ## Authorization
 User explicitly authorized 2026 data on 2026-03-18.

@@ -1,0 +1,50 @@
+{
+  "artifacts": {
+    "stage_dataset": "data/features/news/datasets/phobert_forward_looking_stage_articles.parquet",
+    "stage_manifest": "data/features/news/datasets/phobert_forward_looking_stage_manifest.json"
+  },
+  "metadata": {
+    "source_signature": {
+      "phobert_input_articles": {
+        "exists": true,
+        "mtime_ns": 1776950348873265235,
+        "path": "data/features/news/datasets/phobert_input_articles.parquet",
+        "size": 923092014
+      },
+      "stage_version": 1,
+      "tagged_articles": {
+        "exists": true,
+        "mtime_ns": 1776942533816862519,
+        "path": "data/features/news/tagged/tagged_articles.parquet",
+        "size": 30088929
+      },
+      "teacher_labels": {
+        "exists": true,
+        "mtime_ns": 1777035668778430530,
+        "path": "data/features/news/datasets/phobert_forward_looking_teacher_labels.parquet",
+        "size": 6819757
+      },
+      "train_fraction": 0.7,
+      "val_fraction": 0.15
+    }
+  },
+  "mode": "news_forward_looking_stage_build",
+  "name": "phobert_forward_looking_stage_build",
+  "summary": {
+    "label_distribution": {
+      "count": 40065,
+      "negative": 24029,
+      "positive": 16036
+    },
+    "split_counts": {
+      "test": 7216,
+      "train": 26113,
+      "val": 6736
+    },
+    "stage_rows": 40065,
+    "status": "complete",
+    "teacher_conflict_article_count": 0,
+    "untagged_teacher_article_count": 39219
+  },
+  "ts": "20260424_130121"
+}

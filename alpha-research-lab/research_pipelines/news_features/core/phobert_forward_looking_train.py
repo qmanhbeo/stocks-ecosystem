@@ -14,6 +14,10 @@ import numpy as np
 import pandas as pd
 
 from research_pipelines.news_features.config import NewsFeaturesConfig, get_default_config
+from research_pipelines.news_features.local_runtime import (
+    apply_local_transformers_runtime_defaults,
+    ensure_expected_cuda_runtime,
+)
 from research_pipelines.news_features.core.phobert_forward_looking_common import (
     FORWARD_LOOKING_TRAINING_VERSION,
     ForwardLookingCandidateSpec,
@@ -100,6 +104,95 @@ def resolve_torch_dtype(config: NewsFeaturesConfig, torch, device: str):
     if str(config.phobert_forward_looking_precision) == "fp32":
         return torch.float32
     return torch.float16 if device == "cuda" else torch.float32
+
+
+TRAIN_HEARTBEAT_SECONDS = 30.0
+
+
+def create_grad_scaler(torch, *, use_amp: bool):
+    if hasattr(torch, "amp") and hasattr(torch.amp, "GradScaler"):
+        return torch.amp.GradScaler("cuda", enabled=use_amp)
+    return torch.cuda.amp.GradScaler(enabled=use_amp)
+
+
+def maybe_emit_train_heartbeat(
+    *,
+    config: NewsFeaturesConfig,
+    state_path: Path,
+    candidate: ForwardLookingCandidateSpec,
+    stage_summary: dict[str, object],
+    device: str,
+    dtype,
+    parameter_count: int,
+    epoch_history: Sequence[dict[str, object]],
+    epoch: int,
+    total_epochs: int,
+    epoch_started: float,
+    last_heartbeat_at: float,
+    last_heartbeat_rows: int,
+    epoch_rows: int,
+    optimizer_steps: int,
+) -> tuple[float, int]:
+    now = perf_counter()
+    if now - last_heartbeat_at < TRAIN_HEARTBEAT_SECONDS:
+        return last_heartbeat_at, last_heartbeat_rows
+
+    epoch_elapsed = max(now - epoch_started, 1e-9)
+    window_elapsed = max(now - last_heartbeat_at, 1e-9)
+    window_rows = max(int(epoch_rows) - int(last_heartbeat_rows), 0)
+    epoch_rows_per_second = float(epoch_rows / epoch_elapsed) if epoch_rows else 0.0
+    window_rows_per_second = float(window_rows / window_elapsed) if window_rows else 0.0
+    write_forward_looking_progress_line(
+        "train",
+        "candidate="
+        f"{candidate.name} epoch={epoch}/{total_epochs} heartbeat "
+        f"train_rows={epoch_rows} optimizer_steps={optimizer_steps} "
+        f"rate={epoch_rows_per_second:.1f} rows/s window_rate={window_rows_per_second:.1f} rows/s",
+    )
+    write_forward_looking_job_status(
+        config,
+        status="running",
+        phase="train",
+        progress_updates={
+            "current_candidate": candidate.name,
+            "current_candidate_status": "in_progress",
+            "current_epoch": int(epoch),
+            "total_epochs": int(total_epochs),
+            "epoch_train_rows": int(epoch_rows),
+            "device": device,
+            "current_candidate_model": candidate.model_name,
+        },
+        throughput_updates={
+            "phase": "train",
+            "unit": "rows_per_second",
+            "current": epoch_rows_per_second,
+            "window_rows": int(window_rows),
+            "window_seconds": float(window_elapsed),
+        },
+    )
+    write_json_atomic(
+        state_path,
+        {
+            "status": "in_progress",
+            "candidate_name": candidate.name,
+            "model_name": candidate.model_name,
+            "device": device,
+            "dtype": str(dtype).replace("torch.", ""),
+            "parameter_count": int(parameter_count),
+            "stage_summary": stage_summary,
+            "epoch_history": list(epoch_history),
+            "current_epoch": int(epoch),
+            "epoch_in_progress": {
+                "epoch": int(epoch),
+                "train_rows": int(epoch_rows),
+                "optimizer_steps": int(optimizer_steps),
+                "elapsed_seconds": float(epoch_elapsed),
+                "rows_per_second": float(epoch_rows_per_second),
+            },
+            "last_completed_epoch": max(int(epoch) - 1, 0),
+        },
+    )
+    return now, int(epoch_rows)
 
 
 def ensure_forward_looking_stage_manifest(config: NewsFeaturesConfig) -> dict[str, object]:
@@ -236,6 +329,7 @@ def default_train_forward_looking_candidate(
     output_dir: Path,
     stage_summary: dict[str, object],
 ) -> dict[str, object]:
+    apply_local_transformers_runtime_defaults(config)
     try:
         import torch
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -243,6 +337,7 @@ def default_train_forward_looking_candidate(
         raise ImportError(
             "Forward-looking PhoBERT training requires torch and transformers. Install project dependencies first."
         ) from exc
+    ensure_expected_cuda_runtime(torch, context="PhoBERT forward-looking train")
 
     output_dir.mkdir(parents=True, exist_ok=True)
     state_path = output_dir / "candidate_state.json"
@@ -301,14 +396,67 @@ def default_train_forward_looking_candidate(
         lr=float(config.phobert_forward_looking_learning_rate),
         weight_decay=float(config.phobert_forward_looking_weight_decay),
     )
-    scaler = torch.cuda.amp.GradScaler(enabled=use_amp)
+    scaler = create_grad_scaler(torch, use_amp=use_amp)
     parameter_count = int(sum(int(parameter.numel()) for parameter in model.parameters()))
     epoch_history: list[dict[str, object]] = []
     best_epoch = -1
     best_val_f1 = float("-inf")
+    split_counts = dict(stage_summary.get("split_counts") or {})
+    train_rows_target = int(split_counts.get("train", 0))
+    val_rows_target = int(split_counts.get("val", 0))
+    write_forward_looking_progress_line(
+        "train",
+        "candidate="
+        f"{candidate.name} runtime device={device} dtype={str(dtype).replace('torch.', '')} "
+        f"amp={use_amp} train_rows={train_rows_target} val_rows={val_rows_target}",
+    )
+    write_json_atomic(
+        state_path,
+        {
+            "status": "in_progress",
+            "candidate_name": candidate.name,
+            "model_name": candidate.model_name,
+            "device": device,
+            "dtype": str(dtype).replace("torch.", ""),
+            "parameter_count": int(parameter_count),
+            "stage_summary": stage_summary,
+            "epoch_history": [],
+            "current_epoch": 0,
+            "last_completed_epoch": 0,
+        },
+    )
 
     for epoch in range(1, int(config.phobert_forward_looking_num_epochs) + 1):
         epoch_started = perf_counter()
+        last_heartbeat_at = epoch_started
+        last_heartbeat_rows = 0
+        write_forward_looking_progress_line(
+            "train",
+            "candidate="
+            f"{candidate.name} epoch={epoch}/{int(config.phobert_forward_looking_num_epochs)} start "
+            f"device={device} train_rows_target={train_rows_target}",
+        )
+        write_forward_looking_job_status(
+            config,
+            status="running",
+            phase="train",
+            progress_updates={
+                "current_candidate": candidate.name,
+                "current_candidate_status": "in_progress",
+                "current_epoch": int(epoch),
+                "total_epochs": int(config.phobert_forward_looking_num_epochs),
+                "epoch_train_rows": 0,
+                "device": device,
+                "current_candidate_model": candidate.model_name,
+            },
+            throughput_updates={
+                "phase": "train",
+                "unit": "rows_per_second",
+                "current": 0.0,
+                "window_rows": 0,
+                "window_seconds": 0.0,
+            },
+        )
         model.train()
         optimizer.zero_grad(set_to_none=True)
         epoch_loss = 0.0
@@ -374,6 +522,23 @@ def default_train_forward_looking_candidate(
                     optimizer.zero_grad(set_to_none=True)
                     optimizer_steps += 1
                     accumulation_count = 0
+                last_heartbeat_at, last_heartbeat_rows = maybe_emit_train_heartbeat(
+                    config=config,
+                    state_path=state_path,
+                    candidate=candidate,
+                    stage_summary=stage_summary,
+                    device=device,
+                    dtype=dtype,
+                    parameter_count=parameter_count,
+                    epoch_history=epoch_history,
+                    epoch=epoch,
+                    total_epochs=int(config.phobert_forward_looking_num_epochs),
+                    epoch_started=epoch_started,
+                    last_heartbeat_at=last_heartbeat_at,
+                    last_heartbeat_rows=last_heartbeat_rows,
+                    epoch_rows=epoch_rows,
+                    optimizer_steps=optimizer_steps,
+                )
         if accumulation_count > 0:
             if use_amp:
                 scaler.unscale_(optimizer)

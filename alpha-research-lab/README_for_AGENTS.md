@@ -31,7 +31,9 @@ Execution reality is shared at the workspace level:
 - shared rule code: `../shared-market-rules/shared_market_rules/`
 - produced tradability artifact: `data/features/execution/tradability_daily.parquet`
 
-`notes/next_steps.md` is the live small-brain state source. This file is the working manual.
+`notes/next_steps.md` is the live small-brain state source. Keep it short and
+link out. Use `notes/session_NN_log.md` for full per-session detail. This file
+is the working manual.
 
 Artifact writes are anchored to `alpha-research-lab/artifacts/` regardless of launch directory. Do not treat workspace-root `artifacts/` as the canonical lab output location.
 
@@ -346,13 +348,12 @@ Use this file for:
 
 ## Canonical Sources
 
-- `notes/next_steps.md`: live champion, current priorities, session status
+- `notes/next_steps.md`: live champion, current priorities, short recent digest
 - `notes/signal_library.md`: **signal registry — primary deliverable**
 - `notes/findings.md`: index for durable scientific truth
 - `notes/findings-*.md`: chunked durable scientific truth, padded to 30-block filename ranges
 - `notes/data_sources.md`: **data inventory — what's in git, what's not, how to restore**
 - `notes/session_NN_log.md`: full per-session record
-- `notes/experiments_log.md`: legacy historical detail for earlier sessions
 
 `README.md` is overview only.
 
@@ -958,9 +959,8 @@ See `notes/signal_library.md` for evaluation criteria.
 - `notes/signal_library.md`: **signal registry — primary output, update after every signal experiment**
 - `notes/findings.md`: index for durable scientific conclusions
 - `notes/findings-*.md`: durable scientific conclusions, chunked by 30 findings
-- `notes/next_steps.md`: current queue plus session history
+- `notes/next_steps.md`: current queue plus a short recent digest
 - `notes/session_NN_log.md`: detailed session record
-- `notes/experiments_log.md`: legacy historical record
 
 ### Session Workflow
 

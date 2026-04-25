@@ -1,0 +1,20 @@
+{
+  "artifacts": {
+    "article_dataset": "data/features/news/datasets/phobert_source_type_article_features.parquet",
+    "latest_winner": "data/model_checkpoints/news/phobert_source_type/latest_winner.json",
+    "ticker_day_dataset": "data/features/news/datasets/phobert_source_type_ticker_day_features.parquet"
+  },
+  "metadata": {
+    "checkpoint_manifest": "data/features/news/datasets/phobert_source_type_checkpoint/phobert_source_type_checkpoint_manifest.json",
+    "phobert_source_type_model_id": "phobert_source_type::20260425T161859367170+0000::phobert_base"
+  },
+  "mode": "news_source_type_publish",
+  "name": "phobert_source_type_publish",
+  "summary": {
+    "article_score_rows": 660255,
+    "daily_feature_rows": 1436996,
+    "status": "complete",
+    "unique_article_count": 342135
+  },
+  "ts": "20260425_180839"
+}

@@ -1,0 +1,24 @@
+{
+  "artifacts": {
+    "candidate_output_dir": "tests/.tmp/news_features/pytest-2efde31b57ac48a58da44365addaad8c/alpha-research-lab/artifacts/news_models/phobert_forward_looking/runs/d445bcbc3150/base_b",
+    "training_manifest": "tests/.tmp/news_features/pytest-2efde31b57ac48a58da44365addaad8c/alpha-research-lab/artifacts/news_models/phobert_forward_looking/training_manifest.json"
+  },
+  "metadata": {},
+  "mode": "news_forward_looking_candidate_train",
+  "name": "phobert_forward_looking_candidate_base_b",
+  "summary": {
+    "best_epoch": 1,
+    "candidate_name": "base_b",
+    "model_name": "model/b",
+    "status": "complete",
+    "test_metrics": {
+      "f1": 0.78,
+      "roc_auc": 0.79
+    },
+    "val_metrics": {
+      "f1": 0.8,
+      "roc_auc": 0.8
+    }
+  },
+  "ts": "20260424_093523"
+}

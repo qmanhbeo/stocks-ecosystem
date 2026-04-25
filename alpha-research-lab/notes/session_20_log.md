@@ -1,4 +1,4 @@
-# Session 20: Execution Reality Experiments (H61-H65)
+# Session 20 Log - Execution Reality Experiments (H61-H65)
 
 ## Context
 Five experiments designed to close the gap between "good backtest" and "actual profit".
