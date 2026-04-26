@@ -146,10 +146,12 @@ Important notes:
 - `datasets/ollama_guarded_article_features.parquet` and
   `datasets/ollama_guarded_ticker_day_features.parquet` are additive local
   guarded-generator datasets built from deterministic tagged article-ticker
-  linkage; they now publish only the narrowed residual semantic fields
-  (`ollama_guarded_event_family`, `ollama_guarded_impact_scope`,
-  `ollama_guarded_source_authority`, `ollama_guarded_is_rumor`,
-  `ollama_guarded_confidence`, and coverage diagnostics) and their ticker-day
+  linkage; their default local backfill now fills the narrowed event-family
+  residual while keeping the wider guarded columns
+  (`ollama_guarded_impact_scope`, `ollama_guarded_source_authority`,
+  `ollama_guarded_is_rumor`, `ollama_guarded_confidence`, and coverage
+  diagnostics) as optional/widened diagnostics. PhoBERT `article_scope` and
+  `source_type` are the preferred local scope/source proxies. The ticker-day
   aggregates now merge into `predictions/*_news_features.parquet`
 - `datasets/ollama_guarded_input_articles.parquet` and
   `datasets/ollama_guarded_checkpoint/` are the tagged-only input cache and

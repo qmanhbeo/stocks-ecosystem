@@ -90,12 +90,19 @@ class NewsFeaturesConfig:
     phobert_source_type_enable_class_weighting: bool = False
     ollama_guarded_model_name: str = "qwen2.5-coder:3b"
     ollama_guarded_timeout_seconds: int = 180
-    ollama_guarded_num_predict: int = 256
-    ollama_guarded_num_ctx: int = 2048
-    ollama_guarded_keep_alive: str = "0s"
+    ollama_guarded_num_predict: int = 64
+    ollama_guarded_num_ctx: int = 512
+    ollama_guarded_temperature: float = 0.0
+    ollama_guarded_keep_alive: str = "5m"
     ollama_guarded_use_schema: bool = True
+    ollama_guarded_prompt_variant: str = "lean_json_bottom_v1"
+    ollama_guarded_field_set: str = "event_only"
     ollama_guarded_max_body_chars: int = 0
-    ollama_guarded_checkpoint_rows: int = 2000
+    ollama_guarded_max_body_words: int = 300
+    ollama_guarded_stop_after_each_call: bool = False
+    ollama_guarded_min_article_scope_prob: float = 0.0
+    ollama_guarded_min_source_type_prob: float = 0.0
+    ollama_guarded_checkpoint_rows: int = 20
     feature_prefix: str = "news_"
     embedding_prefix: str = "news_embed_"
     missing_fill_value: float = 0.0
@@ -482,6 +489,9 @@ class NewsFeaturesConfig:
 
     def phobert_source_type_publish_job_status_path(self) -> Path:
         return self.job_status_dir() / "phobert_source_type_publish.json"
+
+    def ollama_guarded_job_status_path(self) -> Path:
+        return self.job_status_dir() / "ollama_guarded_publish.json"
 
     def ollama_guarded_article_features_path(self) -> Path:
         return self.datasets_dir / self.ollama_guarded_article_features_filename

@@ -6,7 +6,7 @@ Purpose:
 - separate machine-fit, JSON/schema obedience, and semantic trustworthiness
 
 Date of last update:
-- `2026-04-23`
+- `2026-04-25`
 
 ## Locked Scope
 
@@ -524,3 +524,76 @@ Models newly ruled out under the reusable probe contract:
 - `granite3-moe:3b`
 - `smollm2:1.7b`
 - `deepseek-coder:1.3b`
+
+## Round 6 - Prompt And Field-Density Efficiency Grid For The Guarded Residual Lane
+
+Artifact:
+- `artifacts/run_summaries/20260425_190453_ollama_guarded_prompt_probe.json`
+- `artifacts/run_summaries/latest_ollama_guarded_prompt_probe.json`
+
+Goal:
+- stop treating the local generator as a broad replacement extractor
+- find the smallest prompt that can fill the residual semantic field BERT does
+  not cover well enough: event family
+- keep the run within the current `3GB VRAM / 10GB RAM` planning budget
+
+Model:
+- `qwen2.5-coder:3b`
+
+Sample:
+- `8` real raw CafeF articles
+- `4` current hand-curated probe articles
+- `4` legacy-cache labelled articles mapped back to their raw article text
+
+Variables tested:
+- expert header vs no header
+- JSON vs XML vs CSV
+- full five-field output vs event+rumor vs event-only
+- `num_ctx` `512`, `1024`, `2048`
+- raw body vs first `300` words
+- schema at top vs schema at bottom
+- no constraint vs no-chat style constraints
+- result anchor and JSON prefill
+- zero-shot vs one-shot
+- `temperature=0.0` vs `0.1`
+
+Winner:
+- `lean_event_only_json_512_300_bottom`
+
+Winner metrics:
+- parse OK: `1.0`
+- scored field: `event_family`
+- event-family accuracy: `0.625`
+- exact event-family rate: `0.625`
+- average seconds/article: `1.7357272136250685`
+- articles/second: `0.5761273961427952`
+- average prompt tokens: `512.0`
+- average eval tokens: `29.125`
+
+What changed:
+- compact Vietnamese taxonomy hints helped the event-family-only prompt,
+  especially for M&A / asset-sale style articles
+- schema-at-bottom was necessary; top-schema prompts at `512` context still
+  failed badly
+- `1024`/`2048` full-field JSON was semantically richer but roughly twice as
+  slow and asks the model for fields now better owned by PhoBERT
+- CSV was fast but not safe: it emitted custom labels such as `Financial News`
+  and got zero exact event+rumor rows under the strict gate
+- XML, one-shotting, anchors, prefill, and `temperature=0.1` did not beat the
+  simple bottom-schema event-only JSON prompt
+
+Operational decision:
+- default the production guarded Ollama lane to event-family-only JSON
+- keep `impact_scope` and `source_authority` as PhoBERT-owned features by
+  default
+- leave the wider Ollama field sets as explicit operator options, not the
+  default backfill path
+
+Backfill posture:
+- ungated canary throughput was about `0.49` unique articles/second over
+  `342135` tagged articles, too slow for a blind full run
+- BERT-gated canary using
+  `phobert_article_scope_prob_positive >= 0.28` reduced the queue to `146872`
+  articles and stayed parse-clean
+- the priority backfill now runs in detached tmux session
+  `ollama_guarded_backfill` with `--checkpoint-rows 200`

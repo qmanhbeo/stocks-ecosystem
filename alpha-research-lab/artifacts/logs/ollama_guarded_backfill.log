@@ -1,0 +1,8 @@
+Loaded normalized_rows=712017 and tagged_rows=660255 for Ollama guarded lane in 0.6s
+Ollama guarded article-scope gate: threshold=0.280, kept=146872/342135
+Ollama guarded input cache reuse: input_rows=146872, unique_tagged_articles=342135, gated_articles=146872
+Ollama guarded scoring universe: input_rows=146872 from /home/manh/stocks-ecosystem/data/features/news/datasets/ollama_guarded_input_articles.parquet
+Ollama guarded checkpoint resume: completed_batches=0/735, article_rows=0, unique_articles=0
+Ollama guarded input scan 200/146872; unique_articles=200, article_rows=345
+Ollama guarded input scan 400/146872; unique_articles=400, article_rows=671
+scan 400/146872; unique_articles=400, article_rows=671

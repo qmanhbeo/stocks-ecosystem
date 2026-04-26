@@ -66,6 +66,12 @@ EVENT_FAMILY_VALUES = (
 )
 IMPACT_SCOPE_VALUES = ("unknown", "stock", "sector", "market", "macro")
 SOURCE_AUTHORITY_VALUES = ("unknown", "official", "media_report", "rumor_or_unsourced")
+OLLAMA_GUARDED_FIELD_SETS = {
+    "full5": ("confidence", "event_family", "impact_scope", "source_authority", "is_rumor"),
+    "core3": ("event_family", "impact_scope", "source_authority"),
+    "event_rumor": ("confidence", "event_family", "is_rumor"),
+    "event_only": ("confidence", "event_family"),
+}
 
 EVENT_TYPE_TO_FAMILY = {
     "earnings_beat": "earnings",
@@ -90,7 +96,7 @@ EVENT_TYPE_TO_FAMILY = {
 
 OLLAMA_GUARDED_INPUT_CACHE_VERSION = 1
 OLLAMA_GUARDED_CHECKPOINT_VERSION = 1
-OLLAMA_GUARDED_PROMPT_VERSION = 2
+OLLAMA_GUARDED_PROMPT_VERSION = 4
 
 
 def _empty_article_dataframe() -> pd.DataFrame:
@@ -105,25 +111,25 @@ def _nullable_schema(*types: str) -> dict[str, object]:
     return {"type": list(types) + ["null"]}
 
 
-def _ollama_guarded_json_schema() -> dict[str, object]:
+def _ollama_guarded_fields(config: NewsFeaturesConfig) -> tuple[str, ...]:
+    raw = str(getattr(config, "ollama_guarded_field_set", "full5") or "full5").strip()
+    return OLLAMA_GUARDED_FIELD_SETS.get(raw, OLLAMA_GUARDED_FIELD_SETS["full5"])
+
+
+def _ollama_guarded_json_schema(fields: tuple[str, ...] | list[str] | None = None) -> dict[str, object]:
+    active_fields = tuple(fields or OLLAMA_GUARDED_FIELD_SETS["full5"])
+    properties = {
+        "id": {"type": "string"},
+        "confidence": _nullable_schema("integer"),
+        "event_family": _nullable_schema("string"),
+        "impact_scope": _nullable_schema("string"),
+        "source_authority": _nullable_schema("string"),
+        "is_rumor": _nullable_schema("boolean"),
+    }
     return {
         "type": "object",
-        "properties": {
-            "id": {"type": "string"},
-            "confidence": _nullable_schema("integer"),
-            "event_family": _nullable_schema("string"),
-            "impact_scope": _nullable_schema("string"),
-            "source_authority": _nullable_schema("string"),
-            "is_rumor": _nullable_schema("boolean"),
-        },
-        "required": [
-            "id",
-            "confidence",
-            "event_family",
-            "impact_scope",
-            "source_authority",
-            "is_rumor",
-        ],
+        "properties": {key: properties[key] for key in ("id", *active_fields)},
+        "required": ["id", *active_fields],
         "additionalProperties": True,
     }
 
@@ -151,6 +157,15 @@ def _clean_text(value: object) -> str:
     return " ".join(str(value or "").split()).strip()
 
 
+def _truncate_words(text: str, max_words: int) -> str:
+    if max_words <= 0:
+        return text
+    words = str(text or "").split()
+    if len(words) <= max_words:
+        return text
+    return " ".join(words[:max_words]).strip()
+
+
 def _compose_input_text(row: pd.Series, max_body_chars: int) -> str:
     title = _clean_text(row.get("clean_title", ""))
     summary = _clean_text(row.get("clean_summary", ""))
@@ -161,43 +176,78 @@ def _compose_input_text(row: pd.Series, max_body_chars: int) -> str:
     return " ".join(parts).strip()
 
 
+def _prepare_prompt_text_parts(row: pd.Series, config: NewsFeaturesConfig) -> dict[str, str]:
+    title = _clean_text(row.get("clean_title", ""))
+    summary = _clean_text(row.get("clean_summary", ""))
+    body = _clean_text(row.get("clean_body_text", ""))
+    if int(config.ollama_guarded_max_body_words) > 0:
+        body = _truncate_words(body, int(config.ollama_guarded_max_body_words))
+    if int(config.ollama_guarded_max_body_chars) > 0 and len(body) > int(config.ollama_guarded_max_body_chars):
+        body = body[: int(config.ollama_guarded_max_body_chars)].rstrip()
+    return {"title": title, "summary": summary, "body": body}
+
+
 def _article_payload_from_row(row: pd.Series, config: NewsFeaturesConfig) -> dict[str, object]:
-    input_text = _compose_input_text(row, config.ollama_guarded_max_body_chars)
+    parts = _prepare_prompt_text_parts(row, config)
+    input_text = " ".join(part for part in [parts["title"], parts["summary"], parts["body"]] if part).strip()
     return {
         "article_id": str(row.get("article_id", "") or ""),
         "published_at": row.get("published_at"),
-        "clean_title": _clean_text(row.get("clean_title", "")),
-        "clean_summary": _clean_text(row.get("clean_summary", "")),
-        "clean_body_text": _clean_text(row.get("clean_body_text", "")),
+        "clean_title": parts["title"],
+        "clean_summary": parts["summary"],
+        "clean_body_text": parts["body"],
         "input_text": input_text,
         "input_text_length": int(len(input_text)),
     }
 
 
-def _build_ollama_guarded_prompt(article: dict[str, object]) -> str:
-    return "\n".join(
-        [
-            "You are reading one Vietnamese CafeF financial news article.",
-            "Score only the minimal residual semantic fields from the article text itself.",
-            "Do not extract or invent tickers. Ticker linkage is handled separately and is not part of this task.",
-            "Do not score sentiment or forward-looking wording here. Those are handled by separate PhoBERT lanes.",
-            "If a field is unclear, contradictory, or unsupported by the article, return null.",
-            "Return one JSON object only. No markdown. No prose. No reasoning.",
-            "",
-            "Output fields:",
-            "- id",
-            "- confidence: 0 | 1 | 2 | null",
-            "- event_family: earnings | dividend | guidance | capital_raise_or_debt | mna_or_asset | regulatory_or_legal | other_company_event | macro_or_sector | unknown | null",
-            "- impact_scope: stock | sector | market | macro | unknown | null",
-            "- source_authority: official | media_report | rumor_or_unsourced | unknown | null",
-            "- is_rumor: true | false | null",
-            "",
-            f"Article id: {article['article_id']}",
-            f"Title: {article['clean_title']}",
-            f"Summary: {article['clean_summary']}",
-            f"Body: {article['clean_body_text']}",
-        ]
+def _ollama_guarded_schema_lines(fields: tuple[str, ...] | list[str]) -> list[str]:
+    active_fields = tuple(fields)
+    lines = ['Keys: "id",' + ",".join(f'"{field}"' for field in active_fields) + "."]
+    if "confidence" in active_fields:
+        lines.append("confidence: 0,1,2,null.")
+    if "event_family" in active_fields:
+        lines.append(
+            "event_family: earnings(kqkd/loi_nhuan),dividend(co_tuc),guidance(ke_hoach/du_bao),"
+            "capital_raise_or_debt(trai_phieu/phat_hanh/tang_von),mna_or_asset(mua_ban/sap_nhap/tai_san/co_phan),"
+            "regulatory_or_legal(phap_ly/kien/to_cao/xu_phat),other_company_event,macro_or_sector,unknown,null."
+        )
+    if "impact_scope" in active_fields:
+        lines.append("impact_scope: stock,sector,market,macro,unknown,null.")
+    if "source_authority" in active_fields:
+        lines.append("source_authority: official,media_report,rumor_or_unsourced,unknown,null.")
+    if "is_rumor" in active_fields:
+        lines.append("is_rumor: true,false,null.")
+    return lines
+
+
+def _build_ollama_guarded_prompt(article: dict[str, object], config: NewsFeaturesConfig) -> str:
+    prompt_variant = str(config.ollama_guarded_prompt_variant)
+    prompt_variant = {
+        "lean_json_v1": "lean_json_bottom_v1",
+        "robust_json_v1": "robust_json_top_v1",
+    }.get(prompt_variant, prompt_variant)
+    if prompt_variant not in {"lean_json_bottom_v1", "lean_json_top_v1", "robust_json_top_v1"}:
+        prompt_variant = "lean_json_bottom_v1"
+    fields = _ollama_guarded_fields(config)
+    header = (
+        ["You are an expert Vietnamese equity-news analyst."]
+        if prompt_variant == "robust_json_top_v1"
+        else []
     )
+    instruction_lines = [
+        "Return one compact JSON object for this Vietnamese financial news article.",
+        *_ollama_guarded_schema_lines(fields),
+    ]
+    article_lines = [
+        f"ID: {article['article_id']}",
+        f"TITLE: {article['clean_title']}",
+        f"SUMMARY: {article['clean_summary']}",
+        f"BODY: {article['clean_body_text']}",
+    ]
+    if prompt_variant.endswith("top_v1"):
+        return "\n".join([*header, *instruction_lines, "", *article_lines])
+    return "\n".join([*header, *article_lines, "", *instruction_lines])
 
 
 def _call_ollama_chat(prompt: str, config: NewsFeaturesConfig) -> str:
@@ -208,13 +258,13 @@ def _call_ollama_chat(prompt: str, config: NewsFeaturesConfig) -> str:
         "think": False,
         "keep_alive": config.ollama_guarded_keep_alive,
         "options": {
-            "temperature": 0,
+            "temperature": float(config.ollama_guarded_temperature),
             "num_predict": int(config.ollama_guarded_num_predict),
             "num_ctx": int(config.ollama_guarded_num_ctx),
         },
     }
     if config.ollama_guarded_use_schema:
-        payload["format"] = _ollama_guarded_json_schema()
+        payload["format"] = _ollama_guarded_json_schema(_ollama_guarded_fields(config))
     request = urllib.request.Request(
         "http://localhost:11434/api/chat",
         data=json.dumps(payload).encode("utf-8"),
@@ -410,7 +460,7 @@ def _infer_single_article(
         if raw_response_fn is not None:
             raw_text = raw_response_fn(article)
         else:
-            prompt = _build_ollama_guarded_prompt(article)
+            prompt = _build_ollama_guarded_prompt(article, config)
             raw_text = _call_ollama_chat(prompt, config)
         return _normalize_guarded_response(
             article_id=str(article.get("article_id", "") or ""),
@@ -425,7 +475,7 @@ def _infer_single_article(
             error="ollama_call_error",
         )
     finally:
-        if raw_response_fn is None:
+        if raw_response_fn is None and bool(config.ollama_guarded_stop_after_each_call):
             _stop_ollama_model(config.ollama_guarded_model_name)
 
 
@@ -732,6 +782,53 @@ def _load_json_payload(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _current_utc_timestamp() -> str:
+    return pd.Timestamp.utcnow().isoformat()
+
+
+def _write_ollama_guarded_job_status(
+    config: NewsFeaturesConfig,
+    *,
+    status: str,
+    phase: str,
+    progress_updates: Optional[dict[str, object]] = None,
+    throughput_updates: Optional[dict[str, object]] = None,
+    error: Optional[str] = None,
+    started_at: Optional[str] = None,
+) -> dict[str, object]:
+    status_path = config.ollama_guarded_job_status_path()
+    existing = _load_json_payload(status_path)
+    now = _current_utc_timestamp()
+    existing_started_at = str(existing.get("started_at") or "")
+    new_started_at = str(started_at or existing_started_at or now)
+    reset_existing = bool(started_at is not None and existing_started_at and existing_started_at != new_started_at)
+    progress = {} if reset_existing else dict(existing.get("progress") or {})
+    progress.update(progress_updates or {})
+    throughput = {} if reset_existing else dict(existing.get("throughput") or {})
+    throughput.update(throughput_updates or {})
+    payload = {
+        "job": "ollama_guarded_publish",
+        "status": str(status),
+        "started_at": new_started_at,
+        "updated_at": now,
+        "last_heartbeat": now,
+        "phase": str(phase),
+        "progress": progress,
+        "throughput": throughput,
+        "artifacts": {
+            "status_file": str(status_path),
+            "input_articles": str(config.ollama_guarded_input_articles_path()),
+            "checkpoint_manifest": str(config.ollama_guarded_checkpoint_manifest_path()),
+            "article_dataset": str(config.ollama_guarded_article_features_path()),
+            "ticker_day_dataset": str(config.ollama_guarded_ticker_day_features_path()),
+        },
+    }
+    if error is not None:
+        payload["error"] = str(error)
+    _write_json_atomic(status_path, payload)
+    return payload
+
+
 def _load_ollama_guarded_input_manifest(config: NewsFeaturesConfig) -> dict[str, object]:
     return _load_json_payload(config.ollama_guarded_input_manifest_path())
 
@@ -768,7 +865,61 @@ def _ollama_guarded_input_source_signature(
         "tagged_rows": int(tagged_rows),
         "normalized_input": _path_checkpoint_signature(config.normalized_path()),
         "tagged_input": _path_checkpoint_signature(config.tagged_path()),
+        "ollama_guarded_min_article_scope_prob": float(config.ollama_guarded_min_article_scope_prob),
+        "ollama_guarded_min_source_type_prob": float(config.ollama_guarded_min_source_type_prob),
+        "article_scope_input": _path_checkpoint_signature(config.phobert_article_scope_article_features_path()),
+        "source_type_input": _path_checkpoint_signature(config.phobert_source_type_article_features_path()),
     }
+
+
+def _apply_ollama_guarded_input_gates(config: NewsFeaturesConfig, article_ids: set[str]) -> set[str]:
+    kept = set(article_ids)
+    min_scope_prob = float(config.ollama_guarded_min_article_scope_prob)
+    min_source_prob = float(config.ollama_guarded_min_source_type_prob)
+    if min_scope_prob > 0:
+        scope_path = config.phobert_article_scope_article_features_path()
+        if not scope_path.exists():
+            raise FileNotFoundError(f"Missing article-scope gate input: {scope_path}")
+        scope = pd.read_parquet(
+            scope_path,
+            columns=["article_id", "phobert_article_scope_prob_positive"],
+        ).drop_duplicates(subset=["article_id"])
+        scope["article_id"] = scope["article_id"].astype(str)
+        scope_ids = set(
+            scope.loc[
+                pd.to_numeric(scope["phobert_article_scope_prob_positive"], errors="coerce").fillna(0.0)
+                >= min_scope_prob,
+                "article_id",
+            ].tolist()
+        )
+        kept.intersection_update(scope_ids)
+        print(
+            f"Ollama guarded article-scope gate: threshold={min_scope_prob:.3f}, kept={len(kept)}/{len(article_ids)}",
+            flush=True,
+        )
+    if min_source_prob > 0:
+        source_path = config.phobert_source_type_article_features_path()
+        if not source_path.exists():
+            raise FileNotFoundError(f"Missing source-type gate input: {source_path}")
+        source = pd.read_parquet(
+            source_path,
+            columns=["article_id", "phobert_source_type_prob_positive"],
+        ).drop_duplicates(subset=["article_id"])
+        source["article_id"] = source["article_id"].astype(str)
+        source_ids = set(
+            source.loc[
+                pd.to_numeric(source["phobert_source_type_prob_positive"], errors="coerce").fillna(0.0)
+                >= min_source_prob,
+                "article_id",
+            ].tolist()
+        )
+        before = len(kept)
+        kept.intersection_update(source_ids)
+        print(
+            f"Ollama guarded source-type gate: threshold={min_source_prob:.3f}, kept={len(kept)}/{before}",
+            flush=True,
+        )
+    return kept
 
 
 def _ollama_guarded_run_signature(
@@ -784,9 +935,16 @@ def _ollama_guarded_run_signature(
         "ollama_guarded_timeout_seconds": int(config.ollama_guarded_timeout_seconds),
         "ollama_guarded_num_predict": int(config.ollama_guarded_num_predict),
         "ollama_guarded_num_ctx": int(config.ollama_guarded_num_ctx),
+        "ollama_guarded_temperature": float(config.ollama_guarded_temperature),
         "ollama_guarded_keep_alive": str(config.ollama_guarded_keep_alive),
         "ollama_guarded_use_schema": bool(config.ollama_guarded_use_schema),
+        "ollama_guarded_prompt_variant": str(config.ollama_guarded_prompt_variant),
+        "ollama_guarded_field_set": str(config.ollama_guarded_field_set),
         "ollama_guarded_max_body_chars": int(config.ollama_guarded_max_body_chars),
+        "ollama_guarded_max_body_words": int(config.ollama_guarded_max_body_words),
+        "ollama_guarded_stop_after_each_call": bool(config.ollama_guarded_stop_after_each_call),
+        "ollama_guarded_min_article_scope_prob": float(config.ollama_guarded_min_article_scope_prob),
+        "ollama_guarded_min_source_type_prob": float(config.ollama_guarded_min_source_type_prob),
         "ollama_guarded_checkpoint_rows": int(config.ollama_guarded_checkpoint_rows),
         "ollama_guarded_input_rows": int(input_rows),
         "ollama_guarded_input": _path_checkpoint_signature(config.ollama_guarded_input_articles_path()),
@@ -807,7 +965,8 @@ def _prepare_ollama_guarded_input_articles_cache(
     except ImportError as exc:
         raise ImportError("Preparing Ollama guarded input cache requires pyarrow.") from exc
 
-    tagged_article_ids = {str(article_id) for article_id in tagged["article_id"].astype(str).tolist()}
+    all_tagged_article_ids = {str(article_id) for article_id in tagged["article_id"].astype(str).tolist()}
+    tagged_article_ids = _apply_ollama_guarded_input_gates(config, all_tagged_article_ids)
     source_signature = _ollama_guarded_input_source_signature(
         config,
         normalized_rows=int(normalized_rows),
@@ -819,14 +978,14 @@ def _prepare_ollama_guarded_input_articles_cache(
         cached_rows = int(input_manifest.get("input_rows", 0))
         print(
             f"Ollama guarded input cache reuse: input_rows={cached_rows}, "
-            f"unique_tagged_articles={len(tagged_article_ids)}",
+            f"unique_tagged_articles={len(all_tagged_article_ids)}, gated_articles={len(tagged_article_ids)}",
             flush=True,
         )
         return input_manifest
 
     print(
         f"Ollama guarded input cache rebuild: scanning normalized_rows={normalized_rows} for "
-        f"{len(tagged_article_ids)} unique tagged articles",
+        f"{len(tagged_article_ids)} gated articles from {len(all_tagged_article_ids)} unique tagged articles",
         flush=True,
     )
     input_schema = pa.schema([(column, pa.string()) for column in OLLAMA_GUARDED_INPUT_COLUMNS])
@@ -919,7 +1078,8 @@ def _prepare_ollama_guarded_input_articles_cache(
         "input_cache_version": OLLAMA_GUARDED_INPUT_CACHE_VERSION,
         "source_signature": source_signature,
         "input_rows": int(input_rows),
-        "tagged_unique_article_count": int(len(tagged_article_ids)),
+        "tagged_unique_article_count": int(len(all_tagged_article_ids)),
+        "gated_article_count": int(len(tagged_article_ids)),
         "missing_normalized_article_count": int(len(missing_article_ids)),
         "updated_at_utc": pd.Timestamp.utcnow().isoformat(),
     }
@@ -1212,9 +1372,29 @@ def build_ollama_guarded_feature_exports(
 ) -> pd.DataFrame:
     config = config or get_default_config()
     config.ensure_directories()
+    job_started_at = _current_utc_timestamp()
     overall_start = perf_counter()
     load_start = perf_counter()
     guarded_input_rows = 0
+    _write_ollama_guarded_job_status(
+        config,
+        status="running",
+        phase="bootstrap",
+        progress_updates={
+            "local_model_name": config.ollama_guarded_model_name,
+            "num_ctx": int(config.ollama_guarded_num_ctx),
+            "num_predict": int(config.ollama_guarded_num_predict),
+            "temperature": float(config.ollama_guarded_temperature),
+            "prompt_variant": str(config.ollama_guarded_prompt_variant),
+            "field_set": str(config.ollama_guarded_field_set),
+            "max_body_words": int(config.ollama_guarded_max_body_words),
+            "max_body_chars": int(config.ollama_guarded_max_body_chars),
+            "min_article_scope_prob": float(config.ollama_guarded_min_article_scope_prob),
+            "min_source_type_prob": float(config.ollama_guarded_min_source_type_prob),
+            "checkpoint_rows": int(config.ollama_guarded_checkpoint_rows),
+        },
+        started_at=job_started_at,
+    )
     if not config.normalized_path().exists() or not config.tagged_path().exists():
         article_rows = _empty_article_dataframe()
         daily = _empty_daily_dataframe(config)
@@ -1230,6 +1410,13 @@ def build_ollama_guarded_feature_exports(
         write_parquet_atomic(daily, config.ollama_guarded_ticker_day_features_path(), index=False)
         write_elapsed = perf_counter() - write_start
         build_elapsed = 0.0
+        _write_ollama_guarded_job_status(
+            config,
+            status="complete",
+            phase="empty_inputs",
+            progress_updates=metadata,
+            started_at=job_started_at,
+        )
     else:
         try:
             import pyarrow.parquet as pq
@@ -1246,6 +1433,17 @@ def build_ollama_guarded_feature_exports(
             f"Loaded normalized_rows={normalized_rows} and tagged_rows={tagged_rows} for Ollama guarded lane in {load_elapsed:.1f}s",
             flush=True,
         )
+        _write_ollama_guarded_job_status(
+            config,
+            status="running",
+            phase="input_cache",
+            progress_updates={
+                "normalized_rows": int(normalized_rows),
+                "tagged_rows": int(tagged_rows),
+            },
+            throughput_updates={"phase": "load", "seconds": float(load_elapsed)},
+            started_at=job_started_at,
+        )
 
         input_manifest = _prepare_ollama_guarded_input_articles_cache(
             config=config,
@@ -1260,6 +1458,18 @@ def build_ollama_guarded_feature_exports(
         print(
             f"Ollama guarded scoring universe: input_rows={input_rows} from {config.ollama_guarded_input_articles_path()}",
             flush=True,
+        )
+        _write_ollama_guarded_job_status(
+            config,
+            status="running",
+            phase="score",
+            progress_updates={
+                "ollama_guarded_input_rows": int(input_rows),
+                "completed_batches": int((checkpoint_manifest := _load_ollama_guarded_checkpoint_manifest(config)).get("completed_batch_count", 0)),
+                "article_score_rows": int(checkpoint_manifest.get("article_score_rows", 0)),
+                "unique_article_count": int(checkpoint_manifest.get("unique_article_count", 0)),
+            },
+            started_at=job_started_at,
         )
 
         if input_rows == 0:
@@ -1280,6 +1490,13 @@ def build_ollama_guarded_feature_exports(
             write_parquet_atomic(_empty_article_dataframe(), config.ollama_guarded_article_features_path(), index=False)
             write_parquet_atomic(daily, config.ollama_guarded_ticker_day_features_path(), index=False)
             write_elapsed = perf_counter() - write_start
+            _write_ollama_guarded_job_status(
+                config,
+                status="complete",
+                phase="empty_score_universe",
+                progress_updates=metadata,
+                started_at=job_started_at,
+            )
         else:
             run_signature = _ollama_guarded_run_signature(
                 config,
@@ -1348,6 +1565,19 @@ def build_ollama_guarded_feature_exports(
                         f"unique_articles={int(checkpoint_manifest.get('unique_article_count', 0))}",
                         flush=True,
                     )
+                _write_ollama_guarded_job_status(
+                    config,
+                    status="running",
+                    phase="score",
+                    progress_updates={
+                        "total_batches": int(total_batches),
+                        "completed_batches": int(checkpoint_manifest.get("completed_batch_count", 0)),
+                        "article_score_rows": int(checkpoint_manifest.get("article_score_rows", 0)),
+                        "unique_article_count": int(checkpoint_manifest.get("unique_article_count", 0)),
+                        "checkpoint_status": str(checkpoint_manifest.get("status", "unknown")),
+                    },
+                    started_at=job_started_at,
+                )
 
                 build_start = perf_counter()
                 tagged = tagged[
@@ -1360,7 +1590,7 @@ def build_ollama_guarded_feature_exports(
                 unique_article_count = int(checkpoint_manifest.get("unique_article_count", 0))
                 processed_input_rows = 0
                 processed_new_batches = 0
-                progress_interval = 25000
+                progress_interval = max(int(config.ollama_guarded_checkpoint_rows), 1)
 
                 for batch_index, batch in enumerate(
                     input_file.iter_batches(
@@ -1447,10 +1677,33 @@ def build_ollama_guarded_feature_exports(
                         or processed_input_rows % progress_interval == 0
                         or processed_input_rows >= input_rows
                     ):
+                        elapsed = max(perf_counter() - build_start, 1e-9)
                         print(
                             f"Ollama guarded input scan {processed_input_rows}/{input_rows}; "
                             f"unique_articles={unique_article_count}, article_rows={article_score_rows}",
                             flush=True,
+                        )
+                        _write_ollama_guarded_job_status(
+                            config,
+                            status="running",
+                            phase="score",
+                            progress_updates={
+                                "processed_input_rows": int(processed_input_rows),
+                                "ollama_guarded_input_rows": int(input_rows),
+                                "completed_batches": int(len(completed_batches)),
+                                "total_batches": int(total_batches),
+                                "article_score_rows": int(article_score_rows),
+                                "unique_article_count": int(unique_article_count),
+                                "last_completed_batch": int(batch_index),
+                                "checkpoint_status": "in_progress",
+                            },
+                            throughput_updates={
+                                "phase": "score",
+                                "input_rows_per_second": float(processed_input_rows / elapsed),
+                                "new_batches": int(processed_new_batches),
+                                "elapsed_seconds": float(elapsed),
+                            },
+                            started_at=job_started_at,
                         )
 
                     if checkpoint_batch_limit is not None and processed_new_batches >= int(checkpoint_batch_limit):
@@ -1464,6 +1717,18 @@ def build_ollama_guarded_feature_exports(
                     checkpoint_manifest.get("total_batches", total_batches)
                 ):
                     print("Ollama guarded checkpoint scoring complete. Finalizing published datasets...", flush=True)
+                    _write_ollama_guarded_job_status(
+                        config,
+                        status="running",
+                        phase="finalize",
+                        progress_updates={
+                            "completed_batches": int(checkpoint_manifest.get("completed_batch_count", 0)),
+                            "total_batches": int(checkpoint_manifest.get("total_batches", total_batches)),
+                            "article_score_rows": int(checkpoint_manifest.get("article_score_rows", 0)),
+                            "unique_article_count": int(checkpoint_manifest.get("unique_article_count", 0)),
+                        },
+                        started_at=job_started_at,
+                    )
                     daily, finalized_metadata = _finalize_ollama_guarded_from_checkpoints(
                         config=config,
                         checkpoint_manifest=checkpoint_manifest,
@@ -1526,16 +1791,62 @@ def build_ollama_guarded_feature_exports(
         f"{config.ollama_guarded_ticker_day_features_path()}",
         flush=True,
     )
+    _write_ollama_guarded_job_status(
+        config,
+        status=str(metadata.get("checkpoint_status", "complete" if len(daily) > 0 else "in_progress")),
+        phase="complete" if str(metadata.get("checkpoint_status", "complete" if len(daily) > 0 else "in_progress")) == "complete" else "score",
+        progress_updates=metadata,
+        throughput_updates={"phase": "total", "elapsed_seconds": float(overall_elapsed)},
+        started_at=job_started_at,
+    )
+    if raw_response_fn is None and not bool(config.ollama_guarded_stop_after_each_call):
+        _stop_ollama_model(config.ollama_guarded_model_name)
     return daily
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
-    return argparse.ArgumentParser(description="Build additive guarded local Ollama news datasets.")
+    parser = argparse.ArgumentParser(description="Build additive guarded local Ollama news datasets.")
+    parser.add_argument(
+        "--checkpoint-batch-limit",
+        type=int,
+        default=0,
+        help="Stop after N new checkpoint batches for a low-resource canary; 0 means run until complete.",
+    )
+    parser.add_argument("--field-set", choices=sorted(OLLAMA_GUARDED_FIELD_SETS), default="")
+    parser.add_argument("--prompt-variant", default="")
+    parser.add_argument("--num-ctx", type=int, default=0)
+    parser.add_argument("--num-predict", type=int, default=0)
+    parser.add_argument("--max-body-words", type=int, default=-1)
+    parser.add_argument("--min-article-scope-prob", type=float, default=-1.0)
+    parser.add_argument("--min-source-type-prob", type=float, default=-1.0)
+    parser.add_argument("--checkpoint-rows", type=int, default=0)
+    return parser
 
 
 def main() -> None:
-    build_arg_parser().parse_args()
-    build_ollama_guarded_feature_exports()
+    args = build_arg_parser().parse_args()
+    config = get_default_config()
+    if args.field_set:
+        config.ollama_guarded_field_set = str(args.field_set)
+    if args.prompt_variant:
+        config.ollama_guarded_prompt_variant = str(args.prompt_variant)
+    if int(args.num_ctx) > 0:
+        config.ollama_guarded_num_ctx = int(args.num_ctx)
+    if int(args.num_predict) > 0:
+        config.ollama_guarded_num_predict = int(args.num_predict)
+    if int(args.max_body_words) >= 0:
+        config.ollama_guarded_max_body_words = int(args.max_body_words)
+    if float(args.min_article_scope_prob) >= 0:
+        config.ollama_guarded_min_article_scope_prob = float(args.min_article_scope_prob)
+    if float(args.min_source_type_prob) >= 0:
+        config.ollama_guarded_min_source_type_prob = float(args.min_source_type_prob)
+    if int(args.checkpoint_rows) > 0:
+        config.ollama_guarded_checkpoint_rows = int(args.checkpoint_rows)
+    checkpoint_batch_limit = int(args.checkpoint_batch_limit)
+    build_ollama_guarded_feature_exports(
+        config=config,
+        checkpoint_batch_limit=checkpoint_batch_limit if checkpoint_batch_limit > 0 else None,
+    )
 
 
 if __name__ == "__main__":

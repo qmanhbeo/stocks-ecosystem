@@ -346,3 +346,49 @@ Limit:
 
 Source sessions:
 - `notes/session_178_log.md`
+
+## F282: The Default Local Ollama Residual Task Should Be Event-Family-Only And BERT-Gated, Not A Broad Full-Field Backfill (2026-04-25, Session 179)
+
+Finding:
+- after `article_scope` and `source_type` were trained, the remaining useful
+  local-generator task narrowed further
+- the best low-resource Ollama prompt in the Session 179 grid was:
+  - bottom-schema JSON
+  - `field_set=event_only`
+  - `num_ctx=512`
+  - first `300` words only
+  - compact Vietnamese taxonomy hints
+- on the mixed `8` article probe it reached:
+  - parse OK `1.0`
+  - event-family accuracy `0.625`
+  - average `1.7357` seconds/article
+
+Why it matters:
+- asking the `3B` generator for scope/source/rumor by default is no longer the
+  right tradeoff once PhoBERT heads own scope and source-type locally
+- top-schema prompts at `512` context remain brittle; schema must stay near the
+  end of the prompt for this small model
+- CSV can look attractive on throughput but is semantically unsafe because it
+  emits non-taxonomy labels
+- the full tagged universe still projects to a multi-day local run even after
+  prompt trimming, so BERT-gated priority backfills are the sane default
+
+Current operational state:
+- the guarded Ollama production defaults now use the event-only prompt
+- a priority backfill is running in tmux session `ollama_guarded_backfill`
+- current gate:
+  - `phobert_article_scope_prob_positive >= 0.28`
+- gated input rows:
+  - `146872`
+- checkpoint rows:
+  - `200`
+
+Limit:
+- the event-family probe sample is still small
+- the running backfill is a priority stock-news residual surface, not a full
+  `342135` article semantic completion
+- `is_rumor` remains better treated as unknown / conservative until a dedicated
+  cheap detector or better local prompt is proven
+
+Source sessions:
+- `notes/session_179_log.md`

@@ -1,0 +1,4941 @@
+{
+  "status": "complete",
+  "model_name": "qwen2.5-coder:3b",
+  "sample_size": 8,
+  "sample_article_ids": [
+    "8002e4554e3b25a6",
+    "140b663d010812f9",
+    "899a7c579aaf8b49",
+    "775ab17877b04e18",
+    "2015-12-31_0001",
+    "2016-01-06_0038",
+    "2016-01-06_0058",
+    "2016-01-06_0060"
+  ],
+  "sample_sources": {
+    "8002e4554e3b25a6": "curated_current_raw",
+    "140b663d010812f9": "curated_current_raw",
+    "899a7c579aaf8b49": "curated_current_raw",
+    "775ab17877b04e18": "curated_current_raw",
+    "2015-12-31_0001": "legacy_llm_cache_raw_map",
+    "2016-01-06_0038": "legacy_llm_cache_raw_map",
+    "2016-01-06_0058": "legacy_llm_cache_raw_map",
+    "2016-01-06_0060": "legacy_llm_cache_raw_map"
+  },
+  "summaries": [
+    {
+      "variant": "lean_event_only_json_512_300_bottom",
+      "settings": {
+        "name": "lean_event_only_json_512_300_bottom",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "event_only",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 1.0,
+      "field_accuracy": 0.625,
+      "core_exact_rate": 0.625,
+      "avg_seconds_per_article": 1.7357272136250685,
+      "articles_per_second": 0.5761273961427952,
+      "eval_tokens_per_second": 50.96999359616719,
+      "avg_prompt_tokens": 512.0,
+      "avg_eval_tokens": 29.125,
+      "score": 0.22504976411827937
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_prefill",
+      "settings": {
+        "name": "lean_event_rumor_json_512_300_prefill",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "event_rumor",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": true,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 1.0,
+      "field_accuracy": 0.5625,
+      "core_exact_rate": 0.25,
+      "avg_seconds_per_article": 1.800274710375561,
+      "articles_per_second": 0.5554707813405805,
+      "eval_tokens_per_second": 37.436096490458354,
+      "avg_prompt_tokens": 512.0,
+      "avg_eval_tokens": 30.875,
+      "score": 0.07811307862601913
+    },
+    {
+      "variant": "lean_full5_json_1024_300_bottom",
+      "settings": {
+        "name": "lean_full5_json_1024_300_bottom",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "full5",
+        "num_ctx": 1024,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "impact_scope",
+        "source_authority",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 1.0,
+      "field_accuracy": 0.6551724137931034,
+      "core_exact_rate": 0.375,
+      "avg_seconds_per_article": 3.814353473875144,
+      "articles_per_second": 0.2621676273185198,
+      "eval_tokens_per_second": 41.0987026159651,
+      "avg_prompt_tokens": 706.75,
+      "avg_eval_tokens": 71.5,
+      "score": 0.06441187395325701
+    },
+    {
+      "variant": "lean_full5_json_2048_300_bottom",
+      "settings": {
+        "name": "lean_full5_json_2048_300_bottom",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "full5",
+        "num_ctx": 2048,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "impact_scope",
+        "source_authority",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 1.0,
+      "field_accuracy": 0.6551724137931034,
+      "core_exact_rate": 0.375,
+      "avg_seconds_per_article": 3.827135463498962,
+      "articles_per_second": 0.2612920314782245,
+      "eval_tokens_per_second": 41.04675557680582,
+      "avg_prompt_tokens": 706.75,
+      "avg_eval_tokens": 71.5,
+      "score": 0.06419674911318446
+    },
+    {
+      "variant": "baseline_full_json_2048_raw",
+      "settings": {
+        "name": "baseline_full_json_2048_raw",
+        "header": "expert",
+        "output_format": "json",
+        "field_set": "full5",
+        "num_ctx": 2048,
+        "body_words": 0,
+        "schema_position": "top",
+        "negative_constraint": "no_chat",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "impact_scope",
+        "source_authority",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 0.875,
+      "field_accuracy": 0.5862068965517241,
+      "core_exact_rate": 0.25,
+      "avg_seconds_per_article": 4.201663215124881,
+      "articles_per_second": 0.23800098884657467,
+      "eval_tokens_per_second": 40.41135823725285,
+      "avg_prompt_tokens": 1070.25,
+      "avg_eval_tokens": 77.125,
+      "score": 0.03051952335424826
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_temp01",
+      "settings": {
+        "name": "lean_event_rumor_json_512_300_temp01",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "event_rumor",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.1,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 1.0,
+      "field_accuracy": 0.4375,
+      "core_exact_rate": 0.125,
+      "avg_seconds_per_article": 2.8709092262502054,
+      "articles_per_second": 0.3483217061885774,
+      "eval_tokens_per_second": 36.9186572979724,
+      "avg_prompt_tokens": 512.0,
+      "avg_eval_tokens": 54.375,
+      "score": 0.019048843307187823
+    },
+    {
+      "variant": "lean_event_rumor_json_1024_300_bottom",
+      "settings": {
+        "name": "lean_event_rumor_json_1024_300_bottom",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "event_rumor",
+        "num_ctx": 1024,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 0.625,
+      "field_accuracy": 0.375,
+      "core_exact_rate": 0.25,
+      "avg_seconds_per_article": 4.227044243625642,
+      "articles_per_second": 0.23657192647273428,
+      "eval_tokens_per_second": 40.71801249746549,
+      "avg_prompt_tokens": 666.75,
+      "avg_eval_tokens": 79.5,
+      "score": 0.013861636316761775
+    },
+    {
+      "variant": "lean_event_rumor_json_2048_300_bottom",
+      "settings": {
+        "name": "lean_event_rumor_json_2048_300_bottom",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "event_rumor",
+        "num_ctx": 2048,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 0.625,
+      "field_accuracy": 0.375,
+      "core_exact_rate": 0.25,
+      "avg_seconds_per_article": 4.244950918624454,
+      "articles_per_second": 0.23557398405069024,
+      "eval_tokens_per_second": 40.37538981094604,
+      "avg_prompt_tokens": 666.75,
+      "avg_eval_tokens": 79.5,
+      "score": 0.013803163127970131
+    },
+    {
+      "variant": "lean_full5_json_512_300_top",
+      "settings": {
+        "name": "lean_full5_json_512_300_top",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "full5",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "top",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "impact_scope",
+        "source_authority",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 0.25,
+      "field_accuracy": 0.06896551724137931,
+      "core_exact_rate": 0.0,
+      "avg_seconds_per_article": 5.615634569874146,
+      "articles_per_second": 0.17807426526017903,
+      "eval_tokens_per_second": 39.86113183764253,
+      "avg_prompt_tokens": 512.0,
+      "avg_eval_tokens": 114.5,
+      "score": 0.0
+    },
+    {
+      "variant": "lean_full5_json_512_300_bottom",
+      "settings": {
+        "name": "lean_full5_json_512_300_bottom",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "full5",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "impact_scope",
+        "source_authority",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 1.0,
+      "field_accuracy": 0.20689655172413793,
+      "core_exact_rate": 0.0,
+      "avg_seconds_per_article": 3.265424571373842,
+      "articles_per_second": 0.30623889118935493,
+      "eval_tokens_per_second": 36.83037478954315,
+      "avg_prompt_tokens": 512.0,
+      "avg_eval_tokens": 64.125,
+      "score": 0.0
+    },
+    {
+      "variant": "lean_full5_json_512_raw_top",
+      "settings": {
+        "name": "lean_full5_json_512_raw_top",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "full5",
+        "num_ctx": 512,
+        "body_words": 0,
+        "schema_position": "top",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "impact_scope",
+        "source_authority",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 0.25,
+      "field_accuracy": 0.10344827586206896,
+      "core_exact_rate": 0.0,
+      "avg_seconds_per_article": 6.05929074187452,
+      "articles_per_second": 0.16503581732581413,
+      "eval_tokens_per_second": 39.07034880369123,
+      "avg_prompt_tokens": 512.0,
+      "avg_eval_tokens": 122.75,
+      "score": 0.0
+    },
+    {
+      "variant": "robust_full5_json_512_300_top",
+      "settings": {
+        "name": "robust_full5_json_512_300_top",
+        "header": "expert",
+        "output_format": "json",
+        "field_set": "full5",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "top",
+        "negative_constraint": "no_chat",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "impact_scope",
+        "source_authority",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 0.25,
+      "field_accuracy": 0.06896551724137931,
+      "core_exact_rate": 0.0,
+      "avg_seconds_per_article": 5.5823151656254595,
+      "articles_per_second": 0.17913714477422504,
+      "eval_tokens_per_second": 36.6756666765425,
+      "avg_prompt_tokens": 512.0,
+      "avg_eval_tokens": 114.5,
+      "score": 0.0
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_top",
+      "settings": {
+        "name": "lean_event_rumor_json_512_300_top",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "event_rumor",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "top",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 0.375,
+      "field_accuracy": 0.1875,
+      "core_exact_rate": 0.0,
+      "avg_seconds_per_article": 4.887383302999751,
+      "articles_per_second": 0.20460846592208667,
+      "eval_tokens_per_second": 36.71980776244421,
+      "avg_prompt_tokens": 512.0,
+      "avg_eval_tokens": 98.25,
+      "score": 0.0
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_bottom",
+      "settings": {
+        "name": "lean_event_rumor_json_512_300_bottom",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "event_rumor",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 1.0,
+      "field_accuracy": 0.375,
+      "core_exact_rate": 0.0,
+      "avg_seconds_per_article": 3.0247110412497022,
+      "articles_per_second": 0.3306100934477483,
+      "eval_tokens_per_second": 37.07287016893601,
+      "avg_prompt_tokens": 512.0,
+      "avg_eval_tokens": 57.5,
+      "score": 0.0
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_1shot",
+      "settings": {
+        "name": "lean_event_rumor_json_512_300_1shot",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "event_rumor",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": true,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 1.0,
+      "field_accuracy": 0.375,
+      "core_exact_rate": 0.0,
+      "avg_seconds_per_article": 3.022583569626022,
+      "articles_per_second": 0.33084279622539203,
+      "eval_tokens_per_second": 36.89760980480943,
+      "avg_prompt_tokens": 512.0,
+      "avg_eval_tokens": 57.5,
+      "score": 0.0
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_result_anchor",
+      "settings": {
+        "name": "lean_event_rumor_json_512_300_result_anchor",
+        "header": "none",
+        "output_format": "json",
+        "field_set": "event_rumor",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "result",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": true
+      },
+      "scored_fields": [
+        "event_family",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 1.0,
+      "field_accuracy": 0.3125,
+      "core_exact_rate": 0.0,
+      "avg_seconds_per_article": 3.3367134059999444,
+      "articles_per_second": 0.2996961016195877,
+      "eval_tokens_per_second": 36.868529800009846,
+      "avg_prompt_tokens": 512.0,
+      "avg_eval_tokens": 64.5,
+      "score": 0.0
+    },
+    {
+      "variant": "lean_event_rumor_xml_512_300",
+      "settings": {
+        "name": "lean_event_rumor_xml_512_300",
+        "header": "none",
+        "output_format": "xml",
+        "field_set": "event_rumor",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": false
+      },
+      "scored_fields": [
+        "event_family",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 0.75,
+      "field_accuracy": 0.3125,
+      "core_exact_rate": 0.0,
+      "avg_seconds_per_article": 1.6827142723750512,
+      "articles_per_second": 0.594277956998938,
+      "eval_tokens_per_second": 38.90997190522523,
+      "avg_prompt_tokens": 503.875,
+      "avg_eval_tokens": 45.375,
+      "score": 0.0
+    },
+    {
+      "variant": "lean_event_rumor_csv_512_300",
+      "settings": {
+        "name": "lean_event_rumor_csv_512_300",
+        "header": "none",
+        "output_format": "csv",
+        "field_set": "event_rumor",
+        "num_ctx": 512,
+        "body_words": 300,
+        "schema_position": "bottom",
+        "negative_constraint": "none",
+        "anchor": "none",
+        "few_shot": false,
+        "prefill": false,
+        "temperature": 0.0,
+        "use_schema": false
+      },
+      "scored_fields": [
+        "event_family",
+        "is_rumor"
+      ],
+      "sample_size": 8,
+      "parse_ok_rate": 1.0,
+      "field_accuracy": 0.5,
+      "core_exact_rate": 0.0,
+      "avg_seconds_per_article": 1.0899370642491704,
+      "articles_per_second": 0.9174841674816099,
+      "eval_tokens_per_second": 39.89192534175363,
+      "avg_prompt_tokens": 502.125,
+      "avg_eval_tokens": 23.75,
+      "score": 0.0
+    }
+  ],
+  "winner": {
+    "variant": "lean_event_only_json_512_300_bottom",
+    "settings": {
+      "name": "lean_event_only_json_512_300_bottom",
+      "header": "none",
+      "output_format": "json",
+      "field_set": "event_only",
+      "num_ctx": 512,
+      "body_words": 300,
+      "schema_position": "bottom",
+      "negative_constraint": "none",
+      "anchor": "none",
+      "few_shot": false,
+      "prefill": false,
+      "temperature": 0.0,
+      "use_schema": true
+    },
+    "scored_fields": [
+      "event_family"
+    ],
+    "sample_size": 8,
+    "parse_ok_rate": 1.0,
+    "field_accuracy": 0.625,
+    "core_exact_rate": 0.625,
+    "avg_seconds_per_article": 1.7357272136250685,
+    "articles_per_second": 0.5761273961427952,
+    "eval_tokens_per_second": 50.96999359616719,
+    "avg_prompt_tokens": 512.0,
+    "avg_eval_tokens": 29.125,
+    "score": 0.22504976411827937
+  },
+  "rows": [
+    {
+      "variant": "baseline_full_json_2048_raw",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 4101,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": "macro",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 5.197182020001492,
+      "prompt_eval_count": 1302,
+      "eval_count": 73,
+      "eval_duration_ns": 1154269624,
+      "raw_response_preview": "{\n  \"id\": \"8002e4554e3b25a6\",\n  \"confidence\": 1,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"impact_scope\": \"stock,sector,macro\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "baseline_full_json_2048_raw",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 3776,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.0223181639994436,
+      "prompt_eval_count": 1153,
+      "eval_count": 73,
+      "eval_duration_ns": 1258371438,
+      "raw_response_preview": "{\n  \"id\": \"140b663d010812f9\",\n  \"confidence\": 2,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"impact_scope\": \"stock,sector,market\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "baseline_full_json_2048_raw",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 3407,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "dividend",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.6370516099996166,
+      "prompt_eval_count": 1218,
+      "eval_count": 65,
+      "eval_duration_ns": 1746282463,
+      "raw_response_preview": "{\n  \"id\": \"899a7c579aaf8b49\",\n  \"confidence\": 2,\n  \"event_family\": \"dividend\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "baseline_full_json_2048_raw",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2364,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "earnings",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.452223985001183,
+      "prompt_eval_count": 811,
+      "eval_count": 65,
+      "eval_duration_ns": 1752863113,
+      "raw_response_preview": "{\n  \"id\": \"775ab17877b04e18\",\n  \"confidence\": 2,\n  \"event_family\": \"earnings\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "baseline_full_json_2048_raw",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2241,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.5578496950001863,
+      "prompt_eval_count": 742,
+      "eval_count": 69,
+      "eval_duration_ns": 1883684132,
+      "raw_response_preview": "{\n  \"id\": \"2015-12-31_0001\",\n  \"confidence\": 2,\n  \"event_family\": \"mna_or_asset\",\n  \"impact_scope\": \"stock,sector\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "baseline_full_json_2048_raw",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 6528,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 7.35396746799961,
+      "prompt_eval_count": 2048,
+      "eval_count": 128,
+      "eval_duration_ns": 3549511569,
+      "raw_response_preview": "{\n  \"id\": \"20230418160900001\",\n  \"confidence\": 0,\n  \"event_family\": \"fraud\",\n  \"impact_scope\": \"individual\",\n  \"source_authority\": \"unknown\",\n  \"is_rumor\": false,\n  \"event_type\": \"financial_fraud\",\n  \"event_description\": \"Multiple individuals have reported being deceived by a company, Cienco 5, which has allegedly stolen millions of dollars from them through fraudulent activities. The victims claim that they were promised specific projects or"
+    },
+    {
+      "variant": "baseline_full_json_2048_raw",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2075,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.814445934996911,
+      "prompt_eval_count": 666,
+      "eval_count": 72,
+      "eval_duration_ns": 1974433379,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0058\",\n  \"confidence\": 2,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"impact_scope\": \"stock,sector,market\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "baseline_full_json_2048_raw",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1903,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.578266844000609,
+      "prompt_eval_count": 622,
+      "eval_count": 72,
+      "eval_duration_ns": 1948569000,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0060\",\n  \"confidence\": 2,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"impact_scope\": \"stock,sector,market\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_512_300_top",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2145,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 7.044033853002475,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 1999589931,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"financial_investment\",\n  \"impact_scope\": \"global\",\n  \"source_authority\": \"CTCP Crystal Bay Việt Nam\",\n  \"is_rumor\": false,\n  \"summary\": \"Crystal Bay Việt Nam plans to use the funds from its share sale to purchase shares in Sunbay Ninh Thuận, which will then be used to develop a hotel and resort project.\",\n  \"details\": {\n    \"company_name\": \"CTCP Crystal Bay Việt Nam\",\n    \"project_name"
+    },
+    {
+      "variant": "lean_full5_json_512_300_top",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2305,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": "unknown",
+        "ollama_guarded_source_authority": "unknown",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.9694536339993647,
+      "prompt_eval_count": 512,
+      "eval_count": 51,
+      "eval_duration_ns": 869988962,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 0, \"event_family\": \"None\", \"impact_scope\": \"None\", \"source_authority\": \"None\", \"is_rumor\": false }"
+    },
+    {
+      "variant": "lean_full5_json_512_300_top",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2162,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.229546536997077,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3498703656,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 99, \"event_family\": \"financial_statement\", \"impact_scope\": \"medium\", \"source_authority\": \"Singapore Exchange (SGX)\", \"is_rumor\": false, \"summary\": \"Sữa Quốc tế Lof, một công ty sản xuất và phân phối thức ăn uống, đã báo cáo doanh thu thuần gần 5.562,4 tỷ đồng trong 9 tháng đầu năm 2025, giảm nhẹ so với cùng kỳ năm trước. Sau khấu trừ các khoản thuế phí,"
+    },
+    {
+      "variant": "lean_full5_json_512_300_top",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2154,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.234170784999151,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3489924337,
+      "raw_response_preview": "{ \"id\": \"NoID\", \"confidence\": 100, \"event_family\": \"FinancialReport\", \"impact_scope\": \"Company\", \"source_authority\": \"Reuters\", \"is_rumor\": false, \"summary\": \"Viglacera, a company in the construction and materials industry, has released its financial report for the first 9 months of 2025. The company reported revenue of $9.337 billion and net profit after tax of $956 billion. This performance is supported by growth in the rental market for industrial parks"
+    },
+    {
+      "variant": "lean_full5_json_512_300_top",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2102,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": "unknown",
+        "ollama_guarded_source_authority": "unknown",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 4.829714438998053,
+      "prompt_eval_count": 512,
+      "eval_count": 97,
+      "eval_duration_ns": 2642607917,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 90, \"event_family\": \"company_financials\", \"impact_scope\": \"global\", \"source_authority\": \"Reuters\", \"is_rumor\": false, \"summary\": \"Cao su Quảng Nam đang xem xét mua 99% cổ phần của công ty kinh doanh và nuôi trồng thủy sản Thủy sản Viễn Đông.\" }"
+    },
+    {
+      "variant": "lean_full5_json_512_300_top",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2128,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.235153170997364,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3490515377,
+      "raw_response_preview": "{\n    \"id\": \"123456\",\n    \"confidence\": 98,\n    \"event_family\": \"Financial Fraud\",\n    \"impact_scope\": \"Personal Finance\",\n    \"source_authority\": \"Investment Regulatory Authority\",\n    \"is_rumor\": false,\n    \"description\": \"A financial fraud case involving a real estate investment project. An individual, Tùng, has invested 17.85 billion yuan in a construction project with the intention of owning a property after completion. However, the project was delayed and the investor did not receive their"
+    },
+    {
+      "variant": "lean_full5_json_512_300_top",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1983,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.2142837190003775,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3495541386,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 95,\n  \"event_family\": \"financial\",\n  \"impact_scope\": \"global\",\n  \"source_authority\": \"Yonhap News Agency\",\n  \"is_rumor\": false,\n  \"summary\": \"A Korean construction company, Keangnam Enterprises Inc., has been forced to sell its flagship building, the Keangnam Landmark in Seoul, due to financial troubles. The sale is expected to raise around $800 million.\",\n  \"event_type\": \"company_sale\",\n  \"target_company\": \""
+    },
+    {
+      "variant": "lean_full5_json_512_300_top",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1811,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.168720420999307,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3492907426,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"company_financials\",\n  \"impact_scope\": \"medium\",\n  \"source_authority\": \"Vietnam News Agency\",\n  \"is_rumor\": false,\n  \"summary\": \"VietinBank and PGBank are preparing to complete the merger in the first quarter of 2016, which is expected to bring significant value to both banks and shareholders.\",\n  \"event_type\": \"company_financials\",\n  \"event_timestamp\": \"2015-0"
+    },
+    {
+      "variant": "lean_full5_json_512_300_bottom",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2145,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "rumor_or_unsourced",
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.377705987997615,
+      "prompt_eval_count": 512,
+      "eval_count": 67,
+      "eval_duration_ns": 1815117739,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"impact_scope\": \"stock,sector,market\",\n  \"source_authority\": \"rumor_or_unsourced\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_full5_json_512_300_bottom",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2305,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "rumor_or_unsourced",
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.1990677719986707,
+      "prompt_eval_count": 512,
+      "eval_count": 63,
+      "eval_duration_ns": 1713143747,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"rumor_or_unsourced\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_full5_json_512_300_bottom",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2162,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "dividend",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "rumor_or_unsourced",
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.2215703799993207,
+      "prompt_eval_count": 512,
+      "eval_count": 63,
+      "eval_duration_ns": 1712782955,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"dividend(co_tuc)\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"rumor_or_unsourced\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_full5_json_512_300_bottom",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2154,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "guidance",
+        "ollama_guarded_impact_scope": "market",
+        "ollama_guarded_source_authority": "rumor_or_unsourced",
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.481140873998811,
+      "prompt_eval_count": 512,
+      "eval_count": 69,
+      "eval_duration_ns": 1874401324,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"guidance(ke_hoach/du_bao)\",\n  \"impact_scope\": \"market\",\n  \"source_authority\": \"rumor_or_unsourced\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_full5_json_512_300_bottom",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2102,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "rumor_or_unsourced",
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.1804345609998563,
+      "prompt_eval_count": 512,
+      "eval_count": 62,
+      "eval_duration_ns": 1686998192,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"rumor_or_unsourced\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_full5_json_512_300_bottom",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2128,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "rumor_or_unsourced",
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.4205989359979867,
+      "prompt_eval_count": 512,
+      "eval_count": 67,
+      "eval_duration_ns": 1818791181,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"impact_scope\": \"stock,sector,market\",\n  \"source_authority\": \"rumor_or_unsourced\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_full5_json_512_300_bottom",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1983,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": "market",
+        "ollama_guarded_source_authority": "rumor_or_unsourced",
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.1163685219980835,
+      "prompt_eval_count": 512,
+      "eval_count": 61,
+      "eval_duration_ns": 1653658629,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"other_company_event\",\n  \"impact_scope\": \"market\",\n  \"source_authority\": \"rumor_or_unsourced\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_full5_json_512_300_bottom",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1811,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "rumor_or_unsourced",
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.1265095380003913,
+      "prompt_eval_count": 512,
+      "eval_count": 61,
+      "eval_duration_ns": 1653826832,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"other_company_event\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"rumor_or_unsourced\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_full5_json_1024_300_bottom",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2145,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 5.248321398001281,
+      "prompt_eval_count": 670,
+      "eval_count": 73,
+      "eval_duration_ns": 1147192656,
+      "raw_response_preview": "{\n  \"id\": \"8002e4554e3b25a6\",\n  \"confidence\": 1,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"impact_scope\": \"stock,sector,market\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_1024_300_bottom",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2305,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "regulatory_or_legal",
+        "ollama_guarded_impact_scope": "market",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.6337014800010365,
+      "prompt_eval_count": 723,
+      "eval_count": 68,
+      "eval_duration_ns": 1065962429,
+      "raw_response_preview": "{\n  \"id\": \"140b663d010812f9\",\n  \"confidence\": 0,\n  \"event_family\": \"regulatory_or_legal\",\n  \"impact_scope\": \"market\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_1024_300_bottom",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2162,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "dividend",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "rumor_or_unsourced",
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.894796349999524,
+      "prompt_eval_count": 795,
+      "eval_count": 73,
+      "eval_duration_ns": 1984526805,
+      "raw_response_preview": "{\n  \"id\": \"899a7c579aaf8b49\",\n  \"confidence\": 0,\n  \"event_family\": \"dividend(co_tuc)\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"rumor_or_unsourced\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_full5_json_1024_300_bottom",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2154,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "guidance",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 4.105465549000655,
+      "prompt_eval_count": 741,
+      "eval_count": 78,
+      "eval_duration_ns": 2126647007,
+      "raw_response_preview": "{\n  \"id\": \"775ab17877b04e18\",\n  \"confidence\": 2,\n  \"event_family\": \"guidance(ke_hoach/du_bao)\",\n  \"impact_scope\": \"stock,sector,market\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_1024_300_bottom",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2102,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.548531792999711,
+      "prompt_eval_count": 711,
+      "eval_count": 67,
+      "eval_duration_ns": 1816232776,
+      "raw_response_preview": "{\n  \"id\": \"2015-12-31_0001\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_1024_300_bottom",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2128,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.8158644049981376,
+      "prompt_eval_count": 763,
+      "eval_count": 72,
+      "eval_duration_ns": 1958786716,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0038\",\n  \"confidence\": 2,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"impact_scope\": \"stock,sector,market\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_1024_300_bottom",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1983,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": "macro",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.826827973000036,
+      "prompt_eval_count": 647,
+      "eval_count": 74,
+      "eval_duration_ns": 2007078712,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0058\",\n  \"confidence\": 0,\n  \"event_family\": \"other_company_event\",\n  \"impact_scope\": \"stock,sector,market,macro,unknown\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_1024_300_bottom",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1811,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.441318843000772,
+      "prompt_eval_count": 604,
+      "eval_count": 67,
+      "eval_duration_ns": 1811287172,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0060\",\n  \"confidence\": 2,\n  \"event_family\": \"mna_or_asset\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_2048_300_bottom",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2145,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 5.251032284999383,
+      "prompt_eval_count": 670,
+      "eval_count": 73,
+      "eval_duration_ns": 1146148036,
+      "raw_response_preview": "{\n  \"id\": \"8002e4554e3b25a6\",\n  \"confidence\": 1,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"impact_scope\": \"stock,sector,market\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_2048_300_bottom",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2305,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "regulatory_or_legal",
+        "ollama_guarded_impact_scope": "market",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.62366472299982,
+      "prompt_eval_count": 723,
+      "eval_count": 68,
+      "eval_duration_ns": 1067405903,
+      "raw_response_preview": "{\n  \"id\": \"140b663d010812f9\",\n  \"confidence\": 0,\n  \"event_family\": \"regulatory_or_legal\",\n  \"impact_scope\": \"market\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_2048_300_bottom",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2162,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "dividend",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "rumor_or_unsourced",
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.9269860179992975,
+      "prompt_eval_count": 795,
+      "eval_count": 73,
+      "eval_duration_ns": 1971439198,
+      "raw_response_preview": "{\n  \"id\": \"899a7c579aaf8b49\",\n  \"confidence\": 0,\n  \"event_family\": \"dividend(co_tuc)\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"rumor_or_unsourced\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_full5_json_2048_300_bottom",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2154,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "guidance",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 4.099523257998953,
+      "prompt_eval_count": 741,
+      "eval_count": 78,
+      "eval_duration_ns": 2127139656,
+      "raw_response_preview": "{\n  \"id\": \"775ab17877b04e18\",\n  \"confidence\": 2,\n  \"event_family\": \"guidance(ke_hoach/du_bao)\",\n  \"impact_scope\": \"stock,sector,market\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_2048_300_bottom",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2102,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.574641946997872,
+      "prompt_eval_count": 711,
+      "eval_count": 67,
+      "eval_duration_ns": 1827315318,
+      "raw_response_preview": "{\n  \"id\": \"2015-12-31_0001\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_2048_300_bottom",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2128,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.816295689997787,
+      "prompt_eval_count": 763,
+      "eval_count": 72,
+      "eval_duration_ns": 1956089622,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0038\",\n  \"confidence\": 2,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"impact_scope\": \"stock,sector,market\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_2048_300_bottom",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1983,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": "macro",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.841907309997623,
+      "prompt_eval_count": 647,
+      "eval_count": 74,
+      "eval_duration_ns": 2020112049,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0058\",\n  \"confidence\": 0,\n  \"event_family\": \"other_company_event\",\n  \"impact_scope\": \"stock,sector,market,macro,unknown\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_2048_300_bottom",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1811,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "official",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.483032477000961,
+      "prompt_eval_count": 604,
+      "eval_count": 67,
+      "eval_duration_ns": 1819678162,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0060\",\n  \"confidence\": 2,\n  \"event_family\": \"mna_or_asset\",\n  \"impact_scope\": \"stock\",\n  \"source_authority\": \"official\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_full5_json_512_raw_top",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 4009,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 7.096702201997687,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 2006557563,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"company\",\n  \"impact_scope\": \"global\",\n  \"source_authority\": \"news article\",\n  \"is_rumor\": false,\n  \"summary\": \"An investment firm, IPA, has made a significant stake in a company called Anvie Life. The investment is valued at approximately 9.6 billion Vietnamese Dong (equivalent to about $40 million USD) and represents 26.99% of the company's total equity.\",\n  \"details\": {\n   "
+    },
+    {
+      "variant": "lean_full5_json_512_raw_top",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 3684,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 5.8801993599990965,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3299726892,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 95, \"event_family\": \"EVT_LIABILITY\", \"impact_scope\": \"GLOBAL\", \"source_authority\": \"YVN\", \"is_rumor\": false, \"event_type\": \"LIABILITY_INCREASEMENT\", \"event_subtype\": \"LARGE_LOAN\", \"event_time\": \"2026-01-02T00:00:00Z\", \"event_description\": \"Vietcombank has become the first bank in Asia to reach Top 100"
+    },
+    {
+      "variant": "lean_full5_json_512_raw_top",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 3315,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": "stock",
+        "ollama_guarded_source_authority": "unknown",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 5.915671482998732,
+      "prompt_eval_count": 512,
+      "eval_count": 121,
+      "eval_duration_ns": 3301580547,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 0, \"event_family\": \"financial_statement\", \"impact_scope\": \"company\", \"source_authority\": \"Reuters\", \"is_rumor\": false, \"summary\": \"Sữa Quốc tế Lof ghi nhận phải trả trước cho người bán ngắn hạn tăng vọt từ 99,1 tỷ đồng lên 631,5 tỷ đồng, tương đương gấp 6,4 lần.\", \"event_type\": \"increase\", \"event_subtype\": \"debt\" }"
+    },
+    {
+      "variant": "lean_full5_json_512_raw_top",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2272,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.211182500999712,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3494815276,
+      "raw_response_preview": "{ \"id\": \"VGC\", \"confidence\": 99, \"event_family\": \"financial_report\", \"impact_scope\": \"company_specific\", \"source_authority\": \"Financial Report of Viglacera Group Co., Ltd.\", \"is_rumor\": false, \"summary\": \"Viglacera Group Co., Ltd. has released its financial report for the first 9 months of 2025. The company reported a total revenue of 9.337 billion yuan and net profit after tax of 956 billion yuan. The company's performance is"
+    },
+    {
+      "variant": "lean_full5_json_512_raw_top",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2149,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": "unknown",
+        "ollama_guarded_source_authority": "unknown",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 4.599724269002763,
+      "prompt_eval_count": 512,
+      "eval_count": 93,
+      "eval_duration_ns": 2546366989,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 0, \"event_family\": \"company\", \"impact_scope\": \"global\", \"source_authority\": \"Reuters\", \"is_rumor\": false, \"summary\": \"Cao su Quảng Nam đang chuẩn bị mua 99% cổ phần của Công ty TNHH Thủy sản Viễn Đông.\", \"event_type\": \"company acquisition\" }"
+    },
+    {
+      "variant": "lean_full5_json_512_raw_top",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 6436,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.317693629000132,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3496072139,
+      "raw_response_preview": "{ \"id\": \"2023-04-18\", \"confidence\": 0, \"event_family\": \"fraud\", \"impact_scope\": \"public\", \"source_authority\": \"Bộ Giao thông Vận tải và các cơ quan chức năng liên quan\", \"is_rumor\": false, \"summary\": \"Công ty Cienco 5 đã bị cáo buộc lừa đảo chiếm đoạt tiền tỷ đồng từ nhà đầu tư dự án HH1. Các dấu hiệu lừa đảo rõ ràng, hy vọng Bộ Giao thông Vận tải"
+    },
+    {
+      "variant": "lean_full5_json_512_raw_top",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1983,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.2280341389996465,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3497157997,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 95,\n  \"event_family\": \"financial\",\n  \"impact_scope\": \"global\",\n  \"source_authority\": \"Yonhap News Agency\",\n  \"is_rumor\": false,\n  \"summary\": \"A Korean construction company, Keangnam Enterprises Inc., has been forced to sell its flagship building, the Keangnam Landmark in Seoul, due to financial troubles. The sale is expected to raise around $800 million.\",\n  \"event_type\": \"company_sale\",\n  \"target_company\": \""
+    },
+    {
+      "variant": "lean_full5_json_512_raw_top",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1811,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.22511835199839,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3491872408,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"company_financials\",\n  \"impact_scope\": \"medium\",\n  \"source_authority\": \"Vietnam News Agency\",\n  \"is_rumor\": false,\n  \"summary\": \"VietinBank and PGBank are preparing to complete the merger in the first quarter of 2016, which is expected to bring significant value to both banks and shareholders.\",\n  \"event_type\": \"company_financials\",\n  \"event_timestamp\": \"2015-0"
+    },
+    {
+      "variant": "robust_full5_json_512_300_top",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2237,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.213056172000506,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3496552064,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"financial\",\n  \"impact_scope\": \"global\",\n  \"source_authority\": \"CTCP Crystal Bay Việt Nam\",\n  \"is_rumor\": false,\n  \"summary\": \"Crystal Bay Việt Nam plans to use the funds from its upcoming share sale to purchase shares in Sunbay Ninh Thuận, which will then be used to develop a hotel and resort project.\",\n  \"event_type\": \"investment\",\n  \"event_description\": \"CTCP Crystal Bay Việt Nam is planning to"
+    },
+    {
+      "variant": "robust_full5_json_512_300_top",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2397,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": "unknown",
+        "ollama_guarded_source_authority": "unknown",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.6232526390012936,
+      "prompt_eval_count": 512,
+      "eval_count": 51,
+      "eval_duration_ns": 1374489887,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 0, \"event_family\": \"None\", \"impact_scope\": \"None\", \"source_authority\": \"None\", \"is_rumor\": false }"
+    },
+    {
+      "variant": "robust_full5_json_512_300_top",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2254,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.2453761720025796,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3497734547,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 99, \"event_family\": \"financial_statement\", \"impact_scope\": \"medium\", \"source_authority\": \"Singapore Exchange (SGX)\", \"is_rumor\": false, \"summary\": \"Sữa Quốc tế Lof, một công ty sản xuất và phân phối thức ăn uống, đã báo cáo doanh thu thuần gần 5.562,4 tỷ đồng trong 9 tháng đầu năm 2025, giảm nhẹ so với cùng kỳ năm trước. Sau khấu trừ các khoản thuế phí,"
+    },
+    {
+      "variant": "robust_full5_json_512_300_top",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2246,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.232965924002201,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3496985477,
+      "raw_response_preview": "{ \"id\": \"NoID\", \"confidence\": 100, \"event_family\": \"FinancialReport\", \"impact_scope\": \"Company\", \"source_authority\": \"Reuters\", \"is_rumor\": false, \"summary\": \"Viglacera, a company in the construction and materials industry, has released its financial report for the first 9 months of 2025. The company reported revenue of $9.337 billion and net profit after tax of $956 billion. This performance is supported by growth in the rental market for industrial parks"
+    },
+    {
+      "variant": "robust_full5_json_512_300_top",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2194,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": "unknown",
+        "ollama_guarded_source_authority": "unknown",
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 4.791997459997219,
+      "prompt_eval_count": 512,
+      "eval_count": 97,
+      "eval_duration_ns": 2641478773,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 90, \"event_family\": \"company_financials\", \"impact_scope\": \"global\", \"source_authority\": \"Reuters\", \"is_rumor\": false, \"summary\": \"Cao su Quảng Nam đang xem xét mua 99% cổ phần của công ty kinh doanh và nuôi trồng thủy sản Thủy sản Viễn Đông.\" }"
+    },
+    {
+      "variant": "robust_full5_json_512_300_top",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2220,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.180397473999619,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3488405424,
+      "raw_response_preview": "{\n    \"id\": \"123456\",\n    \"confidence\": 98,\n    \"event_family\": \"Financial Fraud\",\n    \"impact_scope\": \"Personal Finance\",\n    \"source_authority\": \"Investment Regulatory Authority\",\n    \"is_rumor\": false,\n    \"description\": \"A financial fraud case involving a real estate investment project. An individual, Tùng, has invested 17.85 billion yuan in a construction project with the intention of owning a property after completion. However, the project was delayed and the investor did not receive their"
+    },
+    {
+      "variant": "robust_full5_json_512_300_top",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2075,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.19733537600041,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3496216948,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 95,\n  \"event_family\": \"financial\",\n  \"impact_scope\": \"global\",\n  \"source_authority\": \"Yonhap News Agency\",\n  \"is_rumor\": false,\n  \"summary\": \"A Korean construction company, Keangnam Enterprises Inc., has been forced to sell its flagship building, the Keangnam Landmark in Seoul, due to financial troubles. The sale is expected to raise around $800 million.\",\n  \"event_type\": \"company_sale\",\n  \"target_company\": \""
+    },
+    {
+      "variant": "robust_full5_json_512_300_top",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1903,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.174140107999847,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3483824659,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"company_financials\",\n  \"impact_scope\": \"medium\",\n  \"source_authority\": \"Vietnam News Agency\",\n  \"is_rumor\": false,\n  \"summary\": \"VietinBank and PGBank are preparing to complete the merger in the first quarter of 2016, which is expected to bring significant value to both banks and shareholders.\",\n  \"event_type\": \"company_financials\",\n  \"event_timestamp\": \"2015-0"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_top",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1990,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.134815401997912,
+      "prompt_eval_count": 512,
+      "eval_count": 39,
+      "eval_duration_ns": 1045716603,
+      "raw_response_preview": "{\"id\": \"1\", \"confidence\": 0, \"event_family\": \"financial\", \"is_rumor\": false, \"event_type\": \"investment\"}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_top",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2150,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.3094293930007552,
+      "prompt_eval_count": 512,
+      "eval_count": 43,
+      "eval_duration_ns": 1157333624,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 0, \"event_family\": \"None\", \"is_rumor\": false, \"text\": \"Nghiệp vụ\" }"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_top",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2007,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.271324572000594,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3491117844,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 99, \"event_family\": \"financial_statement\", \"is_rumor\": false, \"summary\": \"Sữa Quốc tế Lof thu về hơn 22,1 tỷ đồng tiền cổ tức từ VCI và Daytona Investments Pte.Ltd.\", \"events\": [ { \"id\": \"1.1\", \"confidence\": 99, \"event_type\": \"financial_statement\", \"entity_1\": \"Sữa Quốc tế Lof\", \"entity_2\": \"VCI\", \"entity_3\": \"Daytona"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_top",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1999,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.296643719000713,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3493718478,
+      "raw_response_preview": "{ \"id\": \"NoID\", \"confidence\": 100, \"event_family\": \"FinancialReport\", \"is_rumor\": false, \"event_type\": \"FinancialReport\", \"language\": \"vi\", \"text\": \"Viglacera ghi nhận doanh thu thuần 9.337 tỷ đồng và lợi nhuận sau thuế hợp nhất 956 tỷ đồng trong 9 tháng đầu năm 2025.\", \"time\": \"2021-04-18T10:00:00Z\", \"source\": \""
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_top",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1947,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.3066946319995623,
+      "prompt_eval_count": 512,
+      "eval_count": 64,
+      "eval_duration_ns": 1726163861,
+      "raw_response_preview": "{ \"id\": \"1\", \"confidence\": 90, \"event_family\": \"company_financials\", \"is_rumor\": false, \"event_type\": \"financial_growth\", \"entity\": \"Cao su Quảng Nam\", \"timeframe\": \"quarterly\" }"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_top",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1973,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.257543845000328,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3488368246,
+      "raw_response_preview": "{\n    \"id\": \"123456\",\n    \"confidence\": 98,\n    \"event_family\": \"Financial Fraud\",\n    \"is_rumor\": false,\n    \"summary\": \"A man named Bạch Ngọc Du, the chairman of a construction company, has been accused of fraudulently soliciting money from another man named Tùng to build a residential complex. According to the contract, Tùng was supposed to contribute 17.85 billion won (approximately $17.85 million) for the project, but he only paid 10."
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_top",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1828,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.277689246999216,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3491098320,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 95,\n  \"event_family\": \"financial\",\n  \"is_rumor\": false,\n  \"summary\": \"A Korean construction company, Keangnam Enterprises Inc., has sold its largest building in Vietnam to a Korean conglomerate, AON Holdings. The sale price is estimated at around $800 million.\",\n  \"entities\": [\n    {\n      \"name\": \"Keangnam Enterprises Inc.\",\n      \"type\": \"company\",\n      \"description\": \"A Korean construction company\"\n    },\n    {\n      \"name\": \"A"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_top",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1656,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.24492561399893,
+      "prompt_eval_count": 512,
+      "eval_count": 128,
+      "eval_duration_ns": 3511823844,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"company_financials\",\n  \"is_rumor\": false,\n  \"event_type\": \"company_financials\",\n  \"event_subtype\": \"company_financials\",\n  \"entity\": {\n    \"id\": \"2\",\n    \"name\": \"VietinBank\"\n  },\n  \"timestamp\": \"2015-04-14T00:00:00Z\",\n  \"text\": \"Chủ tịch VietinBank, ông Nguyễn Văn Thắng"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_bottom",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1990,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 4.566517904000648,
+      "prompt_eval_count": 512,
+      "eval_count": 89,
+      "eval_duration_ns": 2413048037,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": true,\n  \"other_company_event\": {\n    \"company_name\": \"Anvie Life\",\n    \"action\": \"mua_ban\",\n    \"target_company\": \"Crystal Bay Việt Nam\"\n  },\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_bottom",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2150,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "regulatory_or_legal",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.213752569998178,
+      "prompt_eval_count": 512,
+      "eval_count": 62,
+      "eval_duration_ns": 1677554172,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"regulatory_or_legal\",\n  \"is_rumor\": true,\n  \"other_company_event\": null,\n  \"macro_or_sector\": null,\n  \"unknown\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_bottom",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2007,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "dividend",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.280000448001374,
+      "prompt_eval_count": 512,
+      "eval_count": 63,
+      "eval_duration_ns": 1701552100,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"dividend(co_tuc)\",\n  \"is_rumor\": true,\n  \"other_company_event\": null,\n  \"macro_or_sector\": null,\n  \"unknown\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_bottom",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1999,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "guidance",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.5820208670011198,
+      "prompt_eval_count": 512,
+      "eval_count": 69,
+      "eval_duration_ns": 1867379751,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"guidance(ke_hoach/du_bao)\",\n  \"is_rumor\": true,\n  \"other_company_event\": null,\n  \"macro_or_sector\": null,\n  \"unknown\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_bottom",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1947,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.3679426179987786,
+      "prompt_eval_count": 512,
+      "eval_count": 44,
+      "eval_duration_ns": 1182138641,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_bottom",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1973,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.2491523929966206,
+      "prompt_eval_count": 512,
+      "eval_count": 41,
+      "eval_duration_ns": 1096156584,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_bottom",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1828,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.377977837000799,
+      "prompt_eval_count": 512,
+      "eval_count": 44,
+      "eval_duration_ns": 1180682512,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_bottom",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1656,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.5603236930001003,
+      "prompt_eval_count": 512,
+      "eval_count": 48,
+      "eval_duration_ns": 1289483535,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_1024_300_bottom",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1990,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 7.258641013999295,
+      "prompt_eval_count": 630,
+      "eval_count": 128,
+      "eval_duration_ns": 2016707390,
+      "raw_response_preview": "{\n  \"id\": \"8002e4554e3b25a6\",\n  \"confidence\": 1,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": false,\n  \"summary\": \"IPA muốn huy động tối đa 608 tỷ đồng từ trái phiếu để mua phần vốn góp tăng thêm của Công ty TNHH Anvie Life.\",\n  \"body\": \"TIN MỚI CTCP Tập đoàn Đầu tư I.P.A (MCK: IPA, sàn HNX) vừa công bố Nghị quyết của HĐQT về phê"
+    },
+    {
+      "variant": "lean_event_rumor_json_1024_300_bottom",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2150,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.060160048000398,
+      "prompt_eval_count": 683,
+      "eval_count": 128,
+      "eval_duration_ns": 3301994011,
+      "raw_response_preview": "{\n  \"id\": \"140b663d010812f9\",\n  \"confidence\": 2,\n  \"event_family\": \"regulatory_or_legal\",\n  \"is_rumor\": false,\n  \"summary\": \"Nghị quyết 79-NQ/TW có thể tạo bước ngoặt lớn cho nhóm ngân hàng quốc doanh như VietinBank, BIDV và Vietcombank, khi cho phép giữ lại nguồn lực để tăng vốn, tháo gỡ áp lực cổ tức tiền mặt và mở dư địa mở rộng tín dụng.\",\n  \"body\": \"T"
+    },
+    {
+      "variant": "lean_event_rumor_json_1024_300_bottom",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2007,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "dividend",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.8813521829979436,
+      "prompt_eval_count": 755,
+      "eval_count": 51,
+      "eval_duration_ns": 1367917819,
+      "raw_response_preview": "{\n  \"id\": \"899a7c579aaf8b49\",\n  \"confidence\": 0,\n  \"event_family\": \"dividend(co_tuc)\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_1024_300_bottom",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1999,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.48204709300262,
+      "prompt_eval_count": 701,
+      "eval_count": 128,
+      "eval_duration_ns": 3503716074,
+      "raw_response_preview": "{\n  \"id\": \"775ab17877b04e18\",\n  \"confidence\": 2,\n  \"event_family\": \"guidance(ke_hoach/du_bao)\",\n  \"is_rumor\": false,\n  \"summary\": \"Viglacera lên kế hoạch 2026: doanh thu đi ngang, lợi nhuận tăng nhẹ 4,4%\",\n  \"body\": \"VGC: Giá hiện tại Thay đổi Xem hồ sơ doanh nghiệp TIN MỚI Theo Nghị quyết số 367/TCT-HĐQT"
+    },
+    {
+      "variant": "lean_event_rumor_json_1024_300_bottom",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1947,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.8212260600012087,
+      "prompt_eval_count": 671,
+      "eval_count": 50,
+      "eval_duration_ns": 1349855687,
+      "raw_response_preview": "{\n  \"id\": \"2015-12-31_0001\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_1024_300_bottom",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1973,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.8693359850003617,
+      "prompt_eval_count": 723,
+      "eval_count": 51,
+      "eval_duration_ns": 1375567491,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0038\",\n  \"confidence\": 2,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_1024_300_bottom",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1828,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.7429788950030343,
+      "prompt_eval_count": 607,
+      "eval_count": 50,
+      "eval_duration_ns": 1352602422,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0058\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_1024_300_bottom",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1656,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.700612671000272,
+      "prompt_eval_count": 564,
+      "eval_count": 50,
+      "eval_duration_ns": 1351261995,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0060\",\n  \"confidence\": 2,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_2048_300_bottom",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1990,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 7.242170803998306,
+      "prompt_eval_count": 630,
+      "eval_count": 128,
+      "eval_duration_ns": 2026537413,
+      "raw_response_preview": "{\n  \"id\": \"8002e4554e3b25a6\",\n  \"confidence\": 1,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": false,\n  \"summary\": \"IPA muốn huy động tối đa 608 tỷ đồng từ trái phiếu để mua phần vốn góp tăng thêm của Công ty TNHH Anvie Life.\",\n  \"body\": \"TIN MỚI CTCP Tập đoàn Đầu tư I.P.A (MCK: IPA, sàn HNX) vừa công bố Nghị quyết của HĐQT về phê"
+    },
+    {
+      "variant": "lean_event_rumor_json_2048_300_bottom",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2150,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.1361960979993455,
+      "prompt_eval_count": 683,
+      "eval_count": 128,
+      "eval_duration_ns": 3386934495,
+      "raw_response_preview": "{\n  \"id\": \"140b663d010812f9\",\n  \"confidence\": 2,\n  \"event_family\": \"regulatory_or_legal\",\n  \"is_rumor\": false,\n  \"summary\": \"Nghị quyết 79-NQ/TW có thể tạo bước ngoặt lớn cho nhóm ngân hàng quốc doanh như VietinBank, BIDV và Vietcombank, khi cho phép giữ lại nguồn lực để tăng vốn, tháo gỡ áp lực cổ tức tiền mặt và mở dư địa mở rộng tín dụng.\",\n  \"body\": \"T"
+    },
+    {
+      "variant": "lean_event_rumor_json_2048_300_bottom",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2007,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "dividend",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.9023899309977423,
+      "prompt_eval_count": 755,
+      "eval_count": 51,
+      "eval_duration_ns": 1389834057,
+      "raw_response_preview": "{\n  \"id\": \"899a7c579aaf8b49\",\n  \"confidence\": 0,\n  \"event_family\": \"dividend(co_tuc)\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_2048_300_bottom",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1999,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "json_parse_fail"
+      },
+      "parse_ok": false,
+      "seconds": 6.512557477999508,
+      "prompt_eval_count": 701,
+      "eval_count": 128,
+      "eval_duration_ns": 3517824834,
+      "raw_response_preview": "{\n  \"id\": \"775ab17877b04e18\",\n  \"confidence\": 2,\n  \"event_family\": \"guidance(ke_hoach/du_bao)\",\n  \"is_rumor\": false,\n  \"summary\": \"Viglacera lên kế hoạch 2026: doanh thu đi ngang, lợi nhuận tăng nhẹ 4,4%\",\n  \"body\": \"VGC: Giá hiện tại Thay đổi Xem hồ sơ doanh nghiệp TIN MỚI Theo Nghị quyết số 367/TCT-HĐQT"
+    },
+    {
+      "variant": "lean_event_rumor_json_2048_300_bottom",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1947,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.828292797999893,
+      "prompt_eval_count": 671,
+      "eval_count": 50,
+      "eval_duration_ns": 1357223137,
+      "raw_response_preview": "{\n  \"id\": \"2015-12-31_0001\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_2048_300_bottom",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1973,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.8740565110019816,
+      "prompt_eval_count": 723,
+      "eval_count": 51,
+      "eval_duration_ns": 1378339659,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0038\",\n  \"confidence\": 2,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_2048_300_bottom",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1828,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.76002672499817,
+      "prompt_eval_count": 607,
+      "eval_count": 50,
+      "eval_duration_ns": 1345747269,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0058\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_2048_300_bottom",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1656,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.7039170040006866,
+      "prompt_eval_count": 564,
+      "eval_count": 50,
+      "eval_duration_ns": 1349729034,
+      "raw_response_preview": "{\n  \"id\": \"2016-01-06_0060\",\n  \"confidence\": 2,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": false\n}"
+    },
+    {
+      "variant": "lean_event_only_json_512_300_bottom",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1955,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.625981420002063,
+      "prompt_eval_count": 512,
+      "eval_count": 29,
+      "eval_duration_ns": 451383537,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 2,\n  \"event_family\": \"capital_raise_or_debt\"\n}"
+    },
+    {
+      "variant": "lean_event_only_json_512_300_bottom",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2115,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.2874221249985567,
+      "prompt_eval_count": 512,
+      "eval_count": 29,
+      "eval_duration_ns": 446146793,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 2,\n  \"event_family\": \"capital_raise_or_debt\"\n}"
+    },
+    {
+      "variant": "lean_event_only_json_512_300_bottom",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1972,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "dividend",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.2577641000025324,
+      "prompt_eval_count": 512,
+      "eval_count": 29,
+      "eval_duration_ns": 445908913,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 2,\n  \"event_family\": \"dividend(co_tuc)\"\n}"
+    },
+    {
+      "variant": "lean_event_only_json_512_300_bottom",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1964,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "earnings",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.3803245890012477,
+      "prompt_eval_count": 512,
+      "eval_count": 33,
+      "eval_duration_ns": 512609155,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 2,\n  \"event_family\": \"earnings(kqkd/loi_nhuan)\"\n}"
+    },
+    {
+      "variant": "lean_event_only_json_512_300_bottom",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1912,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.226140206999844,
+      "prompt_eval_count": 512,
+      "eval_count": 28,
+      "eval_duration_ns": 458173954,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 2,\n  \"event_family\": \"mna_or_asset\"\n}"
+    },
+    {
+      "variant": "lean_event_only_json_512_300_bottom",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1938,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.7616504229990824,
+      "prompt_eval_count": 512,
+      "eval_count": 29,
+      "eval_duration_ns": 770185063,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 2,\n  \"event_family\": \"capital_raise_or_debt\"\n}"
+    },
+    {
+      "variant": "lean_event_only_json_512_300_bottom",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1793,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.676862740998331,
+      "prompt_eval_count": 512,
+      "eval_count": 28,
+      "eval_duration_ns": 744416318,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 2,\n  \"event_family\": \"mna_or_asset\"\n}"
+    },
+    {
+      "variant": "lean_event_only_json_512_300_bottom",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1621,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.6696721039988915,
+      "prompt_eval_count": 512,
+      "eval_count": 28,
+      "eval_duration_ns": 742493302,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 2,\n  \"event_family\": \"mna_or_asset\"\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_1shot",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2089,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 4.4840022700009285,
+      "prompt_eval_count": 512,
+      "eval_count": 89,
+      "eval_duration_ns": 2422443763,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": true,\n  \"other_company_event\": {\n    \"company_name\": \"Anvie Life\",\n    \"action\": \"mua_ban\",\n    \"target_company\": \"Crystal Bay Việt Nam\"\n  },\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_1shot",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2249,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "regulatory_or_legal",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.251009770003293,
+      "prompt_eval_count": 512,
+      "eval_count": 62,
+      "eval_duration_ns": 1686303330,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"regulatory_or_legal\",\n  \"is_rumor\": true,\n  \"other_company_event\": null,\n  \"macro_or_sector\": null,\n  \"unknown\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_1shot",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2106,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "dividend",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.2925853410015407,
+      "prompt_eval_count": 512,
+      "eval_count": 63,
+      "eval_duration_ns": 1708319926,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"dividend(co_tuc)\",\n  \"is_rumor\": true,\n  \"other_company_event\": null,\n  \"macro_or_sector\": null,\n  \"unknown\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_1shot",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2098,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "guidance",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.546699238002475,
+      "prompt_eval_count": 512,
+      "eval_count": 69,
+      "eval_duration_ns": 1872911123,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"guidance(ke_hoach/du_bao)\",\n  \"is_rumor\": true,\n  \"other_company_event\": null,\n  \"macro_or_sector\": null,\n  \"unknown\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_1shot",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2046,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.405542050000804,
+      "prompt_eval_count": 512,
+      "eval_count": 44,
+      "eval_duration_ns": 1186821469,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_1shot",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2072,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.250008084000001,
+      "prompt_eval_count": 512,
+      "eval_count": 41,
+      "eval_duration_ns": 1103908869,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": true\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_1shot",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1927,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.3779643829984707,
+      "prompt_eval_count": 512,
+      "eval_count": 44,
+      "eval_duration_ns": 1186355553,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_1shot",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1755,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.5728574210006627,
+      "prompt_eval_count": 512,
+      "eval_count": 48,
+      "eval_duration_ns": 1299868173,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_result_anchor",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2019,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 4.481262642999354,
+      "prompt_eval_count": 512,
+      "eval_count": 89,
+      "eval_duration_ns": 2420305586,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": true,\n  \"other_company_event\": {\n    \"company_name\": \"Anvie Life\",\n    \"action\": \"mua_ban\",\n    \"target_company\": \"Crystal Bay Việt Nam\"\n  },\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_result_anchor",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2179,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "regulatory_or_legal",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.98295730099926,
+      "prompt_eval_count": 512,
+      "eval_count": 35,
+      "eval_duration_ns": 934574412,
+      "raw_response_preview": "{\"id\": \"79-NQ/TW\", \"confidence\": 2, \"event_family\": \"regulatory_or_legal\", \"is_rumor\": true}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_result_anchor",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2036,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.026147407999815,
+      "prompt_eval_count": 512,
+      "eval_count": 58,
+      "eval_duration_ns": 1566480446,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": null,\n  \"is_rumor\": true,\n  \"other_company_event\": {\n    \"company_name\": \"Sữa Quốc tế Lof\"\n  }\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_result_anchor",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2028,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "guidance",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.551160703998903,
+      "prompt_eval_count": 512,
+      "eval_count": 69,
+      "eval_duration_ns": 1869722098,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"guidance(ke_hoach/du_bao)\",\n  \"is_rumor\": true,\n  \"other_company_event\": null,\n  \"macro_or_sector\": null,\n  \"unknown\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_result_anchor",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1976,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.56712596899888,
+      "prompt_eval_count": 512,
+      "eval_count": 48,
+      "eval_duration_ns": 1296824572,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_result_anchor",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2002,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 5.933643420001317,
+      "prompt_eval_count": 512,
+      "eval_count": 121,
+      "eval_duration_ns": 3317062651,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": true,\n  \"other_company_event\": {\n    \"company_name\": \"Tong Hoa Phat Hanh\",\n    \"action_type\": \"investment\",\n    \"amount_invested\": 10.710000000000001,\n    \"currency\": \"VND\",\n    \"investor_name\": \"Nguyen Van Tung\"\n  }\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_result_anchor",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1857,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.5779824029996234,
+      "prompt_eval_count": 512,
+      "eval_count": 48,
+      "eval_duration_ns": 1292433483,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_result_anchor",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1685,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.5734274000024016,
+      "prompt_eval_count": 512,
+      "eval_count": 48,
+      "eval_duration_ns": 1298272815,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_prefill",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2018,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.7920815350007615,
+      "prompt_eval_count": 512,
+      "eval_count": 31,
+      "eval_duration_ns": 828975998,
+      "raw_response_preview": "{\"id\": \"1\", \"confidence\": 2, \"event_family\": \"capital_raise_or_debt\", \"is_rumor\": false}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_prefill",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2178,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.0363818260011612,
+      "prompt_eval_count": 512,
+      "eval_count": 36,
+      "eval_duration_ns": 965729174,
+      "raw_response_preview": "{\"id\": \"79-NQ/TW\", \"confidence\": 2, \"event_family\": \"capital_raise_or_debt\", \"is_rumor\": false}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_prefill",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2035,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "dividend",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.672534067001834,
+      "prompt_eval_count": 512,
+      "eval_count": 28,
+      "eval_duration_ns": 746066479,
+      "raw_response_preview": "{\"id\": \"1\", \"confidence\": 0, \"event_family\": \"dividend\", \"is_rumor\": true}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_prefill",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2027,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "guidance",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.07485295099832,
+      "prompt_eval_count": 512,
+      "eval_count": 37,
+      "eval_duration_ns": 993046755,
+      "raw_response_preview": "{\"id\": \"1\", \"confidence\": 2, \"event_family\": \"guidance(ke_hoach/du_bao)\", \"is_rumor\": false}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_prefill",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1975,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.7534751029998006,
+      "prompt_eval_count": 512,
+      "eval_count": 30,
+      "eval_duration_ns": 800149237,
+      "raw_response_preview": "{\"id\": \"1\", \"confidence\": 0, \"event_family\": \"mna_or_asset\", \"is_rumor\": true}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_prefill",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2001,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.8010832120016858,
+      "prompt_eval_count": 512,
+      "eval_count": 31,
+      "eval_duration_ns": 828418090,
+      "raw_response_preview": "{\"id\": \"1\", \"confidence\": 2, \"event_family\": \"capital_raise_or_debt\", \"is_rumor\": true}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_prefill",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1856,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.761583920000703,
+      "prompt_eval_count": 512,
+      "eval_count": 30,
+      "eval_duration_ns": 799040466,
+      "raw_response_preview": "{\"id\": \"1\", \"confidence\": 2, \"event_family\": \"mna_or_asset\", \"is_rumor\": true}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_prefill",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1684,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 1.5102050690002216,
+      "prompt_eval_count": 512,
+      "eval_count": 24,
+      "eval_duration_ns": 636483924,
+      "raw_response_preview": "{\"id\":\"1\",\"confidence\":2,\"event_family\":\"mna_or_asset\",\"is_rumor\":true}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_temp01",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1990,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.913716792001651,
+      "prompt_eval_count": 512,
+      "eval_count": 77,
+      "eval_duration_ns": 2087885044,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": true,\n  \"other_company_event\": {\n    \"company_name\": \"Anvie Life\",\n    \"action\": \"increase_capital\"\n  },\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_temp01",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2150,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.6232435560013982,
+      "prompt_eval_count": 512,
+      "eval_count": 49,
+      "eval_duration_ns": 1324383629,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_temp01",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 2007,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "dividend",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.096543062998535,
+      "prompt_eval_count": 512,
+      "eval_count": 59,
+      "eval_duration_ns": 1603392293,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"dividend(co_tuc)\",\n  \"is_rumor\": false,\n  \"other_company_event\": null,\n  \"macro_or_sector\": null,\n  \"unknown\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_temp01",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1999,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "guidance",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 3.5418801060004625,
+      "prompt_eval_count": 512,
+      "eval_count": 69,
+      "eval_duration_ns": 1876668705,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"guidance(ke_hoach/du_bao)\",\n  \"is_rumor\": true,\n  \"other_company_event\": null,\n  \"macro_or_sector\": null,\n  \"unknown\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_temp01",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1947,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.3961987209986546,
+      "prompt_eval_count": 512,
+      "eval_count": 44,
+      "eval_duration_ns": 1188773556,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_temp01",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1973,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "capital_raise_or_debt",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.442851651998353,
+      "prompt_eval_count": 512,
+      "eval_count": 45,
+      "eval_duration_ns": 1215430813,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 0,\n  \"event_family\": \"capital_raise_or_debt\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_temp01",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1828,
+        "ollama_guarded_confidence": 2.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.3821446350011684,
+      "prompt_eval_count": 512,
+      "eval_count": 44,
+      "eval_duration_ns": 1188702197,
+      "raw_response_preview": "{\n  \"id\": \"1\",\n  \"confidence\": 2,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_json_512_300_temp01",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_model_name": "qwen2.5-coder:3b",
+        "ollama_guarded_input_text_length": 1656,
+        "ollama_guarded_confidence": 0.0,
+        "ollama_guarded_event_family": "mna_or_asset",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true,
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null
+      },
+      "parse_ok": true,
+      "seconds": 2.5706952850014204,
+      "prompt_eval_count": 512,
+      "eval_count": 48,
+      "eval_duration_ns": 1297424126,
+      "raw_response_preview": "{\n  \"id\": \"12345\",\n  \"confidence\": 0,\n  \"event_family\": \"mna_or_asset\",\n  \"is_rumor\": true,\n  \"macro_or_sector\": null\n}"
+    },
+    {
+      "variant": "lean_event_rumor_xml_512_300",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": 90.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 1.6667683270025009,
+      "prompt_eval_count": 512,
+      "eval_count": 44,
+      "eval_duration_ns": 1144742669,
+      "raw_response_preview": "```xml\n<id>12345</id>\n<confidence>90</confidence>\n<event_family>Investment</event_family>\n<is_rumor>false</is_rumor>\n```"
+    },
+    {
+      "variant": "lean_event_rumor_xml_512_300",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 1.652149173001817,
+      "prompt_eval_count": 512,
+      "eval_count": 44,
+      "eval_duration_ns": 1130823217,
+      "raw_response_preview": "```xml\n<id>12345</id>\n<confidence>0.9</confidence>\n<event_family>economic</event_family>\n<is_rumor>false</is_rumor>\n```"
+    },
+    {
+      "variant": "lean_event_rumor_xml_512_300",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": 90.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 1.6275517609974486,
+      "prompt_eval_count": 512,
+      "eval_count": 43,
+      "eval_duration_ns": 1110525180,
+      "raw_response_preview": "```xml\n<id>12345</id>\n<confidence>90</confidence>\n<event_family>Economy</event_family>\n<is_rumor>false</is_rumor>\n```"
+    },
+    {
+      "variant": "lean_event_rumor_xml_512_300",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 1.689429026999278,
+      "prompt_eval_count": 512,
+      "eval_count": 45,
+      "eval_duration_ns": 1173964661,
+      "raw_response_preview": "```xml\n<id>12345</id>\n<confidence>0.98</confidence>\n<event_family>Financial</event_family>\n<is_rumor>false</is_rumor>\n```"
+    },
+    {
+      "variant": "lean_event_rumor_xml_512_300",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 1.5189555940014543,
+      "prompt_eval_count": 512,
+      "eval_count": 40,
+      "eval_duration_ns": 1010866627,
+      "raw_response_preview": "```xml\n<id>1</id>\n<confidence>0.9</confidence>\n<event_family>Business</event_family>\n<is_rumor>false</is_rumor>\n```"
+    },
+    {
+      "variant": "lean_event_rumor_xml_512_300",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": 98.0,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": true
+      },
+      "parse_ok": true,
+      "seconds": 1.7599758019969158,
+      "prompt_eval_count": 512,
+      "eval_count": 48,
+      "eval_duration_ns": 1237800727,
+      "raw_response_preview": "```xml\n<id>12345</id>\n<confidence>98</confidence>\n<event_family>Rumors and Scandals</event_family>\n<is_rumor>true</is_rumor>\n```"
+    },
+    {
+      "variant": "lean_event_rumor_xml_512_300",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "parse_fail",
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null
+      },
+      "parse_ok": false,
+      "seconds": 1.7058620940006222,
+      "prompt_eval_count": 501,
+      "eval_count": 47,
+      "eval_duration_ns": 1195157095,
+      "raw_response_preview": "```json\n{\n  \"id\": \"2015-06-04\",\n  \"confidence\": 9,\n  \"event_family\": \"Real Estate\",\n  \"is_rumor\": false\n}\n```"
+    },
+    {
+      "variant": "lean_event_rumor_xml_512_300",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": false,
+        "local_abstained": true,
+        "local_error": "parse_fail",
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": null,
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": null
+      },
+      "parse_ok": false,
+      "seconds": 1.841022401000373,
+      "prompt_eval_count": 458,
+      "eval_count": 52,
+      "eval_duration_ns": 1325347840,
+      "raw_response_preview": "```json\n{\n  \"id\": \"2016-01-06_0060\",\n  \"confidence\": 95,\n  \"event_family\": \"Financial\",\n  \"is_rumor\": false\n}\n```"
+    },
+    {
+      "variant": "lean_event_rumor_csv_512_300",
+      "article_id": "8002e4554e3b25a6",
+      "gold": {
+        "article_id": "8002e4554e3b25a6",
+        "confidence": 2,
+        "event_family": "capital_raise_or_debt",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 0.9925851919979323,
+      "prompt_eval_count": 512,
+      "eval_count": 20,
+      "eval_duration_ns": 497378777,
+      "raw_response_preview": "id,confidence,event_family,is_rumor\n1,0.95,\"Financial\",False"
+    },
+    {
+      "variant": "lean_event_rumor_csv_512_300",
+      "article_id": "140b663d010812f9",
+      "gold": {
+        "article_id": "140b663d010812f9",
+        "confidence": 1,
+        "event_family": "macro_or_sector",
+        "impact_scope": "sector",
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 1.0437928479987022,
+      "prompt_eval_count": 512,
+      "eval_count": 21,
+      "eval_duration_ns": 519116741,
+      "raw_response_preview": "id,confidence,event_family,is_rumor\n1,0.8,\"Economy\",\"False\""
+    },
+    {
+      "variant": "lean_event_rumor_csv_512_300",
+      "article_id": "899a7c579aaf8b49",
+      "gold": {
+        "article_id": "899a7c579aaf8b49",
+        "confidence": 2,
+        "event_family": "dividend",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 1.043224133001786,
+      "prompt_eval_count": 512,
+      "eval_count": 22,
+      "eval_duration_ns": 549746542,
+      "raw_response_preview": "id,confidence,event_family,is_rumor\n1,0.95,\"Financial News\",\"False\""
+    },
+    {
+      "variant": "lean_event_rumor_csv_512_300",
+      "article_id": "775ab17877b04e18",
+      "gold": {
+        "article_id": "775ab17877b04e18",
+        "confidence": 2,
+        "event_family": "guidance",
+        "impact_scope": "stock",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 1.013757541000814,
+      "prompt_eval_count": 512,
+      "eval_count": 21,
+      "eval_duration_ns": 520498445,
+      "raw_response_preview": "id,confidence,event_family,is_rumor\n1,0.9,\"Financial Report\",\"False\""
+    },
+    {
+      "variant": "lean_event_rumor_csv_512_300",
+      "article_id": "2015-12-31_0001",
+      "gold": {
+        "article_id": "2015-12-31_0001",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 0.9808643889991799,
+      "prompt_eval_count": 512,
+      "eval_count": 20,
+      "eval_duration_ns": 492780961,
+      "raw_response_preview": "id,confidence,event_family,is_rumor\n1,0.9,\"Business\",\"False\""
+    },
+    {
+      "variant": "lean_event_rumor_csv_512_300",
+      "article_id": "2016-01-06_0038",
+      "gold": {
+        "article_id": "2016-01-06_0038",
+        "confidence": 0,
+        "event_family": "regulatory_or_legal",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 1.0171138059995428,
+      "prompt_eval_count": 512,
+      "eval_count": 21,
+      "eval_duration_ns": 523853119,
+      "raw_response_preview": "id,confidence,event_family,is_rumor\n1,0.9,\"Financial Fraud\",\"False\""
+    },
+    {
+      "variant": "lean_event_rumor_csv_512_300",
+      "article_id": "2016-01-06_0058",
+      "gold": {
+        "article_id": "2016-01-06_0058",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": null,
+        "source_authority": "media_report",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 1.2315495609982463,
+      "prompt_eval_count": 494,
+      "eval_count": 29,
+      "eval_duration_ns": 737784592,
+      "raw_response_preview": "id,confidence,event_family,is_rumor\n2016-01-06,0.95,\"Financial\",false"
+    },
+    {
+      "variant": "lean_event_rumor_csv_512_300",
+      "article_id": "2016-01-06_0060",
+      "gold": {
+        "article_id": "2016-01-06_0060",
+        "confidence": 0,
+        "event_family": "mna_or_asset",
+        "impact_scope": "sector",
+        "source_authority": "official",
+        "is_rumor": false
+      },
+      "prediction": {
+        "local_parse_ok": true,
+        "local_abstained": false,
+        "local_error": null,
+        "ollama_guarded_confidence": null,
+        "ollama_guarded_event_family": "other_company_event",
+        "ollama_guarded_impact_scope": null,
+        "ollama_guarded_source_authority": null,
+        "ollama_guarded_is_rumor": false
+      },
+      "parse_ok": true,
+      "seconds": 1.3966090439971595,
+      "prompt_eval_count": 451,
+      "eval_count": 36,
+      "eval_duration_ns": 921709458,
+      "raw_response_preview": "id,confidence,event_family,is_rumor\n2016-01-06_0060,0.95,\"Financial News\",\"False\""
+    }
+  ],
+  "notes": {
+    "quality_reference": "Hosted cache weak labels; use for prompt selection, not final truth.",
+    "quantization": "No local Q8/FP16 tag was available in ollama list; quantization was not varied."
+  }
+}

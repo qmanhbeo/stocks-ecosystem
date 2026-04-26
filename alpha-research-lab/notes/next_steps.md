@@ -2,7 +2,7 @@
 
 This is the live small-brain file for current state, recent direction, and
 next priorities.
-Use [session_177_log.md](./session_177_log.md) for the latest full session
+Use [session_179_log.md](./session_179_log.md) for the latest full session
 detail, and [findings.md](./findings.md) plus the active findings chunk for
 durable conclusions.
 
@@ -17,8 +17,9 @@ durable conclusions.
   - PhoBERT owns sentiment
   - PhoBERT owns forward-looking
   - PhoBERT now has repo-native `article_scope` and `source_type` head paths
-  - the Ollama residual lane owns only `event_family`, `impact_scope`,
-    `source_authority`, `is_rumor`, and confidence / abstention diagnostics
+  - the Ollama residual lane now defaults to the minimal event-family task;
+    wider generator fields remain optional diagnostics, while `article_scope`
+    and `source_type` are the preferred local scope/source proxies
   - combined per-ticker news exports now include the Ollama residual daily
     aggregates
 - `llm-cache-fill` is no longer the default blocker for the local-news branch.
@@ -65,7 +66,16 @@ durable conclusions.
      run-summary files before widening candidate search.
 
 3. `ollama-residual-audit`
-   - Audit whether the narrowed local residual taxonomy is useful enough for
+   - Watch the detached `tmux` session `ollama_guarded_backfill`.
+   - Current command:
+     `python -m research_pipelines.news_features.core.build_ollama_guarded_features --checkpoint-rows 200 --min-article-scope-prob 0.28`
+   - Status file:
+     `artifacts/job_status/ollama_guarded_publish.json`
+   - This is a BERT-gated priority backfill of `146872` article rows, not the
+     full `342135` tagged-article universe.
+   - Latest watchdog check in Session 179 saw checkpoint `2 / 735` complete
+     with `400` unique articles scored and safe GPU pressure.
+   - Audit whether the event-family residual taxonomy is useful enough for
      downstream alpha work before expanding local semantic scope again.
    - Do not reopen a broad hosted full-schema replacement branch.
 
@@ -130,7 +140,14 @@ durable conclusions.
      published parquets use the new trained model ids.
    - Full detail: [session_178_log.md](./session_178_log.md)
 
-9. `Session 177`
+9. `Session 179`
+   - Optimized the local Ollama residual prompt under the hardware cap. The
+     safe default is now bottom-schema event-family-only JSON with `num_ctx=512`
+     and first-300-word article truncation. A BERT-gated checkpointed backfill
+     is running in `tmux` as `ollama_guarded_backfill`.
+   - Full detail: [session_179_log.md](./session_179_log.md)
+
+10. `Session 177`
    - Repaired the semantic binary-head contract so `article_scope` and
      `source_type` no longer inherit the forward-looking date split and hard
      `0.5` threshold blindly. Binary-head training now calibrates a per-head
@@ -139,17 +156,17 @@ durable conclusions.
      class weighting enabled.
    - Full detail: [session_177_log.md](./session_177_log.md)
 
-10. `Session 167`
+11. `Session 167`
    - Repo-local planning assumptions are now explicitly constrained to
       `3GB VRAM / 10GB RAM` for safe local-ML work.
    - Full detail: [session_167_log.md](./session_167_log.md)
 
-11. `Session 166`
+12. `Session 166`
    - The first real PhoBERT forward-looking canary forced two runtime repairs
      and established the current watchdog and stage-manifest flow.
    - Full detail: [session_166_log.md](./session_166_log.md)
 
-12. `Local encoder branch`
+13. `Local encoder branch`
    - Durable task split and branch reasoning now live in
      [local_bert_roadmap.md](./local_bert_roadmap.md).
    - Completed cheap local Ollama comparisons now live in

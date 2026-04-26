@@ -1,6 +1,6 @@
 # News Features
 
-`research_pipelines/news_features/` is the canonical news producer for the workspace. It reads shared raw news from `stocks/data/news/`, tags articles against the shared stock universe, builds daily tabular features, whole-article local PhoBERT sentiment features, a separate PhoBERT forward-looking lane, transformer embeddings, and exports per-ticker parquet files for RL consumption where applicable. A smaller Ollama residual lane now handles only the local semantic fields that are still awkward for PhoBERT. The main production path is local-first and encoder-first.
+`research_pipelines/news_features/` is the canonical news producer for the workspace. It reads shared raw news from `stocks/data/news/`, tags articles against the shared stock universe, builds daily tabular features, whole-article local PhoBERT sentiment features, separate PhoBERT forward-looking / article-scope / source-type lanes, transformer embeddings, and exports per-ticker parquet files for RL consumption where applicable. A smaller Ollama residual lane now defaults to event-family only, because scope and source-type are covered by PhoBERT heads. The main production path is local-first and encoder-first.
 
 By default the pipeline resolves shared data under `/home/manh/stocks/data`. Override that with `STOCKS_DATA_ROOT` if you need a different workspace data root.
 
@@ -96,12 +96,13 @@ under `ollama_guarded_checkpoint/`, and only then publishes
 `ollama_guarded_article_features.parquet` plus
 `ollama_guarded_ticker_day_features.parquet`. This guarded lane is now the
 minimal local residual semantic contract:
-- local confidence
-- `event_family`
-- `impact_scope`
-- `source_authority`
-- `is_rumor`
-- coverage / abstention diagnostics
+- default generated field: `event_family`
+- local confidence / coverage / abstention diagnostics
+- optional widened fields: `impact_scope`, `source_authority`, `is_rumor`
+
+PhoBERT `article_scope` and `source_type` are the preferred local scope/source
+proxies. Use `--field-set full5` or `--field-set event_rumor` only when you are
+intentionally running a widened diagnostic pass.
 
 Sentiment and forward-looking stay in the separate PhoBERT lanes. The guarded
 local daily aggregates now merge into `predictions/*_news_features.parquet`.
@@ -111,8 +112,9 @@ Canonical roadmap on the current constrained workstation:
 - keep PhoBERT forward-looking as the first separate local head
 - if expanding beyond that, add separate PhoBERT heads rather than a broader
   guarded-generator contract
+- keep `article_scope` and `source_type` as the default scope/source path
 - treat model probability as the first local confidence surface
-- keep the Ollama lane minimal and residual rather than broad-schema
+- keep the Ollama lane event-family-first and residual rather than broad-schema
 - keep deterministic ticker linkage outside the model
 - use the locally proven best residual model on the `3GB VRAM / 10GB RAM`
   planning box rather than forcing a nominally larger model class
