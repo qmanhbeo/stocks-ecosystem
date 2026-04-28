@@ -1,0 +1,1249 @@
+{
+  "features": [
+    {
+      "abs_dev_ic": 0.001949941699446549,
+      "abs_validation_ic": 0.002394326378321844,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.008578377785095723,
+      "confirmation_n": 86427,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.002269721059540709,
+      "coverage": 0.9999694030161282,
+      "dev_avg_ic": 0.001949941699446549,
+      "dev_directional_years": 4,
+      "dev_gate": false,
+      "dev_n": 563397,
+      "dev_pct_directional_years": 0.5,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "full_avg_ic": 0.0027065460299384183,
+      "full_n": 817049,
+      "near_gate_pre_confirmation": false,
+      "validation_avg_ic": 0.002394326378321844,
+      "validation_gate": false,
+      "validation_n": 167225
+    },
+    {
+      "abs_dev_ic": 0.002153036396350942,
+      "abs_validation_ic": 0.0017323680602288373,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -9.300061610951947e-05,
+      "confirmation_n": 86410,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.006490010020937836,
+      "coverage": 0.9997980599064467,
+      "dev_avg_ic": -0.002153036396350942,
+      "dev_directional_years": 5,
+      "dev_gate": false,
+      "dev_n": 563295,
+      "dev_pct_directional_years": 0.625,
+      "dev_years": 8,
+      "direction": "negative",
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "full_avg_ic": -0.0018635648422904293,
+      "full_n": 816909,
+      "near_gate_pre_confirmation": false,
+      "validation_avg_ic": -0.0017323680602288373,
+      "validation_gate": false,
+      "validation_n": 167204
+    },
+    {
+      "abs_dev_ic": 0.0007072517912878253,
+      "abs_validation_ic": 0.001731445347983012,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.005622191077301659,
+      "confirmation_n": 86416,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": 0.0015389040185463472,
+      "coverage": 0.9982437331257634,
+      "dev_avg_ic": 0.0007072517912878253,
+      "dev_directional_years": 3,
+      "dev_gate": false,
+      "dev_n": 562062,
+      "dev_pct_directional_years": 0.375,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "full_avg_ic": 0.000833768686673044,
+      "full_n": 815639,
+      "near_gate_pre_confirmation": false,
+      "validation_avg_ic": -0.001731445347983012,
+      "validation_gate": false,
+      "validation_n": 167161
+    },
+    {
+      "abs_dev_ic": 0.0011330296289386809,
+      "abs_validation_ic": 0.0008928108786688425,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.00875377311887998,
+      "confirmation_n": 86427,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": 0.000816137031398736,
+      "coverage": 0.9999804179303221,
+      "dev_avg_ic": 0.0011330296289386809,
+      "dev_directional_years": 3,
+      "dev_gate": false,
+      "dev_n": 563406,
+      "dev_pct_directional_years": 0.375,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "full_avg_ic": 0.0020175149100423347,
+      "full_n": 817058,
+      "near_gate_pre_confirmation": false,
+      "validation_avg_ic": 0.0008928108786688425,
+      "validation_gate": false,
+      "validation_n": 167225
+    },
+    {
+      "abs_dev_ic": 0.001128303343816285,
+      "abs_validation_ic": 0.0005716932804662861,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.008875359625238334,
+      "confirmation_n": 86427,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.0072408809740393335,
+      "coverage": 0.9999694030161282,
+      "dev_avg_ic": 0.001128303343816285,
+      "dev_directional_years": 4,
+      "dev_gate": false,
+      "dev_n": 563397,
+      "dev_pct_directional_years": 0.5,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_net_accum_60d_rank",
+      "full_avg_ic": 0.001484597857064785,
+      "full_n": 817049,
+      "near_gate_pre_confirmation": false,
+      "validation_avg_ic": -0.0005716932804662861,
+      "validation_gate": false,
+      "validation_n": 167225
+    },
+    {
+      "abs_dev_ic": 0.0011969663017515572,
+      "abs_validation_ic": 7.745996169421324e-05,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.008178774750204676,
+      "confirmation_n": 86427,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.008212036892330153,
+      "coverage": 0.9999938806032257,
+      "dev_avg_ic": 0.0011969663017515572,
+      "dev_directional_years": 3,
+      "dev_gate": false,
+      "dev_n": 563417,
+      "dev_pct_directional_years": 0.375,
+      "dev_years": 8,
+      "direction": "positive",
+      "feature": "xs_ff_net_accum_20d_rank",
+      "full_avg_ic": 0.001615633951834071,
+      "full_n": 817069,
+      "near_gate_pre_confirmation": false,
+      "validation_avg_ic": 7.745996169421324e-05,
+      "validation_gate": false,
+      "validation_n": 167225
+    }
+  ],
+  "summary": {
+    "branch_decision": "Foreign accumulation / ownership-change features do not clear the unchanged H327/H333 gate. Do not keep tuning this as a standalone H95 signal.",
+    "predictive": {
+      "best_feature": {
+        "abs_dev_ic": 0.001949941699446549,
+        "abs_validation_ic": 0.002394326378321844,
+        "candidate_gate": false,
+        "confirmation_avg_ic": 0.008578377785095723,
+        "confirmation_n": 86427,
+        "confirmation_ok": true,
+        "corr_gate": true,
+        "corr_with_s1": -0.002269721059540709,
+        "coverage": 0.9999694030161282,
+        "dev_avg_ic": 0.001949941699446549,
+        "dev_directional_years": 4,
+        "dev_gate": false,
+        "dev_n": 563397,
+        "dev_pct_directional_years": 0.5,
+        "dev_years": 8,
+        "direction": "positive",
+        "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+        "full_avg_ic": 0.0027065460299384183,
+        "full_n": 817049,
+        "near_gate_pre_confirmation": false,
+        "validation_avg_ic": 0.002394326378321844,
+        "validation_gate": false,
+        "validation_n": 167225
+      },
+      "feature_count": 6,
+      "merged_dates": 2741,
+      "merged_rows": 817074,
+      "merged_tickers": 391,
+      "near_features_pre_confirmation": [],
+      "passing_features": []
+    },
+    "verdict": "FAILED"
+  },
+  "yearly_ic": [
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": 0.007358830132814718,
+      "n": 51529,
+      "p_value": 0.09483302673097868,
+      "phase": "dev_2015_2022",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.0024115216389344355,
+      "n": 57608,
+      "p_value": 0.5627284053842723,
+      "phase": "dev_2015_2022",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.004949570142852158,
+      "n": 63848,
+      "p_value": 0.21106272350709324,
+      "phase": "dev_2015_2022",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.0018328314642732095,
+      "n": 68863,
+      "p_value": 0.6305456965213213,
+      "phase": "dev_2015_2022",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.0015167437945962795,
+      "n": 72154,
+      "p_value": 0.6837044903255145,
+      "phase": "dev_2015_2022",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.0022208771791579806,
+      "n": 77671,
+      "p_value": 0.5359568388593543,
+      "phase": "dev_2015_2022",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": 0.0011806999560141527,
+      "n": 84957,
+      "p_value": 0.7307423501881296,
+      "phase": "dev_2015_2022",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": 0.011486054891190183,
+      "n": 86787,
+      "p_value": 0.0007148679440942779,
+      "phase": "dev_2015_2022",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": 0.006602940060619223,
+      "n": 84236,
+      "p_value": 0.05531512702078473,
+      "phase": "validation_2023_2024",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.006600452141991953,
+      "n": 82989,
+      "p_value": 0.057244682294424414,
+      "phase": "validation_2023_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": 0.008178774750204676,
+      "n": 86427,
+      "p_value": 0.016197263852509778,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": 0.007358830132814718,
+      "n": 51529,
+      "p_value": 0.09483302673097868,
+      "phase": "full_2015_2025",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.0024115216389344355,
+      "n": 57608,
+      "p_value": 0.5627284053842723,
+      "phase": "full_2015_2025",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.004949570142852158,
+      "n": 63848,
+      "p_value": 0.21106272350709324,
+      "phase": "full_2015_2025",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.0018328314642732095,
+      "n": 68863,
+      "p_value": 0.6305456965213213,
+      "phase": "full_2015_2025",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.0015167437945962795,
+      "n": 72154,
+      "p_value": 0.6837044903255145,
+      "phase": "full_2015_2025",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.0022208771791579806,
+      "n": 77671,
+      "p_value": 0.5359568388593543,
+      "phase": "full_2015_2025",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": 0.0011806999560141527,
+      "n": 84957,
+      "p_value": 0.7307423501881296,
+      "phase": "full_2015_2025",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": 0.011486054891190183,
+      "n": 86787,
+      "p_value": 0.0007148679440942779,
+      "phase": "full_2015_2025",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": 0.006602940060619223,
+      "n": 84236,
+      "p_value": 0.05531512702078473,
+      "phase": "full_2015_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": -0.006600452141991953,
+      "n": 82989,
+      "p_value": 0.057244682294424414,
+      "phase": "full_2015_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_accum_20d_rank",
+      "ic": 0.008178774750204676,
+      "n": 86427,
+      "p_value": 0.016197263852509778,
+      "phase": "full_2015_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.00927519182717111,
+      "n": 51529,
+      "p_value": 0.035251046253420085,
+      "phase": "dev_2015_2022",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": -0.00348573101724882,
+      "n": 57608,
+      "p_value": 0.40280736656193883,
+      "phase": "dev_2015_2022",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.0021474741936253175,
+      "n": 63848,
+      "p_value": 0.5873933556746231,
+      "phase": "dev_2015_2022",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": -0.005325341811568401,
+      "n": 68843,
+      "p_value": 0.16233989768404242,
+      "phase": "dev_2015_2022",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.001510716915870441,
+      "n": 72154,
+      "p_value": 0.6848936924437596,
+      "phase": "dev_2015_2022",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": -0.0032452728604457338,
+      "n": 77671,
+      "p_value": 0.3657675902380405,
+      "phase": "dev_2015_2022",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": -0.006429999150267089,
+      "n": 84957,
+      "p_value": 0.06090722544708377,
+      "phase": "dev_2015_2022",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.014087777741800745,
+      "n": 86787,
+      "p_value": 3.319616951456597e-05,
+      "phase": "dev_2015_2022",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.0034968534533611527,
+      "n": 84236,
+      "p_value": 0.3101558036575224,
+      "phase": "validation_2023_2024",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": -0.004727340838664181,
+      "n": 82989,
+      "p_value": 0.17325137392802661,
+      "phase": "validation_2023_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.008875359625238334,
+      "n": 86427,
+      "p_value": 0.009074529139892984,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.00927519182717111,
+      "n": 51529,
+      "p_value": 0.035251046253420085,
+      "phase": "full_2015_2025",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": -0.00348573101724882,
+      "n": 57608,
+      "p_value": 0.40280736656193883,
+      "phase": "full_2015_2025",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.0021474741936253175,
+      "n": 63848,
+      "p_value": 0.5873933556746231,
+      "phase": "full_2015_2025",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": -0.005325341811568401,
+      "n": 68843,
+      "p_value": 0.16233989768404242,
+      "phase": "full_2015_2025",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.001510716915870441,
+      "n": 72154,
+      "p_value": 0.6848936924437596,
+      "phase": "full_2015_2025",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": -0.0032452728604457338,
+      "n": 77671,
+      "p_value": 0.3657675902380405,
+      "phase": "full_2015_2025",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": -0.006429999150267089,
+      "n": 84957,
+      "p_value": 0.06090722544708377,
+      "phase": "full_2015_2025",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.014087777741800745,
+      "n": 86787,
+      "p_value": 3.319616951456597e-05,
+      "phase": "full_2015_2025",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.0034968534533611527,
+      "n": 84236,
+      "p_value": 0.3101558036575224,
+      "phase": "full_2015_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": -0.004727340838664181,
+      "n": 82989,
+      "p_value": 0.17325137392802661,
+      "phase": "full_2015_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_accum_60d_rank",
+      "ic": 0.008875359625238334,
+      "n": 86427,
+      "p_value": 0.009074529139892984,
+      "phase": "full_2015_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.0037963000977568424,
+      "n": 51529,
+      "p_value": 0.3888293306714331,
+      "phase": "dev_2015_2022",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": 0.002543899948489599,
+      "n": 57608,
+      "p_value": 0.5414868554253298,
+      "phase": "dev_2015_2022",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.007236531742374364,
+      "n": 63824,
+      "p_value": 0.06752209483896134,
+      "phase": "dev_2015_2022",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.0034845993325304954,
+      "n": 68835,
+      "p_value": 0.36060101238704645,
+      "phase": "dev_2015_2022",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.003922115165127858,
+      "n": 72130,
+      "p_value": 0.2921808864820395,
+      "phase": "dev_2015_2022",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.00720101836171543,
+      "n": 77644,
+      "p_value": 0.04479931287266595,
+      "phase": "dev_2015_2022",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": 0.003834637644139978,
+      "n": 84954,
+      "p_value": 0.26371031333862077,
+      "phase": "dev_2015_2022",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": 0.0009987473500172837,
+      "n": 86771,
+      "p_value": 0.7686081217076055,
+      "phase": "dev_2015_2022",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.0003685568291958437,
+      "n": 84233,
+      "p_value": 0.9148172404161861,
+      "phase": "validation_2023_2024",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.0031303155854980284,
+      "n": 82971,
+      "p_value": 0.3672341946640506,
+      "phase": "validation_2023_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -9.300061610951947e-05,
+      "n": 86410,
+      "p_value": 0.9781904092667233,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.0037963000977568424,
+      "n": 51529,
+      "p_value": 0.3888293306714331,
+      "phase": "full_2015_2025",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": 0.002543899948489599,
+      "n": 57608,
+      "p_value": 0.5414868554253298,
+      "phase": "full_2015_2025",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.007236531742374364,
+      "n": 63824,
+      "p_value": 0.06752209483896134,
+      "phase": "full_2015_2025",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.0034845993325304954,
+      "n": 68835,
+      "p_value": 0.36060101238704645,
+      "phase": "full_2015_2025",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.003922115165127858,
+      "n": 72130,
+      "p_value": 0.2921808864820395,
+      "phase": "full_2015_2025",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.00720101836171543,
+      "n": 77644,
+      "p_value": 0.04479931287266595,
+      "phase": "full_2015_2025",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": 0.003834637644139978,
+      "n": 84954,
+      "p_value": 0.26371031333862077,
+      "phase": "full_2015_2025",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": 0.0009987473500172837,
+      "n": 86771,
+      "p_value": 0.7686081217076055,
+      "phase": "full_2015_2025",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.0003685568291958437,
+      "n": 84233,
+      "p_value": 0.9148172404161861,
+      "phase": "full_2015_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -0.0031303155854980284,
+      "n": 82971,
+      "p_value": 0.3672341946640506,
+      "phase": "full_2015_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_net_accum_accel_20v20_rank",
+      "ic": -9.300061610951947e-05,
+      "n": 86410,
+      "p_value": 0.9781904092667233,
+      "phase": "full_2015_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": 0.0028049091673559194,
+      "n": 51529,
+      "p_value": 0.5243201513581739,
+      "phase": "dev_2015_2022",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.006808130004656892,
+      "n": 57608,
+      "p_value": 0.10224874194465508,
+      "phase": "dev_2015_2022",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.00747369538213809,
+      "n": 63848,
+      "p_value": 0.058964915223663,
+      "phase": "dev_2015_2022",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.0006135270833008324,
+      "n": 68852,
+      "p_value": 0.8721055759288707,
+      "phase": "dev_2015_2022",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": 0.004151675875831542,
+      "n": 72154,
+      "p_value": 0.26476997008309133,
+      "phase": "dev_2015_2022",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.002196066551366443,
+      "n": 77671,
+      "p_value": 0.540521853868805,
+      "phase": "dev_2015_2022",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.00045415428968489366,
+      "n": 84957,
+      "p_value": 0.8946899384239079,
+      "phase": "dev_2015_2022",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": 0.013621360848230707,
+      "n": 86787,
+      "p_value": 5.996936461117751e-05,
+      "phase": "dev_2015_2022",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": 0.005298194985642631,
+      "n": 84236,
+      "p_value": 0.12412042987084203,
+      "phase": "validation_2023_2024",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.0031104011704294805,
+      "n": 82989,
+      "p_value": 0.37023824964974905,
+      "phase": "validation_2023_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": 0.00875377311887998,
+      "n": 86427,
+      "p_value": 0.010067931610999835,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": 0.0028049091673559194,
+      "n": 51529,
+      "p_value": 0.5243201513581739,
+      "phase": "full_2015_2025",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.006808130004656892,
+      "n": 57608,
+      "p_value": 0.10224874194465508,
+      "phase": "full_2015_2025",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.00747369538213809,
+      "n": 63848,
+      "p_value": 0.058964915223663,
+      "phase": "full_2015_2025",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.0006135270833008324,
+      "n": 68852,
+      "p_value": 0.8721055759288707,
+      "phase": "full_2015_2025",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": 0.004151675875831542,
+      "n": 72154,
+      "p_value": 0.26476997008309133,
+      "phase": "full_2015_2025",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.002196066551366443,
+      "n": 77671,
+      "p_value": 0.540521853868805,
+      "phase": "full_2015_2025",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.00045415428968489366,
+      "n": 84957,
+      "p_value": 0.8946899384239079,
+      "phase": "full_2015_2025",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": 0.013621360848230707,
+      "n": 86787,
+      "p_value": 5.996936461117751e-05,
+      "phase": "full_2015_2025",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": 0.005298194985642631,
+      "n": 84236,
+      "p_value": 0.12412042987084203,
+      "phase": "full_2015_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": -0.0031104011704294805,
+      "n": 82989,
+      "p_value": 0.37023824964974905,
+      "phase": "full_2015_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_ownership_delta_20d_rank",
+      "ic": 0.00875377311887998,
+      "n": 86427,
+      "p_value": 0.010067931610999835,
+      "phase": "full_2015_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": 0.003426905212162588,
+      "n": 51377,
+      "p_value": 0.43731059864782307,
+      "phase": "dev_2015_2022",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.005387529112135044,
+      "n": 57491,
+      "p_value": 0.19643879033543654,
+      "phase": "dev_2015_2022",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.001220702570108755,
+      "n": 63498,
+      "p_value": 0.7583893272019309,
+      "phase": "dev_2015_2022",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.002758137673755007,
+      "n": 68521,
+      "p_value": 0.4703113501288194,
+      "phase": "dev_2015_2022",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": 0.0053821057981370095,
+      "n": 72037,
+      "p_value": 0.1485908045141187,
+      "phase": "dev_2015_2022",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.00461254118956913,
+      "n": 77571,
+      "p_value": 0.19891416003407894,
+      "phase": "dev_2015_2022",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.005176657383595171,
+      "n": 84820,
+      "p_value": 0.13164898819241763,
+      "phase": "dev_2015_2022",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": 0.012761301679871108,
+      "n": 86747,
+      "p_value": 0.0001708222990856099,
+      "phase": "dev_2015_2022",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": 0.002907416300013775,
+      "n": 84225,
+      "p_value": 0.39879998095648517,
+      "phase": "validation_2023_2024",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.00802039193758496,
+      "n": 82936,
+      "p_value": 0.02090123369125878,
+      "phase": "validation_2023_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": 0.005622191077301659,
+      "n": 86416,
+      "p_value": 0.09838743688698938,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": 0.003426905212162588,
+      "n": 51377,
+      "p_value": 0.43731059864782307,
+      "phase": "full_2015_2025",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.005387529112135044,
+      "n": 57491,
+      "p_value": 0.19643879033543654,
+      "phase": "full_2015_2025",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.001220702570108755,
+      "n": 63498,
+      "p_value": 0.7583893272019309,
+      "phase": "full_2015_2025",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.002758137673755007,
+      "n": 68521,
+      "p_value": 0.4703113501288194,
+      "phase": "full_2015_2025",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": 0.0053821057981370095,
+      "n": 72037,
+      "p_value": 0.1485908045141187,
+      "phase": "full_2015_2025",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.00461254118956913,
+      "n": 77571,
+      "p_value": 0.19891416003407894,
+      "phase": "full_2015_2025",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.005176657383595171,
+      "n": 84820,
+      "p_value": 0.13164898819241763,
+      "phase": "full_2015_2025",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": 0.012761301679871108,
+      "n": 86747,
+      "p_value": 0.0001708222990856099,
+      "phase": "full_2015_2025",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": 0.002907416300013775,
+      "n": 84225,
+      "p_value": 0.39879998095648517,
+      "phase": "full_2015_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": -0.00802039193758496,
+      "n": 82936,
+      "p_value": 0.02090123369125878,
+      "phase": "full_2015_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_ownership_delta_60d_rank",
+      "ic": 0.005622191077301659,
+      "n": 86416,
+      "p_value": 0.09838743688698938,
+      "phase": "full_2015_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.009320774237607892,
+      "n": 51529,
+      "p_value": 0.034360937892723944,
+      "phase": "dev_2015_2022",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": -0.0005268496008146771,
+      "n": 57608,
+      "p_value": 0.8993757653307205,
+      "phase": "dev_2015_2022",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": -0.002403262054058101,
+      "n": 63848,
+      "p_value": 0.543685590837349,
+      "phase": "dev_2015_2022",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": -0.00200187489674712,
+      "n": 68843,
+      "p_value": 0.5994150298530737,
+      "phase": "dev_2015_2022",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.00034968798704198797,
+      "n": 72154,
+      "p_value": 0.925164919628565,
+      "phase": "dev_2015_2022",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": -0.0042175949254981675,
+      "n": 77671,
+      "p_value": 0.23983085989249686,
+      "phase": "dev_2015_2022",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.0006622139599824418,
+      "n": 84957,
+      "p_value": 0.8469470423535113,
+      "phase": "dev_2015_2022",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.012940889076668308,
+      "n": 86787,
+      "p_value": 0.00013759986082209576,
+      "phase": "dev_2015_2022",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.005458438034323503,
+      "n": 84236,
+      "p_value": 0.11314486601822345,
+      "phase": "validation_2023_2024",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": -0.0009332295095426969,
+      "n": 82989,
+      "p_value": 0.7880535750728639,
+      "phase": "validation_2023_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.008578377785095723,
+      "n": 86427,
+      "p_value": 0.011671568952072213,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.009320774237607892,
+      "n": 51529,
+      "p_value": 0.034360937892723944,
+      "phase": "full_2015_2025",
+      "year": 2015
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": -0.0005268496008146771,
+      "n": 57608,
+      "p_value": 0.8993757653307205,
+      "phase": "full_2015_2025",
+      "year": 2016
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": -0.002403262054058101,
+      "n": 63848,
+      "p_value": 0.543685590837349,
+      "phase": "full_2015_2025",
+      "year": 2017
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": -0.00200187489674712,
+      "n": 68843,
+      "p_value": 0.5994150298530737,
+      "phase": "full_2015_2025",
+      "year": 2018
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.00034968798704198797,
+      "n": 72154,
+      "p_value": 0.925164919628565,
+      "phase": "full_2015_2025",
+      "year": 2019
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": -0.0042175949254981675,
+      "n": 77671,
+      "p_value": 0.23983085989249686,
+      "phase": "full_2015_2025",
+      "year": 2020
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.0006622139599824418,
+      "n": 84957,
+      "p_value": 0.8469470423535113,
+      "phase": "full_2015_2025",
+      "year": 2021
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.012940889076668308,
+      "n": 86787,
+      "p_value": 0.00013759986082209576,
+      "phase": "full_2015_2025",
+      "year": 2022
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.005458438034323503,
+      "n": 84236,
+      "p_value": 0.11314486601822345,
+      "phase": "full_2015_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": -0.0009332295095426969,
+      "n": 82989,
+      "p_value": 0.7880535750728639,
+      "phase": "full_2015_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+      "ic": 0.008578377785095723,
+      "n": 86427,
+      "p_value": 0.011671568952072213,
+      "phase": "full_2015_2025",
+      "year": 2025
+    }
+  ]
+}

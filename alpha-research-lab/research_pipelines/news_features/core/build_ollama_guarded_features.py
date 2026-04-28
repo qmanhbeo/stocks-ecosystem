@@ -6,6 +6,7 @@ Preferred operator alias: `build_ollama_probe_features.py`.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -96,7 +97,32 @@ EVENT_TYPE_TO_FAMILY = {
 
 OLLAMA_GUARDED_INPUT_CACHE_VERSION = 1
 OLLAMA_GUARDED_CHECKPOINT_VERSION = 1
+OLLAMA_GUARDED_SCORE_CACHE_VERSION = 1
 OLLAMA_GUARDED_PROMPT_VERSION = 4
+
+SCORE_CACHE_COLUMNS = [
+    "article_id",
+    "published_at",
+    "ollama_guarded_score_key",
+    "ollama_guarded_score_signature_hash",
+    "local_model_name",
+    "ollama_guarded_input_text_length",
+    "ollama_guarded_confidence",
+    "ollama_guarded_event_family",
+    "ollama_guarded_impact_scope",
+    "ollama_guarded_source_authority",
+    "ollama_guarded_is_rumor",
+    "local_parse_ok",
+    "local_abstained",
+    "local_error",
+    "cached_at_utc",
+]
+
+SCORE_VALUE_COLUMNS = [
+    column
+    for column in SCORE_CACHE_COLUMNS
+    if column not in {"ollama_guarded_score_key", "ollama_guarded_score_signature_hash", "cached_at_utc"}
+]
 
 
 def _empty_article_dataframe() -> pd.DataFrame:
@@ -764,6 +790,69 @@ def _path_checkpoint_signature(path: Path) -> dict[str, object]:
     }
 
 
+def _stable_hash_payload(payload: dict[str, object]) -> str:
+    encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str, separators=(",", ":")).encode(
+        "utf-8"
+    )
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _ollama_guarded_score_signature(config: NewsFeaturesConfig) -> dict[str, object]:
+    return {
+        "score_cache_version": OLLAMA_GUARDED_SCORE_CACHE_VERSION,
+        "prompt_version": OLLAMA_GUARDED_PROMPT_VERSION,
+        "ollama_guarded_model_name": config.ollama_guarded_model_name,
+        "ollama_guarded_timeout_seconds": int(config.ollama_guarded_timeout_seconds),
+        "ollama_guarded_num_predict": int(config.ollama_guarded_num_predict),
+        "ollama_guarded_num_ctx": int(config.ollama_guarded_num_ctx),
+        "ollama_guarded_temperature": float(config.ollama_guarded_temperature),
+        "ollama_guarded_use_schema": bool(config.ollama_guarded_use_schema),
+        "ollama_guarded_prompt_variant": str(config.ollama_guarded_prompt_variant),
+        "ollama_guarded_field_set": str(config.ollama_guarded_field_set),
+        "ollama_guarded_max_body_chars": int(config.ollama_guarded_max_body_chars),
+        "ollama_guarded_max_body_words": int(config.ollama_guarded_max_body_words),
+    }
+
+
+def _ollama_guarded_score_signature_hash(score_signature: dict[str, object]) -> str:
+    return _stable_hash_payload(score_signature)[:16]
+
+
+def _ollama_guarded_score_key(article: dict[str, object], score_signature: dict[str, object]) -> str:
+    return _stable_hash_payload(
+        {
+            "score_signature": score_signature,
+            "article": {
+                "article_id": str(article.get("article_id", "") or ""),
+                "published_at": str(article.get("published_at", "") or ""),
+                "clean_title": str(article.get("clean_title", "") or ""),
+                "clean_summary": str(article.get("clean_summary", "") or ""),
+                "clean_body_text": str(article.get("clean_body_text", "") or ""),
+            },
+        }
+    )
+
+
+def _attach_ollama_guarded_score_keys(
+    article_frame: pd.DataFrame,
+    *,
+    config: NewsFeaturesConfig,
+    score_signature: dict[str, object],
+    score_signature_hash: str,
+) -> pd.DataFrame:
+    rows: list[dict[str, object]] = []
+    for article_row in article_frame.to_dict(orient="records"):
+        article = _article_payload_from_row(pd.Series(article_row), config)
+        rows.append(
+            {
+                **article_row,
+                "ollama_guarded_score_key": _ollama_guarded_score_key(article, score_signature),
+                "ollama_guarded_score_signature_hash": score_signature_hash,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def _write_json_atomic(path: Path, payload: dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=path.parent, suffix=".json", delete=False) as handle:
@@ -819,6 +908,7 @@ def _write_ollama_guarded_job_status(
             "status_file": str(status_path),
             "input_articles": str(config.ollama_guarded_input_articles_path()),
             "checkpoint_manifest": str(config.ollama_guarded_checkpoint_manifest_path()),
+            "score_cache_root": str(config.ollama_guarded_score_cache_root_dir()),
             "article_dataset": str(config.ollama_guarded_article_features_path()),
             "ticker_day_dataset": str(config.ollama_guarded_ticker_day_features_path()),
         },
@@ -843,6 +933,102 @@ def _load_ollama_guarded_checkpoint_manifest(config: NewsFeaturesConfig) -> dict
 
 def _write_ollama_guarded_checkpoint_manifest(config: NewsFeaturesConfig, payload: dict[str, object]) -> None:
     _write_json_atomic(config.ollama_guarded_checkpoint_manifest_path(), payload)
+
+
+def _load_ollama_guarded_score_cache_manifest(
+    config: NewsFeaturesConfig,
+    score_signature_hash: str,
+) -> dict[str, object]:
+    return _load_json_payload(config.ollama_guarded_score_cache_manifest_path(score_signature_hash))
+
+
+def _write_ollama_guarded_score_cache_manifest(
+    config: NewsFeaturesConfig,
+    score_signature_hash: str,
+    payload: dict[str, object],
+) -> None:
+    _write_json_atomic(config.ollama_guarded_score_cache_manifest_path(score_signature_hash), payload)
+
+
+def _load_ollama_guarded_score_cache_lookup(
+    config: NewsFeaturesConfig,
+    *,
+    score_signature_hash: str,
+) -> dict[str, dict[str, object]]:
+    cache_dir = config.ollama_guarded_score_cache_dir(score_signature_hash)
+    if not cache_dir.exists():
+        return {}
+    frames: list[pd.DataFrame] = []
+    for shard_path in sorted(cache_dir.glob("score_shard_*.parquet")):
+        shard = pd.read_parquet(shard_path)
+        if shard.empty:
+            continue
+        if "ollama_guarded_score_key" not in shard.columns:
+            continue
+        shard = shard.copy()
+        shard["ollama_guarded_score_key"] = shard["ollama_guarded_score_key"].astype(str)
+        if "ollama_guarded_score_signature_hash" in shard.columns:
+            shard = shard[shard["ollama_guarded_score_signature_hash"].astype(str) == score_signature_hash]
+        frames.append(shard)
+    if not frames:
+        return {}
+    cache = pd.concat(frames, ignore_index=True)
+    cache = cache.drop_duplicates(subset=["ollama_guarded_score_key"], keep="last")
+    return {
+        str(row["ollama_guarded_score_key"]): {
+            column: row.get(column)
+            for column in SCORE_VALUE_COLUMNS
+            if column in cache.columns
+        }
+        for row in cache.to_dict(orient="records")
+    }
+
+
+def _append_ollama_guarded_score_cache_rows(
+    config: NewsFeaturesConfig,
+    *,
+    score_signature_hash: str,
+    score_signature: dict[str, object],
+    rows: pd.DataFrame,
+) -> int:
+    if rows.empty:
+        return 0
+    cache_dir = config.ollama_guarded_score_cache_dir(score_signature_hash)
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    manifest = _load_ollama_guarded_score_cache_manifest(config, score_signature_hash)
+    existing_shards = sorted(cache_dir.glob("score_shard_*.parquet"))
+    shard_count = max(int(manifest.get("shard_count", 0)), len(existing_shards))
+    shard_index = shard_count + 1
+    cache_rows = rows.copy()
+    for column in SCORE_CACHE_COLUMNS:
+        if column not in cache_rows.columns:
+            cache_rows[column] = None
+    cache_rows["article_id"] = cache_rows["article_id"].astype(str)
+    cache_rows["ollama_guarded_score_key"] = cache_rows["ollama_guarded_score_key"].astype(str)
+    cache_rows["ollama_guarded_score_signature_hash"] = score_signature_hash
+    cache_rows["cached_at_utc"] = _current_utc_timestamp()
+    cache_rows = cache_rows[SCORE_CACHE_COLUMNS]
+    cache_rows = cache_rows.drop_duplicates(subset=["ollama_guarded_score_key"], keep="last").reset_index(drop=True)
+    write_parquet_atomic(
+        cache_rows,
+        config.ollama_guarded_score_cache_shard_path(score_signature_hash, shard_index),
+        index=False,
+    )
+    prior_rows = int(manifest.get("cached_score_rows", 0))
+    manifest.update(
+        {
+            "score_cache_version": OLLAMA_GUARDED_SCORE_CACHE_VERSION,
+            "score_signature": score_signature,
+            "score_signature_hash": score_signature_hash,
+            "shard_count": int(shard_index),
+            "cached_score_rows": int(prior_rows + len(cache_rows)),
+            "updated_at_utc": _current_utc_timestamp(),
+        }
+    )
+    if "created_at_utc" not in manifest:
+        manifest["created_at_utc"] = _current_utc_timestamp()
+    _write_ollama_guarded_score_cache_manifest(config, score_signature_hash, manifest)
+    return int(len(cache_rows))
 
 
 def _clear_ollama_guarded_checkpoint_state(config: NewsFeaturesConfig) -> None:
@@ -928,6 +1114,26 @@ def _ollama_guarded_run_signature(
     input_rows: int,
     input_source_signature: dict[str, object],
 ) -> dict[str, object]:
+    score_signature = _ollama_guarded_score_signature(config)
+    score_signature_hash = _ollama_guarded_score_signature_hash(score_signature)
+    return {
+        "checkpoint_version": OLLAMA_GUARDED_CHECKPOINT_VERSION,
+        "score_cache_version": OLLAMA_GUARDED_SCORE_CACHE_VERSION,
+        "score_signature": score_signature,
+        "score_signature_hash": score_signature_hash,
+        "ollama_guarded_checkpoint_rows": int(config.ollama_guarded_checkpoint_rows),
+        "ollama_guarded_input_rows": int(input_rows),
+        "ollama_guarded_input": _path_checkpoint_signature(config.ollama_guarded_input_articles_path()),
+        "ollama_guarded_input_source_signature": input_source_signature,
+    }
+
+
+def _legacy_ollama_guarded_run_signature_without_checkpoint_rows(
+    config: NewsFeaturesConfig,
+    *,
+    input_rows: int,
+    input_source_signature: dict[str, object],
+) -> dict[str, object]:
     return {
         "checkpoint_version": OLLAMA_GUARDED_CHECKPOINT_VERSION,
         "prompt_version": OLLAMA_GUARDED_PROMPT_VERSION,
@@ -945,10 +1151,85 @@ def _ollama_guarded_run_signature(
         "ollama_guarded_stop_after_each_call": bool(config.ollama_guarded_stop_after_each_call),
         "ollama_guarded_min_article_scope_prob": float(config.ollama_guarded_min_article_scope_prob),
         "ollama_guarded_min_source_type_prob": float(config.ollama_guarded_min_source_type_prob),
-        "ollama_guarded_checkpoint_rows": int(config.ollama_guarded_checkpoint_rows),
         "ollama_guarded_input_rows": int(input_rows),
         "ollama_guarded_input": _path_checkpoint_signature(config.ollama_guarded_input_articles_path()),
         "ollama_guarded_input_source_signature": input_source_signature,
+    }
+
+
+def _checkpoint_score_signature_compatible(
+    *,
+    checkpoint_manifest: dict[str, object],
+    score_signature_hash: str,
+    legacy_signature_without_checkpoint_rows: dict[str, object],
+) -> bool:
+    if not checkpoint_manifest:
+        return False
+    if str(checkpoint_manifest.get("score_signature_hash") or "") == score_signature_hash:
+        return True
+    run_signature = checkpoint_manifest.get("run_signature")
+    if not isinstance(run_signature, dict):
+        return False
+    if str(run_signature.get("score_signature_hash") or "") == score_signature_hash:
+        return True
+    legacy = dict(run_signature)
+    legacy.pop("ollama_guarded_checkpoint_rows", None)
+    return legacy == legacy_signature_without_checkpoint_rows
+
+
+def _checkpoint_input_signature_compatible(
+    *,
+    checkpoint_manifest: dict[str, object],
+    run_signature: dict[str, object],
+    legacy_signature_without_checkpoint_rows: dict[str, object],
+) -> bool:
+    existing_run_signature = checkpoint_manifest.get("run_signature")
+    if not isinstance(existing_run_signature, dict):
+        return False
+    if "score_signature_hash" in existing_run_signature:
+        return (
+            existing_run_signature.get("ollama_guarded_input_rows") == run_signature.get("ollama_guarded_input_rows")
+            and existing_run_signature.get("ollama_guarded_input") == run_signature.get("ollama_guarded_input")
+            and existing_run_signature.get("ollama_guarded_input_source_signature")
+            == run_signature.get("ollama_guarded_input_source_signature")
+        )
+    legacy = dict(existing_run_signature)
+    legacy.pop("ollama_guarded_checkpoint_rows", None)
+    return legacy == legacy_signature_without_checkpoint_rows
+
+
+def _load_checkpoint_score_rows_for_migration(
+    *,
+    checkpoint_manifest: dict[str, object],
+) -> dict[str, dict[str, object]]:
+    completed_batches = checkpoint_manifest.get("completed_batches") or {}
+    if not isinstance(completed_batches, dict):
+        return {}
+    frames: list[pd.DataFrame] = []
+    for batch_meta in completed_batches.values():
+        if not isinstance(batch_meta, dict):
+            continue
+        shard_path_value = batch_meta.get("shard_path")
+        if not shard_path_value or int(batch_meta.get("article_rows", 0)) == 0:
+            continue
+        shard_path = Path(str(shard_path_value))
+        if not shard_path.exists():
+            continue
+        shard = pd.read_parquet(shard_path)
+        if not shard.empty:
+            frames.append(shard)
+    if not frames:
+        return {}
+    scores = pd.concat(frames, ignore_index=True)
+    scores["article_id"] = scores["article_id"].astype(str)
+    scores = scores.drop_duplicates(subset=["article_id"], keep="last")
+    return {
+        str(row["article_id"]): {
+            column: row.get(column)
+            for column in SCORE_VALUE_COLUMNS
+            if column in scores.columns
+        }
+        for row in scores.to_dict(orient="records")
     }
 
 
@@ -1498,24 +1779,51 @@ def build_ollama_guarded_feature_exports(
                 started_at=job_started_at,
             )
         else:
+            score_signature = _ollama_guarded_score_signature(config)
+            score_signature_hash = _ollama_guarded_score_signature_hash(score_signature)
             run_signature = _ollama_guarded_run_signature(
                 config,
                 input_rows=input_rows,
                 input_source_signature=input_source_signature,
             )
+            legacy_signature_without_checkpoint_rows = _legacy_ollama_guarded_run_signature_without_checkpoint_rows(
+                config,
+                input_rows=input_rows,
+                input_source_signature=input_source_signature,
+            )
             checkpoint_manifest = _load_ollama_guarded_checkpoint_manifest(config)
-            if checkpoint_manifest and checkpoint_manifest.get("run_signature") != run_signature:
-                print("Ollama guarded checkpoint signature changed; clearing old checkpoint shards", flush=True)
-                _clear_ollama_guarded_checkpoint_state(config)
-                checkpoint_manifest = {}
+            exact_checkpoint_signature = checkpoint_manifest.get("run_signature") == run_signature
+            score_compatible_checkpoint = _checkpoint_score_signature_compatible(
+                checkpoint_manifest=checkpoint_manifest,
+                score_signature_hash=score_signature_hash,
+                legacy_signature_without_checkpoint_rows=legacy_signature_without_checkpoint_rows,
+            )
+            input_compatible_checkpoint = _checkpoint_input_signature_compatible(
+                checkpoint_manifest=checkpoint_manifest,
+                run_signature=run_signature,
+                legacy_signature_without_checkpoint_rows=legacy_signature_without_checkpoint_rows,
+            )
+            score_cache_lookup = _load_ollama_guarded_score_cache_lookup(
+                config,
+                score_signature_hash=score_signature_hash,
+            )
+            print(
+                f"Ollama guarded score cache load: signature={score_signature_hash}, "
+                f"cached_rows={len(score_cache_lookup)}",
+                flush=True,
+            )
 
             if (
                 checkpoint_manifest.get("status") == "complete"
-                and checkpoint_manifest.get("run_signature") == run_signature
+                and score_compatible_checkpoint
+                and input_compatible_checkpoint
                 and config.ollama_guarded_article_features_path().exists()
                 and config.ollama_guarded_ticker_day_features_path().exists()
             ):
-                print("Ollama guarded checkpoint already complete; reusing published datasets", flush=True)
+                print(
+                    "Ollama guarded score output already complete; reusing published datasets",
+                    flush=True,
+                )
                 daily = pd.read_parquet(config.ollama_guarded_ticker_day_features_path())
                 metadata = {
                     "local_model_name": checkpoint_manifest.get("local_model_name", config.ollama_guarded_model_name),
@@ -1526,10 +1834,41 @@ def build_ollama_guarded_feature_exports(
                     "checkpoint_status": "complete",
                     "checkpoint_completed_batches": int(checkpoint_manifest.get("completed_batch_count", 0)),
                     "checkpoint_total_batches": int(checkpoint_manifest.get("total_batches", 0)),
+                    "total_candidate_rows": int(input_rows),
+                    "reused_cached_rows": 0,
+                    "cache_miss_rows": 0,
+                    "newly_scored_rows": 0,
+                    "skipped_completed_rows": int(input_rows),
+                    "checkpoint_files_written": 0,
                 }
                 build_elapsed = 0.0
                 write_elapsed = 0.0
             else:
+                migrated_checkpoint_scores: dict[str, dict[str, object]] = {}
+                if checkpoint_manifest and not exact_checkpoint_signature:
+                    if score_compatible_checkpoint and input_compatible_checkpoint:
+                        migrated_checkpoint_scores = _load_checkpoint_score_rows_for_migration(
+                            checkpoint_manifest=checkpoint_manifest,
+                        )
+                        print(
+                            "Ollama guarded checkpoint cadence changed; "
+                            f"migratable_scored_articles={len(migrated_checkpoint_scores)}",
+                            flush=True,
+                        )
+                    elif score_compatible_checkpoint:
+                        print(
+                            "Ollama guarded input universe changed; reusing row-level score cache only",
+                            flush=True,
+                        )
+                    else:
+                        print(
+                            "Ollama guarded scoring signature changed; old checkpoints cannot be reused",
+                            flush=True,
+                        )
+                    _clear_ollama_guarded_checkpoint_state(config)
+                    checkpoint_manifest = {}
+                    exact_checkpoint_signature = False
+
                 total_batches = max(
                     (int(input_rows) + int(config.ollama_guarded_checkpoint_rows) - 1)
                     // int(config.ollama_guarded_checkpoint_rows),
@@ -1540,6 +1879,8 @@ def build_ollama_guarded_feature_exports(
                         "checkpoint_version": OLLAMA_GUARDED_CHECKPOINT_VERSION,
                         "status": "in_progress",
                         "run_signature": run_signature,
+                        "score_signature": score_signature,
+                        "score_signature_hash": score_signature_hash,
                         "local_model_name": config.ollama_guarded_model_name,
                         "ollama_guarded_input_rows": int(input_rows),
                         "normalized_rows": int(normalized_rows),
@@ -1575,6 +1916,8 @@ def build_ollama_guarded_feature_exports(
                         "article_score_rows": int(checkpoint_manifest.get("article_score_rows", 0)),
                         "unique_article_count": int(checkpoint_manifest.get("unique_article_count", 0)),
                         "checkpoint_status": str(checkpoint_manifest.get("status", "unknown")),
+                        "score_signature_hash": score_signature_hash,
+                        "score_cache_rows": int(len(score_cache_lookup)),
                     },
                     started_at=job_started_at,
                 )
@@ -1591,6 +1934,12 @@ def build_ollama_guarded_feature_exports(
                 processed_input_rows = 0
                 processed_new_batches = 0
                 progress_interval = max(int(config.ollama_guarded_checkpoint_rows), 1)
+                reused_cached_rows = 0
+                cache_miss_rows = 0
+                newly_scored_rows = 0
+                skipped_completed_rows = 0
+                migrated_checkpoint_rows = 0
+                checkpoint_files_written = 0
 
                 for batch_index, batch in enumerate(
                     input_file.iter_batches(
@@ -1608,6 +1957,7 @@ def build_ollama_guarded_feature_exports(
                         if int(existing_meta.get("article_rows", 0)) == 0 or (
                             shard_path_value and Path(str(shard_path_value)).exists()
                         ):
+                            skipped_completed_rows += batch_row_count
                             if (
                                 processed_input_rows == batch_row_count
                                 or processed_input_rows % progress_interval == 0
@@ -1623,16 +1973,101 @@ def build_ollama_guarded_feature_exports(
 
                     input_batch = batch.to_pandas()
                     input_batch["article_id"] = input_batch["article_id"].astype(str)
+                    input_batch = _attach_ollama_guarded_score_keys(
+                        input_batch,
+                        config=config,
+                        score_signature=score_signature,
+                        score_signature_hash=score_signature_hash,
+                    )
                     batch_unique_articles = int(len(input_batch))
                     batch_article_rows = 0
                     shard_path: Optional[Path] = None
 
-                    inference_rows = _infer_article_frame(
-                        input_batch,
-                        config=config,
-                        raw_response_fn=raw_response_fn,
-                        log_progress=False,
-                    )
+                    batch_score_rows: list[dict[str, object]] = []
+                    cache_append_rows: list[dict[str, object]] = []
+                    miss_rows: list[dict[str, object]] = []
+                    for row in input_batch.to_dict(orient="records"):
+                        score_key = str(row["ollama_guarded_score_key"])
+                        cached_row = score_cache_lookup.get(score_key)
+                        if cached_row is not None:
+                            batch_score_rows.append(dict(cached_row))
+                            reused_cached_rows += 1
+                            continue
+                        migrated_row = migrated_checkpoint_scores.get(str(row["article_id"]))
+                        if migrated_row is not None:
+                            value_row = {
+                                column: migrated_row.get(column)
+                                for column in SCORE_VALUE_COLUMNS
+                            }
+                            value_row["article_id"] = str(row["article_id"])
+                            if not value_row.get("published_at"):
+                                value_row["published_at"] = row.get("published_at")
+                            cache_row = {
+                                **value_row,
+                                "ollama_guarded_score_key": score_key,
+                                "ollama_guarded_score_signature_hash": score_signature_hash,
+                                "cached_at_utc": _current_utc_timestamp(),
+                            }
+                            cache_append_rows.append(cache_row)
+                            score_cache_lookup[score_key] = value_row
+                            batch_score_rows.append(value_row)
+                            reused_cached_rows += 1
+                            migrated_checkpoint_rows += 1
+                            continue
+                        miss_rows.append(row)
+
+                    cache_miss_rows += len(miss_rows)
+                    if miss_rows:
+                        miss_batch = pd.DataFrame(miss_rows)
+                        scored_rows = _infer_article_frame(
+                            miss_batch[OLLAMA_GUARDED_INPUT_COLUMNS],
+                            config=config,
+                            raw_response_fn=raw_response_fn,
+                            log_progress=False,
+                        )
+                        if not scored_rows.empty:
+                            scored_rows = scored_rows.merge(
+                                miss_batch[
+                                    [
+                                        "article_id",
+                                        "ollama_guarded_score_key",
+                                        "ollama_guarded_score_signature_hash",
+                                    ]
+                                ],
+                                on="article_id",
+                                how="left",
+                                validate="one_to_one",
+                            )
+                            for row in scored_rows.to_dict(orient="records"):
+                                value_row = {
+                                    column: row.get(column)
+                                    for column in SCORE_VALUE_COLUMNS
+                                }
+                                cache_row = {
+                                    **value_row,
+                                    "ollama_guarded_score_key": str(row["ollama_guarded_score_key"]),
+                                    "ollama_guarded_score_signature_hash": score_signature_hash,
+                                    "cached_at_utc": _current_utc_timestamp(),
+                                }
+                                cache_append_rows.append(cache_row)
+                                score_cache_lookup[str(row["ollama_guarded_score_key"])] = value_row
+                                batch_score_rows.append(value_row)
+                            newly_scored_rows += int(len(scored_rows))
+
+                    if cache_append_rows:
+                        _append_ollama_guarded_score_cache_rows(
+                            config,
+                            score_signature_hash=score_signature_hash,
+                            score_signature=score_signature,
+                            rows=pd.DataFrame(cache_append_rows),
+                        )
+
+                    inference_rows = pd.DataFrame(batch_score_rows)
+                    if not inference_rows.empty:
+                        for column in SCORE_VALUE_COLUMNS:
+                            if column not in inference_rows.columns:
+                                inference_rows[column] = None
+                        inference_rows = inference_rows[SCORE_VALUE_COLUMNS]
                     if not inference_rows.empty:
                         batch_tagged = tagged_indexed.loc[inference_rows["article_id"].tolist()].reset_index(drop=True)
                         article_rows_batch = batch_tagged.merge(
@@ -1646,6 +2081,7 @@ def build_ollama_guarded_feature_exports(
                         if batch_article_rows > 0:
                             shard_path = config.ollama_guarded_checkpoint_shard_path(batch_index)
                             write_parquet_atomic(article_rows_batch, shard_path, index=False)
+                            checkpoint_files_written += 1
 
                     article_score_rows += batch_article_rows
                     unique_article_count += batch_unique_articles
@@ -1660,11 +2096,22 @@ def build_ollama_guarded_feature_exports(
                         {
                             "status": "in_progress",
                             "run_signature": run_signature,
+                            "score_signature": score_signature,
+                            "score_signature_hash": score_signature_hash,
                             "local_model_name": config.ollama_guarded_model_name,
                             "completed_batches": completed_batches,
                             "completed_batch_count": int(len(completed_batches)),
                             "article_score_rows": int(article_score_rows),
                             "unique_article_count": int(unique_article_count),
+                            "cache_stats": {
+                                "total_candidate_rows": int(input_rows),
+                                "reused_cached_rows": int(reused_cached_rows),
+                                "cache_miss_rows": int(cache_miss_rows),
+                                "newly_scored_rows": int(newly_scored_rows),
+                                "skipped_completed_rows": int(skipped_completed_rows),
+                                "migrated_checkpoint_rows": int(migrated_checkpoint_rows),
+                                "checkpoint_files_written": int(checkpoint_files_written),
+                            },
                             "last_completed_batch": int(batch_index),
                             "last_updated_utc": pd.Timestamp.utcnow().isoformat(),
                         }
@@ -1680,7 +2127,9 @@ def build_ollama_guarded_feature_exports(
                         elapsed = max(perf_counter() - build_start, 1e-9)
                         print(
                             f"Ollama guarded input scan {processed_input_rows}/{input_rows}; "
-                            f"unique_articles={unique_article_count}, article_rows={article_score_rows}",
+                            f"unique_articles={unique_article_count}, article_rows={article_score_rows}, "
+                            f"cache_hits={reused_cached_rows}, cache_misses={cache_miss_rows}, "
+                            f"newly_scored={newly_scored_rows}",
                             flush=True,
                         )
                         _write_ollama_guarded_job_status(
@@ -1696,6 +2145,13 @@ def build_ollama_guarded_feature_exports(
                                 "unique_article_count": int(unique_article_count),
                                 "last_completed_batch": int(batch_index),
                                 "checkpoint_status": "in_progress",
+                                "total_candidate_rows": int(input_rows),
+                                "reused_cached_rows": int(reused_cached_rows),
+                                "cache_miss_rows": int(cache_miss_rows),
+                                "newly_scored_rows": int(newly_scored_rows),
+                                "skipped_completed_rows": int(skipped_completed_rows),
+                                "migrated_checkpoint_rows": int(migrated_checkpoint_rows),
+                                "checkpoint_files_written": int(checkpoint_files_written),
                             },
                             throughput_updates={
                                 "phase": "score",
@@ -1726,6 +2182,13 @@ def build_ollama_guarded_feature_exports(
                             "total_batches": int(checkpoint_manifest.get("total_batches", total_batches)),
                             "article_score_rows": int(checkpoint_manifest.get("article_score_rows", 0)),
                             "unique_article_count": int(checkpoint_manifest.get("unique_article_count", 0)),
+                            "total_candidate_rows": int(input_rows),
+                            "reused_cached_rows": int(reused_cached_rows),
+                            "cache_miss_rows": int(cache_miss_rows),
+                            "newly_scored_rows": int(newly_scored_rows),
+                            "skipped_completed_rows": int(skipped_completed_rows),
+                            "migrated_checkpoint_rows": int(migrated_checkpoint_rows),
+                            "checkpoint_files_written": int(checkpoint_files_written),
                         },
                         started_at=job_started_at,
                     )
@@ -1745,6 +2208,19 @@ def build_ollama_guarded_feature_exports(
                         "checkpoint_completed_batches": int(checkpoint_manifest.get("completed_batch_count", 0)),
                         "checkpoint_total_batches": int(checkpoint_manifest.get("total_batches", total_batches)),
                     }
+                metadata.update(
+                    {
+                        "total_candidate_rows": int(input_rows),
+                        "reused_cached_rows": int(reused_cached_rows),
+                        "cache_miss_rows": int(cache_miss_rows),
+                        "newly_scored_rows": int(newly_scored_rows),
+                        "skipped_completed_rows": int(skipped_completed_rows),
+                        "migrated_checkpoint_rows": int(migrated_checkpoint_rows),
+                        "checkpoint_files_written": int(checkpoint_files_written),
+                        "score_signature_hash": score_signature_hash,
+                        "score_cache_rows": int(len(score_cache_lookup)),
+                    }
+                )
 
                 build_elapsed = perf_counter() - build_start
                 write_elapsed = 0.0
@@ -1784,6 +2260,15 @@ def build_ollama_guarded_feature_exports(
     print(
         f"Timing summary: load={load_elapsed:.1f}s, build={build_elapsed:.1f}s, "
         f"write={write_elapsed:.1f}s, total={overall_elapsed:.1f}s",
+        flush=True,
+    )
+    print(
+        "Ollama guarded cache summary: "
+        f"total_candidate_rows={int(metadata.get('total_candidate_rows', metadata.get('ollama_guarded_input_rows', 0)))}, "
+        f"reused_cached_rows={int(metadata.get('reused_cached_rows', 0))}, "
+        f"newly_scored_rows={int(metadata.get('newly_scored_rows', 0))}, "
+        f"skipped_completed_rows={int(metadata.get('skipped_completed_rows', 0))}, "
+        f"checkpoint_files_written={int(metadata.get('checkpoint_files_written', 0))}",
         flush=True,
     )
     print(

@@ -71,6 +71,13 @@ def _config() -> NewsFeaturesConfig:
     return NewsFeaturesConfig()
 
 
+def test_default_ollama_guarded_run_is_bert_gated_with_small_checkpoints() -> None:
+    config = _config()
+
+    assert config.ollama_guarded_min_article_scope_prob == 0.28
+    assert config.ollama_guarded_checkpoint_rows == 20
+
+
 def _normalized_df() -> pd.DataFrame:
     return pd.DataFrame(
         [
@@ -129,6 +136,41 @@ def _normalized_with_untagged_df() -> pd.DataFrame:
         ],
         ignore_index=True,
     )
+
+
+def _many_ollama_guarded_inputs(row_count: int) -> tuple[pd.DataFrame, pd.DataFrame]:
+    normalized_rows: list[dict[str, object]] = []
+    tagged_rows: list[dict[str, object]] = []
+    for index in range(row_count):
+        article_id = f"m{index:04d}"
+        ticker = f"T{index % 5:02d}"
+        day = 1 + (index % 20)
+        date = f"2026-03-{day:02d}"
+        normalized_rows.append(
+            {
+                "article_id": article_id,
+                "source": "cafef",
+                "url": f"https://cafef.vn/{article_id}.chn",
+                "clean_title": f"{ticker} ke hoach tang truong {index}",
+                "clean_summary": "ke hoach sap toi",
+                "clean_body_text": f"{ticker} cong bo ke hoach loi nhuan va co tuc",
+                "date": date,
+                "published_at": f"{date}T02:00:00Z",
+            }
+        )
+        tagged_rows.append(
+            {
+                "article_id": article_id,
+                "ticker": ticker,
+                "date": date,
+                "url": f"https://cafef.vn/{article_id}.chn",
+                "source": "cafef",
+                "match_source": "title",
+                "title_hit": 1,
+                "body_hit": 1,
+            }
+        )
+    return pd.DataFrame(normalized_rows), pd.DataFrame(tagged_rows)
 
 
 def _tagged_df() -> pd.DataFrame:
@@ -456,6 +498,29 @@ def _fake_guarded_raw_response(article: dict[str, object]) -> str:
         "a3": "not valid json",
     }
     return responses[str(article["article_id"])]
+
+
+class _CountingGuardedRawResponse:
+    def __init__(self) -> None:
+        self.article_ids: list[str] = []
+
+    @property
+    def call_count(self) -> int:
+        return len(self.article_ids)
+
+    def __call__(self, article: dict[str, object]) -> str:
+        article_id = str(article["article_id"])
+        self.article_ids.append(article_id)
+        return json.dumps(
+            {
+                "id": article_id,
+                "confidence": 2,
+                "event_family": "guidance",
+                "impact_scope": "stock",
+                "source_authority": "official",
+                "is_rumor": False,
+            }
+        )
 
 
 def _write_forward_looking_teacher_fixture(config: NewsFeaturesConfig, *, include_untagged: bool = False) -> None:
@@ -1173,6 +1238,7 @@ def test_build_ollama_guarded_exports_materialize_tagged_only_input_cache_and_re
     config = _temp_config(
         tmp_path,
         ollama_guarded_checkpoint_rows=2,
+        ollama_guarded_min_article_scope_prob=0.0,
         ollama_guarded_model_name="fake-guarded",
     )
     _normalized_with_untagged_df().assign(published_at="2026-03-10T09:00:00+07:00").to_parquet(
@@ -1208,6 +1274,7 @@ def test_build_ollama_guarded_exports_resume_from_checkpoints_and_match_direct_b
     config = _temp_config(
         tmp_path,
         ollama_guarded_checkpoint_rows=2,
+        ollama_guarded_min_article_scope_prob=0.0,
         ollama_guarded_model_name="fake-guarded",
     )
     normalized = _normalized_df().assign(published_at="2026-03-10T09:00:00+07:00")
@@ -1257,6 +1324,119 @@ def test_build_ollama_guarded_exports_resume_from_checkpoints_and_match_direct_b
     assert checkpoint_manifest["status"] == "complete"
     assert list(config.ollama_guarded_checkpoint_dir().glob("article_shard_*.parquet")) == []
     assert not (tmp_path / "data" / "llm_cache").exists()
+
+
+def test_build_ollama_guarded_exports_resume_partial_without_rescoring_completed_rows(tmp_path):
+    config = _temp_config(
+        tmp_path,
+        ollama_guarded_checkpoint_rows=2,
+        ollama_guarded_min_article_scope_prob=0.0,
+        ollama_guarded_model_name="fake-guarded",
+    )
+    _normalized_df().assign(published_at="2026-03-10T09:00:00+07:00").to_parquet(
+        config.normalized_path(),
+        index=False,
+    )
+    _tagged_df().to_parquet(config.tagged_path(), index=False)
+    scorer = _CountingGuardedRawResponse()
+
+    build_ollama_guarded_feature_exports(
+        config=config,
+        raw_response_fn=scorer,
+        checkpoint_batch_limit=1,
+    )
+    assert scorer.call_count == 2
+
+    build_ollama_guarded_feature_exports(
+        config=config,
+        raw_response_fn=scorer,
+    )
+    checkpoint_manifest = json.loads(config.ollama_guarded_checkpoint_manifest_path().read_text(encoding="utf-8"))
+
+    assert scorer.call_count == 3
+    assert checkpoint_manifest["status"] == "complete"
+    assert checkpoint_manifest["cache_stats"]["skipped_completed_rows"] == 2
+
+
+def test_build_ollama_guarded_exports_reuses_20_row_cache_when_resuming_with_200_rows(tmp_path):
+    normalized, tagged = _many_ollama_guarded_inputs(220)
+    config = _temp_config(
+        tmp_path,
+        ollama_guarded_checkpoint_rows=20,
+        ollama_guarded_min_article_scope_prob=0.0,
+        ollama_guarded_model_name="fake-guarded",
+    )
+    normalized.to_parquet(config.normalized_path(), index=False)
+    tagged.to_parquet(config.tagged_path(), index=False)
+    scorer = _CountingGuardedRawResponse()
+
+    build_ollama_guarded_feature_exports(
+        config=config,
+        raw_response_fn=scorer,
+        checkpoint_batch_limit=1,
+    )
+    assert scorer.call_count == 20
+
+    config.ollama_guarded_checkpoint_rows = 200
+    build_ollama_guarded_feature_exports(config=config, raw_response_fn=scorer)
+    checkpoint_manifest = json.loads(config.ollama_guarded_checkpoint_manifest_path().read_text(encoding="utf-8"))
+
+    assert scorer.call_count == 220
+    assert checkpoint_manifest["status"] == "complete"
+    assert checkpoint_manifest["total_batches"] == 2
+    assert checkpoint_manifest["cache_stats"]["reused_cached_rows"] >= 20
+
+
+def test_build_ollama_guarded_exports_reuses_200_row_cache_when_resuming_with_20_rows(tmp_path):
+    normalized, tagged = _many_ollama_guarded_inputs(220)
+    config = _temp_config(
+        tmp_path,
+        ollama_guarded_checkpoint_rows=200,
+        ollama_guarded_min_article_scope_prob=0.0,
+        ollama_guarded_model_name="fake-guarded",
+    )
+    normalized.to_parquet(config.normalized_path(), index=False)
+    tagged.to_parquet(config.tagged_path(), index=False)
+    scorer = _CountingGuardedRawResponse()
+
+    build_ollama_guarded_feature_exports(
+        config=config,
+        raw_response_fn=scorer,
+        checkpoint_batch_limit=1,
+    )
+    assert scorer.call_count == 200
+
+    config.ollama_guarded_checkpoint_rows = 20
+    build_ollama_guarded_feature_exports(config=config, raw_response_fn=scorer)
+    checkpoint_manifest = json.loads(config.ollama_guarded_checkpoint_manifest_path().read_text(encoding="utf-8"))
+
+    assert scorer.call_count == 220
+    assert checkpoint_manifest["status"] == "complete"
+    assert checkpoint_manifest["total_batches"] == 11
+    assert checkpoint_manifest["cache_stats"]["reused_cached_rows"] >= 200
+
+
+def test_build_ollama_guarded_exports_recomputes_when_real_scoring_input_changes(tmp_path):
+    config = _temp_config(
+        tmp_path,
+        ollama_guarded_checkpoint_rows=20,
+        ollama_guarded_min_article_scope_prob=0.0,
+        ollama_guarded_model_name="fake-guarded",
+    )
+    _normalized_df().to_parquet(config.normalized_path(), index=False)
+    _tagged_df().to_parquet(config.tagged_path(), index=False)
+    scorer = _CountingGuardedRawResponse()
+
+    build_ollama_guarded_feature_exports(config=config, raw_response_fn=scorer)
+    assert scorer.call_count == 3
+
+    config.ollama_guarded_field_set = "full5"
+    build_ollama_guarded_feature_exports(config=config, raw_response_fn=scorer)
+    checkpoint_manifest = json.loads(config.ollama_guarded_checkpoint_manifest_path().read_text(encoding="utf-8"))
+
+    assert scorer.call_count == 6
+    assert checkpoint_manifest["status"] == "complete"
+    assert checkpoint_manifest["cache_stats"]["newly_scored_rows"] == 3
 
 
 def test_build_phobert_forward_looking_teacher_labels_reconstructs_article_ids_from_cache_days(tmp_path):

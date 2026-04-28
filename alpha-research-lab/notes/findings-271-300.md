@@ -373,7 +373,7 @@ Why it matters:
 - the full tagged universe still projects to a multi-day local run even after
   prompt trimming, so BERT-gated priority backfills are the sane default
 
-Current operational state:
+Session 179 operational state:
 - the guarded Ollama production defaults now use the event-only prompt
 - a priority backfill is running in tmux session `ollama_guarded_backfill`
 - current gate:
@@ -392,3 +392,250 @@ Limit:
 
 Source sessions:
 - `notes/session_179_log.md`
+
+## F283: The Current Evergreen Queue Should Not Reopen Solved Binary-Head Or Daily-C5 Questions While The Ollama Residual Backfill Is The Active Heavy Job (2026-04-28, Session 182)
+
+Finding:
+- the current GPU-heavy slot is occupied by the guarded Ollama residual
+  backfill, so the next evergreen step should not launch another local-model
+  train or broad data rebuild
+- existing saved artifacts already resolve several open-looking queue items:
+  - H340 passed as the preferred daily buy-volume-pressure rewrite of bullish
+    `C5`
+  - H341 failed as an exec-rate stack on top of H340, so more same-contract
+    daily stacking is not the next useful branch
+  - H342 left pooled PhoBERT sentiment mixed / not promoted as a standalone
+    alpha signal, with best PhoBERT sentiment avg IC only `+0.0082`
+- the repaired PhoBERT `article_scope` and `source_type` heads are complete,
+  so binary-head training is no longer an immediate queue item
+
+Why it matters:
+- while the long Ollama job runs, useful lab evolution is mostly memory repair,
+  artifact synthesis, and bounded follow-through design using already saved
+  outputs
+- the next real news experiment should wait for the local residual surface,
+  then aggregate and audit the combined local news surface rather than
+  overtraining more BERT heads or reopening hosted LLM cache fill
+- the daily side-channel branch should use H340 as the current C5 form and move
+  only to a distinct official-source bridge if it continues
+
+Session 182 next actions, later superseded by Session 183 after the Ollama
+runner was stopped:
+- watch `artifacts/job_status/ollama_guarded_publish.json` and the checkpoint
+  manifest until the BERT-gated Ollama residual backfill completes or needs
+  safe intervention
+- after completion, run the local-news aggregate and downstream audit:
+  `python -m research_pipelines.news_features.core.aggregate_daily_features --sources phobert phobert_forward_looking ollama_guarded`
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_182_log.md`
+
+## F284: Source-Conditioned PhoBERT Sentiment Is Useful Offline Evidence, But It Fails Standalone Promotion On 2025 Confirmation (2026-04-28, Session 183)
+
+Finding:
+- H343 tested the already-built PhoBERT sentiment, forward-looking,
+  article-scope, and source-type ticker-day surfaces without restarting
+  Ollama or touching `2026`
+- direct semantic-head intensity did not clear the standalone gate:
+  - forward-looking 1d probability sum avg IC `+0.0062`
+  - article-scope stock-news 1d probability sum avg IC `+0.0082`
+  - source-type official/regulatory 1d probability sum avg IC `+0.0071`
+- conditioned sentiment was stronger:
+  - best row `h343_sentiment_x_official`
+  - avg IC `+0.0125`
+  - positive years `9 / 10`
+  - S1 correlation `-0.0498`
+  - coverage `22.48%`
+- H344 then fixed that H343 winner and applied the stricter split:
+  - dev `2016-2022`: `+0.0143`
+  - validation `2023-2024`: `+0.0146`
+  - confirmation `2025`: `-0.0042`
+
+Why it matters:
+- the new PhoBERT `source_type` head does add useful routing information when
+  combined with sentiment; this partially answers the downstream usefulness
+  question from F281
+- the effect is not robust enough to promote as a standalone signal because
+  the one-shot confirmation year is non-positive
+- the honest use is as an offline transform candidate in the later combined
+  local-news audit, not another BERT-only tuning branch
+
+Current next actions:
+- keep `h343_sentiment_x_official` as a candidate transform for the combined
+  local-news audit after the Ollama event-family residual is available
+- do not tune more BERT-only sentiment variants under the current evidence
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_183_log.md`
+
+## F285: Foreign-Flow Accumulation Change-Points Do Not Rescue H95 As A Standalone Signal (2026-04-28, Session 184)
+
+Finding:
+- H345 tested the queued distinct H95 continuation after raw CafeF
+  foreign-flow ranks, simple participation/room-scarcity conditioning, and
+  room-residual discontinuities failed
+- the test used a small predeclared 2015-2025 feature set:
+  - 20d and 60d foreign net accumulation ranks
+  - 20d-vs-prior-20d accumulation acceleration
+  - 20d and 60d foreign ownership percentage changes
+  - 20d volume-normalized room-scarcity change
+- no feature cleared the unchanged dev / validation / confirmation gate
+- the best row was `xs_ff_room_scarcity_delta_20d_volnorm_rank`:
+  - dev IC `+0.0020`
+  - validation IC `+0.0024`
+  - confirmation IC `+0.0086`
+  - S1 correlation `-0.0023`
+  - dev directional years `4 / 8`
+
+Why it matters:
+- CafeF foreign-flow remains a usable historical source, but the standalone
+  alpha path is now much weaker after four negative screens:
+  - raw ranks failed in H327
+  - simple conditioning failed in H328
+  - room-residual discontinuities failed in H333
+  - accumulation / ownership-change change-points failed in H345
+- future work should not keep tuning standalone foreign-flow windows or
+  thresholds without a changed contract
+- if H95 reopens, it should be through a distinct interaction mechanism such
+  as foreign-insider agreement, proprietary-flow conflict/agreement, or
+  sector-specific ownership pressure
+
+Current next actions:
+- do not publish a standalone CafeF foreign-flow feature
+- do not continue standalone accumulation-window tuning
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_184_log.md`
+
+## F286: The Stale OHLCV Queue Items H135/H136/H137 Are Closed Under The Current Contract (2026-04-28, Session 185)
+
+Finding:
+- the signal-library not-yet-tested queue still listed three old OHLCV ideas:
+  - H135 gap-failure exhaustion
+  - H136 sector-conditioned blow-off reversal
+  - H137 residual long-horizon reversal
+- H135 was already tested as H283:
+  - the gap-failure family was predictive, but every variant was redundant with
+    the existing C13 compression blow-off axis
+- H136 was already tested as H284:
+  - sector / ceiling conditioning did not improve the H133 compression
+    blow-off reversal state
+- H346 tested the remaining H137 idea by residualizing 90d/120d continuation
+  ranks against C11 and testing sign-flipped residual reversal features
+- H346 failed:
+  - best feature was the continuation control
+    `xs_ret_120d_resid_c11_continuation_rank`
+  - best avg IC `+0.0072`
+  - positive years `10 / 11`
+  - S1 correlation `-0.0061`
+  - 120d residual reversal IC `-0.0072`
+  - 90d residual reversal IC `-0.0063`
+
+Why it matters:
+- the old OHLCV queue should not keep sending agents back into already closed
+  gap/compression variants
+- after removing C11, the leftover long-horizon continuation residual is
+  directionally real but below the IC gate, and the reversal orientation is
+  wrong
+- future OHLCV work needs a genuinely different contract, not more small
+  variants around C11/C13
+
+Current next actions:
+- remove H135/H136/H137 from the not-yet-tested queue
+- do not publish residual long-horizon reversal as a candidate signal
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_113_log.md`
+- `notes/session_114_log.md`
+- `notes/session_185_log.md`
+
+## F287: Foreign-Flow Agreement Improves Raw C5 But Does Not Beat The H340 Order-Pressure Rewrite (2026-04-28, Session 186)
+
+Finding:
+- H347 tested the first distinct foreign-flow interaction after standalone
+  foreign-flow paths failed
+- the fixed contract was bullish `C5` insider conviction on the existing
+  5-day relative-return target, with H340 same-day buy-volume pressure as the
+  benchmark
+- every foreign-conditioned row improved raw `C5` and kept positive IC in
+  `11 / 11` years
+- the best row was `c5_gate_pos_order_and_ff_net_5d_gt_0`:
+  - avg IC `+0.0572`
+  - validation / confirmation IC `+0.0942 / +0.0376`
+  - S1 correlation `-0.0258`
+  - avg IC delta vs raw `C5`: `+0.0199`
+  - validation / confirmation IC delta vs raw `C5`: `+0.0134 / +0.0348`
+- the same best row still trailed H340:
+  - H340 avg IC `+0.0693`
+  - H340 validation / confirmation IC `+0.0980 / +0.0576`
+  - best foreign row avg IC delta vs H340: `-0.0121`
+  - best foreign row validation / confirmation delta vs H340:
+    `-0.0038 / -0.0200`
+
+Why it matters:
+- CafeF foreign flow is not useless as context: agreement with bullish insider
+  rows cleans raw `C5`
+- it is not strong enough to replace or stack on top of the current H340 daily
+  buy-volume-pressure rewrite
+- this keeps the foreign-flow branch as offline interaction evidence rather
+  than a promoted signal or a live candidate
+
+Current next actions:
+- do not tune more foreign-net windows, lags, or thresholds around `C5`
+- keep H340 as the preferred daily-state rewrite of bullish `C5`
+- if the foreign / flow branch continues, require a materially different
+  interaction such as proprietary-flow conflict/agreement or sector-specific
+  ownership pressure
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_186_log.md`
+
+## F288: Proprietary-Flow Agreement And Conflict Ranks Fail The Limited 2023-2025 Pilot (2026-04-28, Session 187)
+
+Finding:
+- H348 tested CafeF proprietary-desk flow as a distinct actor surface after
+  H347 narrowed foreign-flow agreement to offline evidence only
+- because the local proprietary archive starts on `2022-11-01`, the protocol
+  was explicitly source-limited:
+  - `2022-11` through `2022-12` warmup
+  - `2023` dev
+  - `2024` validation
+  - `2025` confirmation
+  - `2026+` excluded
+- the source is sparse but broad enough for a pilot:
+  - total raw rows `50,918`
+  - 2023-2025 proprietary-row coverage `15.58%` of the stock panel
+  - 2023 / 2024 / 2025 raw rows: `13,220 / 17,005 / 15,127`
+  - missing proprietary rows were treated as zero flow
+- no predeclared proprietary-flow or foreign/proprietary agreement/conflict
+  feature passed
+- the best feature was `xs_prop_buy_share_5d_rank`:
+  - dev IC `+0.0144`
+  - validation IC `-0.0216`
+  - confirmation IC `-0.0110`
+  - S1 correlation `-0.0143`
+- passing / near features: `0 / 0`
+
+Why it matters:
+- the local proprietary-trading archive is useful as a raw source, but the
+  first honest rank/agreement/conflict contract is unstable
+- the strongest row is a classic dev-only mirage: it clears 2023, then flips
+  negative in both 2024 and 2025
+- the flow branch should not continue by tuning proprietary-flow windows,
+  thresholds, or agreement scores on the same next-day S1 target
+
+Current next actions:
+- do not publish a proprietary-flow signal
+- do not continue proprietary-flow rank or foreign/proprietary conflict tuning
+  under this target
+- if daily side channels continue, require a different contract such as an
+  official-source bridge or sector-specific ownership pressure
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_187_log.md`

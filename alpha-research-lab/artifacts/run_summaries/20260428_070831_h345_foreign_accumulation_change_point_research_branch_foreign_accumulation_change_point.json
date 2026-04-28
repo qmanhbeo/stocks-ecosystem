@@ -1,0 +1,57 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260428_070831_h345_foreign_accumulation_change_point_details.json",
+    "feature_results": "artifacts/portfolio_baselines/20260428_070831_h345_foreign_accumulation_change_point_results.parquet",
+    "yearly_ic": "artifacts/portfolio_baselines/20260428_070831_h345_foreign_accumulation_change_point_yearly_ic.parquet"
+  },
+  "metadata": {
+    "hypothesis": "CafeF foreign-flow alpha may live in accumulation / ownership regime changes rather than raw foreign buy/sell ranks or room-residual thresholds.",
+    "protocol": {
+      "confirmation": "2025-01-01..2025-12-31",
+      "dev": "2015-01-01..2022-12-31",
+      "feature_count": 6,
+      "no_tuning_window": "2026+",
+      "validation": "2023-01-01..2024-12-31"
+    }
+  },
+  "mode": "research_branch_foreign_accumulation_change_point",
+  "name": "h345_foreign_accumulation_change_point",
+  "summary": {
+    "branch_decision": "Foreign accumulation / ownership-change features do not clear the unchanged H327/H333 gate. Do not keep tuning this as a standalone H95 signal.",
+    "predictive": {
+      "best_feature": {
+        "abs_dev_ic": 0.001949941699446549,
+        "abs_validation_ic": 0.002394326378321844,
+        "candidate_gate": false,
+        "confirmation_avg_ic": 0.008578377785095723,
+        "confirmation_n": 86427,
+        "confirmation_ok": true,
+        "corr_gate": true,
+        "corr_with_s1": -0.002269721059540709,
+        "coverage": 0.9999694030161282,
+        "dev_avg_ic": 0.001949941699446549,
+        "dev_directional_years": 4,
+        "dev_gate": false,
+        "dev_n": 563397,
+        "dev_pct_directional_years": 0.5,
+        "dev_years": 8,
+        "direction": "positive",
+        "feature": "xs_ff_room_scarcity_delta_20d_volnorm_rank",
+        "full_avg_ic": 0.0027065460299384183,
+        "full_n": 817049,
+        "near_gate_pre_confirmation": false,
+        "validation_avg_ic": 0.002394326378321844,
+        "validation_gate": false,
+        "validation_n": 167225
+      },
+      "feature_count": 6,
+      "merged_dates": 2741,
+      "merged_rows": 817074,
+      "merged_tickers": 391,
+      "near_features_pre_confirmation": [],
+      "passing_features": []
+    },
+    "verdict": "FAILED"
+  },
+  "ts": "20260428_070831"
+}

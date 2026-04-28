@@ -1,0 +1,110 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260428_085257_h348_proprietary_flow_conflict_agreement_details.json",
+    "feature_results": "artifacts/portfolio_baselines/20260428_085257_h348_proprietary_flow_conflict_agreement_results.parquet",
+    "yearly_ic": "artifacts/portfolio_baselines/20260428_085257_h348_proprietary_flow_conflict_agreement_yearly_ic.parquet"
+  },
+  "metadata": {
+    "feature_cols": [
+      "xs_prop_net_share_1d_rank",
+      "xs_prop_net_share_5d_rank",
+      "xs_prop_buy_share_5d_rank",
+      "xs_prop_sell_share_5d_rank",
+      "xs_prop_abs_activity_5d_rank",
+      "xs_prop_ff_agreement_5d_rank",
+      "xs_ff_buy_prop_sell_conflict_5d_rank",
+      "xs_prop_buy_ff_sell_conflict_5d_rank"
+    ],
+    "hypothesis": "Proprietary-desk flow may capture a distinct local institutional actor surface, especially when it agrees or conflicts with foreign flow.",
+    "protocol": {
+      "confirmation": "2025-01-01..2025-12-31",
+      "dev": "2023-01-01..2023-12-31",
+      "no_tuning_window": "2026+",
+      "promotion_note": "limited 2022+ source; pass means continue, not promote",
+      "validation": "2024-01-01..2024-12-31",
+      "warmup": "2022-11-01..2022-12-31"
+    },
+    "session": 187
+  },
+  "mode": "research_branch_proprietary_flow_conflict_agreement",
+  "name": "h348_proprietary_flow_conflict_agreement",
+  "summary": {
+    "branch_decision": "The limited-source proprietary-flow pilot did not produce a feature worth carrying forward. Do not tune proprietary-flow rank variants on this target.",
+    "predictive": {
+      "best_feature": {
+        "abs_dev_ic": 0.014378371874069864,
+        "abs_validation_ic": 0.021649341729306146,
+        "candidate_gate": false,
+        "confirmation_avg_ic": -0.010979184488407555,
+        "confirmation_n": 87117,
+        "confirmation_ok": false,
+        "corr_gate": true,
+        "corr_with_s1": -0.014320882153244627,
+        "coverage": 1.0,
+        "dev_avg_ic": 0.014378371874069864,
+        "dev_gate": true,
+        "dev_n": 84938,
+        "direction": "positive",
+        "feature": "xs_prop_buy_share_5d_rank",
+        "full_avg_ic": -0.0035254103862733736,
+        "full_n": 258375,
+        "near_gate": false,
+        "validation_avg_ic": -0.021649341729306146,
+        "validation_gate": false,
+        "validation_n": 86320
+      },
+      "feature_count": 8,
+      "merged_dates": 748,
+      "merged_rows": 258375,
+      "merged_tickers": 394,
+      "near_features": [],
+      "passing_features": []
+    },
+    "protocol": {
+      "confirmation": "2025-01-01..2025-12-31",
+      "dev": "2023-01-01..2023-12-31",
+      "no_tuning_window": "2026+",
+      "promotion_note": "limited 2022+ source; pass means continue, not promote",
+      "validation": "2024-01-01..2024-12-31",
+      "warmup": "2022-11-01..2022-12-31"
+    },
+    "source": {
+      "by_year": [
+        {
+          "dates": 249,
+          "nonzero_net_rows": 13138,
+          "rows": 13220,
+          "tickers": 302,
+          "year": 2023
+        },
+        {
+          "dates": 250,
+          "nonzero_net_rows": 16707,
+          "rows": 17005,
+          "tickers": 207,
+          "year": 2024
+        },
+        {
+          "dates": 249,
+          "nonzero_net_rows": 14635,
+          "rows": 15127,
+          "tickers": 312,
+          "year": 2025
+        }
+      ],
+      "missing_prop_rows_are_treated_as_zero": true,
+      "predictive_window": "2023-01-01..2025-12-31",
+      "prop_date_max": "2026-04-09T00:00:00",
+      "prop_date_min": "2022-11-01T00:00:00",
+      "prop_path": "data/proprietary_trading/cafef/proprietary_trading_daily.parquet",
+      "prop_rows_eval": 45352,
+      "prop_rows_total": 50918,
+      "prop_tickers_total": 343,
+      "row_coverage_eval": 0.15581348988121427,
+      "stock_rows_eval": 290944,
+      "tickers_with_any_prop_eval": 339
+    },
+    "verdict": "FAILED"
+  },
+  "ts": "20260428_085257"
+}

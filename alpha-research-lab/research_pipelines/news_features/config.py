@@ -100,7 +100,7 @@ class NewsFeaturesConfig:
     ollama_guarded_max_body_chars: int = 0
     ollama_guarded_max_body_words: int = 300
     ollama_guarded_stop_after_each_call: bool = False
-    ollama_guarded_min_article_scope_prob: float = 0.0
+    ollama_guarded_min_article_scope_prob: float = 0.28
     ollama_guarded_min_source_type_prob: float = 0.0
     ollama_guarded_checkpoint_rows: int = 20
     feature_prefix: str = "news_"
@@ -174,6 +174,8 @@ class NewsFeaturesConfig:
     ollama_guarded_checkpoint_dirname: str = "ollama_guarded_checkpoint"
     ollama_guarded_checkpoint_manifest_filename: str = "ollama_guarded_checkpoint_manifest.json"
     ollama_guarded_input_manifest_filename: str = "ollama_guarded_input_manifest.json"
+    ollama_guarded_score_cache_dirname: str = "ollama_guarded_score_cache"
+    ollama_guarded_score_cache_manifest_filename: str = "ollama_guarded_score_cache_manifest.json"
 
     def ensure_directories(self) -> None:
         directories = (
@@ -189,6 +191,7 @@ class NewsFeaturesConfig:
             self.phobert_checkpoint_dir(),
             self.phobert_forward_looking_publish_checkpoint_dir(),
             self.ollama_guarded_checkpoint_dir(),
+            self.ollama_guarded_score_cache_root_dir(),
             self.phobert_forward_looking_model_artifacts_dir(),
             self.job_status_dir(),
         )
@@ -513,6 +516,22 @@ class NewsFeaturesConfig:
 
     def ollama_guarded_checkpoint_shard_path(self, batch_index: int) -> Path:
         return self.ollama_guarded_checkpoint_dir() / f"article_shard_{int(batch_index):06d}.parquet"
+
+    def ollama_guarded_score_cache_root_dir(self) -> Path:
+        return self.datasets_dir / self.ollama_guarded_score_cache_dirname
+
+    def ollama_guarded_score_cache_dir(self, score_signature_hash: str) -> Path:
+        return self.ollama_guarded_score_cache_root_dir() / str(score_signature_hash)
+
+    def ollama_guarded_score_cache_manifest_path(self, score_signature_hash: str) -> Path:
+        return self.ollama_guarded_score_cache_dir(score_signature_hash) / (
+            self.ollama_guarded_score_cache_manifest_filename
+        )
+
+    def ollama_guarded_score_cache_shard_path(self, score_signature_hash: str, shard_index: int) -> Path:
+        return self.ollama_guarded_score_cache_dir(score_signature_hash) / (
+            f"score_shard_{int(shard_index):06d}.parquet"
+        )
 
     def combined_dataset_path(self) -> Path:
         return self.datasets_dir / self.combined_dataset_filename

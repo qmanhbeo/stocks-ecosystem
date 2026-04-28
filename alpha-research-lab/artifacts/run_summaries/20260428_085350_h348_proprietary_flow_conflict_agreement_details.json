@@ -1,0 +1,644 @@
+{
+  "features": [
+    {
+      "abs_dev_ic": 0.014378371874069864,
+      "abs_validation_ic": 0.021649341729306146,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -0.010979184488407555,
+      "confirmation_n": 87117,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.014320882153244627,
+      "coverage": 1.0,
+      "dev_avg_ic": 0.014378371874069864,
+      "dev_gate": true,
+      "dev_n": 84938,
+      "direction": "positive",
+      "feature": "xs_prop_buy_share_5d_rank",
+      "full_avg_ic": -0.0035254103862733736,
+      "full_n": 258375,
+      "near_gate": false,
+      "validation_avg_ic": -0.021649341729306146,
+      "validation_gate": false,
+      "validation_n": 86320
+    },
+    {
+      "abs_dev_ic": 0.010918519003226549,
+      "abs_validation_ic": 0.021468106323928354,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.0007327062565318902,
+      "confirmation_n": 87117,
+      "confirmation_ok": false,
+      "corr_gate": true,
+      "corr_with_s1": -0.0033774545603253822,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.010918519003226549,
+      "dev_gate": true,
+      "dev_n": 84938,
+      "direction": "negative",
+      "feature": "xs_prop_net_share_1d_rank",
+      "full_avg_ic": 0.004831166077879165,
+      "full_n": 258375,
+      "near_gate": false,
+      "validation_avg_ic": 0.021468106323928354,
+      "validation_gate": false,
+      "validation_n": 86320
+    },
+    {
+      "abs_dev_ic": 0.0146237489730308,
+      "abs_validation_ic": 0.021244976193965603,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.00030085617725833725,
+      "confirmation_n": 87117,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.018289120730466055,
+      "coverage": 1.0,
+      "dev_avg_ic": 0.0146237489730308,
+      "dev_gate": true,
+      "dev_n": 84938,
+      "direction": "positive",
+      "feature": "xs_prop_abs_activity_5d_rank",
+      "full_avg_ic": 0.001686896803794894,
+      "full_n": 258375,
+      "near_gate": false,
+      "validation_avg_ic": -0.021244976193965603,
+      "validation_gate": false,
+      "validation_n": 86320
+    },
+    {
+      "abs_dev_ic": 0.009761421625110372,
+      "abs_validation_ic": 0.01894664851675524,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -0.004974680112769138,
+      "confirmation_n": 87117,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.000728266573808073,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.009761421625110372,
+      "dev_gate": false,
+      "dev_n": 84938,
+      "direction": "negative",
+      "feature": "xs_prop_net_share_5d_rank",
+      "full_avg_ic": -0.0018328878845735698,
+      "full_n": 258375,
+      "near_gate": false,
+      "validation_avg_ic": 0.01894664851675524,
+      "validation_gate": false,
+      "validation_n": 86320
+    },
+    {
+      "abs_dev_ic": 0.0010077211283369331,
+      "abs_validation_ic": 0.015811013068437952,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -0.0021793301652418464,
+      "confirmation_n": 87117,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": 0.028472242244678696,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.0010077211283369331,
+      "dev_gate": false,
+      "dev_n": 84938,
+      "direction": "negative",
+      "feature": "xs_prop_buy_ff_sell_conflict_5d_rank",
+      "full_avg_ic": 0.004319343378880939,
+      "full_n": 258375,
+      "near_gate": false,
+      "validation_avg_ic": 0.015811013068437952,
+      "validation_gate": false,
+      "validation_n": 86320
+    },
+    {
+      "abs_dev_ic": 0.012913944578912989,
+      "abs_validation_ic": 0.01487906113119961,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.005967575187098563,
+      "confirmation_n": 87117,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.01177169163702986,
+      "coverage": 1.0,
+      "dev_avg_ic": 0.012913944578912989,
+      "dev_gate": true,
+      "dev_n": 84938,
+      "direction": "positive",
+      "feature": "xs_prop_sell_share_5d_rank",
+      "full_avg_ic": 0.0034907367513043876,
+      "full_n": 258375,
+      "near_gate": false,
+      "validation_avg_ic": -0.01487906113119961,
+      "validation_gate": false,
+      "validation_n": 86320
+    },
+    {
+      "abs_dev_ic": 0.0022205189373184354,
+      "abs_validation_ic": 0.011105407159347384,
+      "candidate_gate": false,
+      "confirmation_avg_ic": 0.0019662176773347557,
+      "confirmation_n": 87117,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.02685811280002097,
+      "coverage": 1.0,
+      "dev_avg_ic": 0.0022205189373184354,
+      "dev_gate": false,
+      "dev_n": 84938,
+      "direction": "positive",
+      "feature": "xs_ff_buy_prop_sell_conflict_5d_rank",
+      "full_avg_ic": -0.002182752682075739,
+      "full_n": 258375,
+      "near_gate": false,
+      "validation_avg_ic": -0.011105407159347384,
+      "validation_gate": false,
+      "validation_n": 86320
+    },
+    {
+      "abs_dev_ic": 0.00019750361082386967,
+      "abs_validation_ic": 0.002204071486931209,
+      "candidate_gate": false,
+      "confirmation_avg_ic": -0.00020115847955990446,
+      "confirmation_n": 87117,
+      "confirmation_ok": true,
+      "corr_gate": true,
+      "corr_with_s1": -0.026123689200737748,
+      "coverage": 1.0,
+      "dev_avg_ic": -0.00019750361082386967,
+      "dev_gate": false,
+      "dev_n": 84938,
+      "direction": "negative",
+      "feature": "xs_prop_ff_agreement_5d_rank",
+      "full_avg_ic": -0.0005297345961381049,
+      "full_n": 258375,
+      "near_gate": false,
+      "validation_avg_ic": 0.002204071486931209,
+      "validation_gate": false,
+      "validation_n": 86320
+    }
+  ],
+  "summary": {
+    "branch_decision": "The limited-source proprietary-flow pilot did not produce a feature worth carrying forward. Do not tune proprietary-flow rank variants on this target.",
+    "predictive": {
+      "best_feature": {
+        "abs_dev_ic": 0.014378371874069864,
+        "abs_validation_ic": 0.021649341729306146,
+        "candidate_gate": false,
+        "confirmation_avg_ic": -0.010979184488407555,
+        "confirmation_n": 87117,
+        "confirmation_ok": false,
+        "corr_gate": true,
+        "corr_with_s1": -0.014320882153244627,
+        "coverage": 1.0,
+        "dev_avg_ic": 0.014378371874069864,
+        "dev_gate": true,
+        "dev_n": 84938,
+        "direction": "positive",
+        "feature": "xs_prop_buy_share_5d_rank",
+        "full_avg_ic": -0.0035254103862733736,
+        "full_n": 258375,
+        "near_gate": false,
+        "validation_avg_ic": -0.021649341729306146,
+        "validation_gate": false,
+        "validation_n": 86320
+      },
+      "feature_count": 8,
+      "merged_dates": 748,
+      "merged_rows": 258375,
+      "merged_tickers": 394,
+      "near_features": [],
+      "passing_features": []
+    },
+    "protocol": {
+      "confirmation": "2025-01-01..2025-12-31",
+      "dev": "2023-01-01..2023-12-31",
+      "no_tuning_window": "2026+",
+      "promotion_note": "limited 2022+ source; pass means continue, not promote",
+      "validation": "2024-01-01..2024-12-31",
+      "warmup": "2022-11-01..2022-12-31"
+    },
+    "source": {
+      "by_year": [
+        {
+          "dates": 249,
+          "nonzero_net_rows": 13138,
+          "rows": 13220,
+          "tickers": 302,
+          "year": 2023
+        },
+        {
+          "dates": 250,
+          "nonzero_net_rows": 16707,
+          "rows": 17005,
+          "tickers": 207,
+          "year": 2024
+        },
+        {
+          "dates": 249,
+          "nonzero_net_rows": 14635,
+          "rows": 15127,
+          "tickers": 312,
+          "year": 2025
+        }
+      ],
+      "missing_prop_rows_are_treated_as_zero": true,
+      "predictive_window": "2023-01-01..2025-12-31",
+      "prop_date_max": "2026-04-09T00:00:00",
+      "prop_date_min": "2022-11-01T00:00:00",
+      "prop_path": "/home/manh/stocks-ecosystem/data/proprietary_trading/cafef/proprietary_trading_daily.parquet",
+      "prop_rows_eval": 45352,
+      "prop_rows_total": 50918,
+      "prop_tickers_total": 343,
+      "row_coverage_eval": 0.15581348988121427,
+      "stock_rows_eval": 290944,
+      "tickers_with_any_prop_eval": 339
+    },
+    "verdict": "FAILED"
+  },
+  "yearly_ic": [
+    {
+      "feature": "xs_prop_net_share_1d_rank",
+      "ic": -0.010918519003226549,
+      "n": 84938,
+      "p_value": 0.001461836637495324,
+      "phase": "dev_2023",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_net_share_1d_rank",
+      "ic": 0.021468106323928354,
+      "n": 86320,
+      "p_value": 2.826236796923537e-10,
+      "phase": "validation_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_net_share_1d_rank",
+      "ic": 0.0007327062565318902,
+      "n": 87117,
+      "p_value": 0.8287854810885287,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_net_share_1d_rank",
+      "ic": -0.010918519003226549,
+      "n": 84938,
+      "p_value": 0.001461836637495324,
+      "phase": "full_2023_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_net_share_1d_rank",
+      "ic": 0.021468106323928354,
+      "n": 86320,
+      "p_value": 2.826236796923537e-10,
+      "phase": "full_2023_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_net_share_1d_rank",
+      "ic": 0.0007327062565318902,
+      "n": 87117,
+      "p_value": 0.8287854810885287,
+      "phase": "full_2023_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_net_share_5d_rank",
+      "ic": -0.009761421625110372,
+      "n": 84938,
+      "p_value": 0.0044424421069937155,
+      "phase": "dev_2023",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_net_share_5d_rank",
+      "ic": 0.01894664851675524,
+      "n": 86320,
+      "p_value": 2.5917030283593655e-08,
+      "phase": "validation_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_net_share_5d_rank",
+      "ic": -0.004974680112769138,
+      "n": 87117,
+      "p_value": 0.1420243373414626,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_net_share_5d_rank",
+      "ic": -0.009761421625110372,
+      "n": 84938,
+      "p_value": 0.0044424421069937155,
+      "phase": "full_2023_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_net_share_5d_rank",
+      "ic": 0.01894664851675524,
+      "n": 86320,
+      "p_value": 2.5917030283593655e-08,
+      "phase": "full_2023_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_net_share_5d_rank",
+      "ic": -0.004974680112769138,
+      "n": 87117,
+      "p_value": 0.1420243373414626,
+      "phase": "full_2023_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_buy_share_5d_rank",
+      "ic": 0.014378371874069864,
+      "n": 84938,
+      "p_value": 2.7821095512387482e-05,
+      "phase": "dev_2023",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_buy_share_5d_rank",
+      "ic": -0.021649341729306146,
+      "n": 86320,
+      "p_value": 2.0006963175426838e-10,
+      "phase": "validation_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_buy_share_5d_rank",
+      "ic": -0.010979184488407555,
+      "n": 87117,
+      "p_value": 0.0011926916305904033,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_buy_share_5d_rank",
+      "ic": 0.014378371874069864,
+      "n": 84938,
+      "p_value": 2.7821095512387482e-05,
+      "phase": "full_2023_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_buy_share_5d_rank",
+      "ic": -0.021649341729306146,
+      "n": 86320,
+      "p_value": 2.0006963175426838e-10,
+      "phase": "full_2023_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_buy_share_5d_rank",
+      "ic": -0.010979184488407555,
+      "n": 87117,
+      "p_value": 0.0011926916305904033,
+      "phase": "full_2023_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_sell_share_5d_rank",
+      "ic": 0.012913944578912989,
+      "n": 84938,
+      "p_value": 0.00016737910891505753,
+      "phase": "dev_2023",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_sell_share_5d_rank",
+      "ic": -0.01487906113119961,
+      "n": 86320,
+      "p_value": 1.2329056602021068e-05,
+      "phase": "validation_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_sell_share_5d_rank",
+      "ic": 0.005967575187098563,
+      "n": 87117,
+      "p_value": 0.07817827217616942,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_sell_share_5d_rank",
+      "ic": 0.012913944578912989,
+      "n": 84938,
+      "p_value": 0.00016737910891505753,
+      "phase": "full_2023_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_sell_share_5d_rank",
+      "ic": -0.01487906113119961,
+      "n": 86320,
+      "p_value": 1.2329056602021068e-05,
+      "phase": "full_2023_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_sell_share_5d_rank",
+      "ic": 0.005967575187098563,
+      "n": 87117,
+      "p_value": 0.07817827217616942,
+      "phase": "full_2023_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_abs_activity_5d_rank",
+      "ic": 0.0146237489730308,
+      "n": 84938,
+      "p_value": 2.0248868534483446e-05,
+      "phase": "dev_2023",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_abs_activity_5d_rank",
+      "ic": -0.021244976193965603,
+      "n": 86320,
+      "p_value": 4.307846726519122e-10,
+      "phase": "validation_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_abs_activity_5d_rank",
+      "ic": 0.00030085617725833725,
+      "n": 87117,
+      "p_value": 0.9292422874977262,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_abs_activity_5d_rank",
+      "ic": 0.0146237489730308,
+      "n": 84938,
+      "p_value": 2.0248868534483446e-05,
+      "phase": "full_2023_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_abs_activity_5d_rank",
+      "ic": -0.021244976193965603,
+      "n": 86320,
+      "p_value": 4.307846726519122e-10,
+      "phase": "full_2023_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_abs_activity_5d_rank",
+      "ic": 0.00030085617725833725,
+      "n": 87117,
+      "p_value": 0.9292422874977262,
+      "phase": "full_2023_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_ff_agreement_5d_rank",
+      "ic": -0.00019750361082386967,
+      "n": 84938,
+      "p_value": 0.9540992301419486,
+      "phase": "dev_2023",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_ff_agreement_5d_rank",
+      "ic": 0.002204071486931209,
+      "n": 86320,
+      "p_value": 0.5172738046627697,
+      "phase": "validation_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_ff_agreement_5d_rank",
+      "ic": -0.00020115847955990446,
+      "n": 87117,
+      "p_value": 0.9526556082220414,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_ff_agreement_5d_rank",
+      "ic": -0.00019750361082386967,
+      "n": 84938,
+      "p_value": 0.9540992301419486,
+      "phase": "full_2023_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_ff_agreement_5d_rank",
+      "ic": 0.002204071486931209,
+      "n": 86320,
+      "p_value": 0.5172738046627697,
+      "phase": "full_2023_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_ff_agreement_5d_rank",
+      "ic": -0.00020115847955990446,
+      "n": 87117,
+      "p_value": 0.9526556082220414,
+      "phase": "full_2023_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_buy_prop_sell_conflict_5d_rank",
+      "ic": 0.0022205189373184354,
+      "n": 84938,
+      "p_value": 0.5175399930641258,
+      "phase": "dev_2023",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_buy_prop_sell_conflict_5d_rank",
+      "ic": -0.011105407159347384,
+      "n": 86320,
+      "p_value": 0.0011029731289025914,
+      "phase": "validation_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_buy_prop_sell_conflict_5d_rank",
+      "ic": 0.0019662176773347557,
+      "n": 87117,
+      "p_value": 0.5616901017202367,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_ff_buy_prop_sell_conflict_5d_rank",
+      "ic": 0.0022205189373184354,
+      "n": 84938,
+      "p_value": 0.5175399930641258,
+      "phase": "full_2023_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_ff_buy_prop_sell_conflict_5d_rank",
+      "ic": -0.011105407159347384,
+      "n": 86320,
+      "p_value": 0.0011029731289025914,
+      "phase": "full_2023_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_ff_buy_prop_sell_conflict_5d_rank",
+      "ic": 0.0019662176773347557,
+      "n": 87117,
+      "p_value": 0.5616901017202367,
+      "phase": "full_2023_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_buy_ff_sell_conflict_5d_rank",
+      "ic": -0.0010077211283369331,
+      "n": 84938,
+      "p_value": 0.7689968949632809,
+      "phase": "dev_2023",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_buy_ff_sell_conflict_5d_rank",
+      "ic": 0.015811013068437952,
+      "n": 86320,
+      "p_value": 3.3918689145187354e-06,
+      "phase": "validation_2024",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_buy_ff_sell_conflict_5d_rank",
+      "ic": -0.0021793301652418464,
+      "n": 87117,
+      "p_value": 0.5200724881973913,
+      "phase": "confirmation_2025",
+      "year": 2025
+    },
+    {
+      "feature": "xs_prop_buy_ff_sell_conflict_5d_rank",
+      "ic": -0.0010077211283369331,
+      "n": 84938,
+      "p_value": 0.7689968949632809,
+      "phase": "full_2023_2025",
+      "year": 2023
+    },
+    {
+      "feature": "xs_prop_buy_ff_sell_conflict_5d_rank",
+      "ic": 0.015811013068437952,
+      "n": 86320,
+      "p_value": 3.3918689145187354e-06,
+      "phase": "full_2023_2025",
+      "year": 2024
+    },
+    {
+      "feature": "xs_prop_buy_ff_sell_conflict_5d_rank",
+      "ic": -0.0021793301652418464,
+      "n": 87117,
+      "p_value": 0.5200724881973913,
+      "phase": "full_2023_2025",
+      "year": 2025
+    }
+  ]
+}

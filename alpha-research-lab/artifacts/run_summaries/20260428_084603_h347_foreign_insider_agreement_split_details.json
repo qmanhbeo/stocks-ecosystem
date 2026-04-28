@@ -1,0 +1,1651 @@
+{
+  "candidate_definitions": {
+    "c5_gate_pos_ff_net_5d_gt_0": "Zero positive C5 rows unless same-day 5d foreign net-volume share is positive.",
+    "c5_gate_pos_ff_net_5d_lag1_gt_0": "Zero positive C5 rows unless prior-day 5d foreign net-volume share is positive.",
+    "c5_gate_pos_order_and_ff_net_5d_gt_0": "Zero positive C5 rows unless both H340 order-pressure and foreign net 5d support are positive.",
+    "c5_raw": "Standalone C5 baseline.",
+    "c5_scale_pos_ff_net_5d_cap_dev_median": "Scale positive C5 rows by same-day 5d foreign net-volume share capped at the dev positive median.",
+    "c5_scale_pos_ff_net_5d_lag1_cap_dev_median": "Scale positive C5 rows by prior-day 5d foreign net-volume share capped at the dev positive median.",
+    "c5_scale_pos_order_x_ff_net_5d_min_cap": "Scale positive C5 rows by the weaker of H340 order support and foreign net 5d support.",
+    "h340_c5_scale_pos_buy_vol_ratio_cap_dev_median": "Current preferred H340 same-day buy-volume pressure rewrite."
+  },
+  "decision_thresholds": {
+    "max_abs_corr_with_s1": 0.3,
+    "min_phase_rows": 100,
+    "mixed_requires": "avg, validation, and confirmation IC deltas all positive versus raw C5 but not H340",
+    "pass_requires": "avg, validation, and confirmation IC deltas all positive versus H340 benchmark"
+  },
+  "mixed_rows": [
+    {
+      "avg_ic": 0.057213843548583186,
+      "avg_ic_delta_vs_h340": -0.012108516087135639,
+      "avg_ic_delta_vs_raw_c5": 0.019850173048968647,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.020012379172007135,
+      "confirmation_ic_delta_vs_raw_c5": 0.03477553562996848,
+      "confirmation_pooled_ic": 0.03760784134958227,
+      "confirmation_rows": 1175,
+      "corr_with_s1": -0.025817516423938768,
+      "coverage_pct": 2.3063891577928364,
+      "dev_pooled_ic": 0.04347589600248633,
+      "dev_rows": 15269,
+      "fire_rows": 19060,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.03760784134958227,
+          "rows": 1175
+        },
+        "dev": {
+          "pooled_ic": 0.04347589600248633,
+          "rows": 15269
+        },
+        "validation": {
+          "pooled_ic": 0.09424433545894731,
+          "rows": 2616
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_gate_pos_order_and_ff_net_5d_gt_0",
+      "validation_ic_delta_vs_h340": -0.0037668835791175442,
+      "validation_ic_delta_vs_raw_c5": 0.013440019629732125,
+      "validation_pooled_ic": 0.09424433545894731,
+      "validation_rows": 2616,
+      "yearly": [
+        {
+          "ic": 0.09886941178215979,
+          "n": 1383,
+          "year": 2015
+        },
+        {
+          "ic": 0.03836025375916707,
+          "n": 1705,
+          "year": 2016
+        },
+        {
+          "ic": 0.006739579829662775,
+          "n": 2075,
+          "year": 2017
+        },
+        {
+          "ic": 0.021179729157656743,
+          "n": 1593,
+          "year": 2018
+        },
+        {
+          "ic": 0.07462255353381941,
+          "n": 1759,
+          "year": 2019
+        },
+        {
+          "ic": 0.07270282646218586,
+          "n": 1948,
+          "year": 2020
+        },
+        {
+          "ic": 0.04574745363531658,
+          "n": 3116,
+          "year": 2021
+        },
+        {
+          "ic": 0.039235674176816046,
+          "n": 1690,
+          "year": 2022
+        },
+        {
+          "ic": 0.1225263124066624,
+          "n": 1139,
+          "year": 2023
+        },
+        {
+          "ic": 0.07176064294138604,
+          "n": 1477,
+          "year": 2024
+        },
+        {
+          "ic": 0.03760784134958227,
+          "n": 1175,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.057565322131933445,
+      "avg_ic_delta_vs_h340": -0.01175703750378538,
+      "avg_ic_delta_vs_raw_c5": 0.020201651632318907,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.020020716955301145,
+      "confirmation_ic_delta_vs_raw_c5": 0.03476719784667447,
+      "confirmation_pooled_ic": 0.03759950356628826,
+      "confirmation_rows": 1175,
+      "corr_with_s1": -0.025648737699989144,
+      "coverage_pct": 2.3063891577928364,
+      "dev_pooled_ic": 0.04377519014919385,
+      "dev_rows": 15269,
+      "fire_rows": 19060,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.03759950356628826,
+          "rows": 1175
+        },
+        "dev": {
+          "pooled_ic": 0.04377519014919385,
+          "rows": 15269
+        },
+        "validation": {
+          "pooled_ic": 0.0942420560695406,
+          "rows": 2616
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_scale_pos_order_x_ff_net_5d_min_cap",
+      "validation_ic_delta_vs_h340": -0.0037691629685242534,
+      "validation_ic_delta_vs_raw_c5": 0.013437740240325416,
+      "validation_pooled_ic": 0.0942420560695406,
+      "validation_rows": 2616,
+      "yearly": [
+        {
+          "ic": 0.09908240674481229,
+          "n": 1383,
+          "year": 2015
+        },
+        {
+          "ic": 0.037861611257123166,
+          "n": 1705,
+          "year": 2016
+        },
+        {
+          "ic": 0.007094003224366176,
+          "n": 2075,
+          "year": 2017
+        },
+        {
+          "ic": 0.020034444388110147,
+          "n": 1593,
+          "year": 2018
+        },
+        {
+          "ic": 0.07403332979262997,
+          "n": 1759,
+          "year": 2019
+        },
+        {
+          "ic": 0.07392133360630375,
+          "n": 1948,
+          "year": 2020
+        },
+        {
+          "ic": 0.04583215190547937,
+          "n": 3116,
+          "year": 2021
+        },
+        {
+          "ic": 0.043654463016555595,
+          "n": 1690,
+          "year": 2022
+        },
+        {
+          "ic": 0.12243670197210897,
+          "n": 1139,
+          "year": 2023
+        },
+        {
+          "ic": 0.07166859397749023,
+          "n": 1477,
+          "year": 2024
+        },
+        {
+          "ic": 0.03759950356628826,
+          "n": 1175,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.047322402657623636,
+      "avg_ic_delta_vs_h340": -0.02199995697809519,
+      "avg_ic_delta_vs_raw_c5": 0.009958732158009097,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.027044869625180067,
+      "confirmation_ic_delta_vs_raw_c5": 0.02774304517679555,
+      "confirmation_pooled_ic": 0.030575350896409337,
+      "confirmation_rows": 1414,
+      "corr_with_s1": -0.04458978140023237,
+      "coverage_pct": 2.628993223620523,
+      "dev_pooled_ic": 0.03137956709782535,
+      "dev_rows": 17341,
+      "fire_rows": 21726,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.030575350896409337,
+          "rows": 1414
+        },
+        "dev": {
+          "pooled_ic": 0.03137956709782535,
+          "rows": 17341
+        },
+        "validation": {
+          "pooled_ic": 0.09673934817973114,
+          "rows": 2971
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_scale_pos_ff_net_5d_cap_dev_median",
+      "validation_ic_delta_vs_h340": -0.001271870858333718,
+      "validation_ic_delta_vs_raw_c5": 0.01593503235051595,
+      "validation_pooled_ic": 0.09673934817973114,
+      "validation_rows": 2971,
+      "yearly": [
+        {
+          "ic": 0.07352011870387644,
+          "n": 1520,
+          "year": 2015
+        },
+        {
+          "ic": 0.01680691869368292,
+          "n": 1891,
+          "year": 2016
+        },
+        {
+          "ic": 0.002781529878780762,
+          "n": 2334,
+          "year": 2017
+        },
+        {
+          "ic": 0.01530440436452888,
+          "n": 1901,
+          "year": 2018
+        },
+        {
+          "ic": 0.036946621567394394,
+          "n": 2015,
+          "year": 2019
+        },
+        {
+          "ic": 0.06331159202791013,
+          "n": 2181,
+          "year": 2020
+        },
+        {
+          "ic": 0.04488836052807142,
+          "n": 3400,
+          "year": 2021
+        },
+        {
+          "ic": 0.03731817987310368,
+          "n": 2099,
+          "year": 2022
+        },
+        {
+          "ic": 0.12311909506529424,
+          "n": 1293,
+          "year": 2023
+        },
+        {
+          "ic": 0.07597425763480775,
+          "n": 1678,
+          "year": 2024
+        },
+        {
+          "ic": 0.030575350896409337,
+          "n": 1414,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.046191135234223246,
+      "avg_ic_delta_vs_h340": -0.02313122440149558,
+      "avg_ic_delta_vs_raw_c5": 0.008827464734608707,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.02707262006745603,
+      "confirmation_ic_delta_vs_raw_c5": 0.027715294734519585,
+      "confirmation_pooled_ic": 0.030547600454133374,
+      "confirmation_rows": 1414,
+      "corr_with_s1": -0.04423993950411558,
+      "coverage_pct": 2.628993223620523,
+      "dev_pooled_ic": 0.030423451945101203,
+      "dev_rows": 17341,
+      "fire_rows": 21726,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.030547600454133374,
+          "rows": 1414
+        },
+        "dev": {
+          "pooled_ic": 0.030423451945101203,
+          "rows": 17341
+        },
+        "validation": {
+          "pooled_ic": 0.09749720387918832,
+          "rows": 2971
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_gate_pos_ff_net_5d_gt_0",
+      "validation_ic_delta_vs_h340": -0.0005140151588765296,
+      "validation_ic_delta_vs_raw_c5": 0.01669288804997314,
+      "validation_pooled_ic": 0.09749720387918832,
+      "validation_rows": 2971,
+      "yearly": [
+        {
+          "ic": 0.0717371940640517,
+          "n": 1520,
+          "year": 2015
+        },
+        {
+          "ic": 0.016782037449388592,
+          "n": 1891,
+          "year": 2016
+        },
+        {
+          "ic": 0.005301155092050183,
+          "n": 2334,
+          "year": 2017
+        },
+        {
+          "ic": 0.016080703891596274,
+          "n": 1901,
+          "year": 2018
+        },
+        {
+          "ic": 0.03566889654660312,
+          "n": 2015,
+          "year": 2019
+        },
+        {
+          "ic": 0.05989339750944503,
+          "n": 2181,
+          "year": 2020
+        },
+        {
+          "ic": 0.04496939599538729,
+          "n": 3400,
+          "year": 2021
+        },
+        {
+          "ic": 0.026389498147114856,
+          "n": 2099,
+          "year": 2022
+        },
+        {
+          "ic": 0.12505414487691788,
+          "n": 1293,
+          "year": 2023
+        },
+        {
+          "ic": 0.07567846354976743,
+          "n": 1678,
+          "year": 2024
+        },
+        {
+          "ic": 0.030547600454133374,
+          "n": 1414,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.04655260803348469,
+      "avg_ic_delta_vs_h340": -0.022769751602234135,
+      "avg_ic_delta_vs_raw_c5": 0.00918893753387015,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.03160455219572103,
+      "confirmation_ic_delta_vs_raw_c5": 0.02318336260625458,
+      "confirmation_pooled_ic": 0.02601566832586837,
+      "confirmation_rows": 1416,
+      "corr_with_s1": -0.04294754334989154,
+      "coverage_pct": 2.622458857696031,
+      "dev_pooled_ic": 0.03151853091014488,
+      "dev_rows": 17285,
+      "fire_rows": 21672,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.02601566832586837,
+          "rows": 1416
+        },
+        "dev": {
+          "pooled_ic": 0.03151853091014488,
+          "rows": 17285
+        },
+        "validation": {
+          "pooled_ic": 0.09472601158303125,
+          "rows": 2971
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_scale_pos_ff_net_5d_lag1_cap_dev_median",
+      "validation_ic_delta_vs_h340": -0.0032852074550336063,
+      "validation_ic_delta_vs_raw_c5": 0.013921695753816063,
+      "validation_pooled_ic": 0.09472601158303125,
+      "validation_rows": 2971,
+      "yearly": [
+        {
+          "ic": 0.07597870624662027,
+          "n": 1513,
+          "year": 2015
+        },
+        {
+          "ic": 0.012128369374431291,
+          "n": 1891,
+          "year": 2016
+        },
+        {
+          "ic": 0.008288786497411247,
+          "n": 2335,
+          "year": 2017
+        },
+        {
+          "ic": 0.012676091505038924,
+          "n": 1895,
+          "year": 2018
+        },
+        {
+          "ic": 0.03479646463972303,
+          "n": 2006,
+          "year": 2019
+        },
+        {
+          "ic": 0.07099457173339208,
+          "n": 2179,
+          "year": 2020
+        },
+        {
+          "ic": 0.04484442116503803,
+          "n": 3386,
+          "year": 2021
+        },
+        {
+          "ic": 0.033383997178079466,
+          "n": 2080,
+          "year": 2022
+        },
+        {
+          "ic": 0.11240775364365484,
+          "n": 1296,
+          "year": 2023
+        },
+        {
+          "ic": 0.080563858059074,
+          "n": 1675,
+          "year": 2024
+        },
+        {
+          "ic": 0.02601566832586837,
+          "n": 1416,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.045411057335176815,
+      "avg_ic_delta_vs_h340": -0.02391130230054201,
+      "avg_ic_delta_vs_raw_c5": 0.008047386835562276,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.03183862842040614,
+      "confirmation_ic_delta_vs_raw_c5": 0.022949286381569477,
+      "confirmation_pooled_ic": 0.025781592101183262,
+      "confirmation_rows": 1416,
+      "corr_with_s1": -0.04235082427639945,
+      "coverage_pct": 2.622458857696031,
+      "dev_pooled_ic": 0.030612503334490115,
+      "dev_rows": 17285,
+      "fire_rows": 21672,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.025781592101183262,
+          "rows": 1416
+        },
+        "dev": {
+          "pooled_ic": 0.030612503334490115,
+          "rows": 17285
+        },
+        "validation": {
+          "pooled_ic": 0.09549720467837261,
+          "rows": 2971
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_gate_pos_ff_net_5d_lag1_gt_0",
+      "validation_ic_delta_vs_h340": -0.002514014359692243,
+      "validation_ic_delta_vs_raw_c5": 0.014692888849157426,
+      "validation_pooled_ic": 0.09549720467837261,
+      "validation_rows": 2971,
+      "yearly": [
+        {
+          "ic": 0.07455503826284636,
+          "n": 1513,
+          "year": 2015
+        },
+        {
+          "ic": 0.011550783042015065,
+          "n": 1891,
+          "year": 2016
+        },
+        {
+          "ic": 0.010628250648538182,
+          "n": 2335,
+          "year": 2017
+        },
+        {
+          "ic": 0.01239296340806926,
+          "n": 1895,
+          "year": 2018
+        },
+        {
+          "ic": 0.03230447837323495,
+          "n": 2006,
+          "year": 2019
+        },
+        {
+          "ic": 0.06822677294089485,
+          "n": 2179,
+          "year": 2020
+        },
+        {
+          "ic": 0.044957352687977896,
+          "n": 3386,
+          "year": 2021
+        },
+        {
+          "ic": 0.0244487614757297,
+          "n": 2080,
+          "year": 2022
+        },
+        {
+          "ic": 0.11413431549758765,
+          "n": 1296,
+          "year": 2023
+        },
+        {
+          "ic": 0.08054132224886781,
+          "n": 1675,
+          "year": 2024
+        },
+        {
+          "ic": 0.025781592101183262,
+          "n": 1416,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    }
+  ],
+  "pass_rows": [],
+  "results": [
+    {
+      "avg_ic": 0.057213843548583186,
+      "avg_ic_delta_vs_h340": -0.012108516087135639,
+      "avg_ic_delta_vs_raw_c5": 0.019850173048968647,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.020012379172007135,
+      "confirmation_ic_delta_vs_raw_c5": 0.03477553562996848,
+      "confirmation_pooled_ic": 0.03760784134958227,
+      "confirmation_rows": 1175,
+      "corr_with_s1": -0.025817516423938768,
+      "coverage_pct": 2.3063891577928364,
+      "dev_pooled_ic": 0.04347589600248633,
+      "dev_rows": 15269,
+      "fire_rows": 19060,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.03760784134958227,
+          "rows": 1175
+        },
+        "dev": {
+          "pooled_ic": 0.04347589600248633,
+          "rows": 15269
+        },
+        "validation": {
+          "pooled_ic": 0.09424433545894731,
+          "rows": 2616
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_gate_pos_order_and_ff_net_5d_gt_0",
+      "validation_ic_delta_vs_h340": -0.0037668835791175442,
+      "validation_ic_delta_vs_raw_c5": 0.013440019629732125,
+      "validation_pooled_ic": 0.09424433545894731,
+      "validation_rows": 2616,
+      "yearly": [
+        {
+          "ic": 0.09886941178215979,
+          "n": 1383,
+          "year": 2015
+        },
+        {
+          "ic": 0.03836025375916707,
+          "n": 1705,
+          "year": 2016
+        },
+        {
+          "ic": 0.006739579829662775,
+          "n": 2075,
+          "year": 2017
+        },
+        {
+          "ic": 0.021179729157656743,
+          "n": 1593,
+          "year": 2018
+        },
+        {
+          "ic": 0.07462255353381941,
+          "n": 1759,
+          "year": 2019
+        },
+        {
+          "ic": 0.07270282646218586,
+          "n": 1948,
+          "year": 2020
+        },
+        {
+          "ic": 0.04574745363531658,
+          "n": 3116,
+          "year": 2021
+        },
+        {
+          "ic": 0.039235674176816046,
+          "n": 1690,
+          "year": 2022
+        },
+        {
+          "ic": 0.1225263124066624,
+          "n": 1139,
+          "year": 2023
+        },
+        {
+          "ic": 0.07176064294138604,
+          "n": 1477,
+          "year": 2024
+        },
+        {
+          "ic": 0.03760784134958227,
+          "n": 1175,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.057565322131933445,
+      "avg_ic_delta_vs_h340": -0.01175703750378538,
+      "avg_ic_delta_vs_raw_c5": 0.020201651632318907,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.020020716955301145,
+      "confirmation_ic_delta_vs_raw_c5": 0.03476719784667447,
+      "confirmation_pooled_ic": 0.03759950356628826,
+      "confirmation_rows": 1175,
+      "corr_with_s1": -0.025648737699989144,
+      "coverage_pct": 2.3063891577928364,
+      "dev_pooled_ic": 0.04377519014919385,
+      "dev_rows": 15269,
+      "fire_rows": 19060,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.03759950356628826,
+          "rows": 1175
+        },
+        "dev": {
+          "pooled_ic": 0.04377519014919385,
+          "rows": 15269
+        },
+        "validation": {
+          "pooled_ic": 0.0942420560695406,
+          "rows": 2616
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_scale_pos_order_x_ff_net_5d_min_cap",
+      "validation_ic_delta_vs_h340": -0.0037691629685242534,
+      "validation_ic_delta_vs_raw_c5": 0.013437740240325416,
+      "validation_pooled_ic": 0.0942420560695406,
+      "validation_rows": 2616,
+      "yearly": [
+        {
+          "ic": 0.09908240674481229,
+          "n": 1383,
+          "year": 2015
+        },
+        {
+          "ic": 0.037861611257123166,
+          "n": 1705,
+          "year": 2016
+        },
+        {
+          "ic": 0.007094003224366176,
+          "n": 2075,
+          "year": 2017
+        },
+        {
+          "ic": 0.020034444388110147,
+          "n": 1593,
+          "year": 2018
+        },
+        {
+          "ic": 0.07403332979262997,
+          "n": 1759,
+          "year": 2019
+        },
+        {
+          "ic": 0.07392133360630375,
+          "n": 1948,
+          "year": 2020
+        },
+        {
+          "ic": 0.04583215190547937,
+          "n": 3116,
+          "year": 2021
+        },
+        {
+          "ic": 0.043654463016555595,
+          "n": 1690,
+          "year": 2022
+        },
+        {
+          "ic": 0.12243670197210897,
+          "n": 1139,
+          "year": 2023
+        },
+        {
+          "ic": 0.07166859397749023,
+          "n": 1477,
+          "year": 2024
+        },
+        {
+          "ic": 0.03759950356628826,
+          "n": 1175,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.047322402657623636,
+      "avg_ic_delta_vs_h340": -0.02199995697809519,
+      "avg_ic_delta_vs_raw_c5": 0.009958732158009097,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.027044869625180067,
+      "confirmation_ic_delta_vs_raw_c5": 0.02774304517679555,
+      "confirmation_pooled_ic": 0.030575350896409337,
+      "confirmation_rows": 1414,
+      "corr_with_s1": -0.04458978140023237,
+      "coverage_pct": 2.628993223620523,
+      "dev_pooled_ic": 0.03137956709782535,
+      "dev_rows": 17341,
+      "fire_rows": 21726,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.030575350896409337,
+          "rows": 1414
+        },
+        "dev": {
+          "pooled_ic": 0.03137956709782535,
+          "rows": 17341
+        },
+        "validation": {
+          "pooled_ic": 0.09673934817973114,
+          "rows": 2971
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_scale_pos_ff_net_5d_cap_dev_median",
+      "validation_ic_delta_vs_h340": -0.001271870858333718,
+      "validation_ic_delta_vs_raw_c5": 0.01593503235051595,
+      "validation_pooled_ic": 0.09673934817973114,
+      "validation_rows": 2971,
+      "yearly": [
+        {
+          "ic": 0.07352011870387644,
+          "n": 1520,
+          "year": 2015
+        },
+        {
+          "ic": 0.01680691869368292,
+          "n": 1891,
+          "year": 2016
+        },
+        {
+          "ic": 0.002781529878780762,
+          "n": 2334,
+          "year": 2017
+        },
+        {
+          "ic": 0.01530440436452888,
+          "n": 1901,
+          "year": 2018
+        },
+        {
+          "ic": 0.036946621567394394,
+          "n": 2015,
+          "year": 2019
+        },
+        {
+          "ic": 0.06331159202791013,
+          "n": 2181,
+          "year": 2020
+        },
+        {
+          "ic": 0.04488836052807142,
+          "n": 3400,
+          "year": 2021
+        },
+        {
+          "ic": 0.03731817987310368,
+          "n": 2099,
+          "year": 2022
+        },
+        {
+          "ic": 0.12311909506529424,
+          "n": 1293,
+          "year": 2023
+        },
+        {
+          "ic": 0.07597425763480775,
+          "n": 1678,
+          "year": 2024
+        },
+        {
+          "ic": 0.030575350896409337,
+          "n": 1414,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.046191135234223246,
+      "avg_ic_delta_vs_h340": -0.02313122440149558,
+      "avg_ic_delta_vs_raw_c5": 0.008827464734608707,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.02707262006745603,
+      "confirmation_ic_delta_vs_raw_c5": 0.027715294734519585,
+      "confirmation_pooled_ic": 0.030547600454133374,
+      "confirmation_rows": 1414,
+      "corr_with_s1": -0.04423993950411558,
+      "coverage_pct": 2.628993223620523,
+      "dev_pooled_ic": 0.030423451945101203,
+      "dev_rows": 17341,
+      "fire_rows": 21726,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.030547600454133374,
+          "rows": 1414
+        },
+        "dev": {
+          "pooled_ic": 0.030423451945101203,
+          "rows": 17341
+        },
+        "validation": {
+          "pooled_ic": 0.09749720387918832,
+          "rows": 2971
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_gate_pos_ff_net_5d_gt_0",
+      "validation_ic_delta_vs_h340": -0.0005140151588765296,
+      "validation_ic_delta_vs_raw_c5": 0.01669288804997314,
+      "validation_pooled_ic": 0.09749720387918832,
+      "validation_rows": 2971,
+      "yearly": [
+        {
+          "ic": 0.0717371940640517,
+          "n": 1520,
+          "year": 2015
+        },
+        {
+          "ic": 0.016782037449388592,
+          "n": 1891,
+          "year": 2016
+        },
+        {
+          "ic": 0.005301155092050183,
+          "n": 2334,
+          "year": 2017
+        },
+        {
+          "ic": 0.016080703891596274,
+          "n": 1901,
+          "year": 2018
+        },
+        {
+          "ic": 0.03566889654660312,
+          "n": 2015,
+          "year": 2019
+        },
+        {
+          "ic": 0.05989339750944503,
+          "n": 2181,
+          "year": 2020
+        },
+        {
+          "ic": 0.04496939599538729,
+          "n": 3400,
+          "year": 2021
+        },
+        {
+          "ic": 0.026389498147114856,
+          "n": 2099,
+          "year": 2022
+        },
+        {
+          "ic": 0.12505414487691788,
+          "n": 1293,
+          "year": 2023
+        },
+        {
+          "ic": 0.07567846354976743,
+          "n": 1678,
+          "year": 2024
+        },
+        {
+          "ic": 0.030547600454133374,
+          "n": 1414,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.04655260803348469,
+      "avg_ic_delta_vs_h340": -0.022769751602234135,
+      "avg_ic_delta_vs_raw_c5": 0.00918893753387015,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.03160455219572103,
+      "confirmation_ic_delta_vs_raw_c5": 0.02318336260625458,
+      "confirmation_pooled_ic": 0.02601566832586837,
+      "confirmation_rows": 1416,
+      "corr_with_s1": -0.04294754334989154,
+      "coverage_pct": 2.622458857696031,
+      "dev_pooled_ic": 0.03151853091014488,
+      "dev_rows": 17285,
+      "fire_rows": 21672,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.02601566832586837,
+          "rows": 1416
+        },
+        "dev": {
+          "pooled_ic": 0.03151853091014488,
+          "rows": 17285
+        },
+        "validation": {
+          "pooled_ic": 0.09472601158303125,
+          "rows": 2971
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_scale_pos_ff_net_5d_lag1_cap_dev_median",
+      "validation_ic_delta_vs_h340": -0.0032852074550336063,
+      "validation_ic_delta_vs_raw_c5": 0.013921695753816063,
+      "validation_pooled_ic": 0.09472601158303125,
+      "validation_rows": 2971,
+      "yearly": [
+        {
+          "ic": 0.07597870624662027,
+          "n": 1513,
+          "year": 2015
+        },
+        {
+          "ic": 0.012128369374431291,
+          "n": 1891,
+          "year": 2016
+        },
+        {
+          "ic": 0.008288786497411247,
+          "n": 2335,
+          "year": 2017
+        },
+        {
+          "ic": 0.012676091505038924,
+          "n": 1895,
+          "year": 2018
+        },
+        {
+          "ic": 0.03479646463972303,
+          "n": 2006,
+          "year": 2019
+        },
+        {
+          "ic": 0.07099457173339208,
+          "n": 2179,
+          "year": 2020
+        },
+        {
+          "ic": 0.04484442116503803,
+          "n": 3386,
+          "year": 2021
+        },
+        {
+          "ic": 0.033383997178079466,
+          "n": 2080,
+          "year": 2022
+        },
+        {
+          "ic": 0.11240775364365484,
+          "n": 1296,
+          "year": 2023
+        },
+        {
+          "ic": 0.080563858059074,
+          "n": 1675,
+          "year": 2024
+        },
+        {
+          "ic": 0.02601566832586837,
+          "n": 1416,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.045411057335176815,
+      "avg_ic_delta_vs_h340": -0.02391130230054201,
+      "avg_ic_delta_vs_raw_c5": 0.008047386835562276,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.03183862842040614,
+      "confirmation_ic_delta_vs_raw_c5": 0.022949286381569477,
+      "confirmation_pooled_ic": 0.025781592101183262,
+      "confirmation_rows": 1416,
+      "corr_with_s1": -0.04235082427639945,
+      "coverage_pct": 2.622458857696031,
+      "dev_pooled_ic": 0.030612503334490115,
+      "dev_rows": 17285,
+      "fire_rows": 21672,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.025781592101183262,
+          "rows": 1416
+        },
+        "dev": {
+          "pooled_ic": 0.030612503334490115,
+          "rows": 17285
+        },
+        "validation": {
+          "pooled_ic": 0.09549720467837261,
+          "rows": 2971
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_gate_pos_ff_net_5d_lag1_gt_0",
+      "validation_ic_delta_vs_h340": -0.002514014359692243,
+      "validation_ic_delta_vs_raw_c5": 0.014692888849157426,
+      "validation_pooled_ic": 0.09549720467837261,
+      "validation_rows": 2971,
+      "yearly": [
+        {
+          "ic": 0.07455503826284636,
+          "n": 1513,
+          "year": 2015
+        },
+        {
+          "ic": 0.011550783042015065,
+          "n": 1891,
+          "year": 2016
+        },
+        {
+          "ic": 0.010628250648538182,
+          "n": 2335,
+          "year": 2017
+        },
+        {
+          "ic": 0.01239296340806926,
+          "n": 1895,
+          "year": 2018
+        },
+        {
+          "ic": 0.03230447837323495,
+          "n": 2006,
+          "year": 2019
+        },
+        {
+          "ic": 0.06822677294089485,
+          "n": 2179,
+          "year": 2020
+        },
+        {
+          "ic": 0.044957352687977896,
+          "n": 3386,
+          "year": 2021
+        },
+        {
+          "ic": 0.0244487614757297,
+          "n": 2080,
+          "year": 2022
+        },
+        {
+          "ic": 0.11413431549758765,
+          "n": 1296,
+          "year": 2023
+        },
+        {
+          "ic": 0.08054132224886781,
+          "n": 1675,
+          "year": 2024
+        },
+        {
+          "ic": 0.025781592101183262,
+          "n": 1416,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.06932235963571882,
+      "avg_ic_delta_vs_h340": 0.0,
+      "avg_ic_delta_vs_raw_c5": 0.031958689136104286,
+      "candidate_decision": "H340_BENCHMARK",
+      "confirmation_ic_delta_vs_h340": 0.0,
+      "confirmation_ic_delta_vs_raw_c5": 0.05478791480197562,
+      "confirmation_pooled_ic": 0.0576202205215894,
+      "confirmation_rows": 1417,
+      "corr_with_s1": -0.02056731089567147,
+      "coverage_pct": 2.6115682478218782,
+      "dev_pooled_ic": 0.056965393033401805,
+      "dev_rows": 17183,
+      "fire_rows": 21582,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.0576202205215894,
+          "rows": 1417
+        },
+        "dev": {
+          "pooled_ic": 0.056965393033401805,
+          "rows": 17183
+        },
+        "validation": {
+          "pooled_ic": 0.09801121903806485,
+          "rows": 2982
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "h340_c5_scale_pos_buy_vol_ratio_cap_dev_median",
+      "validation_ic_delta_vs_h340": 0.0,
+      "validation_ic_delta_vs_raw_c5": 0.01720690320884967,
+      "validation_pooled_ic": 0.09801121903806485,
+      "validation_rows": 2982,
+      "yearly": [
+        {
+          "ic": 0.062201214484779284,
+          "n": 1547,
+          "year": 2015
+        },
+        {
+          "ic": 0.06284240461898136,
+          "n": 1877,
+          "year": 2016
+        },
+        {
+          "ic": 0.0258028030485422,
+          "n": 2278,
+          "year": 2017
+        },
+        {
+          "ic": 0.06620294085856997,
+          "n": 1859,
+          "year": 2018
+        },
+        {
+          "ic": 0.11470708422357083,
+          "n": 1996,
+          "year": 2019
+        },
+        {
+          "ic": 0.08477100617857482,
+          "n": 2264,
+          "year": 2020
+        },
+        {
+          "ic": 0.046043431812036614,
+          "n": 3404,
+          "year": 2021
+        },
+        {
+          "ic": 0.037239503819161184,
+          "n": 1958,
+          "year": 2022
+        },
+        {
+          "ic": 0.1342161025159821,
+          "n": 1284,
+          "year": 2023
+        },
+        {
+          "ic": 0.07089924391111933,
+          "n": 1698,
+          "year": 2024
+        },
+        {
+          "ic": 0.0576202205215894,
+          "n": 1417,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    {
+      "avg_ic": 0.03736367049961454,
+      "avg_ic_delta_vs_h340": -0.031958689136104286,
+      "avg_ic_delta_vs_raw_c5": 0.0,
+      "candidate_decision": "BASELINE",
+      "confirmation_ic_delta_vs_h340": -0.05478791480197562,
+      "confirmation_ic_delta_vs_raw_c5": 0.0,
+      "confirmation_pooled_ic": 0.002832305719613787,
+      "confirmation_rows": 2002,
+      "corr_with_s1": -0.03461585660032382,
+      "coverage_pct": 3.3887947725072602,
+      "dev_pooled_ic": 0.029526397307059346,
+      "dev_rows": 22077,
+      "fire_rows": 28005,
+      "pct_years_positive": 0.9090909090909091,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.002832305719613787,
+          "rows": 2002
+        },
+        "dev": {
+          "pooled_ic": 0.029526397307059346,
+          "rows": 22077
+        },
+        "validation": {
+          "pooled_ic": 0.08080431582921518,
+          "rows": 3926
+        }
+      },
+      "pos_years": 10,
+      "signal_name": "c5_raw",
+      "validation_ic_delta_vs_h340": -0.01720690320884967,
+      "validation_ic_delta_vs_raw_c5": 0.0,
+      "validation_pooled_ic": 0.08080431582921518,
+      "validation_rows": 3926,
+      "yearly": [
+        {
+          "ic": -0.0026611737587077205,
+          "n": 1905,
+          "year": 2015
+        },
+        {
+          "ic": 0.02344710096911765,
+          "n": 2311,
+          "year": 2016
+        },
+        {
+          "ic": 0.00475980637139858,
+          "n": 2799,
+          "year": 2017
+        },
+        {
+          "ic": 0.03828146420269162,
+          "n": 2567,
+          "year": 2018
+        },
+        {
+          "ic": 0.07298871597893741,
+          "n": 2690,
+          "year": 2019
+        },
+        {
+          "ic": 0.05219600655035779,
+          "n": 2917,
+          "year": 2020
+        },
+        {
+          "ic": 0.03864278171416951,
+          "n": 4116,
+          "year": 2021
+        },
+        {
+          "ic": 0.013456899591637006,
+          "n": 2772,
+          "year": 2022
+        },
+        {
+          "ic": 0.10483838990448942,
+          "n": 1683,
+          "year": 2023
+        },
+        {
+          "ic": 0.062218078252054866,
+          "n": 2243,
+          "year": 2024
+        },
+        {
+          "ic": 0.002832305719613787,
+          "n": 2002,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    }
+  ],
+  "summary": {
+    "best_foreign_candidate": {
+      "avg_ic": 0.057213843548583186,
+      "avg_ic_delta_vs_h340": -0.012108516087135639,
+      "avg_ic_delta_vs_raw_c5": 0.019850173048968647,
+      "candidate_decision": "MIXED",
+      "confirmation_ic_delta_vs_h340": -0.020012379172007135,
+      "confirmation_ic_delta_vs_raw_c5": 0.03477553562996848,
+      "confirmation_pooled_ic": 0.03760784134958227,
+      "confirmation_rows": 1175,
+      "corr_with_s1": -0.025817516423938768,
+      "coverage_pct": 2.3063891577928364,
+      "dev_pooled_ic": 0.04347589600248633,
+      "dev_rows": 15269,
+      "fire_rows": 19060,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.03760784134958227,
+          "rows": 1175
+        },
+        "dev": {
+          "pooled_ic": 0.04347589600248633,
+          "rows": 15269
+        },
+        "validation": {
+          "pooled_ic": 0.09424433545894731,
+          "rows": 2616
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "c5_gate_pos_order_and_ff_net_5d_gt_0",
+      "validation_ic_delta_vs_h340": -0.0037668835791175442,
+      "validation_ic_delta_vs_raw_c5": 0.013440019629732125,
+      "validation_pooled_ic": 0.09424433545894731,
+      "validation_rows": 2616,
+      "yearly": [
+        {
+          "ic": 0.09886941178215979,
+          "n": 1383,
+          "year": 2015
+        },
+        {
+          "ic": 0.03836025375916707,
+          "n": 1705,
+          "year": 2016
+        },
+        {
+          "ic": 0.006739579829662775,
+          "n": 2075,
+          "year": 2017
+        },
+        {
+          "ic": 0.021179729157656743,
+          "n": 1593,
+          "year": 2018
+        },
+        {
+          "ic": 0.07462255353381941,
+          "n": 1759,
+          "year": 2019
+        },
+        {
+          "ic": 0.07270282646218586,
+          "n": 1948,
+          "year": 2020
+        },
+        {
+          "ic": 0.04574745363531658,
+          "n": 3116,
+          "year": 2021
+        },
+        {
+          "ic": 0.039235674176816046,
+          "n": 1690,
+          "year": 2022
+        },
+        {
+          "ic": 0.1225263124066624,
+          "n": 1139,
+          "year": 2023
+        },
+        {
+          "ic": 0.07176064294138604,
+          "n": 1477,
+          "year": 2024
+        },
+        {
+          "ic": 0.03760784134958227,
+          "n": 1175,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    "branch_decision": "Foreign-flow agreement improves raw C5 in the fixed test but does not beat the stronger H340 order-pressure rewrite. Keep as offline interaction evidence only.",
+    "decision": "MIXED",
+    "h340_benchmark": {
+      "avg_ic": 0.06932235963571882,
+      "avg_ic_delta_vs_h340": 0.0,
+      "avg_ic_delta_vs_raw_c5": 0.031958689136104286,
+      "candidate_decision": "H340_BENCHMARK",
+      "confirmation_ic_delta_vs_h340": 0.0,
+      "confirmation_ic_delta_vs_raw_c5": 0.05478791480197562,
+      "confirmation_pooled_ic": 0.0576202205215894,
+      "confirmation_rows": 1417,
+      "corr_with_s1": -0.02056731089567147,
+      "coverage_pct": 2.6115682478218782,
+      "dev_pooled_ic": 0.056965393033401805,
+      "dev_rows": 17183,
+      "fire_rows": 21582,
+      "pct_years_positive": 1.0,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.0576202205215894,
+          "rows": 1417
+        },
+        "dev": {
+          "pooled_ic": 0.056965393033401805,
+          "rows": 17183
+        },
+        "validation": {
+          "pooled_ic": 0.09801121903806485,
+          "rows": 2982
+        }
+      },
+      "pos_years": 11,
+      "signal_name": "h340_c5_scale_pos_buy_vol_ratio_cap_dev_median",
+      "validation_ic_delta_vs_h340": 0.0,
+      "validation_ic_delta_vs_raw_c5": 0.01720690320884967,
+      "validation_pooled_ic": 0.09801121903806485,
+      "validation_rows": 2982,
+      "yearly": [
+        {
+          "ic": 0.062201214484779284,
+          "n": 1547,
+          "year": 2015
+        },
+        {
+          "ic": 0.06284240461898136,
+          "n": 1877,
+          "year": 2016
+        },
+        {
+          "ic": 0.0258028030485422,
+          "n": 2278,
+          "year": 2017
+        },
+        {
+          "ic": 0.06620294085856997,
+          "n": 1859,
+          "year": 2018
+        },
+        {
+          "ic": 0.11470708422357083,
+          "n": 1996,
+          "year": 2019
+        },
+        {
+          "ic": 0.08477100617857482,
+          "n": 2264,
+          "year": 2020
+        },
+        {
+          "ic": 0.046043431812036614,
+          "n": 3404,
+          "year": 2021
+        },
+        {
+          "ic": 0.037239503819161184,
+          "n": 1958,
+          "year": 2022
+        },
+        {
+          "ic": 0.1342161025159821,
+          "n": 1284,
+          "year": 2023
+        },
+        {
+          "ic": 0.07089924391111933,
+          "n": 1698,
+          "year": 2024
+        },
+        {
+          "ic": 0.0576202205215894,
+          "n": 1417,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    "mixed_candidate_count": 6,
+    "panel": {
+      "dates": 2748,
+      "foreign_net_5d_lag1_non_null_pct": 98.82175701839303,
+      "foreign_net_5d_non_null_pct": 98.87100677637947,
+      "rows": 826400,
+      "tickers": 394
+    },
+    "pass_candidate_count": 0,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "raw_c5": {
+      "avg_ic": 0.03736367049961454,
+      "avg_ic_delta_vs_h340": -0.031958689136104286,
+      "avg_ic_delta_vs_raw_c5": 0.0,
+      "candidate_decision": "BASELINE",
+      "confirmation_ic_delta_vs_h340": -0.05478791480197562,
+      "confirmation_ic_delta_vs_raw_c5": 0.0,
+      "confirmation_pooled_ic": 0.002832305719613787,
+      "confirmation_rows": 2002,
+      "corr_with_s1": -0.03461585660032382,
+      "coverage_pct": 3.3887947725072602,
+      "dev_pooled_ic": 0.029526397307059346,
+      "dev_rows": 22077,
+      "fire_rows": 28005,
+      "pct_years_positive": 0.9090909090909091,
+      "phase_details": {
+        "confirmation": {
+          "pooled_ic": 0.002832305719613787,
+          "rows": 2002
+        },
+        "dev": {
+          "pooled_ic": 0.029526397307059346,
+          "rows": 22077
+        },
+        "validation": {
+          "pooled_ic": 0.08080431582921518,
+          "rows": 3926
+        }
+      },
+      "pos_years": 10,
+      "signal_name": "c5_raw",
+      "validation_ic_delta_vs_h340": -0.01720690320884967,
+      "validation_ic_delta_vs_raw_c5": 0.0,
+      "validation_pooled_ic": 0.08080431582921518,
+      "validation_rows": 3926,
+      "yearly": [
+        {
+          "ic": -0.0026611737587077205,
+          "n": 1905,
+          "year": 2015
+        },
+        {
+          "ic": 0.02344710096911765,
+          "n": 2311,
+          "year": 2016
+        },
+        {
+          "ic": 0.00475980637139858,
+          "n": 2799,
+          "year": 2017
+        },
+        {
+          "ic": 0.03828146420269162,
+          "n": 2567,
+          "year": 2018
+        },
+        {
+          "ic": 0.07298871597893741,
+          "n": 2690,
+          "year": 2019
+        },
+        {
+          "ic": 0.05219600655035779,
+          "n": 2917,
+          "year": 2020
+        },
+        {
+          "ic": 0.03864278171416951,
+          "n": 4116,
+          "year": 2021
+        },
+        {
+          "ic": 0.013456899591637006,
+          "n": 2772,
+          "year": 2022
+        },
+        {
+          "ic": 0.10483838990448942,
+          "n": 1683,
+          "year": 2023
+        },
+        {
+          "ic": 0.062218078252054866,
+          "n": 2243,
+          "year": 2024
+        },
+        {
+          "ic": 0.002832305719613787,
+          "n": 2002,
+          "year": 2025
+        }
+      ],
+      "years": 11
+    },
+    "thresholds": {
+      "foreign_net_5d_dev_positive_median": 0.028234022337153115,
+      "foreign_net_5d_lag1_dev_positive_median": 0.027994638411598955,
+      "order_volume_dev_positive_median": 0.11492539052329089
+    }
+  }
+}

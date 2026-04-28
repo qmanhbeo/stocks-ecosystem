@@ -97,8 +97,18 @@ under `ollama_guarded_checkpoint/`, and only then publishes
 `ollama_guarded_ticker_day_features.parquet`. This guarded lane is now the
 minimal local residual semantic contract:
 - default generated field: `event_family`
+- default input gate: `phobert_article_scope_prob_positive >= 0.28`
+- default checkpoint interval: `20` input rows per shard
 - local confidence / coverage / abstention diagnostics
 - optional widened fields: `impact_scope`, `source_authority`, `is_rumor`
+
+Expensive Ollama article scores are cached separately under
+`ollama_guarded_score_cache/` by article content plus the real scoring
+contract: model, prompt version, prompt variant, field set, `num_ctx`,
+`num_predict`, temperature, schema mode, and body truncation. `checkpoint_rows`
+is intentionally not part of that score key. Changing checkpoint cadence can
+rebuild or resume checkpoint shards from cached scores without calling Ollama
+again for rows that were already scored under the same scoring contract.
 
 PhoBERT `article_scope` and `source_type` are the preferred local scope/source
 proxies. Use `--field-set full5` or `--field-set event_rumor` only when you are

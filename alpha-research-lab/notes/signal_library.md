@@ -124,6 +124,20 @@ versus `+0.0980 / +0.0576`). The hard intersection gate also failed. Treat
 `H340` as the preferred daily-state rewrite and keep `H306` only as a fallback
 when order-pressure data is unavailable.
 
+**Foreign-flow interaction update:** Session 186 `H347` tested foreign-flow
+agreement as a distinct non-price conditioner after standalone foreign-flow
+paths failed. Foreign support improved raw `C5`, but did not beat the stronger
+H340 rewrite:
+- best row `c5_gate_pos_order_and_ff_net_5d_gt_0`: avg IC `+0.0572`,
+  `11 / 11` positive years, validation / confirmation IC
+  `+0.0942 / +0.0376`, S1 corr `-0.0258`
+- raw `C5`: avg IC `+0.0374`, validation / confirmation IC
+  `+0.0808 / +0.0028`
+- H340 benchmark: avg IC `+0.0693`, validation / confirmation IC
+  `+0.0980 / +0.0576`
+Keep H347 as offline interaction evidence only. Do not replace H340 or tune
+more foreign-net windows around `C5`.
+
 **Interpretation update:** weak bullish follow-through is a pollutant on raw `C5`, not a
 new alpha family. The current preferred robustness form is the `H340`
 same-day buy-volume rewrite, with the `H306` exec-rate rewrite as a weaker
@@ -532,6 +546,19 @@ or LLM-based scoring for higher quality (H98).
 - **Outputs:** additive `phobert_*` article probabilities, ticker-day
   aggregates, and rolling sentiment states under the canonical
   `data/features/news/` pipeline
+- **Current alpha evidence:** H342 did not promote pooled PhoBERT sentiment as
+  a standalone alpha signal. The best PhoBERT row,
+  `phobert_sentiment_score_sum`, reached avg IC `+0.0082` over `2016-2025`
+  and failed the gate, while sparse keyword `sentiment_cs_z` remained stronger
+  but narrow. Treat PhoBERT sentiment as an implementation surface to combine
+  with scope/source/forward-looking/event context, not as a solved standalone
+  signal.
+- **Conditioning update:** H343 found one useful BERT-only conditioned row,
+  `h343_sentiment_x_official`, with avg IC `+0.0125`, `9 / 10` positive years,
+  and S1 corr `-0.0498`. H344 fixed that winner and applied the stricter
+  dev / validation / confirmation split: dev `+0.0143`, validation `+0.0146`,
+  but 2025 confirmation `-0.0042`. This is offline evidence for source-gated
+  sentiment, not a standalone promoted signal.
 - **Why this is different from H98:** the PhoBERT lane is local, GPU-friendly,
   and sentiment-focused; it does **not** claim to replace `event_type`,
   `rumor`, `source_authority`, `causal_impact_label`, or the rest of the
@@ -603,7 +630,7 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Insider tier-weighting (H108 quality) | CEO-only IC +0.021, exec-rate IC −0.008 | Position-size normalization wins; tier/quality weighting doesn't |
 | Sector rotation composite (H111) | xs_sector_rotation_signal IC −0.038 | Intra-sector rank is anti-predictive (laggards beat leaders) |
 | VNM ETF foreign affinity (H110) | xs_fa_signal IC −0.001 | ETF premium is market-direction signal only; no cross-sectional differentiation |
-| CafeF foreign-flow ranks / residuals (H327/H328/H333) | best raw room-scarcity dev/validation IC +0.0117/+0.0074 but 2025 IC −0.0048; best residual loosen rank −0.0044/−0.0109/+0.0132 across dev/validation/confirmation | Source acquired, but raw, conditioned, and room-residual discontinuity paths fail confirmation |
+| CafeF foreign-flow standalone paths (H327/H328/H333/H345) | best raw room-scarcity dev/validation IC +0.0117/+0.0074 but 2025 IC −0.0048; best residual loosen rank −0.0044/−0.0109/+0.0132; best accumulation change-point dev/validation IC only +0.0020/+0.0024 | Source acquired, but raw, conditioned, room-residual, and accumulation / ownership-change paths fail as standalone signals |
 | Earnings quality 52 tickers (H109) | best IC +0.005 (roe_delta) | Insufficient universe; re-test at 394 tickers pending |
 | VN30 rebalancing proximity (H114) | xs_vn30_rank_change_5d IC +0.0075 (10/11) | Rank level anti-predictive; change directionally consistent but below 0.01 gate |
 | 52-week high proximity (H118) | xs_52w_high_prox IC +0.0065 (9/11) | Directionally correct but below IC > 0.01 gate |
@@ -616,9 +643,12 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Beta residual (H125) | `xs_low_beta_resid_60d` IC +0.0019, 6/11 years | Once beta is residualized vs illiquidity/volume, the signal disappears |
 | Close-location persistence (H127) | `xs_clv_volconf_5d_rank` IC +0.0149, but corr with C8 = +0.903 | Strong standalone, but it is effectively the same axis as abnormal volume activity |
 | Compression breakout continuation (H128) | best IC −0.035 (xs_compress_breakout_2) | Breakout-follow-through thesis is wrong in this market; the tested orientation is strongly anti-predictive |
+| Gap-failure exhaustion (H283 / old H135 queue item) | best variant `xs_gap_failure_exhaustion_3` is predictive but maps back to C13 | Real construction, but not a new independent axis under the tested contract |
+| Sector-conditioned blow-off reversal (H284 / old H136 queue item) | fixed sector / ceiling gates do not improve H133 | Parked; C13 remains the cleaner compression blow-off representation |
 | Sector breadth shock (H131) | best IC −0.003 (xs_breadth_shock_laggard) | Breadth changes add no standalone value beyond existing sector structures |
 | Conditional liquidity release (H132) | best IC +0.007 (xs_liq_release_1) | Conditioning illiquidity changes on return/close state still does not clear the 0.01 gate |
 | Longer-horizon continuation (H126) | 90d/120d ranks IC +0.011 but corr with C11 = +0.775 / +0.664 | Real signal, but it is just a longer-horizon restatement of the existing continuation axis |
+| Residual long-horizon reversal (H346 / old H137 queue item) | best residual continuation control IC +0.0072; 90d/120d residual reversal IC −0.0063/−0.0072 | After removing C11, the residual is too weak and the hypothesized reversal sign is wrong |
 
 ---
 
@@ -627,13 +657,10 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Signal | Hypothesis | Data available | Priority |
 |--------|-----------|----------------|---------|
 | H98: LLM news sentiment | Higher quality than keyword approach | **PARKED** (runtime/throughput bottleneck) | Parked |
-| H95 follow-up: foreign accumulation / interactions | Accumulation change-points or friction/insider interactions may matter more than raw buy/sell ranks or room-residual thresholds | CafeF source acquired; raw ranks failed H327/H328 and room residuals failed H333 | Medium |
-| H135: Gap-failure exhaustion | Combine H130 and H133 logic: failed gap acceptance after compression may be the strongest reversal state | Ready to test | High |
-| H136: Sector-conditioned blow-off reversal | Test whether H133 strengthens inside hot sectors or recent ceiling clusters | Ready to test | High |
-| H137: Residual long-horizon reversal | H126 continuation is redundant; test the sign-flipped 90d/120d residual after removing C11 | Ready to test | Medium |
+| H95 follow-up: foreign / flow interactions | Standalone accumulation change-points failed in H345, and H347 foreign-insider agreement improved raw C5 but did not beat H340; only a materially different interaction such as proprietary-flow conflict/agreement or sector-specific ownership pressure remains plausible | CafeF foreign-flow source acquired; proprietary-trading raw surface exists but has limited 2022+ coverage | Low-medium |
 | Order book imbalance | Bid/ask pressure predicts short-term price | Not available historically | Blocked |
 
-H123, H124, H125, H126, H127, H128, H130, H131, H132, H133, and H134 are now closed and documented above.
+H123, H124, H125, H126, H127, H128, H130, H131, H132, H133, H134, H283, H284, and H346 are now closed and documented above.
 Track new OHLCV-only search ideas in `notes/next_steps.md`.
 
 **Session 33 update (2026-03-26):**

@@ -106,6 +106,7 @@ Current contract:
 - `datasets/ollama_guarded_ticker_day_features.parquet`
 - `datasets/ollama_guarded_input_articles.parquet`
 - `datasets/ollama_guarded_input_manifest.json`
+- `datasets/ollama_guarded_score_cache/`
 - `datasets/ollama_guarded_checkpoint/`
 - `datasets/ollama_guarded_checkpoint_manifest.json`
 - `predictions/*_news_features.parquet`
@@ -155,8 +156,11 @@ Important notes:
   aggregates now merge into `predictions/*_news_features.parquet`
 - `datasets/ollama_guarded_input_articles.parquet` and
   `datasets/ollama_guarded_checkpoint/` are the tagged-only input cache and
-  resumable checkpoint surface for that guarded local lane; they are internal
-  producer caches, not consumer feature contracts
+  resumable checkpoint surface for that guarded local lane. The separate
+  `datasets/ollama_guarded_score_cache/` stores expensive per-article Ollama
+  score results by article content plus scoring contract, excluding
+  checkpoint cadence. These are internal producer caches, not consumer feature
+  contracts
 - they are additive to the existing keyword and embedding news features
 - they do **not** overwrite `data/llm_cache/`, `xs_llm_news_ticker_day.parquet`,
   or `xs_llm_news_market_daily.parquet`

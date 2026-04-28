@@ -1,0 +1,145 @@
+{
+  "artifacts": {
+    "source_h343_summary": "artifacts/run_summaries/latest_research_branch_phobert_semantic_condition_audit.json"
+  },
+  "metadata": {
+    "family": "news_sentiment",
+    "signal": "H344"
+  },
+  "mode": "research_branch_phobert_official_sentiment_confirmation",
+  "name": "h344_phobert_official_sentiment_confirmation",
+  "summary": {
+    "branch_decision": "The H343 official-conditioned PhoBERT sentiment feature is useful offline evidence, but it is not a standalone promoted signal because 2025 confirmation is non-positive.",
+    "fixed_feature": "h343_sentiment_x_official",
+    "next_step": "Keep the official-conditioned sentiment transform for the later combined local-news audit; do not promote it alone or tune more BERT-only sentiment variants.",
+    "phase_details": {
+      "confirmation": {
+        "avg_ic": -0.004203226881826918,
+        "pos_years": 0,
+        "rows": 18651,
+        "year_count": 1,
+        "yearly": [
+          {
+            "ic": -0.004203226881826918,
+            "n": 18651,
+            "p_value": 0.5659724419145756,
+            "year": 2025
+          }
+        ],
+        "years": [
+          2025
+        ]
+      },
+      "dev": {
+        "avg_ic": 0.014285281996249054,
+        "pos_years": 7,
+        "rows": 120120,
+        "year_count": 7,
+        "yearly": [
+          {
+            "ic": 0.012107348102862937,
+            "n": 13466,
+            "p_value": 0.16005243970799773,
+            "year": 2016
+          },
+          {
+            "ic": 0.0073258988654012645,
+            "n": 16289,
+            "p_value": 0.34982267513799437,
+            "year": 2017
+          },
+          {
+            "ic": 0.013875375417561673,
+            "n": 16163,
+            "p_value": 0.07773576534478384,
+            "year": 2018
+          },
+          {
+            "ic": 0.0019401602919598008,
+            "n": 16160,
+            "p_value": 0.8052037270356078,
+            "year": 2019
+          },
+          {
+            "ic": 0.01704396557664675,
+            "n": 16911,
+            "p_value": 0.026661817732241924,
+            "year": 2020
+          },
+          {
+            "ic": 0.024284153270909128,
+            "n": 20293,
+            "p_value": 0.0005408584264223159,
+            "year": 2021
+          },
+          {
+            "ic": 0.023420072448401837,
+            "n": 20838,
+            "p_value": 0.0007221314419655953,
+            "year": 2022
+          }
+        ],
+        "years": [
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022
+        ]
+      },
+      "validation": {
+        "avg_ic": 0.014626703759289698,
+        "pos_years": 2,
+        "rows": 35375,
+        "year_count": 2,
+        "yearly": [
+          {
+            "ic": 0.01664557820924823,
+            "n": 17835,
+            "p_value": 0.026217309690573353,
+            "year": 2023
+          },
+          {
+            "ic": 0.012607829309331164,
+            "n": 17540,
+            "p_value": 0.0949764694792996,
+            "year": 2024
+          }
+        ],
+        "years": [
+          2023,
+          2024
+        ]
+      }
+    },
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2016,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "source_h343_best_feature": {
+      "active_rows": 174146,
+      "avg_ic": 0.012504715461049587,
+      "corr_with_s1": -0.049813607160734956,
+      "coverage_pct": 22.481794040606292,
+      "feature_name": "h343_sentiment_x_official",
+      "gate_pass": true,
+      "pct_years_positive": 0.9,
+      "pos_years": 9,
+      "years": 10
+    },
+    "source_h343_summary": "artifacts/run_summaries/latest_research_branch_phobert_semantic_condition_audit.json",
+    "source_h343_verdict": "PASSED",
+    "verdict": "FAILED"
+  },
+  "ts": "20260428_065445"
+}
