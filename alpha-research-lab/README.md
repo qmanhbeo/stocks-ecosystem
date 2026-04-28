@@ -45,7 +45,7 @@ Required standard:
 - rule is operationally implementable with current artifacts and execution assumptions
 
 Typical action:
-- update `notes/next_steps.md` and the active branch description
+- update `notes/live_state.md` and the active branch description
 
 ### 2. Offline evidence promotion
 
@@ -70,7 +70,7 @@ Typical signs:
 - the branch depends on data the workspace does not currently have
 
 Typical action:
-- mark the branch closed or parked in `notes/next_steps.md`
+- mark the branch closed or parked in `notes/live_state.md`
 - record what would need to change before reopening it
 
 ## Hard Trading Rule
@@ -110,7 +110,10 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 
 ## Start Here
 
-- `notes/next_steps.md`: live system state, current priorities, short recent digest
+- `notes/live_state.md`: live system state and current priorities
+- `notes/sessions_compact.md`: compact one-line / one-paragraph session rollup
+- `notes/findings_compact.md`: compact thematic digest of durable findings
+- `notes/deadends_compact.md`: compact digest of durable failed or parked paths
 - `notes/signal_library.md`: **the registry of confirmed and candidate signals**
 - `README_for_AGENTS.md`: exact agent loop, commands, result artifacts, data, note conventions
 - `notes/findings.md`: index for the chunked durable findings files
@@ -123,7 +126,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
   - `notes/timing_data_acquisition_plan.md`
   - `notes/timing_data_source_scorecard.csv`
 
-`README.md` is an overview. The live source of truth is `notes/next_steps.md`.
+`README.md` is an overview. The live source of truth is `notes/live_state.md`.
 
 ## Data Contract
 
@@ -135,13 +138,14 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - No research data is duplicated inside `alpha-research-lab/`
 - The lab publishes the consolidated RL feature surface at `data/features/xs_rl_signal_matrix.parquet`
 - The lab publishes the shared execution tradability artifact at `data/features/execution/tradability_daily.parquet`
+- The lab publishes the scoped C16 order-pressure feature surface at `data/features/xs_order_pressure_daily.parquet`
 - The lab publishes the date-level activation surface at `data/features/activation_state_daily.parquet`
 - The lab publishes the selector-efficacy activation-meta surface at `data/features/activation_meta_daily.parquet`
 - The lab now also publishes the ticker-day corporate-event surface at `data/features/event_surface_daily.parquet`
 - The lab can publish canonical recommendation candidate tables at `data/features/recommendations/<profile>/latest_candidates.parquet`
 - The lab can publish stock-specific entry-alpha research artifacts under `data/features/entry_alpha/`
 - The lab now owns a historical CafeF foreign-flow archive at `data/foreign_flow/cafef/`; H327 passed the source-quality audit, but H327/H328 rejected the first raw-flow feature path, so this remains a raw source surface rather than a published model feature contract
-- The lab now owns a historical CafeF order-statistics archive at `data/order_stats/cafef/`; this is a raw daily summary surface from stock-history page 2 (`ThongKeDL`), not historical queue depth
+- The lab now owns a historical CafeF order-statistics archive at `data/order_stats/cafef/`; this is a raw daily summary surface from stock-history page 2 (`ThongKeDL`), not historical queue depth. The H356-H359 scoped C16 feature contract is published separately at `data/features/xs_order_pressure_daily.parquet`
 - The lab now owns a historical CafeF proprietary-trading archive at `data/proprietary_trading/cafef/`; this is a raw daily summary surface from stock-history page 4 (`GDTuDoanh`)
 - The lab now owns a forward-only VCI board foreign-flow collector at `data/foreign_flow_forward/vci_price_board/`; this is raw acquisition data and not backtestable history
 - The lab now owns a raw official HNX / UPCoM issuer-disclosure surface at `data/official_disclosures/hnx/`; the HNX issuer universe is fetchable now, and per-ticker official disclosure history plus attachment metadata, OCR text caches, and transaction-attachment extracts are wired through `data_tools/fetch_hnx_official_disclosures.py`
@@ -247,7 +251,7 @@ Canonical offline artifacts:
 - `data/features/entry_alpha/entry_scores_daily.parquet`
 
 If intentionally reopened:
-- start from `notes/session_75_log.md`, `notes/session_76_log.md`, `notes/session_77_log.md`, and `notes/next_steps.md`
+- start from `notes/session_75_log.md`, `notes/session_76_log.md`, `notes/session_77_log.md`, and `notes/live_state.md`
 - next honest continuation is `H247`: keep the branch small-book but stop testing more local overlays on the current label; sharpen the label / target for the compact entry-model branch instead
 - keep it lower priority than the active timing-data acquisition branch
     - one-shot confirmation `2025`
@@ -369,7 +373,7 @@ If intentionally reopened:
 - parked: deployment gap (real fills unverified, net P&L borderline at 0.30% RT)
 - artifact: `data/features/xs_barrier_all_probas_hose_full.parquet`
 
-See `notes/next_steps.md` for the live champion, honest benchmark, and next priorities.
+See `notes/live_state.md` for the live champion, honest benchmark, and next priorities.
 
 ## Setup
 
@@ -591,11 +595,14 @@ Permanent logs remain:
 ├── notes/
 │   ├── signal_library.md      ← signal registry (primary output)
 │   ├── findings.md            ← index for chunked scientific truth
+│   ├── findings_compact.md    ← compact thematic finding digest
+│   ├── deadends_compact.md    ← compact failed / parked path digest
 │   ├── findings-001-030.md    ← chunked durable conclusions
 │   ├── findings-031-060.md    ← chunked durable conclusions
 │   ├── findings-061-090.md    ← chunked durable conclusions
 │   ├── findings-091-120.md    ← chunked durable conclusions
-│   ├── next_steps.md          ← live state & queue
+│   ├── live_state.md          ← live state & queue
+│   ├── sessions_compact.md    ← compact per-session rollup
 │   └── session_NN_log.md      ← per-session records
 ├── experiments/
 ├── artifacts/run_summaries/
@@ -610,9 +617,13 @@ The repo treats `notes/` as a permanent scientific record:
 
 - Session logs are the detailed record
 - `findings.md` is the index for the durable truth layer
+- `findings_compact.md` is the compact thematic recovery view of durable truth
+- `deadends_compact.md` is the compact recovery view of failed or parked paths
 - `findings-*.md` are the chunked durable truth files
 - `signal_library.md` is the signal registry — the primary deliverable
-- `next_steps.md` is the active queue plus a short recent digest
+- `live_state.md` is the active queue and live state
+- `sessions_compact.md` is the compact per-session rollup; prepend new entries
+  without manual numbering
 - Failed ideas stay documented instead of being erased
 
 See `README_for_AGENTS.md` for the working convention and agent protocol.

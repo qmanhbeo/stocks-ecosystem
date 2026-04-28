@@ -180,4 +180,4 @@ conda run -n stocks python analysis/h40_rank_portfolio.py
 3. **Option A** — Nested walk-forward parameter search: for test year T, grid-search on T-3 to T-1.
    Most rigorous. Implements fully clean Layer 2.
 
-See `notes/next_steps.md` Session 16 section for full implementation details.
+See `notes/live_state.md` Session 16 section for full implementation details.

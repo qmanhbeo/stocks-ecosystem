@@ -90,7 +90,7 @@ is source/audit-first and now has local HNX raw data.
 ## Memory changes
 
 Updated:
-- `notes/next_steps.md`
+- `notes/live_state.md`
 - `notes/findings-271-300.md`
 
 Added:

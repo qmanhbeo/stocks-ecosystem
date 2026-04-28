@@ -23,7 +23,7 @@ Updated these repo-owned surfaces:
 - `alpha-research-lab/README.md`
 - `alpha-research-lab/research_pipelines/news_features/README.md`
 - `alpha-research-lab/notes/local_bert_roadmap.md`
-- `alpha-research-lab/notes/next_steps.md`
+- `alpha-research-lab/notes/live_state.md`
 
 This pass does not claim the machine only exposes those exact totals.
 It changes the planning budget so future agents leave the remaining observed
@@ -71,7 +71,7 @@ What was not executed:
 ## Pointers
 
 - live state:
-  - `notes/next_steps.md`
+  - `notes/live_state.md`
 - durable findings touched:
   - `notes/findings-271-300.md#f272`
 - durable dead ends touched:

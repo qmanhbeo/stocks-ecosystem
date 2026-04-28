@@ -12,7 +12,7 @@ It did not read `2026+`.
 Coming in:
 - `H273` had already failed and closed the exact breakout-survivor continuation family on the current restarted contract
 - the live sticky branch remained frozen at `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
-- the next honest fallback from `next_steps.md` was no longer a new broad backtest:
+- the next honest fallback from `live_state.md` was no longer a new broad backtest:
   - first summarize whether reduced-shape intraday conviction predicts sparse-book stress, replacement pressure, or breadth collapse on the `2023-2025` branch
   - only continue to a new gate if that selector-state audit survives
 - `H258` had already passed the reduced-shape intraday contract audit, so the branch had usable multi-ticker `1H` coverage for a clean top-k state test

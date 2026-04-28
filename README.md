@@ -61,7 +61,10 @@ separate published feature contract passes.
 `ThongKeDL` page-2 stock-history endpoint. It stores daily buy/sell order
 counts, posted order volumes, average order size, and raw buy-sell volume
 imbalance from `alpha-research-lab/data_tools/fetch_cafef_order_stats.py`. This
-is a raw summary surface, not historical order-book depth.
+is a raw summary surface, not historical order-book depth. The promoted C16
+feature contract from H356-H359 is published separately at
+`data/features/xs_order_pressure_daily.parquet` by
+`alpha-research-lab/data_tools/build_order_pressure_features.py`.
 
 `data/proprietary_trading/` is the historical CafeF proprietary-trading archive
 from the `GDTuDoanh` page-4 stock-history endpoint. It stores daily proprietary
@@ -92,9 +95,10 @@ re-fetching HNX.
 3. Published artifacts are written into root `data/`
 4. The lab publishes a consolidated RL signal matrix at `data/features/xs_rl_signal_matrix.parquet`
 5. The lab publishes shared execution tradability flags at `data/features/execution/tradability_daily.parquet`
-6. The lab now also publishes the canonical corporate-event surface at `data/features/event_surface_daily.parquet`
-7. The lab can publish canonical model-agnostic recommendation candidates at `data/features/recommendations/<profile>/latest_candidates.parquet`
-8. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
+6. The lab publishes the scoped C16 order-pressure feature surface at `data/features/xs_order_pressure_daily.parquet`
+7. The lab now also publishes the canonical corporate-event surface at `data/features/event_surface_daily.parquet`
+8. The lab can publish canonical model-agnostic recommendation candidates at `data/features/recommendations/<profile>/latest_candidates.parquet`
+9. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 
 ## Lightweight-First Execution Rule
 
@@ -132,7 +136,11 @@ If you are starting this workspace fresh, read in this order:
 1. `README.md`
 2. `data/README.md`
 3. `alpha-research-lab/README.md`
-4. `alpha-research-lab/notes/next_steps.md`
+4. `alpha-research-lab/notes/live_state.md` for live state; use
+   `alpha-research-lab/notes/sessions_compact.md`,
+   `alpha-research-lab/notes/findings_compact.md`, and
+   `alpha-research-lab/notes/deadends_compact.md` when you need compact
+   recovery context
 5. `alpha-research-lab/notes/session_74_log.md` only when you need detailed historical traceback on that branch
 6. `alpha-research-lab/README_for_AGENTS.md` if you are continuing research or making repo changes as an agent
 

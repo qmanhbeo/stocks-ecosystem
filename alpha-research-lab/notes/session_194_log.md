@@ -81,7 +81,7 @@ Keep H355 as offline post-entry-state evidence only:
 ## Memory Changes
 
 Updated:
-- `notes/next_steps.md`
+- `notes/live_state.md`
 - `notes/findings-271-300.md`
 - `notes/signal_library.md`
 

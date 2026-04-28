@@ -12,7 +12,7 @@ It did not read `2026+`.
 Coming in:
 - `H274` had already failed and closed the top-k intraday stress-router branch on the frozen sticky contract
 - the live sticky branch remained frozen at `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
-- the next honest fallback from `next_steps.md` was explicitly signal-library scoped:
+- the next honest fallback from `live_state.md` was explicitly signal-library scoped:
   - do not open another gate
   - instead audit whether reduced-shape intraday atoms can survive as offline state features
 - the predeclared comparison anchors were:

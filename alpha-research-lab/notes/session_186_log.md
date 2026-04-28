@@ -20,7 +20,7 @@ Recent evidence closed or parked the obvious local paths:
 - H345 rejected standalone foreign accumulation / ownership-change paths
 - H346 closed the stale long-horizon OHLCV residual queue
 
-The remaining honest foreign-flow reopening condition in `next_steps.md` was a
+The remaining honest foreign-flow reopening condition in `live_state.md` was a
 distinct interaction contract rather than more standalone window tuning. H347
 therefore tested whether foreign-flow support can improve `C5`, with the
 current H340 order-pressure rewrite as the hard benchmark.
@@ -89,7 +89,7 @@ not another foreign-net window around `C5`.
 ## Memory changes
 
 Updated:
-- `notes/next_steps.md`
+- `notes/live_state.md`
 - `notes/findings-271-300.md`
 - `notes/signal_library.md`
 

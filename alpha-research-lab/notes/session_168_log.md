@@ -81,7 +81,7 @@ target scripts:
 ### Docs updated
 
 - `data_tools/README.md`
-- `notes/next_steps.md`
+- `notes/live_state.md`
 
 ---
 
@@ -126,7 +126,7 @@ What was not executed:
 ## Pointers
 
 - live state:
-  - `notes/next_steps.md`
+  - `notes/live_state.md`
 - durable findings touched:
   - `notes/findings-271-300.md#f273`
 - durable dead ends touched:

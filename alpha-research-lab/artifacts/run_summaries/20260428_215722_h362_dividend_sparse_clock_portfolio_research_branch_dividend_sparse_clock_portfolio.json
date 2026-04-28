@@ -1,0 +1,42 @@
+{
+  "artifacts": {
+    "candidate_daily": "artifacts/portfolio_baselines/20260428_215722_h362_dividend_sparse_clock_portfolio_candidate_daily.parquet",
+    "details": "artifacts/run_summaries/20260428_215722_h362_dividend_sparse_clock_portfolio_details.json",
+    "event_surface": "data/features/event_surface_daily.parquet",
+    "results": "artifacts/portfolio_baselines/20260428_215722_h362_dividend_sparse_clock_portfolio_results.parquet",
+    "risk": "artifacts/portfolio_baselines/20260428_215722_h362_dividend_sparse_clock_portfolio_risk.parquet"
+  },
+  "metadata": {
+    "bad_tail_threshold": -0.03,
+    "base_rank_floor": 0.8,
+    "dividend_bonus": 0.015,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    }
+  },
+  "mode": "research_branch_dividend_sparse_clock_portfolio",
+  "name": "h362_dividend_sparse_clock_portfolio",
+  "summary": {
+    "active_rows": 3423,
+    "branch_decision": "Dividend sparse clock did not pass the strict portfolio-level reopening gate; keep dividend-clock parked.",
+    "confirmation_daily_relative_q10_delta": -2.42861286636753e-17,
+    "confirmation_relative_delta": 0.009581891878718829,
+    "eligible_bonus_rows": 395,
+    "passes_downside_tail_gate": true,
+    "passes_execution_health": true,
+    "portfolio_gate_pass": false,
+    "validation_daily_relative_q10_delta": 2.0816681711721685e-17,
+    "validation_relative_delta": -6.8833827526759706e-15,
+    "verdict": "FAILED"
+  },
+  "ts": "20260428_215722"
+}

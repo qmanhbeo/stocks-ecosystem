@@ -87,7 +87,7 @@ then a downstream combined-news alpha audit before any promotion.
 ## Memory Changes
 
 Updated:
-- `notes/next_steps.md`
+- `notes/live_state.md`
 
 No durable alpha finding was added because this is an operational resume, not
 an experiment result.

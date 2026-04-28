@@ -1,0 +1,47 @@
+{
+  "artifacts": {
+    "candidate_daily": "artifacts/portfolio_baselines/20260428_215245_h361_event_sparse_clock_portfolio_candidate_daily.parquet",
+    "details": "artifacts/run_summaries/20260428_215245_h361_event_sparse_clock_portfolio_details.json",
+    "h321_summary": "artifacts/run_summaries/latest_research_branch_hawkes_disclosure_cascade.json",
+    "results": "artifacts/portfolio_baselines/20260428_215245_h361_event_sparse_clock_portfolio_results.parquet",
+    "risk": "artifacts/portfolio_baselines/20260428_215245_h361_event_sparse_clock_portfolio_risk.parquet"
+  },
+  "metadata": {
+    "bad_tail_threshold": -0.03,
+    "base_rank_floor": 0.8,
+    "event_bonus": 0.03,
+    "event_columns": [
+      "today_self_accel_high",
+      "recent5_high_self_no_today"
+    ],
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    },
+    "source_limited_protocol": "2023 dev / 2024 validation / 2025 confirmation; 2026 excluded"
+  },
+  "mode": "research_branch_event_v2_sparse_clock_portfolio",
+  "name": "h361_event_v2_sparse_clock_portfolio",
+  "summary": {
+    "branch_decision": "Event-v2 sparse clock did not pass the strict portfolio-level reopening gate; keep event-v2 parked.",
+    "confirmation_daily_relative_q10_delta": 0.0002763314404329066,
+    "confirmation_relative_delta": -0.026578422062054297,
+    "eligible_bonus_rows": 891,
+    "event_active_rows": 5770,
+    "passes_downside_tail_gate": true,
+    "passes_execution_health": true,
+    "portfolio_gate_pass": false,
+    "validation_daily_relative_q10_delta": -0.00016473179543715494,
+    "validation_relative_delta": -0.04963134132554359,
+    "verdict": "FAILED"
+  },
+  "ts": "20260428_215245"
+}

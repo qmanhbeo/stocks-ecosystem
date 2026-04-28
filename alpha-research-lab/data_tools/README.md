@@ -31,6 +31,7 @@ This matters on local WSL setups with modest RAM. Keep producer workflows modula
 | Insider deals raw | YES | YES (394 tickers) | `fetch_insider_deals.py` |
 | Historical foreign investor flow | YES | YES (CafeF raw archive) | `fetch_cafef_foreign_flow.py` |
 | Historical order statistics | YES | YES (first full backfill completed; inspect `manifest.json`) | `fetch_cafef_order_stats.py` |
+| C16 order-pressure feature | YES | YES (published scoped feature) | `build_order_pressure_features.py` |
 | Historical proprietary trading | YES | YES (first full backfill completed with source-side holes; inspect `manifest.json`) | `fetch_cafef_proprietary_trading.py` |
 | Forward foreign-flow board snapshots | YES | YES (forward-only from 2026-04-09) | `collect_forward_foreign_flow.py` |
 | HNX official issuer universe + disclosure history | YES | Universe YES; history on demand | `fetch_hnx_official_disclosures.py` |
@@ -374,6 +375,24 @@ Fetch historical daily order-statistics data from CafeF's `ThongKeDL` endpoint.
   `2026-04-10`
 - **Important:** this is a raw daily summary of posted orders, not a historical
   depth ladder or queue-position archive
+
+### `build_order_pressure_features.py`
+Build the scoped C16 order-pressure feature surface from the CafeF order-stat
+archive plus the shared tradability artifact.
+- **Status:** Active published feature builder
+- **Inputs:** `data/order_stats/cafef/order_stats_daily.parquet`,
+  `data/features/execution/tradability_daily.parquet`
+- **Output:** `data/features/xs_order_pressure_daily.parquet`
+- **Schema:** `time`, `ticker`, `order_volume_ratio`,
+  `order_volume_ratio_rank`, `order_pressure_available`,
+  `can_buy_next_open`, `order_pressure_h359_active`,
+  `order_pressure_h359_blend_weight`
+- **Usage:** `python data_tools/build_order_pressure_features.py`
+- **Usage:** `python data_tools/build_order_pressure_features.py --end-date 2025-12-31`
+- **2026 lockbox:** default output stops at `2025-12-31`; pass
+  `--include-2026` only for an explicit live/monitoring refresh
+- **Consumer formula:** `blended_score = (1 - w) * base_score + w * order_volume_ratio_rank`,
+  where `w` is `order_pressure_h359_blend_weight`
 
 ### `fetch_cafef_proprietary_trading.py`
 Fetch historical daily proprietary-trading data from CafeF's `GDTuDoanh` endpoint.
@@ -778,6 +797,7 @@ Build VN30 proximity / rebalancing-pressure features.
 | `xs_volume_zscore_daily.parquet` | Active | Abnormal-volume feature surface (`C8`) |
 | `xs_shortterm_reversal.parquet` | Active | Short-term reversal feature surface (`C9`) |
 | `data/features/execution/tradability_daily.parquet` | Active | Execution/liquidity flags used across portfolio, activation, and exit research |
+| `xs_order_pressure_daily.parquet` | Active | Scoped C16 posted-order pressure feature from H356-H359 |
 | `xs_dispersion_regime_daily.parquet` | Active | Dense date-level dispersion regime features |
 | `activation_state_daily.parquet` | Active | Dense date-level selection/activation state surface |
 | `activation_meta_daily.parquet` | Active | Dense date-level selector-efficacy / activation-meta surface |

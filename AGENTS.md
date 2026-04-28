@@ -22,6 +22,7 @@ Current responsibilities:
 - `data/` is the canonical shared data root for the entire workspace
 - `data/foreign_flow/` is a raw historical CafeF foreign-flow surface
 - `data/order_stats/` is a raw historical CafeF order-statistics surface
+- `data/features/xs_order_pressure_daily.parquet` is the scoped published C16 order-pressure feature surface derived from `data/order_stats/` plus shared tradability
 - `data/proprietary_trading/` is a raw historical CafeF proprietary-trading surface
 - `data/foreign_flow_forward/` is a forward-only raw acquisition surface, not a historical feature backfill
 - `data/official_disclosures/` is a raw official-disclosure acquisition surface; the first wired source is HNX mobile issuer disclosures
@@ -49,7 +50,7 @@ Current responsibilities:
 - Treat internal news-builder stage/checkpoint artifacts under `data/features/news/datasets/` such as `news_tabular_article_stage.parquet`, `embedding_input_articles.parquet`, `embedding_checkpoint/`, `phobert_input_articles.parquet`, `phobert_checkpoint/`, `ollama_guarded_input_articles.parquet`, and `ollama_guarded_checkpoint/` as producer-side caches, not shared consumer contracts
 - Treat `data/model_checkpoints/` as durable producer-side checkpoint state, not a shared consumer contract
 - Treat `data/foreign_flow/` as a raw source surface until a research-owned feature artifact is published from it
-- Treat `data/order_stats/` as a raw source surface until a research-owned feature artifact is published from it
+- Treat `data/order_stats/` as a raw source surface; use `data/features/xs_order_pressure_daily.parquet` for the published scoped C16 order-pressure contract
 - Treat `data/proprietary_trading/` as a raw source surface until a research-owned feature artifact is published from it
 - Treat `data/foreign_flow_forward/` as forward-only raw data; do not use it in historical alpha tests until enough post-collection history exists
 - Treat `data/official_disclosures/` as a raw source surface; do not assume exchange-hosted disclosures are a published event feature contract yet

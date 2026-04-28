@@ -10,7 +10,7 @@ It did not read `2026+`.
 
 Updated notes only:
 - `notes/findings-181-210.md`
-- `notes/next_steps.md`
+- `notes/live_state.md`
 
 Verified artifacts:
 - `data/features/xs_news_sentiment_daily.parquet`

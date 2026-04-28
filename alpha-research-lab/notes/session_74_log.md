@@ -59,7 +59,7 @@ Richer company-event data is only usable if it clears:
 Updated:
 - `README.md`
 - `README_for_AGENTS.md`
-- `notes/next_steps.md`
+- `notes/live_state.md`
 - `notes/data_sources.md`
 - `notes/findings-151-180.md`
 

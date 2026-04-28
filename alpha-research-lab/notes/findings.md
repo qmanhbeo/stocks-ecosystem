@@ -1,6 +1,9 @@
 # Findings Index
 
 The durable scientific record is now chunked by 30 finding blocks per file.
+For fast recovery, use [findings_compact.md](./findings_compact.md) for the
+thematic digest and [deadends_compact.md](./deadends_compact.md) for durable
+failed, parked, closed, or blocked paths derived from the findings.
 
 Current chunks:
 - [findings-001-030.md](./findings-001-030.md)
@@ -13,6 +16,7 @@ Current chunks:
 - [findings-211-240.md](./findings-211-240.md)
 - [findings-241-270.md](./findings-241-270.md)
 - [findings-271-300.md](./findings-271-300.md)
+- [findings-301-330.md](./findings-301-330.md)
 
 ## Convention
 
@@ -26,4 +30,4 @@ Current chunks:
 ## How To Read
 
 Start here, then open the chunk file that contains the finding you need.
-`findings-271-300.md` is now the active findings chunk.
+`findings-301-330.md` is now the active findings chunk.

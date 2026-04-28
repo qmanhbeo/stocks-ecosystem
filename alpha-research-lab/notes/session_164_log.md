@@ -20,7 +20,7 @@ Added one durable note:
 Linked that note from the main local-model entry points:
 - `README.md`
 - `notes/local_bert_roadmap.md`
-- `notes/next_steps.md`
+- `notes/live_state.md`
 
 No extractor behavior changed in this session.
 No model default was switched in code during this pass.

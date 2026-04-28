@@ -9,6 +9,11 @@ Scope:
 - candidate-table generation engine
 - canonical recommendation artifact writing
 
+Registered shared research artifacts now include the C16 order-pressure feature
+surface at `data/features/xs_order_pressure_daily.parquet`. It is path/schema
+metadata only; recommendation or RL consumers must opt in explicitly before
+using it.
+
 Non-goals:
 
 - model training

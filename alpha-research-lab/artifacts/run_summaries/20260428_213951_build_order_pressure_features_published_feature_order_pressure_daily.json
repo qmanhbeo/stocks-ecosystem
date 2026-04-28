@@ -1,0 +1,31 @@
+{
+  "artifacts": {
+    "output": "data/features/xs_order_pressure_daily.parquet"
+  },
+  "metadata": {
+    "end_date": "2025-12-31",
+    "h359_blend_formula": "(1 - w) * base_score + w * order_volume_ratio_rank",
+    "h359_blend_weight_column": "order_pressure_h359_blend_weight",
+    "include_2026": false,
+    "order_stats_path": "data/order_stats/cafef/order_stats_daily.parquet",
+    "start_date": null,
+    "tradability_path": "data/features/execution/tradability_daily.parquet"
+  },
+  "mode": "published_feature_order_pressure_daily",
+  "name": "build_order_pressure_features",
+  "summary": {
+    "active_coverage": 0.9205154668948713,
+    "active_rows": 1211194,
+    "date_count": 4622,
+    "duplicate_order_rows_removed": 0,
+    "max_date": "2025-12-31T00:00:00",
+    "min_date": "2007-07-02T00:00:00",
+    "rank_coverage": 0.9868594854147128,
+    "rank_rows": 1298488,
+    "row_count": 1315778,
+    "ticker_count": 402,
+    "tradability_coverage": 0.9917349279285715,
+    "tradability_rows": 1304903
+  },
+  "ts": "20260428_213951"
+}

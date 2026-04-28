@@ -19,6 +19,7 @@ class ArtifactKey:
     LAB_SIGNAL_MATRIX = "lab_signal_matrix"
     LAB_SIGNAL_PREDICTION_DIR = "lab_signal_prediction_dir"
     TRADABILITY_DAILY = "tradability_daily"
+    ORDER_PRESSURE_DAILY = "order_pressure_daily"
     ACTIVATION_STATE_DAILY = "activation_state_daily"
     ACTIVATION_META_DAILY = "activation_meta_daily"
 
@@ -83,6 +84,10 @@ def default_lab_signal_prediction_dir() -> Path:
 
 def default_tradability_path() -> Path:
     return resolve_artifact_path(ArtifactKey.TRADABILITY_DAILY)
+
+
+def default_order_pressure_path() -> Path:
+    return resolve_artifact_path(ArtifactKey.ORDER_PRESSURE_DAILY)
 
 
 def default_activation_state_path() -> Path:
@@ -176,6 +181,17 @@ _ARTIFACT_SPECS: dict[str, ArtifactSpec] = {
         key=ArtifactKey.TRADABILITY_DAILY,
         relative_path="features/execution/tradability_daily.parquet",
         required_columns=("time", "ticker", "can_buy_next_open"),
+        time_column="time",
+    ),
+    ArtifactKey.ORDER_PRESSURE_DAILY: ArtifactSpec(
+        key=ArtifactKey.ORDER_PRESSURE_DAILY,
+        relative_path="features/xs_order_pressure_daily.parquet",
+        required_columns=(
+            "time",
+            "ticker",
+            "order_volume_ratio_rank",
+            "order_pressure_h359_blend_weight",
+        ),
         time_column="time",
     ),
     ArtifactKey.ACTIVATION_STATE_DAILY: ArtifactSpec(

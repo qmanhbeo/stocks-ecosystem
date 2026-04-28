@@ -21,6 +21,7 @@ For the active timing-data acquisition branch, also read:
 | Data | In git? | How to restore if missing |
 |------|---------|---------------------------|
 | `data/features/*.parquet` | YES | Already in repo; regenerate with scripts below if corrupted |
+| `data/features/xs_order_pressure_daily.parquet` — scoped C16 order-pressure feature | YES | `build_order_pressure_features.py` |
 | `data/stock/` — 394 HOSE OHLCV parquets | YES | `fetch_hose_universe.py` / `fetch_refresh_all.py` |
 | `data/fx-commodities/` — 20 global files | YES | `fetch_fx_commodities.py` + `fetch_global_macro.py` |
 | `data/insider_cache/` — 394 ticker parquets | YES | `fetch_insider_deals.py` |
@@ -138,6 +139,9 @@ Canonical producer note:
   - repo fetcher writes raw daily summaries under `data/order_stats/cafef/`
   - fetcher writes resumable per-ticker caches plus an incrementally updated
     `manifest.json` so long backfills can be monitored and resumed
+  - H356-H359 promoted a scoped C16 feature contract at
+    `data/features/xs_order_pressure_daily.parquet`, built by
+    `data_tools/build_order_pressure_features.py`
   - first full run completed cleanly:
     - `404` tickers
     - `1,340,619` rows

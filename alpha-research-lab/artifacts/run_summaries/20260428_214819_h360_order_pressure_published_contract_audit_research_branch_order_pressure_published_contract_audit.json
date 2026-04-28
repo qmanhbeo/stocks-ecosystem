@@ -1,0 +1,44 @@
+{
+  "artifacts": {
+    "daily": "artifacts/portfolio_baselines/20260428_214819_h360_order_pressure_published_contract_daily.parquet",
+    "details": "artifacts/run_summaries/20260428_214819_h360_order_pressure_published_contract_details.json",
+    "h359_summary": "artifacts/run_summaries/latest_research_branch_order_pressure_sizing_scope_audit.json",
+    "order_pressure": "data/features/xs_order_pressure_daily.parquet",
+    "results": "artifacts/portfolio_baselines/20260428_214819_h360_order_pressure_published_contract_results.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "formula": "(1 - w) * full_library_score + w * order_volume_ratio_rank",
+    "parity_tolerance": 1e-09,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "start_year": 2015,
+    "weight_column": "order_pressure_h359_blend_weight"
+  },
+  "mode": "research_branch_order_pressure_published_contract_audit",
+  "name": "h360_order_pressure_published_contract_audit",
+  "summary": {
+    "branch_decision": "The published C16 artifact reproduces the H359 winner exactly enough for the documented downstream opt-in contract.",
+    "confirmation_cash_delta": -0.006697340012432801,
+    "confirmation_relative_delta": 0.05819275622319764,
+    "max_abs_parity_delta": 9.103828801926284e-15,
+    "parity_pass": true,
+    "passes_execution_health": true,
+    "portfolio_gate_pass": true,
+    "strategy_name": "order_pressure_published_h359_contract",
+    "validation_cash_delta": 0.0036053878564699555,
+    "validation_relative_delta": 0.32198725809829765,
+    "verdict": "PASSED"
+  },
+  "ts": "20260428_214819"
+}

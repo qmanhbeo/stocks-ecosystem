@@ -87,6 +87,9 @@ python -m manual_label_factory.manual_label
 RL defaults to shared `data/features/news/predictions/` and `data/features/signals/predictions/auto/` when `--news-prediction-dir` / `--signal-prediction-dir` are omitted.
 Those default paths are now resolved through the shared artifact registry in `../shared-recommendation/`, so alpha and RL consume the same workspace path contract.
 Producer-side model checkpoints under `../data/model_checkpoints/` are not consumed by RL directly.
+The scoped C16 order-pressure artifact at `../data/features/xs_order_pressure_daily.parquet`
+is registered as a shared artifact, but RL does not consume it automatically; it
+must first be merged through a promoted lab matrix/export path.
 
 ## Consume the lab RL signal matrix
 

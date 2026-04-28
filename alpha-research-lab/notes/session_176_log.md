@@ -88,6 +88,6 @@ This pass did not interrupt the live training process.
 ## Pointers
 
 - live state:
-  - `notes/next_steps.md`
+  - `notes/live_state.md`
 - durable findings touched:
   - `notes/findings-271-300.md#f279`

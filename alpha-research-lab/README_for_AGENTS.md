@@ -31,9 +31,11 @@ Execution reality is shared at the workspace level:
 - shared rule code: `../shared-market-rules/shared_market_rules/`
 - produced tradability artifact: `data/features/execution/tradability_daily.parquet`
 
-`notes/next_steps.md` is the live small-brain state source. Keep it short and
-link out. Use `notes/session_NN_log.md` for full per-session detail. This file
-is the working manual.
+`notes/live_state.md` is the live small-brain state source. Keep it short and
+link out. Use `notes/sessions_compact.md` for the compact per-session rollup
+and `notes/findings_compact.md` / `notes/deadends_compact.md` for compact
+durable-memory recovery. Use `notes/session_NN_log.md` and `notes/findings-*.md`
+for source detail. This file is the working manual.
 
 Artifact writes are anchored to `alpha-research-lab/artifacts/` regardless of launch directory. Do not treat workspace-root `artifacts/` as the canonical lab output location.
 
@@ -158,7 +160,7 @@ Operationally important summary:
 - if architecture work is intentionally reopened around ticker-specific buy timing, start from:
   - this file
   - `README.md`
-  - `notes/next_steps.md`
+  - `notes/live_state.md`
   - `notes/session_75_log.md`
   - branch thesis:
     - keep selection alpha as the cross-sectional prior
@@ -326,15 +328,18 @@ Do not maintain a partial summary table here unless you update it together with 
 Read in this order:
 
 1. `README.md`
-2. `notes/next_steps.md`
-3. `notes/signal_library.md`
-4. `notes/findings.md` index plus the relevant `notes/findings-*.md` chunk
-5. `notes/session_NN_log.md` only when you need a detailed traceback
+2. `notes/live_state.md`
+3. `notes/sessions_compact.md` only when you need compact recent-session context
+4. `notes/findings_compact.md` and `notes/deadends_compact.md` when you need
+   compact durable-memory context
+5. `notes/signal_library.md`
+6. `notes/findings.md` index plus the relevant `notes/findings-*.md` chunk
+7. `notes/session_NN_log.md` only when you need a detailed traceback
 
 When the active branch is timing-data acquisition rather than modeling, read next:
 
-6. `notes/timing_data_acquisition_plan.md`
-7. `notes/timing_data_source_scorecard.csv`
+8. `notes/timing_data_acquisition_plan.md`
+9. `notes/timing_data_source_scorecard.csv`
 
 Use this file for:
 
@@ -348,7 +353,14 @@ Use this file for:
 
 ## Canonical Sources
 
-- `notes/next_steps.md`: live champion, current priorities, short recent digest
+- `notes/live_state.md`: current state, active constraints, and immediate next
+  actions; keep `Last verified` current when checked
+- `notes/sessions_compact.md`: compact per-session rollup; unnumbered
+  newest-first entries with source-session links
+- `notes/findings_compact.md`: compact thematic digest of durable findings
+  with source anchors
+- `notes/deadends_compact.md`: compact digest of durable failed or parked paths
+  with source anchors
 - `notes/signal_library.md`: **signal registry — primary deliverable**
 - `notes/findings.md`: index for durable scientific truth
 - `notes/findings-*.md`: chunked durable scientific truth, padded to 30-block filename ranges
@@ -531,8 +543,12 @@ one compact summary JSON under `artifacts/run_summaries/`.
 - The permanent output path is recorded.
 - The session log states the hypothesis, result, and verdict.
 - The verdict is classified using the branch-result buckets in this file and `README.md`.
+- `notes/sessions_compact.md` is prepended with a source-linked entry.
 - Durable conclusions are promoted to the current `notes/findings-*.md` chunk.
-- `notes/next_steps.md` is updated if the champion system or next priority changed.
+- `notes/live_state.md` is updated if current state, active constraints, blockers,
+  or immediate next actions changed; refresh `Last verified` when checked.
+- `notes/findings_compact.md` or `notes/deadends_compact.md` is updated only when
+  durable memory changed, with source anchors included.
 - `notes/signal_library.md` is updated if a signal was confirmed, promoted, or newly rejected.
 
 ---
@@ -958,19 +974,47 @@ See `notes/signal_library.md` for evaluation criteria.
 
 - `notes/signal_library.md`: **signal registry — primary output, update after every signal experiment**
 - `notes/findings.md`: index for durable scientific conclusions
+- `notes/findings_compact.md`: compact thematic digest of durable conclusions;
+  every entry must include source anchors
+- `notes/deadends_compact.md`: compact digest of failed or parked paths derived
+  from findings; every entry must include source anchors
 - `notes/findings-*.md`: durable scientific conclusions, chunked by 30 findings
-- `notes/next_steps.md`: current queue plus a short recent digest
+- `notes/live_state.md`: current state, active constraints, and immediate next
+  actions; keep `Last verified` current when checked
+- `notes/sessions_compact.md`: compact per-session rollup; prepend new entries
+  without manual numbering and link each entry to its source session
 - `notes/session_NN_log.md`: detailed session record
 
 ### Session Workflow
 
-1. Start by reading `README.md`, `notes/next_steps.md`, `notes/signal_library.md`, this file, and `notes/findings.md` plus the relevant `notes/findings-*.md` chunk.
+1. Start by reading `README.md`, `notes/live_state.md`,
+   `notes/signal_library.md`, this file, and `notes/findings.md` plus the
+   relevant `notes/findings-*.md` chunk. Read `notes/sessions_compact.md` when
+   compact recent-session context is needed, and read
+   `notes/findings_compact.md` / `notes/deadends_compact.md` when compact
+   durable-memory context is needed.
 2. Run the smallest valid experiment.
 3. Make sure the run leaves behind a compact summary artifact.
 4. Record the experiment in the session log after the result is known.
 5. Promote durable conclusions into the current `notes/findings-*.md` chunk and update `notes/findings.md` if a new chunk is created.
-6. Update `notes/next_steps.md` when the live state changes.
+6. Update `notes/live_state.md` when the live state changes.
 7. Update `notes/signal_library.md` if the experiment concerned a signal (confirmed, promoted, or rejected).
+
+### Session Closeout Checklist
+
+For every material pass:
+
+- update the session log
+- prepend `notes/sessions_compact.md` with a source-linked entry
+- update `notes/live_state.md` only if current state, active constraints,
+  blockers, or immediate next actions changed; refresh `Last verified` when
+  checked
+- promote durable findings into the active findings chunk when warranted
+- promote durable failed, rejected, or parked paths into the durable dead-end
+  layer when warranted
+- update `notes/findings_compact.md` or `notes/deadends_compact.md` only when
+  durable memory changed, and include source anchors
+- update operator docs when workflow or script-heavy surfaces changed
 
 ### Minimum Documentation Standard For A Material Experiment
 
@@ -986,7 +1030,7 @@ Every material experiment should leave behind:
 - Do not treat terminal output as the only record.
 - Do not overwrite a session log with a shorter summary.
 - Do not delete a failed direction just because it did not work.
-- Do not let `next_steps.md` become a long narrative; keep details in session logs.
+- Do not let `live_state.md` become a long narrative; keep details in session logs.
 
 ---
 

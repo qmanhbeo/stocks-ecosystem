@@ -29,6 +29,7 @@ Key exported inputs:
 - consolidated lab RL matrix: `data/features/xs_rl_signal_matrix.parquet`
 - adapted lab signal features: `data/features/signals/predictions/rl_lab_matrix/*_signal_predictions.parquet`
 - execution tradability flags: `data/features/execution/tradability_daily.parquet`
+- scoped order-pressure feature: `data/features/xs_order_pressure_daily.parquet` (not consumed by RL automatically; merge through a promoted lab matrix/export path first)
 - raw historical foreign-flow archive: `data/foreign_flow/cafef/` (not consumed by RL directly; raw source only)
 - forward-only foreign-flow board snapshots: `data/foreign_flow_forward/vci_price_board/` (raw acquisition surface, not consumed by RL and not historical/backtestable yet)
 - producer-side checkpoint bundles: `data/model_checkpoints/` (not consumed by RL directly)

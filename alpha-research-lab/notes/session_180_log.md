@@ -30,7 +30,7 @@ Operator effect:
 Updated:
 - `README.md`
 - `research_pipelines/news_features/README.md`
-- `notes/next_steps.md`
+- `notes/live_state.md`
 
 The live note now records that the earlier tmux run is not active and that
 stale Ollama checkpoint/status files should be treated as partial resume state.

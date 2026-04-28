@@ -14,7 +14,7 @@ Coming in:
   - `fade_tension_disagreement`
   - `intraday_shape_core_disagreement`
   survived the standalone observed-subset library gate
-- the next honest question from `next_steps.md` was narrower than a new broad backtest:
+- the next honest question from `live_state.md` was narrower than a new broad backtest:
   - do event regimes make that disagreement information more transportable on the breakout-like entry subset?
 - earlier event work had already shown only narrow trust-context value:
   - `H251` passed

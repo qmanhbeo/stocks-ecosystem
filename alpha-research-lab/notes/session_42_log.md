@@ -92,5 +92,5 @@ The H124 low-beta signal was not kept in the matrix because it overlaps too stro
 
 - Keep `C11` in the RL matrix and signal library
 - Keep `H124` in the rejected table
-- Future OHLCV searches should start from the orthogonalized beta / longer-horizon continuation ideas in `notes/next_steps.md`
+- Future OHLCV searches should start from the orthogonalized beta / longer-horizon continuation ideas in `notes/live_state.md`
 - `notes/findings-061-090.md` now holds F85 and F86 for this session

@@ -39,7 +39,7 @@ Updated:
 
 - `research_pipelines/news_features/README.md`
 - `notes/local_bert_roadmap.md`
-- `notes/next_steps.md`
+- `notes/live_state.md`
 
 The local-news branch is now documented as:
 
@@ -87,6 +87,6 @@ What was not executed:
 ## Pointers
 
 - live state:
-  - `notes/next_steps.md`
+  - `notes/live_state.md`
 - durable findings touched:
   - `notes/findings-271-300.md#f274`

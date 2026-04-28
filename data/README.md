@@ -32,7 +32,7 @@ Operational rule:
 | `data/fundamentals_cache/` | available | vnstock fundamentals | `fetch_fundamentals.py`, `fetch_all_stock_fundamentals.py` | Raw ratios / statements cache |
 | `data/insider_cache/` | available | CafeF `GDCoDong` | `fetch_insider_deals.py` | Raw insider and large-holder disclosures for the HOSE universe |
 | `data/foreign_flow/cafef/` | available | CafeF `GDKhoiNgoai` | `fetch_cafef_foreign_flow.py` | Raw historical foreign-flow archive |
-| `data/order_stats/cafef/` | available | CafeF `ThongKeDL` | `fetch_cafef_order_stats.py` | Raw daily order-statistics summary, not depth |
+| `data/order_stats/cafef/` | available | CafeF `ThongKeDL` | `fetch_cafef_order_stats.py` | Raw daily order-statistics summary, not depth; published scoped feature is `data/features/xs_order_pressure_daily.parquet` |
 | `data/proprietary_trading/cafef/` | available with source-side holes | CafeF `GDTuDoanh` | `fetch_cafef_proprietary_trading.py` | Raw daily proprietary-trading summary |
 | `data/foreign_flow_forward/vci_price_board/` | available, forward-only | VCI price board | `collect_forward_foreign_flow.py` | Current-day accumulation snapshots only |
 | `data/official_disclosures/hnx/` | partially available | HNX mobile official issuer-disclosure site | `fetch_hnx_official_disclosures.py` | Full official issuer universe is fetchable now; per-ticker disclosure history is wired, and transaction PDF extraction is available when attachments are downloaded |
@@ -202,10 +202,47 @@ These are shared consumer-facing contracts, not raw-source caches:
 
 - `data/features/xs_rl_signal_matrix.parquet`
 - `data/features/execution/tradability_daily.parquet`
+- `data/features/xs_order_pressure_daily.parquet`
 - `data/features/activation_state_daily.parquet`
 - `data/features/activation_meta_daily.parquet`
 - `data/features/event_surface_daily.parquet`
 - `data/features/recommendations/<profile>/latest_candidates.parquet`
+
+## Order Pressure Feature Subcontract
+
+### `data/features/xs_order_pressure_daily.parquet`
+
+Purpose:
+- scoped C16 daily posted-order pressure feature from the CafeF `ThongKeDL`
+  archive
+- portable blend metadata for the H359-promoted variant, without baking in any
+  full-library selector score
+
+Produced by:
+- `alpha-research-lab/data_tools/build_order_pressure_features.py`
+
+Current contract:
+- `time`
+- `ticker`
+- `order_volume_ratio`
+- `order_volume_ratio_rank`
+- `order_pressure_available`
+- `can_buy_next_open`
+- `order_pressure_h359_active`
+- `order_pressure_h359_blend_weight`
+
+Consumer formula:
+- `blended_score = (1 - w) * base_score + w * order_volume_ratio_rank`
+- `w` is `order_pressure_h359_blend_weight`, currently `0.05` only where the
+  order-pressure row is available and `can_buy_next_open` is true; otherwise it
+  is `0.0`
+
+Important limitations:
+- this is a posted-order summary feature, not historical depth or queue data
+- the default builder stops at `2025-12-31` to preserve the research lockbox;
+  2026+ refreshes require the explicit `--include-2026` flag
+- RL does not consume this artifact automatically; it must be merged through a
+  promoted matrix/export path first
 
 ## Maintenance Rule
 

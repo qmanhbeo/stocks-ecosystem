@@ -1052,12 +1052,166 @@ Why it matters:
   explicit producer-consumer contract update
 
 Current next actions:
-- run a portfolio/tradability audit for order pressure before publishing
-- if that passes, design a low-resource producer for a shared
-  `xs_order_pressure_daily` feature artifact
+- H358 has now superseded this next action with a `MIXED` executable
+  portfolio / tradability result
+- do not publish a shared `xs_order_pressure_daily` feature artifact on
+  H357 evidence alone
+- if continuing, use one bounded smaller-weight or tradable-state-scope audit
 - update producer/consumer docs only when the shared artifact contract is
   intentionally introduced
 - keep `2026` data monitor-only unless explicitly allowed for predictive work
 
 Source sessions:
 - `notes/session_197_log.md`
+
+## F298: H358 Shows Order Pressure Has Executable Portfolio Relevance But Is Not Yet A Clean Published Feature Contract (2026-04-28, Session 198)
+
+Finding:
+- H358 took the H356/H357 winner, `order_volume_ratio_rank`, through the first
+  executable portfolio / tradability audit
+- the protocol stayed locked:
+  - `2015-2022` dev
+  - `2023-2024` validation
+  - `2025` confirmation
+  - `2026+` excluded
+- the executable audit used:
+  - full-library top-5 equal-weight selector
+  - rebalance every `5` signal days
+  - shared tradability artifact
+  - T+1 open fills
+  - legal sell delay
+  - round-trip cost `0.003`
+- source coverage remained dense:
+  - matrix rows: `826,404`
+  - order-feature rows: `810,201`
+  - coverage: `98.04%`
+- the full-library-plus-order portfolio passed the additive portfolio gate:
+  - validation relative-return delta: `+12.31%`
+  - validation IR delta: `+0.1532`
+  - confirmation relative-return delta: `+11.07%`
+  - confirmation IR delta: `+0.4739`
+- the result was still classified `MIXED`, not `PASSED`, because the
+  predeclared execution-health gate failed:
+  - validation average cash weight rose from `0.0238` to `0.0452`
+  - validation cash delta was `+0.0214` versus the `0.02` limit
+  - confirmation cash delta was acceptable at `+0.0175`
+  - turnover deltas were not the problem
+
+Why it matters:
+- H358 confirms C16 is not merely a label-level artifact; it can improve an
+  executable portfolio
+- the equal-weight full-library addition also shifts the book toward slightly
+  more unfilled or cash-heavy selections, so a shared consumer artifact is not
+  ready on this evidence alone
+- the honest continuation is one bounded sizing or tradable-state-scope audit,
+  not more order-statistics rank tuning
+
+Current next actions:
+- superseded by F299/F300: do not use H358 alone as the publication rationale;
+  the later H359 scoped variant and Session 200 artifact are the promoted
+  contract
+- if continuing, run one predeclared smaller-weight or tradable-state-scope
+  audit; if that fails, park C16 until a learned model contract or downstream
+  RL consumer specifically needs it
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_198_log.md`
+
+## F299: H359 Promotes Scoped Order Pressure To Publisher / Contract Design (2026-04-28, Session 199)
+
+Finding:
+- H359 ran the single bounded continuation allowed by H358 after the
+  equal-feature order-pressure addition produced a `MIXED` tradability result
+- the protocol stayed locked:
+  - `2015-2022` dev
+  - `2023-2024` validation
+  - `2025` confirmation
+  - `2026+` excluded
+- the four predeclared variants were:
+  - order blend weight `0.025`
+  - order blend weight `0.050`
+  - H358-equivalent order weight `1 / 14` only where `can_buy_next_open` is
+    true
+  - order blend weight `0.050` only where `can_buy_next_open` is true
+- all four variants passed the portfolio and execution-health gates
+- the selected winner was `order_w0050_buyable`:
+  - formula: blend the full-library score with `5%` `order_volume_ratio_rank`
+    only on rows where `can_buy_next_open` is true
+  - validation relative-return delta: `+32.20%`
+  - validation IR delta: `+0.3735`
+  - confirmation relative-return delta: `+5.82%`
+  - confirmation IR delta: `+0.2738`
+  - validation cash delta: `+0.0036`
+  - confirmation cash delta: `-0.0067`
+  - validation blocked-buy events/day delta: `+0.0020`
+  - confirmation blocked-buy events/day delta: `+0.0040`
+
+Why it matters:
+- C16 is now more than a standalone / label-level candidate: a bounded scoped
+  executable variant passed under the shared tradability contract
+- the right production contract is not the raw equal-feature addition from
+  H358; it is a scoped order-pressure blend that respects next-open buyability
+- the branch can advance to low-resource publisher / contract design, but
+  consumer docs should wait until the artifact shape is verified
+
+Current next actions:
+- superseded by F300: the low-resource C16 scoped artifact is now published
+- producer/consumer docs were updated in Session 200 after the artifact was
+  verified
+- do not run more sizing/search variants unless a future downstream consumer
+  changes the contract
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_199_log.md`
+
+## F300: C16 Scoped Order Pressure Is Now A Published Shared Feature Contract (2026-04-28, Session 200)
+
+Finding:
+- Session 200 implemented and verified the low-resource C16 publisher:
+  `data_tools/build_order_pressure_features.py`
+- the published artifact is
+  `data/features/xs_order_pressure_daily.parquet`
+- the builder derives `order_volume_ratio_rank` from the raw CafeF
+  `data/order_stats/cafef/order_stats_daily.parquet` surface and joins
+  `data/features/execution/tradability_daily.parquet` for
+  `can_buy_next_open`
+- the H359 contract is represented without baking in any base selector:
+  `blended_score = (1 - w) * base_score + w * order_volume_ratio_rank`
+- `w` is `order_pressure_h359_blend_weight`, set to `0.05` only when the
+  order-pressure row is available and `can_buy_next_open` is true; otherwise
+  `w = 0.0`
+- the verified default output stops at `2025-12-31` to preserve the 2026
+  lockbox:
+  - rows: `1,315,778`
+  - tickers: `402`
+  - dates: `4,622`
+  - date range: `2007-07-02` through `2025-12-31`
+  - no duplicate ticker-days
+  - rank range: `0.0025` to `1.0`
+  - active H359 blend rows: `1,211,194` (`92.05%`)
+  - rank coverage: `98.69%`
+  - tradability coverage: `99.17%`
+- the artifact is registered in `shared-recommendation` as
+  `ArtifactKey.ORDER_PRESSURE_DAILY`
+- root, data, alpha, shared-recommendation, and RL docs now state that the
+  artifact is published but downstream use is opt-in only
+
+Why it matters:
+- C16 has crossed from offline candidate into a durable shared feature surface
+  with an explicit producer/consumer contract
+- the contract preserves the H359 tradability condition and avoids the H358
+  equal-feature cash-drag failure mode
+- RL and recommendation consumers are protected from accidental behavior
+  changes because no default consumer path was changed
+
+Current next actions:
+- do not run more C16 sizing/search variants unless a downstream consumer
+  changes the contract
+- if the C16 feature is merged into the consolidated RL matrix later, rerun
+  the appropriate adapter/export and repeat a focused portfolio/consumer audit
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_200_log.md`

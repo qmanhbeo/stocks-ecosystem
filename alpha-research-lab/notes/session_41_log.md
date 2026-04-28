@@ -67,4 +67,4 @@ C10 stays well below the 0.30 orthogonality threshold against the existing candi
 - Keep C10 in the RL matrix and the signal library
 - H122 is now rejected and should stay in the rejected table
 - Next tests to prioritize are H123 and H124
-- The current live state is fully captured in `notes/next_steps.md`
+- The current live state is fully captured in `notes/live_state.md`

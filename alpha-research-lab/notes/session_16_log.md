@@ -286,4 +286,4 @@ this is the true out-of-sample test.
 
 **Ask the user explicitly before touching 2026 data.**
 
-See `notes/next_steps.md` for prioritization.
+See `notes/live_state.md` for prioritization.

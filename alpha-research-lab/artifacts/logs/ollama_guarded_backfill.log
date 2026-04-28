@@ -6,3 +6,802 @@ Ollama guarded checkpoint resume: completed_batches=0/735, article_rows=0, uniqu
 Ollama guarded input scan 200/146872; unique_articles=200, article_rows=345
 Ollama guarded input scan 400/146872; unique_articles=400, article_rows=671
 scan 400/146872; unique_articles=400, article_rows=671
+Loaded normalized_rows=712017 and tagged_rows=660255 for Ollama guarded lane in 0.5s
+Ollama guarded article-scope gate: threshold=0.280, kept=146872/342135
+Ollama guarded input cache reuse: input_rows=146872, unique_tagged_articles=342135, gated_articles=146872
+Ollama guarded scoring universe: input_rows=146872 from /home/manh/stocks-ecosystem/data/features/news/datasets/ollama_guarded_input_articles.parquet
+Ollama guarded score cache load: signature=b399e5647c2306b7, cached_rows=10100
+Ollama guarded checkpoint resume: completed_batches=505/7344, article_rows=18264, unique_articles=10100
+Ollama guarded input scan 20/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 40/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 60/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 80/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 100/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 120/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 140/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 160/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 180/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 200/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 220/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 240/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 260/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 280/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 300/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 320/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 340/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 360/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 380/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 400/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 420/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 440/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 460/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 480/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 500/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 520/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 540/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 560/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 580/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 600/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 620/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 640/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 660/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 680/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 700/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 720/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 740/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 760/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 780/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 800/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 820/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 840/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 860/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 880/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 900/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 920/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 940/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 960/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 980/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1000/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1020/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1040/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1060/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1080/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1100/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1120/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1140/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1160/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1180/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1200/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1220/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1240/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1260/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1280/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1300/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1320/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1340/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1360/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1380/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1400/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1420/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1440/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1460/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1480/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1500/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1520/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1540/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1560/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1580/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1600/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1620/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1640/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1660/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1680/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1700/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1720/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1740/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1760/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1780/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1800/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1820/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1840/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1860/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1880/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1900/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1920/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1940/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1960/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 1980/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2000/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2020/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2040/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2060/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2080/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2100/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2120/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2140/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2160/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2180/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2200/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2220/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2240/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2260/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2280/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2300/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2320/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2340/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2360/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2380/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2400/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2420/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2440/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2460/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2480/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2500/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2520/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2540/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2560/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2580/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2600/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2620/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2640/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2660/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2680/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2700/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2720/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2740/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2760/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2780/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2800/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2820/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2840/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2860/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2880/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2900/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2920/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2940/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2960/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 2980/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3000/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3020/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3040/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3060/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3080/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3100/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3120/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3140/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3160/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3180/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3200/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3220/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3240/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3260/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3280/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3300/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3320/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3340/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3360/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3380/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3400/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3420/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3440/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3460/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3480/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3500/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3520/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3540/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3560/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3580/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3600/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3620/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3640/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3660/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3680/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3700/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3720/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3740/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3760/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3780/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3800/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3820/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3840/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3860/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3880/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3900/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3920/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3940/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3960/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 3980/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4000/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4020/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4040/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4060/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4080/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4100/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4120/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4140/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4160/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4180/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4200/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4220/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4240/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4260/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4280/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4300/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4320/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4340/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4360/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4380/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4400/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4420/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4440/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4460/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4480/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4500/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4520/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4540/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4560/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4580/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4600/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4620/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4640/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4660/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4680/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4700/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4720/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4740/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4760/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4780/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4800/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4820/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4840/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4860/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4880/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4900/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4920/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4940/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4960/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 4980/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5000/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5020/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5040/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5060/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5080/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5100/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5120/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5140/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5160/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5180/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5200/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5220/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5240/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5260/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5280/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5300/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5320/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5340/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5360/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5380/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5400/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5420/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5440/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5460/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5480/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5500/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5520/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5540/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5560/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5580/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5600/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5620/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5640/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5660/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5680/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5700/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5720/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5740/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5760/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5780/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5800/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5820/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5840/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5860/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5880/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5900/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5920/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5940/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5960/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 5980/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6000/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6020/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6040/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6060/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6080/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6100/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6120/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6140/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6160/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6180/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6200/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6220/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6240/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6260/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6280/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6300/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6320/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6340/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6360/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6380/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6400/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6420/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6440/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6460/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6480/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6500/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6520/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6540/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6560/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6580/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6600/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6620/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6640/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6660/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6680/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6700/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6720/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6740/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6760/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6780/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6800/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6820/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6840/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6860/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6880/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6900/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6920/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6940/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6960/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 6980/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7000/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7020/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7040/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7060/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7080/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7100/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7120/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7140/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7160/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7180/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7200/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7220/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7240/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7260/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7280/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7300/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7320/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7340/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7360/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7380/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7400/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7420/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7440/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7460/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7480/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7500/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7520/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7540/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7560/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7580/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7600/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7620/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7640/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7660/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7680/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7700/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7720/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7740/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7760/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7780/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7800/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7820/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7840/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7860/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7880/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7900/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7920/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7940/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7960/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 7980/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8000/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8020/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8040/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8060/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8080/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8100/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8120/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8140/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8160/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8180/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8200/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8220/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8240/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8260/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8280/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8300/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8320/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8340/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8360/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8380/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8400/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8420/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8440/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8460/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8480/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8500/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8520/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8540/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8560/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8580/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8600/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8620/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8640/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8660/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8680/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8700/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8720/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8740/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8760/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8780/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8800/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8820/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8840/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8860/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8880/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8900/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8920/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8940/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8960/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 8980/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9000/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9020/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9040/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9060/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9080/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9100/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9120/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9140/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9160/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9180/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9200/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9220/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9240/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9260/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9280/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9300/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9320/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9340/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9360/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9380/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9400/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9420/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9440/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9460/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9480/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9500/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9520/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9540/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9560/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9580/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9600/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9620/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9640/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9660/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9680/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9700/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9720/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9740/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9760/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9780/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9800/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9820/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9840/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9860/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9880/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9900/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9920/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9940/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9960/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 9980/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 10000/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 10020/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 10040/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 10060/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 10080/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 10100/146872; unique_articles=10100, article_rows=18264 (resume skip)
+Ollama guarded input scan 10120/146872; unique_articles=10120, article_rows=18305, cache_hits=0, cache_misses=20, newly_scored=20
+Ollama guarded input scan 10140/146872; unique_articles=10140, article_rows=18337, cache_hits=0, cache_misses=40, newly_scored=40
+Ollama guarded input scan 10160/146872; unique_articles=10160, article_rows=18370, cache_hits=0, cache_misses=60, newly_scored=60
+Ollama guarded input scan 10180/146872; unique_articles=10180, article_rows=18427, cache_hits=0, cache_misses=80, newly_scored=80
+Ollama guarded input scan 10200/146872; unique_articles=10200, article_rows=18526, cache_hits=0, cache_misses=100, newly_scored=100
+Ollama guarded input scan 10220/146872; unique_articles=10220, article_rows=18564, cache_hits=0, cache_misses=120, newly_scored=120
+Ollama guarded input scan 10240/146872; unique_articles=10240, article_rows=18599, cache_hits=0, cache_misses=140, newly_scored=140
+Ollama guarded input scan 10260/146872; unique_articles=10260, article_rows=18647, cache_hits=0, cache_misses=160, newly_scored=160
+Ollama guarded input scan 10280/146872; unique_articles=10280, article_rows=18680, cache_hits=0, cache_misses=180, newly_scored=180
+Ollama guarded input scan 10300/146872; unique_articles=10300, article_rows=18714, cache_hits=0, cache_misses=200, newly_scored=200
+Ollama guarded input scan 10320/146872; unique_articles=10320, article_rows=18745, cache_hits=0, cache_misses=220, newly_scored=220
+Ollama guarded input scan 10340/146872; unique_articles=10340, article_rows=18782, cache_hits=0, cache_misses=240, newly_scored=240
+Ollama guarded input scan 10360/146872; unique_articles=10360, article_rows=18810, cache_hits=0, cache_misses=260, newly_scored=260
+Ollama guarded input scan 10380/146872; unique_articles=10380, article_rows=18851, cache_hits=0, cache_misses=280, newly_scored=280
+Ollama guarded input scan 10400/146872; unique_articles=10400, article_rows=18878, cache_hits=0, cache_misses=300, newly_scored=300
+Ollama guarded input scan 10420/146872; unique_articles=10420, article_rows=18920, cache_hits=0, cache_misses=320, newly_scored=320
+Ollama guarded input scan 10440/146872; unique_articles=10440, article_rows=18965, cache_hits=0, cache_misses=340, newly_scored=340
+Ollama guarded input scan 10460/146872; unique_articles=10460, article_rows=19017, cache_hits=0, cache_misses=360, newly_scored=360
+Ollama guarded input scan 10480/146872; unique_articles=10480, article_rows=19050, cache_hits=0, cache_misses=380, newly_scored=380
+Ollama guarded input scan 10500/146872; unique_articles=10500, article_rows=19074, cache_hits=0, cache_misses=400, newly_scored=400
+Ollama guarded input scan 10520/146872; unique_articles=10520, article_rows=19113, cache_hits=0, cache_misses=420, newly_scored=420
+Ollama guarded input scan 10540/146872; unique_articles=10540, article_rows=19156, cache_hits=0, cache_misses=440, newly_scored=440
+Ollama guarded input scan 10560/146872; unique_articles=10560, article_rows=19197, cache_hits=0, cache_misses=460, newly_scored=460
+Ollama guarded input scan 10580/146872; unique_articles=10580, article_rows=19233, cache_hits=0, cache_misses=480, newly_scored=480
+Ollama guarded input scan 10600/146872; unique_articles=10600, article_rows=19264, cache_hits=0, cache_misses=500, newly_scored=500
+Ollama guarded input scan 10620/146872; unique_articles=10620, article_rows=19307, cache_hits=0, cache_misses=520, newly_scored=520
+Ollama guarded input scan 10640/146872; unique_articles=10640, article_rows=19337, cache_hits=0, cache_misses=540, newly_scored=540
+Ollama guarded input scan 10660/146872; unique_articles=10660, article_rows=19382, cache_hits=0, cache_misses=560, newly_scored=560
+Ollama guarded input scan 10680/146872; unique_articles=10680, article_rows=19411, cache_hits=0, cache_misses=580, newly_scored=580
+Ollama guarded input scan 10700/146872; unique_articles=10700, article_rows=19445, cache_hits=0, cache_misses=600, newly_scored=600
+Ollama guarded input scan 10720/146872; unique_articles=10720, article_rows=19490, cache_hits=0, cache_misses=620, newly_scored=620
+Ollama guarded input scan 10740/146872; unique_articles=10740, article_rows=19527, cache_hits=0, cache_misses=640, newly_scored=640
+Ollama guarded input scan 10760/146872; unique_articles=10760, article_rows=19550, cache_hits=0, cache_misses=660, newly_scored=660
+Ollama guarded input scan 10780/146872; unique_articles=10780, article_rows=19582, cache_hits=0, cache_misses=680, newly_scored=680
+Ollama guarded input scan 10800/146872; unique_articles=10800, article_rows=19618, cache_hits=0, cache_misses=700, newly_scored=700
+Ollama guarded input scan 10820/146872; unique_articles=10820, article_rows=19641, cache_hits=0, cache_misses=720, newly_scored=720
+Ollama guarded input scan 10840/146872; unique_articles=10840, article_rows=19672, cache_hits=0, cache_misses=740, newly_scored=740
+Ollama guarded input scan 10860/146872; unique_articles=10860, article_rows=19714, cache_hits=0, cache_misses=760, newly_scored=760
+Ollama guarded input scan 10880/146872; unique_articles=10880, article_rows=19751, cache_hits=0, cache_misses=780, newly_scored=780
+Ollama guarded input scan 10900/146872; unique_articles=10900, article_rows=19782, cache_hits=0, cache_misses=800, newly_scored=800
+Ollama guarded input scan 10920/146872; unique_articles=10920, article_rows=19810, cache_hits=0, cache_misses=820, newly_scored=820
+Ollama guarded input scan 10940/146872; unique_articles=10940, article_rows=19845, cache_hits=0, cache_misses=840, newly_scored=840
+Ollama guarded input scan 10960/146872; unique_articles=10960, article_rows=19880, cache_hits=0, cache_misses=860, newly_scored=860
+Ollama guarded input scan 10980/146872; unique_articles=10980, article_rows=19930, cache_hits=0, cache_misses=880, newly_scored=880
+Ollama guarded input scan 11000/146872; unique_articles=11000, article_rows=19963, cache_hits=0, cache_misses=900, newly_scored=900
+Ollama guarded input scan 11020/146872; unique_articles=11020, article_rows=20000, cache_hits=0, cache_misses=920, newly_scored=920
+Ollama guarded input scan 11040/146872; unique_articles=11040, article_rows=20029, cache_hits=0, cache_misses=940, newly_scored=940
+Ollama guarded input scan 11060/146872; unique_articles=11060, article_rows=20075, cache_hits=0, cache_misses=960, newly_scored=960
+Ollama guarded input scan 11080/146872; unique_articles=11080, article_rows=20114, cache_hits=0, cache_misses=980, newly_scored=980
+Ollama guarded input scan 11100/146872; unique_articles=11100, article_rows=20149, cache_hits=0, cache_misses=1000, newly_scored=1000
+Ollama guarded input scan 11120/146872; unique_articles=11120, article_rows=20189, cache_hits=0, cache_misses=1020, newly_scored=1020
+Ollama guarded input scan 11140/146872; unique_articles=11140, article_rows=20281, cache_hits=0, cache_misses=1040, newly_scored=1040
+Ollama guarded input scan 11160/146872; unique_articles=11160, article_rows=20328, cache_hits=0, cache_misses=1060, newly_scored=1060
+Ollama guarded input scan 11180/146872; unique_articles=11180, article_rows=20351, cache_hits=0, cache_misses=1080, newly_scored=1080
+Ollama guarded input scan 11200/146872; unique_articles=11200, article_rows=20386, cache_hits=0, cache_misses=1100, newly_scored=1100
+Ollama guarded input scan 11220/146872; unique_articles=11220, article_rows=20418, cache_hits=0, cache_misses=1120, newly_scored=1120
+Ollama guarded input scan 11240/146872; unique_articles=11240, article_rows=20452, cache_hits=0, cache_misses=1140, newly_scored=1140
+Ollama guarded input scan 11260/146872; unique_articles=11260, article_rows=20514, cache_hits=0, cache_misses=1160, newly_scored=1160
+Ollama guarded input scan 11280/146872; unique_articles=11280, article_rows=20552, cache_hits=0, cache_misses=1180, newly_scored=1180
+Ollama guarded input scan 11300/146872; unique_articles=11300, article_rows=20576, cache_hits=0, cache_misses=1200, newly_scored=1200
+Ollama guarded input scan 11320/146872; unique_articles=11320, article_rows=20628, cache_hits=0, cache_misses=1220, newly_scored=1220
+Ollama guarded input scan 11340/146872; unique_articles=11340, article_rows=20662, cache_hits=0, cache_misses=1240, newly_scored=1240
+Ollama guarded input scan 11360/146872; unique_articles=11360, article_rows=20701, cache_hits=0, cache_misses=1260, newly_scored=1260
+Ollama guarded input scan 11380/146872; unique_articles=11380, article_rows=20734, cache_hits=0, cache_misses=1280, newly_scored=1280
+Ollama guarded input scan 11400/146872; unique_articles=11400, article_rows=20769, cache_hits=0, cache_misses=1300, newly_scored=1300
+Ollama guarded input scan 11420/146872; unique_articles=11420, article_rows=20798, cache_hits=0, cache_misses=1320, newly_scored=1320
+Ollama guarded input scan 11440/146872; unique_articles=11440, article_rows=20888, cache_hits=0, cache_misses=1340, newly_scored=1340
+Ollama guarded input scan 11460/146872; unique_articles=11460, article_rows=20926, cache_hits=0, cache_misses=1360, newly_scored=1360
+Ollama guarded input scan 11480/146872; unique_articles=11480, article_rows=20951, cache_hits=0, cache_misses=1380, newly_scored=1380
+Ollama guarded input scan 11500/146872; unique_articles=11500, article_rows=20982, cache_hits=0, cache_misses=1400, newly_scored=1400
+Ollama guarded input scan 11520/146872; unique_articles=11520, article_rows=21013, cache_hits=0, cache_misses=1420, newly_scored=1420
+Ollama guarded input scan 11540/146872; unique_articles=11540, article_rows=21059, cache_hits=0, cache_misses=1440, newly_scored=1440
+Ollama guarded input scan 11560/146872; unique_articles=11560, article_rows=21119, cache_hits=0, cache_misses=1460, newly_scored=1460
+Ollama guarded input scan 11580/146872; unique_articles=11580, article_rows=21146, cache_hits=0, cache_misses=1480, newly_scored=1480
+Ollama guarded input scan 11600/146872; unique_articles=11600, article_rows=21185, cache_hits=0, cache_misses=1500, newly_scored=1500
+Ollama guarded input scan 11620/146872; unique_articles=11620, article_rows=21212, cache_hits=0, cache_misses=1520, newly_scored=1520
+Ollama guarded input scan 11640/146872; unique_articles=11640, article_rows=21256, cache_hits=0, cache_misses=1540, newly_scored=1540
+Ollama guarded input scan 11660/146872; unique_articles=11660, article_rows=21297, cache_hits=0, cache_misses=1560, newly_scored=1560
+Ollama guarded input scan 11680/146872; unique_articles=11680, article_rows=21331, cache_hits=0, cache_misses=1580, newly_scored=1580
+Ollama guarded input scan 11700/146872; unique_articles=11700, article_rows=21367, cache_hits=0, cache_misses=1600, newly_scored=1600
+Ollama guarded input scan 11720/146872; unique_articles=11720, article_rows=21414, cache_hits=0, cache_misses=1620, newly_scored=1620
+Ollama guarded input scan 11740/146872; unique_articles=11740, article_rows=21448, cache_hits=0, cache_misses=1640, newly_scored=1640
+Ollama guarded input scan 11760/146872; unique_articles=11760, article_rows=21490, cache_hits=0, cache_misses=1660, newly_scored=1660
+Ollama guarded input scan 11780/146872; unique_articles=11780, article_rows=21522, cache_hits=0, cache_misses=1680, newly_scored=1680
+Ollama guarded input scan 11800/146872; unique_articles=11800, article_rows=21552, cache_hits=0, cache_misses=1700, newly_scored=1700
+Ollama guarded input scan 11820/146872; unique_articles=11820, article_rows=21583, cache_hits=0, cache_misses=1720, newly_scored=1720
+Ollama guarded input scan 11840/146872; unique_articles=11840, article_rows=21614, cache_hits=0, cache_misses=1740, newly_scored=1740
+Ollama guarded input scan 11860/146872; unique_articles=11860, article_rows=21664, cache_hits=0, cache_misses=1760, newly_scored=1760
+Ollama guarded input scan 11880/146872; unique_articles=11880, article_rows=21689, cache_hits=0, cache_misses=1780, newly_scored=1780
+Ollama guarded input scan 11900/146872; unique_articles=11900, article_rows=21720, cache_hits=0, cache_misses=1800, newly_scored=1800
+Ollama guarded input scan 11920/146872; unique_articles=11920, article_rows=21750, cache_hits=0, cache_misses=1820, newly_scored=1820
+Ollama guarded input scan 11940/146872; unique_articles=11940, article_rows=21784, cache_hits=0, cache_misses=1840, newly_scored=1840
+Ollama guarded input scan 11960/146872; unique_articles=11960, article_rows=21812, cache_hits=0, cache_misses=1860, newly_scored=1860
+Ollama guarded input scan 11980/146872; unique_articles=11980, article_rows=21853, cache_hits=0, cache_misses=1880, newly_scored=1880
+Ollama guarded input scan 12000/146872; unique_articles=12000, article_rows=21880, cache_hits=0, cache_misses=1900, newly_scored=1900
+Ollama guarded input scan 12020/146872; unique_articles=12020, article_rows=21905, cache_hits=0, cache_misses=1920, newly_scored=1920
+Ollama guarded input scan 12040/146872; unique_articles=12040, article_rows=21937, cache_hits=0, cache_misses=1940, newly_scored=1940
+Ollama guarded input scan 12060/146872; unique_articles=12060, article_rows=21968, cache_hits=0, cache_misses=1960, newly_scored=1960
+Ollama guarded input scan 12080/146872; unique_articles=12080, article_rows=21995, cache_hits=0, cache_misses=1980, newly_scored=1980
+Ollama guarded input scan 12100/146872; unique_articles=12100, article_rows=22035, cache_hits=0, cache_misses=2000, newly_scored=2000
+Ollama guarded input scan 12120/146872; unique_articles=12120, article_rows=22062, cache_hits=0, cache_misses=2020, newly_scored=2020
+Ollama guarded input scan 12140/146872; unique_articles=12140, article_rows=22096, cache_hits=0, cache_misses=2040, newly_scored=2040
+Ollama guarded input scan 12160/146872; unique_articles=12160, article_rows=22130, cache_hits=0, cache_misses=2060, newly_scored=2060
+Ollama guarded input scan 12180/146872; unique_articles=12180, article_rows=22168, cache_hits=0, cache_misses=2080, newly_scored=2080
+Ollama guarded input scan 12200/146872; unique_articles=12200, article_rows=22204, cache_hits=0, cache_misses=2100, newly_scored=2100
+Ollama guarded input scan 12220/146872; unique_articles=12220, article_rows=22243, cache_hits=0, cache_misses=2120, newly_scored=2120
+Ollama guarded input scan 12240/146872; unique_articles=12240, article_rows=22267, cache_hits=0, cache_misses=2140, newly_scored=2140
+Ollama guarded input scan 12260/146872; unique_articles=12260, article_rows=22312, cache_hits=0, cache_misses=2160, newly_scored=2160
+Ollama guarded input scan 12280/146872; unique_articles=12280, article_rows=22350, cache_hits=0, cache_misses=2180, newly_scored=2180
+Ollama guarded input scan 12300/146872; unique_articles=12300, article_rows=22389, cache_hits=0, cache_misses=2200, newly_scored=2200
+Ollama guarded input scan 12320/146872; unique_articles=12320, article_rows=22439, cache_hits=0, cache_misses=2220, newly_scored=2220
+Ollama guarded input scan 12340/146872; unique_articles=12340, article_rows=22483, cache_hits=0, cache_misses=2240, newly_scored=2240
+Ollama guarded input scan 12360/146872; unique_articles=12360, article_rows=22518, cache_hits=0, cache_misses=2260, newly_scored=2260
+Ollama guarded input scan 12380/146872; unique_articles=12380, article_rows=22561, cache_hits=0, cache_misses=2280, newly_scored=2280
+Ollama guarded input scan 12400/146872; unique_articles=12400, article_rows=22606, cache_hits=0, cache_misses=2300, newly_scored=2300
+Ollama guarded input scan 12420/146872; unique_articles=12420, article_rows=22656, cache_hits=0, cache_misses=2320, newly_scored=2320
+Ollama guarded input scan 12440/146872; unique_articles=12440, article_rows=22689, cache_hits=0, cache_misses=2340, newly_scored=2340
+Ollama guarded input scan 12460/146872; unique_articles=12460, article_rows=22720, cache_hits=0, cache_misses=2360, newly_scored=2360
+Ollama guarded input scan 12480/146872; unique_articles=12480, article_rows=22766, cache_hits=0, cache_misses=2380, newly_scored=2380
+Ollama guarded input scan 12500/146872; unique_articles=12500, article_rows=22799, cache_hits=0, cache_misses=2400, newly_scored=2400
+Ollama guarded input scan 12520/146872; unique_articles=12520, article_rows=22854, cache_hits=0, cache_misses=2420, newly_scored=2420
+Ollama guarded input scan 12540/146872; unique_articles=12540, article_rows=22894, cache_hits=0, cache_misses=2440, newly_scored=2440
+Ollama guarded input scan 12560/146872; unique_articles=12560, article_rows=22932, cache_hits=0, cache_misses=2460, newly_scored=2460
+Ollama guarded input scan 12580/146872; unique_articles=12580, article_rows=22965, cache_hits=0, cache_misses=2480, newly_scored=2480
+Ollama guarded input scan 12600/146872; unique_articles=12600, article_rows=22998, cache_hits=0, cache_misses=2500, newly_scored=2500
+Ollama guarded input scan 12620/146872; unique_articles=12620, article_rows=23043, cache_hits=0, cache_misses=2520, newly_scored=2520
+Ollama guarded input scan 12640/146872; unique_articles=12640, article_rows=23081, cache_hits=0, cache_misses=2540, newly_scored=2540
+Ollama guarded input scan 12660/146872; unique_articles=12660, article_rows=23114, cache_hits=0, cache_misses=2560, newly_scored=2560
+Ollama guarded input scan 12680/146872; unique_articles=12680, article_rows=23182, cache_hits=0, cache_misses=2580, newly_scored=2580
+Ollama guarded input scan 12700/146872; unique_articles=12700, article_rows=23227, cache_hits=0, cache_misses=2600, newly_scored=2600
+Ollama guarded input scan 12720/146872; unique_articles=12720, article_rows=23262, cache_hits=0, cache_misses=2620, newly_scored=2620
+Ollama guarded input scan 12740/146872; unique_articles=12740, article_rows=23302, cache_hits=0, cache_misses=2640, newly_scored=2640
+Ollama guarded input scan 12760/146872; unique_articles=12760, article_rows=23369, cache_hits=0, cache_misses=2660, newly_scored=2660
+Ollama guarded input scan 12780/146872; unique_articles=12780, article_rows=23397, cache_hits=0, cache_misses=2680, newly_scored=2680
+Ollama guarded input scan 12800/146872; unique_articles=12800, article_rows=23432, cache_hits=0, cache_misses=2700, newly_scored=2700
+Ollama guarded input scan 12820/146872; unique_articles=12820, article_rows=23483, cache_hits=0, cache_misses=2720, newly_scored=2720
+Ollama guarded input scan 12840/146872; unique_articles=12840, article_rows=23523, cache_hits=0, cache_misses=2740, newly_scored=2740
+Ollama guarded input scan 12860/146872; unique_articles=12860, article_rows=23548, cache_hits=0, cache_misses=2760, newly_scored=2760
+Ollama guarded input scan 12880/146872; unique_articles=12880, article_rows=23598, cache_hits=0, cache_misses=2780, newly_scored=2780
+Ollama guarded input scan 12900/146872; unique_articles=12900, article_rows=23655, cache_hits=0, cache_misses=2800, newly_scored=2800
+Ollama guarded input scan 12920/146872; unique_articles=12920, article_rows=23687, cache_hits=0, cache_misses=2820, newly_scored=2820
+Ollama guarded input scan 12940/146872; unique_articles=12940, article_rows=23723, cache_hits=0, cache_misses=2840, newly_scored=2840
+Ollama guarded input scan 12960/146872; unique_articles=12960, article_rows=23757, cache_hits=0, cache_misses=2860, newly_scored=2860
+Ollama guarded input scan 12980/146872; unique_articles=12980, article_rows=23783, cache_hits=0, cache_misses=2880, newly_scored=2880
+Ollama guarded input scan 13000/146872; unique_articles=13000, article_rows=23825, cache_hits=0, cache_misses=2900, newly_scored=2900
+Ollama guarded input scan 13020/146872; unique_articles=13020, article_rows=23861, cache_hits=0, cache_misses=2920, newly_scored=2920
+Ollama guarded input scan 13040/146872; unique_articles=13040, article_rows=23889, cache_hits=0, cache_misses=2940, newly_scored=2940
+Ollama guarded input scan 13060/146872; unique_articles=13060, article_rows=23930, cache_hits=0, cache_misses=2960, newly_scored=2960
+Ollama guarded input scan 13080/146872; unique_articles=13080, article_rows=23977, cache_hits=0, cache_misses=2980, newly_scored=2980
+Ollama guarded input scan 13100/146872; unique_articles=13100, article_rows=24004, cache_hits=0, cache_misses=3000, newly_scored=3000
+Ollama guarded input scan 13120/146872; unique_articles=13120, article_rows=24036, cache_hits=0, cache_misses=3020, newly_scored=3020
+Ollama guarded input scan 13140/146872; unique_articles=13140, article_rows=24066, cache_hits=0, cache_misses=3040, newly_scored=3040
+Ollama guarded input scan 13160/146872; unique_articles=13160, article_rows=24104, cache_hits=0, cache_misses=3060, newly_scored=3060
+Ollama guarded input scan 13180/146872; unique_articles=13180, article_rows=24133, cache_hits=0, cache_misses=3080, newly_scored=3080
+Ollama guarded input scan 13200/146872; unique_articles=13200, article_rows=24162, cache_hits=0, cache_misses=3100, newly_scored=3100
+Ollama guarded input scan 13220/146872; unique_articles=13220, article_rows=24217, cache_hits=0, cache_misses=3120, newly_scored=3120
+Ollama guarded input scan 13240/146872; unique_articles=13240, article_rows=24256, cache_hits=0, cache_misses=3140, newly_scored=3140
+Ollama guarded input scan 13260/146872; unique_articles=13260, article_rows=24313, cache_hits=0, cache_misses=3160, newly_scored=3160
+Ollama guarded input scan 13280/146872; unique_articles=13280, article_rows=24352, cache_hits=0, cache_misses=3180, newly_scored=3180
+Ollama guarded input scan 13300/146872; unique_articles=13300, article_rows=24384, cache_hits=0, cache_misses=3200, newly_scored=3200
+Ollama guarded input scan 13320/146872; unique_articles=13320, article_rows=24454, cache_hits=0, cache_misses=3220, newly_scored=3220
+Ollama guarded input scan 13340/146872; unique_articles=13340, article_rows=24495, cache_hits=0, cache_misses=3240, newly_scored=3240
+Ollama guarded input scan 13360/146872; unique_articles=13360, article_rows=24534, cache_hits=0, cache_misses=3260, newly_scored=3260
+Ollama guarded input scan 13380/146872; unique_articles=13380, article_rows=24568, cache_hits=0, cache_misses=3280, newly_scored=3280
+Ollama guarded input scan 13400/146872; unique_articles=13400, article_rows=24608, cache_hits=0, cache_misses=3300, newly_scored=3300
+Ollama guarded input scan 13420/146872; unique_articles=13420, article_rows=24638, cache_hits=0, cache_misses=3320, newly_scored=3320
+Ollama guarded input scan 13440/146872; unique_articles=13440, article_rows=24686, cache_hits=0, cache_misses=3340, newly_scored=3340
+Ollama guarded input scan 13460/146872; unique_articles=13460, article_rows=24729, cache_hits=0, cache_misses=3360, newly_scored=3360
+Ollama guarded input scan 13480/146872; unique_articles=13480, article_rows=24762, cache_hits=0, cache_misses=3380, newly_scored=3380
+Ollama guarded input scan 13500/146872; unique_articles=13500, article_rows=24793, cache_hits=0, cache_misses=3400, newly_scored=3400
+Ollama guarded input scan 13520/146872; unique_articles=13520, article_rows=24825, cache_hits=0, cache_misses=3420, newly_scored=3420
+Ollama guarded input scan 13540/146872; unique_articles=13540, article_rows=24854, cache_hits=0, cache_misses=3440, newly_scored=3440
+Ollama guarded input scan 13560/146872; unique_articles=13560, article_rows=24886, cache_hits=0, cache_misses=3460, newly_scored=3460
+Ollama guarded input scan 13580/146872; unique_articles=13580, article_rows=24930, cache_hits=0, cache_misses=3480, newly_scored=3480
+Ollama guarded input scan 13600/146872; unique_articles=13600, article_rows=25009, cache_hits=0, cache_misses=3500, newly_scored=3500
+Ollama guarded input scan 13620/146872; unique_articles=13620, article_rows=25047, cache_hits=0, cache_misses=3520, newly_scored=3520
+Ollama guarded input scan 13640/146872; unique_articles=13640, article_rows=25074, cache_hits=0, cache_misses=3540, newly_scored=3540
+Ollama guarded input scan 13660/146872; unique_articles=13660, article_rows=25141, cache_hits=0, cache_misses=3560, newly_scored=3560
+Ollama guarded input scan 13680/146872; unique_articles=13680, article_rows=25185, cache_hits=0, cache_misses=3580, newly_scored=3580
+Ollama guarded input scan 13700/146872; unique_articles=13700, article_rows=25229, cache_hits=0, cache_misses=3600, newly_scored=3600
+Ollama guarded input scan 13720/146872; unique_articles=13720, article_rows=25264, cache_hits=0, cache_misses=3620, newly_scored=3620
+Ollama guarded input scan 13740/146872; unique_articles=13740, article_rows=25295, cache_hits=0, cache_misses=3640, newly_scored=3640
+Ollama guarded input scan 13760/146872; unique_articles=13760, article_rows=25328, cache_hits=0, cache_misses=3660, newly_scored=3660
+Ollama guarded input scan 13780/146872; unique_articles=13780, article_rows=25367, cache_hits=0, cache_misses=3680, newly_scored=3680
+Ollama guarded input scan 13800/146872; unique_articles=13800, article_rows=25399, cache_hits=0, cache_misses=3700, newly_scored=3700
+Ollama guarded input scan 13820/146872; unique_articles=13820, article_rows=25442, cache_hits=0, cache_misses=3720, newly_scored=3720
+Ollama guarded input scan 13840/146872; unique_articles=13840, article_rows=25472, cache_hits=0, cache_misses=3740, newly_scored=3740
+Ollama guarded input scan 13860/146872; unique_articles=13860, article_rows=25504, cache_hits=0, cache_misses=3760, newly_scored=3760
+Ollama guarded input scan 13880/146872; unique_articles=13880, article_rows=25531, cache_hits=0, cache_misses=3780, newly_scored=3780
+Ollama guarded input scan 13900/146872; unique_articles=13900, article_rows=25556, cache_hits=0, cache_misses=3800, newly_scored=3800
+Ollama guarded input scan 13920/146872; unique_articles=13920, article_rows=25592, cache_hits=0, cache_misses=3820, newly_scored=3820
+Ollama guarded input scan 13940/146872; unique_articles=13940, article_rows=25626, cache_hits=0, cache_misses=3840, newly_scored=3840
+Ollama guarded input scan 13960/146872; unique_articles=13960, article_rows=25660, cache_hits=0, cache_misses=3860, newly_scored=3860
+Ollama guarded input scan 13980/146872; unique_articles=13980, article_rows=25704, cache_hits=0, cache_misses=3880, newly_scored=3880
+Ollama guarded input scan 14000/146872; unique_articles=14000, article_rows=25729, cache_hits=0, cache_misses=3900, newly_scored=3900
+Ollama guarded input scan 14020/146872; unique_articles=14020, article_rows=25760, cache_hits=0, cache_misses=3920, newly_scored=3920
+Ollama guarded input scan 14040/146872; unique_articles=14040, article_rows=25789, cache_hits=0, cache_misses=3940, newly_scored=3940
+Ollama guarded input scan 14060/146872; unique_articles=14060, article_rows=25834, cache_hits=0, cache_misses=3960, newly_scored=3960
+Ollama guarded input scan 14080/146872; unique_articles=14080, article_rows=25874, cache_hits=0, cache_misses=3980, newly_scored=3980
+Ollama guarded input scan 14100/146872; unique_articles=14100, article_rows=25914, cache_hits=0, cache_misses=4000, newly_scored=4000
+Ollama guarded input scan 14120/146872; unique_articles=14120, article_rows=25951, cache_hits=0, cache_misses=4020, newly_scored=4020
+Ollama guarded input scan 14140/146872; unique_articles=14140, article_rows=25988, cache_hits=0, cache_misses=4040, newly_scored=4040
+Ollama guarded input scan 14160/146872; unique_articles=14160, article_rows=26032, cache_hits=0, cache_misses=4060, newly_scored=4060
+Ollama guarded input scan 14180/146872; unique_articles=14180, article_rows=26071, cache_hits=0, cache_misses=4080, newly_scored=4080
+Ollama guarded input scan 14200/146872; unique_articles=14200, article_rows=26125, cache_hits=0, cache_misses=4100, newly_scored=4100
+Ollama guarded input scan 14220/146872; unique_articles=14220, article_rows=26165, cache_hits=0, cache_misses=4120, newly_scored=4120
+Ollama guarded input scan 14240/146872; unique_articles=14240, article_rows=26207, cache_hits=0, cache_misses=4140, newly_scored=4140
+Ollama guarded input scan 14260/146872; unique_articles=14260, article_rows=26243, cache_hits=0, cache_misses=4160, newly_scored=4160
+Ollama guarded input scan 14280/146872; unique_articles=14280, article_rows=26280, cache_hits=0, cache_misses=4180, newly_scored=4180
+Ollama guarded input scan 14300/146872; unique_articles=14300, article_rows=26311, cache_hits=0, cache_misses=4200, newly_scored=4200
+Ollama guarded input scan 14320/146872; unique_articles=14320, article_rows=26344, cache_hits=0, cache_misses=4220, newly_scored=4220
+Ollama guarded input scan 14340/146872; unique_articles=14340, article_rows=26371, cache_hits=0, cache_misses=4240, newly_scored=4240
+Ollama guarded input scan 14360/146872; unique_articles=14360, article_rows=26408, cache_hits=0, cache_misses=4260, newly_scored=4260
+Ollama guarded input scan 14380/146872; unique_articles=14380, article_rows=26448, cache_hits=0, cache_misses=4280, newly_scored=4280
+Ollama guarded input scan 14400/146872; unique_articles=14400, article_rows=26483, cache_hits=0, cache_misses=4300, newly_scored=4300
+Ollama guarded input scan 14420/146872; unique_articles=14420, article_rows=26518, cache_hits=0, cache_misses=4320, newly_scored=4320
+Ollama guarded input scan 14440/146872; unique_articles=14440, article_rows=26550, cache_hits=0, cache_misses=4340, newly_scored=4340
+Ollama guarded input scan 14460/146872; unique_articles=14460, article_rows=26575, cache_hits=0, cache_misses=4360, newly_scored=4360
+Ollama guarded input scan 14480/146872; unique_articles=14480, article_rows=26636, cache_hits=0, cache_misses=4380, newly_scored=4380
+Ollama guarded input scan 14500/146872; unique_articles=14500, article_rows=26664, cache_hits=0, cache_misses=4400, newly_scored=4400
+Ollama guarded input scan 14520/146872; unique_articles=14520, article_rows=26692, cache_hits=0, cache_misses=4420, newly_scored=4420
+Ollama guarded input scan 14540/146872; unique_articles=14540, article_rows=26732, cache_hits=0, cache_misses=4440, newly_scored=4440
+Ollama guarded input scan 14560/146872; unique_articles=14560, article_rows=26763, cache_hits=0, cache_misses=4460, newly_scored=4460
+Ollama guarded input scan 14580/146872; unique_articles=14580, article_rows=26801, cache_hits=0, cache_misses=4480, newly_scored=4480
+Ollama guarded input scan 14600/146872; unique_articles=14600, article_rows=26853, cache_hits=0, cache_misses=4500, newly_scored=4500
+Ollama guarded input scan 14620/146872; unique_articles=14620, article_rows=26882, cache_hits=0, cache_misses=4520, newly_scored=4520
+Ollama guarded input scan 14640/146872; unique_articles=14640, article_rows=26923, cache_hits=0, cache_misses=4540, newly_scored=4540
+Ollama guarded input scan 14660/146872; unique_articles=14660, article_rows=27005, cache_hits=0, cache_misses=4560, newly_scored=4560
+Ollama guarded input scan 14680/146872; unique_articles=14680, article_rows=27042, cache_hits=0, cache_misses=4580, newly_scored=4580
+Ollama guarded input scan 14700/146872; unique_articles=14700, article_rows=27065, cache_hits=0, cache_misses=4600, newly_scored=4600
+Ollama guarded input scan 14720/146872; unique_articles=14720, article_rows=27095, cache_hits=0, cache_misses=4620, newly_scored=4620
+Ollama guarded input scan 14740/146872; unique_articles=14740, article_rows=27137, cache_hits=0, cache_misses=4640, newly_scored=4640
+Ollama guarded input scan 14760/146872; unique_articles=14760, article_rows=27165, cache_hits=0, cache_misses=4660, newly_scored=4660
+Ollama guarded input scan 14780/146872; unique_articles=14780, article_rows=27197, cache_hits=0, cache_misses=4680, newly_scored=4680
+Ollama guarded input scan 14800/146872; unique_articles=14800, article_rows=27240, cache_hits=0, cache_misses=4700, newly_scored=4700
+Ollama guarded input scan 14820/146872; unique_articles=14820, article_rows=27277, cache_hits=0, cache_misses=4720, newly_scored=4720
+Ollama guarded input scan 14840/146872; unique_articles=14840, article_rows=27307, cache_hits=0, cache_misses=4740, newly_scored=4740
+Ollama guarded input scan 14860/146872; unique_articles=14860, article_rows=27351, cache_hits=0, cache_misses=4760, newly_scored=4760
+Ollama guarded input scan 14880/146872; unique_articles=14880, article_rows=27386, cache_hits=0, cache_misses=4780, newly_scored=4780
+Ollama guarded input scan 14900/146872; unique_articles=14900, article_rows=27438, cache_hits=0, cache_misses=4800, newly_scored=4800
+Ollama guarded input scan 14920/146872; unique_articles=14920, article_rows=27474, cache_hits=0, cache_misses=4820, newly_scored=4820
+Ollama guarded input scan 14940/146872; unique_articles=14940, article_rows=27516, cache_hits=0, cache_misses=4840, newly_scored=4840
+Ollama guarded input scan 14960/146872; unique_articles=14960, article_rows=27545, cache_hits=0, cache_misses=4860, newly_scored=4860
+Ollama guarded input scan 14980/146872; unique_articles=14980, article_rows=27582, cache_hits=0, cache_misses=4880, newly_scored=4880
+Ollama guarded input scan 15000/146872; unique_articles=15000, article_rows=27612, cache_hits=0, cache_misses=4900, newly_scored=4900
+Ollama guarded input scan 15020/146872; unique_articles=15020, article_rows=27675, cache_hits=0, cache_misses=4920, newly_scored=4920
+Ollama guarded input scan 15040/146872; unique_articles=15040, article_rows=27704, cache_hits=0, cache_misses=4940, newly_scored=4940
+Ollama guarded input scan 15060/146872; unique_articles=15060, article_rows=27738, cache_hits=0, cache_misses=4960, newly_scored=4960
+Ollama guarded input scan 15080/146872; unique_articles=15080, article_rows=27771, cache_hits=0, cache_misses=4980, newly_scored=4980
+Ollama guarded input scan 15100/146872; unique_articles=15100, article_rows=27805, cache_hits=0, cache_misses=5000, newly_scored=5000
+Traceback (most recent call last):
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_guarded_features.py", line 2338, in <module>
+    main()
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_guarded_features.py", line 2331, in main
+    build_ollama_guarded_feature_exports(
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_guarded_features.py", line 2022, in build_ollama_guarded_feature_exports
+    scored_rows = _infer_article_frame(
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_guarded_features.py", line 520, in _infer_article_frame
+    result = _infer_single_article(article, config=config, raw_response_fn=raw_response_fn)
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_guarded_features.py", line 490, in _infer_single_article
+    raw_text = _call_ollama_chat(prompt, config)
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_guarded_features.py", line 300, in _call_ollama_chat
+    with urllib.request.urlopen(request, timeout=int(config.ollama_guarded_timeout_seconds)) as response:
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 519, in open
+    response = self._open(req, data)
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 536, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 1377, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 1352, in do_open
+    r = h.getresponse()
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/http/client.py", line 1395, in getresponse
+    response.begin()
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/http/client.py", line 323, in begin
+    version, status, reason = self._read_status()
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/http/client.py", line 284, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/socket.py", line 717, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt

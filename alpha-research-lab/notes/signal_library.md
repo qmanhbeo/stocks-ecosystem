@@ -453,7 +453,7 @@ that volume alone does not explain.
 ---
 
 ### C16 — CafeF Posted Order-Volume Pressure (H356)
-**Status: CANDIDATE — standalone and integration gates passed; needs portfolio/tradability audit before publication**
+**Status: PUBLISHED FEATURE — scoped H359 contract, downstream opt-in only**
 
 - **Standalone IC vs 1d barrier:** `+0.0738`
 - **Consistency:** `11 / 11` years positive
@@ -466,6 +466,19 @@ that volume alone does not explain.
   redundancy bar
 - **Frozen selector delta:** validation / confirmation top-5 edge
   `+0.0152 / +0.0554`
+- **Executable portfolio delta (H358):** validation / confirmation relative
+  return `+12.31% / +11.07%`, but validation cash drag `+0.0214` breached
+  the `0.02` execution-health limit
+- **Scoped sizing delta (H359):** `order_w0050_buyable` validation /
+  confirmation relative return `+32.20% / +5.82%`; cash deltas
+  `+0.0036 / -0.0067`
+- **Published artifact (Session 200):** `data/features/xs_order_pressure_daily.parquet`
+  with `1,315,778` rows, `402` tickers, `4,622` dates, max date
+  `2025-12-31`, no duplicate ticker-days, and H359 blend weights of `0.0` or
+  `0.05`
+- **Published contract parity (H360):** reproduced the H359 winner with max
+  absolute metric delta `9.10e-15`; portfolio and execution-health gates still
+  passed
 
 **What it captures:** `order_volume_ratio_rank` is the cross-sectional rank of
 CafeF posted buy-vs-sell order-volume imbalance:
@@ -485,17 +498,41 @@ current full library and tested it as one equal-weight addition to the frozen
 label-level full-library selector. The residual signal stayed strong, and the
 selector improved in validation and confirmation.
 
-**Current constraint:** do not treat this as a published consumer contract yet.
-H356/H357 did not add a formal `data/features/...` artifact or run a portfolio
-/ tradability audit. The next required pass is a portfolio/tradability audit,
-then a low-resource feature-publication design if that audit passes.
+**Portfolio / tradability update:** H358 tested the same equal-weight addition
+in the executable deterministic portfolio with the shared tradability artifact,
+fees, T+1 open fills, and legal sell delay. The portfolio relevance was real:
+validation / confirmation relative-return deltas were `+12.31% / +11.07%` and
+IR deltas were `+0.15 / +0.47`. The pass was still classified `MIXED`, not
+publishable, because validation average cash weight rose from `0.0238` to
+`0.0452`, a `+0.0214` delta versus the predeclared `0.02` health limit.
+
+**Sizing / state-scope update:** H359 then ran the one bounded continuation
+allowed by H358. The winner, `order_w0050_buyable`, blends the full-library
+score with `5%` order-pressure rank only where `can_buy_next_open` is true.
+It passed both portfolio and execution-health gates: validation relative
+return delta `+32.20%`, validation IR delta `+0.3735`, confirmation relative
+return delta `+5.82%`, confirmation IR delta `+0.2738`, and validation /
+confirmation cash deltas `+0.0036 / -0.0067`.
+
+**Current constraint:** The scoped feature is now published and registered, but
+it is not automatically consumed by RL or recommendations. Any downstream use
+must explicitly apply `score = (1 - w) * base_score + w * order_volume_ratio_rank`,
+where `w` is `order_pressure_h359_blend_weight`.
 
 **Artifact:** source data currently lives at
-`data/order_stats/cafef/order_stats_daily.parquet`. H356 saved research results
-under
+`data/order_stats/cafef/order_stats_daily.parquet`. The published feature lives
+at `data/features/xs_order_pressure_daily.parquet`. H356 saved research results under
 `artifacts/run_summaries/latest_research_branch_order_pressure_standalone_gate.json`;
 H357 saved integration results under
-`artifacts/run_summaries/latest_research_branch_order_pressure_integration_audit.json`.
+`artifacts/run_summaries/latest_research_branch_order_pressure_integration_audit.json`;
+H358 saved executable portfolio results under
+`artifacts/run_summaries/latest_research_branch_order_pressure_portfolio_tradability_audit.json`;
+H359 saved sizing / state-scope results under
+`artifacts/run_summaries/latest_research_branch_order_pressure_sizing_scope_audit.json`;
+the publisher saved
+`artifacts/run_summaries/latest_published_feature_order_pressure_daily.json`;
+H360 saved the published contract audit under
+`artifacts/run_summaries/latest_research_branch_order_pressure_published_contract_audit.json`.
 
 ---
 
@@ -689,8 +726,8 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | CafeF foreign-flow standalone paths (H327/H328/H333/H345) | best raw room-scarcity dev/validation IC +0.0117/+0.0074 but 2025 IC −0.0048; best residual loosen rank −0.0044/−0.0109/+0.0132; best accumulation change-point dev/validation IC only +0.0020/+0.0024 | Source acquired, but raw, conditioned, room-residual, and accumulation / ownership-change paths fail as standalone signals |
 | Proprietary-flow conflict/agreement pilot (H348) | best proprietary buy-share row dev/validation/confirmation IC +0.0144/−0.0216/−0.0110 | Limited 2022+ CafeF proprietary-trading source is usable, but raw ranks and foreign/proprietary agreement-conflict states are unstable on the current next-day target |
 | Sector ownership pressure (H351) | best sector participation row dev/validation/confirmation IC −0.0007/−0.0051/+0.0015 | Sector-level foreign pressure, participation, room/ownership, and sector-heat interactions fail; low sector-anchor correlation means this is not merely C6/breadth redundancy |
-| Event-v2 payoff-shape states (H352) | best state `recent5_high_self_no_today` validation/confirmation q90 lift +0.0196/+0.0174, but q10 lift −0.0145/−0.0239 and confirmation mean lift −0.0026 | Upside-tail hints remain offline timing evidence only; downside tail and expected value are not clean enough for promotion or integration |
-| Dividend-clock payoff states (H354) | best `pre_ex_20d` validation/confirmation mean lift +0.0007/+0.0002, q90 lift +0.0068/+0.0093, but confirmation q10 lift −0.0030 | Small pre-ex payoff hint remains offline calendar evidence only; do not reopen H31-style dividend-calendar model features or tune more dividend windows under the current target |
+| Event-v2 payoff / sparse-clock states (H352/H361) | H352 best state q90 lift +0.0196/+0.0174 but q10 worsened; H361 fixed sparse-clock portfolio bonus validation/confirmation relative-return deltas −4.96%/−2.66% | Event-v2 remains offline timing evidence only; the remaining portfolio-level sparse-clock reopening condition failed, so do not tune more event-v2 overlays under the current contract |
+| Dividend-clock payoff / sparse-clock states (H354/H362) | H354 best `pre_ex_20d` mean lift +0.0007/+0.0002; H362 fixed sparse-clock portfolio bonus validation/confirmation relative-return deltas ~0.00%/+0.96% but failed the portfolio gate | Small pre-ex payoff hint remains offline calendar evidence only; do not tune more dividend windows or sparse-clock overlays under the current target |
 | Order-pressure smart-exit state (H355) | best two-phase utility delta vs H337 refit only about +0.00065/+0.00053 | CafeF order pressure is useful post-entry state evidence, but it does not solve H337/H339 smart-exit learning; do not integrate exit features or tune more linear step-hazard feature sets |
 | Earnings quality 52 tickers (H109) | best IC +0.005 (roe_delta) | Insufficient universe; re-test at 394 tickers pending |
 | VN30 rebalancing proximity (H114) | xs_vn30_rank_change_5d IC +0.0075 (10/11) | Rank level anti-predictive; change directionally consistent but below 0.01 gate |
@@ -722,7 +759,7 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Order book imbalance | Bid/ask pressure predicts short-term price | Not available historically | Blocked |
 
 H123, H124, H125, H126, H127, H128, H130, H131, H132, H133, H134, H283, H284, and H346 are now closed and documented above.
-Track new OHLCV-only search ideas in `notes/next_steps.md`.
+Track new OHLCV-only search ideas in `notes/live_state.md`.
 
 **Session 33 update (2026-03-26):**
 - H98 infrastructure is implemented:
