@@ -1,0 +1,64 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260428_155240_h353_h340_entry_label_transfer_details.json",
+    "panel": "artifacts/portfolio_baselines/20260428_155240_h353_h340_entry_label_transfer_panel.parquet",
+    "results": "artifacts/portfolio_baselines/20260428_155240_h353_h340_entry_label_transfer_results.parquet"
+  },
+  "metadata": {
+    "candidate_panel": "data/features/entry_alpha/candidate_panel_daily.parquet",
+    "entry_labels": "data/features/entry_alpha/entry_labels_cycle5.parquet",
+    "entry_scores": "data/features/entry_alpha/entry_scores_daily.parquet",
+    "h340_summary": "artifacts/run_summaries/latest_research_branch_c5_order_pressure_split.json",
+    "order_stats": "data/order_stats/cafef/order_stats_daily.parquet"
+  },
+  "mode": "research_branch_h340_entry_label_transfer",
+  "name": "h353_h340_entry_label_transfer",
+  "summary": {
+    "best_state": "h340_buy_vol_gate",
+    "best_state_decision": "MIXED",
+    "best_state_reason": "one_phase_positive_only",
+    "branch_decision": "H340 shows partial entry-candidate evidence, but does not cleanly improve validation and confirmation entry labels/returns over raw C5.",
+    "candidate_decisions": [
+      {
+        "decision": "MIXED",
+        "reason": "one_phase_positive_only",
+        "score": 0.006012319032526676,
+        "state": "h340_buy_vol_gate"
+      },
+      {
+        "decision": "MIXED",
+        "reason": "positive_both_phases_but_raw_c5_control_not_cleared",
+        "score": 0.005720371797332733,
+        "state": "h340_buy_vol_strong"
+      }
+    ],
+    "confirmation_active_dates": 121,
+    "confirmation_active_rows": 161,
+    "confirmation_matched_label_lift": 0.029350104821802964,
+    "confirmation_matched_net_lift": -7.497609679254306e-05,
+    "confirmation_matched_rel_vnindex_lift": -7.497609679254446e-05,
+    "h340_dev_volume_support_threshold": 0.11492539052329089,
+    "panel_dates": 1749,
+    "panel_rows": 34980,
+    "panel_tickers": 394,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2019,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "validation_active_dates": 211,
+    "validation_active_rows": 269,
+    "validation_matched_label_lift": 0.022304832713754674,
+    "validation_matched_net_lift": 0.0030811356130558817,
+    "validation_matched_rel_vnindex_lift": 0.0030811356130558817,
+    "verdict": "MIXED"
+  },
+  "ts": "20260428_155240"
+}

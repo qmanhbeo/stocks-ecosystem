@@ -639,3 +639,425 @@ Current next actions:
 
 Source sessions:
 - `notes/session_187_log.md`
+
+## F289: H349 Shows The H321 Event-Cascade State Does Not Transfer To The Entry-Alpha Label Contract (2026-04-28, Session 188)
+
+Finding:
+- H349 tested whether the H321 cascade winner, `today_self_accel_high`, failed
+  H322 additive promotion because it belongs on the stock-specific entry-label
+  contract rather than the full-universe rank contract
+- the test reused saved artifacts only:
+  - H321 cascade panel
+  - entry-alpha candidate panel
+  - entry labels
+  - entry score / prior surface
+- the protocol was source-limited to the H321 event-v2 window:
+  - `2023` dev
+  - `2024` validation
+  - `2025` confirmation
+  - `2026+` excluded
+- the state had enough entry-candidate coverage for a first pass:
+  - validation active rows / dates: `15 / 15`
+  - confirmation active rows / dates: `19 / 18`
+- it failed the entry contract:
+  - validation daily label lift: `-0.1807`
+  - validation matched label lift: `-0.1111`
+  - validation matched net lift: `-0.0166`
+  - validation matched relative lift vs VNINDEX: `-0.0166`
+  - confirmation daily label lift: `+0.0453`
+  - confirmation matched label lift: `-0.0263`
+  - confirmation matched net lift: `-0.0345`
+  - confirmation matched relative lift vs VNINDEX: `-0.0345`
+
+Why it matters:
+- H321 remains valid sparse event-timing evidence, but the obvious target
+  rewrite into entry-alpha labels does not rescue it
+- H322's failure was not merely a broad-rank-contract mismatch
+- future event-v2 work should not keep retesting `today_self_accel_high` as an
+  entry-label or additive-rank feature under the current data contract
+
+Current next actions:
+- do not continue event-cascade entry-label variants on the current entry
+  target
+- keep H321 as offline timing evidence only
+- move the evergreen queue to a different mechanism, with official-disclosure
+  source bridging as the next audit-first branch
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_188_log.md`
+
+## F290: H350 Shows The HNX Official-Disclosure Surface Is Wired But Not Yet A Historical Bridge Surface (2026-04-28, Session 189)
+
+Finding:
+- H350 revisited the official-disclosure branch after `data/official_disclosures/hnx/`
+  appeared locally
+- this was a source audit only; it excluded current `2026` rows from
+  predictive-readiness counts and did not compute alpha IC
+- the full HNX / UPCoM issuer universe exists:
+  - universe rows / tickers: `1,220 / 1,220`
+  - market buckets: `listed 387`, `upcom 833`
+- the current disclosure history is not usable for predictive research:
+  - latest news rows / tickers: `10 / 2`
+  - latest news date range: `2026-04-07` to `2026-04-23`
+  - pre-2026 news rows / tickers / dates: `0 / 0 / 0`
+  - attachment rows: `13`
+  - transaction disclosure rows: `0`
+  - transaction extract rows: `0`
+  - manifest `max_tickers`: `2`
+- the bridge to the current HOSE research matrix is not ready:
+  - universe overlap with 2015-2025 matrix tickers: `1`
+  - manifest notes say HSX official disclosures are not part of this fetcher
+  - current latest-run parquets are rewritten to match request scope and are
+    not append-only history stores
+
+Why it matters:
+- H315 is no longer literally "no official disclosure files exist"; the HNX
+  source is wired
+- but the branch remains acquisition-limited because the local surface is a
+  tiny current sample, not historical pre-2026 research history
+- running alpha IC here would be fake precision: there is no predictive window
+  and no HOSE bridge surface
+
+Current next actions:
+- do not run official-disclosure alpha IC yet
+- only reopen this branch through data work:
+  - broader HNX / UPCoM history if that market becomes a target
+  - a resolved HOSE / HSX official-disclosure source for the current matrix
+  - history-preserving / append-safe disclosure outputs
+- keep `2026` rows monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_189_log.md`
+
+## F291: H351 Closes The Current-Data Sector Ownership-Pressure Reopening Of H95 (2026-04-28, Session 190)
+
+Finding:
+- H351 tested the last current-data H95 reopening condition left after
+  H327/H328/H333/H345/H347/H348: sector-level ownership pressure
+- the test avoided raw ticker-level foreign-flow rank tuning and built seven
+  predeclared sector-level features:
+  - sector foreign net pressure over `5d` and `20d`
+  - sector foreign participation over `20d`
+  - sector foreign ownership level
+  - sector ownership change over `20d`
+  - sector pressure interacted with sector heat
+  - sector pressure interacted with ownership level
+- the 2015-2025 panel had:
+  - rows: `814,353`
+  - tickers / dates: `390 / 2,741`
+- no feature passed and no feature was even a redundant sector-anchor
+  candidate
+- the best row was `xs_sector_ff_participation_20d_rank`:
+  - dev IC `-0.0007`
+  - validation IC `-0.0051`
+  - confirmation IC `+0.0015`
+  - S1 corr `-0.0048`
+  - max sector-anchor corr `0.0022`
+
+Why it matters:
+- the failure is not because sector ownership pressure duplicates C6 or sector
+  breadth; correlations to those anchors are low
+- the mechanism simply does not show enough predictive content under the
+  current next-day target
+- the current-data H95 branch is now closed across raw ticker flow, simple
+  conditioning, room discontinuity, accumulation change-points, C5 agreement,
+  proprietary-flow agreement/conflict, and sector ownership pressure
+
+Current next actions:
+- do not tune more foreign-flow sector-pressure variants under the current
+  target
+- do not publish a flow-derived signal from the current CafeF flow family
+- reopen H95 only with a materially different data source, target, or market
+  contract
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_190_log.md`
+
+## F292: H352 Finds Event-V2 Upside-Tail Hints But No Clean Optionality Payoff State (2026-04-28, Session 191)
+
+Finding:
+- H352 tested the remaining event-v2 rescue after H322 and H349:
+  event states might be payoff-shape / risk-filter states rather than additive
+  rank overlays or entry-label states
+- the test reused the saved H321 panel and matched active event rows against
+  non-event controls by date, sector, and S1 bucket with fallback matching
+- the source-limited protocol stayed unchanged:
+  - `2023` dev
+  - `2024` validation
+  - `2025` confirmation
+  - `2026+` excluded
+- all five candidate states showed some validation / confirmation upside-tail
+  lift, but no state passed the full payoff-shape gate
+- the best state was `recent5_high_self_no_today`:
+  - validation active rows: `1,586`
+  - validation mean lift: `+0.0016`
+  - validation `q90` lift: `+0.0196`
+  - validation `q10` lift: `-0.0145`
+  - validation bad-tail-rate lift: `-0.0054`
+  - confirmation active rows: `1,641`
+  - confirmation mean lift: `-0.0026`
+  - confirmation `q90` lift: `+0.0174`
+  - confirmation `q10` lift: `-0.0239`
+  - confirmation bad-tail-rate lift: `+0.0065`
+
+Why it matters:
+- H352 does not contradict H321: event-v2 states still look like sparse timing
+  cohorts with real upside-tail behavior
+- the payoff distribution is not clean enough for deployment because the
+  upside tail comes with materially worse downside tail and weak confirmation
+  mean
+- H322, H349, and H352 now jointly say event-v2 is offline timing evidence
+  only under the current data / target contract
+
+Current next actions:
+- do not promote or integrate event-v2 payoff-shape states
+- do not continue event-v2 additive, entry-label, or payoff-shape tuning under
+  the current contract
+- reopen only with a stricter portfolio-level convexity test, a new event data
+  source, or a materially different target
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_191_log.md`
+
+## F293: H353 Shows H340 Partially Transfers To The Entry Book But Is Not A Clean Entry Prior (2026-04-28, Session 192)
+
+Finding:
+- H353 tested whether the H340 same-day buy-volume pressure rewrite of bullish
+  `C5` transfers from the daily 5d relative-return contract into the
+  entry-alpha candidate-book label contract
+- the test reused the fixed H340 dev support threshold:
+  - `0.1149253905`
+- it joined:
+  - entry candidates
+  - entry cycle labels
+  - entry scores / prior
+  - CafeF order-statistics buy/sell volume imbalance
+- the protocol was:
+  - `2019-2022` dev
+  - `2023-2024` validation
+  - `2025` confirmation
+  - `2026+` excluded
+- the loose H340 gate had enough coverage but only one clean return phase:
+  - validation active rows / dates: `269 / 211`
+  - validation matched label / net / relative lift: `+0.0223 / +0.0031 / +0.0031`
+  - confirmation active rows / dates: `161 / 121`
+  - confirmation matched label / net / relative lift: `+0.0294 / -0.0001 / -0.0001`
+- the strong H340 support state was positive in both phases, but failed the raw
+  `C5` control bar:
+  - validation matched label / net / relative lift: `+0.0291 / +0.0001 / +0.0001`
+  - confirmation matched label / net / relative lift: `+0.0855 / +0.0028 / +0.0028`
+  - validation return lift was below raw positive `C5`
+
+Why it matters:
+- H340 remains a strong daily-state C5 rewrite; H353 does not invalidate H340
+- the entry-alpha candidate-book contract is stricter: a daily IC rewrite does
+  not automatically become a better entry prior
+- the branch should not spend more cycles stacking daily side-channel filters
+  around H340 unless a small-book integration contract is explicitly reopened
+
+Current next actions:
+- keep H340 as the preferred daily-state `C5` robustness rewrite
+- do not promote H340 as an entry-alpha prior
+- do not replace the current entry prior with H340
+- reopen only with a stricter small-book integration test or a materially
+  different entry target
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_192_log.md`
+
+## F294: H354 Finds A Small Pre-Ex Dividend Clock Hint But No Promotable Calendar Payoff State (2026-04-28, Session 193)
+
+Finding:
+- H354 tested the remaining honest dividend-calendar question after H31 and
+  H298:
+  - not broad dividend-calendar model inputs
+  - not fundamentals conditioned by corporate-action windows
+  - direct sparse pre/post ex-dividend payoff states
+- controls were restricted to the same 51-ticker dividend-calendar universe
+  and matched by date plus S1 bucket with date-only fallback
+- the protocol was:
+  - `2015-2022` dev
+  - `2023-2024` validation
+  - `2025` confirmation
+  - `2026+` excluded
+- the panel had:
+  - rows / tickers / dates: `131,330 / 51 / 2,748`
+  - any dividend-window rows / dates: `8,573 / 2,540`
+- only the 20-day pre-ex window had a two-phase payoff hint:
+  - validation active rows / dates: `1,039 / 414`
+  - validation mean / q10 / q90 lift: `+0.0007 / -0.0005 / +0.0068`
+  - validation bad-tail / hit-rate lift: `-0.0297 / +0.0419`
+  - confirmation active rows / dates: `555 / 224`
+  - confirmation mean / q10 / q90 lift: `+0.0002 / -0.0030 / +0.0093`
+  - confirmation bad-tail / hit-rate lift: `-0.0324 / +0.0240`
+- post-ex windows failed directly, and the clustered dividend-count state
+  failed
+
+Why it matters:
+- H354 does not justify reopening H31-style dividend-calendar model features
+- the 20-day pre-ex clock is directionally interesting but too small and not
+  clean enough for promotion; the confirmation q10 lift misses the predeclared
+  risk floor
+- dividend timing can remain offline calendar evidence, not a live signal
+
+Current next actions:
+- do not promote dividend-clock states
+- do not tune more pre/post dividend windows under the current target
+- reopen only if a stricter portfolio-level sparse-clock or risk-filter
+  contract explicitly needs calendar evidence
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_193_log.md`
+
+## F295: H355 Shows CafeF Order Pressure Helps Smart-Exit State Marginally But Does Not Solve The H337/H339 Blocker (2026-04-28, Session 194)
+
+Finding:
+- H355 tested the exact smart-exit reopening condition left by H339:
+  richer post-entry state/data
+- the new state source was the CafeF order-statistics surface later validated
+  by H340 for daily `C5` order-pressure conditioning
+- the test consumed the saved H337 legal-step rows instead of rebuilding the
+  oracle universe:
+  - step rows: `7,717`
+  - entries: `2,578`
+  - `2015-2025` only
+  - `2026+` excluded
+- compared fixed feature sets:
+  - `h337_refit`
+  - `current_order_pressure`
+  - `minimal_order_delta`
+  - `entry_current_order_delta`
+- order pressure was directionally useful in some slices:
+  - H337 refit validation / confirmation uplift vs fixed `3d`:
+    `+0.00245 / +0.00253`
+  - `current_order_pressure` validation uplift:
+    `+0.00387`
+  - `minimal_order_delta` validation / confirmation uplift:
+    `+0.00311 / +0.00306`
+  - `entry_current_order_delta` validation AUC:
+    `0.5190`
+- but no feature set cleared the material improvement bar:
+  - required validation and confirmation uplift deltas vs H337 refit:
+    at least `+0.002 / +0.002`
+  - best two-phase utility delta was only about `+0.00065 / +0.00053`
+    for `minimal_order_delta`
+
+Why it matters:
+- H355 confirms that order pressure is a real post-entry state, not pure noise
+- it does not contradict H340; order pressure remains useful as a daily `C5`
+  robustness rewrite
+- it also does not rescue smart-exit ML: the H337/H339 blocker is deeper than
+  one missing order-pressure feature family
+
+Current next actions:
+- do not integrate order-pressure smart-exit features
+- do not continue H337/H339 through more linear feature-set tweaks
+- keep smart-exit ML parked until genuinely richer post-entry state/data or a
+  materially different model contract exists
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_194_log.md`
+
+## F296: H356 Shows CafeF Posted Buy-Volume Pressure Is A Strong Standalone Daily Signal, Not Only A C5 Conditioner (2026-04-28, Session 196)
+
+Finding:
+- H356 tested the broad standalone version of the CafeF order-statistics
+  surface after H340, H353, and H355 had only used order pressure as a
+  conditioner or post-entry state
+- the protocol was:
+  - `2015-2022` dev
+  - `2023-2024` validation
+  - `2025` confirmation
+  - `2026+` excluded
+- the panel had:
+  - rows / dates / tickers: `826,404 / 2,748 / 394`
+  - order-row coverage: `99.44%`
+- the best feature was `order_volume_ratio_rank`, the cross-sectional rank of
+  posted buy-vs-sell order-volume imbalance
+- it passed the strict 1d standalone gate:
+  - avg IC: `+0.0738`
+  - positive years: `11 / 11`
+  - S1 correlation: `+0.0342`
+  - dev / validation / confirmation pooled IC:
+    `+0.0799 / +0.0593 / +0.0713`
+- it also passed the diagnostic 5d relative-return target:
+  - avg IC: `+0.0797`
+  - positive years: `11 / 11`
+  - dev / validation / confirmation pooled IC:
+    `+0.0844 / +0.0647 / +0.0669`
+- six of seven predeclared order-pressure features passed the strict 1d split;
+  only the lagged count-ratio rank failed
+
+Why it matters:
+- H356 changes the order-statistics branch meaningfully: CafeF posted order
+  pressure is not merely a bullish-insider support variable
+- the surface is near-dense, low-correlation with S1, and strong on both 1d
+  and 5d targets
+- this is one of the strongest current-data side-channel findings in the lab,
+  but it still needs integration review before a published consumer contract
+  is added
+
+Current next actions:
+- run a frozen-matrix / selector integration audit for
+  `order_volume_ratio_rank`
+- check redundancy against the current candidate library, not just S1
+- publish a formal feature artifact only if the integration audit preserves the
+  standalone evidence under the repo's consumer contract
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_196_log.md`
+
+## F297: H357 Shows Order Pressure Survives Full-Library Residualization And Improves A Frozen Label-Level Selector (2026-04-28, Session 197)
+
+Finding:
+- H357 took the H356 winner, `order_volume_ratio_rank`, through the first
+  integration audit against the existing RL signal matrix
+- the protocol stayed locked:
+  - `2015-2022` dev
+  - `2023-2024` validation
+  - `2025` confirmation
+  - `2026+` excluded
+- the integration panel had:
+  - rows / dates / tickers: `810,201 / 2,748 / 394`
+  - existing full-library columns: `13`
+- order pressure remained low-redundancy:
+  - max absolute candidate-library correlation: `0.1877`
+  - max-corr column: `c13_compress_blowoff_2`
+- after daily cross-sectional residualization against the full library,
+  `order_volume_ratio_full_library_residual_rank` still passed:
+  - avg IC: `+0.0687`
+  - positive years: `11 / 11`
+  - dev / validation / confirmation pooled IC:
+    `+0.0728 / +0.0585 / +0.0613`
+- adding `order_volume_ratio_rank` as one equal-weight column to the frozen
+  full-library label-level selector improved every phase:
+  - dev top-5 edge delta: `+0.0243`
+  - validation top-5 edge delta: `+0.0152`
+  - confirmation top-5 edge delta: `+0.0554`
+  - validation / confirmation daily IC delta: `+0.0122 / +0.0154`
+
+Why it matters:
+- H357 strongly supports C16 as a genuine new state axis, not a restatement of
+  S1, C8, C13, or the current matrix
+- the selector integration result is positive enough to justify moving from
+  pure research audit to feature-publication design
+- publication should still wait for a portfolio/tradability audit and an
+  explicit producer-consumer contract update
+
+Current next actions:
+- run a portfolio/tradability audit for order pressure before publishing
+- if that passes, design a low-resource producer for a shared
+  `xs_order_pressure_daily` feature artifact
+- update producer/consumer docs only when the shared artifact contract is
+  intentionally introduced
+- keep `2026` data monitor-only unless explicitly allowed for predictive work
+
+Source sessions:
+- `notes/session_197_log.md`

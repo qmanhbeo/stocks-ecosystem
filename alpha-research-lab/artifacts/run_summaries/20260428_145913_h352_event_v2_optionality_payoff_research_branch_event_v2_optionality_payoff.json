@@ -1,0 +1,58 @@
+{
+  "artifacts": {
+    "active_matches": "artifacts/portfolio_baselines/20260428_145913_h352_event_v2_optionality_payoff_active_matches.parquet",
+    "details": "artifacts/run_summaries/20260428_145913_h352_event_v2_optionality_payoff_details.json",
+    "results": "artifacts/portfolio_baselines/20260428_145913_h352_event_v2_optionality_payoff_results.parquet",
+    "state_results": "artifacts/portfolio_baselines/20260428_145913_h352_event_v2_optionality_payoff_state_results.parquet"
+  },
+  "metadata": {
+    "h321_summary": "artifacts/run_summaries/latest_research_branch_hawkes_disclosure_cascade.json",
+    "matching": "non-event controls by date+sector+S1 bucket with fallback",
+    "source_limited_protocol": "2023 dev / 2024 validation / 2025 confirmation; 2026 excluded",
+    "tradability": "data/features/execution/tradability_daily.parquet"
+  },
+  "mode": "research_branch_event_v2_optionality_payoff",
+  "name": "h352_event_v2_optionality_payoff",
+  "summary": {
+    "best_confirmation_fwd_bad_tail_rate_lift": 0.0064687534690536785,
+    "best_confirmation_fwd_mean_lift": -0.0025857090728329418,
+    "best_confirmation_fwd_q10_lift": -0.02393296930233775,
+    "best_confirmation_fwd_q90_lift": 0.01737071933431177,
+    "best_state": "recent5_high_self_no_today",
+    "best_state_decision": "MIXED",
+    "best_state_reason": "weak_tail_hint_but_not_a_clean_two_phase_optionality_state",
+    "best_validation_fwd_bad_tail_rate_lift": -0.005362459271259112,
+    "best_validation_fwd_mean_lift": 0.0016218371109967696,
+    "best_validation_fwd_q10_lift": -0.01453181986574166,
+    "best_validation_fwd_q90_lift": 0.019623833826121474,
+    "branch_decision": "Event-v2 states show partial tail-payoff evidence, but not a clean two-phase deployable payoff shape. Keep as offline timing evidence; do not integrate without a stricter portfolio-level follow-up.",
+    "candidate_states": [
+      "event_today_novel20",
+      "today_self_accel_high",
+      "today_high_sector_low_self",
+      "recent5_low_self_no_today",
+      "recent5_high_self_no_today"
+    ],
+    "diagnostic_states": [
+      "event_today_follow20",
+      "v1_proxy_5d"
+    ],
+    "panel_dates": 748,
+    "panel_rows": 258375,
+    "panel_tickers": 394,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    },
+    "verdict": "MIXED"
+  },
+  "ts": "20260428_145913"
+}

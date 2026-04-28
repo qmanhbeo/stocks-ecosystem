@@ -1,0 +1,93 @@
+{
+  "decision_rules": {
+    "failed": "sufficient coverage but no positive validation/confirmation entry lift",
+    "minimum_active_dates_per_validation_phase": 30,
+    "minimum_active_rows_per_validation_phase": 50,
+    "mixed": "one or both phases positive without clearing raw positive C5",
+    "pass": "validation and confirmation daily/matched label plus matched net and relative-return lifts are positive, and matched net/relative lifts beat raw positive C5 in both phases",
+    "skipped": "insufficient validation or confirmation active rows/dates"
+  },
+  "metric_specs": [
+    {
+      "metric": "buy_now_label",
+      "slug": "label"
+    },
+    {
+      "metric": "cycle_return_net",
+      "slug": "net"
+    },
+    {
+      "metric": "cycle_relative_return_vs_vnindex",
+      "slug": "rel_vnindex"
+    }
+  ],
+  "state_specs": [
+    {
+      "kind": "control",
+      "note": "Raw positive C5 state inside the entry candidate book",
+      "state": "c5_positive"
+    },
+    {
+      "kind": "candidate",
+      "note": "H340 positive C5 with same-day buy-volume imbalance > 0",
+      "state": "h340_buy_vol_gate"
+    },
+    {
+      "kind": "candidate",
+      "note": "H340 positive C5 with buy-volume imbalance >= dev support median",
+      "state": "h340_buy_vol_strong"
+    },
+    {
+      "kind": "diagnostic",
+      "note": "Positive C5 row rejected by same-day buy-volume imbalance",
+      "state": "h340_rejected_positive_c5"
+    }
+  ],
+  "summary": {
+    "best_state": "h340_buy_vol_gate",
+    "best_state_decision": "MIXED",
+    "best_state_reason": "one_phase_positive_only",
+    "branch_decision": "H340 shows partial entry-candidate evidence, but does not cleanly improve validation and confirmation entry labels/returns over raw C5.",
+    "candidate_decisions": [
+      {
+        "decision": "MIXED",
+        "reason": "one_phase_positive_only",
+        "score": 0.006012319032526676,
+        "state": "h340_buy_vol_gate"
+      },
+      {
+        "decision": "MIXED",
+        "reason": "positive_both_phases_but_raw_c5_control_not_cleared",
+        "score": 0.005720371797332733,
+        "state": "h340_buy_vol_strong"
+      }
+    ],
+    "confirmation_active_dates": 121,
+    "confirmation_active_rows": 161,
+    "confirmation_matched_label_lift": 0.029350104821802964,
+    "confirmation_matched_net_lift": -7.497609679254306e-05,
+    "confirmation_matched_rel_vnindex_lift": -7.497609679254446e-05,
+    "h340_dev_volume_support_threshold": 0.11492539052329089,
+    "panel_dates": 1749,
+    "panel_rows": 34980,
+    "panel_tickers": 394,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2019,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "validation_active_dates": 211,
+    "validation_active_rows": 269,
+    "validation_matched_label_lift": 0.022304832713754674,
+    "validation_matched_net_lift": 0.0030811356130558817,
+    "validation_matched_rel_vnindex_lift": 0.0030811356130558817,
+    "verdict": "MIXED"
+  }
+}

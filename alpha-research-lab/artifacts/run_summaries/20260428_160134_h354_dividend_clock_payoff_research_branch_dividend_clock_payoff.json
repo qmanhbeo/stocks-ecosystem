@@ -1,0 +1,159 @@
+{
+  "artifacts": {
+    "active_matches": "artifacts/portfolio_baselines/20260428_160134_h354_dividend_clock_payoff_active_matches.parquet",
+    "details": "artifacts/run_summaries/20260428_160134_h354_dividend_clock_payoff_details.json",
+    "results": "artifacts/portfolio_baselines/20260428_160134_h354_dividend_clock_payoff_results.parquet",
+    "state_results": "artifacts/portfolio_baselines/20260428_160134_h354_dividend_clock_payoff_state_results.parquet"
+  },
+  "metadata": {
+    "inputs": {
+      "dividend_calendar": "data/features/xs_dividend_calendar.parquet",
+      "future_rel_5d": "artifacts/cache/future_rel_return_5d_hose.parquet",
+      "s1": "data/features/xs_barrier_vol_1d_hose_full.parquet",
+      "tradability": "data/features/execution/tradability_daily.parquet"
+    },
+    "notes": "2026 rows excluded; controls restricted to same dividend-calendar ticker universe."
+  },
+  "mode": "research_branch_dividend_clock_payoff",
+  "name": "h354_dividend_clock_payoff",
+  "summary": {
+    "best_state": {
+      "confirmation_actual_hit_rate_lift": 0.03296890058715346,
+      "confirmation_actual_mean_lift": 0.03296890058715346,
+      "confirmation_fwd_active_dates": 224.0,
+      "confirmation_fwd_active_rows": 555.0,
+      "confirmation_fwd_bad_tail_rate_lift": -0.032437275860078385,
+      "confirmation_fwd_can_buy_rate_lift": 0.0018995832153726466,
+      "confirmation_fwd_daily_mean_lift_hit_rate": 0.5089285714285714,
+      "confirmation_fwd_hit_rate_lift": 0.02403612028830765,
+      "confirmation_fwd_mean_lift": 0.00016054690610009797,
+      "confirmation_fwd_q10_lift": -0.00302809105992901,
+      "confirmation_fwd_q90_lift": 0.009257936957563849,
+      "decision": "MIXED",
+      "decision_rank": 1,
+      "dev_actual_hit_rate_lift": 0.04443395394900751,
+      "dev_actual_mean_lift": 0.04443395394900751,
+      "dev_fwd_active_dates": 1684.0,
+      "dev_fwd_active_rows": 4511.0,
+      "dev_fwd_bad_tail_rate_lift": -0.03370133483920526,
+      "dev_fwd_can_buy_rate_lift": 0.001569315308769248,
+      "dev_fwd_daily_mean_lift_hit_rate": 0.5546318289786223,
+      "dev_fwd_hit_rate_lift": 0.06216565355678688,
+      "dev_fwd_mean_lift": 0.0027219687666599815,
+      "dev_fwd_q10_lift": -0.003898516215056748,
+      "dev_fwd_q90_lift": 0.011394209683457598,
+      "reason": "positive_mean_lift_in_validation_and_confirmation_but_risk_or_gate_not_clean",
+      "score": 0.06353304585483016,
+      "state": "pre_ex_20d",
+      "state_kind": "candidate",
+      "state_note": "Dividend calendar pre-ex window, up to 20 trading days before ex date.",
+      "validation_actual_hit_rate_lift": 0.03276090870535031,
+      "validation_actual_mean_lift": 0.03276090870535031,
+      "validation_fwd_active_dates": 414.0,
+      "validation_fwd_active_rows": 1039.0,
+      "validation_fwd_bad_tail_rate_lift": -0.029732763213513286,
+      "validation_fwd_can_buy_rate_lift": 0.001104958564053904,
+      "validation_fwd_daily_mean_lift_hit_rate": 0.5265700483091788,
+      "validation_fwd_hit_rate_lift": 0.04185516858300087,
+      "validation_fwd_mean_lift": 0.0007306908445396361,
+      "validation_fwd_q10_lift": -0.0005191869925055513,
+      "validation_fwd_q90_lift": 0.006818251374569394
+    },
+    "branch_decision": "Dividend-clock states have at most local payoff hints. Keep as offline calendar evidence unless a stricter portfolio-level contract needs a sparse clock.",
+    "candidate_definitions": {
+      "any_dividend_window": "Diagnostic union of pre/post dividend windows.",
+      "clustered_div_count_30d": "At least two dividend events inside the trailing/nearby 30-day calendar field.",
+      "post_ex_20d": "Dividend calendar post-ex window, up to 20 trading days after ex date.",
+      "post_ex_5d": "Dividend calendar 0-5 trading days after ex date.",
+      "pre_ex_10d": "Dividend calendar 1-10 trading days before ex date.",
+      "pre_ex_20d": "Dividend calendar pre-ex window, up to 20 trading days before ex date.",
+      "pre_ex_5d": "Dividend calendar 1-5 trading days before ex date."
+    },
+    "candidate_state_count": 6,
+    "decision": "MIXED",
+    "panel": {
+      "any_dividend_window_dates": 2540,
+      "any_dividend_window_rows": 8573,
+      "dates": 2748,
+      "end": "2025-12-31T00:00:00",
+      "rows": 131330,
+      "start": "2015-01-05T00:00:00",
+      "tickers": 51
+    },
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "state_decisions": [
+      {
+        "decision": "MIXED",
+        "reason": "positive_mean_lift_in_validation_and_confirmation_but_risk_or_gate_not_clean",
+        "score": 0.06353304585483016,
+        "state": "pre_ex_20d",
+        "state_kind": "candidate"
+      },
+      {
+        "decision": "FAILED",
+        "reason": "no_clean_two_phase_matched_dividend_clock_payoff",
+        "score": -0.004268495062991682,
+        "state": "pre_ex_10d",
+        "state_kind": "candidate"
+      },
+      {
+        "decision": "FAILED",
+        "reason": "no_clean_two_phase_matched_dividend_clock_payoff",
+        "score": -0.16793602267996183,
+        "state": "pre_ex_5d",
+        "state_kind": "candidate"
+      },
+      {
+        "decision": "FAILED",
+        "reason": "no_clean_two_phase_matched_dividend_clock_payoff",
+        "score": 9.094966339013265e-05,
+        "state": "post_ex_5d",
+        "state_kind": "candidate"
+      },
+      {
+        "decision": "FAILED",
+        "reason": "no_clean_two_phase_matched_dividend_clock_payoff",
+        "score": 0.00302826989858233,
+        "state": "post_ex_20d",
+        "state_kind": "candidate"
+      },
+      {
+        "decision": "FAILED",
+        "reason": "no_clean_two_phase_matched_dividend_clock_payoff",
+        "score": -0.005678749529298383,
+        "state": "clustered_div_count_30d",
+        "state_kind": "candidate"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "reason": "diagnostic_union_state",
+        "score": 0.04435898224340612,
+        "state": "any_dividend_window",
+        "state_kind": "diagnostic"
+      }
+    ],
+    "thresholds": {
+      "bad_tail_max_worsening": 0.01,
+      "bad_tail_threshold": -0.03,
+      "can_buy_max_worsening": -0.05,
+      "dev_mean_min_lift": -0.001,
+      "hit_rate_max_worsening": -0.02,
+      "mean_min_lift": 0.002,
+      "min_active_dates": 40,
+      "min_active_rows": 80,
+      "q10_max_worsening": -0.0025
+    }
+  },
+  "ts": "20260428_160134"
+}

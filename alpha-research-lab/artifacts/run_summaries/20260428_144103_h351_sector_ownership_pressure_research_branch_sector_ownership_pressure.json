@@ -1,0 +1,57 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260428_144103_h351_sector_ownership_pressure_details.json",
+    "feature_results": "artifacts/portfolio_baselines/20260428_144103_h351_sector_ownership_pressure_results.parquet",
+    "yearly_ic": "artifacts/portfolio_baselines/20260428_144103_h351_sector_ownership_pressure_yearly_ic.parquet"
+  },
+  "metadata": {
+    "branch_contract": "Sector-level H95 continuation only; no raw ticker-level foreign-flow rank tuning.",
+    "foreign_flow": "data/foreign_flow/cafef/foreign_flow_daily.parquet",
+    "sector_classification": "data/features/sector_classification.parquet",
+    "sector_rotation": "data/features/xs_sector_rotation_daily.parquet"
+  },
+  "mode": "research_branch_sector_ownership_pressure",
+  "name": "h351_sector_ownership_pressure",
+  "summary": {
+    "branch_decision": "Sector-level ownership pressure does not rescue H95 under the current contract. Do not keep tuning foreign-flow sector pressure variants without a new target or data source.",
+    "predictive": {
+      "best_feature": {
+        "abs_dev_ic": 0.0006579927279972475,
+        "abs_validation_ic": 0.005053555701524484,
+        "candidate_gate": false,
+        "confirmation_avg_ic": 0.0014832696829671988,
+        "confirmation_n": 86179,
+        "confirmation_ok": false,
+        "corr_gate": true,
+        "corr_with_s1": -0.004785642385375693,
+        "coverage": 1.0,
+        "dev_avg_ic": -0.0006579927279972475,
+        "dev_directional_years": 5,
+        "dev_gate": false,
+        "dev_n": 561441,
+        "dev_pct_directional_years": 0.625,
+        "dev_years": 8,
+        "direction": "negative",
+        "feature": "xs_sector_ff_participation_20d_rank",
+        "full_avg_ic": -0.0012250523764101037,
+        "full_n": 814353,
+        "max_sector_anchor": "c6_contrarian_intra_5d",
+        "max_sector_anchor_corr": 0.0022174229634194776,
+        "redundant_candidate": false,
+        "sector_anchor_corrs_json": "{\"c6_contrarian_intra_5d\": 0.0022174229634194776, \"xs_sector_breadth_5d\": -0.0005177677632042844}",
+        "sector_redundancy_gate": true,
+        "validation_avg_ic": -0.005053555701524484,
+        "validation_gate": true,
+        "validation_n": 166733
+      },
+      "feature_count": 7,
+      "merged_dates": 2741,
+      "merged_rows": 814353,
+      "merged_tickers": 390,
+      "passing_features": [],
+      "redundant_candidates": []
+    },
+    "verdict": "FAILED"
+  },
+  "ts": "20260428_144103"
+}

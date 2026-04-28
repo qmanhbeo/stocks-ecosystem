@@ -1,0 +1,84 @@
+{
+  "decision_rules": {
+    "failed": "sufficient coverage but no positive validation/confirmation entry lift",
+    "minimum_active_dates_per_validation_phase": 4,
+    "minimum_active_rows_per_validation_phase": 8,
+    "mixed": "one or both phases positive without clearing the full matched-control bar",
+    "pass": "validation and confirmation daily/matched label plus matched net and relative-return lifts are positive, and matched net lift beats the H310 follow-up control in both phases",
+    "skipped": "insufficient validation or confirmation active rows/dates"
+  },
+  "metric_specs": [
+    {
+      "metric": "buy_now_label",
+      "slug": "label"
+    },
+    {
+      "metric": "cycle_return_net",
+      "slug": "net"
+    },
+    {
+      "metric": "cycle_relative_return_vs_vnindex",
+      "slug": "rel_vnindex"
+    }
+  ],
+  "state_specs": [
+    {
+      "kind": "candidate",
+      "note": "H321 same-day self-excitation acceleration",
+      "state": "today_self_accel_high"
+    },
+    {
+      "kind": "control",
+      "note": "H310 same-day follow-up matched control",
+      "state": "event_today_follow20"
+    },
+    {
+      "kind": "control",
+      "note": "H310 same-day first-public control",
+      "state": "event_today_novel20"
+    },
+    {
+      "kind": "diagnostic",
+      "note": "H321 same-day low self-intensity diagnostic",
+      "state": "today_low_self_tau5"
+    },
+    {
+      "kind": "control",
+      "note": "Broad event-surface-v1 proxy",
+      "state": "v1_proxy_5d"
+    }
+  ],
+  "summary": {
+    "branch_decision": "Cascade state does not improve the entry-label contract after matching against the existing entry prior.",
+    "candidate_state": "today_self_accel_high",
+    "confirmation_active_dates": 18,
+    "confirmation_active_rows": 19,
+    "confirmation_daily_label_lift": 0.04527481557925314,
+    "confirmation_matched_label_lift": -0.02631578947368417,
+    "confirmation_matched_net_lift": -0.03447176065804859,
+    "confirmation_matched_rel_vnindex_lift": -0.0344717606580486,
+    "panel_dates": 748,
+    "panel_rows": 14960,
+    "panel_tickers": 393,
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2023,
+        2023
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2024,
+        2024
+      ]
+    },
+    "reason": "entry_lift_not_positive_in_validation_and_confirmation",
+    "validation_active_dates": 15,
+    "validation_active_rows": 15,
+    "validation_daily_label_lift": -0.18070175438596492,
+    "validation_matched_label_lift": -0.11111111111111108,
+    "validation_matched_net_lift": -0.016599365176074913,
+    "validation_matched_rel_vnindex_lift": -0.016599365176074913,
+    "verdict": "FAILED"
+  }
+}

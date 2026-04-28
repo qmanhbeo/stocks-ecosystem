@@ -1,0 +1,354 @@
+{
+  "verdict": "PASSED",
+  "panel_rows": 826404,
+  "panel_dates": 2748,
+  "panel_tickers": 394,
+  "order_row_coverage_pct": 99.43853127526005,
+  "protocol": {
+    "dev_years": [
+      2015,
+      2022
+    ],
+    "validation_years": [
+      2023,
+      2024
+    ],
+    "confirmation_year": 2025,
+    "forward_start_year": 2026
+  },
+  "primary_target": "actual",
+  "diagnostic_target": "fwd_rel_5d",
+  "strict_1d_passes": 6,
+  "broad_1d_mixed_count": 7,
+  "strict_5d_passes": 6,
+  "best_feature": {
+    "feature_name": "order_volume_ratio_rank",
+    "description": "rank((buy_order_volume - sell_order_volume) / total posted order volume)",
+    "active_rows": 810201,
+    "active_dates": 2748,
+    "active_tickers": 394,
+    "coverage_pct": 98.03933669246518,
+    "barrier_1d": {
+      "target": "actual",
+      "avg_ic": 0.07376541886599795,
+      "pos_years": 11,
+      "years": 11,
+      "pct_years_positive": 1.0,
+      "corr_with_s1": 0.03419262403970579,
+      "gate_pass": true,
+      "strict_split_pass": true,
+      "positive_holdout": true,
+      "phase_details": {
+        "dev": {
+          "rows": 555840,
+          "pooled_ic": 0.07988874576089242
+        },
+        "validation": {
+          "rows": 167612,
+          "pooled_ic": 0.059308463681042284
+        },
+        "confirmation": {
+          "rows": 86749,
+          "pooled_ic": 0.07125833593792893
+        }
+      },
+      "yearly": [
+        {
+          "year": 2015,
+          "n": 51787,
+          "ic": 0.059610712669719935,
+          "p_value": 5.4668232434755905e-42
+        },
+        {
+          "year": 2016,
+          "n": 57856,
+          "ic": 0.07351761822877699,
+          "p_value": 3.7044822583001374e-70
+        },
+        {
+          "year": 2017,
+          "n": 63735,
+          "ic": 0.07675177583520959,
+          "p_value": 7.023626753527446e-84
+        },
+        {
+          "year": 2018,
+          "n": 68567,
+          "ic": 0.06179343096511286,
+          "p_value": 5.383397748305474e-59
+        },
+        {
+          "year": 2019,
+          "n": 71348,
+          "ic": 0.06318799919423831,
+          "p_value": 4.916787846531247e-64
+        },
+        {
+          "year": 2020,
+          "n": 74430,
+          "ic": 0.0916304365283272,
+          "p_value": 1.7119546832431087e-138
+        },
+        {
+          "year": 2021,
+          "n": 82463,
+          "ic": 0.10533974401124029,
+          "p_value": 4.120012902367923e-202
+        },
+        {
+          "year": 2022,
+          "n": 85654,
+          "ic": 0.08960831645876993,
+          "p_value": 3.4319692429295134e-152
+        },
+        {
+          "year": 2023,
+          "n": 82969,
+          "ic": 0.05766247626402014,
+          "p_value": 4.759326988035692e-62
+        },
+        {
+          "year": 2024,
+          "n": 84643,
+          "ic": 0.06105876143263337,
+          "p_value": 1.0019000731888433e-70
+        },
+        {
+          "year": 2025,
+          "n": 86749,
+          "ic": 0.07125833593792893,
+          "p_value": 4.857366946675257e-98
+        }
+      ]
+    },
+    "fwd_rel_5d": {
+      "target": "fwd_rel_5d",
+      "avg_ic": 0.07971380649794474,
+      "pos_years": 11,
+      "years": 11,
+      "pct_years_positive": 1.0,
+      "corr_with_s1": null,
+      "gate_pass": true,
+      "strict_split_pass": true,
+      "positive_holdout": true,
+      "phase_details": {
+        "dev": {
+          "rows": 555840,
+          "pooled_ic": 0.08435478763122752
+        },
+        "validation": {
+          "rows": 167610,
+          "pooled_ic": 0.06466705804075301
+        },
+        "confirmation": {
+          "rows": 86747,
+          "pooled_ic": 0.06688582553548988
+        }
+      },
+      "yearly": [
+        {
+          "year": 2015,
+          "n": 51787,
+          "ic": 0.089188826798684,
+          "p_value": 6.110170466044905e-92
+        },
+        {
+          "year": 2016,
+          "n": 57856,
+          "ic": 0.08759919997185298,
+          "p_value": 6.3546824016898495e-99
+        },
+        {
+          "year": 2017,
+          "n": 63735,
+          "ic": 0.07819730714403349,
+          "p_value": 5.247700640769665e-87
+        },
+        {
+          "year": 2018,
+          "n": 68567,
+          "ic": 0.08005693188285885,
+          "p_value": 7.064067849392797e-98
+        },
+        {
+          "year": 2019,
+          "n": 71348,
+          "ic": 0.09275277830520488,
+          "p_value": 4.432609674022199e-136
+        },
+        {
+          "year": 2020,
+          "n": 74430,
+          "ic": 0.09443768062437685,
+          "p_value": 5.067030811807717e-147
+        },
+        {
+          "year": 2021,
+          "n": 82463,
+          "ic": 0.0715058402629671,
+          "p_value": 6.277259063590507e-94
+        },
+        {
+          "year": 2022,
+          "n": 85654,
+          "ic": 0.08626865211003168,
+          "p_value": 3.6451203045949226e-141
+        },
+        {
+          "year": 2023,
+          "n": 82967,
+          "ic": 0.0609892304631398,
+          "p_value": 3.2994978232975974e-69
+        },
+        {
+          "year": 2024,
+          "n": 84643,
+          "ic": 0.06896959837875248,
+          "p_value": 9.15867557486544e-90
+        },
+        {
+          "year": 2025,
+          "n": 86747,
+          "ic": 0.06688582553548988,
+          "p_value": 1.4076243155945508e-86
+        }
+      ]
+    },
+    "barrier_1d_avg_ic": 0.07376541886599795,
+    "barrier_1d_pos_years": 11,
+    "barrier_1d_years": 11,
+    "barrier_1d_corr_with_s1": 0.03419262403970579,
+    "barrier_1d_gate_pass": true,
+    "barrier_1d_strict_split_pass": true,
+    "barrier_1d_positive_holdout": true,
+    "fwd_rel_5d_avg_ic": 0.07971380649794474,
+    "fwd_rel_5d_pos_years": 11,
+    "fwd_rel_5d_years": 11,
+    "fwd_rel_5d_gate_pass": true,
+    "fwd_rel_5d_strict_split_pass": true,
+    "fwd_rel_5d_positive_holdout": true
+  },
+  "tested_features": [
+    {
+      "feature_name": "order_volume_ratio_rank",
+      "description": "rank((buy_order_volume - sell_order_volume) / total posted order volume)",
+      "active_rows": 810201,
+      "coverage_pct": 98.03933669246518,
+      "barrier_1d_avg_ic": 0.07376541886599795,
+      "barrier_1d_pos_years": 11,
+      "barrier_1d_years": 11,
+      "barrier_1d_corr_with_s1": 0.03419262403970579,
+      "barrier_1d_gate_pass": true,
+      "barrier_1d_strict_split_pass": true,
+      "fwd_rel_5d_avg_ic": 0.07971380649794474,
+      "fwd_rel_5d_pos_years": 11,
+      "fwd_rel_5d_years": 11,
+      "fwd_rel_5d_gate_pass": true,
+      "fwd_rel_5d_strict_split_pass": true
+    },
+    {
+      "feature_name": "buy_sell_volume_imbalance_rank",
+      "description": "rank of CafeF raw buy_sell_volume_imbalance",
+      "active_rows": 821764,
+      "coverage_pct": 99.43853127526005,
+      "barrier_1d_avg_ic": 0.06618255770207006,
+      "barrier_1d_pos_years": 11,
+      "barrier_1d_years": 11,
+      "barrier_1d_corr_with_s1": 0.003346213270991271,
+      "barrier_1d_gate_pass": true,
+      "barrier_1d_strict_split_pass": true,
+      "fwd_rel_5d_avg_ic": 0.05597546930517467,
+      "fwd_rel_5d_pos_years": 11,
+      "fwd_rel_5d_years": 11,
+      "fwd_rel_5d_gate_pass": true,
+      "fwd_rel_5d_strict_split_pass": true
+    },
+    {
+      "feature_name": "order_count_ratio_rank",
+      "description": "rank((buy_order_count - sell_order_count) / total posted order count)",
+      "active_rows": 810188,
+      "coverage_pct": 98.03776361198639,
+      "barrier_1d_avg_ic": 0.044228338570128374,
+      "barrier_1d_pos_years": 11,
+      "barrier_1d_years": 11,
+      "barrier_1d_corr_with_s1": 0.10263999663905775,
+      "barrier_1d_gate_pass": true,
+      "barrier_1d_strict_split_pass": true,
+      "fwd_rel_5d_avg_ic": 0.029497265763728485,
+      "fwd_rel_5d_pos_years": 10,
+      "fwd_rel_5d_years": 11,
+      "fwd_rel_5d_gate_pass": true,
+      "fwd_rel_5d_strict_split_pass": true
+    },
+    {
+      "feature_name": "order_volume_ratio_5d_rank",
+      "description": "rank of 5d mean posted order-volume imbalance",
+      "active_rows": 820719,
+      "coverage_pct": 99.31207980600287,
+      "barrier_1d_avg_ic": 0.0346496355010353,
+      "barrier_1d_pos_years": 11,
+      "barrier_1d_years": 11,
+      "barrier_1d_corr_with_s1": -0.021850482407062513,
+      "barrier_1d_gate_pass": true,
+      "barrier_1d_strict_split_pass": true,
+      "fwd_rel_5d_avg_ic": 0.05287136827842165,
+      "fwd_rel_5d_pos_years": 11,
+      "fwd_rel_5d_years": 11,
+      "fwd_rel_5d_gate_pass": true,
+      "fwd_rel_5d_strict_split_pass": true
+    },
+    {
+      "feature_name": "avg_order_size_ratio_rank",
+      "description": "rank((avg_buy_order_volume - avg_sell_order_volume) / total avg order size)",
+      "active_rows": 810187,
+      "coverage_pct": 98.03764260579571,
+      "barrier_1d_avg_ic": 0.03426088434724398,
+      "barrier_1d_pos_years": 11,
+      "barrier_1d_years": 11,
+      "barrier_1d_corr_with_s1": -0.046031257682408774,
+      "barrier_1d_gate_pass": true,
+      "barrier_1d_strict_split_pass": true,
+      "fwd_rel_5d_avg_ic": 0.06028674629883471,
+      "fwd_rel_5d_pos_years": 11,
+      "fwd_rel_5d_years": 11,
+      "fwd_rel_5d_gate_pass": true,
+      "fwd_rel_5d_strict_split_pass": true
+    },
+    {
+      "feature_name": "order_volume_ratio_lag1_rank",
+      "description": "lag-1 rank of posted order-volume imbalance",
+      "active_rows": 809939,
+      "coverage_pct": 98.0076330705079,
+      "barrier_1d_avg_ic": 0.018944109280253044,
+      "barrier_1d_pos_years": 11,
+      "barrier_1d_years": 11,
+      "barrier_1d_corr_with_s1": -0.02004341845898766,
+      "barrier_1d_gate_pass": true,
+      "barrier_1d_strict_split_pass": true,
+      "fwd_rel_5d_avg_ic": 0.037111168338692664,
+      "fwd_rel_5d_pos_years": 11,
+      "fwd_rel_5d_years": 11,
+      "fwd_rel_5d_gate_pass": true,
+      "fwd_rel_5d_strict_split_pass": true
+    },
+    {
+      "feature_name": "order_count_ratio_lag1_rank",
+      "description": "lag-1 rank of posted order-count imbalance",
+      "active_rows": 809927,
+      "coverage_pct": 98.00618099621977,
+      "barrier_1d_avg_ic": 0.01052335378816534,
+      "barrier_1d_pos_years": 11,
+      "barrier_1d_years": 11,
+      "barrier_1d_corr_with_s1": 0.07155295381709777,
+      "barrier_1d_gate_pass": true,
+      "barrier_1d_strict_split_pass": false,
+      "fwd_rel_5d_avg_ic": 0.002938931008175744,
+      "fwd_rel_5d_pos_years": 8,
+      "fwd_rel_5d_years": 11,
+      "fwd_rel_5d_gate_pass": false,
+      "fwd_rel_5d_strict_split_pass": false
+    }
+  ],
+  "branch_decision": "CafeF order pressure has broad standalone 1d-barrier predictive value; advance to a separate integration audit before any publication.",
+  "next_step": "Run one integration audit against the frozen selector / signal matrix before publishing."
+}

@@ -124,6 +124,15 @@ versus `+0.0980 / +0.0576`). The hard intersection gate also failed. Treat
 `H340` as the preferred daily-state rewrite and keep `H306` only as a fallback
 when order-pressure data is unavailable.
 
+**Entry-book transfer update:** Session 192 `H353` tested whether H340 should
+be promoted from a daily-state C5 rewrite into an entry-alpha prior. It should
+not. The loose buy-volume gate had positive validation matched return lift
+(`+0.0031`) but slightly negative confirmation return lift (`-0.0001`). The
+strong buy-volume support state was positive in both validation and
+confirmation (`+0.0001 / +0.0028` matched relative-return lift), but did not
+beat raw positive `C5` in validation. Keep this as offline entry-book evidence
+only.
+
 **Foreign-flow interaction update:** Session 186 `H347` tested foreign-flow
 agreement as a distinct non-price conditioner after standalone foreign-flow
 paths failed. Foreign support improved raw `C5`, but did not beat the stronger
@@ -443,6 +452,53 @@ that volume alone does not explain.
 
 ---
 
+### C16 — CafeF Posted Order-Volume Pressure (H356)
+**Status: CANDIDATE — standalone and integration gates passed; needs portfolio/tradability audit before publication**
+
+- **Standalone IC vs 1d barrier:** `+0.0738`
+- **Consistency:** `11 / 11` years positive
+- **Correlation with S1:** `+0.0342`
+- **Coverage:** `98.04%` active rows on the 2015-2025 S1 panel
+- **Split IC:** dev `+0.0799`, validation `+0.0593`, confirmation `+0.0713`
+- **5d diagnostic IC:** `+0.0797`, also `11 / 11` positive years
+- **Full-library residual IC (H357):** `+0.0687`, `11 / 11` positive years
+- **Max current-library correlation:** `0.1877` with `C13`, below the
+  redundancy bar
+- **Frozen selector delta:** validation / confirmation top-5 edge
+  `+0.0152 / +0.0554`
+
+**What it captures:** `order_volume_ratio_rank` is the cross-sectional rank of
+CafeF posted buy-vs-sell order-volume imbalance:
+`(buy_order_volume - sell_order_volume) / (buy_order_volume + sell_order_volume)`.
+It measures same-day demand pressure from the order-statistics page-2 daily
+summary surface, available after the trading day and usable for a T-close
+signal / T+1 open fill protocol.
+
+**Why it matters:** H340 had already shown posted buy-volume pressure is a
+strong conditioner on bullish insider conviction. H356 shows the same surface
+has broad standalone value with dense coverage and low S1 overlap. This makes
+CafeF order pressure one of the strongest current-data side-channel candidates
+in the lab.
+
+**Integration update:** H357 residualized `order_volume_ratio_rank` against the
+current full library and tested it as one equal-weight addition to the frozen
+label-level full-library selector. The residual signal stayed strong, and the
+selector improved in validation and confirmation.
+
+**Current constraint:** do not treat this as a published consumer contract yet.
+H356/H357 did not add a formal `data/features/...` artifact or run a portfolio
+/ tradability audit. The next required pass is a portfolio/tradability audit,
+then a low-resource feature-publication design if that audit passes.
+
+**Artifact:** source data currently lives at
+`data/order_stats/cafef/order_stats_daily.parquet`. H356 saved research results
+under
+`artifacts/run_summaries/latest_research_branch_order_pressure_standalone_gate.json`;
+H357 saved integration results under
+`artifacts/run_summaries/latest_research_branch_order_pressure_integration_audit.json`.
+
+---
+
 ### I1 — Reduced-Shape Intraday Disagreement Atoms (H275)
 **Status: CANDIDATE — observed-subset intraday state family, offline only**
 
@@ -631,6 +687,11 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Sector rotation composite (H111) | xs_sector_rotation_signal IC −0.038 | Intra-sector rank is anti-predictive (laggards beat leaders) |
 | VNM ETF foreign affinity (H110) | xs_fa_signal IC −0.001 | ETF premium is market-direction signal only; no cross-sectional differentiation |
 | CafeF foreign-flow standalone paths (H327/H328/H333/H345) | best raw room-scarcity dev/validation IC +0.0117/+0.0074 but 2025 IC −0.0048; best residual loosen rank −0.0044/−0.0109/+0.0132; best accumulation change-point dev/validation IC only +0.0020/+0.0024 | Source acquired, but raw, conditioned, room-residual, and accumulation / ownership-change paths fail as standalone signals |
+| Proprietary-flow conflict/agreement pilot (H348) | best proprietary buy-share row dev/validation/confirmation IC +0.0144/−0.0216/−0.0110 | Limited 2022+ CafeF proprietary-trading source is usable, but raw ranks and foreign/proprietary agreement-conflict states are unstable on the current next-day target |
+| Sector ownership pressure (H351) | best sector participation row dev/validation/confirmation IC −0.0007/−0.0051/+0.0015 | Sector-level foreign pressure, participation, room/ownership, and sector-heat interactions fail; low sector-anchor correlation means this is not merely C6/breadth redundancy |
+| Event-v2 payoff-shape states (H352) | best state `recent5_high_self_no_today` validation/confirmation q90 lift +0.0196/+0.0174, but q10 lift −0.0145/−0.0239 and confirmation mean lift −0.0026 | Upside-tail hints remain offline timing evidence only; downside tail and expected value are not clean enough for promotion or integration |
+| Dividend-clock payoff states (H354) | best `pre_ex_20d` validation/confirmation mean lift +0.0007/+0.0002, q90 lift +0.0068/+0.0093, but confirmation q10 lift −0.0030 | Small pre-ex payoff hint remains offline calendar evidence only; do not reopen H31-style dividend-calendar model features or tune more dividend windows under the current target |
+| Order-pressure smart-exit state (H355) | best two-phase utility delta vs H337 refit only about +0.00065/+0.00053 | CafeF order pressure is useful post-entry state evidence, but it does not solve H337/H339 smart-exit learning; do not integrate exit features or tune more linear step-hazard feature sets |
 | Earnings quality 52 tickers (H109) | best IC +0.005 (roe_delta) | Insufficient universe; re-test at 394 tickers pending |
 | VN30 rebalancing proximity (H114) | xs_vn30_rank_change_5d IC +0.0075 (10/11) | Rank level anti-predictive; change directionally consistent but below 0.01 gate |
 | 52-week high proximity (H118) | xs_52w_high_prox IC +0.0065 (9/11) | Directionally correct but below IC > 0.01 gate |
@@ -657,7 +718,7 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Signal | Hypothesis | Data available | Priority |
 |--------|-----------|----------------|---------|
 | H98: LLM news sentiment | Higher quality than keyword approach | **PARKED** (runtime/throughput bottleneck) | Parked |
-| H95 follow-up: foreign / flow interactions | Standalone accumulation change-points failed in H345, and H347 foreign-insider agreement improved raw C5 but did not beat H340; only a materially different interaction such as proprietary-flow conflict/agreement or sector-specific ownership pressure remains plausible | CafeF foreign-flow source acquired; proprietary-trading raw surface exists but has limited 2022+ coverage | Low-medium |
+| H95 follow-up: new data or target only | Standalone flow paths failed through H345; H347 foreign-insider agreement lost to H340; H348 proprietary-flow agreement/conflict failed; H351 sector ownership pressure failed | CafeF foreign-flow and proprietary-trading sources exist, but no current-data flow feature remains untested under this target | Parked |
 | Order book imbalance | Bid/ask pressure predicts short-term price | Not available historically | Blocked |
 
 H123, H124, H125, H126, H127, H128, H130, H131, H132, H133, H134, H283, H284, and H346 are now closed and documented above.

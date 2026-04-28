@@ -1,0 +1,57 @@
+{
+  "artifacts": {
+    "details": "artifacts/run_summaries/20260428_143701_h350_official_disclosure_bridge_source_audit_details.json"
+  },
+  "metadata": {
+    "branch_contract": "Source audit only. Exclude 2026 rows from predictive readiness and do not compute alpha IC.",
+    "predictive_end": "2025-12-31"
+  },
+  "mode": "research_branch_official_disclosure_bridge_source_audit",
+  "name": "h350_official_disclosure_bridge_source_audit",
+  "summary": {
+    "attachment_rows": 13,
+    "blockers": [
+      "insufficient_pre_2026_disclosure_history",
+      "latest_outputs_are_sample_scoped_not_append_only_history",
+      "no_pre_2026_transaction_extract_surface",
+      "hnx_universe_has_insufficient_hose_matrix_overlap"
+    ],
+    "branch_decision": "Official-disclosure bridge remains acquisition-limited. Do not run alpha IC until broader pre-2026 history exists.",
+    "manifest_max_tickers": 2,
+    "manifest_notes": [
+      "Universe refresh is full; per-ticker disclosure history is only fetched for the requested ticker set.",
+      "The HNX mobile site requires TLS verification to be disabled in this environment.",
+      "HSX official disclosures are not part of this fetcher because the current HSX SPA/API route is still unresolved.",
+      "Latest-run parquet outputs are rewritten to match the current request scope; they are not append-only history stores.",
+      "Transaction attachment extracts can be rebuilt locally from cached news/attachment parquets plus any saved OCR text files."
+    ],
+    "manifest_resolved_target_tickers": [
+      "AAV",
+      "ADC"
+    ],
+    "manifest_run_mode": "local_rebuild_transaction_extracts",
+    "manifest_target_tickers": 2,
+    "matrix_tickers_2015_2025": 394,
+    "news_date_max": "2026-04-23",
+    "news_date_min": "2026-04-07",
+    "news_pre_2026_dates": 0,
+    "news_pre_2026_rows": 0,
+    "news_pre_2026_tickers": 0,
+    "news_rows": 10,
+    "news_tickers": 2,
+    "skipped": true,
+    "transaction_disclosure_rows": 0,
+    "transaction_extract_pre_2026_rows": 0,
+    "transaction_extract_rows": 0,
+    "transaction_extract_tickers": 0,
+    "universe_market_bucket_counts": {
+      "listed": 387,
+      "upcom": 833
+    },
+    "universe_overlap_with_matrix_tickers": 1,
+    "universe_rows": 1220,
+    "universe_tickers": 1220,
+    "verdict": "SKIPPED"
+  },
+  "ts": "20260428_143701"
+}

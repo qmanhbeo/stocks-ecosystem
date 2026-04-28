@@ -1,0 +1,344 @@
+{
+  "verdict": "PASSED",
+  "panel_rows": 810201,
+  "panel_dates": 2748,
+  "panel_tickers": 394,
+  "protocol": {
+    "dev_years": [
+      2015,
+      2022
+    ],
+    "validation_years": [
+      2023,
+      2024
+    ],
+    "confirmation_year": 2025,
+    "forward_start_year": 2026
+  },
+  "order_feature": "order_volume_ratio_rank",
+  "residual_feature": "order_volume_ratio_full_library_residual_rank",
+  "full_library_column_count": 13,
+  "raw_order_pressure_ic": {
+    "feature": "order_volume_ratio_rank",
+    "avg_ic": 0.07376541886599795,
+    "pos_years": 11,
+    "years": 11,
+    "pct_years_positive": 1.0,
+    "phase_details": {
+      "dev": {
+        "rows": 555840,
+        "pooled_ic": 0.07988874576089242
+      },
+      "validation": {
+        "rows": 167612,
+        "pooled_ic": 0.059308463681042284
+      },
+      "confirmation": {
+        "rows": 86749,
+        "pooled_ic": 0.07125833593792893
+      }
+    },
+    "strict_split_pass": true,
+    "yearly": [
+      {
+        "year": 2015,
+        "n": 51787,
+        "ic": 0.059610712669719935,
+        "p_value": 5.4668232434755905e-42
+      },
+      {
+        "year": 2016,
+        "n": 57856,
+        "ic": 0.07351761822877699,
+        "p_value": 3.7044822583001374e-70
+      },
+      {
+        "year": 2017,
+        "n": 63735,
+        "ic": 0.07675177583520959,
+        "p_value": 7.023626753527446e-84
+      },
+      {
+        "year": 2018,
+        "n": 68567,
+        "ic": 0.06179343096511286,
+        "p_value": 5.383397748305474e-59
+      },
+      {
+        "year": 2019,
+        "n": 71348,
+        "ic": 0.06318799919423831,
+        "p_value": 4.916787846531247e-64
+      },
+      {
+        "year": 2020,
+        "n": 74430,
+        "ic": 0.0916304365283272,
+        "p_value": 1.7119546832431087e-138
+      },
+      {
+        "year": 2021,
+        "n": 82463,
+        "ic": 0.10533974401124029,
+        "p_value": 4.120012902367923e-202
+      },
+      {
+        "year": 2022,
+        "n": 85654,
+        "ic": 0.08960831645876993,
+        "p_value": 3.4319692429295134e-152
+      },
+      {
+        "year": 2023,
+        "n": 82969,
+        "ic": 0.05766247626402014,
+        "p_value": 4.759326988035692e-62
+      },
+      {
+        "year": 2024,
+        "n": 84643,
+        "ic": 0.06105876143263337,
+        "p_value": 1.0019000731888433e-70
+      },
+      {
+        "year": 2025,
+        "n": 86749,
+        "ic": 0.07125833593792893,
+        "p_value": 4.857366946675257e-98
+      }
+    ]
+  },
+  "residual_order_pressure_ic": {
+    "feature": "order_volume_ratio_full_library_residual_rank",
+    "avg_ic": 0.06867388856346683,
+    "pos_years": 11,
+    "years": 11,
+    "pct_years_positive": 1.0,
+    "phase_details": {
+      "dev": {
+        "rows": 554893,
+        "pooled_ic": 0.07275343553513197
+      },
+      "validation": {
+        "rows": 167449,
+        "pooled_ic": 0.05847389554887339
+      },
+      "confirmation": {
+        "rows": 86739,
+        "pooled_ic": 0.06132618132296537
+      }
+    },
+    "strict_split_pass": true,
+    "yearly": [
+      {
+        "year": 2015,
+        "n": 51787,
+        "ic": 0.0656293786468135,
+        "p_value": 1.537106882392153e-50
+      },
+      {
+        "year": 2016,
+        "n": 57856,
+        "ic": 0.07142924631846222,
+        "p_value": 2.535438837375728e-66
+      },
+      {
+        "year": 2017,
+        "n": 63692,
+        "ic": 0.07311918889711172,
+        "p_value": 3.1241872056496716e-76
+      },
+      {
+        "year": 2018,
+        "n": 68508,
+        "ic": 0.062335999705427005,
+        "p_value": 5.898492513494457e-60
+      },
+      {
+        "year": 2019,
+        "n": 71185,
+        "ic": 0.0632927095580815,
+        "p_value": 4.241615785629918e-64
+      },
+      {
+        "year": 2020,
+        "n": 74116,
+        "ic": 0.08270139287856472,
+        "p_value": 1.25207251122225e-112
+      },
+      {
+        "year": 2021,
+        "n": 82189,
+        "ic": 0.08486069636513006,
+        "p_value": 3.389536963199716e-131
+      },
+      {
+        "year": 2022,
+        "n": 85560,
+        "ic": 0.07381407333925764,
+        "p_value": 1.1579605870426204e-103
+      },
+      {
+        "year": 2023,
+        "n": 82868,
+        "ic": 0.055357837200160756,
+        "p_value": 2.9539578432479556e-57
+      },
+      {
+        "year": 2024,
+        "n": 84581,
+        "ic": 0.06154606996616055,
+        "p_value": 8.83875660695227e-72
+      },
+      {
+        "year": 2025,
+        "n": 86739,
+        "ic": 0.06132618132296537,
+        "p_value": 4.730456982031787e-73
+      }
+    ]
+  },
+  "max_abs_candidate_corr": 0.18770947576552227,
+  "max_corr_row": {
+    "column": "c13_compress_blowoff_2",
+    "corr_with_order_pressure": -0.18770947576552227,
+    "abs_corr": 0.18770947576552227
+  },
+  "selector_delta": {
+    "dev": {
+      "baseline_top5_edge": 0.11638228025370674,
+      "candidate_top5_edge": 0.14068228025370672,
+      "top5_edge_delta": 0.024299999999999974,
+      "baseline_daily_ic": 0.10023136848247532,
+      "candidate_daily_ic": 0.11747472038091498,
+      "daily_ic_delta": 0.01724335189843966
+    },
+    "validation": {
+      "baseline_top5_edge": 0.09696019138233439,
+      "candidate_top5_edge": 0.11219065230417809,
+      "top5_edge_delta": 0.0152304609218437,
+      "baseline_daily_ic": 0.09816871459108359,
+      "candidate_daily_ic": 0.11033161651171007,
+      "daily_ic_delta": 0.012162901920626482
+    },
+    "confirmation": {
+      "baseline_top5_edge": 0.08673357424236912,
+      "candidate_top5_edge": 0.14215526098935705,
+      "top5_edge_delta": 0.05542168674698793,
+      "baseline_daily_ic": 0.09215305987073466,
+      "candidate_daily_ic": 0.10751081823765973,
+      "daily_ic_delta": 0.015357758366925073
+    }
+  },
+  "selector_summary": [
+    {
+      "strategy": "full_library_baseline",
+      "phase": "dev",
+      "days": 2000,
+      "avg_daily_ic": 0.10023136848247532,
+      "avg_top5_edge": 0.11638228025370674,
+      "avg_q5_q1_spread": 0.13500583090636814,
+      "positive_ic_years": 8,
+      "positive_edge_years": 8,
+      "years": 8
+    },
+    {
+      "strategy": "full_library_baseline",
+      "phase": "validation",
+      "days": 499,
+      "avg_daily_ic": 0.09816871459108359,
+      "avg_top5_edge": 0.09696019138233439,
+      "avg_q5_q1_spread": 0.13331925566464053,
+      "positive_ic_years": 2,
+      "positive_edge_years": 2,
+      "years": 2
+    },
+    {
+      "strategy": "full_library_baseline",
+      "phase": "confirmation",
+      "days": 249,
+      "avg_daily_ic": 0.09215305987073466,
+      "avg_top5_edge": 0.08673357424236912,
+      "avg_q5_q1_spread": 0.1211595277896384,
+      "positive_ic_years": 1,
+      "positive_edge_years": 1,
+      "years": 1
+    },
+    {
+      "strategy": "full_library_plus_order_pressure",
+      "phase": "dev",
+      "days": 2000,
+      "avg_daily_ic": 0.11747472038091498,
+      "avg_top5_edge": 0.14068228025370672,
+      "avg_q5_q1_spread": 0.1584824615407138,
+      "positive_ic_years": 8,
+      "positive_edge_years": 8,
+      "years": 8
+    },
+    {
+      "strategy": "full_library_plus_order_pressure",
+      "phase": "validation",
+      "days": 499,
+      "avg_daily_ic": 0.11033161651171007,
+      "avg_top5_edge": 0.11219065230417809,
+      "avg_q5_q1_spread": 0.146110539355087,
+      "positive_ic_years": 2,
+      "positive_edge_years": 2,
+      "years": 2
+    },
+    {
+      "strategy": "full_library_plus_order_pressure",
+      "phase": "confirmation",
+      "days": 249,
+      "avg_daily_ic": 0.10751081823765973,
+      "avg_top5_edge": 0.14215526098935705,
+      "avg_q5_q1_spread": 0.14361963805650807,
+      "positive_ic_years": 1,
+      "positive_edge_years": 1,
+      "years": 1
+    },
+    {
+      "strategy": "order_pressure_only",
+      "phase": "dev",
+      "days": 2000,
+      "avg_daily_ic": 0.08015118638666331,
+      "avg_top5_edge": 0.10668228025370674,
+      "avg_q5_q1_spread": 0.1056071824458106,
+      "positive_ic_years": 8,
+      "positive_edge_years": 8,
+      "years": 8
+    },
+    {
+      "strategy": "order_pressure_only",
+      "phase": "validation",
+      "days": 499,
+      "avg_daily_ic": 0.05846315935624332,
+      "avg_top5_edge": 0.08573774649255485,
+      "avg_q5_q1_spread": 0.07707425934425333,
+      "positive_ic_years": 2,
+      "positive_edge_years": 2,
+      "years": 2
+    },
+    {
+      "strategy": "order_pressure_only",
+      "phase": "confirmation",
+      "days": 249,
+      "avg_daily_ic": 0.07505476658817366,
+      "avg_top5_edge": 0.09074963849939721,
+      "avg_q5_q1_spread": 0.0967930815336104,
+      "positive_ic_years": 1,
+      "positive_edge_years": 1,
+      "years": 1
+    }
+  ],
+  "decision_flags": {
+    "residual_pass": true,
+    "low_redundancy": true,
+    "selector_pass": true,
+    "selector_not_harmed": true,
+    "validation_top5_edge_delta": 0.0152304609218437,
+    "confirmation_top5_edge_delta": 0.05542168674698793
+  },
+  "branch_decision": "Order pressure survives residualization and improves the frozen label-level selector. Advance to feature publication design plus a portfolio/tradability audit.",
+  "next_step": "Design the published order-pressure feature artifact and run a portfolio/tradability audit before consumer docs change."
+}
