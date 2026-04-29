@@ -1,0 +1,899 @@
+{
+  "artifacts": {
+    "active_matches": "artifacts/portfolio_baselines/20260429_204602_h363_vietnam_holiday_timing_active_matches.parquet",
+    "audit_states": "artifacts/timing_data/20260429_204602_h363_vietnam_holiday_timing_audit_states.parquet",
+    "details": "artifacts/run_summaries/20260429_204602_h363_vietnam_holiday_timing_details.json",
+    "holiday_calendar": "artifacts/timing_data/20260429_204602_h363_vietnam_holiday_timing_calendar.parquet",
+    "holiday_clusters": "artifacts/timing_data/20260429_204602_h363_vietnam_holiday_timing_clusters.parquet",
+    "portfolio_candidate_daily": "artifacts/portfolio_baselines/20260429_204602_h363_vietnam_holiday_sparse_clock_portfolio_candidate_daily.parquet",
+    "portfolio_results": "artifacts/portfolio_baselines/20260429_204602_h363_vietnam_holiday_sparse_clock_portfolio_results.parquet",
+    "portfolio_risk": "artifacts/portfolio_baselines/20260429_204602_h363_vietnam_holiday_sparse_clock_portfolio_risk.parquet",
+    "results": "artifacts/portfolio_baselines/20260429_204602_h363_vietnam_holiday_timing_payoff_results.parquet",
+    "state_results": "artifacts/portfolio_baselines/20260429_204602_h363_vietnam_holiday_timing_state_results.parquet",
+    "yearly_lifts": "artifacts/portfolio_baselines/20260429_204602_h363_vietnam_holiday_timing_yearly_lifts.parquet"
+  },
+  "metadata": {
+    "inputs": {
+      "benchmark": "data/stock/gia_lich_su_VNINDEX_1D.parquet",
+      "fwd_rel_1d_cache": "artifacts/cache/future_rel_return_1d_hose.parquet",
+      "fwd_rel_5d": "artifacts/cache/future_rel_return_5d_hose.parquet",
+      "matrix": "data/features/xs_rl_signal_matrix.parquet",
+      "stock_dir": "data/stock",
+      "tradability": "data/features/execution/tradability_daily.parquet"
+    },
+    "notes": "2026+ rows excluded; controls are non-holiday rows matched by phase, S1 bucket, and full-library bucket."
+  },
+  "mode": "research_branch_vietnam_holiday_timing_payoff",
+  "name": "h363_vietnam_holiday_timing_payoff",
+  "summary": {
+    "best_state": {
+      "confirmation_can_buy_next_open_mean_lift": 0.0007100731970771657,
+      "confirmation_fwd_rel_1d_mean_lift": -0.00032835937936665036,
+      "confirmation_fwd_rel_5d_mean_lift": 0.009352579735932478,
+      "confirmation_has_volume_mean_lift": 0.0,
+      "confirmation_is_ceiling_mean_lift": -0.0007100731970772559,
+      "confirmation_is_floor_mean_lift": -0.002128492442006803,
+      "confirmation_s1_actual_mean_lift": 0.004234524897250791,
+      "confirmation_top_book_fwd_rel_5d_active_dates": 5.0,
+      "confirmation_top_book_fwd_rel_5d_active_rows": 25.0,
+      "confirmation_top_book_fwd_rel_5d_bad_tail_rate_lift": -0.13245071873390454,
+      "confirmation_top_book_fwd_rel_5d_hit_rate_lift": 0.07865102776607202,
+      "confirmation_top_book_fwd_rel_5d_matched_row_rate": 1.0,
+      "confirmation_top_book_fwd_rel_5d_mean_lift": 0.015789885599705324,
+      "confirmation_top_book_fwd_rel_5d_q10_lift": 0.03632608459792388,
+      "confirmation_top_book_fwd_rel_5d_q90_lift": -0.008954130724506335,
+      "decision": "PASSED",
+      "dev_can_buy_next_open_mean_lift": 0.0012995119467579253,
+      "dev_fwd_rel_1d_mean_lift": -0.0012309565652288798,
+      "dev_fwd_rel_5d_mean_lift": -0.0018763907034467296,
+      "dev_has_volume_mean_lift": 0.0,
+      "dev_is_ceiling_mean_lift": -0.0012995119467581143,
+      "dev_is_floor_mean_lift": -0.002005489021052154,
+      "dev_s1_actual_mean_lift": -0.010182684547549337,
+      "dev_top_book_fwd_rel_5d_active_dates": 39.0,
+      "dev_top_book_fwd_rel_5d_active_rows": 195.0,
+      "dev_top_book_fwd_rel_5d_bad_tail_rate_lift": -0.017124258428730055,
+      "dev_top_book_fwd_rel_5d_hit_rate_lift": 0.010792126861419615,
+      "dev_top_book_fwd_rel_5d_matched_row_rate": 1.0,
+      "dev_top_book_fwd_rel_5d_mean_lift": -0.0023303966992381103,
+      "dev_top_book_fwd_rel_5d_q10_lift": 0.00485408754152155,
+      "dev_top_book_fwd_rel_5d_q90_lift": -0.016607658276401052,
+      "holiday_state": "post_5",
+      "passes_year_consistency": true,
+      "reason": "validation_and_confirmation_top_book_payoff_clean_with_multi_year_support",
+      "score": 0.2954161689674235,
+      "state_label": "all_holidays__post_5",
+      "state_note": "All legal major holiday families.",
+      "state_scope": "group",
+      "state_subject": "all_holidays",
+      "val_conf_max_positive_lift_year_share": 0.653436723226234,
+      "val_conf_positive_years": 3,
+      "val_conf_year_count": 3,
+      "validation_can_buy_next_open_mean_lift": 0.0003435512178669997,
+      "validation_fwd_rel_1d_mean_lift": 0.0007606911232018662,
+      "validation_fwd_rel_5d_mean_lift": -0.0014195907890511511,
+      "validation_has_volume_mean_lift": 0.0,
+      "validation_is_ceiling_mean_lift": -0.0003435512178671385,
+      "validation_is_floor_mean_lift": -0.0018201606137597981,
+      "validation_s1_actual_mean_lift": 0.05724404559063473,
+      "validation_top_book_fwd_rel_5d_active_dates": 9.0,
+      "validation_top_book_fwd_rel_5d_active_rows": 45.0,
+      "validation_top_book_fwd_rel_5d_bad_tail_rate_lift": -0.09007905314494724,
+      "validation_top_book_fwd_rel_5d_hit_rate_lift": 0.01791625311409062,
+      "validation_top_book_fwd_rel_5d_matched_row_rate": 1.0,
+      "validation_top_book_fwd_rel_5d_mean_lift": 0.004048005955647837,
+      "validation_top_book_fwd_rel_5d_q10_lift": 0.01672242093529465,
+      "validation_top_book_fwd_rel_5d_q90_lift": -0.020365709503361695
+    },
+    "branch_decision": "At least one sparse holiday state passed the matched top-book payoff gate. Run exactly one fixed sparse portfolio audit with a 0.015 bonus/veto.",
+    "calendar": {
+      "clusters": 53,
+      "data_checks": {
+        "all_state_dates_in_trading_calendar": true,
+        "max_state_date": "2025-09-09",
+        "min_state_date": "2015-01-05",
+        "missing_trading_calendar_dates": [],
+        "state_dates": 408,
+        "state_rows": 436,
+        "state_rows_outside_requested_years": 0,
+        "state_rows_with_2026_or_later": 0
+      },
+      "end_year": 2025,
+      "families": [
+        "hung_kings",
+        "national_day",
+        "new_year",
+        "reunification_labor",
+        "tet"
+      ],
+      "start_year": 2015,
+      "state_dates": 408,
+      "state_rows": 436
+    },
+    "panel": {
+      "dates": 2748,
+      "holiday_any_state_dates": 408,
+      "holiday_any_state_rows": 121876,
+      "rows": 826404,
+      "tickers": 394,
+      "top_book_rows": 13740
+    },
+    "passed_state_count": 1,
+    "portfolio": {
+      "active_dates": 53,
+      "artifacts": {
+        "portfolio_candidate_daily": "artifacts/portfolio_baselines/20260429_204602_h363_vietnam_holiday_sparse_clock_portfolio_candidate_daily.parquet",
+        "portfolio_results": "artifacts/portfolio_baselines/20260429_204602_h363_vietnam_holiday_sparse_clock_portfolio_results.parquet",
+        "portfolio_risk": "artifacts/portfolio_baselines/20260429_204602_h363_vietnam_holiday_sparse_clock_portfolio_risk.parquet"
+      },
+      "confirmation_daily_relative_q10_delta": 0.0,
+      "confirmation_relative_delta": 0.0,
+      "eligible_bonus_rows": 3109,
+      "passes_downside_tail_gate": true,
+      "passes_execution_health": true,
+      "portfolio_direction": "bonus",
+      "portfolio_gate_pass": false,
+      "portfolio_run": true,
+      "portfolio_state_label": "all_holidays__post_5",
+      "portfolio_verdict": "FAILED",
+      "validation_daily_relative_q10_delta": 0.0,
+      "validation_relative_delta": 0.0
+    },
+    "protocol": {
+      "confirmation_year": 2025,
+      "dev_years": [
+        2015,
+        2022
+      ],
+      "forward_start_year": 2026,
+      "validation_years": [
+        2023,
+        2024
+      ]
+    },
+    "source_notes": {
+      "closure_inference": "Closure clusters are inferred from missing VNINDEX trading dates around legal anchors.",
+      "legal_major_set": "Labor Code Article 112 major public holidays: New Year, Tet, Hung Kings, Reunification Day, Labor Day, and National Day plus adjacent official day.",
+      "research_split": "2015-2022 dev, 2023-2024 validation, 2025 confirmation, 2026+ excluded."
+    },
+    "state_decisions": [
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "pre_3",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": 0.42568768958348846,
+        "state_label": "long_closure_ge5__pre_3",
+        "state_scope": "closure",
+        "state_subject": "long_closure_ge5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "post_5",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": 0.3875449154905225,
+        "state_label": "short_closure_lt5__post_5",
+        "state_scope": "closure",
+        "state_subject": "short_closure_lt5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "pre_2",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": 0.34729069416319547,
+        "state_label": "long_closure_ge5__pre_2",
+        "state_scope": "closure",
+        "state_subject": "long_closure_ge5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "pre_1",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": 0.25596803615361,
+        "state_label": "long_closure_ge5__pre_1",
+        "state_scope": "closure",
+        "state_subject": "long_closure_ge5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "pre_5",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": 0.21084266538508803,
+        "state_label": "short_closure_lt5__pre_5",
+        "state_scope": "closure",
+        "state_subject": "short_closure_lt5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "post_5",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": 0.16675972432423242,
+        "state_label": "long_closure_ge5__post_5",
+        "state_scope": "closure",
+        "state_subject": "long_closure_ge5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "pre_5",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": 0.12614551759460957,
+        "state_label": "long_closure_ge5__pre_5",
+        "state_scope": "closure",
+        "state_subject": "long_closure_ge5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "post_3",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": 0.08867196748362562,
+        "state_label": "long_closure_ge5__post_3",
+        "state_scope": "closure",
+        "state_subject": "long_closure_ge5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "post_1",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": 0.0660879268748181,
+        "state_label": "long_closure_ge5__post_1",
+        "state_scope": "closure",
+        "state_subject": "long_closure_ge5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "pre_3",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": 0.03555216609985338,
+        "state_label": "short_closure_lt5__pre_3",
+        "state_scope": "closure",
+        "state_subject": "short_closure_lt5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "post_2",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": -0.016968744335195768,
+        "state_label": "short_closure_lt5__post_2",
+        "state_scope": "closure",
+        "state_subject": "short_closure_lt5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "post_1",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": -0.09194485149199805,
+        "state_label": "short_closure_lt5__post_1",
+        "state_scope": "closure",
+        "state_subject": "short_closure_lt5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "post_2",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": -0.15807384897243837,
+        "state_label": "long_closure_ge5__post_2",
+        "state_scope": "closure",
+        "state_subject": "long_closure_ge5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "post_3",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": -0.16576886636432478,
+        "state_label": "short_closure_lt5__post_3",
+        "state_scope": "closure",
+        "state_subject": "short_closure_lt5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "pre_2",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": -0.2577983341258065,
+        "state_label": "short_closure_lt5__pre_2",
+        "state_scope": "closure",
+        "state_subject": "short_closure_lt5"
+      },
+      {
+        "decision": "DIAGNOSTIC",
+        "holiday_state": "pre_1",
+        "reason": "closure_length_diagnostic_not_portfolio_candidate",
+        "score": -0.3569062557014101,
+        "state_label": "short_closure_lt5__pre_1",
+        "state_scope": "closure",
+        "state_subject": "short_closure_lt5"
+      },
+      {
+        "decision": "FAILED",
+        "holiday_state": "post_1",
+        "reason": "no_clean_two_phase_holiday_timing_payoff",
+        "score": -0.029457559373335405,
+        "state_label": "all_holidays__post_1",
+        "state_scope": "group",
+        "state_subject": "all_holidays"
+      },
+      {
+        "decision": "FAILED",
+        "holiday_state": "post_3",
+        "reason": "no_clean_two_phase_holiday_timing_payoff",
+        "score": -0.06622122475328399,
+        "state_label": "all_holidays__post_3",
+        "state_scope": "group",
+        "state_subject": "all_holidays"
+      },
+      {
+        "decision": "FAILED",
+        "holiday_state": "post_1",
+        "reason": "no_clean_two_phase_holiday_timing_payoff",
+        "score": -0.0845333262618407,
+        "state_label": "civil_holidays__post_1",
+        "state_scope": "group",
+        "state_subject": "civil_holidays"
+      },
+      {
+        "decision": "FAILED",
+        "holiday_state": "post_2",
+        "reason": "no_clean_two_phase_holiday_timing_payoff",
+        "score": -0.08539424100988992,
+        "state_label": "all_holidays__post_2",
+        "state_scope": "group",
+        "state_subject": "all_holidays"
+      },
+      {
+        "decision": "FAILED",
+        "holiday_state": "pre_2",
+        "reason": "no_clean_two_phase_holiday_timing_payoff",
+        "score": -0.09274965681675784,
+        "state_label": "civil_holidays__pre_2",
+        "state_scope": "group",
+        "state_subject": "civil_holidays"
+      },
+      {
+        "decision": "FAILED",
+        "holiday_state": "post_2",
+        "reason": "no_clean_two_phase_holiday_timing_payoff",
+        "score": -0.13952939152734112,
+        "state_label": "civil_holidays__post_2",
+        "state_scope": "group",
+        "state_subject": "civil_holidays"
+      },
+      {
+        "decision": "FAILED",
+        "holiday_state": "post_3",
+        "reason": "no_clean_two_phase_holiday_timing_payoff",
+        "score": -0.16101145010054943,
+        "state_label": "civil_holidays__post_3",
+        "state_scope": "group",
+        "state_subject": "civil_holidays"
+      },
+      {
+        "decision": "FAILED",
+        "holiday_state": "pre_1",
+        "reason": "no_clean_two_phase_holiday_timing_payoff",
+        "score": -0.2998735503754403,
+        "state_label": "civil_holidays__pre_1",
+        "state_scope": "group",
+        "state_subject": "civil_holidays"
+      },
+      {
+        "decision": "MIXED",
+        "holiday_state": "post_5",
+        "reason": "one_phase_holiday_timing_hint_only",
+        "score": 0.2589759395061529,
+        "state_label": "civil_holidays__post_5",
+        "state_scope": "group",
+        "state_subject": "civil_holidays"
+      },
+      {
+        "decision": "MIXED",
+        "holiday_state": "pre_3",
+        "reason": "one_phase_holiday_timing_hint_only",
+        "score": 0.17734695694461086,
+        "state_label": "all_holidays__pre_3",
+        "state_scope": "group",
+        "state_subject": "all_holidays"
+      },
+      {
+        "decision": "MIXED",
+        "holiday_state": "pre_5",
+        "reason": "one_phase_holiday_timing_hint_only",
+        "score": 0.17266433045957089,
+        "state_label": "civil_holidays__pre_5",
+        "state_scope": "group",
+        "state_subject": "civil_holidays"
+      },
+      {
+        "decision": "MIXED",
+        "holiday_state": "pre_5",
+        "reason": "positive_validation_and_confirmation_mean_lift_but_gate_or_year_consistency_not_clean",
+        "score": 0.16601693685611185,
+        "state_label": "all_holidays__pre_5",
+        "state_scope": "group",
+        "state_subject": "all_holidays"
+      },
+      {
+        "decision": "MIXED",
+        "holiday_state": "pre_3",
+        "reason": "one_phase_holiday_timing_hint_only",
+        "score": 0.06398854915937134,
+        "state_label": "civil_holidays__pre_3",
+        "state_scope": "group",
+        "state_subject": "civil_holidays"
+      },
+      {
+        "decision": "MIXED",
+        "holiday_state": "pre_2",
+        "reason": "one_phase_holiday_timing_hint_only",
+        "score": 0.030562370372673967,
+        "state_label": "all_holidays__pre_2",
+        "state_scope": "group",
+        "state_subject": "all_holidays"
+      },
+      {
+        "decision": "MIXED",
+        "holiday_state": "pre_1",
+        "reason": "one_phase_holiday_timing_hint_only",
+        "score": -0.08019843999475187,
+        "state_label": "all_holidays__pre_1",
+        "state_scope": "group",
+        "state_subject": "all_holidays"
+      },
+      {
+        "decision": "PASSED",
+        "holiday_state": "post_5",
+        "reason": "validation_and_confirmation_top_book_payoff_clean_with_multi_year_support",
+        "score": 0.2954161689674235,
+        "state_label": "all_holidays__post_5",
+        "state_scope": "group",
+        "state_subject": "all_holidays"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.6728477113631257,
+        "state_label": "tet__pre_1",
+        "state_scope": "family",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.6728477113631257,
+        "state_label": "tet__pre_1",
+        "state_scope": "group",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.6411067846590899,
+        "state_label": "tet__pre_3",
+        "state_scope": "family",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.6411067846590899,
+        "state_label": "tet__pre_3",
+        "state_scope": "group",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.5448596932220744,
+        "state_label": "national_day__pre_3",
+        "state_scope": "family",
+        "state_subject": "national_day"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.5308185237070285,
+        "state_label": "hung_kings__post_5",
+        "state_scope": "family",
+        "state_subject": "hung_kings"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.512784487243247,
+        "state_label": "national_day__post_5",
+        "state_scope": "family",
+        "state_subject": "national_day"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.4398860892309055,
+        "state_label": "tet__pre_2",
+        "state_scope": "family",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.4398860892309055,
+        "state_label": "tet__pre_2",
+        "state_scope": "group",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.4179496320947106,
+        "state_label": "tet__post_5",
+        "state_scope": "family",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.4179496320947106,
+        "state_label": "tet__post_5",
+        "state_scope": "group",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.37135976905448354,
+        "state_label": "tet__post_3",
+        "state_scope": "family",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.37135976905448354,
+        "state_label": "tet__post_3",
+        "state_scope": "group",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.3617678143349187,
+        "state_label": "hung_kings__post_1",
+        "state_scope": "family",
+        "state_subject": "hung_kings"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.33270027778551625,
+        "state_label": "national_day__pre_5",
+        "state_scope": "family",
+        "state_subject": "national_day"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.268388405494685,
+        "state_label": "tet__post_1",
+        "state_scope": "family",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.268388405494685,
+        "state_label": "tet__post_1",
+        "state_scope": "group",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.25760279731427826,
+        "state_label": "reunification_labor__pre_2",
+        "state_scope": "family",
+        "state_subject": "reunification_labor"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.1939735361193666,
+        "state_label": "tet__post_2",
+        "state_scope": "family",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.1939735361193666,
+        "state_label": "tet__post_2",
+        "state_scope": "group",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.1897013722931767,
+        "state_label": "reunification_labor__pre_3",
+        "state_scope": "family",
+        "state_subject": "reunification_labor"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.12855768721693694,
+        "state_label": "tet__pre_5",
+        "state_scope": "family",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.12855768721693694,
+        "state_label": "tet__pre_5",
+        "state_scope": "group",
+        "state_subject": "tet"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.11747975986877769,
+        "state_label": "hung_kings__post_2",
+        "state_scope": "family",
+        "state_subject": "hung_kings"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.1150607350438998,
+        "state_label": "reunification_labor__pre_5",
+        "state_scope": "family",
+        "state_subject": "reunification_labor"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.11426278564931416,
+        "state_label": "new_year__post_5",
+        "state_scope": "family",
+        "state_subject": "new_year"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.07269656276690252,
+        "state_label": "new_year__post_3",
+        "state_scope": "family",
+        "state_subject": "new_year"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.07109918899189507,
+        "state_label": "national_day__pre_2",
+        "state_scope": "family",
+        "state_subject": "national_day"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.06763511801135424,
+        "state_label": "hung_kings__post_3",
+        "state_scope": "family",
+        "state_subject": "hung_kings"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.06594252710291654,
+        "state_label": "national_day__post_2",
+        "state_scope": "family",
+        "state_subject": "national_day"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": 0.05429352688971918,
+        "state_label": "hung_kings__pre_5",
+        "state_scope": "family",
+        "state_subject": "hung_kings"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.03381120618918754,
+        "state_label": "national_day__post_1",
+        "state_scope": "family",
+        "state_subject": "national_day"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.07665772468856238,
+        "state_label": "national_day__pre_1",
+        "state_scope": "family",
+        "state_subject": "national_day"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.09753223626317725,
+        "state_label": "new_year__post_2",
+        "state_scope": "family",
+        "state_subject": "new_year"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.10613048863851632,
+        "state_label": "reunification_labor__pre_1",
+        "state_scope": "family",
+        "state_subject": "reunification_labor"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.12309263116622843,
+        "state_label": "reunification_labor__post_1",
+        "state_scope": "family",
+        "state_subject": "reunification_labor"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.12325083192331368,
+        "state_label": "reunification_labor__post_5",
+        "state_scope": "family",
+        "state_subject": "reunification_labor"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.15561624540020833,
+        "state_label": "hung_kings__pre_1",
+        "state_scope": "family",
+        "state_subject": "hung_kings"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.22291451949884555,
+        "state_label": "reunification_labor__post_3",
+        "state_scope": "family",
+        "state_subject": "reunification_labor"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.2540183883728456,
+        "state_label": "new_year__post_1",
+        "state_scope": "family",
+        "state_subject": "new_year"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.26694257784650444,
+        "state_label": "hung_kings__pre_3",
+        "state_scope": "family",
+        "state_subject": "hung_kings"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.29531490729957693,
+        "state_label": "hung_kings__pre_2",
+        "state_scope": "family",
+        "state_subject": "hung_kings"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.4549667048136217,
+        "state_label": "reunification_labor__post_2",
+        "state_scope": "family",
+        "state_subject": "reunification_labor"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "post_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -0.4699606620810217,
+        "state_label": "national_day__post_3",
+        "state_scope": "family",
+        "state_subject": "national_day"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_5",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -26.87808616667911,
+        "state_label": "new_year__pre_5",
+        "state_scope": "family",
+        "state_subject": "new_year"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_3",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -27.13092059846767,
+        "state_label": "new_year__pre_3",
+        "state_scope": "family",
+        "state_subject": "new_year"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_2",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -27.27575313207849,
+        "state_label": "new_year__pre_2",
+        "state_scope": "family",
+        "state_subject": "new_year"
+      },
+      {
+        "decision": "SKIPPED",
+        "holiday_state": "pre_1",
+        "reason": "insufficient_validation_or_confirmation_top_book_rows_or_dates",
+        "score": -27.419435871388337,
+        "state_label": "new_year__pre_1",
+        "state_scope": "family",
+        "state_subject": "new_year"
+      }
+    ],
+    "thresholds": {
+      "bad_tail_max_worsening": 0.01,
+      "base_rank_floor": 0.8,
+      "hit_rate_max_worsening": -0.02,
+      "holiday_bonus_or_veto": 0.015,
+      "max_single_year_positive_lift_share": 0.8,
+      "mean_min_lift": 0.002,
+      "min_confirmation_dates": 2,
+      "min_confirmation_topbook_rows": 10,
+      "min_positive_years": 2,
+      "min_validation_dates": 4,
+      "min_validation_topbook_rows": 20,
+      "primary_metric": "top_book_fwd_rel_5d",
+      "q10_max_worsening": -0.0025
+    },
+    "verdict": "PASSED"
+  },
+  "ts": "20260429_204602"
+}

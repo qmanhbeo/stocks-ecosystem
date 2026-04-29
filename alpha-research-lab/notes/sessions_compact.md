@@ -7,6 +7,26 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 210](./session_210_log.md): Stopped the guarded Ollama residual
+  backfill at the user's request. The tmux job session closed, no
+  `build_ollama_guarded_features` process remained, `qwen2.5-coder:3b` was
+  unloaded from Ollama, and the status file was marked `stopped_by_user` at
+  `2281 / 7344` checkpoint batches with `45,620` processed input rows.
+
+- [Session 209](./session_209_log.md): Implemented and ran H363 Vietnam legal
+  holiday timing. The calendar builder generated `436` 2015-2025 sparse
+  pre/post trading-day rows across `53` VNINDEX-inferred closure clusters with
+  no `2026+` leakage. Matched payoff found one passing state,
+  `all_holidays__post_5`, but the single fixed `+0.015` sparse portfolio bonus
+  produced `0.00% / 0.00%` validation/confirmation relative deltas and failed
+  the portfolio gate, so legal-holiday timing stays offline evidence only.
+
+- [Session 208](./session_208_log.md): Resumed the guarded Ollama residual
+  backfill in tmux from the Session 207 checkpoint, then completed two
+  scheduled 5-minute watchdog checks. Latest status was healthy/running at
+  `780 / 7344` checkpoint batches, `15,600` processed rows, with
+  `qwen2.5-coder:3b` loaded at about `2.3GB` VRAM.
+
 - [Session 207](./session_207_log.md): Stopped the guarded Ollama residual
   backfill at the user's request, verified the tmux session and Ollama model
   runner were gone, updated `live_state.md`, then prepared the repository for

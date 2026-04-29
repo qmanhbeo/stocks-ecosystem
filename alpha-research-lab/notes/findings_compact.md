@@ -23,9 +23,9 @@ entry must include source anchors: stable finding IDs or source session links.
   published-contract parity. Source anchors: `F296-F301`.
 
 - Current parked branches: event-v2 sparse-clock, dividend-clock timing,
-  standalone foreign/proprietary flow, old OHLCV residual queue, and smart-exit
-  ML are parked under the current target/selector contracts. Source anchors:
-  `F285-F295`, `F302-F303`.
+  legal-holiday timing, standalone foreign/proprietary flow, old OHLCV
+  residual queue, and smart-exit ML are parked under the current target/selector
+  contracts. Source anchors: `F285-F295`, `F302-F304`.
 
 ## Core Signal Lineage
 
@@ -154,8 +154,10 @@ entry must include source anchors: stable finding IDs or source session links.
 
 - Dividend/calendar research remains offline context only: the old broad
   dividend-calendar model input failed, H354 found a small pre-ex payoff hint,
-  and H362 failed the executable sparse-clock portfolio rescue. Source anchors:
-  `F294`, `F303`.
+  and H362 failed the executable sparse-clock portfolio rescue. H363 then found
+  one legal-holiday post-5 top-book payoff hint, but the fixed `+0.015`
+  sparse portfolio bonus had `0.00% / 0.00%` validation/confirmation relative
+  deltas and failed the portfolio gate. Source anchors: `F294`, `F303-F304`.
 
 ## Local ML, Data Pipelines, And Operator Rules
 

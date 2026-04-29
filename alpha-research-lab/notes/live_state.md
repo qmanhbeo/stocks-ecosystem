@@ -5,8 +5,8 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_207_log.md](./session_207_log.md)
-Last verified: [Session 207](./session_207_log.md), 2026-04-29.
+Latest full session detail: [session_210_log.md](./session_210_log.md)
+Last verified: [Session 210](./session_210_log.md), 2026-04-29.
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -32,23 +32,21 @@ Source durable memory:
   `data/features/xs_order_pressure_daily.parquet`, but downstream use is
   opt-in only. Do not run more C16 sizing/search unless a consumer asks for a
   matrix/export integration.
-- Event-v2, dividend-clock, foreign/proprietary/sector-flow, old OHLCV queue,
-  smart-exit linear tweaks, and BERT-only sentiment are parked or failed under
-  the current target/consumer contracts. Use the compact dead-end view before
-  reopening any of them.
+- Event-v2, dividend-clock, legal-holiday timing, foreign/proprietary/sector-flow,
+  old OHLCV queue, smart-exit linear tweaks, and BERT-only sentiment are parked
+  or failed under the current target/consumer contracts. Use the compact
+  dead-end view before reopening any of them.
 
 ## Active Jobs / Constraints
 
-- No heavy local-model job is currently active.
-- The guarded Ollama residual backfill was stopped by request in Session 207.
-  The last status-file heartbeat before shutdown was
-  `2026-04-28T23:09:46.984098+00:00`, with `755 / 7344` checkpoint batches
-  and `15,100` processed input rows.
-- Stale status file:
+- No heavy local-model job is currently running.
+- The guarded Ollama residual backfill was stopped at the user's request in
+  Session 210 and the `qwen2.5-coder:3b` runner was unloaded.
+- Stop checkpoint/status:
   `alpha-research-lab/artifacts/job_status/ollama_guarded_publish.json`
-- Session 207 verified that `tmux` no longer has `ollama_guarded_backfill`,
-  `ollama ps` is empty, and no backfill Python process remains. The Ollama
-  service itself is still available.
+  now reports `status=stopped_by_user`, phase `score`, heartbeat
+  `2026-04-29T21:20:40.408255+00:00`, `2281 / 7344` checkpoint batches,
+  `45,620` processed input rows, and `1,526` checkpoint files written.
 - Local-ML planning budget remains hard-capped at `3GB VRAM / 10GB RAM`.
 - `2026` data remains monitor-only until the user explicitly says otherwise.
 - Heavy PhoBERT train/publish commands should fail fast when CUDA is hidden;
@@ -56,10 +54,9 @@ Source durable memory:
 
 ## Immediate Next Actions
 
-- If the local-news branch continues, decide whether to resume the guarded
-  Ollama residual backfill from checkpoint before doing any downstream
-  aggregation.
-- Resume command if reopened:
+- Do not restart the guarded Ollama residual backfill today unless the user
+  explicitly asks.
+- When the user wants to resume it, use the checkpoint-safe command:
   `python -m research_pipelines.news_features.core.build_ollama_guarded_features`
 - After the guarded Ollama residual surface finishes, aggregate the default
   local-first news features:
@@ -83,6 +80,10 @@ Source durable memory:
   different target, or a different downstream consumer contract exists.
 - Do not tune more dividend windows, bonuses, or sparse-clock overlays under
   the current target. Keep the pre-ex clock as offline calendar evidence only.
+- Do not tune more legal-holiday pre/post offsets, closure-length gates, bonus
+  sizes, or veto variants under the current top-5 executable selector. H363's
+  `all_holidays__post_5` payoff hint did not transfer to the fixed portfolio
+  sparse-clock contract.
 - Do not continue linear smart-exit feature-set tweaks unless richer
   post-entry state/data or a materially different model contract appears.
 - Do not rerun stale H135/H136/H137 old-OHLCV variants under the current

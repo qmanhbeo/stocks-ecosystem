@@ -25,6 +25,13 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   failed validation. Reopen only with a different calendar target or downstream
   consumer contract. Source anchors: `F294`, `F303`.
 
+- Legal public-holiday timing is parked under the current executable top-5
+  selector: H363 found a clean `all_holidays__post_5` top-book payoff hint, but
+  the required fixed sparse-clock portfolio bonus did not change validation or
+  confirmation relative returns. Do not tune more holiday offsets, closure
+  gates, bonus sizes, or veto variants unless the target or downstream consumer
+  contract changes. Source anchors: `F304`.
+
 - Standalone foreign/proprietary flow is parked on current data: raw CafeF
   foreign-flow ranks, room scarcity, residual discontinuities,
   accumulation/change-points, foreign-C5 agreement, proprietary agreement or
