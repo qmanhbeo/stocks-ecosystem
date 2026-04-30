@@ -1270,6 +1270,39 @@ def test_build_ollama_guarded_exports_materialize_tagged_only_input_cache_and_re
     assert config.ollama_guarded_input_articles_path().stat().st_mtime_ns == input_mtime_ns
 
 
+def test_build_ollama_guarded_exports_filters_input_cache_by_max_published_at(tmp_path):
+    config = _temp_config(
+        tmp_path,
+        ollama_guarded_checkpoint_rows=2,
+        ollama_guarded_min_article_scope_prob=0.0,
+        ollama_guarded_model_name="fake-guarded",
+        ollama_guarded_max_published_at="2025-12-31T23:59:59+07:00",
+    )
+    normalized = _normalized_df().copy()
+    normalized["published_at"] = [
+        "2025-12-30T09:00:00+07:00",
+        "2025-12-31T23:59:59+07:00",
+        "2026-01-01T00:00:00+07:00",
+    ]
+    normalized.to_parquet(config.normalized_path(), index=False)
+    _tagged_df().to_parquet(config.tagged_path(), index=False)
+
+    build_ollama_guarded_feature_exports(
+        config=config,
+        raw_response_fn=_fake_guarded_raw_response,
+    )
+
+    input_cache = pd.read_parquet(config.ollama_guarded_input_articles_path())
+    input_manifest = json.loads(config.ollama_guarded_input_manifest_path().read_text(encoding="utf-8"))
+    checkpoint_manifest = json.loads(config.ollama_guarded_checkpoint_manifest_path().read_text(encoding="utf-8"))
+
+    assert sorted(input_cache["article_id"].tolist()) == ["a1", "a2"]
+    assert input_manifest["input_rows"] == 2
+    assert input_manifest["date_filtered_article_count"] == 1
+    assert input_manifest["max_published_at"] == "2025-12-31T23:59:59+07:00"
+    assert checkpoint_manifest["total_batches"] == 1
+
+
 def test_build_ollama_guarded_exports_resume_from_checkpoints_and_match_direct_builder(tmp_path):
     config = _temp_config(
         tmp_path,

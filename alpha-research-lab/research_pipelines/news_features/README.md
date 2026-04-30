@@ -52,6 +52,13 @@ Compatibility note:
 - `build_ollama_guarded_features` still works, but `build_ollama_probe_features` is the preferred operator name
 - `publish_phobert_forward_looking_exports` still works, but `publish_phobert_forward_looking_features` is the clearer preferred alias
 
+For locked research backfills that must avoid the `2026+` monitor period, pass
+the cutoff explicitly:
+
+```bash
+python -m research_pipelines.news_features.core.build_ollama_probe_features --max-published-at 2025-12-31T23:59:59+07:00
+```
+
 Hard operating rule:
 - publish-only jobs must not route through heavyweight rebuild stages
 - if `phobert_ticker_day_sentiment.parquet` already exists, do not rerun

@@ -102,6 +102,7 @@ class NewsFeaturesConfig:
     ollama_guarded_stop_after_each_call: bool = False
     ollama_guarded_min_article_scope_prob: float = 0.28
     ollama_guarded_min_source_type_prob: float = 0.0
+    ollama_guarded_max_published_at: str = ""
     ollama_guarded_checkpoint_rows: int = 20
     feature_prefix: str = "news_"
     embedding_prefix: str = "news_embed_"

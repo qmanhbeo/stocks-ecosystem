@@ -5,8 +5,8 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_210_log.md](./session_210_log.md)
-Last verified: [Session 210](./session_210_log.md), 2026-04-29.
+Latest full session detail: [session_211_log.md](./session_211_log.md)
+Last verified: [Session 211](./session_211_log.md), 2026-04-30.
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -39,14 +39,17 @@ Source durable memory:
 
 ## Active Jobs / Constraints
 
-- No heavy local-model job is currently running.
-- The guarded Ollama residual backfill was stopped at the user's request in
-  Session 210 and the `qwen2.5-coder:3b` runner was unloaded.
-- Stop checkpoint/status:
-  `alpha-research-lab/artifacts/job_status/ollama_guarded_publish.json`
-  now reports `status=stopped_by_user`, phase `score`, heartbeat
-  `2026-04-29T21:20:40.408255+00:00`, `2281 / 7344` checkpoint batches,
-  `45,620` processed input rows, and `1,526` checkpoint files written.
+- No heavy local-model job is active. The guarded Ollama residual backfill was
+  stopped for the day at the user's request in Session 211.
+- The stopped run used the lockbox cutoff:
+  `python -m research_pipelines.news_features.core.build_ollama_guarded_features --max-published-at 2025-12-31T23:59:59+07:00`
+- The cutoff-aware input cache was rebuilt to `142,296` rows with max
+  published timestamp `2025-12-31T20:40:05+07:00`; `4,576` gated articles were
+  filtered out by date, so the current backfill is not scoring `2026+` rows.
+- Stop status: `stopped_by_user`, phase `score`, `3,638 / 7,115` checkpoint
+  batches, `72,760 / 142,296` processed input rows, `45,620` reused from the
+  existing row-level score cache and `27,140` newly scored after the cache
+  boundary. The tmux session is gone, `ollama ps` is empty, and the GPU is idle.
 - Local-ML planning budget remains hard-capped at `3GB VRAM / 10GB RAM`.
 - `2026` data remains monitor-only until the user explicitly says otherwise.
 - Heavy PhoBERT train/publish commands should fail fast when CUDA is hidden;
@@ -54,14 +57,14 @@ Source durable memory:
 
 ## Immediate Next Actions
 
-- Do not restart the guarded Ollama residual backfill today unless the user
-  explicitly asks.
-- When the user wants to resume it, use the checkpoint-safe command:
-  `python -m research_pipelines.news_features.core.build_ollama_guarded_features`
+- Keep the guarded Ollama residual backfill stopped unless the user asks to
+  resume it. When it is restarted, use the same checkpoint-safe lockbox command:
+  `python -m research_pipelines.news_features.core.build_ollama_guarded_features --max-published-at 2025-12-31T23:59:59+07:00`
 - After the guarded Ollama residual surface finishes, aggregate the default
   local-first news features:
-  `python -m research_pipelines.news_features.core.aggregate_daily_features --sources phobert phobert_forward_looking ollama_guarded`
-- Then run one bounded downstream audit of the combined local-news surface
+  `python -m research_pipelines.news_features.core.aggregate_daily_features --sources phobert phobert_forward_looking phobert_article_scope phobert_source_type ollama_guarded`
+- Then run the prepared bounded downstream audit:
+  `python analysis/h364_combined_local_news_audit.py`
   before promoting any news feature into the signal library.
 - Only if a downstream consumer explicitly asks for C16, merge
   `data/features/xs_order_pressure_daily.parquet` into the consolidated lab

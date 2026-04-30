@@ -7,6 +7,15 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 211](./session_211_log.md): Resumed the guarded Ollama residual
+  backfill at the user's request, but first found that the existing input cache
+  included a `2026` tail. Added a cutoff-aware `--max-published-at` path,
+  rebuilt the input cache to `142,296` rows with max timestamp
+  `2025-12-31T20:40:05+07:00`, launched `ollama_guarded_backfill` in tmux with
+  `2026+` excluded, then stopped it for the day at `3,638 / 7,115` checkpoint
+  batches and `72,760 / 142,296` processed input rows. H364 is prepared as the
+  fixed combined local-news audit to run after completion.
+
 - [Session 210](./session_210_log.md): Stopped the guarded Ollama residual
   backfill at the user's request. The tmux job session closed, no
   `build_ollama_guarded_features` process remained, `qwen2.5-coder:3b` was

@@ -3,6 +3,24 @@
 This is a lightweight research backlog. The operational source of truth remains
 `notes/live_state.md`.
 
+## Local-News Queue
+
+Context:
+- The guarded Ollama residual backfill is stopped for the day at
+  `3,638 / 7,115` checkpoint batches with a 2025 cutoff.
+- H342/H343/H344 show BERT-only sentiment/context is not enough for standalone
+  promotion, but official-conditioned sentiment is useful offline evidence.
+- H364 is prepared as the fixed combined local-news audit and should only run
+  after Ollama completes and all local sources are aggregated.
+
+Queue:
+- Resume and finish `ollama_guarded_backfill` only when requested:
+  `python -m research_pipelines.news_features.core.build_ollama_guarded_features --max-published-at 2025-12-31T23:59:59+07:00`
+- Aggregate all local news surfaces:
+  `python -m research_pipelines.news_features.core.aggregate_daily_features --sources phobert phobert_forward_looking phobert_article_scope phobert_source_type ollama_guarded`
+- Run:
+  `python analysis/h364_combined_local_news_audit.py`
+
 ## Bright-Mind Queue: Holiday Timing
 
 Context:

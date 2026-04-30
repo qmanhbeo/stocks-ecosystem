@@ -161,6 +161,9 @@ Important notes:
   score results by article content plus scoring contract, excluding
   checkpoint cadence. These are internal producer caches, not consumer feature
   contracts
+- locked research backfills should pass `--max-published-at 2025-12-31T23:59:59+07:00`
+  to the Ollama guarded/probe builder so the producer-side input cache excludes
+  the `2026+` monitor period unless the user explicitly authorizes 2026 data
 - they are additive to the existing keyword and embedding news features
 - they do **not** overwrite `data/llm_cache/`, `xs_llm_news_ticker_day.parquet`,
   or `xs_llm_news_market_daily.parquet`

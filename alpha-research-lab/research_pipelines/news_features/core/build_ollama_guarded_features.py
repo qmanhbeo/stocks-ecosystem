@@ -1053,9 +1053,20 @@ def _ollama_guarded_input_source_signature(
         "tagged_input": _path_checkpoint_signature(config.tagged_path()),
         "ollama_guarded_min_article_scope_prob": float(config.ollama_guarded_min_article_scope_prob),
         "ollama_guarded_min_source_type_prob": float(config.ollama_guarded_min_source_type_prob),
+        "ollama_guarded_max_published_at": str(config.ollama_guarded_max_published_at or ""),
         "article_scope_input": _path_checkpoint_signature(config.phobert_article_scope_article_features_path()),
         "source_type_input": _path_checkpoint_signature(config.phobert_source_type_article_features_path()),
     }
+
+
+def _ollama_guarded_max_published_at_timestamp(config: NewsFeaturesConfig) -> Optional[pd.Timestamp]:
+    raw_value = str(config.ollama_guarded_max_published_at or "").strip()
+    if not raw_value:
+        return None
+    max_published_at = pd.Timestamp(raw_value)
+    if max_published_at.tzinfo is None:
+        max_published_at = max_published_at.tz_localize("UTC")
+    return max_published_at.tz_convert("UTC")
 
 
 def _apply_ollama_guarded_input_gates(config: NewsFeaturesConfig, article_ids: set[str]) -> set[str]:
@@ -1248,6 +1259,7 @@ def _prepare_ollama_guarded_input_articles_cache(
 
     all_tagged_article_ids = {str(article_id) for article_id in tagged["article_id"].astype(str).tolist()}
     tagged_article_ids = _apply_ollama_guarded_input_gates(config, all_tagged_article_ids)
+    max_published_at = _ollama_guarded_max_published_at_timestamp(config)
     source_signature = _ollama_guarded_input_source_signature(
         config,
         normalized_rows=int(normalized_rows),
@@ -1276,6 +1288,7 @@ def _prepare_ollama_guarded_input_articles_cache(
     scanned_rows = 0
     seen_article_ids: set[str] = set()
     missing_article_ids = set(tagged_article_ids)
+    date_filtered_article_ids: set[str] = set()
     batch_size = max(int(config.ollama_guarded_checkpoint_rows) * 10, 20000)
     progress_interval = 50000
     try:
@@ -1293,6 +1306,13 @@ def _prepare_ollama_guarded_input_articles_cache(
             batch_df = batch_df[batch_df["article_id"].isin(tagged_article_ids)].copy()
             if not batch_df.empty:
                 batch_df = batch_df[~batch_df["article_id"].isin(seen_article_ids)].copy()
+                if max_published_at is not None and not batch_df.empty:
+                    published_at = pd.to_datetime(batch_df["published_at"], errors="coerce", utc=True)
+                    keep_date = published_at <= max_published_at
+                    excluded_ids = set(batch_df.loc[~keep_date, "article_id"].astype(str).tolist())
+                    date_filtered_article_ids.update(excluded_ids)
+                    missing_article_ids.difference_update(excluded_ids)
+                    batch_df = batch_df.loc[keep_date].copy()
                 if not batch_df.empty:
                     for column in OLLAMA_GUARDED_INPUT_COLUMNS:
                         batch_df[column] = batch_df[column].where(batch_df[column].notna(), "")
@@ -1319,11 +1339,12 @@ def _prepare_ollama_guarded_input_articles_cache(
                 print(
                     f"Ollama guarded input cache scan {scanned_rows}/{normalized_rows}; "
                     f"matched_input_rows={input_rows}, remaining_missing_articles={len(missing_article_ids)}, "
+                    f"date_filtered_articles={len(date_filtered_article_ids)}, "
                     f"batch_index={batch_index}",
                     flush=True,
                 )
 
-        if missing_article_ids:
+        if missing_article_ids and max_published_at is None:
             missing_df = pd.DataFrame(
                 [
                     {
@@ -1362,6 +1383,8 @@ def _prepare_ollama_guarded_input_articles_cache(
         "tagged_unique_article_count": int(len(all_tagged_article_ids)),
         "gated_article_count": int(len(tagged_article_ids)),
         "missing_normalized_article_count": int(len(missing_article_ids)),
+        "max_published_at": str(config.ollama_guarded_max_published_at or ""),
+        "date_filtered_article_count": int(len(date_filtered_article_ids)),
         "updated_at_utc": pd.Timestamp.utcnow().isoformat(),
     }
     _write_ollama_guarded_input_manifest(config, input_manifest)
@@ -1672,6 +1695,7 @@ def build_ollama_guarded_feature_exports(
             "max_body_chars": int(config.ollama_guarded_max_body_chars),
             "min_article_scope_prob": float(config.ollama_guarded_min_article_scope_prob),
             "min_source_type_prob": float(config.ollama_guarded_min_source_type_prob),
+            "max_published_at": str(config.ollama_guarded_max_published_at or ""),
             "checkpoint_rows": int(config.ollama_guarded_checkpoint_rows),
         },
         started_at=job_started_at,
@@ -2304,6 +2328,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-body-words", type=int, default=-1)
     parser.add_argument("--min-article-scope-prob", type=float, default=-1.0)
     parser.add_argument("--min-source-type-prob", type=float, default=-1.0)
+    parser.add_argument("--max-published-at", default="")
     parser.add_argument("--checkpoint-rows", type=int, default=0)
     return parser
 
@@ -2325,6 +2350,8 @@ def main() -> None:
         config.ollama_guarded_min_article_scope_prob = float(args.min_article_scope_prob)
     if float(args.min_source_type_prob) >= 0:
         config.ollama_guarded_min_source_type_prob = float(args.min_source_type_prob)
+    if args.max_published_at:
+        config.ollama_guarded_max_published_at = str(args.max_published_at)
     if int(args.checkpoint_rows) > 0:
         config.ollama_guarded_checkpoint_rows = int(args.checkpoint_rows)
     checkpoint_batch_limit = int(args.checkpoint_batch_limit)
