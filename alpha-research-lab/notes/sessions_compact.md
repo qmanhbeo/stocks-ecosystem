@@ -7,6 +7,13 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 253](session_253_log.md): TRUE walk-forward validation - **ALL 3 PASSED**.
+  - insider_lead: IC=0.1093 ✅
+  - consecutive_down: IC=0.1047 ✅
+  - down_market_c16: IC=0.0992 ✅
+  - **Skepticism RESOLVED**: Signals REAL under stricter validation.
+  - Low variance confirms robustness (std ~0.01-0.04).
+
 - [Sessions 248-252](session_248_252_log.md): Bright-mind eureka tests - **ALL 5 FAILED**.
   - S248 macro_c16_regime: FAILED (+0%) - no regime boost.
   - S249 gap_open_c16: FAILED (-4%) - no gap help.

@@ -691,3 +691,41 @@ Why it matters:
 - FAILED - extreme filter loses signal due to sparsity
 
 Source: session_248_252_log.md
+
+---
+
+## F337: TRUE Walk-Forward Validation (S253, 2026-05-03, PASSED)
+
+Finding:
+- **Claim**: Insider lead, consecutive down, down market C16 signals are REAL.
+- **Evidence**: TRUE rolling holdout (Train T-2,T-1 → Test T)
+- **Walk-forward**: All 3 signals PASSED
+
+| Signal | Prior IC | True WF IC | Verdict |
+|--------|----------|------------|--------|
+| insider_lead | 0.1113 | 0.1093 | REAL ✅ |
+| consecutive_down | 0.1030 | 0.1047 | REAL ✅ |
+| down_market_c16 | 0.0980 | 0.0992 | REAL ✅ |
+
+Why it matters:
+- Validates methodology: signals hold with stricter TRUE walk-forward
+- LOW variance across years (std 0.01-0.04)
+- No overfitting detected
+
+Source: session_253_log.md
+
+---
+
+## F338: Methodology Skepticism Resolution (S253, 2026-05-03, RESOLVED)
+
+Finding:
+- **Claim**: Too many good signals - methodology issue?
+- **Evidence**: All top signals validated with TRUE rolling holdout
+- **Walk-forward**: Skepticism addressed - signals confirmed REAL
+
+Why it matters:
+- Critical question: is IC > 0.05 due to overfitting?
+- Answer: NO - signals hold under stricter validation
+- Low variance confirms robustness
+
+Source: session_253_log.md

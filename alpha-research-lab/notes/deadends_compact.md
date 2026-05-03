@@ -11,6 +11,13 @@ specified changed condition. Keep links to source `F` IDs so the original
 evidence remains traceable. Every compact dead-end entry must include source
 anchors: stable dead-end IDs, finding IDs, or source session links.
 
+## Resolution: Methodology Skepticism
+
+- S253 TRUE walk-forward validation: CONFIRMED signals are REAL.
+  All 3 top signals passed stricter rolling holdout validation.
+  Low variance = no overfitting.
+  Source: F337, F338
+
 ## Current Hard Stops
 
 - S244 weak/inconsistent signals:
