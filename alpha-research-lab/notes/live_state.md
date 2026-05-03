@@ -113,17 +113,9 @@ Source durable memory:
 
 ## Current State
 
-- Triple Storm mechanism confirmed: amplifies anomaly/microstructure signals
-- C13-triple strongest: +307% boost
-- c13_c16_combo: +9% (best combo found)
-- volume_shock_c16: +16% boost
-- Queue: EXHAUSTED
-
-- Triple Storm mechanism confirmed: amplifies anomaly/microstructure signals (C4, C12, C13, C16, volume, reversal, skewness)
-- C13-triple is strongest amplifier: +307% boost
-- Queue: c4_c16_combo, volume_shock_c16 untested
-  - NOT work: foreign_flow, sector_rotation (position signals)
-  - Discovery: Signal type matters, not just signal itself
+- Triple Storm branch: PARKED (Session 234)
+- Findings: C13-triple (+307%), c13_c16_combo (+9%), volume_shock_c16 (+16%)
+- Queue: EXHAUSTED - need new signal sources
 
 ## Active Jobs / Constraints
 
