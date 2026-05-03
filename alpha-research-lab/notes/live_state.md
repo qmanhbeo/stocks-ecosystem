@@ -75,6 +75,26 @@ Source durable memory:
   - down_market_c16: IC=0.0992 ✅
 - **Finding**: F337, F338 (signals confirmed REAL)
 
+## Eureka Queue (S254-S258)
+
+1. **fundamentals_momentum**: ROE/ROA revisions predict C16 quality
+   - First test: IC(C16) on high ROE vs low ROE
+   - Data: fundamentals_cache/
+
+2. **buy_zone_entry_timing**: Buy zone labels predict T+1 C16 quality
+   - First test: IC(C16 on entry-day T+1) vs non-entry days
+   - Data: labels/buy_zones/
+
+3. **article_sentiment_regime**: Article volume regime conditions C16
+   - First test: IC(C16 on low-news days) vs high-news days
+   - Data: news/
+
+4. **ovr_reversal**: C16 extremes mean-revert (not tested as signal)
+   - First test: IC(mid C16 today → C16 extremes tomorrow)
+
+5. **small_liquidity_premium**: C16 stronger on small caps
+   - First test: IC(C16 on small caps) vs large caps
+
 - `c16_divergence`: Price UP + C16 DOWN = contrarian divergence.
   Test: IC(C16) where price > market_return but C16 < median.
   Smallest honest test: split by price direction vs C16 direction.
