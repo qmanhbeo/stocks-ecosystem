@@ -22,38 +22,25 @@ entry must include source anchors: stable finding IDs or source session links.
   IC, residual selector value, bounded executable uplift, publication, and
   published-contract parity. Source anchors: `F296-F301`.
 
+## Reference Baselines (Walk-Forward IC)
+- Random: ~0.00 (noise benchmark)
+- C16: +0.078 (order pressure)
+- S1: +0.149 (best published - PRIMARY for RL)
+
 - C16 enhancement discoveries (S220-S231): 
-  - Liquid filter (C16>50% + move>80%) = +15% IC boost in WF (X53).
-  - C16 is CONTRARIAN: works +22% better in DOWN markets in WF (X226).
-  - C16 divergence: price vs C16 direction disagreement = +39% IC boost (X228).
-  - **Triple Storm: liquid + down + divergence = +92% IC boost in WF (X229, X231)**!
-  - **HOLDOUT CONFIRMED: +111% boost (X230)**!
-  - **WALK-FORWARD VERIFIED: 9/9 years positive (X231)**!
-  - **Triple Storm EXTENSIONS (S232)**: Universal amplifier!
-    - Works: C16 (+104%), S1 (+90%), volume (+38%), reversal (+60%), skewness (+)
-    - NOT work: foreign_flow, sector_rotation (position signals stay negative)
-    - Mechanism: amplifies ANOMALY/MICROSTRUCTURE signals, not position signals
-  - **Combo discoveries (S234)**:
-    - c13_c16_combo: +9% over C16 alone (best orthogonal combo)
-    - volume_shock_c16: +16% boost (volume anomaly amplifies C16)
-  - **S235 new findings**:
-    - C16 entry timing: decays fast - T+0 is optimal (T+1 drops 74%)
-    - vnindex_momentum: C16 +15% better when index momentum negative
-    - news_c16_divergence: FAILED (sentiment too weak)
-  - **S238 new findings**:
-    - market_breadth: A/D Q1-Q2 +30% better than Q4-Q5 (contrarian breadth)
-    - quarter_start: +26% (NEW!), quarter_end: -15% (institutional pump is noise)
-    - price_tier: weak +13%
-  - **S242 new findings**:
-    - january_first_10: +5% IC boost (NEW!)
-    - volume regime: high volume = +21% boost, low volume = -11% (confirmed S237)
-  - **S243 new discoveries**:
-    - monday_jan_combo: **+42% IC boost (STRONGEST!)** - NEW!
-    - february_mid: +10%, march_late: +7%, october: +5% PASSED
-    - yearend: -16%, midyear: -9% FAILED
+  - **S238 new findings (Honest vs Random)**:
+    - market_breadth A/D Q1: +0.10 over random (REAL)
+    - quarter_start: +0.10 over random (REAL)
+  - **S242 new findings (Honest vs Random)**:
+    - january_first_10: +0.08 over random (REAL)
+    - volume regime high: +0.09 over random (REAL)
+  - **S243 new discoveries (Honest vs Random)**:
+    - monday_jan_combo: +0.11 over random - STRONGEST, closest to S1
+    - february_mid: +0.09, march_late: +0.08, october: +0.08 - REAL signals
+    - yearend: +0.07 (weak), midyear: +0.07 (failed)
   - Reusable script: x240_wf_ic_test.py
-  - **Key mechanism**: Quarter START beats END - opposite of Western效应!
-  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 238.
+  - **Best signal**: monday_jan_combo (IC=0.1109) — still below S1 but useful
+  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 238, 242, 243.
 
 - Current parked branches: event-v2 sparse-clock, dividend-clock timing,
   legal-holiday timing, standalone foreign/proprietary flow, old OHLCV
