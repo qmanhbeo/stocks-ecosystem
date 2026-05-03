@@ -69,7 +69,43 @@ entry must include source anchors: stable finding IDs or source session links.
 | Signal | IC | vs Random | Verdict |
 |--------|-----|---------|--------|
 | consecutive_down_days | 0.1030 | +0.10 | REAL - filter |
+| dividend_30d | 0.0934 | +0.09 | REAL - event driver |
 | rank_time_acceleration | 0.0576 | +0.06 | REAL - state feature |
+
+## All Real Signals for RL (IC > 0.05 vs Random) — Complete Inventory
+
+### Tier 1: Primary Signals (IC > 0.10)
+| Signal | IC | vs Random | Type |
+|--------|-----|---------|------|
+| S1 (xs_proba) | 0.149 | +0.15 | PRIMARY |
+| Triple Storm | 0.158 | +0.16 | enhancement |
+| monday_jan_combo | 0.1109 | +0.11 | calendar combo |
+| X53 (Liquid C16) | 0.137 | +0.14 | liquidity filter |
+| consecutive_down_days | 0.1030 | +0.10 | market streak |
+
+### Tier 2: Enhancement/Filters (IC 0.08-0.10)
+| Signal | IC | vs Random | Type |
+|--------|-----|---------|------|
+| C16 divergence | 0.108 | +0.11 | price disagreement |
+| quarter_start | 0.098 | +0.10 | timing |
+| dividend_30d | 0.0934 | +0.09 | event driver |
+| market_breadth A/D Q1 | 0.093 | +0.09 | breadth filter |
+| vol_high | 0.0941 | +0.09 | volume regime |
+| february_mid | 0.0858 | +0.09 | calendar |
+| march_late | 0.0833 | +0.08 | calendar |
+| monday | 0.0836 | +0.08 | calendar |
+| october | 0.0817 | +0.08 | calendar |
+| january_first_10 | 0.0817 | +0.08 | calendar |
+
+### Tier 3: State Features (IC 0.05-0.08)
+| Signal | IC | vs Random | Type |
+|--------|-----|---------|------|
+| rank_time_acceleration | 0.0576 | +0.06 | state feature |
+| X54 (Braid) | 0.080 | +0.08 | sector filter |
+| C16 baseline | 0.078 | +0.08 | order pressure |
+| vol_low | 0.0695 | +0.07 | volume regime |
+| yearend | 0.0652 | +0.07 | calendar |
+| midyear | 0.0711 | +0.07 | calendar |
 
 ### Key RL Use Cases
 1. **Primary signal**: S1 (0.149)

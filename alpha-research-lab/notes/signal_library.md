@@ -782,6 +782,36 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | H95 follow-up: new data or target only | Standalone flow paths failed through H345; H347 foreign-insider agreement lost to H340; H348 proprietary-flow agreement/conflict failed; H351 sector ownership pressure failed | CafeF foreign-flow and proprietary-trading sources exist, but no current-data flow feature remains untested under this target | Parked |
 | Order book imbalance | Bid/ask pressure predicts short-term price | Not available historically | Blocked |
 
+### S244 New Signals (2026-05-03)
+
+| Signal | IC | vs Random | Status | Use |
+|--------|-----|---------|--------|------|
+| consecutive_down_days | 0.1030 | +0.10 | REAL | market streak filter |
+| dividend_30d | 0.0934 | +0.09 | REAL | event driver |
+| rank_time_acceleration | 0.0576 | +0.06 | REAL | state feature |
+
+### Calendar Signals (S242, S243)
+
+| Signal | IC | vs Random | Status | Use |
+|--------|-----|---------|--------|------|
+| monday_jan_combo | 0.1109 | +0.11 | REAL | calendar combo |
+| february_mid | 0.0858 | +0.09 | REAL | calendar |
+| march_late | 0.0833 | +0.08 | REAL | calendar |
+| monday | 0.0836 | +0.08 | REAL | calendar |
+| october | 0.0817 | +0.08 | REAL | calendar |
+| january_first_10 | 0.0817 | +0.08 | REAL | calendar |
+
+### Market State Filters (S237, S238)
+
+| Signal | IC | vs Random | Status | Use |
+|--------|-----|---------|--------|------|
+| vol_high | 0.0941 | +0.09 | REAL | volume regime |
+| tet | 0.097 | +0.10 | REAL | holiday filter |
+| quarter_start | 0.098 | +0.10 | timing |
+| market_breadth A/D Q1 | 0.093 | +0.09 | breadth filter |
+
+**Source:** [session_244_log.md](./session_244_log.md), [session_243_log.md](./session_243_log.md), [session_242_log.md](./session_242_log.md)
+
 H123, H124, H125, H126, H127, H128, H130, H131, H132, H133, H134, H283, H284, and H346 are now closed and documented above.
 Track new OHLCV-only search ideas in `notes/live_state.md`.
 
