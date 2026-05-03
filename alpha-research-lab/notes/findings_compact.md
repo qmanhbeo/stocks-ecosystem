@@ -33,7 +33,10 @@ entry must include source anchors: stable finding IDs or source session links.
     - Works: C16 (+104%), S1 (+90%), volume (+38%), reversal (+60%), skewness (+)
     - NOT work: foreign_flow, sector_rotation (position signals stay negative)
     - Mechanism: amplifies ANOMALY/MICROSTRUCTURE signals, not position signals
-  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232.
+  - **Combo discoveries (S234)**:
+    - c13_c16_combo: +9% over C16 alone (best orthogonal combo)
+    - volume_shock_c16: +16% boost (volume anomaly amplifies C16)
+  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234.
 
 - Current parked branches: event-v2 sparse-clock, dividend-clock timing,
   legal-holiday timing, standalone foreign/proprietary flow, old OHLCV

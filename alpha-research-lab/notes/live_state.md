@@ -111,17 +111,13 @@ Source durable memory:
 - **Walk-Forward (9 years): +0.145 (+92% boost, 9/9 positive)**
 - **VERIFIED: Robust across all years, no regime degradation**
 
-## New Signal Family Ideas (2026-05-03)
-
-- `c4_c16_combo`: C4 (OC asymmetry) + C16 = orthogonal combo.
-  Test: IC(C4 + C16) vs either alone.
-  Smallest: simple rank sum.
-
-- `volume_shock_c16`: Unusual volume + high C16.
-  Test: IC(C16) where volume_zscore > 2.
-  Smallest: volume anomaly filter.
-
 ## Current State
+
+- Triple Storm mechanism confirmed: amplifies anomaly/microstructure signals
+- C13-triple strongest: +307% boost
+- c13_c16_combo: +9% (best combo found)
+- volume_shock_c16: +16% boost
+- Queue: EXHAUSTED
 
 - Triple Storm mechanism confirmed: amplifies anomaly/microstructure signals (C4, C12, C13, C16, volume, reversal, skewness)
 - C13-triple is strongest amplifier: +307% boost
