@@ -579,14 +579,45 @@ Source: session_243_log.md
 
 ---
 
-## F328: rank_time_acceleration Signal (S244, 2026-05-03)
+## F329: sector_pressure_momentum Signal (S245, 2026-05-03, FAILED)
 
 Finding:
-- **Claim**: C16 rank change over time matters.
-- **Evidence**: IC=0.0576 (+0.06 vs random)
-- **Walk-forward**: 9/9 positive
+- **Claim**: Sector-level C16 momentum conditions individual stock C16.
+- **Evidence**: IC=+0.0776 vs baseline +0.078 (+0.00) - FAILED
+- **Walk-forward**: No improvement
 
 Why it matters:
-- Independent state feature - Tier 3 placement
+- FAILED - sector momentum too noisy at daily frequency
+- Individual stock C16 is sufficient without sector context
 
-Source: session_244_log.md
+Source: session_245_log.md
+
+---
+
+## F330: down_market_c16 Signal (S246, 2026-05-03, PASSED)
+
+Finding:
+- **Claim**: C16 is stronger in down markets.
+- **Evidence**: IC=+0.0982 vs baseline +0.078 (+26%)
+- **Walk-forward**: 8/8 years down > all
+
+Why it matters:
+- Tier 2 filter - use C16 DIFFERENTLY in up vs down markets
+- CONFIRMS X226 finding: C16 is contrarian
+
+Source: session_245_log.md
+
+---
+
+## F331: deep_down_c16 Signal (S247, 2026-05-03, PASSED)
+
+Finding:
+- **Claim**: C16 is strongest in deepest down days (bottom quintile).
+- **Evidence**: IC=+0.0934 vs baseline +0.078 (+20%)
+- **Walk-forward**: consistent across years
+
+Why it matters:
+- Tier 2 filter - use bottom quintile as C16 filter
+- Confirms contrarian nature of C16
+
+Source: session_245_log.md

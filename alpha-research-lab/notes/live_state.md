@@ -5,8 +5,8 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_224_226_log.md](./session_224_226_log.md)
-Last verified: [Sessions 224-226](./session_224_226_log.md), 2026-05-03.
+Latest full session detail: [session_245_log.md](./session_245_log.md)
+Last verified: [Sessions 245-247](./session_245_log.md), 2026-05-03.
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -45,13 +45,18 @@ Source durable memory:
 - `rank_time_acceleration`: IC=0.0576 (+0.06) **REAL** - state feature
 - `c16_entropy`: IC~0.08 **WEAK/INCONSISTENT** - dead end
 
+### S245-S247 Tested (2026-05-03)
+
+- `sector_pressure_momentum`: IC=+0.078 - **FAILED**
+- `down_market_c16`: IC=+0.098 (+26%) - **PASSED - Tier 2**
+- `deep_down_c16`: IC=+0.093 (+20%) - **PASSED - Tier 2**
+
+**Key insight**: C16 is a CONTRARIAN signal - works best in down markets
+
 ### Pending (untested)
 
 - `disclosure_shock_reaction`: No data source - CANNOT TEST
 - `c16_entropy_signal`: Already tested - WEAK
-
-- `sector_pressure_momentum`: Sector pressure rate of change.
-  Test: IC(sector-level C16 momentum) as predictor.
 
 ### S244 Complete (2026-05-03)
 
