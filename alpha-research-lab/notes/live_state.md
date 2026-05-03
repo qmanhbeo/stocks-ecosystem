@@ -113,9 +113,31 @@ Source durable memory:
 
 ## Current State
 
-- S236 tested: exit_signal (hold is optimal), foreign_c13_triple FAILED, label_5d NEUTRAL
-- Findings: Hold 5d optimal, foreign makes worse
+- S236 tested: all FAILED/NEUTRAL
+- Best holds: C13-triple +307%, Triple +104%, c13_c16_combo +9%
 - Queue: EXHAUSTED
+
+## New Eureka Ideas (S237)
+
+- **`monday_gap_reversal`**: Monday opens have distinct reversal patterns.
+  Test: IC(monday_gap) vs baseline.
+  Status: NOT TESTED. Calendar effect blind spot
+
+- **`quarter_end_window`**: Quarter-end domestic institutional pump.
+  Test: IC(VN30) near quarter-end vs non-quarter.
+  Status: NOT TESTED. Calendar effect
+
+- **`market_breadth_momentum`**: A/D ratio predicts market direction.
+  Test: IC(signal | breadth > 60%) vs < 40%.
+  Status: NOT TESTED. Breadth blind spot
+
+- **`holiday_effect`**: Pre/post holiday reversal.
+  Test: IC returns around holidays.
+  Status: NOT TESTED.
+
+- **`volatility_regime`**: C16 in high vs low vol regimes.
+  Test: IC(C16) in vol > 80% vs vol < 20%.
+  Status: NOT TESTED.
 
 ## Active Jobs / Constraints
 
