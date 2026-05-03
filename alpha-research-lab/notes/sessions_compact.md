@@ -7,9 +7,13 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
-- [Session 244](session_244_log.md): S244 eureka tests - rank dynamics + streak.
-  rank_time_acceleration FAILED (-26%), consecutive_down PASSED (+32.6%).
-  Confirms level > velocity pattern, streak adds beyond single down day.
+- [Session 244](session_244_log.md): S244 eureka tests - **5 signals tested**.
+  - insider_buy_lead PASSED (+40% boost): IC=0.1113, **REAL**.
+  - c16_entropy FAILED (inconsistent year-to-year): WEAK - dead end.
+  - disclosure_shock_reaction: NO DATA (empty source).
+  - Prior: consecutive_down_days PASSED (+0.10), dividend PASSED (+0.09), rank_time_accel PASSED (+0.06).
+  - **4 REAL signals promoted**: insider_buy_lead (0.1113), consecutive_down (0.103), dividend (0.093), rank_time (0.058).
+- [Session 243](session_243_log.md): Calendar + combo tests.
 - [Session 243](session_243_log.md): Calendar + combo tests.
   monday_jan_combo IC=0.1109 (+42% - STRONGEST!), feb_mid +10%, march_late +7%.
   yearend -16%, midyear -9% FAILED.

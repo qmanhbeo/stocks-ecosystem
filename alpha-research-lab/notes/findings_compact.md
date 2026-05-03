@@ -68,9 +68,11 @@ entry must include source anchors: stable finding IDs or source session links.
 ### S244 New Signals (independent vs Random)
 | Signal | IC | vs Random | Verdict |
 |--------|-----|---------|--------|
+| insider_buy_lead | 0.1113 | +0.11 | REAL (+40% boost) |
 | consecutive_down_days | 0.1030 | +0.10 | REAL - filter |
 | dividend_30d | 0.0934 | +0.09 | REAL - event driver |
 | rank_time_acceleration | 0.0576 | +0.06 | REAL - state feature |
+| c16_entropy | ~0.08 | ~0.08 | WEAK - dead end |
 
 ## All Real Signals for RL (IC > 0.05 vs Random) — Complete Inventory
 
@@ -82,6 +84,7 @@ entry must include source anchors: stable finding IDs or source session links.
 | monday_jan_combo | 0.1109 | +0.11 | calendar combo |
 | X53 (Liquid C16) | 0.137 | +0.14 | liquidity filter |
 | consecutive_down_days | 0.1030 | +0.10 | market streak |
+| **insider_buy_lead** | **0.1113** | **+0.11** | **insider lead** |
 
 ### Tier 2: Enhancement/Filters (IC 0.08-0.10)
 | Signal | IC | vs Random | Type |

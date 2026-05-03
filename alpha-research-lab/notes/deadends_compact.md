@@ -13,6 +13,11 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
 
 ## Current Hard Stops
 
+- S244 weak/inconsistent signals:
+  - c16_entropy: WEAK (inconsistent year-to-year) - dead end
+  - disclosure_shock_reaction: NO DATA - blocked (empty source)
+  Source: [session_244_log.md](./session_244_log.md)
+
 - Event-v2 timing is parked under the current executable top-5 selector:
   H321 remains offline sparse evidence, but additive integration, entry-label
   transfer, payoff-shape promotion, and sparse-clock portfolio rescue all

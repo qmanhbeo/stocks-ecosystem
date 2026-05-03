@@ -160,6 +160,30 @@ def run_test(test_name):
         filtered = df[df['month'].isin([6, 7])]
         ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
         return f'midyear: IC={ic:.4f}'
+    elif test_name == 'rank_time_acceleration':
+        df = df.sort_values(['ticker', 'time'])
+        df['rank_c16'] = df.groupby('time')['c16'].rank(pct=True)
+        df['rank_c16_5d_lag'] = df.groupby('ticker')['rank_c16'].shift(5)
+        df['rank_accel'] = df['rank_c16'] - df['rank_c16_5d_lag']
+        df = df.dropna(subset=['rank_accel'])
+        if len(df) > 100:
+            ic = wf_ic(df, 'rank_accel')
+            return f'rank_accel_5d: IC={ic:.4f}'
+        return 'rank_accel: insufficient data'
+    elif test_name == 'c16_entropy_signal':
+        return 'NOT TESTED: requires sector entropy computation'
+    elif test_name == 'consecutive_down_days':
+        df['market_return'] = df.groupby('time')['actual'].transform('mean')
+        df['market_down'] = df['market_return'] < 0
+        df = df.sort_values(['ticker', 'time'])
+        df['prev_market_down'] = df.groupby('ticker')['market_down'].shift(1)
+        df['streak_2d'] = df['market_down'] & df['prev_market_down']
+        df = df.dropna(subset=['streak_2d'])
+        filtered = df[df['streak_2d']]
+        ic = wf_ic(filtered, 'c16') if len(filtered) > 100 else np.nan
+        return f'consecutive_2d_down: IC={ic:.4f}'
+    elif test_name == 'drawdown_entry_signal':
+        return 'NOT TESTED: requires drawdown computation'
     else:
         return f'Unknown test: {test_name}'
 

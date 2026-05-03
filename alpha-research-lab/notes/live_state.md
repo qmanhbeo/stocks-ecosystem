@@ -37,20 +37,28 @@ Source durable memory:
   or failed under the current target/consumer contracts. Use the compact
   dead-end view before reopening any of them.
 
-## New Branches (2026-05-03)
+## Tested Signals (S244 Complete)
 
-- `c16_roc_filtered`: Rate of C16 change + liquid filter.
-  Test: IC(ROC(C16) | move>80).
+- `consecutive_down_days`: IC=0.1030 (+0.10) **REAL** - filter for down-day streaks
+- `insider_buy_lead`: IC=0.1113 (+0.11 +40%) **REAL** - insider BUY on T-1 predicts C16 quality
+- `dividend_30d`: IC=0.0934 (+0.09) **REAL** but noisy
+- `rank_time_acceleration`: IC=0.0576 (+0.06) **REAL** - state feature
+- `c16_entropy`: IC~0.08 **WEAK/INCONSISTENT** - dead end
+
+### Pending (untested)
+
+- `disclosure_shock_reaction`: No data source - CANNOT TEST
+- `c16_entropy_signal`: Already tested - WEAK
 
 - `sector_pressure_momentum`: Sector pressure rate of change.
   Test: IC(sector-level C16 momentum) as predictor.
 
-## New Eureka Queue (2026-05-03)
+### S244 Complete (2026-05-03)
 
-- `c16_acceleration`: C16 velocity matters more than level.
-  Test: IC(ROC(C16, 5d)) vs IC(C16 level).
-  Smallest honest test: compute ROC, compare IC to baseline.
-  **FAILED: level beats ROC by 28%**
+- **4 REAL signals promoted to signal_library**: 
+  insider_buy_lead (0.1113), consecutive_down (0.103), dividend (0.093), rank_time (0.058)
+- **1 WEAK signal**: c16_entropy (inconsistent year-to-year)
+- **1 NO DATA**: disclosure_shock_reaction
 
 - `c16_divergence`: Price UP + C16 DOWN = contrarian divergence.
   Test: IC(C16) where price > market_return but C16 < median.
