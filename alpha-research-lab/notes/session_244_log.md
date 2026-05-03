@@ -25,3 +25,9 @@
 - **Verdict**: REAL - confirms X226, use as filter
 
 ## Next Test (in progress)
+
+### dividend_signal_momentum (2026-05-03)
+- **Claim**: Dividend announcements drive pre-event accumulation
+- **Result**: IC = 0.0934
+- **vs Random**: +0.09 (**REAL**) - but year-to-year noisy
+- **Verdict**: REAL but inconsistent (some years negative)
