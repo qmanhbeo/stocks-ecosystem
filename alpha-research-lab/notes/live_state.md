@@ -2682,16 +2682,15 @@ Source durable memory:
 
 ### Tested (IC > 0.05 = REAL)
 
-- `rank_time_acceleration`: IC=0.0576 (+0.06) **REAL**
 - `consecutive_down_days`: IC=0.1030 (+0.10) **REAL**
-- `dividend_signal_momentum`: IC=0.0934 (+0.09) **REAL** but yr-to-yr noisy
+- `insider_buy_lead`: IC=0.1113 (+0.11) **REAL** (+40% boost)
+- `dividend_signal_momentum`: IC=0.0934 (+0.09) **REAL** but noisy
+- `rank_time_acceleration`: IC=0.0576 (+0.06) **REAL**
 
 ### Pending
 
-- `insider_pressure_coherence`: Insider direction aligns with order pressure.
 - `disclosure_shock_reaction`: Official disclosures cause post-announcement drift.
 - `c16_entropy_signal`: Entropy of C16 across sector.
-- `mutual_information_c16`: MI between index and stock.
   Test: IC(delta_rank_5d | C16) vs level.
   Required: rank computation over time.
   **First honest test: rank_5d vs level IC**

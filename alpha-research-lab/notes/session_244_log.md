@@ -31,3 +31,18 @@
 - **Result**: IC = 0.0934
 - **vs Random**: +0.09 (**REAL**) - but year-to-year noisy
 - **Verdict**: REAL but inconsistent (some years negative)
+
+### insider_pressure_coherence (2026-05-03)
+- **Claim**: Insider BUY on T-1 amplifies C16 on T
+- **Result**: IC = 0.1113
+- **vs Random**: +0.11 (**REAL**)
+- **Verdict**: REAL - +39.7% boost when insider bought previous day
+
+## S244 Results Summary
+
+| Signal | IC | vs Random | Verdict |
+|--------|-----|---------|--------|
+| consecutive_down_days | 0.1030 | +0.10 | REAL - filter |
+| insider_buy_lead | 0.1113 | +0.11 | REAL - +39.7% boost |
+| dividend_30d | 0.0934 | +0.09 | REAL - noisy |
+| rank_time_acceleration | 0.0576 | +0.06 | REAL - state feature |
