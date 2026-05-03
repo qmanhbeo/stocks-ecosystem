@@ -60,9 +60,16 @@ entry must include source anchors: stable finding IDs or source session links.
 ### Tier 3: Weak/Contextual (IC 0.05-0.08)
 | Signal | IC | vs Random | Use |
 |--------|-----|---------|-----|
+| rank_time_acceleration | 0.0576 | +0.06 | independent state feature |
 | vol_low | 0.0695 | +0.07 | volume regime (inverse) |
 | yearend | 0.0652 | +0.07 | weak calendar |
 | midyear | 0.0711 | +0.07 | failed |
+
+### S244 New Signals (independent vs Random)
+| Signal | IC | vs Random | Verdict |
+|--------|-----|---------|--------|
+| consecutive_down_days | 0.1030 | +0.10 | REAL - filter |
+| rank_time_acceleration | 0.0576 | +0.06 | REAL - state feature |
 
 ### Key RL Use Cases
 1. **Primary signal**: S1 (0.149)

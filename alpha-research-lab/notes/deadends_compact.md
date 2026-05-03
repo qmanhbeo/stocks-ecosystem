@@ -68,6 +68,11 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
 - C16 persistence (S225): Yesterday's pressure confirming today's doesn't help.
   IC -17%. Source: Session 225.
 
+- Rank time acceleration (S244): Rank velocity WORSE than rank level.
+  IC 0.0576 vs baseline 0.0778 (-26%). All 8 years negative delta.
+  Confirms: level > velocity pattern (same as C16 ROC failure S227).
+  Source: session_244_log.md
+
 - News keyword and simple pooled sentiment paths are not enough by themselves:
   keyword sentiment added no IC, rolling aggregation did not fix sparsity,
   body-text ticker extraction hurt quality, the keyword lexicon path was

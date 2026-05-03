@@ -7,6 +7,9 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 244](session_244_log.md): S244 eureka tests - rank dynamics + streak.
+  rank_time_acceleration FAILED (-26%), consecutive_down PASSED (+32.6%).
+  Confirms level > velocity pattern, streak adds beyond single down day.
 - [Session 243](session_243_log.md): Calendar + combo tests.
   monday_jan_combo IC=0.1109 (+42% - STRONGEST!), feb_mid +10%, march_late +7%.
   yearend -16%, midyear -9% FAILED.
