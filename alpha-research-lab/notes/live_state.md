@@ -145,7 +145,2134 @@ Source durable memory:
   Test: IC(C16 * turnover_rate_quintile).
   Smallest: composite signal test.
 
-## Mathematics-Inspired Hypotheses (S240)
+## Prime Number Theories
+
+- `prime_gap_clustering`: Prime gaps between nth primes correlate with market gaps.
+  Claim: Prime gap sizes in sequence = market regime predictor.
+  Test: nth_prime(n+1) - nth_prime(n) sequence mod market moves.
+  Mechanism: Twin prime conjecture suggests gaps correlate with "twin" market moves.
+
+- `riemann_zeta_regime`: Critical line zeros map to market turning points.
+  Claim: ζ(½ + it) imaginary parts = market cycle frequencies.
+  Test: approximate non-trivial zeros vs market peaks.
+  Insane: Riemann Hypothesis ↔ Market Efficiency equivalence.
+
+- `modular_arithmetic_symmetry`: Modulo-N market state cycles.
+  Claim: Market repeats every N days where N = prime.
+  Test: FFT find periodicities at prime periods (7, 11, 13, 17...).
+  Mechanism: VN T+2 settlement creates prime-modulus cycles.
+
+- `prime_density_trading`: Bertrand's postulate as allocation density.
+  Claim: More primes in interval = more market "primes" (top stocks).
+  Test: prime_density in [n, 2n] correlates with top-stock returns.
+  Mechanism: Number theory meets portfolio selection.
+
+- `goldbach_conjecture_trADING`: Sum of two primes = price level.
+  Claim: Every even price = sum of two "prime" stocks.
+  Test: price level decomp into prime tickers.
+  Insane: Goldbach representation of portfolio.
+
+- `sieve_eratosthenes_selection`: Eratosthenes-style filtering.
+  Claim: Sieve out "composite" signals, keep "prime" signals.
+  Test: Sieve algorithm on signal set.
+  Mechanism: Ancient algorithm meets modern market.
+
+- `mersenne_prime_cycles`: Mersenne prime cycles (2^p - 1) as cycles.
+  Claim: Market cycles at Mersenne periods (3, 7, 31, 127...).
+  Test: FFT at M_p periods.
+  Mechanism: Perfect numbers = perfect cycles.
+
+- `fermat_prime_fourier`: Fermat primes (2^(2^n)) in Fourier.
+  Claim: Fermat prime frequencies are spectral peaks.
+  Test: FFT at Fermat frequencies (1, 2, 4, 8, 16...).
+  Mechanism: Prime Fourier extraction.
+
+- `prime_zeta_convergence`: Prime zeta function P(s).
+  Claim: P(s) converges at market-critical s-values.
+  Test: Prime zeta near s=1+it.
+  Insane: Prime counting meets market timing.
+
+- `legendre_polynomial_support`: Legendre polynomials as basis functions.
+  Claim: Price path approximated by Legendre polynomials.
+  Test: coefficients as regime signals.
+  Mechanism: Orthogonal function expansion.
+
+- `dirichlet_series_momentum`: Dirichlet series of returns.
+  Claim: Sum of returns/n^s = "return zeta".
+  Test: Compute D(s), find critical line.
+  Insane: Dirichlet series as signal processor.
+
+- `modular_form_oscillator`: Modular forms as oscillators.
+  Claim: j-invariant maps to market oscillator.
+  Test: j-function of price time-series.
+  Quantum connection: Modular forms = 2D conformal field theory.
+
+- `l_function_market`: L-function of market.
+  Claim: L-function zeros = turning points.
+  Test: L-function fit to returns.
+  Insane: L-functions from number theory to markets.
+
+- `weil_conjecture_trading`: Weil conjectures as market structure.
+  Claim: Counting function matches market counting.
+  Test: Weil-reve-type formulas.
+  Algebraic geometry markets.
+
+- `tate_thesis_revaluatio`: Tate twist as regime switch.
+  Claim: Twisted Tate module = regime change.
+  Test: Tate twist signal.
+  Insane: Arithmetic geometry on markets.
+
+## Quantum Finance
+
+- `quantum_wavefunction_portfolio`: Portfolio as wavefunction.
+  Claim: |ψ|² = probability distribution.
+  Test: construct ψ, verify |ψ|² matches returns.
+  Mechanism: Quantum portfolio theory.
+
+- `quantum_uncertainty_position`: Heisenberg uncertainty in positions.
+  Claim: Δx * Δp ≥ ħ/2 for portfolios.
+  Test: position_size * momentum uncertainty.
+  Mechanism: Can't know both price and position simultaneously.
+
+- `quantum_entanglement_sectors`: Sector entanglement.
+  Claim: Entangled sectors move together.
+  Test: entanglement_coefficient between sector ETFs.
+  Mechanism: Non-local correlation.
+
+- `quantum_tunneling_market`: Price barrier tunneling.
+  Claim: Price tunnels through resistance.
+  Test: tunneling_probability through barriers.
+  Mechanism: Quantum mechanics meets support/resistance.
+
+- `quantum_decoherence_trading`: Decoherence as information loss.
+  Claim: Market decoherence = signal decay.
+  Test: coherence_time as signal half-life.
+  Mechanism: Quantum decoherence model.
+
+- `quantum_phase_estimation`: Phase estimation algorithm.
+  Claim: Market phase = algorithm output.
+  Test: quantum_phase_estimation(returns).
+  Quantum advantage: QPE speedup.
+
+- `quantum_fourier_transform_market`: QFT on market data.
+  Claim: QFT extracts frequencies better.
+  Test: QFT vs classical FFT.
+  Quantum advantage: Quadratic speedup.
+
+- `quantum_search_market`: Grover's search for patterns.
+  Claim: Grover search finds patterns in O(√N).
+  Test: Grover algorithm vs brute force.
+  Quadratic speedup hypothesis.
+
+- `quantum_sampling_market`: Quantum sampling for distributions.
+  Claim: Quantum sampling = market distribution.
+  Test: compare to historical.
+  Mechanism: Boson sampling market model.
+
+- `quantum_machine_learning`: Quantum ML on market data.
+  Claim: Quantum kernel methods improve.
+  Test: quantum_kernel_vs_classical.
+  Hybrid quantum-classical.
+
+## Particle Physics
+
+- `higgs_mechanism_bubble`: Higgs-like symmetry breaking.
+  Claim: Market " Higgs field" breaks symmetry = regime change.
+  Test: field_strength vs returns.
+  Mechanism: Spontaneous symmetry breaking.
+
+- `gauge_theory_market`: Gauge invariance in market.
+  Claim: Gauge transformations = normalization.
+  Test: Gauge-invariant signals.
+  Mechanism: Covariant derivatives.
+
+- `chiral_anomaly_trading`: Chiral anomaly = market anomaly.
+  Claim: Chiral asymmetry predicts anomalies.
+  Test: chirality_asymmetry vs returns.
+  Mechanism: Anomaly detection via chirality.
+
+- `yang_mills_market`: Yang-Mills theory for sectors.
+  Claim: Sector interactions via gauge fields.
+  Test: S = ∫ Tr(F∧*F) for sectors.
+  Mechanism: Non-abelian gauge theory.
+
+- ` QCD_color_confinement`: Color confinement = sector clustering.
+  Claim: Sectors cluster like quarks.
+  Test: sector_clustering vs color_charge.
+  Mechanism: Asymptotic freedom.
+
+- `quark_gluon_plasma`: QGP-like market state.
+  Claim: High-temperature market = deconfined.
+  Test: temperature_measure vs clustering.
+  Mechanism: QGP analog states.
+
+- `supersymmetry_portfolio`: Supersymmetry trading.
+  Claim: Superpartner signals exist.
+  Test: find superpartners of signals.
+  Undiscovered signals.
+
+- `string_theory_market`: Market as string vibration.
+  Claim: Price = string vibration modes.
+  Test: string_modes vs returns.
+  Dimension: 10D or 11D market.
+
+- `brane_world_market`: Brane world market.
+  Claim: Our market is 3-brane in higher dimension.
+  Test: brane_signature effects.
+  Extra dimension search.
+
+- `M_theory_market`: M-theory = unified theory.
+  Claim: All signals are M-theory components.
+  Test: find 11D supergravity.
+  Ultimate unification.
+
+- `adS_CFT_correspondence`: AdS/CFT for markets.
+  Claim: Market (CFT) = gravity (AdS).
+  Test: find AdS radius from returns.
+  Holographic principle.
+
+- `holographic_principle_market`: Market holography.
+  Claim: N² bits on boundary = N² stocks.
+  Test: boundary_theory vs bulk_theory.
+  Information theory: Market is holographic.
+
+- `landau pole_renormalization`: Landau pole in market.
+  Claim: Coupling blows up = regime breakdown.
+  Test: coupling_run vs returns.
+  Mechanism: Landau pole detection.
+
+- `beta_function_market`: Beta function of coupling.
+  Claim: β(g) determines market flow.
+  Test: beta_function fit.
+  Renormalization group flow.
+
+- `conformal_block_market`: Conformal blocks as correlations.
+  Claim: CFT correlation = signal correlation.
+  Test: conformal_block_fit.
+  Conformal field theory.
+
+- `critical_exponent_market`: Critical exponents at phase transition.
+  Claim: β, γ, ν exponents apply.
+  Test: measure_critical_exponents.
+  Phase transition theory.
+
+- `spinfoam_market`: Spinfoam model for market.
+  Claim: Market = spinfoam quantum gravity.
+  Test: spinfoam_quantization.
+  Loop quantum gravity analog.
+
+## Cosmological
+
+- `dark_matter_allocation`: Dark matter = unknown flows.
+  Claim: Unknown capital = dark matter.
+  Test: mass_missing vs unexplained_moves.
+  Mechanism: 27% of market is dark.
+
+- `dark_energy_acceleration`: Dark energy = momentum.
+  Claim: Market accelerating = dark energy.
+  Test: acceleration_parameter.
+  Mechanism: Cosmological constant.
+
+- `cosmic_inflation_market`: Inflationary phase in market.
+  Claim: Exponential growth phase = inflation.
+  Test: inflation_detected.
+  Mechanism: Inflationary period mapping.
+
+- `cmb_anisotropy_market`: CMB-like market background.
+  Claim: Market has background radiation.
+  Test: find_background_radiation.
+  Mechanism: Market CMB analog.
+
+- `gravitational_wave_market`: Gravitational waves from mergers.
+  Claim: Stock mergers create waves.
+  Test: gravitational_wave_spectrum.
+  LIGO analog: Stock merger detection.
+
+- `hawking_radiation_trading`: Hawking radiation from "black holes".
+  Claim: Black hole stocks emit radiation.
+  Test: stockHawking_radiation.
+  Black hole thermodynamics.
+
+- `unruh_effect_market`: Unruh effect = acceleration radiation.
+  Claim: Accelerated stocks emit information.
+  Test: acceleration_radiation.
+  Quantum field theory in acceleration.
+
+- `casimir_effect_market`: Casimir effect between sectors.
+  Claim: Sectors have Casimir energy.
+  Test: sector_Casimir_force.
+  Vacuum energy in market.
+
+- `entanglement_entropy_market`: Entanglement entropy = correlations.
+  Claim: Entropy S = A/4 (area law).
+  Test: entanglement_entropy vs sector_size.
+  Black hole entropy analog.
+
+- `page_curve_trading`: Page curve of information.
+  Claim: Information loss follows Page curve.
+  Test: page_curve_fit.
+  Holographic entanglement entropy.
+
+- `tensor_network_market`: Tensor network representation.
+  Claim: Market = tensor network.
+  Test: tensor_network_representation.
+  MERA-like structure.
+
+- ` Firewall_paradox_market`: Firewall paradox in market.
+  Claim: Information paradox at "hot" stocks.
+  Test: check_firewall.
+  Black hole information paradox.
+
+- `er=EPR_correlation`: ER = EPR for markets (Einstein-Rosen = Einstein-Podolsky-Rosen).
+  Claim: Entangled sectors = wormholes.
+  Test: entanglement_vs_correlation.
+  ER = EPR is market basis.
+
+- `page_woolf_theorem`: Page theorem on information.
+  Claim: Half informationPage out at threshold.
+  Test: information_decay_curve.
+  Information paradox resolution.
+
+- `ads_ground_state`: AdS ground state search.
+  Claim: Find ground state of market Hamiltonian.
+  Test: ground_state_energy.
+  Quantum gravity: market as quantum system.
+
+## Biology / Genetics
+
+- `DNA_sequence_coding`: Return sequences as DNA.
+  Claim: DNA-like code in returns.
+  Test: find_genetic_code.
+  Mechanism: Genetic algorithm on returns.
+
+- `CRISPR_signal_editing`: CRISPR-style signal editing.
+  Claim: Edit signals like CRISPR edits genes.
+  Test: CRISPR_on_signals.
+  Gene editing meets signal processing.
+
+- `RNA_transcription_market`: RNA transcription analog.
+  Claim: DNA → RNA = price → signal.
+  Test: transcription_speed.
+  Central dogma in markets.
+
+- `protein_folding_signal`: Protein folding problem.
+  Claim: Signals fold like proteins.
+  Test: folding_energy.
+  Protein structure prediction.
+
+- `epigenetic_market`: Epigenetic modification.
+  Claim: "Methylation" = signal memory.
+  Test: methylation_patterns.
+  Epigenetic inheritance.
+
+- `telomere_length_market`: Telomere-like price caps.
+  Claim: Price has maximum "telomere".
+  Test: price_telomere.
+  Cellular aging analog.
+
+- `cancer_cell_market`: Cancer-like stocks (fast growth).
+  Claim: "Cancer" stocks overgrow.
+  Test: growth_rate_vs_anomaly.
+  Cancer phenotype mapping.
+
+- ` stem_cell_portfolio`: Stem cell-like selection.
+  Claim: Stem cells = undifferentiated potential.
+  Test: stemness_score.
+  Pluripotent selection.
+
+- `neuron_network_market`: Neural network analogy.
+  Claim: Market = neural network.
+  Test: network_architecture.
+  Deep learning market model.
+
+- `synaptic_plasticity_market`: Synaptic plasticity = signal learning.
+  Claim: Synapses strengthen with use.
+  Test: synaptic_change_rate.
+  Learning in brain vs market.
+
+- `quantum_biology_market`: Quantum biology effects.
+  Claim: Quantum effects in photosynthesis, magnetoreception → market.
+  Test: quantum_market_effects.
+  Quantum mechanics in biology.
+
+- `circadian_rhythm_market`: Circadian rhythm in VN market.
+  Claim: Market has daily rhythm.
+  Test: rhythm_phase.
+  Biological clock mapping.
+
+- `seasonal_affective_market`: Seasonal affective disorder.
+  Claim: Market has seasonal patterns.
+  Test: seasonal_pattern_strength.
+  Mood disorder analogy.
+
+- `metabolic_rate_market`: Market metabolism.
+  Claim: Trading volume = metabolic rate.
+  Test: metabolic_rate_correlation.
+  Metabolic mapping.
+
+- `circadian_portfolio`: Time-of-day genetic programming.
+  Claim: Gene ~ time of day.
+  Test: time_gene_expression.
+  Chronobiology mapping.
+
+## Philosophy of Mind
+
+- `hard_problem_market`: Hard problem of consciousness.
+  Claim: Why does market "think"?
+  Test: measure_consciousness.
+  Hard problem parallel.
+
+- `qualia_trading`: Qualia in price.
+  Claim: Price has qualia (raw feels).
+  Test: find_qualia.
+  Consciousness studies.
+
+- `integrated_information_market`: Integrated information theory.
+  Claim: Φ = market consciousness.
+  Test: compute_integrated_information.
+  IIT application.
+
+- `global_workspace_market`: Global workspace in market.
+  Claim: Market has global broadcast.
+  Test: workspace_model.
+  Psychology model.
+
+- `predictive_coding_market`: Predictive coding as market.
+  Claim: Brain = hierarchical predictive model.
+  Test: hierarchical_prediction_error.
+  Neuroscience meets market.
+
+- `free_energy_principle`: Free energy principle.
+  Claim: Markets minimize free energy.
+  Test: free_energy_minimization.
+  FEP in markets.
+
+- `active_inference_market`: Active inference.
+  Claim: Market infers + acts.
+  Test: active_inference_fit.
+  Active inference framework.
+
+- ` Predictive_Mind_price`: Predictive processing.
+  Claim: Market predicts everything.
+  Test: prediction_horizon.
+  Predictive brain → market.
+
+- `dual_aspect_market`: Dual aspect of information.
+  Claim: Mind-matter = price-observer.
+  Test: dual_aspect_correlation.
+  Panpsychism connection.
+
+- `panpsychism_market`: Panpsychism in markets.
+  Claim: Everything has "mind".
+  Test: measure_mind_in_stocks.
+  Consciousness in everything.
+
+- `orchestrated_consciousness`: Orch-OR theory in market.
+  Claim: Orchestrated objective reduction.
+  Test: check_orch_or.
+  Quantum consciousness.
+
+- `neural_correlate_market`: Neural correlate of market.
+  Claim: Find NCM (neural correlate of market).
+  Test: NCM_finding.
+  Discover the market correlate.
+
+- `global_neuronal_workspace`: Global neuronal workspace.
+  Claim: GNW in market = global price.
+  Test: workspace_coherence.
+  GNW theory application.
+
+- `higher_theory_market`: Higher-order theories.
+  Claim: Higher-order thoughts in market.
+  Test: higher_order_content.
+  Theories of consciousness.
+
+- `attention_schema_market`: Attention schema.
+  Claim: Market has attention.
+  Test: attention_schema_fit.
+  Attention mechanism.
+
+## Deep Learning / AI
+
+- `transformer_attention_market`: Transformer attention mechanism.
+  Claim: Attending to stocks like tokens.
+  Test: attention_weights.
+  NLP → markets transform.
+
+- `BERT_price_embedding`: BERT embeddings for prices.
+  Claim: Price sequence → BERT embeddings.
+  Test: price_BERT_performance.
+  Language model → price model.
+
+- `GPT_market_generation`: GPT for price generation.
+  Claim: Generate future prices.
+  Test: GPT_generation_quality.
+  Generative model.
+
+- `diffusion_market_models`: Diffusion models for prices.
+  Claim: Diffusion model price paths.
+  Test: diffusion_trajectory_quality.
+  Image generation → price generation.
+
+- `VAE_market_latent`: VAE latent space.
+  Claim: Market has latent space.
+  Test: VAE_latent_quality.
+  Variational autoencoder.
+
+- `autoencoder_anomaly`: Autoencoder for anomalies.
+  Claim: Reconstruction error = anomaly.
+  Test: autoencoder_anomaly_score.
+  Anomaly detection.
+
+- `generative_adversarial_market`: GAN for market.
+  Claim: Generator vs discriminator.
+  Test: GAN_market_quality.
+  Adversarial training.
+
+- `self_supervised_market`: Self-supervised learning.
+  Claim: Predict next day from past.
+  Test: SSL_performance.
+  Self-supervised pretraining.
+
+- `contrastive_learning_market`: Contrastive learning.
+  Claim: Similar days close, different far.
+  Test: contrastive_loss.
+  Representation learning.
+
+- `retrieval_augmented_market`: Retrieval-augmented generation.
+  Claim: Retrieve similar days → predict.
+  Test: RAG_performance.
+  Memory-augmented model.
+
+- `chain_of_thought_market`: Chain of thought in prices.
+  Claim: Reasoning chain in price moves.
+  Test: CoT_price_accuracy.
+  Chain of thought prompting.
+
+- `tool_use_market`: Tool use in trading.
+  Claim: Use external tools like calculators.
+  Test: tool_use_frequency.
+  Tool learning.
+
+- `constitutional_ai_trading`: Constitutional AI principles.
+  Claim: Principles constrain behavior.
+  Test: constitutional_compliance.
+  AI alignment in markets.
+
+- `RLHF_market`: RL from human feedback.
+  Claim: Human feedback improves trading.
+  Test: RLHF_performance.
+  RL from human feedback.
+
+- `reward_modeling_market`: Reward modeling.
+  Claim: Model reward from behavior.
+  Test: reward_model_accuracy.
+  Inverse RL.
+
+- `constitutional_ai_trading`: Constitutional AI principles.
+  Claim: Principles constrain behavior.
+  Test: constitutional_compliance.
+  AI alignment in markets.
+
+## Even More Insane (S241)
+
+- `mandelbrot_set_trading`: Mandelbrot set boundary as support.
+  Claim: Price respects Mandelbrot boundary.
+  Test: price_vs_mandelbrot_boundary.
+  Fractal geometry.
+
+- `julia_set_market`: Julia set of market.
+  Claim: Market = Julia set iteration.
+  Test: find_julia_set.
+  Dynamical systems.
+
+- `newton_fractal_trading`: Newton fractal patterns.
+  Claim: Newton method iterations = patterns.
+  Test: newton_fractal_patterns.
+  Root finding visualization.
+
+- `sierpinski_triangle_market`: Sierpinski in price.
+  Claim: Price traces Sierpinski triangle.
+  Test: find_sierpinski.
+  Recursive pattern.
+
+- `cantor_dust_market`: Cantor dust in market.
+  Claim: Market has Cantor dust structure.
+  Test: find_cantor_dust.
+  Self-similar set.
+
+- `koch_curve_support`: Koch curve as support.
+  Claim: Support/resistance = Koch geometry.
+  Test: koch_curve_fit.
+  Infinite boundary.
+
+- `menger_sponge_market`: Menger sponge volume.
+  Claim: Volume = Menger sponge.
+  Test: menger_dimension.
+  Fractal dimension.
+
+- `peano_curve_market`: Peano space-filling.
+  Claim: Market fills space like Peano.
+  Test: peano_curve_mapping.
+  Space-filling curves.
+
+- `hilbert_curve_market`: Hilbert curve trading.
+  Claim: Data on Hilbert curve.
+  Test: hilbert_mapping_quality.
+  Space-filling curve indexing.
+
+- `box_counting_dimension`: Box-counting dimension.
+  Claim: D₀ = fractal dimension.
+  Test: box_counting_dimension.
+  Dimension estimation.
+
+- `lyapunov_dimension_market`: Lyapunov dimension.
+  Claim: Kaplan-Yorke dimension.
+  Test: lyapunov_dimension.
+  Strange attractor dimension.
+
+- `information_dimension_market`: Information dimension.
+  Claim: D₁ = information dimension.
+  Test: information_dimension.
+  Entropy-based dimension.
+
+- `correlation_dimension_market`: Correlation dimension.
+  Claim: D₂ = correlation dimension.
+  Test: correlation_dimension.
+  Point correlation dimension.
+
+- `multifractal_spectrum`: Multifractal spectrum.
+  Claim: Spectrum as regime fingerprint.
+  Test: multifractal_spectrum.
+  Singularity spectrum.
+
+- `singularity_spectrum_market`: Singularity spectrum f(α).
+  Claim: f(α) measures regularity.
+  Test: singularity_spectrum.
+  Multifractal analysis.
+
+- `renormalization_group`: Renormalization group in market.
+  Claim: RG flow = regime change.
+  Test: renormalization_flow.
+  Scale invariance.
+
+- `fixed_point_market`: Fixed point equation.
+  Claim: Market → fixed point.
+  Test: fixed_point_convergence.
+  Fixed point theorem.
+
+- `critical_phenomena_market`: Critical phenomena.
+  Claim: Critical exponents describe market.
+  Test: critical_exponent_measurement.
+  Phase transition physics.
+
+- `order_parameter_market`: Order parameter.
+  Claim: Order parameter = market direction.
+  Test: order_parameter_value.
+  Order parameter theory.
+
+- `symmetry_breaking_market`: Spontaneous symmetry breaking.
+  Claim: Market breaks symmetry.
+  Test: symmetry_breaking_scale.
+  Goldstone modes.
+
+- `goldstone_market`: Goldstone modes.
+  Claim: Low-energy excitations.
+  Test: goldstone_modes.
+  Broken symmetry.
+
+- `effective_field_market`: Effective field theory.
+  Claim: Market = effective field.
+  Test: effective_action.
+  EFT in markets.
+
+- `wilsonian_rg`: Wilsonian renormalization.
+  Claim: Scale-by-scale integration.
+  Test: wilsonian_flow.
+  Wilson's RG approach.
+
+- `epsilon_expansion`: epsilon expansion.
+  Claim: ε expansion calculates.
+  Test: epsilon_expansion_fit.
+  Critical point calculation.
+
+- `conformal_symmetry`: Conformal symmetry in market.
+  Claim: Scale + special conf invariance.
+  Test: conformal_invariant.
+  Conformal field theory.
+
+- `stress_energy_market`: Stress-energy tensor.
+  Claim: Tμν = market stress-energy.
+  Test: stress_energy_conservation.
+  conservation law.
+
+- `anomaly_market`: Chiral anomaly.
+  Claim: Anomaly = information loss.
+  Test: anomaly_check.
+  Anomaly matching.
+
+- `index_theorem_market`: Atiyah-Singer index.
+  Claim: Index = topology change.
+  Test: index_calculation.
+  Index theorem.
+
+- `characteristic_classes`: Characteristic classes.
+  Claim: Classes = market invariants.
+  Test: characteristic_classes.
+  Chern classes.
+
+- `kosmann_derivative`: Kosmann derivative.
+  Claim: Spinor covariant derivative.
+  Test: kosmann_derivative_value.
+  Supergravity.
+
+- `torsion_market`: Torsion as market signal.
+  Claim: Torsion = spin interaction.
+  Test: torsion_measurement.
+  Cartan structure.
+
+- `levi_civita_connection`: Levi-Civita connection.
+  Claim: Geodesic = price path.
+  Test: geodesic_path.
+  Riemannian geometry.
+
+- `riemann_curvature`: Riemann curvature tensor.
+  Claim: Rμναβ = curvature.
+  Test: curvature_tensor.
+  Curvature field.
+
+- `ricci_flow_market`: Ricci flow smoothing.
+  Claim: Market smooths like Ricci flow.
+  Test: ricci_flow_iteration.
+  Geometric evolution.
+
+- `yamabe_flow_market`: Yamabe flow for normalization.
+  Claim: Yamabe flow normalizes.
+  Test: yamabe_flow_result.
+  Conformal flow.
+
+- `calabi_yau_market`: Calabi-Yau manifold market.
+  Claim: CY manifold = market structure.
+  Test: calabi_yau_fit.
+  Complex manifold.
+
+- `kahler_potential`: Kähler potential.
+  Claim: K = log |∂W|².
+  Test: kahler_potential_value.
+  Complex differential geometry.
+
+- `hodge_laplacian`: Hodge Laplacian.
+  Claim: Δ = d*d + d*d.
+  Test: hodge_eigenvalues.
+  Harmonic forms.
+
+- `hodge_star_market`: Hodge star operator.
+  Claim: * maps k-forms to (n-k)-forms.
+  Test: hodge_star_action.
+  Duality.
+
+- `Dolbeault_operator`: ∂̄ operator in markets.
+  Claim: ∂̄ = Cauchy-Riemann.
+  Test: dolbeault_cohomology.
+  Complex analysis.
+
+- `sheaf_cohomology`: Sheaf cohomology.
+  Claim: Sheaf = market information.
+  Test: sheaf_cohomology_groups.
+  sheaf theory.
+
+- `etale_cohomology`: etale cohomology.
+  Claim: Etale maps to market.
+  Test: etale_cohomology.
+  Algebraic topology.
+
+- `motive_periods`: Motives and periods.
+  Claim: Periods = market integrals.
+  Test: motive_periods.
+  Motives → periods.
+
+- `absolute_geometry`: Absolute geometry over Q.
+  Claim: Geometry over integers.
+  Test: absolute_point_count.
+  Number geometry.
+
+- `arithmetic_surface`: Arithmetic surface.
+  Claim: Price surface = arithmetic.
+  Test: arithmetic_genus.
+  Arithmetic geometry.
+
+- `modular_curves`: Modular curves.
+  Claim: Prices on modular curve.
+  Test: modular_curve_points.
+  Complex multiplication.
+
+- `shimura_variety`: Shimura variety.
+  Claim: Market = Shimura variety.
+  Test: shimura_dimension.
+  Modular forms.
+
+- `langlands_program`: Langlands correspondence.
+  Claim: Representations ↔ automorphic forms.
+  Test: langlands_fit.
+  Langlands dual.
+
+- `categorical_logic`: Categorical logic.
+  Claim: Category theory = logic.
+  Test: categorical_type_theory.
+  Type theory in markets.
+
+- `topos_theory_market`: Topos theory.
+  Claim: Topos = universe of sets.
+  Test: topos_construction.
+  Sheaf topos.
+
+- `homotopy_type_theory`: Homotopy type theory.
+  Claim: HoTT = foundations.
+  Test: HoTT_type_checking.
+  Univalent foundations.
+
+- `univalent_universe`: Univalent universe.
+  Claim: U = univalent universe.
+  Test: univalent_universe_count.
+  Univalent foundations.
+
+- `cubical_type_theory`: Cubical type theory.
+  Claim: Cubical = computable.
+  Test: cubical_computation.
+  Computational HoTT.
+
+- `internal_language`: Internal language of topos.
+  Claim: Internal language = market.
+  Test: internal_language_run.
+  Category-as-type.
+
+- `synthetic_geometry`: Synthetic geometry.
+  Claim: Axioms = geometry.
+  Test: synthetic_axioms.
+  Euclidean synthetic.
+
+- `affine_geometry`: Affine geometry.
+  Claim: Affine maps = transformations.
+  Test: affine_transform_fit.
+  Linear structures.
+
+- `projective_geometry`: Projective geometry.
+  Claim: Points at infinity.
+  Test: projectivization.
+  Completion at infinity.
+
+- `conformal_geometry`: Conformal geometry.
+  Claim: Angles preserved.
+  Test: conformal_structure.
+  Weyl invariance.
+
+- `symplectic_geometry`: Symplectic geometry.
+  Claim: Area form preserved.
+  Test: symplectic_form.
+  Hamiltonian mechanics.
+
+- `contact_geometry`: Contact geometry.
+  Claim: Contact structure.
+  Test: contact_structure.
+  3D analog of symplectic.
+
+- `cr_geometry`: CR geometry.
+  Claim: ComplexReal boundary.
+  Test: CR_structure.
+  Complex boundary.
+
+- `almost_complex_structure`: Almost complex structure.
+  Claim: J² = -1.
+  Test: almost_complex_check.
+  Complex structure.
+
+- `complex_manifold`: Complex manifold.
+  Claim: Holomorphic coordinates.
+  Test: holomorphicity.
+  Complex coordinates.
+
+- `kahler_manifold`: Kähler manifold.
+  Claim: Kähler = Hermitian + symplectic.
+  Test: kahler_property.
+  Special geometry.
+
+- `calabi_yau_manifold`: Calabi-Yau manifolds.
+  Claim: Ricci-flat Kähler.
+  Test: calabi_yau_condition.
+  String theory compactification.
+
+- `g2_manifold`: G2 manifold.
+  Claim: Exceptional holonomy.
+  Test: G2_holonomy.
+  7D manifold.
+
+- `spin_manifold`: Spin manifold.
+  Claim: Spin structure exists.
+  Test: spin_structure_check.
+  Spin geometry.
+
+- `orientable_manifold`: Orientability.
+  Claim: Orientation preserved.
+  Test: orientability.
+  Orientation.
+
+- `parallelizable_manifold`: Parallelizable.
+  Claim: Global frame exists.
+  Test: parallelizability.
+  Frame field.
+
+- ` einstein_manifold`: Einstein manifold.
+  Claim: Ricci = λg.
+  Test: einstein_condition.
+  Constant curvature.
+
+- `ricci_flow`: Ricci flow equation.
+  Claim: dg/dt = -2Ric.
+  Test: ricci_flow_simulation.
+  Geometric evolution equation.
+
+- `mean_curvature_flow`: Mean curvature flow.
+  Claim: H = 0 is critical.
+  Test: MCF_stationary.
+  Minimal surfaces.
+
+- `willmore_energy`: Willmore energy.
+  Claim: Minimize Willmore energy.
+  Test: willmore_minimizer.
+  conformal invariance.
+
+- `yang_mills_energy`: Yang-Mills energy.
+  Claim: Critical gauge fields.
+  Test: YM_energy_minimizer.
+  Gauge theory.
+
+- `seiberg_witten`: Seiberg-Witten equations.
+  Claim: SW = 4-manifold invariant.
+  Test: SW_invariant.
+  Gauge theory.
+
+- `floer_homology`: Floer homology.
+  Claim: Count Morse trajectories.
+  Test: floer_homology_groups.
+  Symplectic topology.
+
+- `hofer_geometry`: Hofer's geometry.
+  Claim: Hofer norm on symplectomorphisms.
+  Test: hofer_norm.
+  Symplectomorphism geometry.
+
+- `gromov_width`: Gromov width.
+  Claim: Non-squeezing theorem.
+  Test: gromov_width_value.
+  symplectic embedding.
+
+- `gromov_horomorphism`: Gromov convergence.
+  Claim: Gromov-Hausdorff limit.
+  Test: GH_convergence.
+  Metric geometry.
+
+- `persistence_homology`: Persistence homology.
+  Claim: Birth-death of features.
+  Test: persistence_diagram.
+  TDA method.
+
+- `morse_theory`: Morse theory.
+  Claim: Critical points give topology.
+  Test: morse_complex.
+  Morse functions.
+
+- `spectral_sequence`: Spectral sequence.
+  Claim: E → H*(X).
+  Test: spectral_sequence_convergence.
+  Homology computation.
+
+- `cellular_homology`: Cellular homology.
+  Claim: Cell complex homology.
+  Test: cellular_complex.
+  CW complexes.
+
+- `singular_homology`: Singular homology.
+  Claim: Singular simplices.
+  Test: singular_groups.
+  Topological invariance.
+
+- `de_rham_cohomology`: de Rham cohomology.
+  Claim: Differential forms.
+  Test: de_rham_groups.
+  Differential topology.
+
+- `dolbeault_cohomology`: Dolbeault cohomology.
+  Claim: ∂̄-closed forms.
+  Test: ∂̄_cohomology.
+  Complex manifold.
+
+- ` sheaf_cohomology`: Sheaf cohomology.
+  Claim: Locally defined sections.
+  Test: sheaf_cohomology_groups.
+  Sheaf theory.
+
+- `Čech_cohomology`: Cech cohomology.
+  Claim: Covering refinement.
+  Test: check_complex.
+  Covering method.
+
+- `Alexander_cohomology`: Alexander cohomology.
+  Claim: Coorientation.
+  Test: alexander_polynomial.
+  Knot theory.
+
+- `定向_cohomology`: Oriented cohomology.
+  Claim: Orientation local system.
+  Test: oriented_cohomology.
+ 定向 theory.
+
+- `K_theory`: K-theory.
+  Claim: Vector bundles → K-theory.
+  Test: K_groups.
+  Topological K-theory.
+
+- `KO_theory`: Real K-theory.
+  Claim: Real periodicity.
+  Test: KO_groups.
+  Real K-theory.
+
+- ` elliptic_cohomology`: Elliptic cohomology.
+  Claim: Elliptic curves.
+  Test: elliptic_spectrum.
+  Generalized cohomology.
+
+- `complex Cobordism`: Complex cobordism.
+  Claim: MU complex cobordism.
+  Test: MU_ring.
+  Cobordism theory.
+
+- `topological_modular_forms`: Topological modular forms.
+  Claim: TMF = elliptic cohomology.
+  Test: TMF_groups.
+  Topological modular forms.
+
+- `stable_homotopy`: Stable homotopy groups.
+  Claim: πₙ(S⁰).
+  Test: stable_groups.
+  Stable homotopy.
+
+- `Adams_spectral_sequence`: Adams spectral sequence.
+  Claim: Ext → stable homotopy.
+  Test: Adams_differential.
+  Computation method.
+
+- `ANGElow_spectral`: ANSS for Morel-Voevodsky.
+  Claim: π₁(MG) → πₙ(S⁰).
+  Test: anesslope.
+  motivic stable homotopy.
+
+- `motivic_homotopy`: Motivic homotopy.
+  Claim: Over Spec(k).
+  Test: motivic_stable_groups.
+  Motivic spaces.
+
+- `étale_homotopy`: Étale homotopy.
+  Claim: Profinite completion.
+  Test: étale_homotopy_type.
+  Algebraic topology.
+
+- `profinite_completion`: Profinite completion.
+  Claim: Ẑ = lim Z/n.
+  Test: profinite_completion_group.
+  Completion theory.
+
+## Mathematical Physics (All of It)
+
+- `witten_index`: Witten index.
+  Claim: Tr(-1)^F = index.
+  Test: witten_index_value.
+  Supersymmetry.
+
+- `Kasparov_Groups`: KK-theory.
+  Claim: K-theory of operator algebras.
+  Test: KK_groups.
+  Operator K-theory.
+
+- `Connes_index_theory`: Connes index theorem.
+  Claim: Index = topological invariant.
+  Test: connes_index_pairing.
+  Noncommutative geometry.
+
+- `BC_theorem`: Bott periodicity.
+  Claim: Period 2 in K-theory.
+  Test: bott_periodicity.
+  Periodicity.
+
+- `Clifford_algebra`: Clifford algebra.
+  Claim: Cℓ(p,q).
+  Test: clifford_algebra_type.
+  Spin representation.
+
+- `Dirac_operator`: Dirac operator.
+  Claim: iγᵐDₘ.
+  Test: dirac_spectrum.
+  Quantum field theory.
+
+- `Atiyah_Singer`: Atiyah-Singer index theorem.
+  Claim: Index(D) = topological.
+  Test: atiyah_singer_index.
+  Index theorem.
+
+- `Atiyah_Bott`: Fixed point formula.
+  Claim: Lefschetz fixed point.
+  Test: atiyah_bott_formula.
+  Fixed point distribution.
+
+- `gloss_on_Riemann`: Glaisher formula.
+  Claim: Partition generating function.
+  Test: glaisher_formula.
+  Number theory.
+
+- `Selberg_Zeta`: Selberg zeta function.
+  Claim: Z(s) = ∏_γ (1 - N(γ)^{-s}).
+  Test: selberg_zeta_zeros.
+  Spectral theory.
+
+- `Random_Matrices`: Random matrix theory.
+  Claim: Wigner-Dyson statistics.
+  Test: random_matrix_gap_distribution.
+  Nuclear physics.
+
+- `Ladyzenskij`: Timeline of operator algebras.
+  Claims: Class of operators.
+  Test: classify_operator.
+  Functional analysis.
+
+- `Tomita_Takesaki`: Modular automorphism.
+  Claim: Δ^{it}σ_t(A).
+  Test: modular_flow.
+  von Neumann algebras.
+
+- `Connes_Embedding`: Connes embedding conjecture.
+  Claim: Any II₁ factor embeds.
+  Test: connes_embedding_check.
+  Operator algebras.
+
+- `Jones_polynomial`: Jones polynomial.
+  Claim: knots → V_F(q).
+  Test: jones_polynomial.
+  Knot invariants.
+
+- `HOMFLYPT`: HOMFLYPT polynomial.
+  Claim: Two-variable polynomial.
+  Test: homflypt_polynomial.
+  Knot homology.
+
+- `Khovanov_homology`: Khovanov knot homology.
+  Claim: Knot → graded vector space.
+  Test: khovanov_homology_groups.
+  Categorified knot invariant.
+
+- `knot_floer_homology`: Knot Floer homology.
+  Claim: HF(K) = knot invariant.
+  Test: knot_floer_homology_groups.
+  Heegaard Floer theory.
+
+- `knot homology`: Knot homology in other categories.
+  Claim: Various categorifications.
+  Test: check_knot_homology.
+  Categorical invariants.
+
+- `Khovanov_Rozansky`: Khovanov-Rozansky homology.
+  Claim: sl(N) homology.
+  Test: KR_homology_groups.
+  Matrix factorization.
+
+- `Birman_Lin`: Birman-Lin theorem.
+  Claim: Knot groups fill in.
+  Test: check_birman_lin.
+  Mapping class groups.
+
+- `mapping_class_group`: Mapping class group.
+  Claim: MCG(Σ_g).
+  Test: mCG_representation.
+  Dehn twists.
+
+- `Dehn_complex`: Dehn-Skeene theory.
+  Claim: Dehn functions.
+  Test: dehn_function_estimate.
+  Third dimension.
+
+- `Thurston_norm`: Thurston norm.
+  Claim: ||ϕ||_T on H_2.
+  Test: thurston_norm_value.
+  3-manifold topology.
+
+- `Perelmann_entropy`: Ricci flow → entropy.
+  Claim: W functional.
+  Test: perelman_entropy.
+  Geometric analysis.
+
+- `Hamiltion_DeTurk`: Hamilton-DeTurck flow.
+  Claim: Gauge choice removes torsion.
+  Test: deTurck_flow_result.
+  Ricci flow.
+
+- `Ricci_Solitons`: Ricci solitons.
+  Claim: g = c(t) ¹¹¹ g₀ + (1/2t)R_g.
+  Test: soliton_type.
+  Self-similar solutions.
+
+- `Yamabe_Problem`: Yamabe problem.
+  Claim: Conformal constant scalar curvature.
+  Test: yamabe_solution_exists.
+  Conformal geometry.
+
+- `Schoen_Yau`: SY inequality.
+  Claim: Positive mass theorem.
+  Test: schoen_yau_check.
+  Differential geometry.
+
+- `Witten_Guth`: Stability conjecture.
+  Claim: Initial data stable.
+  Test: witten_guth_stable.
+  Mass in GR.
+
+- ` Jang_surface`: Jang equation.
+  Claim: ∂ₜJ = -(tr KJ) + |∂J|/J.
+  Test: jang_surface_construct.
+  PSR in GR.
+
+- `Penrose_Consjecture`: Penrose inequality.
+  Claim: m ≥ √(A/16π).
+  Test: penrose_inequality.
+  Gravitational mass.
+
+- `Positive_Mass`: Positive mass theorem.
+  Claim: m ≥ 0 for ASC data.
+  Test: positive_mass_theorem.
+  Energy positivity.
+
+- `Witten_Superselection`: Superselection sectors.
+  Claim: DHR sectors.
+  Test: superselection_sectors.
+  Algebraic QFT.
+
+- ` Doplicher_Roberts`: DR duality.
+  Claim: Sector categories.
+  Test: dr_dual_higher_group.
+  Tensor categories.
+
+- `Haag_Correspondence`: Haag duality.
+  Claim: A ⊂ B(mathcal H).
+  Test: haag_locality.
+  Local quantum field theory.
+
+- `Bisognano_Wichmann`: BW theorem.
+  Claim: Unruh effect as TW side.
+  Test: bisognano_wichmann_check.
+  Rindler quantization.
+
+- `Unruh_effect`: Unruh effect.
+  Claim: Uniformly accelerated detector sees vacuum as thermal.
+  Test: unruh_temperature.
+  Temperature from acceleration.
+
+- `Sakai_turn`: Sakai ellipsis.
+  Claim: Boundary → CFT.
+  Test: adS_CFT_correspondence.
+  Holographic principle.
+
+- `GKP_Witten`: GKP-Witten relation.
+  Claim: correlators have gravity duals.
+  Test: gkp_witten_check.
+  String theory.
+
+- `Maldacena_conjecture`: AdS/CFT correspondence.
+  Claim: N strong CFT = weakly coupled gravity.
+  Test: check_adS_CFT_duality.
+  Ultimate hologram.
+
+- `Polchinski_Briefs`: Polchinski string equations.
+  Claim: 26D bosonic, 10D super.
+  Test: polchinski_brane_count.
+  String theory.
+
+- `Green_Schwartz`: Green-Schwartz mechanism.
+  Claim: κ-symmetry gauges.
+  Test: green_schwartz_gauge_fix.
+  Superstring action.
+
+- `NSVS_R`: NS5 + R → Type IIA/IIB.
+  Claim: S-duality relates.
+  Test: NS5_R_charge_quantization.
+  String dualities.
+
+- `T_duality`: T-duality.
+  Claim: R ↔ α'/R.
+  Test: T-duality_check.
+  Target space duality.
+
+- `S_duality`: S-duality.
+  Claim: g → 1/g.
+  Test: S-duality_check.
+  Type I ↔ HO ↔ IIB.
+
+- `U_duality`: U-duality.
+  Claim: S + T combined.
+  Test: U-duality_check.
+  Maximal supergravity.
+
+- `Mirror_Symmetry`: Mirror symmetry.
+  Claim: CY ↔ dual CY.
+  Test: mirror_pair_exists.
+  Calabi-Yau.
+
+- `K3_Surfaces`: K3 surfaces.
+  Claim: Complex surfaces with trivial canonical.
+  Test: K3_hodge_numbers.
+  K3 surfaces.
+
+- `Elliptic_Surfaces`: Elliptic surfaces.
+  Claim: Elliptic fibrations.
+  Test: elliptic_surface_pencil.
+  Rational surfaces.
+
+- `Rational_Surfaces`: Rational surfaces.
+  Claim: Picard rank = 1.
+  Test: rational_surface_check.
+  Ruled surfaces.
+
+- `Enriques_Surface`: Enriques surfaces.
+  Claim: Canonical covers K3.
+  Test: enriques_involution.
+  Algebraic surfaces.
+
+- `Siegel_Upper_Half`: Siegel upper half-space.
+  Claim: Sp(2g, Z) acts on moduli.
+  Test: siegel_moduli_point.
+  Abelian varieties.
+
+- `Jacobians`: Jacobian varieties.
+  Claim: Pic⁰(X) = Jac(X).
+  Test: jacobian_variety.
+  Albanese variety.
+
+- `Intermediate_Jacobian`: Intermediate Jacobians.
+  Claim: H^{2n-1} → Alb.
+  Test: intermediate_jacobian_check.
+  Intermediate.
+
+- ` Prym_Varieties`: Prym varieties.
+  Claim: Double cover branched points.
+  Test: prym_variety_dimension.
+  Root systems.
+
+- `Weyl_Chamber`: Weyl chamber.
+  Claim: Root space decomposition.
+  Test: weyl_chamber_position.
+  Lie algebras.
+
+- ` Root_System_Te`: Root systems.
+  Claim: A_n, B_n, C_n, D_n, E_6,7,8, F_4, G_2.
+  Test: root_system_type.
+  Classification.
+
+- ` Dynkin_Diagram`: Dynkin diagrams.
+  Claim: Cartan matrix encodes.
+  Test: dynkin_diagram_count.
+  Lie group structure.
+
+- `Affine_Lie`: Affine Lie algebras.
+  Claim: Kac-Moody algebras.
+  Test: affine_lie_level.
+  Current algebras.
+
+- `Quantum_Group`: Quantum groups.
+  Claim: U_q(g) deformations.
+  Test: quantum_group_deformation_parameter.
+  q-deformation.
+
+- `Yangian`: Yangians.
+  Claim: Chiral Yangians.
+  Test: yangian_representation_affine.
+  Integrable systems.
+
+- `Quantum_KdV`: Quantum KdV.
+  Claim: q-KdV integrable.
+  Test: quantum_kdv_conserved.
+  Quantum integrable.
+
+- `Bethe_Ansatz`: Bethe ansatz.
+  Claim: Eigenvalues from Bethe equations.
+  Test: bethe_equation_solution.
+  Exact solution.
+
+- ` Baxter_Q`: Baxter Q-operator.
+  Claim: Q obeys Q Q = I.
+  Test: Baxter_Q_function.
+  Exactly solvable models.
+
+- `Eight_Vertex`: 8-vertex model.
+  Claim: Exactly solvable.
+  Test: eight_vertex_exact_solution.
+  Exactly solved.
+
+- `Six_Vertex`: 6-vertex model (XXZ).
+  Claim: Ice-type model.
+  Test: six_vertex_partition_function.
+  Exactly solved.
+
+- `Potts_Model`: Potts model.
+  Claim: q-state Potts.
+  Test: potts_critical_exponent.
+  q-state Potts.
+
+- `Ashkin_Teller`: Ashkin-Teller.
+  Claim: Coupled Ising.
+  Test: ashkin_teller_critical_point.
+  Coupled Ising.
+
+- ` XY_Model`: XY model.
+  Claim: O(2) symmetry.
+  Test: xy_model_vortex_entropy.
+  Vortex binding.
+
+- `Vector_Potts`: Vector Potts.
+  Claim: O(N) model.
+  Test: vector_potts_critical_exponent.
+  Vector models.
+
+- `Heisenberg_Model`: Heisenberg model.
+  Claim: Spin-1/2 with O(3).
+  Test: heisenberg_critical_exponent.
+  Antiferromagnet.
+
+- `Hubbard_Model`: Hubbard model.
+  Claim: U on-site interaction.
+  Test: hubbard_mott_transition.
+  Mott insulator.
+
+- `t_J_Model`: t-J model.
+  Claim: J coupling + no double occupancy.
+  Test: t_J_phase_diagram.
+  Superconductor.
+
+- `Hubbard-Stratonovich`: HS transformation.
+  Claim: Decouple interactions → bosons.
+  Test: hs_decoupling_check.
+  Mean field.
+
+- `RVB_Theory`: Resonating Valence Bond.
+  Claim: Spin liquid ground state.
+  Test: rvb_energy_compare.
+  Quantum spin liquid.
+
+- `Chern_Simons`: Chern-Simons theory.
+  Claim: CS action = ∫Tr(A∧dA+2/3 A∧A∧A).
+  Test: chern_simons_level.
+  Anyon statistics.
+
+- `Jones_Knot`: Jones polynomial from Chern-Simons.
+  Claim: V_K(t) = Z(C S_knot).
+  Test: jones_from_chern_simon.
+  CS → knot invariants.
+
+- `Witten_Invariants`: Witten invariants of 3-manifolds.
+  Claim: Z_M(A) = 3D partition.
+  Test: witten_invariant_Euler.
+  3-manifold invariants.
+
+- `Reshetikhin_Turaev`: RT invariants.
+  Claim: Ribbon categories.
+  Test: RT_invariant_value.
+  Quantum groups.
+
+- `Turaev_Viro`: TV invariants.
+  Claim: 3D from 2D→3D.
+  Test: turaev_viro_sum.
+  State sum model.
+
+- `Kauffman_Products`: Kauffman products.
+  Claim: Framed knot invariants.
+  Test: kauffman_product_value.
+  Framed knots.
+
+- ` Kauffman_Bracket`: Kauffman bracket.
+  Claim: <K> = (-A³)+³)<L>.
+  Test: kauffman_bracket_evaluation.
+  Unoriented.
+
+- ` Khovanov_Homolog`: Khovanov homology.
+  Claim: Categorified Jones.
+  Test: khovanov_homology_bigraded.
+  Differential graded.
+
+- `Knot_Homology_Floer`: Floer homology.
+  Claim: HF^ = knot invariant.
+  Test: khovanov_floer_correspondence.
+  Correspondence.
+
+- `Milnor_Invariant`: Milnor invariants.
+  Claim: Link invariants.
+  Test: milnor_mu_bar.
+  Higher links.
+
+- `Alexander_Conway`: Conway-Gauss-Cessenko.
+  Claim: Z ↔ linking.
+  Test: conway_polynomial.
+  Simple invariants.
+
+- `Seifert_Matrix`: Seifert matrix.
+  Claim: Linking form.
+  Test: seifert_matrix_detects.
+  Linking.
+
+- `Torsion_Invariants`: Torsion.
+  Claim: Reidemeister torsion.
+  Test: reidemeister_torsion_value.
+  Topological torsion.
+
+- `eta_Invariant`: Eta invariant.
+  Claim: Atiyah-Patodi-Singer.
+  Test: eta_invariant_value.
+  Spectral asymmetry.
+
+- `rho_Invariant`: Rho invariant.
+  Claim: Reduced eta.
+  Test: rho_invariant_check.
+  Chern-Simons.
+
+- `Chern_Simons_Fields`: CS field theory.
+  Claim: Topological gauge.
+  Test: cs_field_strength_variation.
+  Topological.
+
+- `Witten_Floyd`: Floyd on surfaces.
+  Claim: Skein threshold.
+  Test: witten_floyd_check.
+  Skein.
+
+- `Goldman_Group`: Goldman Lie algebra.
+  Claim: Lie structure on loops.
+  Test: goldman_bracket_relations.
+  Surface group.
+
+- `Turaev_Goldman`: Turaev Goldman.
+  Claim: Quasi-Tournament.
+  Test: turaev_goldman_quantum.
+  Skew-Hermitian.
+
+- `Kauffman_Synthesis`: Kauffman sum.
+  Claim: 1+1=1+1+1.
+  Test: kauffman_sum_rules.
+  Braiding.
+
+- `trace_normality`: Trace normality.
+  Claim: Markov property.
+  Test: trace_markov_property.
+  Skein modules.
+
+- `Temperley_Lieb`: Temperley-Lieb.
+  Claim: TL_n = (n+1)_q.
+  Test: Temperley_Lieb_relation.
+  Brauer algebra.
+
+- `Brauer_Category`: Brauer category.
+  Claim: Tensor * + loop.
+  Test: brauer_category_check.
+  Normalization.
+
+- `Jones_Temperley`: Joint representation.
+  Claim: QT = category.
+  Test: JonesTemperley_correspondence.
+  Fusion categories.
+
+- `Ocneanu_Imrick`: Ocneanu rigidity.
+  Claim: No gauge drift.
+  Test: ocneanu_rigidity_check.
+  Tensor categories.
+
+- `Modular_Invariants`: Modular invariance.
+  Claim: S-matrix commutes.
+  Test: modular_invariance_check.
+  Conformal field.
+
+- `CFT_Corner`: Corner symmetry.
+  Claim: Virasoro + affine + W.
+  Test: cft_symmetry_budget.
+  Chiral algebra.
+
+- `Vertex_Algebra`: Vertex operator algebras.
+  Claim: Chiral algebra = VOAs.
+  Test: VOAs_associative_algebra.
+  Chiral CFT.
+
+- `Chiral_Conformal`: Chiral conformal blocks.
+  Claim: CFT_1 → Bl.
+  Test: chiral_conformal_block_computation.
+  Conformal blocks.
+
+- `Belavin_Polchinski`: BP scalings.
+  Claim: Z = B² + A*+B*g.
+  Test: belavin_polkblock_check.
+  Pillow backgrounds.
+
+- `WZW_Currents`: WZW currents.
+  Claim: Kac-Moody level k.
+  Test: wzw_current_algebra.
+  Affine currents.
+
+- `Coset_Construction`: Coset construction.
+  Claim: g ⊃ h = G/H.
+  Test: coset_cft_central_charge.
+  Coset models.
+
+- `GKO`: GKO coset.
+  Claim: Virasoro from coset.
+  test: gko_virasoro_recovery.
+  String embeddings.
+
+- `Minimal_Models`: Minimal models.
+  Claim: p' → minimal.
+  Test: minimal_model_classification.
+  Unitary series.
+
+- `D_Series`: D-series minimal.
+  Claim: D_{2n+2}.
+  Test: d_series_minimal_model.
+  Non-unitary.
+
+- `Rational_CFT`: Rational CFT.
+  Claim: Finite RCFT.
+  Test: rational_cft_check.
+  Finite image.
+
+- `Galois_Module`: Galois modules.
+  Claim: Inertia action.
+  Test: inertia_galois_action.
+  Class field theory.
+
+- ` Class_Field`: Class field theory.
+  Claim: Artin map.
+  Test: artin_map_surjectivity.
+  Global CFT.
+
+- `Langlands_Isldy`: Langlands isogeny conjecture.
+  Claim: Isogeny ↔ automorphic.
+  Test: langlands_isogeny_check.
+  Reciprocity.
+
+- `Shimura_Vari`: Shimura varieties.
+  Claim: Hecke correspondences.
+  Test: shimura_correspondence.
+  Modular curves.
+
+- `Drinfeld_Cocycle`: Drinfeld double.
+  Claim: D(H) = H⊗H^* cop.
+  Test: double_bialgebra_structure.
+  Quantum doubles.
+
+- `Quantum_Doubles`: Quantum doubles in QFT.
+  Claim: D(brahms) = G.
+  test: quantum_double_check.
+  Duality.
+
+- ` Quantum_Z`: Quantum dimension.
+  Claim: dim_q(V) = [V]_q / [1]_q.
+  Test: quantum_dimension_computation.
+  q-dimension.
+
+- `Fusion_Rules`: Fusion rules in RCFT.
+  Claim: N_{ij}^k.
+  Test: fusion_rule_check.
+  Fusion algebra.
+
+- `Modular_S`: S-matrix from fusion.
+  Claim: S_{ij} from fusion rules.
+  Test: modular_S_from_fusion.
+  S duality.
+
+- `Modular_T`: T-matrix from conformal weights.
+  Claim: T_{ij} = δ_{ij} exp(2πi h_i).
+  Test: modular_T_exponential.
+  T transformation.
+
+- `Verlinde_Formula`: Verlinde formula.
+  Claim: N = S^{-1} * S^*2.
+  Test: verlinde_formula_check.
+  Fusion from S.
+
+- `CE_Series`: CE series computation.
+  Claim: Conformal engineering.
+  test: ce_series_value_at_critical.
+  Scaling dimensions.
+
+- `Quantum_Cell`: Quantum cell model.
+  Claim: Anyon collider.
+  Test: quantum_cell_comparison.
+  Quantum error correction.
+
+- `Kitaev_Torus`: Kitaev toric code.
+  Claim: Logical operators.
+  test: kitaev_toric_check.
+  Error correction.
+
+- `Anyon_Theory`: Anyon theory.
+  Claim: Anyon statistics.
+  Test: anyon_statistic_value.
+  Fusion rules.
+
+- `Fibonacci_Anyon`: Fibonacci anyon.
+  Claim: τ² = τ + 1.
+  test: fibonacci_anyon_statistics.
+  Universal QC.
+
+- `Ising_Anyon`: Ising anyons.
+  Claim: σ³ = 1.
+  Test: ising_anyon_check.
+  Topological QC.
+
+- `Moore_Read`: Moore-Read state.
+  Claim: PFa = Pf(Q).
+  Test: moore_read_fractional_statistic.
+  Fractional QC.
+
+- `Read-Rezayi`: Read-Rezayi state.
+  Claim: k+1 cluster.
+  test: read_rezayi_clustering.
+  Non-Abelian.
+
+- `Non_Abelian_I`: Non-Abelian statistics.
+  Claim: Degenerate exchange.
+  Test: non_abelian_exchange_check.
+  Statistics.
+
+- `Topological_Order`: Topological order.
+  Claim: Ground state degeneracy.
+  Test: topological_order_detect.
+  GSD.
+
+- `Ground_State_Degeneracy`: Ground state degeneracy.
+  Claim: GSD on genus g.
+  Test: genus_surface_degeneracy.
+  Topology detection.
+
+- `Topological_Entropy`: Topological entropy.
+  Claim: S_top = log(GSD).
+  Test: topological_entropy_glog.
+  Entropy calculation.
+
+- `Boundary_CFT`: Boundary CFT.
+  Claim: BFCFT on D-branes.
+  test: boundary_conformal_theory.
+  D-brane sectors.
+
+- `Cardy_Case`: Cardy case.
+  Claim: Open String → I.
+  Test: cardy_case_boundary.
+  Boundary states.
+
+- ` Ishibashi_States`: Ishibashi states.
+  Claim: |i⟩⟩ = ∑_n n|n⟩) ⊗ ṅ|n⟩).
+  test: ishibashi_state_sum.
+  Boundary.
+
+- `Virasoro_Orbit`: Virasoro minimal model.
+  Claim: Minimal models in Virasoro.
+  test: virasoro_minimal_model_check.
+  Minimal.
+
+- `Virasoro_Charge`: Virasoro minimal models.
+  Claim: c = 1 - 6(p-p')²/(pp').
+  test: virasoro_c_check.
+  Central charge.
+
+- `Perelmus_Algebra`: Feigin-Feigin modules.
+  Claim: Vertex + variety.
+  test: feigin_feigin_modules.
+  Quasi-lisse.
+
+- `W_Algebra`: W-algebras.
+  Claim: Enveloping algebras.
+  test: W_algebra_generators.
+  Extended algebras.
+
+- `Triality`: S-duality for SO(32) + E8×E8.
+  dual: T-duality + S-duality + O(32).
+  Test: check_triality_equivalence.
+  String dualities.
+
+- `F_Theory`: F-theory.
+  Claim: Elliptic fibration over base.
+  Test: f_theory_base_space.
+  12D.
+
+- `M_theory`: M-theory.
+  Claim: 11D SUGRA.
+  test: m_theory_compactification.
+  11D SUGRA.
+
+- `Heterotic_Strings`: Heterotic strings. 
+  Claim: E8×E8 or SO(32).
+  Test: heterotic_gauge_group.
+  Grand unification.
+
+- `Tyoe_I_Strings`: Type I strings.
+  Claim: O9 + 32 D9.
+  Test: type_I_gauge_group.
+  Oriented+unoriented.
+
+- `D_Branes`: D-branes.
+  Claim: p-branes.
+  Test: d_brane_dimension_count.
+  Nonperturbative.
+
+- `NS5_Branes`: NS5 branes.  
+  Claim: H_3(F) = Z.
+  test: NS5_brane_flux.
+  Fundamental.
+
+- `M2_Branes`: M2 branes.
+  Claim: 3D membranes.
+  Test: m2_brane_bound_states.
+  M-theory.
+
+- `M5_Branes`: M5 branes.
+  Claim: 6D tensors.
+  Test: m5_brane_chiral_anomaly.
+  6D.
+
+- `S_Dual_FT`: S-duality in Type I.
+  Claim: S maps I ↔ HO.
+  Test: s_dual_i_ho_check.
+  Strong-weak.
+
+- `U_Dualities`: U-dualities.
+  Claim: S + T + affine.
+  Test: u_duality_group_enhanced.
+  Extended U-duality.
+
+- `F_Theory_U`: F-theory U-duality.
+  Claim: Duality to M-theory.
+  Test: f_theory_u_duality_check.
+  Duality.
+
+- `Heterotic_M`: Heterotic/M on T⁴.
+  Claim: H × K3.
+  Test: heterotic_m_duality.
+  Duality.
+
+- `M_On_CY`: M-theory on CY.
+  Claim: N=2, 4D.
+  Test: m_theory_cy_compactification.
+  Superstrings.
+
+- `String_Comp`: String compactifications.
+  Claims: Many.
+  Test: count_string_compactifications.
+  Landscape.
+
+- `Landscape` Landscape of string vacua.
+  Claim: 10^500 vacua.
+  Test: landscape_count.
+  String landscape.
+
+- `Swampland`: Swampland criteria.
+  Claim: Not all QFTs in landscape.
+  Test: swampland_criteria.
+  Criteria.
+
+- `Gradient_Flow`: Gradient flow.
+  Claim: Morse-Smale.
+  Test: gradient_flow_check.
+  Downstream.
+
+- `Morse_Homology`: Morse homology.
+  Claim: Crit + Flow = H_*(M).
+  test: morse_homology_computation.
+  Homology.
+
+- `Floer_Homolog2`: Floer homology.
+  Claim: Instantons in symplectic.
+  Test: instanton_floer_differential.
+  Floer.
+
+- ` Seiberg_Exac`: Exact Seiberg-Witten.
+  Claim: N=2 SQCD.
+  Test: seiberg_witten_exact_solution.
+  Exact solution.
+
+- `N2_BPS_Count`: BPS state counting.
+  Claim: #BPS states.
+  Test: bPS_count_computation.
+  Index.
+
+- ` MacArthur`: MacArthur duality.
+  Claim: Inverse question.
+  Test: macarthur_duality_check.
+  EKMT relation.
+
+- `Vafa_Witten`: Vafa-Witten.
+  Claim: Twist on 4-manifolds.
+  Test: vafa_witten_invariant.
+  Topological.
+
+- `Gopakumar_Vafa`: Gopakumar-Vafa.
+  Claim: BPS → Gromov-Witten.
+  Test: gopakumar_vafa_check.
+  GV=Gopakumar.
+
+- `Integrality`: Integrality conjecture.
+  Claim: S^4 #P = integral.
+  Test: integrality_check.
+  Invariants.
+
+- `Donaldson_Thomas`: DT invariants.
+  Claim: Counting stable sheaves.
+  Test: dt_invariant_computation.
+  Sheaf counts.
+
+- ` PT_Invariants`: PT invariants.
+  Claim: Curve counting.
+  Test: pt_invariant_value.
+  Plane partition.
+
+- `Mariño-Vafa`: Mariño-Vafa formula.
+  Claim: PT = string.
+  Test: marino_vafa_check.
+  M-L.
+
+- `Katz-Klemm-Ler`: KKL formula.
+  Claim: Conifold × S³.
+  Test: kkl_formula_check.
+  Conifold.
+
+- `Vafa-Yin`: Vafa-Yin.
+  Claim: Gopakumar form.
+  Test: vafa_yin_integral_form.
+  Topological string.
+
+- `A_Model`: A-model.
+  Claim: ω-topological.
+  Test: a_model_correlation_function.
+  Topological string.
+
+- `B_Model`: B-model.
+  Claim: Ω-topological.
+  Test: b_model_correlation_function.
+  Topological string.
+
+- `Closed_String`: Closed string.
+  Claim: Target × Target.
+  Test: closed_string_correlator.
+  String worldsheet.
+
+- `Open_String`: Open string.
+  Claim: D-brane sector.
+  Test: open_string_correlator.
+  Boundary.
+
+- `Topological_String`: Topological string.
+  Claim: tw = 0.
+  Test: topological_string_check.
+  Physical string.
+
+- `Large_N`: Large N factorization.
+  Claim: Z ~ exp(F_classical).
+  test: large_N_f_2_expansion.
+  Zeta function.
+
+- `Open-Closed`: Open-closed duality.
+  Claim: closed ↔ open * O.
+  test: open_closed_duality_check.
+  O/O*O.
+
+- `Holomorphic`: Holomorphic anomaly.
+  Claim: F − F_{hol}= N log.
+  Test: holomorphic_anomaly_equation.
+  Anomaly.
+
+- `BCOV_ anomaly`: BCOV anomaly.
+  Claims: N=2 chiral.
+  test: bcov_anomaly_check.
+  Anomaly equations.
+
+- `Witten_NLC`: Witten noncritical.
+  Claims: c=1 string.
+  test: witten_noncritical_check.
+  Noncritical.
+
+- ` Liouville_Theor`: Liouville field.
+  Claim: c > 25.
+  test: liouville_theory_check.
+  Liouville.
+
+- `TFT_Correspondence`: TFT-correspondence.
+  claim: CFT ↔ 2D gauge.
+  Test: tft_correspondence_check.
+  2D-3D duality.
+
+- `Virasoro_Constraint`: Virasoro constraint.
+  Claims: L_{-1}, L₀.
+  Test: virasoro_constraint_check.
+  Conformal.
+
+- ` BRST_Cohomology`: BRST cohomology.
+  Claims: Q² = 0.
+  test: BRST_cohomology_groups.
+  Gauge fixed.
+
+- ` Bosonic_String`: Bosonic string.
+  claim: Critical 26D.
+  test: critical_dimension_check.
+  Unstable!
+
+- ` Superstring`: Superstring.
+  claim: Critical 10D.
+  test: superstring_critical_dimension.
+  Stable.
+
+- ` Hybrid_String`: Hybrid string.
+  Claim: 6D N=2.
+  Test: hybrid_string_type.
+  Heterotic.
+
+- `Little_String`: Little string theory.
+  Claim: 6D noncritical.
+  Test: little_string_check.
+  NS5.
+
+- `Witten_O99`: Witten (1999).
+  Claims: Twist E8.
+  Test: witten_twist_nc_check.
+  Noncritical.
+
+- `Banks_Z`: Banks-Z as matrix models.
+  claim: M-theory = bfss matrix.
+  Test: matrix_model_check.
+  Matrix models.
+
+- `IKKT`: IKKT matrix model.  
+  Claim: Lorentzian CFT.
+  Test: ikkt_model_check.
+  Fuzzy.
+
+- `BMN`: BMN matrix.
+  Claim: pp-wave.
+  Test: bmn_matrix_check.
+  Penrose.
+
+- `Matrix_String`: Matrix string.
+  Claim: D1 → D4.
+  Test: matrix_string_duality.
+  String bits.
+
+- ` Stringy`: String bits.
+  Claim: String = bits.
+  Test: string_bits_check.
+  Bits.
+
+- `Non_Pert`: String nonperturbative.
+  claims: Nonperturbative completions.
+  Test: nonperturbative_completeness.
+  Not just.
+
+- `M_Twist`: M-theory twist.
+  Claims: E8.
+  Test: m_theory_twist_e8.
+  Twist.
+
+- `Polchinski_Volume`: Polchinski volume.
+  Claim: D0 vol.
+  test: polchinski_volume_evaluation.
+  D0.
+
+- `Kreuzer_Skarke`: Kreuzer-Skarke.
+  Claim: Fano base × Elliptic.
+  test: kreuzer_skarke_count.
+  Toric.
+
+- `Batyrev_Boris`: Batyrev Boris.
+  Claims: reflexive Polytopes.
+  Test: batyrev_reflexive_check.
+  Polytopes.
+
+- `Toroidal`: Toroidal compactification.
+  Claim: Tⁿ × CY.
+  Test: toroidal_coupling_moduli_space.
+  Simple.
+
+- ` orbifold`: Orbifold CFT/geometry.
+  Claim: Point → O/g.
+  test: orbifold_sector_count.
+  Quotients.
+
+- ` Conifold`: Conifold transition.
+  Claims: Node → S2 × S3.
+  test: conifold_transition_check.
+  Topology change.
+
+- ` flop_Trans`: Flop transition.
+  Claims: Blowups.
+  Test: flop_check.
+  Flops.
+
+- ` flipp`: Flip transitions.
+  Claims: MWC.
+  test: flip_transitions_present.
+  Minimal model.
+
+- `Geometric_Langlands`: Geometric Langlands.
+  Claims: D-mod on Bun_G → Sh(C).
+  Test: geometric_langlands_fourier_mukai.
+  Sheaf.
+
+- `Beilinson_Bernstein`: Beilinson-Bernstein localization.
+  Claim: D-mod on flag → g-modules.
+  test: beilinson_bernstein_localization.
+  Equivalence.
+
+- `D_Module`: D-module viewpoint.
+  Claim: Sheaf of differential operators.
+  test: d_module_check.
+  Algebraic D-modules.
+
+- ` Stokes_Phenomena`: Stokes phenomenon.
+  Claims: Asymptotic.
+  test: stokes_line_computation.
+  PDE.
+
+- ` resurgence`: Resurgence.
+  Claims: Transseries.
+  test: resurgence_check.
+  Non-perturbative.
+
+- ` Borel_summable`: Borel summability.
+  Claims: Sum after Borel.
+  test: borel_summable_check.
+  Summation.
+
+- ` trans_Series`: Transseries expansion.
+  Claims: x = Σ c_{n,k} x^{n}(log x)^k.
+  test: transseries_compare_to_asymptotic.
+  Asymptotic.
+
+- ` alien_derivatives`: Alien derivatives.
+  Claims: ∂_α on Stokes data.
+  test: alien_derivative_value.
+  Stokes.
+
+- `Bridge_invariants`: Bridge invariants.
+  Claims: Resurgent.
+  test: bridge_invariant_check.
+  Resurgence.
+
+- `Exact_Values`: Exact values.
+  Claims: Get from transseries.
+  test: exact_value_check
+  Exacts.
+
+## Current State
+
+- S238 tested: market_breadth PASSED (+30%), vol regime PASSED (+38%), quarter_start PASSED (+26%)
+- Key: Quarter START (+26%) > quarter END (-15%) - NEW!
+- Queue: EXHAUSTED
 
 ### Spectral / Linear Algebra
 
