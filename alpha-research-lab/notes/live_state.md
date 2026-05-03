@@ -2557,6 +2557,46 @@ Source durable memory:
   Claim: Sector laggards with same-day buy-pressure signal = rotation into underperforming names.
   **Requires sector data merge**
 
+## S243 New Eureka Queue (2026-05-03)
+
+### Calendar / Temporal
+
+- `february_effect`: Feb post-Tet recovery. Test: days 15-28 Feb.
+- `march_quadrant`: March month position. Test: IC by week_in_month.
+- `april_fool_momentum`: Early April anomaly. Test: first_week_april vs rest.
+- `may_selloff_historical`: Historical May pattern. Test: IC in May.
+- `midyear_rebalancing`: June/July rebalancing. Test: mid_year_filter.
+- `september_call`: Back-to-school effect. Test: Sept first_half vs second_half.
+- `october_uncertainty`: October volatility effect. Test: october_filter.
+- `yearend_window`: Last 10 trading days. Test: days_december > 20.
+
+### Market Microstructure
+
+- `open_auction_strength`: First 15min strength. Test: open_session IC.
+- `close_auction_momentum`: Last 15min strength. Test: close_session IC.
+- `intraday_reversal_timing`: Mid-day reversal window. Test: ic_intraday_reversal.
+- `volume_weighted_price`: VWAP deviation. Test: vwap_deviation_signal.
+
+### Signal Combinations (Composed from existing)
+
+- `c16_monday_jan_combo`: C16 × Monday × January. Test: triple_combo IC.
+- `triple_storm_plus_jan`: Triple Storm + January. Test: quadruple_combo.
+- `volume_regime_breadth`: Volume regime × A/D breadth. Test: cross_regime_IC.
+
+### Novel Data Combinations
+
+- `price_range_regime`: High/low price regime. Test: price_tier × C16.
+- `tick_size_proximity`: Tick size boundary proximity. Test: tick_proximity_signal.
+- `market_cap_regime`: Market cap regime. Test: cap_regime × C16.
+- `float_regime`: Float size regime. Test: float_regime × C16.
+
+### Psychology / Behavior
+
+- `post_holiday_lag`: Post-holiday exhaustion. Test: day_after_holiday.
+- `earnings_seasonality`: Earnings calendar effect. Test: earnings_week_effect.
+- `sector_rotation_quadrant`: Sector rotation by calendar quarter. Test: sector_Q_effect.
+- `liquidity_shock_reversal`: Post-shock reversal. Test: shock_reversal_signal.
+
 - `news_scope_order_stacking` (H370 ⚠): Combine post-Ollama article scope + order pressure.
   Claim: Articles with scope=positive + high order pressure = text-confirmed + flow-confirmed.
   **Requires H364 news aggregate first**
