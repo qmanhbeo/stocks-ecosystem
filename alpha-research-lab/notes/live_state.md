@@ -45,6 +45,20 @@ Source durable memory:
 - `sector_pressure_momentum`: Sector pressure rate of change.
   Test: IC(sector-level C16 momentum) as predictor.
 
+## Contrarian Extensions (2026-05-03)
+
+- `down_market_magnitude`: C16 strength increases with drop depth.
+  Test: IC(C16) in bottom 20% market days vs bottom 50%.
+
+- `sector_rotation_down`: Sector behavior differs in down vs up markets.
+  Test: IC(sector_laggard) in down markets separately.
+
+- `time_sequence_down`: Day 2-3 of sustained down = stronger.
+  Test: IC(C16) on consecutive market-down days.
+
+- `c16_intensity_modulation`: Very high C16 in down = extreme signal.
+  Test: IC(C16 > 0.9) in down markets vs all markets.
+
 ## Branch Status (2026-05-03)
 
 - liquid_braid_stack: KILLED (stacking hurts)
