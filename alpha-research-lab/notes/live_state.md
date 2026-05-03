@@ -145,6 +145,211 @@ Source durable memory:
   Test: IC(C16 * turnover_rate_quintile).
   Smallest: composite signal test.
 
+## Mathematics-Inspired Hypotheses (S240)
+
+### Spectral / Linear Algebra
+
+- `eigenvalue_entropy_portfolio`: PCA eigenvalue entropy as regime signal.
+  Claim: When top eigenvalue dominates, trend is strong; when entropy high, mean-revert.
+  Test: Compute daily correlation matrix eigenvalues, entropy = -sum(λ² log λ²).
+  Mechanism: Random Matrix Theory -Market has "noise" eigenvalues vs "signal" eigenvalues.
+
+- `spectral_gap_detection`: Second-largest eigenvalue gap predicts breakout.
+  Claim: Large gap between λ₁ and λ₂ = clear market direction; small gap = range-bound.
+  Test: spectral_gap = λ₁/λ₂ ratio, compare IC by gap quintile.
+
+- `principal_component_direction`: PC1 vs PC2 alignment.
+  Claim: PC1 and PC2 same sign = trending; opposite = reverting.
+  Test: dot_product(PC1, PC2) sign as filter on C16.
+
+- `condition_number_regime`: Matrix condition number as volatility predictor.
+  Claim: High condition number = unstable correlations = regime change imminent.
+  Test: cond(correlation_matrix) < threshold as risk-off signal.
+
+### Stochastic / Random Process
+
+- `mean_reversion_hitting_time`: Expected hitting time to moving average.
+  Claim: Stocks touching 20d MA have predictable bounce timing.
+  Test: days_to_ma_20, survival analysis on returns.
+
+- ` Ornstein-Uhlenbeck_regime`: OU drift parameter estimates.
+  Claim: OU estimated drift predicts reversion speed.
+  Test: rolling OU fit, drift parameter as signal.
+
+- `brownian_bridge_absorption`: Price path absorption at barriers.
+  Claim: When price hits ceiling/floor, absorption time predicts next-day direction.
+  Test: time_to_limit vs subsequent return.
+
+- `ito_lemma_momentum`: Ito drift vs diffusion ratio.
+  Claim: High drift/diffusion = trending; low = reverting.
+  Test: compute rolling μ/σ ratio, predict regime.
+
+### Information Theory
+
+- `mutual_information_strength`: Mutual information between signals.
+  Claim: High MI between C16 and price = strong signal; low = noise.
+  Test: MI(C16, returns) by quintile.
+
+- `kl_divergence_regime`: KL divergence between up/down states.
+  Claim: Distribution shift predicts next regime.
+  Test: KL(p_up || p_down) as predictor.
+
+- `entropy_rate_market`: Rolling entropy of daily returns.
+  Claim: Entropy increasing = uncertainty rising = flight to quality.
+  Test: rolling_window_entropy as filter.
+
+- `compression_signal`: Gzip compression ratio of daily news as sentiment.
+  Claim: Highly compressible news = redundant = crowd consensus = reversal.
+  Test: compress(news) vs returns.
+
+### Graph Theory / Network
+
+- `graph_laplacian_spectrum`: Sector adjacency matrix eigenvalues.
+  Claim: Fiedler eigenvalue = sector connectivity = rotation predictability.
+  Test: compute sector graph Laplacian, Fiedler value as signal.
+
+- `page_rank_sector`: PageRank of ticker in sector network.
+ Claim: High PageRank = sector leader, but may be overowned.
+  Test: PageRank vs subsequent return.
+
+- ` shortest_path_flow`: Flow through sector network.
+  Claim: Information flows through shortest paths, predicts sector rotation.
+  Test: sector_distance_to_hot = signal.
+
+- `clustering_coefficient_regime`: Clustering in sector co-movement.
+  Claim: High clustering = herding = mean-reversion imminent.
+  Test: clustering_coefficient vs returns.
+
+### Topological / TDA
+
+- `persistent_homology_trend`: TDA-based trend detection.
+  Claim: H0 persistence length predicts trend continuation.
+  Test: rolling_persistence, compare to random bootstrap.
+
+- `betti_number_regime`: Betti-0 (components) count as market health.
+  Claim: Many components = fragmented = risky; few = unified.
+  Test: Betti_0 as regime signal.
+
+- `topological_smoothness`: Price sequence topological shape.
+  Claim: Topologically smooth path = trending; jagged = reverting.
+  Test: compute topological features on price windows.
+
+### Chaos / Dynamical Systems
+
+- `lyapunov_exponent_estimate`: Lyapunov exponent as chaos measure.
+  Claim: Positive Lyapunov = deterministic chaos = unpredictable.
+  Test: rolling_lyapunov > 0 as skip signal.
+
+- `correlation_dimension_market`: Correlation dimension as complexity.
+  Claim: Lower dimension = more predictable; higher = noise.
+  Test: computeGrassberger-Procaccia.
+
+- `hurst_exponent_regime`: Hurst exponent as trend/reversion.
+  Claim: H > 0.5 trending; H < 0.5 mean-reverting.
+  Test: rolling Hurst estimate filter.
+
+- `kolmogorov_entropy`: Kolmogorov entropy as unpredictability.
+  Claim: High KE = random = reduce exposure.
+  Test: KE_estimator as position sizer.
+
+### Wavelet / Fourier
+
+- `wavelet_decomposition_predict`: Multi-scale wavelet components.
+  Claim: Coarse scales trend; fine scales mean-revert.
+  Test: DWT components as separate signals.
+
+- `fourier_frequency_cycle`: Dominant frequency detection.
+  Claim: Market has hidden cycles, detect and trade.
+  Test: FFT peak frequency vs subsequent return.
+
+- `spectral_centroid_movement`: Spectral centroid position.
+  Claim: Centroid moving down = distribution shrinking = support.
+  Test: rolling_spectral_centroid as signal.
+
+### Extreme Value / Tail
+
+- `peaks_over_thresholds`: POT tail risk detection.
+  Claim: Exceedances cluster before crashes.
+  Test: exceedance_rate as lead indicator.
+
+- `generalized_pareto_tail`: GPD tail shape parameter.
+  Claim: Tail shape predicts crash probability.
+  Test: rolling_GPD_fit, ξ parameter.
+
+### Game Theory / Equilibrium
+
+- `nash_equilibrium_portfolio`: Nash equilibrium in sector allocation.
+  Claim: Sector allocation converges to equilibrium, deviate = alpha.
+  Test: deviation_from_equilibrium_vs_return.
+
+- `零和_positioning`: Positioning consensus as zero-sum.
+  Claim: Overconsensus = reversal; underconsensus = continuation.
+  Test: consensus_rank as contrarian.
+
+### Copula / Dependence
+
+- `copula_tail_dependence`: Tail dependence coefficient.
+  Claim: High tail dependence = crash correlation increases.
+  Test: tail_dependence coefficient as risk signal.
+
+- `vine_copula_regime`: Regime-dependent copula.
+  Claim: Different copulas in up vs down regimes.
+  Test: regime_copula_fit vs returns.
+
+### Bayesian / Probabilistic
+
+- `bayesian_update_speed`: Posterior updating rate.
+  Claim: Fast updating = high information arrival = momentum.
+  Test: rolling likelihood update rate.
+
+- `conjugate_prior_regime`: Prior regime determines posteriors.
+  Claim: Market regime = prior type determines signal efficacy.
+  Test: regime_dependent_signal_efficacy.
+
+### Optimization / Combinatorial
+
+- `knapsack_selection`: Knapsack-like portfolio construction.
+  Claim: Top-K knapsack optimization gives different weights.
+  Test: optimization-based weights vs equal weights.
+
+- `weighted_medoid_clustering`: Medoid clustering for sector assignment.
+  Claim: Medoid-based sectors are more stable.
+  Test: medoid_sector vs return.
+
+### Miscellaneous
+
+- `benford_law_anomaly`: First-digit distribution anomaly.
+  Claim: Deviation from Benford = manipulation = reversal.
+  Test: benford_chi_square on volume.
+
+- `zipf_law_sector_rank`: Sector rank follows Zipf distribution.
+  Claim: Sector return rank vs theoretical expectation.
+  Test: zipf_exponent as predictor.
+
+- `golden_ratio_divider`: Fibonacci levels as support/resistance.
+  Claim: 0.618, 0.382 retracement levels are magnetic.
+  Test: price_near_fib as signal.
+
+- `golden_ratio_divider`: Fibonacci levels as support/resistance.
+  Claim: 0.618, 0.382 retracement levels are magnetic.
+  Test: price_near_fib as signal.
+
+- `entropy_based_weighting`: Entropy-weighted signals.
+  Claim: Higher entropy signal = more uncertainty = less weight.
+  Test: entropy_weighted_portfolio vs equal.
+
+- `ranking_stability`: Stability of cross-sectional rank.
+  Claim: Rank changes are predictable.
+  Test: rank_volatility as signal.
+
+- `volterra_kernel_nl`: Volterra series nonlinearity.
+  Claim: Second-order kernel captures nonlinearities.
+  Test: volterra_coefficient as signal.
+
+- `bellman_equation_value`: RL-style value function.
+  Claim: Value function estimates predict positions.
+  Test: value_estimate vs optimal.
+
 ## Current State
 
 - S238 tested: market_breadth PASSED (+30%), vol regime PASSED (+38%), quarter_start PASSED (+26%)
