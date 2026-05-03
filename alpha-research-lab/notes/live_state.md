@@ -5,8 +5,8 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_223_log.md](./session_223_log.md)
-Last verified: [Session 223](./session_223_log.md), 2026-05-03.
+Latest full session detail: [session_224_226_log.md](./session_224_226_log.md)
+Last verified: [Sessions 224-226](./session_224_226_log.md), 2026-05-03.
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -64,6 +64,9 @@ Source durable memory:
 - liquid_braid_stack: KILLED (stacking hurts)
 - dynamic_liquidity_regime: WEAK (use for sizing only)
 - sector_convergence_contrarian: KILLED (fragmented = weak always)
+- sector_relative_c16: KILLED (hurts, -15%)
+- c16_persistence: KILLED (doesn't help)
+- market_state_c16: PASSED! In DOWN markets IC +0.098 vs +0.056 (+26%)
 
 ## Active Jobs / Constraints
 

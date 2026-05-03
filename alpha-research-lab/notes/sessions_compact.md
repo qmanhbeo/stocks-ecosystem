@@ -7,6 +7,9 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Sessions 224-226](session_224_226_log.md): New C16 branches.
+  X224 sector-relative: FAILED (-15%). X225 persistence: FAILED (-17%).
+  X226 market-state: PASSED - C16 +26% stronger in DOWN markets (+0.098 vs +0.056).
 - [Session 223](session_223_log.md): sector_convergence_contrarian — FAILED.
   Fragmented + high C16: IC +0.035 vs baseline +0.078 (-55%).
   Kill branch.
