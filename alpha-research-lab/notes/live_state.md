@@ -121,53 +121,11 @@ Source durable memory:
   Test: IC(C16) where volume_zscore > 2.
   Smallest: volume anomaly filter.
 
-- `s1_triple_storm_combo`: S1 momentum + Triple Storm conditions.
-  Test: WF C16 baseline vs C16+Triple Storm.
-  **PASSED: +90% IC boost, 7/7 years +** ✅
+## Current State
 
-- `foreign_flow_triple`: Foreign room + Triple Storm conditions.
-  Test: IC(foreign_room) where market=down AND liquid.
-  Smallest: filter foreign by our conditions.
-
-- `quadruple_storm`: Triple + C4 (OC asymmetry).
-  Test: IC(C16) where liquid + down + divergence + C4 > median.
-  **PASSED: +9% more IC (0.172 vs 0.158), but 55% more reduction** ✅
-
-- `universal_triple_amp`: Triple Storm amplifies ANY signal.
-  Test: IC(news_signal) with vs without triple conditions.
-  **FAILED: works on C16, NOT on foreign_flow (-0.013 → still negative)**
-
-- `condition_relaxation`: Dual conditions (liquid+down) = 90% of triple with 50% less reduction.
-  Test: IC(C16 | liquid+down) vs IC(C16 | triple).
-  **NEUTRAL: dual = +39% boost (0.108), triple = +104% (0.158). Different use cases.**
-
-- `activation_triple`: Apply Triple to activation state.
-  Test: IC(activation) with vs without triple conditions.
-  **SKIPPED: schema mismatch, need to map columns**
-
-- `volume_triple`: Apply Triple to volume anomaly.
-  Test: IC(volume_zscore) with vs without triple conditions.
-  **PASSED: +38% boost (0.043 → 0.059)** ✅
-
-- `reversal_triple`: Triple amplifies short-term reversal.
-  Test: IC(shortterm_reversal) with vs without triple conditions.
-  **PASSED: +60% boost (0.027 → 0.042)** ✅
-
-- `dispersion_triple`: Triple amplifies dispersion regime.
-  **SKIPPED: market-level aggregate, not per-ticker**
-
-- `sector_triple`: Triple amplifies sector rotation.
-  Test: IC(sector_rotation) with vs without triple.
-  **FAILED: still negative, worse** ❌
-
-- `skewness_triple`: Triple amplifies return skewness.
-  Test: IC(return_skewness) with vs without triple.
-  **PASSED: -0.001 → +0.009** ✅
-
-## New (S232 Discovered)
-
-- **Triple Storm MECHANISM**: Universal amplifier for ANOMALY/MICROSTRUCTURE signals.
-  - Works: C16, volume, reversal, skewness
+- Triple Storm mechanism confirmed: amplifies anomaly/microstructure signals (C4, C12, C13, C16, volume, reversal, skewness)
+- C13-triple is strongest amplifier: +307% boost
+- Queue: c4_c16_combo, volume_shock_c16 untested
   - NOT work: foreign_flow, sector_rotation (position signals)
   - Discovery: Signal type matters, not just signal itself
 
