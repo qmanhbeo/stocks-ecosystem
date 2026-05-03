@@ -436,4 +436,157 @@ Source sessions:
 ## Missing Signals - To Be Added (F318-F328)
 
 These need to be added in proper order after F317.
-DO NOT EDIT - manual append required
+
+## F318: price_tier_low Signal (S238, 2026-04-25)
+
+Finding:
+- **Claim**: Low price tier stocks have stronger signal.
+- **Data**: Price quintile split.
+- **Evidence**: IC=0.086 (+0.09 vs random)
+- **Walk-forward**: consistent
+
+Why it matters:
+- Price tier filter - Tier 2 placement
+
+Source: session_238_log.md
+
+---
+
+## F319: quarter_end Signal (S238, 2026-04-25, WEAK)
+
+Finding:
+- **Claim**: Quarter-end days have stronger signal.
+- **Evidence**: IC=0.066 (+0.07 vs random) - WEAK
+- **Walk-forward**: weak
+
+Why it matters:
+- FAILED - weak signal. Use quarter_start (F305) instead.
+
+Source: session_238_log.md
+
+---
+
+## F320: vol_low Signal (S242, 2026-05-02)
+
+Finding:
+- **Claim**: Low volume days have weaker signal.
+- **Evidence**: IC=0.0695 (+0.07 vs random)
+- **Walk-forward**: consistent but weaker
+
+Why it matters:
+- Inverse of vol_high (F308) - Tier 3 placement
+- Use F308 (vol_high) instead.
+
+Source: session_242_log.md
+
+---
+
+## F321: monday Signal (S243, 2026-05-02)
+
+Finding:
+- **Claim**: Monday has stronger C16 signal.
+- **Evidence**: IC=0.0836 (+0.08 vs random)
+- **Walk-forward**: consistent
+
+Why it matters:
+- Calendar filter - Tier 2 placement
+
+Source: session_243_log.md
+
+---
+
+## F322: may Signal (S243, 2026-05-02)
+
+Finding:
+- **Claim**: May has stronger signal.
+- **Evidence**: IC=0.0805 (+0.08 vs random)
+- **Walk-forward**: consistent
+
+Why it matters:
+- Calendar filter - Tier 2 placement (weaker)
+
+Source: session_243_log.md
+
+---
+
+## F323: september_late Signal (S243, 2026-05-02)
+
+Finding:
+- **Claim**: Late September has stronger signal.
+- **Evidence**: IC=0.0791 (+0.08 vs random)
+- **Walk-forward**: consistent
+
+Why it matters:
+- Calendar filter - Tier 2 placement
+
+Source: session_243_log.md
+
+---
+
+## F324: september_early Signal (S243, 2026-05-02, WEAK)
+
+Finding:
+- **Claim**: Early September has weaker signal.
+- **Evidence**: IC=0.0614 (+0.06 vs random) - WEAK
+- **Walk-forward**: weak
+
+Why it matters:
+- Use late September (F323) instead.
+
+Source: session_243_log.md
+
+---
+
+## F325: yearend Signal (S243, 2026-05-02, WEAK)
+
+Finding:
+- **Claim**: Year-end window (Dec 20+) has stronger signal.
+- **Evidence**: IC=0.0652 (+0.07 vs random) - WEAK
+- **Walk-forward**: weak
+
+Why it matters:
+- Tier 3 placement.
+
+Source: session_243_log.md
+
+---
+
+## F326: midyear Signal (S243, 2026-05-02, FAILED)
+
+Finding:
+- **Claim**: June/July midyear rebalancing effect.
+- **Evidence**: IC=0.0711 (+0.07 vs random) - FAILED
+- **Walk-forward**: failed
+
+Why it matters:
+- FAILED - Tier 3 placement.
+
+Source: session_243_log.md
+
+---
+
+## F327: march_early Signal (S243, 2026-05-02, WEAK)
+
+Finding:
+- **Claim**: Early March has weaker signal.
+- **Evidence**: IC=0.0643 (+0.06 vs random) - WEAK
+- **Walk-forward**: weak
+
+Why it matters:
+- Use march_late (F311) instead.
+
+Source: session_243_log.md
+
+---
+
+## F328: rank_time_acceleration Signal (S244, 2026-05-03)
+
+Finding:
+- **Claim**: C16 rank change over time matters.
+- **Evidence**: IC=0.0576 (+0.06 vs random)
+- **Walk-forward**: 9/9 positive
+
+Why it matters:
+- Independent state feature - Tier 3 placement
+
+Source: session_244_log.md
