@@ -7,6 +7,20 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Sessions 248-252](session_248_252_log.md): Bright-mind eureka tests - **ALL 5 FAILED**.
+  - S248 macro_c16_regime: FAILED (+0%) - no regime boost.
+  - S249 gap_open_c16: FAILED (-4%) - no gap help.
+  - S250 vol_shock: FAILED (data proxy insufficient).
+  - S251 consecutive_down: FAILED (+0%) - no day-to-day compounding.
+  - S252 c16_extreme: FAILED (-63%) - too sparse.
+  - **Key insight**: C16 IS the down-market signal - no conditioning helps.
+
+- [Sessions 245-247](session_245_log.md): C16 contrarian tests.
+  - S245 sector_pressure_momentum: FAILED (+0%) - sector context doesn't help.
+  - S246 down_market_c16: PASSED (+26%) - IC=+0.098 **REAL**.
+  - S247 deep_down_c16: PASSED (+20%) - IC=+0.093.
+  - **Confirms**: C16 works in down markets - use as filter.
+
 - [Session 244](session_244_log.md): S244 eureka tests - **5 signals tested**.
   - insider_buy_lead PASSED (+40% boost): IC=0.1113, **REAL**.
   - c16_entropy FAILED (inconsistent year-to-year): WEAK - dead end.

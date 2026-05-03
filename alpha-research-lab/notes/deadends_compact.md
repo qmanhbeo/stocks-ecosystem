@@ -78,6 +78,28 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   Confirms: level > velocity pattern (same as C16 ROC failure S227).
   Source: session_244_log.md
 
+## Bright-Mind Failed Experiments (S248-S252)
+
+- macro_c16_regime (S248): Macro VIX regime doesn't condition C16.
+  IC +0.078 BULL vs +0.077 BEAR (+0%) - no boost.
+  Source: F332
+
+- gap_open_c16 (S249): Previous day's return direction doesn't help C16.
+  IC +0.075 gap positive vs +0.079 none (-4%) - no boost.
+  Source: F333
+
+- vol_shock_c16 (S250): Volume shock proxy insufficient data.
+  Could not compute meaningful volume signal.
+  Source: F334
+
+- consecutive_down_c16 (S251): Day 2/3 streak doesn't compound.
+  IC +0.078 day1 = day2 = day3 (0%) - no compounding.
+  Source: F335
+
+- c16_extreme_down (S252): Very high C16 (>0.9) too sparse.
+  IC +0.028 vs +0.078 baseline (-63%) - signal lost.
+  Source: F336
+
 - News keyword and simple pooled sentiment paths are not enough by themselves:
   keyword sentiment added no IC, rolling aggregation did not fix sparsity,
   body-text ticker extraction hurt quality, the keyword lexicon path was

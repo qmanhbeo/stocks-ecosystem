@@ -72,6 +72,21 @@ entry must include source anchors: stable finding IDs or source session links.
 | consecutive_down_days | 0.1030 | +0.10 | REAL - filter |
 | dividend_30d | 0.0934 | +0.09 | REAL - event driver |
 | rank_time_acceleration | 0.0576 | +0.06 | REAL - state feature |
+
+### S245-S247 C16 Contrarian Signals
+| Signal | IC | vs Baseline | Verdict |
+|--------|-----|-------------|--------|
+| down_market_c16 | +0.098 | +26% | **REAL** - TIER 2 |
+| deep_down_c16 | +0.093 | +20% | **REAL** - TIER 2 |
+| sector_pressure_momentum | +0.078 | +0% | FAILED |
+
+### S248-S252 Bright-Mind Failed
+| Signal | IC | vs Baseline | Verdict |
+|--------|-----|-------------|--------|
+| macro_c16_regime | +0.077 | +0% | FAILED |
+| gap_open_c16 | +0.075 | -4% | FAILED |
+| consecutive_down | +0.078 | +0% | FAILED |
+| c16_extreme_down | +0.028 | -63% | FAILED (sparse)
 | c16_entropy | ~0.08 | ~0.08 | WEAK - dead end |
 
 ## All Real Signals for RL (IC > 0.05 vs Random) — Complete Inventory
