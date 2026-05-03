@@ -44,6 +44,9 @@ entry must include source anchors: stable finding IDs or source session links.
     - market_breadth: A/D Q1-Q2 +30% better than Q4-Q5 (contrarian breadth)
     - quarter_start: +26% (NEW!), quarter_end: -15% (institutional pump is noise)
     - price_tier: weak +13%
+  - **S242 new findings**:
+    - january_first_10: +5% IC boost (NEW!)
+    - volume regime: high volume = +21% boost, low volume = -11% (confirmed S237)
   - Reusable script: x240_wf_ic_test.py
   - **Key mechanism**: Quarter START beats END - opposite of Western效应!
   Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 238.

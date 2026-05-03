@@ -86,6 +86,31 @@ def run_test(test_name):
         filtered = df[(df['month'].isin([3, 6, 9, 12])) & (df['days_in_month'] - df['day'] <= 5)]
         ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
         return f'quarter_end: IC={ic:.4f}'
+    elif test_name == 'january_first_10':
+        df['dayofyear'] = df['time'].dt.dayofyear
+        filtered = df[df['dayofyear'] <= 10]
+        ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
+        return f'january_first_10: IC={ic:.4f}'
+    elif test_name == 'sector_streak':
+        return 'NOT TESTED: requires sector_momentum streak data'
+    elif test_name == 'small_cap':
+        return 'NOT TESTED: requires market cap data'
+    elif test_name == 'volume_vol_combo':
+        df['vol_low'] = df['volume_rank'] < 0.3
+        df['vol_high'] = df['volume_rank'] > 0.7
+        filtered = df[df['vol_low']]
+        ic1 = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
+        filtered2 = df[df['vol_high']]
+        ic2 = wf_ic(filtered2, signal) if len(filtered2) > 100 else np.nan
+        return f'vol_low IC={ic1:.4f}, vol_high IC={ic2:.4f}'
+    elif test_name == 'foreign_room_delta':
+        return 'NOT TESTED: requires foreign room delta data'
+    elif test_name == 'dow_jones_lag':
+        return 'NOT TESTED: requires US market overnight data'
+    elif test_name == 'turnover_rate':
+        return 'NOT TESTED: requires turnover rate data'
+    elif test_name == 'market_breadth':
+        return 'S238 ALREADY TESTED: A/D Q1-Q2 +30%'
     else:
         return f'Unknown test: {test_name}'
 

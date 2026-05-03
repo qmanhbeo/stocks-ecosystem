@@ -7,6 +7,9 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 242](session_242_log.md): January effect + volume regime confirmation.
+  january_first_10 IC=0.0817 (+5% boost), vol_high IC=0.0941 (+21%).
+  Reusable x240_wf_ic_test.py script updated.
 - [Session 232](session_232_log.md): Triple Storm Extensions — 6 PASSED, 3 FAILED.
   Universal: works on order/volume/reversal/skewness, NOT on position (foreign/sector).
   x232_triple_test.py reusable script.
