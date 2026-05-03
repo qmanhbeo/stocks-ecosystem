@@ -73,6 +73,19 @@ def run_test(test_name):
         filtered = df[df['time'].isin(tet_dates)]
         ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
         return f'Tet period: IC={ic:.4f}'
+    elif test_name == 'quarter_start':
+        df['month'] = df['time'].dt.month
+        df['day'] = df['time'].dt.day
+        filtered = df[(df['month'].isin([1, 4, 7, 10])) & (df['day'] <= 5)]
+        ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
+        return f'quarter_start: IC={ic:.4f}'
+    elif test_name == 'quarter_end':
+        df['month'] = df['time'].dt.month
+        df['day'] = df['time'].dt.day
+        df['days_in_month'] = df['time'].dt.days_in_month
+        filtered = df[(df['month'].isin([3, 6, 9, 12])) & (df['days_in_month'] - df['day'] <= 5)]
+        ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
+        return f'quarter_end: IC={ic:.4f}'
     else:
         return f'Unknown test: {test_name}'
 

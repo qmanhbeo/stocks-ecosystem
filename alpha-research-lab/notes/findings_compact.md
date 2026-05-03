@@ -40,12 +40,13 @@ entry must include source anchors: stable finding IDs or source session links.
     - C16 entry timing: decays fast - T+0 is optimal (T+1 drops 74%)
     - vnindex_momentum: C16 +15% better when index momentum negative
     - news_c16_divergence: FAILED (sentiment too weak)
-  - **S237 new findings**:
-    - volatility_regime: C16 +38% in high vol (>80%), -15% in low vol
-    - monday_effect: Monday +17% over Thursday  
-    - holiday_effect: Tet period +25% (strongest calendar)
-  - **Key mechanism**: High vol AMPLIFIES C16 (opposite of typical risk-off)
-  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237.
+  - **S238 new findings**:
+    - market_breadth: A/D Q1-Q2 +30% better than Q4-Q5 (contrarian breadth)
+    - quarter_start: +26% (NEW!), quarter_end: -15% (institutional pump is noise)
+    - price_tier: weak +13%
+  - Reusable script: x240_wf_ic_test.py
+  - **Key mechanism**: Quarter START beats END - opposite of Western效应!
+  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 238.
 
 - Current parked branches: event-v2 sparse-clock, dividend-clock timing,
   legal-holiday timing, standalone foreign/proprietary flow, old OHLCV
