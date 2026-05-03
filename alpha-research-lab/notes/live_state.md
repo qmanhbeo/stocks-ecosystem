@@ -5,8 +5,8 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_245_log.md](./session_245_log.md)
-Last verified: [Sessions 245-247](./session_245_log.md), 2026-05-03.
+Latest full session detail: [session_253_log.md](./session_253_log.md)
+Last verified: [Sessions 253](./session_253_log.md), 2026-05-03.
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -64,6 +64,16 @@ Source durable memory:
   insider_buy_lead (0.1113), consecutive_down (0.103), dividend (0.093), rank_time (0.058)
 - **1 WEAK signal**: c16_entropy (inconsistent year-to-year)
 - **1 NO DATA**: disclosure_shock_reaction
+
+### S253 TRUE Walk-Forward Validation (2026-05-03)
+
+- **Skepticism**: User asked if too many signals = methodology issue
+- **Answer**: NO - all 3 hold with TRUE rolling holdout (Train T-2,T-1 → Test T)
+- **Results**: 
+  - insider_lead: IC=0.1093 ✅
+  - consecutive_down: IC=0.1047 ✅
+  - down_market_c16: IC=0.0992 ✅
+- **Finding**: F337, F338 (signals confirmed REAL)
 
 - `c16_divergence`: Price UP + C16 DOWN = contrarian divergence.
   Test: IC(C16) where price > market_return but C16 < median.

@@ -86,8 +86,15 @@ entry must include source anchors: stable finding IDs or source session links.
 | macro_c16_regime | +0.077 | +0% | FAILED |
 | gap_open_c16 | +0.075 | -4% | FAILED |
 | consecutive_down | +0.078 | +0% | FAILED |
-| c16_extreme_down | +0.028 | -63% | FAILED (sparse)
+| c16_extreme_down | +0.028 | -63% | FAILED (sparse) |
 | c16_entropy | ~0.08 | ~0.08 | WEAK - dead end |
+
+### S253 TRUE Walk-Forward Validation (IC > 0.05)
+| Signal | True WF IC | Std | Verdict |
+|--------|-----------|-----|--------|
+| insider_lead | 0.1093 | 0.036 | **REAL** ✅ |
+| consecutive_down | 0.1047 | 0.011 | **REAL** ✅ |
+| down_market_c16 | 0.0992 | 0.007 | **REAL** ✅ |
 
 ## All Real Signals for RL (IC > 0.05 vs Random) — Complete Inventory
 
