@@ -115,7 +115,29 @@ Source durable memory:
 
 - S235 tested: news_c16_divergence FAILED, entry_window T+0 optimal, vnindex_momentum PASSED
 - New finding: C16 works +15% better when index momentum negative
-- Remaining: c13_cross_microstructure, alternative_label_c16
+- Remaining: c13_cross_microstructure, alternative_label_c16, exit_signal, foreign_c13_triple
+
+## New Eureka Ideas (S236)
+
+- **`exit_signal`**: Exit when C16 deactivates vs fixed 5d hold.
+  Test: Compare return/drawdown: exit on deactivation vs fixed hold.
+  Status: NOT TESTED. **RANK 1** - high practical value
+
+- **`foreign_c13_triple`**: C13 + index neg + foreign flow as 3-leg Triple.
+  Test: Triple 3-leg vs 2-leg IC comparison.
+  Status: NOT TESTED. Leverages existing framework
+
+- **`alternative_label_5d`**: C16 on 5d barrier vs 1d.
+  Test: IC comparison: C16 on 1d vs 5d labels.
+  Status: NOT TESTED. Label engineering
+
+- **`sector_input_c13`**: Sector momentum as C13 weight input.
+  Test: Weighted vs unweighted C13 performance.
+  Status: NOT TESTED. Feature engineering
+
+- **`bid_ask_spread`**: Filter by narrow spread quartile.
+  Test: Entry = C16 + spread < 25th.
+  Status: NOT TESTED. DATA DEPENDENT
 
 ## Active Jobs / Constraints
 
