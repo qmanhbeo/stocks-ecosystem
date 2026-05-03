@@ -417,25 +417,23 @@ Source sessions:
 
 ---
 
-## F316: c16_entropy Signal (S244, 2026-05-03, WEAK/DEAD END)
+## F317: vol_rank_gt_08 Signal (S238, 2026-04-25)
 
 Finding:
-- **Claim**: Sector-level C16 dispersion amplifies individual stock signal.
-- **Data**: `data/order_stats/` + returns, sector dispersion computed daily.
-- **Test**: IC(C16) split by sector entropy quartiles.
-- **Evidence**:
-  - Simple comparison: HIGH dispersion IC=0.0883 vs LOW=0.0708 (+24.7%)
-  - **Walk-forward: INCONSISTENT** 
-    - 2015: LOW better (0.066 vs 0.036)
-    - 2016-2019: HIGH better
-    - 2020: similar
-    - 2021-2022: LOW better
-  - Final: WEAK/DEAD END
+- **Claim**: High volume rank amplifies C16 signal.
+- **Data**: Order volume rank > 0.8.
+- **Evidence**: IC=0.091 (+0.09 vs random)
+- **Walk-forward**: consistent
 
 Why it matters:
-- The signal fails walk-forward consistency
-- Should not be used as filter
-- Mark as dead end
+- Volume regime filter - Tier 2 placement
 
 Source sessions:
-- `notes/session_244_log.md`
+- `notes/session_238_log.md`
+
+---
+
+## Missing Signals - To Be Added (F318-F328)
+
+These need to be added in proper order after F317.
+DO NOT EDIT - manual append required
