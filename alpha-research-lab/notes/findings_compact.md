@@ -27,20 +27,49 @@ entry must include source anchors: stable finding IDs or source session links.
 - C16: +0.078 (order pressure)
 - S1: +0.149 (best published - PRIMARY for RL)
 
-- C16 enhancement discoveries (S220-S231): 
-  - **S238 new findings (Honest vs Random)**:
-    - market_breadth A/D Q1: +0.10 over random (REAL)
-    - quarter_start: +0.10 over random (REAL)
-  - **S242 new findings (Honest vs Random)**:
-    - january_first_10: +0.08 over random (REAL)
-    - volume regime high: +0.09 over random (REAL)
-  - **S243 new discoveries (Honest vs Random)**:
-    - monday_jan_combo: +0.11 over random - STRONGEST, closest to S1
-    - february_mid: +0.09, march_late: +0.08, october: +0.08 - REAL signals
-    - yearend: +0.07 (weak), midyear: +0.07 (failed)
-  - Reusable script: x240_wf_ic_test.py
-  - **Best signal**: monday_jan_combo (IC=0.1109) — still below S1 but useful
-  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 238, 242, 243.
+## Reference Baselines (Walk-Forward IC)
+- Random: ~0.00 (noise benchmark)
+- C16: +0.078 (order pressure)
+- S1: +0.149 (best published - PRIMARY for RL)
+
+## All Real Signals for RL (IC > 0.05 vs Random)
+
+### Tier 1: Primary Signals (IC > 0.10)
+| Signal | IC | vs Random | Use |
+|--------|-----|---------|-----|
+| **S1 (xs_proba)** | 0.149 | +0.15 | **BEST - PRIMARY** |
+| **Triple Storm** | 0.158 | +0.16 | liquid+down+divergence boost |
+| monday_jan_combo | 0.1109 | +0.11 | calendar combo |
+| X53 (Liquid C16) | 0.137 | +0.14 | C16 + liquidity filter |
+
+### Tier 2: Enhancement Filters (IC 0.08-0.10)
+| Signal | IC | vs Random | Use |
+|--------|-----|---------|-----|
+| C16 divergence | 0.108 | +0.11 | price vs C16 disagreement |
+| quarter_start | 0.098 | +0.10 | timing filter |
+| market_breadth A/D Q1 | 0.093 | +0.09 | breadth filter |
+| vol_high | 0.0941 | +0.09 | volume regime filter |
+| X54 (Braid) | 0.080 | +0.08 | sector unanimity |
+| C16 baseline | 0.078 | +0.08 | order pressure |
+| february_mid | 0.0858 | +0.09 | calendar |
+| march_late | 0.0833 | +0.08 | calendar |
+| monday | 0.0836 | +0.08 | calendar |
+| october | 0.0817 | +0.08 | calendar |
+| january_first_10 | 0.0817 | +0.08 | calendar |
+
+### Tier 3: Weak/Contextual (IC 0.05-0.08)
+| Signal | IC | vs Random | Use |
+|--------|-----|---------|-----|
+| vol_low | 0.0695 | +0.07 | volume regime (inverse) |
+| yearend | 0.0652 | +0.07 | weak calendar |
+| midyear | 0.0711 | +0.07 | failed |
+
+### Key RL Use Cases
+1. **Primary signal**: S1 (0.149)
+2. **Enhancement filters**: vol_high, monday_jan, divergence, liquid, down_market
+3. **RL state features**: calendar-day, volume regime, market breadth, quarter timing
+
+Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 238, 242, 243.
 
 - Current parked branches: event-v2 sparse-clock, dividend-clock timing,
   legal-holiday timing, standalone foreign/proprietary flow, old OHLCV
