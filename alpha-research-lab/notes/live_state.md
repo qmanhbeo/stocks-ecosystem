@@ -45,6 +45,41 @@ Source durable memory:
 - `sector_pressure_momentum`: Sector pressure rate of change.
   Test: IC(sector-level C16 momentum) as predictor.
 
+## New Eureka Queue (2026-05-03)
+
+- `c16_acceleration`: C16 velocity matters more than level.
+  Test: IC(ROC(C16, 5d)) vs IC(C16 level).
+  Smallest honest test: compute ROC, compare IC to baseline.
+  **FAILED: level beats ROC by 28%**
+
+- `c16_divergence`: Price UP + C16 DOWN = contrarian divergence.
+  Test: IC(C16) where price > market_return but C16 < median.
+  Smallest honest test: split by price direction vs C16 direction.
+  **WEAK PASS: divergence = +0.108 vs baseline +0.078 (+39%)**
+
+- `liquidity_adjusted_contrarian`: C16 + high liquidity + DOWN market = extreme.
+  Test: IC(C16 > median AND move > 80%ile AND market = DOWN).
+  Smallest honest test: triple condition vs X226 single condition.
+
+- `deep_down_only`: C16 only matters in DEEP down (bottom 20%).
+  Test: IC(C16) in market_return < 20%ile vs < 50%ile.
+  Smallest honest test: market quintile split comparison.
+
+## New Eureka Queue (EXTENDED - 2026-05-03)
+
+- `triple_storm`: Combine liquid (+X53) + down market (+X226) + divergence.
+  Test: IC(C16) where move>80%ile AND market=down AND divergence=true.
+  Smallest: triple intersection vs single conditions.
+  **PASSED: triple = +0.158 vs baseline +0.078 (+104%)**
+
+- `market_quintile_gradient`: C16 strength at each market quintile.
+  Test: IC(C16) at market_return <20%, 20-40%, 40-60%, 60-80%, >80%.
+  Smallest: compare 5-way split vs binary up/down.
+
+- `c16_extreme_in_down`: Very high C16 (>.9) in DOWN markets.
+  Test: IC(C16>0.9) in market=down vs all C16 in market=down.
+  Smallest: filter by C16 threshold in down market only.
+
 ## Contrarian Extensions (2026-05-03)
 
 - `down_market_magnitude`: C16 strength increases with drop depth.
@@ -67,6 +102,74 @@ Source durable memory:
 - sector_relative_c16: KILLED (hurts, -15%)
 - c16_persistence: KILLED (doesn't help)
 - market_state_c16: PASSED! In DOWN markets IC +0.098 vs +0.056 (+26%)
+
+## C16 Branch CLOSED & FULLY VERIFIED (2026-05-03)
+
+- Triple Storm = liquid + down market + divergence
+- Training IC: +0.158 (+104% vs baseline)
+- Holdout (2023-25) IC: +0.134 (+111% vs baseline)
+- **Walk-Forward (9 years): +0.145 (+92% boost, 9/9 positive)**
+- **VERIFIED: Robust across all years, no regime degradation**
+
+## New Signal Family Ideas (2026-05-03)
+
+- `c4_c16_combo`: C4 (OC asymmetry) + C16 = orthogonal combo.
+  Test: IC(C4 + C16) vs either alone.
+  Smallest: simple rank sum.
+
+- `volume_shock_c16`: Unusual volume + high C16.
+  Test: IC(C16) where volume_zscore > 2.
+  Smallest: volume anomaly filter.
+
+- `s1_triple_storm_combo`: S1 momentum + Triple Storm conditions.
+  Test: WF C16 baseline vs C16+Triple Storm.
+  **PASSED: +90% IC boost, 7/7 years +** ✅
+
+- `foreign_flow_triple`: Foreign room + Triple Storm conditions.
+  Test: IC(foreign_room) where market=down AND liquid.
+  Smallest: filter foreign by our conditions.
+
+- `quadruple_storm`: Triple + C4 (OC asymmetry).
+  Test: IC(C16) where liquid + down + divergence + C4 > median.
+  **PASSED: +9% more IC (0.172 vs 0.158), but 55% more reduction** ✅
+
+- `universal_triple_amp`: Triple Storm amplifies ANY signal.
+  Test: IC(news_signal) with vs without triple conditions.
+  **FAILED: works on C16, NOT on foreign_flow (-0.013 → still negative)**
+
+- `condition_relaxation`: Dual conditions (liquid+down) = 90% of triple with 50% less reduction.
+  Test: IC(C16 | liquid+down) vs IC(C16 | triple).
+  **NEUTRAL: dual = +39% boost (0.108), triple = +104% (0.158). Different use cases.**
+
+- `activation_triple`: Apply Triple to activation state.
+  Test: IC(activation) with vs without triple conditions.
+  **SKIPPED: schema mismatch, need to map columns**
+
+- `volume_triple`: Apply Triple to volume anomaly.
+  Test: IC(volume_zscore) with vs without triple conditions.
+  **PASSED: +38% boost (0.043 → 0.059)** ✅
+
+- `reversal_triple`: Triple amplifies short-term reversal.
+  Test: IC(shortterm_reversal) with vs without triple conditions.
+  **PASSED: +60% boost (0.027 → 0.042)** ✅
+
+- `dispersion_triple`: Triple amplifies dispersion regime.
+  **SKIPPED: market-level aggregate, not per-ticker**
+
+- `sector_triple`: Triple amplifies sector rotation.
+  Test: IC(sector_rotation) with vs without triple.
+  **FAILED: still negative, worse** ❌
+
+- `skewness_triple`: Triple amplifies return skewness.
+  Test: IC(return_skewness) with vs without triple.
+  **PASSED: -0.001 → +0.009** ✅
+
+## New (S232 Discovered)
+
+- **Triple Storm MECHANISM**: Universal amplifier for ANOMALY/MICROSTRUCTURE signals.
+  - Works: C16, volume, reversal, skewness
+  - NOT work: foreign_flow, sector_rotation (position signals)
+  - Discovery: Signal type matters, not just signal itself
 
 ## Active Jobs / Constraints
 

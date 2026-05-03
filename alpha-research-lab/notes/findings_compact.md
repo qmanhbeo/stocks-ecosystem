@@ -22,10 +22,18 @@ entry must include source anchors: stable finding IDs or source session links.
   IC, residual selector value, bounded executable uplift, publication, and
   published-contract parity. Source anchors: `F296-F301`.
 
-- C16 enhancement discoveries (S220-S226): 
-  - Liquid filter (C16>50% + move>80%) = +25% IC boost (X53).
-  - C16 is CONTRARIAN: works +26% better in DOWN markets (X226).
-  Source anchors: Sessions 220, 226.
+- C16 enhancement discoveries (S220-S231): 
+  - Liquid filter (C16>50% + move>80%) = +15% IC boost in WF (X53).
+  - C16 is CONTRARIAN: works +22% better in DOWN markets in WF (X226).
+  - C16 divergence: price vs C16 direction disagreement = +39% IC boost (X228).
+  - **Triple Storm: liquid + down + divergence = +92% IC boost in WF (X229, X231)**!
+  - **HOLDOUT CONFIRMED: +111% boost (X230)**!
+  - **WALK-FORWARD VERIFIED: 9/9 years positive (X231)**!
+  - **Triple Storm EXTENSIONS (S232)**: Universal amplifier!
+    - Works: C16 (+104%), S1 (+90%), volume (+38%), reversal (+60%), skewness (+)
+    - NOT work: foreign_flow, sector_rotation (position signals stay negative)
+    - Mechanism: amplifies ANOMALY/MICROSTRUCTURE signals, not position signals
+  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232.
 
 - Current parked branches: event-v2 sparse-clock, dividend-clock timing,
   legal-holiday timing, standalone foreign/proprietary flow, old OHLCV

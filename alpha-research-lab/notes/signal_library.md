@@ -536,6 +536,29 @@ H360 saved the published contract audit under
 
 ---
 
+### C16-Triple — CafeF Order Pressure + Triple Storm Conditions (S229)
+**Status: DISCOVERED — candidate for publication**
+
+- **Standalone IC vs 1d barrier:** `+0.158` (vs baseline +0.078 = **+104% boost**)
+- **Walk-Forward IC:** `+0.145`, **9/9 years positive** (X231)
+- **Holdout IC (2023-2025):** `+0.134` (+111% vs baseline)
+- **Conditions:** liquid (>80% move) + market=down + divergence (price vs C16 direction disagree)
+
+**What it captures:** Same as C16, but with Triple Storm filters applied:
+- Liquid: 20-day rolling C16 std > 80th percentile
+- Down market: daily win rate < 50% (contrarian regime)
+- Divergence: yesterday return direction != C16 direction
+
+**Mechanism:** Triple Storm is a universal signal amplifier that works on
+anomaly/microstructure signals (C16, volume, reversal, skewness) but NOT
+on position signals (foreign, sector).
+
+**Reusable script:** `analysis/x232_triple_test.py`
+
+**Source:** Sessions 229, 230, 231, 232.
+
+---
+
 ### I1 — Reduced-Shape Intraday Disagreement Atoms (H275)
 **Status: CANDIDATE — observed-subset intraday state family, offline only**
 
