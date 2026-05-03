@@ -5,8 +5,8 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_219_log.md](./session_219_log.md)
-Last verified: [Session 219](./session_219_log.md), 2026-05-03.
+Latest full session detail: [session_220_log.md](./session_220_log.md)
+Last verified: [Session 220](./session_220_log.md), 2026-05-03.
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -37,6 +37,23 @@ Source durable memory:
   or failed under the current target/consumer contracts. Use the compact
   dead-end view before reopening any of them.
 
+## New Branches (2026-05-03)
+
+- `liquid_braid_stack`: C16 + liquidity + sector-unanimity double filter.
+  Test: IC(C16 | move>80th AND kurtosis<20th).
+
+- `dynamic_liquidity_regime`: Weight C16 by market liquidity regime.
+  Test: IC(C16) in high-move vs low-move regimes separately.
+
+- `sector_convergence_contrarian`: High C16 in fragmented sector = contrarian outlier.
+  Test: IC(C16 | high-sector-kurtosis).
+
+- `c16_roc_filtered`: Rate of C16 change + liquid/braid filter.
+  Test: IC(ROC(C16) | move>80 AND kurt<20).
+
+- `sector_pressure_momentum`: Sector pressure rate of change predicts sector rank.
+  Test: IC(sector-level C16 momentum) as rank predictor.
+
 ## Active Jobs / Constraints
 
 - One heavy local-model job is active: tmux session
@@ -52,6 +69,15 @@ Source durable memory:
 - Local-ML planning budget remains hard-capped at `3GB VRAM / 10GB RAM`.
 - Heavy PhoBERT train/publish commands should fail fast when CUDA is hidden;
   use `NEWS_FEATURES_ALLOW_CPU=1` only for an explicit CPU fallback.
+
+## Data / Test Findings (2026-05-03)
+
+- X51-X55 stochastic: X51/52 FAILED, X53 DISCOVERED: C16 works BETTER with
+  high liquidity (move>80%ile): IC +0.137 vs +0.090 baseline (+52%!)
+- X54 DISCOVERED: High sector-unanimity (low kurtosis): IC +0.080 vs +0.031 (+160%!)
+- Realized: price data exists in `data/stock/gia_lich_su_*_1D.parquet` (1227 files)
+- Actual return exists in barrier surface `xs_barrier_vol_1d_hose_full.parquet`
+- Scripts: `analysis/x53v2_liquid_c16.py`, `analysis/x54_braid_divergence.py`
 
 ## Immediate Next Actions
 
@@ -675,13 +701,27 @@ Source durable memory:
   First test: atman_presence * price_action as signal.
   Why cosmic: Soul in price action.
 
-- Holiday timing (H363 tested, closed): one payoff-passing state
-  `all_holidays__post_5` but failed portfolio gate. Keep only as offline
-  evidence. Do not tune closure-length gates under current selector.
-- `civil_holiday_sparse_clock`: closed by H363. Civil holiday states had
-  hints, but no portfolio-level rule is promotable without changing target.
-- `holiday_news_silence_break`: holiday-window news/disclosure vs matched
-  non-holiday names. Test after local-news aggregate finishes.
+## Stochastic Resonance & Noise (X51-X55)
+
+- `fibonacci_tick_liquidity_trap` (X51 pending): Whole-number price proximity.
+  Claim: Retail stop-loss clusters at whole/half-integer levels. C16 stronger when price within 0.618% of whole number.
+  Test: IC(C16) vs distance_to_whole_number.
+
+- `fourier_ghost_cycles` (X52 pending): Hidden heartbeat frequency.
+  Claim: C16 works 2x better at specific cycle frequency (3.5 or 7 days).
+  Test: FFT on C16 daily IC, filter by peak frequency alignment.
+
+- `order_flow_cavitation` (X53 pending): Vacuum effect under high pressure.
+  Claim: High C16 + stagnant price = liquidity vacuum = next-day gap-up.
+  Test: C16>90th + price_move<10th percentile → next-day return.
+
+- `braid_divergence` (X54 pending): Signal unanimity across brokers.
+  Claim: Sector-wide pressure unanimity (low kurtosis) = robust signal.
+  Test: C16 kurtosis across sector contributors vs win rate.
+
+- `lempel_ziv_complexity` (X55 pending): Tape complexity filter.
+  Claim: C16 stronger when tape is repetitive (low complexity).
+  Test: C16 IC in bottom complexity decile vs top.
 
 ## Pointers
 
