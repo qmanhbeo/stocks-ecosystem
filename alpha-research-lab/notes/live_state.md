@@ -5,8 +5,8 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_221_log.md](./session_221_log.md)
-Last verified: [Session 221](./session_221_log.md), 2026-05-03.
+Latest full session detail: [session_223_log.md](./session_223_log.md)
+Last verified: [Session 223](./session_223_log.md), 2026-05-03.
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -39,20 +39,17 @@ Source durable memory:
 
 ## New Branches (2026-05-03)
 
-- `liquid_braid_stack`: C16 + liquidity + sector-unanimity double filter.
-  Test: IC(C16 | move>80th AND kurtosis<20th).
+- `c16_roc_filtered`: Rate of C16 change + liquid filter.
+  Test: IC(ROC(C16) | move>80).
 
-- `dynamic_liquidity_regime`: Weight C16 by market liquidity regime.
-  Test: IC(C16) in high-move vs low-move regimes separately.
+- `sector_pressure_momentum`: Sector pressure rate of change.
+  Test: IC(sector-level C16 momentum) as predictor.
 
-- `sector_convergence_contrarian`: High C16 in fragmented sector = contrarian outlier.
-  Test: IC(C16 | high-sector-kurtosis).
+## Branch Status (2026-05-03)
 
-- `c16_roc_filtered`: Rate of C16 change + liquid/braid filter.
-  Test: IC(ROC(C16) | move>80 AND kurt<20).
-
-- `sector_pressure_momentum`: Sector pressure rate of change predicts sector rank.
-  Test: IC(sector-level C16 momentum) as rank predictor.
+- liquid_braid_stack: KILLED (stacking hurts)
+- dynamic_liquidity_regime: WEAK (use for sizing only)
+- sector_convergence_contrarian: KILLED (fragmented = weak always)
 
 ## Active Jobs / Constraints
 

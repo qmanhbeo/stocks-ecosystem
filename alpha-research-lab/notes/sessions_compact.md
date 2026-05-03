@@ -7,6 +7,12 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 223](session_223_log.md): sector_convergence_contrarian — FAILED.
+  Fragmented + high C16: IC +0.035 vs baseline +0.078 (-55%).
+  Kill branch.
+- [Session 222](session_222_log.md): dynamic_liquidity_regime — WEAK PASS.
+  High market regime: +0.081 vs Low: +0.074 (diff +0.007, ~8%)
+  Not enough for regime switching, could use for sizing only.
 - [Session 221](session_221_log.md): liquid_braid_stack TEST — MIXED.
   X53 (liquid): +25% IC ✅. X54 (braid): +3%. Stack: -18% ❌.
   Stacking FILTERS HURTS. Use X53 alone, not both.
