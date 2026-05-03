@@ -7,6 +7,9 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 221](session_221_log.md): liquid_braid_stack TEST — MIXED.
+  X53 (liquid): +25% IC ✅. X54 (braid): +3%. Stack: -18% ❌.
+  Stacking FILTERS HURTS. Use X53 alone, not both.
 - [Session 220](session_220_log.md): X51-X55 stochastic resonance batch - SUPER PASS.
   X53 (Liquid C16): C16 + high move >80%ile = IC +0.137 (+52% vs baseline +0.090).
   X54 (Braid): Low sector kurtosis = unanimous pressure = IC +0.080 vs +0.031 (+160%).

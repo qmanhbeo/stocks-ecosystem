@@ -5,8 +5,8 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_220_log.md](./session_220_log.md)
-Last verified: [Session 220](./session_220_log.md), 2026-05-03.
+Latest full session detail: [session_221_log.md](./session_221_log.md)
+Last verified: [Session 221](./session_221_log.md), 2026-05-03.
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
