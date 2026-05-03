@@ -1,0 +1,371 @@
+Ollama guarded input scan 72880/142296; unique_articles=72880, article_rows=142614, cache_hits=0, cache_misses=120, newly_scored=120
+Ollama guarded input scan 72900/142296; unique_articles=72900, article_rows=142666, cache_hits=0, cache_misses=140, newly_scored=140
+Ollama guarded input scan 72920/142296; unique_articles=72920, article_rows=142701, cache_hits=0, cache_misses=160, newly_scored=160
+Ollama guarded input scan 72940/142296; unique_articles=72940, article_rows=142772, cache_hits=0, cache_misses=180, newly_scored=180
+Ollama guarded input scan 72960/142296; unique_articles=72960, article_rows=142831, cache_hits=0, cache_misses=200, newly_scored=200
+Ollama guarded input scan 72980/142296; unique_articles=72980, article_rows=142884, cache_hits=0, cache_misses=220, newly_scored=220
+Ollama guarded input scan 73000/142296; unique_articles=73000, article_rows=142917, cache_hits=0, cache_misses=240, newly_scored=240
+Ollama guarded input scan 73020/142296; unique_articles=73020, article_rows=142968, cache_hits=0, cache_misses=260, newly_scored=260
+Ollama guarded input scan 73040/142296; unique_articles=73040, article_rows=143020, cache_hits=0, cache_misses=280, newly_scored=280
+Ollama guarded input scan 73060/142296; unique_articles=73060, article_rows=143054, cache_hits=0, cache_misses=300, newly_scored=300
+Ollama guarded input scan 73080/142296; unique_articles=73080, article_rows=143087, cache_hits=0, cache_misses=320, newly_scored=320
+Ollama guarded input scan 73100/142296; unique_articles=73100, article_rows=143145, cache_hits=0, cache_misses=340, newly_scored=340
+Ollama guarded input scan 73120/142296; unique_articles=73120, article_rows=143186, cache_hits=0, cache_misses=360, newly_scored=360
+Ollama guarded input scan 73140/142296; unique_articles=73140, article_rows=143221, cache_hits=0, cache_misses=380, newly_scored=380
+Ollama guarded input scan 73160/142296; unique_articles=73160, article_rows=143279, cache_hits=0, cache_misses=400, newly_scored=400
+Ollama guarded input scan 73180/142296; unique_articles=73180, article_rows=143313, cache_hits=0, cache_misses=420, newly_scored=420
+Ollama guarded input scan 73200/142296; unique_articles=73200, article_rows=143361, cache_hits=0, cache_misses=440, newly_scored=440
+Ollama guarded input scan 73220/142296; unique_articles=73220, article_rows=143400, cache_hits=0, cache_misses=460, newly_scored=460
+Ollama guarded input scan 73240/142296; unique_articles=73240, article_rows=143448, cache_hits=0, cache_misses=480, newly_scored=480
+Ollama guarded input scan 73260/142296; unique_articles=73260, article_rows=143482, cache_hits=0, cache_misses=500, newly_scored=500
+Ollama guarded input scan 73280/142296; unique_articles=73280, article_rows=143524, cache_hits=0, cache_misses=520, newly_scored=520
+Ollama guarded input scan 73300/142296; unique_articles=73300, article_rows=143566, cache_hits=0, cache_misses=540, newly_scored=540
+Ollama guarded input scan 73320/142296; unique_articles=73320, article_rows=143613, cache_hits=0, cache_misses=560, newly_scored=560
+Ollama guarded input scan 73340/142296; unique_articles=73340, article_rows=143665, cache_hits=0, cache_misses=580, newly_scored=580
+Ollama guarded input scan 73360/142296; unique_articles=73360, article_rows=143701, cache_hits=0, cache_misses=600, newly_scored=600
+Ollama guarded input scan 73380/142296; unique_articles=73380, article_rows=143740, cache_hits=0, cache_misses=620, newly_scored=620
+Ollama guarded input scan 73400/142296; unique_articles=73400, article_rows=143787, cache_hits=0, cache_misses=640, newly_scored=640
+Ollama guarded input scan 73420/142296; unique_articles=73420, article_rows=143825, cache_hits=0, cache_misses=660, newly_scored=660
+Ollama guarded input scan 73440/142296; unique_articles=73440, article_rows=143879, cache_hits=0, cache_misses=680, newly_scored=680
+Ollama guarded input scan 73460/142296; unique_articles=73460, article_rows=143912, cache_hits=0, cache_misses=700, newly_scored=700
+Ollama guarded input scan 73480/142296; unique_articles=73480, article_rows=143948, cache_hits=0, cache_misses=720, newly_scored=720
+Ollama guarded input scan 73500/142296; unique_articles=73500, article_rows=143980, cache_hits=0, cache_misses=740, newly_scored=740
+Ollama guarded input scan 73520/142296; unique_articles=73520, article_rows=144017, cache_hits=0, cache_misses=760, newly_scored=760
+Ollama guarded input scan 73540/142296; unique_articles=73540, article_rows=144044, cache_hits=0, cache_misses=780, newly_scored=780
+Ollama guarded input scan 73560/142296; unique_articles=73560, article_rows=144082, cache_hits=0, cache_misses=800, newly_scored=800
+Ollama guarded input scan 73580/142296; unique_articles=73580, article_rows=144119, cache_hits=0, cache_misses=820, newly_scored=820
+Ollama guarded input scan 73600/142296; unique_articles=73600, article_rows=144182, cache_hits=0, cache_misses=840, newly_scored=840
+Ollama guarded input scan 73620/142296; unique_articles=73620, article_rows=144220, cache_hits=0, cache_misses=860, newly_scored=860
+Ollama guarded input scan 73640/142296; unique_articles=73640, article_rows=144261, cache_hits=0, cache_misses=880, newly_scored=880
+Ollama guarded input scan 73660/142296; unique_articles=73660, article_rows=144300, cache_hits=0, cache_misses=900, newly_scored=900
+Ollama guarded input scan 73680/142296; unique_articles=73680, article_rows=144336, cache_hits=0, cache_misses=920, newly_scored=920
+Ollama guarded input scan 73700/142296; unique_articles=73700, article_rows=144383, cache_hits=0, cache_misses=940, newly_scored=940
+Ollama guarded input scan 73720/142296; unique_articles=73720, article_rows=144418, cache_hits=0, cache_misses=960, newly_scored=960
+Ollama guarded input scan 73740/142296; unique_articles=73740, article_rows=144457, cache_hits=0, cache_misses=980, newly_scored=980
+Ollama guarded input scan 73760/142296; unique_articles=73760, article_rows=144496, cache_hits=0, cache_misses=1000, newly_scored=1000
+Ollama guarded input scan 73780/142296; unique_articles=73780, article_rows=144537, cache_hits=0, cache_misses=1020, newly_scored=1020
+Ollama guarded input scan 73800/142296; unique_articles=73800, article_rows=144570, cache_hits=0, cache_misses=1040, newly_scored=1040
+Ollama guarded input scan 73820/142296; unique_articles=73820, article_rows=144616, cache_hits=0, cache_misses=1060, newly_scored=1060
+Ollama guarded input scan 73840/142296; unique_articles=73840, article_rows=144663, cache_hits=0, cache_misses=1080, newly_scored=1080
+Ollama guarded input scan 73860/142296; unique_articles=73860, article_rows=144716, cache_hits=0, cache_misses=1100, newly_scored=1100
+Ollama guarded input scan 73880/142296; unique_articles=73880, article_rows=144742, cache_hits=0, cache_misses=1120, newly_scored=1120
+Ollama guarded input scan 73900/142296; unique_articles=73900, article_rows=144789, cache_hits=0, cache_misses=1140, newly_scored=1140
+Ollama guarded input scan 73920/142296; unique_articles=73920, article_rows=144842, cache_hits=0, cache_misses=1160, newly_scored=1160
+Ollama guarded input scan 73940/142296; unique_articles=73940, article_rows=144871, cache_hits=0, cache_misses=1180, newly_scored=1180
+Ollama guarded input scan 73960/142296; unique_articles=73960, article_rows=144914, cache_hits=0, cache_misses=1200, newly_scored=1200
+Ollama guarded input scan 73980/142296; unique_articles=73980, article_rows=144985, cache_hits=0, cache_misses=1220, newly_scored=1220
+Ollama guarded input scan 74000/142296; unique_articles=74000, article_rows=145044, cache_hits=0, cache_misses=1240, newly_scored=1240
+Ollama guarded input scan 74020/142296; unique_articles=74020, article_rows=145079, cache_hits=0, cache_misses=1260, newly_scored=1260
+Ollama guarded input scan 74040/142296; unique_articles=74040, article_rows=145119, cache_hits=0, cache_misses=1280, newly_scored=1280
+Ollama guarded input scan 74060/142296; unique_articles=74060, article_rows=145168, cache_hits=0, cache_misses=1300, newly_scored=1300
+Ollama guarded input scan 74080/142296; unique_articles=74080, article_rows=145193, cache_hits=0, cache_misses=1320, newly_scored=1320
+Ollama guarded input scan 74100/142296; unique_articles=74100, article_rows=145232, cache_hits=0, cache_misses=1340, newly_scored=1340
+Ollama guarded input scan 74120/142296; unique_articles=74120, article_rows=145269, cache_hits=0, cache_misses=1360, newly_scored=1360
+Ollama guarded input scan 74140/142296; unique_articles=74140, article_rows=145318, cache_hits=0, cache_misses=1380, newly_scored=1380
+Ollama guarded input scan 74160/142296; unique_articles=74160, article_rows=145376, cache_hits=0, cache_misses=1400, newly_scored=1400
+Ollama guarded input scan 74180/142296; unique_articles=74180, article_rows=145408, cache_hits=0, cache_misses=1420, newly_scored=1420
+Ollama guarded input scan 74200/142296; unique_articles=74200, article_rows=145455, cache_hits=0, cache_misses=1440, newly_scored=1440
+Ollama guarded input scan 74220/142296; unique_articles=74220, article_rows=145511, cache_hits=0, cache_misses=1460, newly_scored=1460
+Ollama guarded input scan 74240/142296; unique_articles=74240, article_rows=145545, cache_hits=0, cache_misses=1480, newly_scored=1480
+Ollama guarded input scan 74260/142296; unique_articles=74260, article_rows=145579, cache_hits=0, cache_misses=1500, newly_scored=1500
+Ollama guarded input scan 74280/142296; unique_articles=74280, article_rows=145635, cache_hits=0, cache_misses=1520, newly_scored=1520
+Ollama guarded input scan 74300/142296; unique_articles=74300, article_rows=145671, cache_hits=0, cache_misses=1540, newly_scored=1540
+Ollama guarded input scan 74320/142296; unique_articles=74320, article_rows=145712, cache_hits=0, cache_misses=1560, newly_scored=1560
+Ollama guarded input scan 74340/142296; unique_articles=74340, article_rows=145759, cache_hits=0, cache_misses=1580, newly_scored=1580
+Ollama guarded input scan 74360/142296; unique_articles=74360, article_rows=145809, cache_hits=0, cache_misses=1600, newly_scored=1600
+Ollama guarded input scan 74380/142296; unique_articles=74380, article_rows=145861, cache_hits=0, cache_misses=1620, newly_scored=1620
+Ollama guarded input scan 74400/142296; unique_articles=74400, article_rows=145898, cache_hits=0, cache_misses=1640, newly_scored=1640
+Ollama guarded input scan 74420/142296; unique_articles=74420, article_rows=145948, cache_hits=0, cache_misses=1660, newly_scored=1660
+Ollama guarded input scan 74440/142296; unique_articles=74440, article_rows=145989, cache_hits=0, cache_misses=1680, newly_scored=1680
+Ollama guarded input scan 74460/142296; unique_articles=74460, article_rows=146023, cache_hits=0, cache_misses=1700, newly_scored=1700
+Ollama guarded input scan 74480/142296; unique_articles=74480, article_rows=146059, cache_hits=0, cache_misses=1720, newly_scored=1720
+Ollama guarded input scan 74500/142296; unique_articles=74500, article_rows=146121, cache_hits=0, cache_misses=1740, newly_scored=1740
+Ollama guarded input scan 74520/142296; unique_articles=74520, article_rows=146171, cache_hits=0, cache_misses=1760, newly_scored=1760
+Ollama guarded input scan 74540/142296; unique_articles=74540, article_rows=146204, cache_hits=0, cache_misses=1780, newly_scored=1780
+Ollama guarded input scan 74560/142296; unique_articles=74560, article_rows=146262, cache_hits=0, cache_misses=1800, newly_scored=1800
+Ollama guarded input scan 74580/142296; unique_articles=74580, article_rows=146299, cache_hits=0, cache_misses=1820, newly_scored=1820
+Ollama guarded input scan 74600/142296; unique_articles=74600, article_rows=146329, cache_hits=0, cache_misses=1840, newly_scored=1840
+Ollama guarded input scan 74620/142296; unique_articles=74620, article_rows=146365, cache_hits=0, cache_misses=1860, newly_scored=1860
+Ollama guarded input scan 74640/142296; unique_articles=74640, article_rows=146398, cache_hits=0, cache_misses=1880, newly_scored=1880
+Ollama guarded input scan 74660/142296; unique_articles=74660, article_rows=146435, cache_hits=0, cache_misses=1900, newly_scored=1900
+Ollama guarded input scan 74680/142296; unique_articles=74680, article_rows=146480, cache_hits=0, cache_misses=1920, newly_scored=1920
+Ollama guarded input scan 74700/142296; unique_articles=74700, article_rows=146512, cache_hits=0, cache_misses=1940, newly_scored=1940
+Ollama guarded input scan 74720/142296; unique_articles=74720, article_rows=146561, cache_hits=0, cache_misses=1960, newly_scored=1960
+Ollama guarded input scan 74740/142296; unique_articles=74740, article_rows=146609, cache_hits=0, cache_misses=1980, newly_scored=1980
+Ollama guarded input scan 74760/142296; unique_articles=74760, article_rows=146641, cache_hits=0, cache_misses=2000, newly_scored=2000
+Ollama guarded input scan 74780/142296; unique_articles=74780, article_rows=146674, cache_hits=0, cache_misses=2020, newly_scored=2020
+Ollama guarded input scan 74800/142296; unique_articles=74800, article_rows=146713, cache_hits=0, cache_misses=2040, newly_scored=2040
+Ollama guarded input scan 74820/142296; unique_articles=74820, article_rows=146758, cache_hits=0, cache_misses=2060, newly_scored=2060
+Ollama guarded input scan 74840/142296; unique_articles=74840, article_rows=146824, cache_hits=0, cache_misses=2080, newly_scored=2080
+Ollama guarded input scan 74860/142296; unique_articles=74860, article_rows=146858, cache_hits=0, cache_misses=2100, newly_scored=2100
+Ollama guarded input scan 74880/142296; unique_articles=74880, article_rows=146896, cache_hits=0, cache_misses=2120, newly_scored=2120
+Ollama guarded input scan 74900/142296; unique_articles=74900, article_rows=146925, cache_hits=0, cache_misses=2140, newly_scored=2140
+Ollama guarded input scan 74920/142296; unique_articles=74920, article_rows=146976, cache_hits=0, cache_misses=2160, newly_scored=2160
+Ollama guarded input scan 74940/142296; unique_articles=74940, article_rows=147018, cache_hits=0, cache_misses=2180, newly_scored=2180
+Ollama guarded input scan 74960/142296; unique_articles=74960, article_rows=147051, cache_hits=0, cache_misses=2200, newly_scored=2200
+Ollama guarded input scan 74980/142296; unique_articles=74980, article_rows=147083, cache_hits=0, cache_misses=2220, newly_scored=2220
+Ollama guarded input scan 75000/142296; unique_articles=75000, article_rows=147120, cache_hits=0, cache_misses=2240, newly_scored=2240
+Ollama guarded input scan 75020/142296; unique_articles=75020, article_rows=147166, cache_hits=0, cache_misses=2260, newly_scored=2260
+Ollama guarded input scan 75040/142296; unique_articles=75040, article_rows=147210, cache_hits=0, cache_misses=2280, newly_scored=2280
+Ollama guarded input scan 75060/142296; unique_articles=75060, article_rows=147247, cache_hits=0, cache_misses=2300, newly_scored=2300
+Ollama guarded input scan 75080/142296; unique_articles=75080, article_rows=147280, cache_hits=0, cache_misses=2320, newly_scored=2320
+Ollama guarded input scan 75100/142296; unique_articles=75100, article_rows=147325, cache_hits=0, cache_misses=2340, newly_scored=2340
+Ollama guarded input scan 75120/142296; unique_articles=75120, article_rows=147350, cache_hits=0, cache_misses=2360, newly_scored=2360
+Ollama guarded input scan 75140/142296; unique_articles=75140, article_rows=147388, cache_hits=0, cache_misses=2380, newly_scored=2380
+Ollama guarded input scan 75160/142296; unique_articles=75160, article_rows=147437, cache_hits=0, cache_misses=2400, newly_scored=2400
+Ollama guarded input scan 75180/142296; unique_articles=75180, article_rows=147477, cache_hits=0, cache_misses=2420, newly_scored=2420
+Ollama guarded input scan 75200/142296; unique_articles=75200, article_rows=147520, cache_hits=0, cache_misses=2440, newly_scored=2440
+Ollama guarded input scan 75220/142296; unique_articles=75220, article_rows=147569, cache_hits=0, cache_misses=2460, newly_scored=2460
+Ollama guarded input scan 75240/142296; unique_articles=75240, article_rows=147608, cache_hits=0, cache_misses=2480, newly_scored=2480
+Ollama guarded input scan 75260/142296; unique_articles=75260, article_rows=147640, cache_hits=0, cache_misses=2500, newly_scored=2500
+Ollama guarded input scan 75280/142296; unique_articles=75280, article_rows=147683, cache_hits=0, cache_misses=2520, newly_scored=2520
+Ollama guarded input scan 75300/142296; unique_articles=75300, article_rows=147721, cache_hits=0, cache_misses=2540, newly_scored=2540
+Ollama guarded input scan 75320/142296; unique_articles=75320, article_rows=147772, cache_hits=0, cache_misses=2560, newly_scored=2560
+Ollama guarded input scan 75340/142296; unique_articles=75340, article_rows=147802, cache_hits=0, cache_misses=2580, newly_scored=2580
+Ollama guarded input scan 75360/142296; unique_articles=75360, article_rows=147839, cache_hits=0, cache_misses=2600, newly_scored=2600
+Ollama guarded input scan 75380/142296; unique_articles=75380, article_rows=147869, cache_hits=0, cache_misses=2620, newly_scored=2620
+Ollama guarded input scan 75400/142296; unique_articles=75400, article_rows=147906, cache_hits=0, cache_misses=2640, newly_scored=2640
+Ollama guarded input scan 75420/142296; unique_articles=75420, article_rows=147950, cache_hits=0, cache_misses=2660, newly_scored=2660
+Ollama guarded input scan 75440/142296; unique_articles=75440, article_rows=147987, cache_hits=0, cache_misses=2680, newly_scored=2680
+Ollama guarded input scan 75460/142296; unique_articles=75460, article_rows=148043, cache_hits=0, cache_misses=2700, newly_scored=2700
+Ollama guarded input scan 75480/142296; unique_articles=75480, article_rows=148081, cache_hits=0, cache_misses=2720, newly_scored=2720
+Ollama guarded input scan 75500/142296; unique_articles=75500, article_rows=148120, cache_hits=0, cache_misses=2740, newly_scored=2740
+Ollama guarded input scan 75520/142296; unique_articles=75520, article_rows=148164, cache_hits=0, cache_misses=2760, newly_scored=2760
+Ollama guarded input scan 75540/142296; unique_articles=75540, article_rows=148206, cache_hits=0, cache_misses=2780, newly_scored=2780
+Ollama guarded input scan 75560/142296; unique_articles=75560, article_rows=148236, cache_hits=0, cache_misses=2800, newly_scored=2800
+Ollama guarded input scan 75580/142296; unique_articles=75580, article_rows=148301, cache_hits=0, cache_misses=2820, newly_scored=2820
+Ollama guarded input scan 75600/142296; unique_articles=75600, article_rows=148352, cache_hits=0, cache_misses=2840, newly_scored=2840
+Ollama guarded input scan 75620/142296; unique_articles=75620, article_rows=148422, cache_hits=0, cache_misses=2860, newly_scored=2860
+Ollama guarded input scan 75640/142296; unique_articles=75640, article_rows=148460, cache_hits=0, cache_misses=2880, newly_scored=2880
+Ollama guarded input scan 75660/142296; unique_articles=75660, article_rows=148495, cache_hits=0, cache_misses=2900, newly_scored=2900
+Ollama guarded input scan 75680/142296; unique_articles=75680, article_rows=148544, cache_hits=0, cache_misses=2920, newly_scored=2920
+Ollama guarded input scan 75700/142296; unique_articles=75700, article_rows=148596, cache_hits=0, cache_misses=2940, newly_scored=2940
+Ollama guarded input scan 75720/142296; unique_articles=75720, article_rows=148628, cache_hits=0, cache_misses=2960, newly_scored=2960
+Ollama guarded input scan 75740/142296; unique_articles=75740, article_rows=148660, cache_hits=0, cache_misses=2980, newly_scored=2980
+Ollama guarded input scan 75760/142296; unique_articles=75760, article_rows=148701, cache_hits=0, cache_misses=3000, newly_scored=3000
+Ollama guarded input scan 75780/142296; unique_articles=75780, article_rows=148746, cache_hits=0, cache_misses=3020, newly_scored=3020
+Ollama guarded input scan 75800/142296; unique_articles=75800, article_rows=148775, cache_hits=0, cache_misses=3040, newly_scored=3040
+Ollama guarded input scan 75820/142296; unique_articles=75820, article_rows=148799, cache_hits=0, cache_misses=3060, newly_scored=3060
+Ollama guarded input scan 75840/142296; unique_articles=75840, article_rows=148839, cache_hits=0, cache_misses=3080, newly_scored=3080
+Ollama guarded input scan 75860/142296; unique_articles=75860, article_rows=148890, cache_hits=0, cache_misses=3100, newly_scored=3100
+Ollama guarded input scan 75880/142296; unique_articles=75880, article_rows=148922, cache_hits=0, cache_misses=3120, newly_scored=3120
+Ollama guarded input scan 75900/142296; unique_articles=75900, article_rows=148970, cache_hits=0, cache_misses=3140, newly_scored=3140
+Ollama guarded input scan 75920/142296; unique_articles=75920, article_rows=149018, cache_hits=0, cache_misses=3160, newly_scored=3160
+Ollama guarded input scan 75940/142296; unique_articles=75940, article_rows=149052, cache_hits=0, cache_misses=3180, newly_scored=3180
+Ollama guarded input scan 75960/142296; unique_articles=75960, article_rows=149077, cache_hits=0, cache_misses=3200, newly_scored=3200
+Ollama guarded input scan 75980/142296; unique_articles=75980, article_rows=149146, cache_hits=0, cache_misses=3220, newly_scored=3220
+Ollama guarded input scan 76000/142296; unique_articles=76000, article_rows=149174, cache_hits=0, cache_misses=3240, newly_scored=3240
+Ollama guarded input scan 76020/142296; unique_articles=76020, article_rows=149240, cache_hits=0, cache_misses=3260, newly_scored=3260
+Ollama guarded input scan 76040/142296; unique_articles=76040, article_rows=149272, cache_hits=0, cache_misses=3280, newly_scored=3280
+Ollama guarded input scan 76060/142296; unique_articles=76060, article_rows=149314, cache_hits=0, cache_misses=3300, newly_scored=3300
+Ollama guarded input scan 76080/142296; unique_articles=76080, article_rows=149346, cache_hits=0, cache_misses=3320, newly_scored=3320
+Ollama guarded input scan 76100/142296; unique_articles=76100, article_rows=149381, cache_hits=0, cache_misses=3340, newly_scored=3340
+Ollama guarded input scan 76120/142296; unique_articles=76120, article_rows=149416, cache_hits=0, cache_misses=3360, newly_scored=3360
+Ollama guarded input scan 76140/142296; unique_articles=76140, article_rows=149458, cache_hits=0, cache_misses=3380, newly_scored=3380
+Ollama guarded input scan 76160/142296; unique_articles=76160, article_rows=149498, cache_hits=0, cache_misses=3400, newly_scored=3400
+Ollama guarded input scan 76180/142296; unique_articles=76180, article_rows=149532, cache_hits=0, cache_misses=3420, newly_scored=3420
+Ollama guarded input scan 76200/142296; unique_articles=76200, article_rows=149573, cache_hits=0, cache_misses=3440, newly_scored=3440
+Ollama guarded input scan 76220/142296; unique_articles=76220, article_rows=149611, cache_hits=0, cache_misses=3460, newly_scored=3460
+Ollama guarded input scan 76240/142296; unique_articles=76240, article_rows=149651, cache_hits=0, cache_misses=3480, newly_scored=3480
+Ollama guarded input scan 76260/142296; unique_articles=76260, article_rows=149685, cache_hits=0, cache_misses=3500, newly_scored=3500
+Ollama guarded input scan 76280/142296; unique_articles=76280, article_rows=149713, cache_hits=0, cache_misses=3520, newly_scored=3520
+Ollama guarded input scan 76300/142296; unique_articles=76300, article_rows=149756, cache_hits=0, cache_misses=3540, newly_scored=3540
+Ollama guarded input scan 76320/142296; unique_articles=76320, article_rows=149800, cache_hits=0, cache_misses=3560, newly_scored=3560
+Ollama guarded input scan 76340/142296; unique_articles=76340, article_rows=149834, cache_hits=0, cache_misses=3580, newly_scored=3580
+Ollama guarded input scan 76360/142296; unique_articles=76360, article_rows=149876, cache_hits=0, cache_misses=3600, newly_scored=3600
+Ollama guarded input scan 76380/142296; unique_articles=76380, article_rows=149912, cache_hits=0, cache_misses=3620, newly_scored=3620
+Ollama guarded input scan 76400/142296; unique_articles=76400, article_rows=149960, cache_hits=0, cache_misses=3640, newly_scored=3640
+Ollama guarded input scan 76420/142296; unique_articles=76420, article_rows=150010, cache_hits=0, cache_misses=3660, newly_scored=3660
+Ollama guarded input scan 76440/142296; unique_articles=76440, article_rows=150044, cache_hits=0, cache_misses=3680, newly_scored=3680
+Ollama guarded input scan 76460/142296; unique_articles=76460, article_rows=150110, cache_hits=0, cache_misses=3700, newly_scored=3700
+Ollama guarded input scan 76480/142296; unique_articles=76480, article_rows=150138, cache_hits=0, cache_misses=3720, newly_scored=3720
+Ollama guarded input scan 76500/142296; unique_articles=76500, article_rows=150181, cache_hits=0, cache_misses=3740, newly_scored=3740
+Ollama guarded input scan 76520/142296; unique_articles=76520, article_rows=150213, cache_hits=0, cache_misses=3760, newly_scored=3760
+Ollama guarded input scan 76540/142296; unique_articles=76540, article_rows=150249, cache_hits=0, cache_misses=3780, newly_scored=3780
+Ollama guarded input scan 76560/142296; unique_articles=76560, article_rows=150280, cache_hits=0, cache_misses=3800, newly_scored=3800
+Ollama guarded input scan 76580/142296; unique_articles=76580, article_rows=150331, cache_hits=0, cache_misses=3820, newly_scored=3820
+Ollama guarded input scan 76600/142296; unique_articles=76600, article_rows=150385, cache_hits=0, cache_misses=3840, newly_scored=3840
+Ollama guarded input scan 76620/142296; unique_articles=76620, article_rows=150414, cache_hits=0, cache_misses=3860, newly_scored=3860
+Ollama guarded input scan 76640/142296; unique_articles=76640, article_rows=150461, cache_hits=0, cache_misses=3880, newly_scored=3880
+Ollama guarded input scan 76660/142296; unique_articles=76660, article_rows=150500, cache_hits=0, cache_misses=3900, newly_scored=3900
+Ollama guarded input scan 76680/142296; unique_articles=76680, article_rows=150523, cache_hits=0, cache_misses=3920, newly_scored=3920
+Ollama guarded input scan 76700/142296; unique_articles=76700, article_rows=150562, cache_hits=0, cache_misses=3940, newly_scored=3940
+Ollama guarded input scan 76720/142296; unique_articles=76720, article_rows=150597, cache_hits=0, cache_misses=3960, newly_scored=3960
+Ollama guarded input scan 76740/142296; unique_articles=76740, article_rows=150668, cache_hits=0, cache_misses=3980, newly_scored=3980
+Ollama guarded input scan 76760/142296; unique_articles=76760, article_rows=150710, cache_hits=0, cache_misses=4000, newly_scored=4000
+Ollama guarded input scan 76780/142296; unique_articles=76780, article_rows=150754, cache_hits=0, cache_misses=4020, newly_scored=4020
+Ollama guarded input scan 76800/142296; unique_articles=76800, article_rows=150801, cache_hits=0, cache_misses=4040, newly_scored=4040
+Ollama guarded input scan 76820/142296; unique_articles=76820, article_rows=150833, cache_hits=0, cache_misses=4060, newly_scored=4060
+Ollama guarded input scan 76840/142296; unique_articles=76840, article_rows=150868, cache_hits=0, cache_misses=4080, newly_scored=4080
+Ollama guarded input scan 76860/142296; unique_articles=76860, article_rows=150904, cache_hits=0, cache_misses=4100, newly_scored=4100
+Ollama guarded input scan 76880/142296; unique_articles=76880, article_rows=150943, cache_hits=0, cache_misses=4120, newly_scored=4120
+Ollama guarded input scan 76900/142296; unique_articles=76900, article_rows=150974, cache_hits=0, cache_misses=4140, newly_scored=4140
+Ollama guarded input scan 76920/142296; unique_articles=76920, article_rows=151015, cache_hits=0, cache_misses=4160, newly_scored=4160
+Ollama guarded input scan 76940/142296; unique_articles=76940, article_rows=151046, cache_hits=0, cache_misses=4180, newly_scored=4180
+Ollama guarded input scan 76960/142296; unique_articles=76960, article_rows=151104, cache_hits=0, cache_misses=4200, newly_scored=4200
+Ollama guarded input scan 76980/142296; unique_articles=76980, article_rows=151144, cache_hits=0, cache_misses=4220, newly_scored=4220
+Ollama guarded input scan 77000/142296; unique_articles=77000, article_rows=151189, cache_hits=0, cache_misses=4240, newly_scored=4240
+Ollama guarded input scan 77020/142296; unique_articles=77020, article_rows=151220, cache_hits=0, cache_misses=4260, newly_scored=4260
+Ollama guarded input scan 77040/142296; unique_articles=77040, article_rows=151252, cache_hits=0, cache_misses=4280, newly_scored=4280
+Ollama guarded input scan 77060/142296; unique_articles=77060, article_rows=151286, cache_hits=0, cache_misses=4300, newly_scored=4300
+Ollama guarded input scan 77080/142296; unique_articles=77080, article_rows=151324, cache_hits=0, cache_misses=4320, newly_scored=4320
+Ollama guarded input scan 77100/142296; unique_articles=77100, article_rows=151374, cache_hits=0, cache_misses=4340, newly_scored=4340
+Ollama guarded input scan 77120/142296; unique_articles=77120, article_rows=151421, cache_hits=0, cache_misses=4360, newly_scored=4360
+Ollama guarded input scan 77140/142296; unique_articles=77140, article_rows=151457, cache_hits=0, cache_misses=4380, newly_scored=4380
+Ollama guarded input scan 77160/142296; unique_articles=77160, article_rows=151500, cache_hits=0, cache_misses=4400, newly_scored=4400
+Ollama guarded input scan 77180/142296; unique_articles=77180, article_rows=151554, cache_hits=0, cache_misses=4420, newly_scored=4420
+Ollama guarded input scan 77200/142296; unique_articles=77200, article_rows=151583, cache_hits=0, cache_misses=4440, newly_scored=4440
+Ollama guarded input scan 77220/142296; unique_articles=77220, article_rows=151644, cache_hits=0, cache_misses=4460, newly_scored=4460
+Ollama guarded input scan 77240/142296; unique_articles=77240, article_rows=151677, cache_hits=0, cache_misses=4480, newly_scored=4480
+Ollama guarded input scan 77260/142296; unique_articles=77260, article_rows=151710, cache_hits=0, cache_misses=4500, newly_scored=4500
+Ollama guarded input scan 77280/142296; unique_articles=77280, article_rows=151766, cache_hits=0, cache_misses=4520, newly_scored=4520
+Ollama guarded input scan 77300/142296; unique_articles=77300, article_rows=151809, cache_hits=0, cache_misses=4540, newly_scored=4540
+Ollama guarded input scan 77320/142296; unique_articles=77320, article_rows=151839, cache_hits=0, cache_misses=4560, newly_scored=4560
+Ollama guarded input scan 77340/142296; unique_articles=77340, article_rows=151882, cache_hits=0, cache_misses=4580, newly_scored=4580
+Ollama guarded input scan 77360/142296; unique_articles=77360, article_rows=151914, cache_hits=0, cache_misses=4600, newly_scored=4600
+Ollama guarded input scan 77380/142296; unique_articles=77380, article_rows=151968, cache_hits=0, cache_misses=4620, newly_scored=4620
+Ollama guarded input scan 77400/142296; unique_articles=77400, article_rows=151993, cache_hits=0, cache_misses=4640, newly_scored=4640
+Ollama guarded input scan 77420/142296; unique_articles=77420, article_rows=152034, cache_hits=0, cache_misses=4660, newly_scored=4660
+Ollama guarded input scan 77440/142296; unique_articles=77440, article_rows=152067, cache_hits=0, cache_misses=4680, newly_scored=4680
+Ollama guarded input scan 77460/142296; unique_articles=77460, article_rows=152109, cache_hits=0, cache_misses=4700, newly_scored=4700
+Ollama guarded input scan 77480/142296; unique_articles=77480, article_rows=152163, cache_hits=0, cache_misses=4720, newly_scored=4720
+Ollama guarded input scan 77500/142296; unique_articles=77500, article_rows=152190, cache_hits=0, cache_misses=4740, newly_scored=4740
+Ollama guarded input scan 77520/142296; unique_articles=77520, article_rows=152223, cache_hits=0, cache_misses=4760, newly_scored=4760
+Ollama guarded input scan 77540/142296; unique_articles=77540, article_rows=152264, cache_hits=0, cache_misses=4780, newly_scored=4780
+Ollama guarded input scan 77560/142296; unique_articles=77560, article_rows=152292, cache_hits=0, cache_misses=4800, newly_scored=4800
+Ollama guarded input scan 77580/142296; unique_articles=77580, article_rows=152321, cache_hits=0, cache_misses=4820, newly_scored=4820
+Ollama guarded input scan 77600/142296; unique_articles=77600, article_rows=152364, cache_hits=0, cache_misses=4840, newly_scored=4840
+Ollama guarded input scan 77620/142296; unique_articles=77620, article_rows=152401, cache_hits=0, cache_misses=4860, newly_scored=4860
+Ollama guarded input scan 77640/142296; unique_articles=77640, article_rows=152448, cache_hits=0, cache_misses=4880, newly_scored=4880
+Ollama guarded input scan 77660/142296; unique_articles=77660, article_rows=152483, cache_hits=0, cache_misses=4900, newly_scored=4900
+Ollama guarded input scan 77680/142296; unique_articles=77680, article_rows=152534, cache_hits=0, cache_misses=4920, newly_scored=4920
+Ollama guarded input scan 77700/142296; unique_articles=77700, article_rows=152573, cache_hits=0, cache_misses=4940, newly_scored=4940
+Ollama guarded input scan 77720/142296; unique_articles=77720, article_rows=152606, cache_hits=0, cache_misses=4960, newly_scored=4960
+Ollama guarded input scan 77740/142296; unique_articles=77740, article_rows=152639, cache_hits=0, cache_misses=4980, newly_scored=4980
+Ollama guarded input scan 77760/142296; unique_articles=77760, article_rows=152683, cache_hits=0, cache_misses=5000, newly_scored=5000
+Ollama guarded input scan 77780/142296; unique_articles=77780, article_rows=152730, cache_hits=0, cache_misses=5020, newly_scored=5020
+Ollama guarded input scan 77800/142296; unique_articles=77800, article_rows=152773, cache_hits=0, cache_misses=5040, newly_scored=5040
+Ollama guarded input scan 77820/142296; unique_articles=77820, article_rows=152803, cache_hits=0, cache_misses=5060, newly_scored=5060
+Ollama guarded input scan 77840/142296; unique_articles=77840, article_rows=152847, cache_hits=0, cache_misses=5080, newly_scored=5080
+Ollama guarded input scan 77860/142296; unique_articles=77860, article_rows=152885, cache_hits=0, cache_misses=5100, newly_scored=5100
+Ollama guarded input scan 77880/142296; unique_articles=77880, article_rows=152927, cache_hits=0, cache_misses=5120, newly_scored=5120
+Ollama guarded input scan 77900/142296; unique_articles=77900, article_rows=152993, cache_hits=0, cache_misses=5140, newly_scored=5140
+Ollama guarded input scan 77920/142296; unique_articles=77920, article_rows=153026, cache_hits=0, cache_misses=5160, newly_scored=5160
+Ollama guarded input scan 77940/142296; unique_articles=77940, article_rows=153052, cache_hits=0, cache_misses=5180, newly_scored=5180
+Ollama guarded input scan 77960/142296; unique_articles=77960, article_rows=153082, cache_hits=0, cache_misses=5200, newly_scored=5200
+Ollama guarded input scan 77980/142296; unique_articles=77980, article_rows=153142, cache_hits=0, cache_misses=5220, newly_scored=5220
+Ollama guarded input scan 78000/142296; unique_articles=78000, article_rows=153178, cache_hits=0, cache_misses=5240, newly_scored=5240
+Ollama guarded input scan 78020/142296; unique_articles=78020, article_rows=153237, cache_hits=0, cache_misses=5260, newly_scored=5260
+Ollama guarded input scan 78040/142296; unique_articles=78040, article_rows=153280, cache_hits=0, cache_misses=5280, newly_scored=5280
+Ollama guarded input scan 78060/142296; unique_articles=78060, article_rows=153324, cache_hits=0, cache_misses=5300, newly_scored=5300
+Ollama guarded input scan 78080/142296; unique_articles=78080, article_rows=153350, cache_hits=0, cache_misses=5320, newly_scored=5320
+Ollama guarded input scan 78100/142296; unique_articles=78100, article_rows=153380, cache_hits=0, cache_misses=5340, newly_scored=5340
+Ollama guarded input scan 78120/142296; unique_articles=78120, article_rows=153429, cache_hits=0, cache_misses=5360, newly_scored=5360
+Ollama guarded input scan 78140/142296; unique_articles=78140, article_rows=153459, cache_hits=0, cache_misses=5380, newly_scored=5380
+Ollama guarded input scan 78160/142296; unique_articles=78160, article_rows=153497, cache_hits=0, cache_misses=5400, newly_scored=5400
+Ollama guarded input scan 78180/142296; unique_articles=78180, article_rows=153543, cache_hits=0, cache_misses=5420, newly_scored=5420
+Ollama guarded input scan 78200/142296; unique_articles=78200, article_rows=153565, cache_hits=0, cache_misses=5440, newly_scored=5440
+Ollama guarded input scan 78220/142296; unique_articles=78220, article_rows=153601, cache_hits=0, cache_misses=5460, newly_scored=5460
+Ollama guarded input scan 78240/142296; unique_articles=78240, article_rows=153637, cache_hits=0, cache_misses=5480, newly_scored=5480
+Ollama guarded input scan 78260/142296; unique_articles=78260, article_rows=153674, cache_hits=0, cache_misses=5500, newly_scored=5500
+Ollama guarded input scan 78280/142296; unique_articles=78280, article_rows=153706, cache_hits=0, cache_misses=5520, newly_scored=5520
+Ollama guarded input scan 78300/142296; unique_articles=78300, article_rows=153764, cache_hits=0, cache_misses=5540, newly_scored=5540
+Ollama guarded input scan 78320/142296; unique_articles=78320, article_rows=153812, cache_hits=0, cache_misses=5560, newly_scored=5560
+Ollama guarded input scan 78340/142296; unique_articles=78340, article_rows=153870, cache_hits=0, cache_misses=5580, newly_scored=5580
+Ollama guarded input scan 78360/142296; unique_articles=78360, article_rows=153899, cache_hits=0, cache_misses=5600, newly_scored=5600
+Ollama guarded input scan 78380/142296; unique_articles=78380, article_rows=153958, cache_hits=0, cache_misses=5620, newly_scored=5620
+Ollama guarded input scan 78400/142296; unique_articles=78400, article_rows=153997, cache_hits=0, cache_misses=5640, newly_scored=5640
+Ollama guarded input scan 78420/142296; unique_articles=78420, article_rows=154039, cache_hits=0, cache_misses=5660, newly_scored=5660
+Ollama guarded input scan 78440/142296; unique_articles=78440, article_rows=154087, cache_hits=0, cache_misses=5680, newly_scored=5680
+Ollama guarded input scan 78460/142296; unique_articles=78460, article_rows=154121, cache_hits=0, cache_misses=5700, newly_scored=5700
+Ollama guarded input scan 78480/142296; unique_articles=78480, article_rows=154160, cache_hits=0, cache_misses=5720, newly_scored=5720
+Ollama guarded input scan 78500/142296; unique_articles=78500, article_rows=154206, cache_hits=0, cache_misses=5740, newly_scored=5740
+Ollama guarded input scan 78520/142296; unique_articles=78520, article_rows=154260, cache_hits=0, cache_misses=5760, newly_scored=5760
+Ollama guarded input scan 78540/142296; unique_articles=78540, article_rows=154294, cache_hits=0, cache_misses=5780, newly_scored=5780
+Ollama guarded input scan 78560/142296; unique_articles=78560, article_rows=154340, cache_hits=0, cache_misses=5800, newly_scored=5800
+Ollama guarded input scan 78580/142296; unique_articles=78580, article_rows=154381, cache_hits=0, cache_misses=5820, newly_scored=5820
+Ollama guarded input scan 78600/142296; unique_articles=78600, article_rows=154445, cache_hits=0, cache_misses=5840, newly_scored=5840
+Ollama guarded input scan 78620/142296; unique_articles=78620, article_rows=154482, cache_hits=0, cache_misses=5860, newly_scored=5860
+Ollama guarded input scan 78640/142296; unique_articles=78640, article_rows=154527, cache_hits=0, cache_misses=5880, newly_scored=5880
+Ollama guarded input scan 78660/142296; unique_articles=78660, article_rows=154565, cache_hits=0, cache_misses=5900, newly_scored=5900
+Ollama guarded input scan 78680/142296; unique_articles=78680, article_rows=154594, cache_hits=0, cache_misses=5920, newly_scored=5920
+Ollama guarded input scan 78700/142296; unique_articles=78700, article_rows=154632, cache_hits=0, cache_misses=5940, newly_scored=5940
+Ollama guarded input scan 78720/142296; unique_articles=78720, article_rows=154675, cache_hits=0, cache_misses=5960, newly_scored=5960
+Ollama guarded input scan 78740/142296; unique_articles=78740, article_rows=154705, cache_hits=0, cache_misses=5980, newly_scored=5980
+Ollama guarded input scan 78760/142296; unique_articles=78760, article_rows=154760, cache_hits=0, cache_misses=6000, newly_scored=6000
+Ollama guarded input scan 78780/142296; unique_articles=78780, article_rows=154800, cache_hits=0, cache_misses=6020, newly_scored=6020
+Ollama guarded input scan 78800/142296; unique_articles=78800, article_rows=154828, cache_hits=0, cache_misses=6040, newly_scored=6040
+Ollama guarded input scan 78820/142296; unique_articles=78820, article_rows=154860, cache_hits=0, cache_misses=6060, newly_scored=6060
+Ollama guarded input scan 78840/142296; unique_articles=78840, article_rows=154937, cache_hits=0, cache_misses=6080, newly_scored=6080
+Ollama guarded input scan 78860/142296; unique_articles=78860, article_rows=154964, cache_hits=0, cache_misses=6100, newly_scored=6100
+Ollama guarded input scan 78880/142296; unique_articles=78880, article_rows=154990, cache_hits=0, cache_misses=6120, newly_scored=6120
+Ollama guarded input scan 78900/142296; unique_articles=78900, article_rows=155030, cache_hits=0, cache_misses=6140, newly_scored=6140
+Ollama guarded input scan 78920/142296; unique_articles=78920, article_rows=155072, cache_hits=0, cache_misses=6160, newly_scored=6160
+Ollama guarded input scan 78940/142296; unique_articles=78940, article_rows=155114, cache_hits=0, cache_misses=6180, newly_scored=6180
+Ollama guarded input scan 78960/142296; unique_articles=78960, article_rows=155160, cache_hits=0, cache_misses=6200, newly_scored=6200
+Ollama guarded input scan 78980/142296; unique_articles=78980, article_rows=155190, cache_hits=0, cache_misses=6220, newly_scored=6220
+Ollama guarded input scan 79000/142296; unique_articles=79000, article_rows=155227, cache_hits=0, cache_misses=6240, newly_scored=6240
+Ollama guarded input scan 79020/142296; unique_articles=79020, article_rows=155273, cache_hits=0, cache_misses=6260, newly_scored=6260
+Ollama guarded input scan 79040/142296; unique_articles=79040, article_rows=155306, cache_hits=0, cache_misses=6280, newly_scored=6280
+Ollama guarded input scan 79060/142296; unique_articles=79060, article_rows=155372, cache_hits=0, cache_misses=6300, newly_scored=6300
+Ollama guarded input scan 79080/142296; unique_articles=79080, article_rows=155422, cache_hits=0, cache_misses=6320, newly_scored=6320
+Ollama guarded input scan 79100/142296; unique_articles=79100, article_rows=155463, cache_hits=0, cache_misses=6340, newly_scored=6340
+Ollama guarded input scan 79120/142296; unique_articles=79120, article_rows=155515, cache_hits=0, cache_misses=6360, newly_scored=6360
+Ollama guarded input scan 79140/142296; unique_articles=79140, article_rows=155546, cache_hits=0, cache_misses=6380, newly_scored=6380
+Ollama guarded input scan 79160/142296; unique_articles=79160, article_rows=155582, cache_hits=0, cache_misses=6400, newly_scored=6400
+Ollama guarded input scan 79180/142296; unique_articles=79180, article_rows=155624, cache_hits=0, cache_misses=6420, newly_scored=6420
+Ollama guarded input scan 79200/142296; unique_articles=79200, article_rows=155651, cache_hits=0, cache_misses=6440, newly_scored=6440
+Ollama guarded input scan 79220/142296; unique_articles=79220, article_rows=155681, cache_hits=0, cache_misses=6460, newly_scored=6460
+Ollama guarded input scan 79240/142296; unique_articles=79240, article_rows=155715, cache_hits=0, cache_misses=6480, newly_scored=6480
+Ollama guarded input scan 79260/142296; unique_articles=79260, article_rows=155750, cache_hits=0, cache_misses=6500, newly_scored=6500
+Ollama guarded input scan 79280/142296; unique_articles=79280, article_rows=155792, cache_hits=0, cache_misses=6520, newly_scored=6520
+Ollama guarded input scan 79300/142296; unique_articles=79300, article_rows=155825, cache_hits=0, cache_misses=6540, newly_scored=6540
+Ollama guarded input scan 79320/142296; unique_articles=79320, article_rows=155870, cache_hits=0, cache_misses=6560, newly_scored=6560
+Ollama guarded input scan 79340/142296; unique_articles=79340, article_rows=155918, cache_hits=0, cache_misses=6580, newly_scored=6580
+Ollama guarded input scan 79360/142296; unique_articles=79360, article_rows=155961, cache_hits=0, cache_misses=6600, newly_scored=6600
+Ollama guarded input scan 79380/142296; unique_articles=79380, article_rows=156006, cache_hits=0, cache_misses=6620, newly_scored=6620
+Ollama guarded input scan 79400/142296; unique_articles=79400, article_rows=156037, cache_hits=0, cache_misses=6640, newly_scored=6640
+Ollama guarded input scan 79420/142296; unique_articles=79420, article_rows=156074, cache_hits=0, cache_misses=6660, newly_scored=6660
+Ollama guarded input scan 79440/142296; unique_articles=79440, article_rows=156109, cache_hits=0, cache_misses=6680, newly_scored=6680
+Ollama guarded input scan 79460/142296; unique_articles=79460, article_rows=156140, cache_hits=0, cache_misses=6700, newly_scored=6700
+Ollama guarded input scan 79480/142296; unique_articles=79480, article_rows=156168, cache_hits=0, cache_misses=6720, newly_scored=6720
+Ollama guarded input scan 79500/142296; unique_articles=79500, article_rows=156197, cache_hits=0, cache_misses=6740, newly_scored=6740
+Ollama guarded input scan 79520/142296; unique_articles=79520, article_rows=156231, cache_hits=0, cache_misses=6760, newly_scored=6760
+^CTraceback (most recent call last):
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_probe_features.py", line 10, in <module>
+    _main()
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_guarded_features.py", line 2358, in main
+    build_ollama_guarded_feature_exports(
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_guarded_features.py", line 2046, in build_ollama_guarded_feature_exports
+    scored_rows = _infer_article_frame(
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_guarded_features.py", line 520, in _infer_article_frame
+    result = _infer_single_article(article, config=config, raw_response_fn=raw_response_fn)
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_guarded_features.py", line 490, in _infer_single_article
+    raw_text = _call_ollama_chat(prompt, config)
+  File "/home/manh/stocks-ecosystem/alpha-research-lab/research_pipelines/news_features/core/build_ollama_guarded_features.py", line 300, in _call_ollama_chat
+    with urllib.request.urlopen(request, timeout=int(config.ollama_guarded_timeout_seconds)) as response:
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 519, in open
+    response = self._open(req, data)
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 536, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 1377, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/urllib/request.py", line 1352, in do_open
+    r = h.getresponse()
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/http/client.py", line 1395, in getresponse
+    response.begin()
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/http/client.py", line 323, in begin
+    version, status, reason = self._read_status()
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/http/client.py", line 284, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/home/manh/miniforge3/envs/stocks/lib/python3.10/socket.py", line 717, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt

@@ -7,6 +7,16 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 212](./session_212_log.md): Recovered the evergreen loop while
+  `ollama_guarded_backfill` was running, found the active run had reverted to
+  an empty cutoff and the non-lockbox `146,872`-row input, stopped it before it
+  reached the known post-2025 tail, verified the `120` newly appended score
+  cache rows were all Dec 2023, and relaunched the checkpoint-safe
+  `--max-published-at 2025-12-31T23:59:59+07:00` command. The corrected input
+  manifest is back to `142,296` rows with `4,576` date-filtered articles, H364
+  readiness now blocks until the final Ollama ticker-day dataset exists, and
+  H364 was hardened to reject missing lockbox cutoffs.
+
 - [Session 211](./session_211_log.md): Resumed the guarded Ollama residual
   backfill at the user's request, but first found that the existing input cache
   included a `2026` tail. Added a cutoff-aware `--max-published-at` path,

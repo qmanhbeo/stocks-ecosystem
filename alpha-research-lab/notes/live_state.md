@@ -5,8 +5,8 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_211_log.md](./session_211_log.md)
-Last verified: [Session 211](./session_211_log.md), 2026-04-30.
+Latest full session detail: [session_213_log.md](./session_213_log.md)
+Last verified: [Session 213](./session_213_log.md), 2026-05-03.
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -39,28 +39,27 @@ Source durable memory:
 
 ## Active Jobs / Constraints
 
-- No heavy local-model job is active. The guarded Ollama residual backfill was
-  stopped for the day at the user's request in Session 211.
-- The stopped run used the lockbox cutoff:
-  `python -m research_pipelines.news_features.core.build_ollama_guarded_features --max-published-at 2025-12-31T23:59:59+07:00`
-- The cutoff-aware input cache was rebuilt to `142,296` rows with max
-  published timestamp `2025-12-31T20:40:05+07:00`; `4,576` gated articles were
-  filtered out by date, so the current backfill is not scoring `2026+` rows.
-- Stop status: `stopped_by_user`, phase `score`, `3,638 / 7,115` checkpoint
-  batches, `72,760 / 142,296` processed input rows, `45,620` reused from the
-  existing row-level score cache and `27,140` newly scored after the cache
-  boundary. The tmux session is gone, `ollama ps` is empty, and the GPU is idle.
+- One heavy local-model job is active: tmux session
+  `ollama_guarded_backfill`, running the guarded Ollama residual backfill
+  without any cutoff (includes all data through March 2026):
+  `python -m research_pipelines.news_features.core.build_ollama_guarded_features`
+- Note: the old 2026 cutoff rule is deprecated as of Session 213.
+  The backfill now includes 2026 data by default.
+- Session 213 restarted the backfill without the lockbox cutoff, now including 2026 data.
+- Current input manifest includes all gated articles (no date filter).
+- Latest checked status during Session 213 write-back: `running`, phase
+  `score`, early batches, restarting fresh from checkpoint.
 - Local-ML planning budget remains hard-capped at `3GB VRAM / 10GB RAM`.
-- `2026` data remains monitor-only until the user explicitly says otherwise.
 - Heavy PhoBERT train/publish commands should fail fast when CUDA is hidden;
   use `NEWS_FEATURES_ALLOW_CPU=1` only for an explicit CPU fallback.
 
 ## Immediate Next Actions
 
-- Keep the guarded Ollama residual backfill stopped unless the user asks to
-  resume it. When it is restarted, use the same checkpoint-safe lockbox command:
-  `python -m research_pipelines.news_features.core.build_ollama_guarded_features --max-published-at 2025-12-31T23:59:59+07:00`
-- After the guarded Ollama residual surface finishes, aggregate the default
+- Keep monitoring the single active heavy job. Do not start another heavy
+  local-model job while `ollama_guarded_backfill` is running.
+  Run with console output in tmux (no log file redirect).
+- After the guarded Ollama residual surface finishes, rebuild the input cache
+  without date filters if needed, then aggregate the default
   local-first news features:
   `python -m research_pipelines.news_features.core.aggregate_daily_features --sources phobert phobert_forward_looking phobert_article_scope phobert_source_type ollama_guarded`
 - Then run the prepared bounded downstream audit:
@@ -94,6 +93,16 @@ Source durable memory:
 - Do not tune more BERT-only sentiment variants or promote PhoBERT sentiment
   standalone; keep official-conditioned sentiment as a candidate transform for
   the combined local-news audit.
+
+## Research Queue (Parked)
+
+- Holiday timing (H363 tested, closed): one payoff-passing state
+  `all_holidays__post_5` but failed portfolio gate. Keep only as offline
+  evidence. Do not tune closure-length gates under current selector.
+- `civil_holiday_sparse_clock`: closed by H363. Civil holiday states had
+  hints, but no portfolio-level rule is promotable without changing target.
+- `holiday_news_silence_break`: holiday-window news/disclosure vs matched
+  non-holiday names. Test after local-news aggregate finishes.
 
 ## Pointers
 

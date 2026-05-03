@@ -130,6 +130,8 @@ def _validate_ollama_ready() -> tuple[bool, list[str], dict[str, object]]:
     if not OLLAMA_PATH.exists():
         blockers.append(f"missing Ollama ticker-day dataset: {OLLAMA_PATH}")
     max_published_at = str(input_manifest.get("max_published_at") or "")
+    if not max_published_at:
+        blockers.append("Ollama input cache is missing the required 2025 lockbox cutoff")
     if _max_published_at_exceeds_lockbox(max_published_at):
         blockers.append(f"Ollama input cache cutoff exceeds 2025 lockbox: {max_published_at}")
     return not blockers, blockers, {

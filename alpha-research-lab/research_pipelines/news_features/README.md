@@ -52,11 +52,17 @@ Compatibility note:
 - `build_ollama_guarded_features` still works, but `build_ollama_probe_features` is the preferred operator name
 - `publish_phobert_forward_looking_exports` still works, but `publish_phobert_forward_looking_features` is the clearer preferred alias
 
+The default Ollama guarded backfill includes all 2026 data (no cutoff). To run:
+
+```bash
+python -m research_pipelines.news_features.core.build_ollama_guarded_features
+```
+
 For locked research backfills that must avoid the `2026+` monitor period, pass
 the cutoff explicitly:
 
 ```bash
-python -m research_pipelines.news_features.core.build_ollama_probe_features --max-published-at 2025-12-31T23:59:59+07:00
+python -m research_pipelines.news_features.core.build_ollama_guarded_features --max-published-at 2025-12-31T23:59:59+07:00
 ```
 
 Hard operating rule:
