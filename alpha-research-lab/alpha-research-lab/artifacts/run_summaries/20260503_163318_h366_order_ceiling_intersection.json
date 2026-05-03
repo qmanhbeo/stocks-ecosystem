@@ -1,0 +1,23 @@
+{
+  "mode": "h366",
+  "results": {
+    "c16_standalone": {
+      "ic": 0.07670763680801607,
+      "pos_years": 8
+    },
+    "c7_standalone": {
+      "ic": 0.007905780765568894,
+      "pos_years": 4
+    },
+    "intersection_and": {
+      "ic": 0.06394194811975636,
+      "pos_years": 8
+    },
+    "multiplicative": {
+      "ic": 0.0746155361176504,
+      "pos_years": 8
+    }
+  },
+  "verdict": "FAILED",
+  "message": "Both methods underperform C16 alone"
+}

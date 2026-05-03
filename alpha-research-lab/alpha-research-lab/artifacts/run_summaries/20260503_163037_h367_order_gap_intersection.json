@@ -1,0 +1,21 @@
+{
+  "mode": "h367",
+  "results": {
+    "c16_standalone": {
+      "ic": 0.07670763680801607,
+      "pos_years": 8
+    },
+    "c12_standalone": {
+      "ic": 0.03131764578133972,
+      "pos_years": 8
+    },
+    "intersection_and": {
+      "ic": 0.057356428648863575,
+      "pos_years": 8
+    },
+    "multiplicative": {
+      "ic": 0.0688091327291018,
+      "pos_years": 8
+    }
+  }
+}

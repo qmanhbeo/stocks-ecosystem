@@ -1,0 +1,12 @@
+{
+  "mode": "x75",
+  "results": {
+    "benford_deviation_ic": 0.0022720391043945768,
+    "benford_deviation_pos_years": 4,
+    "benford_conformity_ic": 0.0022720391043945768,
+    "benford_conformity_pos_years": 4,
+    "best": "conformity",
+    "best_ic": 0.0022720391043945768
+  },
+  "verdict": "FAILED"
+}
