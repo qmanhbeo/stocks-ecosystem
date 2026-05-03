@@ -211,3 +211,94 @@ Current next actions:
 
 Source sessions:
 - `notes/session_209_log.md`
+
+---
+
+## F304: insider_buy_lead Signal (S244, 2026-05-03)
+
+Finding:
+- **Claim**: Insider BUY publishes on T-1 → amplifies C16 signal quality on T.
+- **Data**: `data/insider_cache/*.parquet` merged with `data/order_stats/` + returns.
+- **Test**: Compare IC(C16) with prior insider buy (T-1) vs without.
+- **Evidence**:
+  - IC with prior insider buy: **0.1113**
+  - IC without prior insider buy: 0.0797
+  - **Boost: +39.7%**
+  - n (with insid er buy): 5,912
+  - n (without): 553,054
+  - Walk-forward: 9/9 years positive
+
+Why it matters:
+- Insider buy is an **independent signal** that boosts C16 by +40%
+- Can use as filter/weight when insider activity is detected previous day
+- IC > 0.10 = qualifies for Tier 1 promotion
+
+Source sessions:
+- `notes/session_244_log.md`
+
+---
+
+## F305: consecutive_down_days Signal (S244, 2026-05-03)
+
+Finding:
+- **Claim**: Stocks that fell yesterday continue to fall (streak continuation).
+- **Data**: Returns from `xs_barrier_vol_1d_hose_full.parquet`.
+- **Test**: IC of down-day streak indicator.
+- **Evidence**:
+  - IC: **0.1030**
+  - vs Random: +0.10
+  - Walk-forward: 9/9 positive
+
+Why it matters:
+- Independent contrarian filter
+- Works as market-regime detector
+- IC > 0.10 = Tier 1 promotion
+
+Source sessions:
+- `notes/session_244_log.md`
+
+---
+
+## F306: dividend_30d Signal (S244, 2026-05-03)
+
+Finding:
+- **Claim**: Dividend ex-date in next 30 days drives pre-event accumulation.
+- **Data**: `data/xs_dividend_calendar.parquet` merged with returns.
+- **Test**: IC 30d dividend window indicator.
+- **Evidence**:
+  - IC: **0.0934**
+  - vs Random: +0.09
+  - Walk-forward: INCONSISTENT (some years negative)
+
+Why it matters:
+- Event-driven signal but **noisy year-to-year**
+- Qualifies by IC > 0.05 but flagged for monitoring
+- Tier 2 placement due to inconsistency
+
+Source sessions:
+- `notes/session_244_log.md`
+
+---
+
+## F307: c16_entropy Signal (S244, 2026-05-03, WEAK/DEAD END)
+
+Finding:
+- **Claim**: Sector-level C16 dispersion amplifies individual stock signal.
+- **Data**: `data/order_stats/` + returns, sector dispersion computed daily.
+- **Test**: IC(C16) split by sector entropy quartiles.
+- **Evidence**:
+  - Simple comparison: HIGH dispersion IC=0.0883 vs LOW=0.0708 (+24.7%)
+  - **Walk-forward: INCONSISTENT** 
+    - 2015: LOW better (0.066 vs 0.036)
+    - 2016-2019: HIGH better
+    - 2020: similar
+    - 2021-2022: LOW better
+  - Final: WEAK/DEAD END
+
+Why it matters:
+- The signal fails walk-forward consistency
+- Should not be used as filter
+- Mark as dead end
+
+Source sessions:
+- `notes/session_244_log.md`
