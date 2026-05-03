@@ -40,11 +40,12 @@ entry must include source anchors: stable finding IDs or source session links.
     - C16 entry timing: decays fast - T+0 is optimal (T+1 drops 74%)
     - vnindex_momentum: C16 +15% better when index momentum negative
     - news_c16_divergence: FAILED (sentiment too weak)
-  - **S236 new findings**:
-    - exit_signal: Hold 5d optimal (returns grow with hold)
-    - foreign_c13_triple: FAILED (-14% with foreign added)
-    - alternative_label: 5d slightly better, 20d worse (C16 best on short horizons)
-  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236.
+  - **S237 new findings**:
+    - volatility_regime: C16 +38% in high vol (>80%), -15% in low vol
+    - monday_effect: Monday +17% over Thursday  
+    - holiday_effect: Tet period +25% (strongest calendar)
+  - **Key mechanism**: High vol AMPLIFIES C16 (opposite of typical risk-off)
+  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237.
 
 - Current parked branches: event-v2 sparse-clock, dividend-clock timing,
   legal-holiday timing, standalone foreign/proprietary flow, old OHLCV
