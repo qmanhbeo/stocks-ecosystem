@@ -113,9 +113,31 @@ Source durable memory:
 
 ## Current State
 
-- S237 tested: monday_gap PASSED, volatility_regime PASSED, holiday_effect PASSED
-- Key: Vol regime AMPLIFIES C16 (+38%), Tet +25%
+- S237: vol regime +38%, Tet +25%, Monday +17%
+- Key: Vol AMPLIFIES C16 (opposite of typical!)
 - Queue: EXHAUSTED
+
+## New Eureka Ideas (S238)
+
+- **`quarter_end_rebalance`**: Foreign ownership by quarter-end proximity.
+  Test: IC by days_to_quarter_end.
+  Status: NOT TESTED.
+
+- **`market_breadth_regime`**: A/D ratio quintile filters C16.
+  Test: IC(C16) | A/D_q1 vs A/D_q5.
+  Status: NOT TESTED.
+
+- **`price_level_regime`**: Penny (<10K) vs blue chip (>50K) dynamics.
+  Test: IC(C16) by price tier.
+  Status: NOT TESTED.
+
+- **`morning_auction_flow`**: Morning vs afternoon session effects.
+  Test: IC by time-of-day.
+  Status: NOT TESTED. Intraday data needed
+
+- **`ownership_concentration`**: Foreign <15% vs >30% reversal.
+  Test: IC by ownership tier.
+  Status: NOT TESTED.
 
 ## Active Jobs / Constraints
 
