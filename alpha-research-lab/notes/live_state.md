@@ -111,6 +111,40 @@ Source durable memory:
 - **Walk-Forward (9 years): +0.145 (+92% boost, 9/9 positive)**
 - **VERIFIED: Robust across all years, no regime degradation**
 
+## S239 New Eureka Queue (2026-05-03)
+
+- `january_effect`: First 10 days of year institutional reallocation.
+  Test: IC(early_jan) vs IC(late_jan).
+  Smallest: day_of_year < 10 as filter.
+
+- `intraday_momentum_regime`: Morning vs afternoon session patterns.
+  Test: IC by session half.
+  Smallest: split data by morning/afternoon.
+
+- `sector_momentum_streak`: Sector 3-day streak predicts continuation.
+  Test: IC(sector_streak > 0) vs level.
+  Smallest: streak signal exists, compare to breadth level.
+
+- `small_liquidity_premium`: Small-cap + high C16 extreme.
+  Test: IC(C16) | cap < median vs cap > median.
+  Smallest: market cap split on C16.
+
+- `volume_regime_volatility_combo`: Low vol + high volume = accumulation.
+  Test: IC(C16) where vol_low AND volume_spike.
+  Smallest: combine vol regime + volume shock.
+
+- `foreign_room_acceleration`: Room delta as signal.
+  Test: IC(C16) | room_delta > 0.
+  Smallest: foreign room change signal.
+
+- `dow_jones_lag`: US market overnight → VN morning.
+  Test: IC(C16) | us_overnight > 0.
+  Smallest: macro overnight signal.
+
+- `turnover_rate_intensity`: Turnover rate × C16 interaction.
+  Test: IC(C16 * turnover_rate_quintile).
+  Smallest: composite signal test.
+
 ## Current State
 
 - S238 tested: market_breadth PASSED (+30%), vol regime PASSED (+38%), quarter_start PASSED (+26%)
