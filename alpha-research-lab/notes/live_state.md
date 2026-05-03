@@ -113,31 +113,9 @@ Source durable memory:
 
 ## Current State
 
-- Triple Storm branch: PARKED (Session 234)
-- Findings: C13-triple (+307%), c13_c16_combo (+9%), volume_shock_c16 (+16%)
-- Queue: EXHAUSTED - need new signal sources
-
-## New Eureka Ideas (S235 - Bright Mind Ideation)
-
-- **`news_c16_divergence`**: Text sentiment diverging from C16 creates strongest signal.
-  Test: IC(sentiment>C16) vs C16 alone.
-  Status: NOT TESTED. **RANK 1** - bridges unused domains
-
-- **`c13_cross_microstructure`**: C13 + volume + skewness 3-way interaction.
-  Test: IC(C13 + volume_zscore + skewness) vs C13 alone.
-  Status: NOT TESTED. Expected +C13-triple baseline
-
-- **`entry_window_microstructure`**: Optimal entry timing after signal (T+0 vs T+1 vs T+2 vs T+3).
-  Test: Compare IC(C16) decay across entry windows.
-  Status: NOT TESTED. Pure timing adjustment
-
-- **`vnindex_momentum_cross_asset`**: Index momentum as regime modifier.
-  Test: IC(C16 | index_momentum > 80%) vs < 20%.
-  Status: NOT TESTED. Cross-asset blind spot
-
-- **`alternative_label_c16`**: C16 with 5d/10d barrier labels vs 1d.
-  Test: IC(C16) on 1d, 5d, 10d labels.
-  Status: NOT TESTED. Structural assumption test
+- S235 tested: news_c16_divergence FAILED, entry_window T+0 optimal, vnindex_momentum PASSED
+- New finding: C16 works +15% better when index momentum negative
+- Remaining: c13_cross_microstructure, alternative_label_c16
 
 ## Active Jobs / Constraints
 

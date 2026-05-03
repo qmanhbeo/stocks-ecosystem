@@ -36,7 +36,11 @@ entry must include source anchors: stable finding IDs or source session links.
   - **Combo discoveries (S234)**:
     - c13_c16_combo: +9% over C16 alone (best orthogonal combo)
     - volume_shock_c16: +16% boost (volume anomaly amplifies C16)
-  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234.
+  - **S235 new findings**:
+    - C16 entry timing: decays fast - T+0 is optimal (T+1 drops 74%)
+    - vnindex_momentum: C16 +15% better when index momentum negative
+    - news_c16_divergence: FAILED (sentiment too weak)
+  Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235.
 
 - Current parked branches: event-v2 sparse-clock, dividend-clock timing,
   legal-holiday timing, standalone foreign/proprietary flow, old OHLCV
