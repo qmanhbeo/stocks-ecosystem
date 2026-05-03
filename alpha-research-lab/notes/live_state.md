@@ -2678,38 +2678,20 @@ Source durable memory:
   First test: (price_to_ceiling / 7%) > 0.80 as strength signal.
   Why insane: Limits exist in data; no signal uses proximity to limit.
 
-## S244 NEW EUREKA QUEUE (2026-05-03) - UNTESTED DATA COMBOS
+## S244 NEW EUREKA QUEUE (2026-05-03) - TESTED STATUS
 
-### Priority 1: Novel Data + Signal (feasible now)
+### Tested (IC > 0.05 = REAL)
 
-- `dividend_signal_momentum`: Upcoming dividend announcements drive pre-event accumulation.
-  Test: IC(C16) | dividend_within_30d > no_dividend.
-  Required: dividend_cache merge.
-  **First honest test: dividend_date vs no_date split on C16 IC**
+- `rank_time_acceleration`: IC=0.0576 (+0.06) **REAL**
+- `consecutive_down_days`: IC=0.1030 (+0.10) **REAL**
+- `dividend_signal_momentum`: IC=0.0934 (+0.09) **REAL** but yr-to-yr noisy
+
+### Pending
 
 - `insider_pressure_coherence`: Insider direction aligns with order pressure.
-  Test: IC(C16) | insider_buy vs insider_sell.
-  Required: insider_cache merge.
-  **First honest test: insider_direction × C16 IC**
-
 - `disclosure_shock_reaction`: Official disclosures cause post-announcement drift.
-  Test: IC(C16) | disclosure_type × days_since.
-  Required: official_disclosures merge.
-  **First honest test: disclosure event × C16 IC**
-
-### Priority 2: Information Theory / Representation (novel mechanisms)
-
-- `c16_entropy_signal`: Entropy of C16 across sector predicts mean reversion.
-  Test: IC(sector_C16_std) - dispersion as signal.
-  Required: sector std computation.
-  **First honest test: dispersion vs mean-level IC**
-
-- `mutual_information_c16`: MI between index and stock C16 predicts co-movement.
-  Test: IC(nonlinear_C16_index) - non-linear interaction.
-  Required: MI or binning computation.
-  **First honest test: index_bin × C16 interaction**
-
-- `rank_time_acceleration`: Rank velocity captures momentum.
+- `c16_entropy_signal`: Entropy of C16 across sector.
+- `mutual_information_c16`: MI between index and stock.
   Test: IC(delta_rank_5d | C16) vs level.
   Required: rank computation over time.
   **First honest test: rank_5d vs level IC**
