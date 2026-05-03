@@ -58,6 +58,16 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   additions, and raw quarterly fundamentals did not improve the promoted XS
   model stack. Source anchors: `F2`, `F5`, `F23`, `F36`, `F40`, `F42-F43`, `F57`.
 
+- C16 stacking filters (S221): Combining liquid + braid/sector filters OVERFILTERS,
+  reducing sample below statistical validity. Stacking hurts: IC -18% vs baseline.
+  Source anchors: Session 221.
+
+- C16 sector-relative adjustment (S224): Subtract sector median to remove sector bias
+  HURTS signal: -15% IC. Keep absolute C16. Source: Session 224.
+
+- C16 persistence (S225): Yesterday's pressure confirming today's doesn't help.
+  IC -17%. Source: Session 225.
+
 - News keyword and simple pooled sentiment paths are not enough by themselves:
   keyword sentiment added no IC, rolling aggregation did not fix sparsity,
   body-text ticker extraction hurt quality, the keyword lexicon path was

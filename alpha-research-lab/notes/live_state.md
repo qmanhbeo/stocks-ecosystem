@@ -45,20 +45,6 @@ Source durable memory:
 - `sector_pressure_momentum`: Sector pressure rate of change.
   Test: IC(sector-level C16 momentum) as predictor.
 
-## New Branches (2026-05-03)
-
-- `sector_relative_c16`: C16 - sector median = sector-neutral signal.
-  Test: IC(C16 - sector_median) vs baseline.
-
-- `c16_persistence`: Today's pressure persists to tomorrow = confirmed signal.
-  Test: IC(C16_today | C16_yesterday > 0.5).
-
-- `market_state_c16`: C16 behavior in up vs down markets.
-  Test: IC(C16) separately in Nifty up days vs down days.
-
-- `cross_sectional_rank`: C16 rank vs same-day top-5 tickers.
-  Test: IC(C16_rank_within_day) vs absolute.
-
 ## Branch Status (2026-05-03)
 
 - liquid_braid_stack: KILLED (stacking hurts)
