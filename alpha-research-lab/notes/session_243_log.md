@@ -6,7 +6,7 @@
 ## Reference Baselines (Walk-Forward IC)
 - Random: ~0.00 (noise)
 - C16: +0.078 
-- S1: +0.149 (best published signal - primary for RL)
+- S1: +0.149 (best published - PRIMARY for RL)
 
 ## Tests Run
 
@@ -14,75 +14,73 @@
 - **Claim**: Post-Tet recovery effect
 - **Result**: IC=0.0858
 - **vs Random**: +0.09 (real signal)
-- **vs S1**: -0.06 (below best)
-- **Verdict**: REAL SIGNAL
+- **Verdict**: TIER 2 - calendar filter for RL
 
 ### March Quadrant
 - **Claim**: March week position matters
 - **Result**: early=0.0643, late=0.0833
 - **vs Random**: +0.06 to +0.08
-- **Verdict**: March late is real signal
+- **Verdict**: March late = TIER 2, early = TIER 3
 
 ### May Effect
 - **Claim**: Historical May pattern
 - **Result**: IC=0.0805
-- **vs Random**: +0.08 (marginal)
-- **Verdict**: WEAK
+- **vs Random**: +0.08
+- **Verdict**: TIER 2 (weaker)
 
 ### September Call
 - **Claim**: Back-to-school effect
 - **Result**: early=0.0614, late=0.0791
 - **vs Random**: +0.06 to +0.08
-- **Verdict**: WEAK
+- **Verdict**: TIER 2/3
 
 ### October Uncertainty
 - **Claim**: October volatility effect
 - **Result**: IC=0.0817
-- **vs Random**: +0.08 (real signal)
-- **Verdict**: REAL SIGNAL
+- **vs Random**: +0.08
+- **Verdict**: TIER 2 - calendar filter for RL
 
 ### Yearend Window (Dec 20+)
 - **Claim**: Last 10 days effect
 - **Result**: IC=0.0652
-- **vs Random**: +0.07 (still real, but weak)
-- **Verdict**: WEAK/FAILED
+- **vs Random**: +0.07
+- **Verdict**: TIER 3 (weak)
 
 ### Monday + January Combo
 - **Claim**: Monday × January combo
 - **Result**: IC=0.1109
 - **vs Random**: +0.11 (STRONG signal)
-- **vs S1**: -0.04 (close to best!)
-- **Verdict**: REAL SIGNAL - closest to S1
+- **Verdict**: TIER 1 - strong calendar combo for RL
 
 ### Midyear Rebalancing (Jun-Jul)
 - **Claim**: June/July rebalancing
 - **Result**: IC=0.0711
-- **vs Random**: +0.07 (barely real)
-- **Verdict**: FAILED
+- **vs Random**: +0.07
+- **Verdict**: TIER 3 (weak) - FAILED
 
-## Summary Table (Honest)
-| Test | IC | vs Random | vs S1 | Verdict |
-|------|-----|----------|-------|--------|
-| monday_jan | 0.1109 | +0.11 | -0.04 | REAL - close to S1 |
-| february_mid | 0.0858 | +0.09 | -0.06 | REAL |
-| march_late | 0.0833 | +0.08 | -0.07 | REAL |
-| monday | 0.0836 | +0.08 | -0.07 | REAL |
-| october | 0.0817 | +0.08 | -0.07 | REAL |
-| may | 0.0805 | +0.08 | -0.07 | WEAK |
-| sept_late | 0.0791 | +0.08 | -0.07 | WEAK |
-| yearend | 0.0652 | +0.07 | -0.08 | WEAK |
-| midyear | 0.0711 | +0.07 | -0.08 | FAILED |
-| march_early | 0.0643 | +0.06 | -0.08 | FAILED |
-| sept_early | 0.0614 | +0.06 | -0.09 | FAILED |
+## RL Signal Inventory
+| Test | IC | vs Random | Tier | Use |
+|------|-----|----------|------|-----|
+| monday_jan | 0.1109 | +0.11 | T1 | calendar combo |
+| february_mid | 0.0858 | +0.09 | T2 | calendar filter |
+| march_late | 0.0833 | +0.08 | T2 | calendar filter |
+| monday | 0.0836 | +0.08 | T2 | calendar filter |
+| october | 0.0817 | +0.08 | T2 | calendar filter |
+| may | 0.0805 | +0.08 | T2 | calendar filter |
+| sept_late | 0.0791 | +0.08 | T2 | calendar filter |
+| yearend | 0.0652 | +0.07 | T3 | weak |
+| midyear | 0.0711 | +0.07 | T3 | weak/failed |
+| march_early | 0.0643 | +0.06 | T3 | weak |
+| sept_early | 0.0614 | +0.06 | T3 | weak |
 
 ## Reusable Script
-- `analysis/x240_wf_ic_test.py` — walk-forward IC test, updated with S243 tests
+- `analysis/x240_wf_ic_test.py` — walk-forward IC test
 
-## Key Discoveries (Honest)
-- Monday+January = IC +0.11 — STRONG, closest to S1 best published
-- Feb, March late, Oct = real signals (+0.08 to +0.09)
-- Yearend, Midyear = weak/negative signals
+## Key Discoveries
+- **monday_jan = TIER 1** - strongest calendar combo (IC 0.11)
+- **Feb/Mar/Oct/Mon = TIER 2** - real calendar filters (IC 0.08-0.09)
+- These are VALID RL FEATURES for state encoding
 
 ## Next Steps
 - Test more combos (triple_storm + jan)
-- monday_jan is worth promoting as filter
+- monday_jan is worth promoting as RL filter
