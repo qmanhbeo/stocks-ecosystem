@@ -7,6 +7,10 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 243](session_243_log.md): Calendar + combo tests.
+  monday_jan_combo IC=0.1109 (+42% - STRONGEST!), feb_mid +10%, march_late +7%.
+  yearend -16%, midyear -9% FAILED.
+  x240_wf_ic_test.py reusable script updated.
 - [Session 242](session_242_log.md): January effect + volume regime confirmation.
   january_first_10 IC=0.0817 (+5% boost), vol_high IC=0.0941 (+21%).
   Reusable x240_wf_ic_test.py script updated.

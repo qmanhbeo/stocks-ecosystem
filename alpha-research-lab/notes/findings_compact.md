@@ -47,6 +47,10 @@ entry must include source anchors: stable finding IDs or source session links.
   - **S242 new findings**:
     - january_first_10: +5% IC boost (NEW!)
     - volume regime: high volume = +21% boost, low volume = -11% (confirmed S237)
+  - **S243 new discoveries**:
+    - monday_jan_combo: **+42% IC boost (STRONGEST!)** - NEW!
+    - february_mid: +10%, march_late: +7%, october: +5% PASSED
+    - yearend: -16%, midyear: -9% FAILED
   - Reusable script: x240_wf_ic_test.py
   - **Key mechanism**: Quarter START beats END - opposite of Western效应!
   Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 238.

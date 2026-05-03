@@ -2270,9 +2270,10 @@ Source durable memory:
 
 ## Current State
 
-- S242 tested: january_first_10 (+5%), vol regime (+21% high / -11% low)
+- S243 tested: monday_jan_combo (+42% - STRONGEST!), feb_mid (+10%), march_late (+7%), october (+5%)
+- S242: january_first_10 (+5%), vol regime (+21% / -11%)
 - S238: market_breadth (+30%), vol regime (+38%), quarter_start (+26%) PASSED
-- Key: Quarter START (+26%) > quarter END (-15%), January +5% (NEW!)
+- Key: monday_jan = #1, quarter_start = #2, A/D breadth = #3
 - Queue: ACTIVE (testing)
 
 ### Spectral / Linear Algebra
@@ -2480,9 +2481,10 @@ Source durable memory:
 
 ## Current State
 
-- S242 tested: january_first_10 (+5%), vol regime (+21% high / -11% low)
+- S243 tested: monday_jan_combo (+42% - STRONGEST!), feb_mid (+10%), march_late (+7%), october (+5%)
+- S242: january_first_10 (+5%), vol regime (+21% / -11%)
 - S238: market_breadth (+30%), vol regime (+38%), quarter_start (+26%) PASSED
-- Key: Quarter START (+26%) > quarter END (-15%), January +5% (NEW!)
+- Key: monday_jan = #1, quarter_start = #2, A/D breadth = #3
 - Queue: ACTIVE (testing)
 
 ## Active Jobs / Constraints

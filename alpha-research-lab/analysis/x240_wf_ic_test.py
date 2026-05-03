@@ -111,6 +111,55 @@ def run_test(test_name):
         return 'NOT TESTED: requires turnover rate data'
     elif test_name == 'market_breadth':
         return 'S238 ALREADY TESTED: A/D Q1-Q2 +30%'
+    elif test_name == 'february_effect':
+        df['month'] = df['time'].dt.month
+        df['day'] = df['time'].dt.day
+        filtered = df[(df['month'] == 2) & (df['day'] >= 15)]
+        ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
+        return f'february_mid: IC={ic:.4f}'
+    elif test_name == 'march_quadrant':
+        df['month'] = df['time'].dt.month
+        df['week'] = df['time'].dt.isocalendar().week
+        df['march_week_half'] = np.where(df['week'] <= 10, 'early', 'late')
+        ic_early = wf_ic(df[(df['month'] == 3) & (df['march_week_half'] == 'early')], signal)
+        ic_late = wf_ic(df[(df['month'] == 3) & (df['march_week_half'] == 'late')], signal)
+        return f'march_early={ic_early:.4f}, march_late={ic_late:.4f}'
+    elif test_name == 'may_effect':
+        df['month'] = df['time'].dt.month
+        filtered = df[df['month'] == 5]
+        ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
+        return f'may: IC={ic:.4f}'
+    elif test_name == 'september_call':
+        df['month'] = df['time'].dt.month
+        df['week'] = df['time'].dt.isocalendar().week
+        df['sept_week_half'] = np.where(df['week'] <= 36, 'early', 'late')
+        ic_early = wf_ic(df[(df['month'] == 9) & (df['sept_week_half'] == 'early')], signal)
+        ic_late = wf_ic(df[(df['month'] == 9) & (df['sept_week_half'] == 'late')], signal)
+        return f'sept_early={ic_early:.4f}, sept_late={ic_late:.4f}'
+    elif test_name == 'october_uncertainty':
+        df['month'] = df['time'].dt.month
+        filtered = df[df['month'] == 10]
+        ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
+        return f'october: IC={ic:.4f}'
+    elif test_name == 'yearend_window':
+        df['month'] = df['time'].dt.month
+        df['day'] = df['time'].dt.day
+        filtered = df[(df['month'] == 12) & (df['day'] >= 20)]
+        ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
+        return f'yearend_20+: IC={ic:.4f}'
+    elif test_name == 'c16_monday_jan_combo':
+        df['month'] = df['time'].dt.month
+        df['dayofyear'] = df['time'].dt.dayofyear
+        filtered = df[(df['dayofyear'] <= 10) & (df['dayofweek'] == 0)]
+        ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
+        return f'monday_jan: IC={ic:.4f}'
+    elif test_name == 'triple_storm_plus_jan':
+        return 'NOT TESTED: requires market_direction + divergence data'
+    elif test_name == 'midyear_rebalancing':
+        df['month'] = df['time'].dt.month
+        filtered = df[df['month'].isin([6, 7])]
+        ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
+        return f'midyear: IC={ic:.4f}'
     else:
         return f'Unknown test: {test_name}'
 
