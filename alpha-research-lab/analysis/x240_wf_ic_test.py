@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+"""X240: Walk-forward IC test reusable script.
+
+Usage:
+    python analysis/x240_wf_ic_test.py --test vol_high          # test high vol regime
+    python analysis/x240_wf_ic_test.py --test monday         # test monday
+    python analysis/x240_wf_ic_test.py --test tet          # test tet period
+"""
+import argparse
+import pandas as pd
+import numpy as np
+from scipy.stats import spearmanr
+
+ORDER = 'data/order_stats/cafef/order_stats_daily.parquet'
+RETURNS = 'data/features/xs_barrier_vol_1d_hose_full.parquet'
+
+def load_data():
+    """Load and merge order stats + returns."""
+    order = pd.read_parquet(ORDER)
+    order['date'] = pd.to_datetime(order['date'])
+    order = order[order['date'].dt.year.isin(range(2015, 2023))]
+    order['ovr'] = (order['buy_order_volume'] - order['sell_order_volume']) / (order['buy_order_volume'] + order['sell_order_volume'])
+    order['c16'] = order.groupby('date')['ovr'].rank(pct=True)
+    order['volume_rank'] = order.groupby('date')['buy_order_count'].rank(pct=True)
+    order = order.rename(columns={'date': 'time'})
+    
+    ret = pd.read_parquet(RETURNS, columns=['time', 'ticker', 'actual'])
+    ret['time'] = pd.to_datetime(ret['time'])
+    ret = ret[ret['time'].dt.year.isin(range(2015, 2023))]
+    
+    merged = ret.merge(order[['time', 'ticker', 'c16', 'volume_rank']], on=['time', 'ticker'], how='inner')
+    merged = merged.dropna(subset=['actual', 'c16'])
+    merged['dayofweek'] = merged['time'].dt.dayofweek
+    return merged
+
+def wf_ic(df, signal):
+    """Walk-forward IC: train on years before Y, test on year Y."""
+    results = []
+    for year in range(2015, 2023):
+        test = df[df['time'].dt.year == year]
+        test = test.dropna(subset=[signal, 'actual'])
+        if len(test) > 50:
+            ic, p = spearmanr(test[signal], test['actual'])
+            if not np.isnan(ic):
+                results.append({'year': year, 'ic': ic})
+    return np.mean([r['ic'] for r in results]) if results else np.nan
+
+def run_test(test_name):
+    """Run named test."""
+    df = load_data()
+    signal = 'c16'
+    
+    if test_name == 'vol_high':
+        filtered = df[df['volume_rank'] > 0.8]
+        ic = wf_ic(filtered, signal)
+        return f'vol_rank>0.8: IC={ic:.4f}'
+    elif test_name == 'vol_low':
+        filtered = df[df['volume_rank'] < 0.2]
+        ic = wf_ic(filtered, signal)
+        return f'vol_rank<0.2: IC={ic:.4f}'
+    elif test_name == 'monday':
+        filtered = df[df['dayofweek'] == 0]
+        ic = wf_ic(filtered, signal)
+        return f'Monday: IC={ic:.4f}'
+    elif test_name == 'thursday':
+        filtered = df[df['dayofweek'] == 3]
+        ic = wf_ic(filtered, signal)
+        return f'Thursday: IC={ic:.4f}'
+    elif test_name == 'tet':
+        tet_dates = pd.to_datetime([
+            '2015-02-15', '2016-02-05', '2017-01-24', '2018-02-11', '2019-02-01', '2020-01-24', '2021-02-10', '2022-01-29'
+        ])
+        filtered = df[df['time'].isin(tet_dates)]
+        ic = wf_ic(filtered, signal) if len(filtered) > 100 else np.nan
+        return f'Tet period: IC={ic:.4f}'
+    else:
+        return f'Unknown test: {test_name}'
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Walk-forward IC test')
+    parser.add_argument('--test', default='vol_high', help='Test name')
+    args = parser.parse_args()
+    print(run_test(args.test))
