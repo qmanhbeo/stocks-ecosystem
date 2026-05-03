@@ -1,0 +1,77 @@
+# Session 248-252: Bright-Mind Eureka Experiments
+
+Date: 2026-05-03
+Focus: Test 6 bright-mind eureka hypotheses
+
+## Test 1: S248 - Macro-C16 Regime
+
+**Summary**: WEAK
+- VIX BEAR regime shows slight improvement that was not consistent
+- Macro regime provides minimal C16 conditioning value
+- IC = +0.0777 all markets vs +0.0763 BEAR
+
+**Verdict**: FAILED - macro regime not useful
+
+---
+
+## Test 2: S249 - Gap Open Momentum
+
+**Summary**: WEAK  
+- Gap positive (previous day up) shows no improvement
+- IC = +0.0754 gap positive vs +0.0792 no significant gap
+
+**Verdict**: FAILED - gap conditioning not useful
+
+---
+
+## Test 3: S250 - C16 × Volume Shock
+
+**Summary**: WEAK
+- Volume shock proxy was too noisy
+- Could not compute meaningful volume signal
+
+**Verdict**: FAILED - data constraint
+
+---
+
+## Test 4: S251 - Consecutive Down Intensity
+
+**Summary**: WEAK
+- Day 2/3 streak shows no compounding over day 1
+- IC = +0.0777 all down = same for all streak lengths
+
+**Verdict**: FAILED - no sequential compounding
+
+---
+
+## Test 5: S252 - C16 Extreme in Down
+
+**Summary**: WEAK
+- Very high C16 (>0.9) in down markets actually HARMS signal
+- IC = +0.0284 (too sparse, high variance)
+- Down market alone: IC = +0.0777
+
+**Verdict**: FAILED - extreme filter reduces signal
+
+---
+
+## Complete Session Summary
+
+| Test | IC | vs Baseline | Verdict |
+|------|-----|-------------|---------|
+| S248 macro regime | +0.077 | +0% | **FAILED** |
+| S249 gap open | +0.075 | -4% | **FAILED** |
+| S250 vol shock | - | N/A | **FAILED** (data issue) |
+| S251 consecutive | +0.078 | +0% | **FAILED** |
+| S252 c16 extreme | +0.028 | -63% | **FAILED** |
+
+## Key Findings (Confirmed)
+
+- **C16 alone in down markets**: IC = +0.0777 (±0%)
+- **Use case**: C16 is a contrarian in down markets
+- **Do NOT use**: macro regime, gap, volume shock, consecutive days, extreme C16 filters
+
+## References
+
+- Confirms S246 finding: down market = stronger C16
+- Confirms session_224_226_log.md: market_state_c16 PASSED

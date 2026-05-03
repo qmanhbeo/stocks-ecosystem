@@ -621,3 +621,73 @@ Why it matters:
 - Confirms contrarian nature of C16
 
 Source: session_245_log.md
+
+---
+
+## F332: macro_c16_regime Signal (S248, 2026-05-03, FAILED)
+
+Finding:
+- **Claim**: C16 works differently in macro regimes (bear/bull/transition).
+- **Evidence**: IC=+0.078 ALL vs +0.077 BEAR vs +0.081 BULL - FAILED
+- **Walk-forward**: no regime boost
+
+Why it matters:
+- FAILED - macro regime doesn't condition C16 effectively
+
+Source: session_248_252_log.md
+
+---
+
+## F333: gap_open_c16 Signal (S249, 2026-05-03, FAILED)
+
+Finding:
+- **Claim**: C16 after positive gap is stronger.
+- **Evidence**: IC=+0.075 gap positive vs +0.079 no gap - FAILED
+- **Walk-forward**: gap conditioning no help
+
+Why it matters:
+- FAILED - gap direction doesn't help C16
+
+Source: session_248_252_log.md
+
+---
+
+## F334: vol_shock_c16 Signal (S250, 2026-05-03, FAILED)
+
+Finding:
+- **Claim**: Volume shock amplifies C16 in down markets.
+- **Evidence**: Data proxy insufficient - FAILED
+- **Walk-forward**: could not compute
+
+Why it matters:
+- FAILED - need better volume data source
+
+Source: session_248_252_log.md
+
+---
+
+## F335: consecutive_down_c16 Signal (S251, 2026-05-03, FAILED)
+
+Finding:
+- **Claim**: C16 strengthens on day 2/3 of down streak.
+- **Evidence**: IC=+0.078 day1 = day2 = day3 - FAILED
+- **Walk-forward**: no sequential compounding
+
+Why it matters:
+- FAILED - no day-over-day strengthening
+
+Source: session_248_252_log.md
+
+---
+
+## F336: c16_extreme_down Signal (S252, 2026-05-03, FAILED)
+
+Finding:
+- **Claim**: Very high C16 (>.9) in down markets is strongest.
+- **Evidence**: IC=+0.028 vs +0.078 down only - FAILED
+- **Walk-forward**: too sparse, signal lost
+
+Why it matters:
+- FAILED - extreme filter loses signal due to sparsity
+
+Source: session_248_252_log.md

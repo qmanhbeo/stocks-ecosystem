@@ -82,47 +82,26 @@ Source durable memory:
 
 ## BRIGHT-MIND EUREKAS (Creative + Testable)
 
-### 1. Macro-C16 Regime Interaction
-- **Claim**: C16 strength is regime-dependent - works in down but HOW in different macro states?
-- **Mechanism**: Bear/bull/transition macro regime modulates C16 effectiveness
-- **Evidence**: C16 is contrarian (+26% in down). Macro states haven't been tested.
-- **First test**: IC(C16) split by macro_regime_daily category in down markets
-- **Upside**: May find regime-specific C16 boosts (e.g., high in bear, weak in bull)
+### Bright-Mind Experiments Completed (S248-S252)
 
-### 2. Morning Gap Open Momentum Filter
-- **Claim**: Overnight gap + C16 = stronger signal
-- **Mechanism**: Overnight information gets embedded in opening gap; C16 captures order pressure REACTION to gap
-- **Evidence**: Nobody tested C16 + overnight gap interaction
-- **First test**: IC(C16) where market_open_gap > 1% vs gap < 0
-- **Upside**: 15-20% IC boost if gap signals institutional thesis
+| Test | IC | vs Baseline | Verdict |
+|------|-----|-------------|---------|
+| macro_c16_regime | +0.077 | +0% | **FAILED** |
+| gap_open_c16 | +0.075 | -4% | **FAILED** |
+| vol_shock_c16 | N/A | N/A | **FAILED** (data) |
+| consecutive_down | +0.078 | +0% | **FAILED** |
+| c16_extreme_down | +0.028 | -63% | **FAILED** |
 
-### 3. C16 × Volume Shock Amplitude
-- **Claim**: C16 + extreme volume = amplify contrarian signal
-- **Mechanism**: Volume shock = liquidity event = larger order flow Signal
-- **Evidence**: S246 showed down markets work; adding volume shock may amplify
-- **First test**: IC(C16) where volume_spike > 2σ AND market_down
-- **Upside**: Could push IC to 0.11+ (Tier 1)
+### Key Finding
 
-### 4. Sector Rotation in Down Markets (Not Up!)
-- **Claim**: Sector laggard works DIFFERENTLY in down vs up markets
-- **Evidence**: S245 killed sector_pressure_momentum (neutral). But maybe sector laggard in down?
-- **Why not killed**: Previous test was sector C16 MOMENTUM, not sector PRICE laggard
-- **First test**: IC(sector_laggard_rank) in down markets separately
-- **Upside**: Disentangle sector effect from market state
+- **All bright-mind eurekas FAILED**
+- **C16 IS the down-market signal** itself - no further conditioning helps
+- Use C16 directly in down markets (confirmed by S246)
 
-### 5. Consecutive Down Day Intensity
-- **Claim**: C16 strength compounds on day 2/3 of market down
-- **Mechanism**: Sustained selling = exhausted pressure = stronger contrarian
-- **Evidence**: Sequential effect NOT tested; S247 showed single-day depth boost
-- **First test**: IC(C16) on streak_day_2 vs streak_day_1 (both in market_down)
-- **Upside**: Could find day-specific intensity gradient
+### Confirmed Signals
 
-### 6. C16-News Sentiment Gate
-- **Claim**: C16 only works when news sentiment is NEGATIVE (fear amplifies contrarian)
-- **Mechanism**: Negative news + high C16 = extreme fear = tradeable bottom
-- **Evidence**: News data exists (fpt_news_daily). Nobody tested sentiment × C16.
-- **First test**: IC(C16) | sentiment < threshold vs sentiment > threshold
-- **Upside**: Could be 0.12+ IC if news gates C16
+- `down_market_c16`: IC=+0.098 (+26%) - TIER 2
+- Use directly in down markets, not complex filters
 
 ---
 
