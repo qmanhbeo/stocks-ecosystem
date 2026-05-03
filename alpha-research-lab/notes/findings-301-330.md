@@ -1,5 +1,20 @@
 # Findings 301-330
 
+## F300: quarter_start Signal (S238, 2026-04-25)
+
+Finding:
+- **Claim**: Quarter-start days have stronger C16 signal.
+- **Data**: Order stats + returns.
+- **Evidence**: IC=0.098 vs baseline +0.078 (+26% boost)
+- **Walk-forward**: 9/9 years positive
+
+Why it matters:
+- Timing filter for portfolio gate
+- Tier 2 placement (IC 0.08-0.10)
+
+Source sessions:
+- `notes/session_238_log.md`
+
 ## F301: H360 Verifies The Published C16 Contract Reproduces The H359 Winner (2026-04-28, Session 201)
 
 Finding:
@@ -214,6 +229,38 @@ Source sessions:
 
 ---
 
+## F302: january_first_10 Signal (S242, 2026-05-02)
+
+Finding:
+- **Claim**: First 10 days of January have stronger signal (institutional reallocation).
+- **Data**: Calendar + order stats + returns.
+- **Evidence**: IC=0.0817 vs random (+0.08), +5% boost
+- **Walk-forward**: 9/9 positive
+
+Why it matters:
+- Calendar filter for timing
+- Tier 2 placement
+
+Source sessions:
+- `notes/session_242_log.md`
+
+## F303: vol_high Volume Regime (S242/S238, 2026-05-02)
+
+Finding:
+- **Claim**: High volume days amplify C16 signal.
+- **Data**: Volume regime split.
+- **Evidence**: vol_high IC=0.0941 vs vol_low IC=0.0695 (+21%)
+- **Walk-forward**: consistent
+
+Why it matters:
+- Volume regime filter
+- Tier 2 placement
+
+Source sessions:
+- `notes/session_242_log.md`, `notes/session_238_log.md`
+
+---
+
 ## F304: insider_buy_lead Signal (S244, 2026-05-03)
 
 Finding:
@@ -302,3 +349,89 @@ Why it matters:
 
 Source sessions:
 - `notes/session_244_log.md`
+
+---
+
+## F308: monday_jan_combo Signal (S243, 2026-05-02)
+
+Finding:
+- **Claim**: Monday × January combo amplifies C16 strongest.
+- **Data**: Calendar × C16 × returns.
+- **Evidence**: IC=0.1109 vs baseline +0.078 (+42% boost)
+- **Walk-forward**: 9/9 years positive
+
+Why it matters:
+- **STRONGEST calendar combo** (IC 0.11)
+- Tier 1 placement
+- Use as primary calendar filter
+
+Source sessions:
+- `notes/session_243_log.md`
+
+---
+
+## F309: february_mid Signal (S243, 2026-05-02)
+
+Finding:
+- **Claim**: Mid-February has stronger signal.
+- **Data**: Calendar × C16 × returns.
+- **Evidence**: IC=0.0858 (+10% boost vs baseline)
+- **Walk-forward**: consistent
+
+Why it matters:
+- Calendar filter
+- Tier 2 placement
+
+Source sessions:
+- `notes/session_243_log.md`
+
+---
+
+## F310: march_late Signal (S243, 2026-05-02)
+
+Finding:
+- **Claim**: Late March has stronger signal.
+- **Data**: Calendar × C16 × returns.
+- **Evidence**: IC=0.0833 (+7% boost)
+- **Walk-forward**: consistent
+
+Why it matters:
+- Calendar filter
+- Tier 2 placement
+
+Source sessions:
+- `notes/session_243_log.md`
+
+---
+
+## F311: october Signal (S243, 2026-05-02)
+
+Finding:
+- **Claim**: October has stronger signal.
+- **Data**: Calendar × C16 × returns.
+- **Evidence**: IC=0.0817 (+5% boost)
+- **Walk-forward**: consistent
+
+Why it matters:
+- Calendar filter
+- Tier 2 placement
+
+Source sessions:
+- `notes/session_243_log.md`
+
+---
+
+## F312: market_breadth A/D Signal (S238, 2026-04-25)
+
+Finding:
+- **Claim**: Advance/decline breadth predicts market regime.
+- **Data**: Market breadth × C16 × returns.
+- **Evidence**: IC=0.093 (+30% boost)
+- **Walk-forward**: consistent
+
+Why it matters:
+- Market regime detector
+- Tier 2 placement
+
+Source sessions:
+- `notes/session_238_log.md`
