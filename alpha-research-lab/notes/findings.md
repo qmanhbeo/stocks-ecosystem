@@ -17,6 +17,7 @@ Current chunks:
 - [findings-241-270.md](./findings-241-270.md)
 - [findings-271-300.md](./findings-271-300.md)
 - [findings-301-330.md](./findings-301-330.md)
+- [findings-331-360.md](./findings-331-360.md)
 
 ## Convention
 
@@ -30,4 +31,4 @@ Current chunks:
 ## How To Read
 
 Start here, then open the chunk file that contains the finding you need.
-`findings-301-330.md` is now the active findings chunk.
+`findings-331-360.md` is now the active findings chunk.

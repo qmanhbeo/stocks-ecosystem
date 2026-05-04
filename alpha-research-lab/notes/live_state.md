@@ -5,8 +5,9 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_254_log.md](./session_254_log.md)
-Last verified: [Session 254](./session_254_log.md), 2026-05-03.
+Latest full session detail: [session_257_log.md](./session_257_log.md)
+Last verified: [Session 257](./session_257_log.md), 2026-05-04
+(H380 candidate-count policy router; backfill status remains from Session 255).
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -16,6 +17,9 @@ Compact recovery:
 Source durable memory:
 - [findings.md](./findings.md)
 - [findings-301-330.md](./findings-301-330.md)
+- [findings-331-360.md](./findings-331-360.md)
+- [signal_library.md](./signal_library.md)
+- [portfolio_policy_library.md](./portfolio_policy_library.md)
 
 ---
 
@@ -37,6 +41,11 @@ Source durable memory:
   `data/features/xs_order_pressure_daily.parquet`, but downstream use is
   opt-in only. Do not run more C16 sizing/search unless a consumer asks for a
   matrix/export integration.
+- H379/H380 dynamic breadth passed as offline policy evidence. H380 narrowed
+  the branch to candidate-count-only routing and beat random K/cash policies
+  with mean cycle lift `+0.00389`, `4 / 5` years above random K/cash mean, and
+  positive 2025 confirmation; this is not a live promotion. The policy-state
+  registry is [portfolio_policy_library.md](./portfolio_policy_library.md).
 - Event-v2, dividend-clock, legal-holiday timing, foreign/proprietary/sector-flow,
   old OHLCV queue, smart-exit linear tweaks, and BERT-only sentiment are parked
   or failed under the current target/consumer contracts. Use the compact
@@ -85,16 +94,7 @@ Do not assign `H` numbers until one branch is activated.
    only offline evidence and standalone promotion failed; this tests a different
    interaction target.
 
-4. `dynamic_breadth_option`: the right portfolio decision is often K, not which
-   stock; top-1/top-2/top-5 should depend on candidate distribution shape.
-   Smallest honest test: use only pre-decision columns in
-   `activation_state_daily.parquet` and `entry_alpha/candidate_panel_daily.parquet`
-   to group rebalance dates by score spread, entropy, buyable breadth, and
-   candidate count; compare best fixed K by TRUE WF year. Why not killed:
-   H238-H246 killed local entry overlays on the current label, not a daily
-   breadth-policy target.
-
-5. `insider_down_rescue`: insider buys after visible weakness are different
+4. `insider_down_rescue`: insider buys after visible weakness are different
    from ordinary insider buys.
    Smallest honest test: intersect prior insider buy, 1-3 day stock drawdown,
    and C16 rank; require sample-size and TRUE WF checks against insider-only
@@ -102,7 +102,7 @@ Do not assign `H` numbers until one branch is activated.
    passed separately; C16 streak compounding failed, but not insider-vs-weakness
    cross-source confirmation.
 
-6. `fresh_selection_pulse`: a ticker's first reappearance in the top candidate
+5. `fresh_selection_pulse`: a ticker's first reappearance in the top candidate
    set after dormancy carries more edge than repeated membership.
    Smallest honest test: compute days since ticker last appeared in top-5/top-10
    candidate pool from `entry_alpha/candidate_panel_daily.parquet`; compare
@@ -110,21 +110,21 @@ Do not assign `H` numbers until one branch is activated.
    Why not killed: sticky retention was a portfolio rule; freshness of selection
    history was not tested as a separate alpha state.
 
-7. `post_ollama_event_cascade`: the narrow Ollama event-family residual can
+6. `post_ollama_event_cascade`: the narrow Ollama event-family residual can
    revive event timing only if it changes the event representation.
    Smallest honest test: after the guarded backfill finishes, build first-event,
    repeat-event, and event-family transition states, then compare against the
    old H321/H361 CafeF event-v2 sparse-clock controls. Why not killed: event-v2
    is parked under old mappings; this branch requires new event-family data.
 
-8. `calendar_as_liquidity_mechanism`: calendar edges are proxies for settlement,
+7. `calendar_as_liquidity_mechanism`: calendar edges are proxies for settlement,
    attention, and breadth states, not magic dates.
    Smallest honest test: retest `monday_jan_combo`, quarter-start, and
    late-month effects after matching or residualizing volume regime, market
    breadth, news volume, buyable breadth, and C16 down-market state. Why not
    killed: calendar filters passed, but the mechanism has not been decomposed.
 
-9. `tradability_release_pulse`: a high-ranked name becoming buyable after a
+8. `tradability_release_pulse`: a high-ranked name becoming buyable after a
    blocked or limit-constrained state has a short executable continuation edge.
    Smallest honest test: use `release_flag`, `prev_can_buy_next_open`,
    `can_buy_next_open`, price-limit features, and candidate rank from the entry
@@ -132,7 +132,7 @@ Do not assign `H` numbers until one branch is activated.
    killed: generic blocked-buy complexity failed as a live overlay, but release
    after constraint is a different stock-level entry event.
 
-10. `source_triangle_sparse`: insider, order pressure, and local-news source
+9. `source_triangle_sparse`: insider, order pressure, and local-news source
     type may form a sparse high-conviction state even when any two-way route is
     too noisy.
     Smallest honest test: require at least two of prior insider buy, high C16,

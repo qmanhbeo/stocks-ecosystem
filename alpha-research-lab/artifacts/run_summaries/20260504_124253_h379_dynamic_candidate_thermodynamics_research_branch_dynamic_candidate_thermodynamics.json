@@ -1,0 +1,67 @@
+{
+  "artifacts": {
+    "daily": "artifacts/entry_alpha/20260504_124253_h379_dynamic_candidate_thermodynamics_daily.parquet",
+    "years": "artifacts/entry_alpha/20260504_124253_h379_dynamic_candidate_thermodynamics_years.parquet"
+  },
+  "metadata": {
+    "actions": [
+      "cash",
+      "top1",
+      "top2",
+      "top5",
+      "top10"
+    ],
+    "candidate_panel": "data/features/entry_alpha/candidate_panel_daily.parquet",
+    "data_rows": 1749,
+    "end_year": 2025,
+    "feature_columns": [
+      "full_top1_minus_top5_spread",
+      "full_top5_score_std",
+      "full_top10_score_entropy",
+      "full_top5_buyable_count",
+      "full_top10_buyable_count",
+      "full_top5_blocked_buy_count",
+      "full_top10_blocked_buy_count",
+      "buyable_breadth_all",
+      "liq_open_breadth_all",
+      "candidate_count",
+      "selector_confidence_combo",
+      "selector_entry_quality_combo"
+    ],
+    "labels": "data/features/entry_alpha/entry_labels_cycle5.parquet",
+    "min_bin_days": 20,
+    "min_train_years": 2,
+    "quantile_bins": 3,
+    "random_trials": 200,
+    "seed": 379,
+    "start_year": 2019
+  },
+  "mode": "research_branch_dynamic_candidate_thermodynamics",
+  "name": "h379_dynamic_candidate_thermodynamics",
+  "summary": {
+    "branch": "dynamic_breadth_option / dynamic_candidate_thermodynamics",
+    "confirmation_2025_lift_vs_random_invested": 0.0011104896928476552,
+    "confirmation_2025_random_invested_percentile": 0.695,
+    "durable_status": "offline_evidence",
+    "experiment_id": "H379",
+    "mean_lift_vs_random_invested": 0.0015081068265068787,
+    "mean_policy_abs_return": 0.006650385483646408,
+    "mean_random_invested_abs_return": 0.005142278657139529,
+    "mean_random_invested_percentile": 0.6819999999999999,
+    "pass_rule": "PASS if mean lift vs random invested policy is positive, at least 60% of WF years beat random invested mean, and 2025 confirmation lift is positive; MIXED if only partial consistency; otherwise FAILED.",
+    "primary_benchmark": "random invested action policy over top1/top2/top5/top10",
+    "secondary_benchmark": "random action policy including cash",
+    "test_years": [
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "verdict": "PASSED",
+    "wf_years": 5,
+    "years_gt_random_invested_mean": 4,
+    "years_gt_random_invested_p95": 1
+  },
+  "ts": "20260504_124253"
+}

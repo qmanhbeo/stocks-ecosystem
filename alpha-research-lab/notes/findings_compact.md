@@ -202,6 +202,15 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
   sparse catalysts, selector-relative variants, and report-window switchboards
   did not create a live-compatible replacement. Source anchors: `F157-F168`.
 
+- Dynamic candidate breadth now has stronger offline portfolio-policy evidence,
+  not a live branch change. H379 showed candidate-panel temperature could route
+  K/cash decisions versus random K policies; H380 then narrowed the branch to
+  candidate-count-only transforms and passed versus random K/cash policies with
+  mean cycle lift `+0.00389`, `4 / 5` years above random K/cash mean, and 2025
+  lift `+0.00472`. The durable clue is raw `candidate_count`; it is a
+  portfolio-policy state, not a ticker-level signal. Source anchors: `F339`,
+  `F340`.
+
 - Event/reduced-shape timing work found useful narrow evidence but kept
   boundaries tight: CafeF company news was real but sparse, the `1H` intraday
   surface was a reduced-shape research contract, and universal five-bar/auction

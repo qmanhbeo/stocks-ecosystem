@@ -7,6 +7,40 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 257](session_257_log.md): Ran H380 `candidate_count_policy_router`
+  as the narrowed PP5 continuation. Reusable script
+  `analysis/h380_candidate_count_policy_router.py`, TRUE walk-forward
+  `2021-2025`, no `2026+`, and random policy baselines only. Candidate-count
+  router PASSED as offline policy evidence: mean cycle return `+0.00796` vs
+  random K/cash `+0.00407`, lift `+0.00389`, `4 / 5` years above random
+  K/cash mean, and 2025 lift `+0.00472`. Not live-promoted; 2021 failed and
+  this remains policy state, not ticker alpha. Source anchor: `F340`.
+
+- [Session 256](session_256_log.md): Added
+  [portfolio_policy_library.md](portfolio_policy_library.md) as the sibling
+  registry to `signal_library.md` for K/exposure/hold/veto/release state.
+  Captured current surfaces, action vocabulary, policy-state feature families,
+  active frozen policy components, H379 offline evidence, queued policy
+  hypotheses, and the future `portfolio_policy_state_daily` promotion path.
+  No experiment was run and no live branch changed.
+
+- [Session 255](session_255_log.md): Ran H379
+  `dynamic_candidate_thermodynamics` as the next queue item with reusable script
+  `analysis/h379_dynamic_candidate_thermodynamics.py`. TRUE walk-forward
+  `2021-2025`, no `2026+`, and random K-policy baselines only. The tiny
+  date-level K/cash router PASSED as offline evidence: mean cycle return
+  `+0.00665` vs random invested `+0.00508`, lift `+0.00157`, `4 / 5` years
+  above random mean, 2025 lift `+0.00108`; not live-promoted because only
+  `1 / 5` years beat random p95. Source anchor: `F339`.
+
+- [Session 254](session_254_log.md): Bright-mind eureka refresh and live-state
+  queue cleanup. Reconstructed current beliefs, verified the active
+  `ollama_guarded_backfill` status at `6298 / 7344` batches, collapsed the stale
+  multi-thousand-line hypothesis dump into a concise 10-item queue, and ranked
+  new falsifiable branches around no-news order pressure, text-flow
+  disagreement, official-delay confirmation, dynamic breadth, insider-down
+  rescue, selection freshness, and post-Ollama event cascades.
+
 - [Session 253](session_253_log.md): TRUE walk-forward validation - **ALL 3 PASSED**.
   - insider_lead: IC=0.1093 ✅
   - consecutive_down: IC=0.1047 ✅
