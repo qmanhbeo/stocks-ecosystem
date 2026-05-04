@@ -1,0 +1,291 @@
+{
+  "artifacts": {
+    "folds": "artifacts/news_flow/20260504_202950_h389_post_ollama_event_cascade_folds.parquet",
+    "news": "data/features/news/datasets/news_daily_features.parquet",
+    "states": "artifacts/news_flow/20260504_202950_h389_post_ollama_event_cascade_states.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "first_event_quiet_days": 20,
+    "min_train_years": 2,
+    "min_year_rows": 50,
+    "pass_min_lift_5d": 0.002,
+    "repeat_event_days": 5,
+    "start_year": 2016
+  },
+  "mode": "research_branch_post_ollama_event_cascade",
+  "name": "h389_post_ollama_event_cascade",
+  "summary": {
+    "branch": "post_ollama_event_cascade",
+    "branch_decision": "No guarded Ollama first/repeat/transition event state beat controls cleanly.",
+    "durable_status": "branch_kill_or_reframe",
+    "event_today_share": 0.12106977784320579,
+    "experiment_id": "H389",
+    "key_states": {
+      "event_any": {
+        "confirmation_2025_rel_5d": -0.003037208319024921,
+        "family": "event",
+        "label": "Any guarded Ollama known event today",
+        "mean_article_count_1d": 2.032311734617309,
+        "mean_confidence": 0.9056357498056729,
+        "mean_days_since_event": 9.70338665308513,
+        "mean_rel_1d": Infinity,
+        "mean_rel_5d": Infinity,
+        "mean_rows": 11392.5,
+        "median_rel_5d": -0.002478763308010952,
+        "state": "event_any",
+        "wf_years": 8
+      },
+      "event_capital_raise": {
+        "confirmation_2025_rel_5d": -0.002888370652837942,
+        "family": "family",
+        "label": "Capital raise or debt event today",
+        "mean_article_count_1d": 3.8554975319250575,
+        "mean_confidence": 0.8431799245827378,
+        "mean_days_since_event": 6.298376062167211,
+        "mean_rel_1d": 0.0008994281913515654,
+        "mean_rel_5d": 0.0009984539323251317,
+        "mean_rows": 2367.875,
+        "median_rel_5d": -0.002867729549563776,
+        "state": "event_capital_raise",
+        "wf_years": 8
+      },
+      "event_earnings_guidance": {
+        "confirmation_2025_rel_5d": -0.0012753302190645366,
+        "family": "family",
+        "label": "Earnings or guidance event today",
+        "mean_article_count_1d": 2.810799423039059,
+        "mean_confidence": 1.10583722760765,
+        "mean_days_since_event": 10.347227139862003,
+        "mean_rel_1d": Infinity,
+        "mean_rel_5d": Infinity,
+        "mean_rows": 3059.125,
+        "median_rel_5d": -0.0021946763432304367,
+        "state": "event_earnings_guidance",
+        "wf_years": 8
+      },
+      "event_family_transition5": {
+        "confirmation_2025_rel_5d": -0.002199492994401916,
+        "family": "transition",
+        "label": "Known event changes family within 5 trading days",
+        "mean_article_count_1d": 1.816122717905552,
+        "mean_confidence": 0.9565098876731324,
+        "mean_days_since_event": 2.011202281972043,
+        "mean_rel_1d": 0.0006324431050232563,
+        "mean_rel_5d": 0.0016175761258520468,
+        "mean_rows": 3927.875,
+        "median_rel_5d": -0.0023083755842106396,
+        "state": "event_family_transition5",
+        "wf_years": 8
+      },
+      "event_first20": {
+        "confirmation_2025_rel_5d": -0.002423480551189981,
+        "family": "first",
+        "label": "Known event after 20 trading days without prior known event",
+        "mean_article_count_1d": 1.065296942641693,
+        "mean_confidence": 0.9013247383433896,
+        "mean_days_since_event": 61.335785879716205,
+        "mean_rel_1d": 0.002380592307779397,
+        "mean_rel_5d": 0.002374970266035139,
+        "mean_rows": 1156.0,
+        "median_rel_5d": -0.003033398521030052,
+        "state": "event_first20",
+        "wf_years": 8
+      },
+      "event_mna_asset": {
+        "confirmation_2025_rel_5d": -0.0031339339871342244,
+        "family": "family",
+        "label": "M&A or asset event today",
+        "mean_article_count_1d": 2.5024315626303104,
+        "mean_confidence": 0.8378540465148179,
+        "mean_days_since_event": 7.408869377912273,
+        "mean_rel_1d": 0.000603300729513468,
+        "mean_rel_5d": 0.0013458589630880285,
+        "mean_rows": 7426.25,
+        "median_rel_5d": -0.00258071126038132,
+        "state": "event_mna_asset",
+        "wf_years": 8
+      },
+      "event_regulatory_legal": {
+        "confirmation_2025_rel_5d": -0.00397195874495731,
+        "family": "family",
+        "label": "Regulatory or legal event today",
+        "mean_article_count_1d": 7.4465599362941095,
+        "mean_confidence": 0.8434839567009922,
+        "mean_days_since_event": 4.745021840335364,
+        "mean_rel_1d": 0.0002897224924371776,
+        "mean_rel_5d": 0.0009646346848910371,
+        "mean_rows": 889.375,
+        "median_rel_5d": -0.0018029074350884855,
+        "state": "event_regulatory_legal",
+        "wf_years": 8
+      },
+      "event_repeat5": {
+        "confirmation_2025_rel_5d": -0.0031746416251738816,
+        "family": "repeat",
+        "label": "Known event within 5 trading days of prior known event",
+        "mean_article_count_1d": 2.416960934203392,
+        "mean_confidence": 0.8927097859303106,
+        "mean_days_since_event": 1.8908935964247848,
+        "mean_rel_1d": Infinity,
+        "mean_rel_5d": Infinity,
+        "mean_rows": 8015.125,
+        "median_rel_5d": -0.0023107194703085865,
+        "state": "event_repeat5",
+        "wf_years": 8
+      },
+      "event_same_family_repeat5": {
+        "confirmation_2025_rel_5d": -0.004272037939043739,
+        "family": "repeat",
+        "label": "Known event repeats same family within 5 trading days",
+        "mean_article_count_1d": 2.9991103211880916,
+        "mean_confidence": 0.8338069523708392,
+        "mean_days_since_event": 1.7770149075165749,
+        "mean_rel_1d": Infinity,
+        "mean_rel_5d": Infinity,
+        "mean_rows": 4087.25,
+        "median_rel_5d": -0.0024565570985562446,
+        "state": "event_same_family_repeat5",
+        "wf_years": 8
+      },
+      "no_event_today": {
+        "confirmation_2025_rel_5d": -0.004634442496191692,
+        "family": "control",
+        "label": "No guarded Ollama known event today",
+        "mean_article_count_1d": 0.004661959378750981,
+        "mean_confidence": 0.000109701870451389,
+        "mean_days_since_event": null,
+        "mean_rel_1d": Infinity,
+        "mean_rel_5d": Infinity,
+        "mean_rows": 81896.5,
+        "median_rel_5d": -0.003067878051186239,
+        "state": "no_event_today",
+        "wf_years": 8
+      }
+    },
+    "lift_diagnostics": {
+      "event_family_transition5": {
+        "event_any": {
+          "confirmation_2025_lift_5d": 0.0008377153246230053,
+          "control": "event_any",
+          "mean_lift_5d": -Infinity,
+          "pct_pos_lift_5d_years": 0.5,
+          "pos_lift_5d_years": 4,
+          "state": "event_family_transition5",
+          "years": 8
+        },
+        "event_same_family_repeat5": {
+          "confirmation_2025_lift_5d": 0.002072544944641823,
+          "control": "event_same_family_repeat5",
+          "mean_lift_5d": -Infinity,
+          "pct_pos_lift_5d_years": 0.5,
+          "pos_lift_5d_years": 4,
+          "state": "event_family_transition5",
+          "years": 8
+        },
+        "no_event_today": {
+          "confirmation_2025_lift_5d": 0.002434949501789776,
+          "control": "no_event_today",
+          "mean_lift_5d": -Infinity,
+          "pct_pos_lift_5d_years": 0.375,
+          "pos_lift_5d_years": 3,
+          "state": "event_family_transition5",
+          "years": 8
+        }
+      },
+      "event_first20": {
+        "event_any": {
+          "confirmation_2025_lift_5d": 0.0006137277678349403,
+          "control": "event_any",
+          "mean_lift_5d": -Infinity,
+          "pct_pos_lift_5d_years": 0.625,
+          "pos_lift_5d_years": 5,
+          "state": "event_first20",
+          "years": 8
+        },
+        "event_repeat5": {
+          "confirmation_2025_lift_5d": 0.0007511610739839008,
+          "control": "event_repeat5",
+          "mean_lift_5d": -Infinity,
+          "pct_pos_lift_5d_years": 0.625,
+          "pos_lift_5d_years": 5,
+          "state": "event_first20",
+          "years": 8
+        },
+        "no_event_today": {
+          "confirmation_2025_lift_5d": 0.002210961945001711,
+          "control": "no_event_today",
+          "mean_lift_5d": -Infinity,
+          "pct_pos_lift_5d_years": 0.75,
+          "pos_lift_5d_years": 6,
+          "state": "event_first20",
+          "years": 8
+        }
+      },
+      "event_repeat5": {
+        "event_any": {
+          "confirmation_2025_lift_5d": -0.00013743330614896052,
+          "control": "event_any",
+          "mean_lift_5d": -0.00012547215398301274,
+          "pct_pos_lift_5d_years": 0.375,
+          "pos_lift_5d_years": 3,
+          "state": "event_repeat5",
+          "years": 8
+        },
+        "event_first20": {
+          "confirmation_2025_lift_5d": -0.0007511610739839008,
+          "control": "event_first20",
+          "mean_lift_5d": Infinity,
+          "pct_pos_lift_5d_years": 0.375,
+          "pos_lift_5d_years": 3,
+          "state": "event_repeat5",
+          "years": 8
+        },
+        "no_event_today": {
+          "confirmation_2025_lift_5d": 0.0014598008710178102,
+          "control": "no_event_today",
+          "mean_lift_5d": -5.391062815110952e-05,
+          "pct_pos_lift_5d_years": 0.375,
+          "pos_lift_5d_years": 3,
+          "state": "event_repeat5",
+          "years": 8
+        }
+      }
+    },
+    "old_event_v2_reference": {
+      "H321_best_state": "today_self_accel_high",
+      "H321_confirmation_fwd5_uplift_vs_control": 0.0008847554257748187,
+      "H321_validation_fwd5_uplift_vs_control": 0.001418696270164649,
+      "H361_confirmation_relative_delta": -0.026578422062054297,
+      "H361_sparse_clock_verdict": "FAILED",
+      "H361_validation_relative_delta": -0.04963134132554359
+    },
+    "panel_dates": 2500,
+    "panel_rows": 889867,
+    "panel_tickers": 398,
+    "pass_rule": "PASS if event_family_transition5, event_first20, or event_repeat5 has positive mean 5d payoff and beats generic event, relevant cascade control, and no-event rows by more than pass_min_lift_5d on average, with at least 60% positive-lift years and positive 2025 lifts. MIXED if only an event-family pocket beats generic event rows. Otherwise FAILED.",
+    "pass_states": [],
+    "protocol": {
+      "end_year": 2025,
+      "first_event_quiet_days": 20,
+      "known_event_share_threshold": 0.5,
+      "min_train_years": 2,
+      "min_year_rows": 50,
+      "primary_target": "future_rel_return_5d",
+      "repeat_event_days": 5,
+      "start_year": 2016,
+      "test_years": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "verdict": "FAILED"
+  },
+  "ts": "20260504_202950"
+}

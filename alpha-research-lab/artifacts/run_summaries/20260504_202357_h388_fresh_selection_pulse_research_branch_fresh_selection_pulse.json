@@ -1,0 +1,257 @@
+{
+  "artifacts": {
+    "folds": "artifacts/entry_alpha/20260504_202357_h388_fresh_selection_pulse_folds.parquet",
+    "states": "artifacts/entry_alpha/20260504_202357_h388_fresh_selection_pulse_states.parquet"
+  },
+  "metadata": {
+    "candidate_panel": "data/features/entry_alpha/candidate_panel_daily.parquet",
+    "end_year": 2025,
+    "fresh_dormancy_days": 20,
+    "labels": "data/features/entry_alpha/entry_labels_cycle5.parquet",
+    "min_train_years": 2,
+    "min_year_rows": 20,
+    "pass_min_lift": 0.002,
+    "stale_repeat_max_days": 19,
+    "start_year": 2019
+  },
+  "mode": "research_branch_fresh_selection_pulse",
+  "name": "h388_fresh_selection_pulse",
+  "summary": {
+    "branch": "fresh_selection_pulse",
+    "branch_decision": "No fresh selection pulse state beat all, incumbent, and short-repeat controls cleanly.",
+    "durable_status": "branch_kill_or_reframe",
+    "experiment_id": "H388",
+    "key_states": {
+      "top10_all": {
+        "confirmation_2025_relative_return": -0.006219783286422054,
+        "family": "top10",
+        "label": "Buyable top-10 candidate rows",
+        "mean_abs_return": 0.0038317365370679314,
+        "mean_candidate_rank": 5.526934915397698,
+        "mean_days_since": 35.69896904345431,
+        "mean_hit_rate": 0.4811174058689226,
+        "mean_relative_return": 0.0013136872852084057,
+        "mean_rows": 2355.2,
+        "median_relative_return": -0.005499590200732771,
+        "state": "top10_all",
+        "wf_years": 5
+      },
+      "top10_fresh20": {
+        "confirmation_2025_relative_return": -0.004311000011312431,
+        "family": "top10",
+        "label": "Top-10 rows returning after at least 20 trading days out",
+        "mean_abs_return": 0.003885050377673259,
+        "mean_candidate_rank": 6.164502668451277,
+        "mean_days_since": 103.63818040209394,
+        "mean_hit_rate": 0.481987467338861,
+        "mean_relative_return": 0.001400667437746555,
+        "mean_rows": 742.6,
+        "median_relative_return": -0.005152108963760815,
+        "state": "top10_fresh20",
+        "wf_years": 5
+      },
+      "top10_incumbent": {
+        "confirmation_2025_relative_return": -0.010702731412358097,
+        "family": "top10",
+        "label": "Top-10 rows that were also top-10 on the previous trading day",
+        "mean_abs_return": 0.0019002520547966584,
+        "mean_candidate_rank": 4.666988117454981,
+        "mean_days_since": 1.0,
+        "mean_hit_rate": 0.46359742454223973,
+        "mean_relative_return": 0.0005404801455737435,
+        "mean_rows": 749.8,
+        "median_relative_return": -0.006240642049433451,
+        "state": "top10_incumbent",
+        "wf_years": 5
+      },
+      "top10_stale_repeat": {
+        "confirmation_2025_relative_return": -0.0033359172205378548,
+        "family": "top10",
+        "label": "Top-10 rows returning after 2-19 trading days",
+        "mean_abs_return": 0.005675164986241913,
+        "mean_candidate_rank": 5.714784187429517,
+        "mean_days_since": 7.069903396806202,
+        "mean_hit_rate": 0.49793947119717047,
+        "mean_relative_return": 0.0020840633933117553,
+        "mean_rows": 853.2,
+        "median_relative_return": -0.0043274447158264204,
+        "state": "top10_stale_repeat",
+        "wf_years": 5
+      },
+      "top5_all": {
+        "confirmation_2025_relative_return": -0.004787985087927451,
+        "family": "top5",
+        "label": "Buyable top-5 candidate rows",
+        "mean_abs_return": 0.003917612504218934,
+        "mean_candidate_rank": 3.0167872689772794,
+        "mean_days_since": 62.43792893748359,
+        "mean_hit_rate": 0.4796302374657072,
+        "mean_relative_return": 0.0014505914631959302,
+        "mean_rows": 1169.2,
+        "median_relative_return": -0.005984842765293783,
+        "state": "top5_all",
+        "wf_years": 5
+      },
+      "top5_first_ever": {
+        "confirmation_2025_relative_return": null,
+        "family": "top5",
+        "label": "Top-5 rows with no prior top-5 appearance in panel history",
+        "mean_abs_return": -0.009235434127654873,
+        "mean_candidate_rank": 3.1645962732919255,
+        "mean_days_since": null,
+        "mean_hit_rate": 0.40993788819875776,
+        "mean_relative_return": -0.009023543777705222,
+        "mean_rows": 25.5,
+        "median_relative_return": -0.015335590101768489,
+        "state": "top5_first_ever",
+        "wf_years": 2
+      },
+      "top5_fresh20": {
+        "confirmation_2025_relative_return": -0.003339808536416106,
+        "family": "top5",
+        "label": "Top-5 rows returning after at least 20 trading days out",
+        "mean_abs_return": 0.004708933143995496,
+        "mean_candidate_rank": 3.2536074773094894,
+        "mean_days_since": 145.88943774365765,
+        "mean_hit_rate": 0.4849991352636257,
+        "mean_relative_return": 0.0023085493928760676,
+        "mean_rows": 474.6,
+        "median_relative_return": -0.0052601755082857336,
+        "state": "top5_fresh20",
+        "wf_years": 5
+      },
+      "top5_incumbent": {
+        "confirmation_2025_relative_return": -0.011264563213876916,
+        "family": "top5",
+        "label": "Top-5 rows that were also top-5 on the previous trading day",
+        "mean_abs_return": 0.0006406149940643485,
+        "mean_candidate_rank": 2.5691424067241106,
+        "mean_days_since": 1.0,
+        "mean_hit_rate": 0.4575172457688609,
+        "mean_relative_return": -0.0003196336456571584,
+        "mean_rows": 315.2,
+        "median_relative_return": -0.007449054964290655,
+        "state": "top5_incumbent",
+        "wf_years": 5
+      },
+      "top5_stale_repeat": {
+        "confirmation_2025_relative_return": -0.0006500850357047137,
+        "family": "top5",
+        "label": "Top-5 rows returning after 2-19 trading days",
+        "mean_abs_return": 0.006179614704727754,
+        "mean_candidate_rank": 3.0946823741859237,
+        "mean_days_since": 7.292963674815654,
+        "mean_hit_rate": 0.4938445300559359,
+        "mean_relative_return": 0.002471613815816517,
+        "mean_rows": 364.0,
+        "median_relative_return": -0.005218143588608079,
+        "state": "top5_stale_repeat",
+        "wf_years": 5
+      }
+    },
+    "lift_diagnostics": {
+      "top10_fresh20": {
+        "top10_all": {
+          "confirmation_2025_lift": 0.0019087832751096233,
+          "control": "top10_all",
+          "mean_lift": 8.698015253814909e-05,
+          "pct_pos_lift_years": 0.6,
+          "pos_lift_years": 3,
+          "state": "top10_fresh20",
+          "years": 5
+        },
+        "top10_incumbent": {
+          "confirmation_2025_lift": 0.006391731401045667,
+          "control": "top10_incumbent",
+          "mean_lift": 0.0008601872921728112,
+          "pct_pos_lift_years": 0.6,
+          "pos_lift_years": 3,
+          "state": "top10_fresh20",
+          "years": 5
+        },
+        "top10_stale_repeat": {
+          "confirmation_2025_lift": -0.000975082790774576,
+          "control": "top10_stale_repeat",
+          "mean_lift": -0.0006833959555652004,
+          "pct_pos_lift_years": 0.4,
+          "pos_lift_years": 2,
+          "state": "top10_fresh20",
+          "years": 5
+        }
+      },
+      "top5_first_ever": {
+        "top5_all": {
+          "confirmation_2025_lift": null,
+          "control": "top5_all",
+          "mean_lift": -0.01341088774797105,
+          "pct_pos_lift_years": 0.0,
+          "pos_lift_years": 0,
+          "state": "top5_first_ever",
+          "years": 2
+        },
+        "top5_incumbent": {
+          "confirmation_2025_lift": null,
+          "control": "top5_incumbent",
+          "mean_lift": -0.011691169433808718,
+          "pct_pos_lift_years": 0.0,
+          "pos_lift_years": 0,
+          "state": "top5_first_ever",
+          "years": 2
+        }
+      },
+      "top5_fresh20": {
+        "top5_all": {
+          "confirmation_2025_lift": 0.0014481765515113446,
+          "control": "top5_all",
+          "mean_lift": 0.000857957929680137,
+          "pct_pos_lift_years": 0.8,
+          "pos_lift_years": 4,
+          "state": "top5_fresh20",
+          "years": 5
+        },
+        "top5_incumbent": {
+          "confirmation_2025_lift": 0.00792475467746081,
+          "control": "top5_incumbent",
+          "mean_lift": 0.0026281830385332257,
+          "pct_pos_lift_years": 0.6,
+          "pos_lift_years": 3,
+          "state": "top5_fresh20",
+          "years": 5
+        },
+        "top5_stale_repeat": {
+          "confirmation_2025_lift": -0.0026897235007113923,
+          "control": "top5_stale_repeat",
+          "mean_lift": -0.00016306442294044968,
+          "pct_pos_lift_years": 0.6,
+          "pos_lift_years": 3,
+          "state": "top5_fresh20",
+          "years": 5
+        }
+      }
+    },
+    "panel_dates": 1749,
+    "panel_rows": 34821,
+    "panel_tickers": 394,
+    "pass_rule": "PASS if top5_fresh20 or top10_fresh20 has positive mean cycle relative return and beats all, incumbent, and stale-repeat controls by more than pass_min_lift on average, with at least 60% positive-lift years and positive 2025 lifts. MIXED if only first-ever top5 clears. Otherwise FAILED.",
+    "pass_states": [],
+    "protocol": {
+      "end_year": 2025,
+      "fresh_dormancy_days": 20,
+      "min_train_years": 2,
+      "min_year_rows": 20,
+      "scope": "buyable top-5/top-10 candidate rows from entry-alpha panel",
+      "stale_repeat_max_days": 19,
+      "start_year": 2019,
+      "target": "cycle_relative_return_vs_vnindex",
+      "test_years": [
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "verdict": "FAILED"
+  },
+  "ts": "20260504_202357"
+}

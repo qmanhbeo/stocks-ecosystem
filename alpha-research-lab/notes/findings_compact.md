@@ -22,13 +22,59 @@ entry must include source anchors: stable finding IDs or source session links.
   IC, residual selector value, bounded executable uplift, publication, and
   published-contract parity. Source anchors: `F296-F301`.
 
+- Insider/weakness interactions: H387 rejected the insider-down rescue overlay.
+  Positive insider plus stock weakness plus high C16 beat ordinary insider rows
+  but failed the stronger insider-C16 and stock-down-C16 controls; stock-down
+  high-C16 remained the cleaner control state. Source anchors: `F348`, `D005`.
+
+- Calendar/timing context: old calendar filters remain useful as context, but
+  H390 parks exact-state calendar promotion under the current target. Exact
+  `monday_jan_combo` retained a 1d residual C16-IC lift after mechanism
+  controls, but it was only one active test date per evaluated year, had only
+  `2 / 4` positive 1d residual-lift years, and had negative mean 5d residual
+  lift; `quarter_start` and late quarter-month timing did not retain positive
+  1d residual lift. Source anchors: `F351`, `D008`.
+
+- Tradability-release context: H391 rejected the current entry-panel
+  `release_flag` as a `wait_release` buy signal. Top-5/top-10 rows becoming
+  buyable after prior blocked-buy states had negative cycle relative returns,
+  negative same-rank matched-control lifts, weak 2025 confirmation, and weaker
+  sellability health than stable buyable controls. Source anchors: `F352`,
+  `D009`.
+
+- Source-triangle context: H392 rejected the C16+insider+news core under the
+  current C5/PhoBERT representation. `c16_insider_any_news` was positive but
+  lost to both C16+insider-without-news and C16+news-without-insider controls;
+  the broader `three_plus_sensors` pocket beat exactly-two sensors, suggesting
+  the live clue is a non-insider C16+source+forward news pocket, not an
+  insider-confirmed triangle. Source anchors: `F353`, `D010`.
+
+- Capitulation context: H393 found high C16 after stock and market weakness
+  without bullish news is positive, but not better than the simpler
+  `stock_down_high_c16` control. Stock-down high-C16 remains the cleaner
+  hidden-support state; same-day no-bullish-news/market-down additions are
+  parked unless a weak-active-news or intraday absorption contract is opened.
+  Source anchors: `F354`, `D011`.
+
 - Local-news status: the blocked Ollama residual backfill is complete and H364
   produced the first combined local-news pass. The current anchor is
   `h364_official_sentiment_x_earnings_guidance`, with avg IC `+0.01766`,
   dev/validation/confirmation IC `+0.0173 / +0.0200 / +0.0156`, `10 / 10`
   positive years, and S1 corr `-0.0104`. This is candidate/offline evidence
-  pending a fixed consumer integration audit, not a live change. Source anchor:
-  `F342`.
+  but H382 narrowed its consumer status: same-support active-news ranking passed
+  random-active, while broad candidate-pool allocation failed random-all. H383
+  then confirmed the broader interaction mechanism: C16 is stronger when
+  own-ticker news is active, and `active_news_strong_flow` /
+  `positive_news_strong_flow` are confirmation states, not disagreement states.
+  H384 then rejected those H383 states as candidate-pool allocators under
+  random same-support and random-all policy benchmarks. H385 then confirmed a
+  different local-news mechanism: official/regulatory or forward-looking rows
+  need C16 or insider support and pay with delay; `official_supported` and
+  `official_forward_supported` had 5d lifts around `+0.0074` to `+0.0077`
+  versus unsupported controls with `8 / 8` positive years. H386 then rejected
+  those states as candidate-pool allocators under deterministic candidate-rank
+  selection and random same-support/random-all policy benchmarks. Source
+  anchors: `F342-F347`, `D002-D004`.
 
 ## Reference Baselines (Walk-Forward IC)
 - Random: ~0.00 (noise benchmark)
@@ -47,14 +93,14 @@ entry must include source anchors: stable finding IDs or source session links.
 |--------|-----|---------|-----|
 | **S1 (xs_proba)** | 0.149 | +0.15 | **BEST - PRIMARY** |
 | **Triple Storm** | 0.158 | +0.16 | liquid+down+divergence boost |
-| monday_jan_combo | 0.1109 | +0.11 | calendar combo |
+| monday_jan_combo | 0.1109 | +0.11 | raw calendar combo; exact promotion parked by H390 |
 | X53 (Liquid C16) | 0.137 | +0.14 | C16 + liquidity filter |
 
 ### Tier 2: Enhancement Filters (IC 0.08-0.10)
 | Signal | IC | vs Random | Use |
 |--------|-----|---------|-----|
 | C16 divergence | 0.108 | +0.11 | price vs C16 disagreement |
-| quarter_start | 0.098 | +0.10 | timing filter |
+| quarter_start | 0.098 | +0.10 | raw timing filter; exact promotion parked by H390 |
 | market_breadth A/D Q1 | 0.093 | +0.09 | breadth filter |
 | vol_high | 0.0941 | +0.09 | volume regime filter |
 | X54 (Braid) | 0.080 | +0.08 | sector unanimity |
@@ -111,7 +157,7 @@ entry must include source anchors: stable finding IDs or source session links.
 |--------|-----|---------|------|
 | S1 (xs_proba) | 0.149 | +0.15 | PRIMARY |
 | Triple Storm | 0.158 | +0.16 | enhancement |
-| monday_jan_combo | 0.1109 | +0.11 | calendar combo |
+| monday_jan_combo | 0.1109 | +0.11 | raw calendar combo; exact promotion parked by H390 |
 | X53 (Liquid C16) | 0.137 | +0.14 | liquidity filter |
 | consecutive_down_days | 0.1030 | +0.10 | market streak |
 | **insider_buy_lead** | **0.1113** | **+0.11** | **insider lead** |
@@ -120,7 +166,7 @@ entry must include source anchors: stable finding IDs or source session links.
 | Signal | IC | vs Random | Type |
 |--------|-----|---------|------|
 | C16 divergence | 0.108 | +0.11 | price disagreement |
-| quarter_start | 0.098 | +0.10 | timing |
+| quarter_start | 0.098 | +0.10 | raw timing; exact promotion parked by H390 |
 | dividend_30d | 0.0934 | +0.09 | event driver |
 | market_breadth A/D Q1 | 0.093 | +0.09 | breadth filter |
 | vol_high | 0.0941 | +0.09 | volume regime |
@@ -216,8 +262,10 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
   candidate-count-only transforms and passed versus random K/cash policies with
   mean cycle lift `+0.00389`, `4 / 5` years above random K/cash mean, and 2025
   lift `+0.00472`. The durable clue is raw `candidate_count`; it is a
-  portfolio-policy state, not a ticker-level signal. Source anchors: `F339`,
-  `F340`.
+  portfolio-policy state, not a ticker-level signal. H388 then rejected
+  long-dormancy fresh reappearance as a candidate-history boost; short-repeat
+  controls were stronger than `20+` day fresh returns. Source anchors: `F339`,
+  `F340`, `F349`, `D006`.
 
 - Event/reduced-shape timing work found useful narrow evidence but kept
   boundaries tight: CafeF company news was real but sparse, the `1H` intraday
@@ -245,8 +293,9 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
   event-v2 mapping improved source quality, same-day first-public and
   low-repeat states survived as sparse evidence, and H321 found a self-exciting
   cascade state. Additive integration, entry-label transfer, payoff-shape
-  promotion, and portfolio sparse-clock rescue then failed. Source anchors:
-  `F222-F241`, `F289`, `F292`, `F302`.
+  promotion, portfolio sparse-clock rescue, and the guarded-Ollama
+  first/repeat/family-transition reopening test then failed. Source anchors:
+  `F222-F241`, `F289`, `F292`, `F302`, `F350`, `D007`.
 
 - Official-disclosure and HNX work is source-first, not alpha-ready: official
   disclosure timing, HNX transfer, and the current HNX disclosure history remain
@@ -313,8 +362,9 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
   BERT-gated, score-cached, and residual to PhoBERT rather than a broad
   full-field local replacement. The first completed backfill enabled H364, where
   official/regulatory source probability, sentiment, and Ollama
-  earnings/guidance agreement passed the standalone local-news gate. Source
-  anchors: `F274`, `F282-F283`, `F342`.
+  earnings/guidance agreement passed the standalone local-news gate. H382 says
+  the feature is an event-subset ranker, not a broad candidate allocator. Source
+  anchors: `F274`, `F282-F283`, `F342-F343`, `D002`.
 
 ## Maintenance Rule
 

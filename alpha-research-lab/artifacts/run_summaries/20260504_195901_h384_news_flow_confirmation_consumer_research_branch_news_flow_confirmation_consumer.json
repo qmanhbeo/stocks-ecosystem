@@ -1,0 +1,107 @@
+{
+  "artifacts": {
+    "daily": "artifacts/entry_alpha/20260504_195901_h384_news_flow_confirmation_consumer_daily.parquet",
+    "years": "artifacts/entry_alpha/20260504_195901_h384_news_flow_confirmation_consumer_years.parquet"
+  },
+  "metadata": {
+    "active_state_rows": 1429,
+    "c16": "data/features/xs_order_pressure_daily.parquet",
+    "candidate_panel": "data/features/entry_alpha/candidate_panel_daily.parquet",
+    "candidate_pool_rank_max": 20,
+    "daily_rows": 1737,
+    "end_year": 2025,
+    "k_values": [
+      1,
+      2,
+      3,
+      5
+    ],
+    "labels": "data/features/entry_alpha/entry_labels_cycle5.parquet",
+    "min_active_dates_per_year": 20,
+    "min_train_years": 2,
+    "news": "data/features/news/datasets/news_daily_features.parquet",
+    "panel_rows": 33925,
+    "positive_state_rows": 1215,
+    "random_trials": 5000,
+    "seed": 384,
+    "start_year": 2019
+  },
+  "mode": "research_branch_news_flow_confirmation_consumer",
+  "name": "h384_news_flow_confirmation_consumer",
+  "summary": {
+    "branch": "news_flow_confirmation_consumer",
+    "branch_decision": "No fixed H383 confirmation state beat the same-support random policy cleanly.",
+    "broad_pass_states": [],
+    "durable_status": "branch_kill_or_reframe",
+    "experiment_id": "H384",
+    "fixed_states": [
+      "active_news_strong_flow",
+      "positive_news_strong_flow"
+    ],
+    "pass_rule": "PASS if any fixed H383 confirmation state beats random same-support and random-all means on average, beats both in at least 60% of WF years, has positive 2025 lift versus both, and has enough support. MIXED if only same-support clears. Otherwise FAILED.",
+    "primary_benchmark": "random same-K selection among active buyable rows from the same fixed state",
+    "primary_state": "active_news_strong_flow",
+    "same_support_only_states": [],
+    "score": "order_volume_ratio_rank",
+    "secondary_benchmark": "random same-K selection among all buyable candidate-pool rows",
+    "secondary_state": "positive_news_strong_flow",
+    "state_summaries": {
+      "active_news_strong_flow": {
+        "confirmation_2025_lift_vs_random_all": 0.002997464276127846,
+        "confirmation_2025_lift_vs_random_state": 0.00039846464629035745,
+        "confirmation_2025_random_all_percentile": 0.7664,
+        "mean_lift_vs_random_all": -0.0033651864429195995,
+        "mean_lift_vs_random_state": -0.00025643844495031856,
+        "mean_policy_abs_return": 0.00038013787327421174,
+        "mean_policy_relative_return": -0.0004905466906903643,
+        "mean_random_all_abs_return": 0.0037453243161938107,
+        "mean_random_state_abs_return": 0.0006365763182245302,
+        "min_active_dates_per_year": 94,
+        "random_all_gate": false,
+        "required_min_active_dates_per_year": 20,
+        "same_support_gate": false,
+        "state": "active_news_strong_flow",
+        "test_years": [
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "trained_component": "consumer K choice only, selected from prior years for this fixed state",
+        "wf_years": 5,
+        "years_gt_random_all_mean": 2,
+        "years_gt_random_state_mean": 2
+      },
+      "positive_news_strong_flow": {
+        "confirmation_2025_lift_vs_random_all": 0.004391581965994129,
+        "confirmation_2025_lift_vs_random_state": 0.0005021800036811262,
+        "confirmation_2025_random_all_percentile": 0.8584,
+        "mean_lift_vs_random_all": -0.0019065201955634002,
+        "mean_lift_vs_random_state": -0.00019689910781086963,
+        "mean_policy_abs_return": 0.0018005536256545489,
+        "mean_policy_relative_return": 0.0011731875188414943,
+        "mean_random_all_abs_return": 0.0037070738212179495,
+        "mean_random_state_abs_return": 0.0019974527334654184,
+        "min_active_dates_per_year": 77,
+        "random_all_gate": false,
+        "required_min_active_dates_per_year": 20,
+        "same_support_gate": false,
+        "state": "positive_news_strong_flow",
+        "test_years": [
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "trained_component": "consumer K choice only, selected from prior years for this fixed state",
+        "wf_years": 5,
+        "years_gt_random_all_mean": 2,
+        "years_gt_random_state_mean": 2
+      }
+    },
+    "verdict": "FAILED"
+  },
+  "ts": "20260504_195901"
+}

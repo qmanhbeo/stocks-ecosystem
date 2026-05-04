@@ -1,0 +1,110 @@
+{
+  "artifacts": {
+    "daily": "artifacts/entry_alpha/20260504_201315_h386_official_delay_consumer_router_daily.parquet",
+    "years": "artifacts/entry_alpha/20260504_201315_h386_official_delay_consumer_router_years.parquet"
+  },
+  "metadata": {
+    "c16": "data/features/xs_order_pressure_daily.parquet",
+    "candidate_panel": "data/features/entry_alpha/candidate_panel_daily.parquet",
+    "candidate_pool_rank_max": 20,
+    "daily_rows": 1737,
+    "end_year": 2025,
+    "k_values": [
+      1,
+      2,
+      3,
+      5
+    ],
+    "labels": "data/features/entry_alpha/entry_labels_cycle5.parquet",
+    "matrix": "data/features/xs_rl_signal_matrix.parquet",
+    "min_active_dates_per_year": 20,
+    "min_train_years": 2,
+    "news": "data/features/news/datasets/news_daily_features.parquet",
+    "official_forward_state_rows": 558,
+    "official_state_rows": 344,
+    "panel_rows": 33925,
+    "random_trials": 5000,
+    "seed": 386,
+    "start_year": 2019
+  },
+  "mode": "research_branch_official_delay_consumer_router",
+  "name": "h386_official_delay_consumer_router",
+  "summary": {
+    "branch": "official_delay_consumer_router",
+    "branch_decision": "No fixed H385 official-delay state beat random policy gates cleanly.",
+    "broad_pass_states": [],
+    "deterministic_selector": "lowest candidate_pool_rank first, then highest order_volume_ratio_rank tie-break",
+    "durable_status": "branch_kill_or_reframe",
+    "experiment_id": "H386",
+    "fixed_states": [
+      "official_supported",
+      "official_forward_supported"
+    ],
+    "partial_pass_states": [],
+    "pass_rule": "PASS if any fixed H385 official-delay state beats random same-support and random-all means on average, beats both in at least 60% of WF years, has positive 2025 lift versus both, and has enough support. MIXED if only one random-policy gate clears. Otherwise FAILED.",
+    "primary_benchmark": "random same-K selection among active buyable rows from the same fixed state",
+    "primary_state": "official_supported",
+    "secondary_benchmark": "random same-K selection among all buyable candidate-pool rows",
+    "secondary_state": "official_forward_supported",
+    "state_summaries": {
+      "official_forward_supported": {
+        "confirmation_2025_lift_vs_random_all": -0.0024402109833085387,
+        "confirmation_2025_lift_vs_random_state": 1.6263032587282567e-19,
+        "confirmation_2025_random_all_percentile": 0.0682,
+        "deterministic_selector": "lowest candidate_pool_rank first, then highest order_volume_ratio_rank tie-break",
+        "mean_lift_vs_random_all": -0.005551303945348307,
+        "mean_lift_vs_random_state": -0.0005736501093284122,
+        "mean_policy_abs_return": -0.0018738359024636695,
+        "mean_policy_relative_return": -0.00190653872978661,
+        "mean_random_all_abs_return": 0.0036774680428846365,
+        "mean_random_state_abs_return": -0.0013001857931352575,
+        "min_active_dates_per_year": 41,
+        "random_all_gate": false,
+        "required_min_active_dates_per_year": 20,
+        "same_support_gate": false,
+        "state": "official_forward_supported",
+        "test_years": [
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "trained_component": "consumer K choice only, selected from prior years for this fixed H385 state",
+        "wf_years": 5,
+        "years_gt_random_all_mean": 1,
+        "years_gt_random_state_mean": 2
+      },
+      "official_supported": {
+        "confirmation_2025_lift_vs_random_all": -0.002265385906804661,
+        "confirmation_2025_lift_vs_random_state": 0.0,
+        "confirmation_2025_random_all_percentile": 0.0786,
+        "deterministic_selector": "lowest candidate_pool_rank first, then highest order_volume_ratio_rank tie-break",
+        "mean_lift_vs_random_all": -0.005396084659949581,
+        "mean_lift_vs_random_state": -0.0003541200607027118,
+        "mean_policy_abs_return": -0.0017128644867776105,
+        "mean_policy_relative_return": -0.0016771834392840478,
+        "mean_random_all_abs_return": 0.0036832201731719708,
+        "mean_random_state_abs_return": -0.001358744426074899,
+        "min_active_dates_per_year": 23,
+        "random_all_gate": false,
+        "required_min_active_dates_per_year": 20,
+        "same_support_gate": false,
+        "state": "official_supported",
+        "test_years": [
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "trained_component": "consumer K choice only, selected from prior years for this fixed H385 state",
+        "wf_years": 5,
+        "years_gt_random_all_mean": 1,
+        "years_gt_random_state_mean": 2
+      }
+    },
+    "verdict": "FAILED"
+  },
+  "ts": "20260504_201315"
+}

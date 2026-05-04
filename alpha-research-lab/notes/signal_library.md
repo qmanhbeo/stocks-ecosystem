@@ -147,6 +147,14 @@ H340 rewrite:
 Keep H347 as offline interaction evidence only. Do not replace H340 or tune
 more foreign-net windows around `C5`.
 
+**Insider-down update:** Session 265 `H387` tested whether positive C5 after
+visible 1d/3d stock weakness plus high C16 forms a distinct rescue state. It
+failed against the important controls: `insider_down_high_c16` beat ordinary
+`insider_buy`, but its mean 5d lift was only `+0.00087` versus
+`insider_high_c16` and `-0.00308` versus `stock_down_high_c16`, with negative
+2025 lifts versus both. Do not add an insider-down overlay under the current
+representation.
+
 **Interpretation update:** weak bullish follow-through is a pollutant on raw `C5`, not a
 new alpha family. The current preferred robustness form is the `H340`
 same-day buy-volume rewrite, with the `H306` exec-rate rewrite as a weaker
@@ -685,13 +693,45 @@ or LLM-based scoring for higher quality (H98).
   S1 corr `-0.0104`, and `13.329%` coverage. Treat it as candidate local-news
   evidence pending one fixed portfolio/consumer integration audit, not a live
   branch change.
+- **Consumer update:** H382 tested that fixed feature inside the entry-alpha
+  candidate pool with TRUE walk-forward validation and random candidate-policy
+  benchmarks. It passed only as a same-support active-news ranker: mean lift
+  versus random-active `+0.00092`, `4 / 5` years above random-active mean, and
+  2025 lift `+0.00296`. It failed broad random-all allocation with mean lift
+  `-0.00367` and only `1 / 5` years above random-all mean. Do not promote H364
+  as a broad portfolio allocator.
+- **Flow/text interaction update:** H383 tested local-news states against C16
+  order pressure with a primary 1d relative-return target. It passed as
+  confirmation rather than disagreement: `active_news_strong_flow` reached WF
+  relative IC `+0.10293`, `8 / 8` positive years, 2025 IC `+0.12163`, and lift
+  `+0.04005` versus strong-flow; `positive_news_strong_flow` reached
+  `+0.10854`. No-news and weak-flow disagreement states did not beat their
+  baselines. H384 then failed the fixed consumer audit: both active/positive
+  strong-flow states underperformed random same-support and random-all policy
+  means. Treat H383 as offline interaction context, not a broad allocator.
+- **Official-delay update:** H385 tested official/regulatory and
+  forward-looking local-news rows with C16 or positive-insider support on 1d
+  and 5d excess-return payoffs. It passed as delayed offline evidence:
+  `official_supported` had 5d lift `+0.007408` versus unsupported official
+  rows, and `official_forward_supported` had 5d lift `+0.007657` versus
+  unsupported official/forward rows; both had `8 / 8` positive 5d-lift years.
+  H386 then failed the fixed candidate-pool consumer audit: both states
+  underperformed random same-support and random-all policy means. Treat H385
+  as support-confirmed official-attention context, not a broad allocator.
+- **Source-triangle update:** H392 tested a stricter C16+insider+local-news
+  triangle. The required `c16_insider_any_news` core failed controls: mean 5d
+  lift was `-0.007315` versus C16+insider-without-news and `-0.005205` versus
+  C16+news-without-insider. Broader `three_plus_sensors` beat exactly-two
+  sensors by `+0.005156`, but this is a non-insider news-triangle clue, not a
+  C16+insider promotion. Source anchors: `F353`, `D010`.
 - **Why this is different from H98:** the PhoBERT lane is local, GPU-friendly,
   and sentiment-focused; it does **not** claim to replace `event_type`,
   `rumor`, `source_authority`, `causal_impact_label`, or the rest of the
   hosted LLM schema
-- **Promotion rule:** do not promote this into a live or consumer-facing matrix
-  contract until the fixed H364 consumer integration audit passes. If that audit
-  fails, keep H364 as offline local-news context.
+- **Promotion rule:** keep H364/H383/H385/H392 as offline local-news context and
+  event-subset interaction/ranking or delay evidence. Do not promote these into
+  a live or broad consumer-facing matrix contract without a materially stronger
+  consumer audit.
 
 ---
 
@@ -759,7 +799,7 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | CafeF foreign-flow standalone paths (H327/H328/H333/H345) | best raw room-scarcity dev/validation IC +0.0117/+0.0074 but 2025 IC −0.0048; best residual loosen rank −0.0044/−0.0109/+0.0132; best accumulation change-point dev/validation IC only +0.0020/+0.0024 | Source acquired, but raw, conditioned, room-residual, and accumulation / ownership-change paths fail as standalone signals |
 | Proprietary-flow conflict/agreement pilot (H348) | best proprietary buy-share row dev/validation/confirmation IC +0.0144/−0.0216/−0.0110 | Limited 2022+ CafeF proprietary-trading source is usable, but raw ranks and foreign/proprietary agreement-conflict states are unstable on the current next-day target |
 | Sector ownership pressure (H351) | best sector participation row dev/validation/confirmation IC −0.0007/−0.0051/+0.0015 | Sector-level foreign pressure, participation, room/ownership, and sector-heat interactions fail; low sector-anchor correlation means this is not merely C6/breadth redundancy |
-| Event-v2 payoff / sparse-clock states (H352/H361) | H352 best state q90 lift +0.0196/+0.0174 but q10 worsened; H361 fixed sparse-clock portfolio bonus validation/confirmation relative-return deltas −4.96%/−2.66% | Event-v2 remains offline timing evidence only; the remaining portfolio-level sparse-clock reopening condition failed, so do not tune more event-v2 overlays under the current contract |
+| Event-v2 / guarded-Ollama payoff and sparse-clock states (H352/H361/H389) | H352 best state q90 lift +0.0196/+0.0174 but q10 worsened; H361 fixed sparse-clock portfolio bonus validation/confirmation relative-return deltas −4.96%/−2.66%; H389 best guarded-Ollama `event_first20` lift only +0.00099 vs generic event and +0.00114 vs repeat event | Event timing remains offline evidence only; the event-v2 sparse-clock and guarded-Ollama first/repeat/transition reopening routes failed, so do not tune more event overlays under the current contract |
 | Dividend-clock payoff / sparse-clock states (H354/H362) | H354 best `pre_ex_20d` mean lift +0.0007/+0.0002; H362 fixed sparse-clock portfolio bonus validation/confirmation relative-return deltas ~0.00%/+0.96% but failed the portfolio gate | Small pre-ex payoff hint remains offline calendar evidence only; do not tune more dividend windows or sparse-clock overlays under the current target |
 | Legal public-holiday payoff / sparse-clock states (H363) | Best `all_holidays__post_5` top-book lift +0.00405/+0.01579 passed the payoff audit, but the fixed `+0.015` sparse portfolio bonus had validation/confirmation relative-return deltas `0.00%`/`0.00%` and failed the portfolio gate | Legal-holiday timing remains offline evidence only; do not tune more pre/post offsets, closure-length gates, bonus sizes, or veto variants under the current selector |
 | Order-pressure smart-exit state (H355) | best two-phase utility delta vs H337 refit only about +0.00065/+0.00053 | CafeF order pressure is useful post-entry state evidence, but it does not solve H337/H339 smart-exit learning; do not integrate exit features or tune more linear step-hazard feature sets |
@@ -778,7 +818,7 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 | Gap-failure exhaustion (H283 / old H135 queue item) | best variant `xs_gap_failure_exhaustion_3` is predictive but maps back to C13 | Real construction, but not a new independent axis under the tested contract |
 | Sector-conditioned blow-off reversal (H284 / old H136 queue item) | fixed sector / ceiling gates do not improve H133 | Parked; C13 remains the cleaner compression blow-off representation |
 | Sector breadth shock (H131) | best IC −0.003 (xs_breadth_shock_laggard) | Breadth changes add no standalone value beyond existing sector structures |
-| Conditional liquidity release (H132) | best IC +0.007 (xs_liq_release_1) | Conditioning illiquidity changes on return/close state still does not clear the 0.01 gate |
+| Conditional liquidity / tradability release (H132/H391) | H132 best IC +0.007; H391 `top5_release` / `top10_release` matched lifts `-0.03367` / `-0.02837` with negative 2025 lifts | Illiquidity-change and entry-panel blocked-buy release states do not clear; do not use `wait_release` as a buy boost under the current contract |
 | Longer-horizon continuation (H126) | 90d/120d ranks IC +0.011 but corr with C11 = +0.775 / +0.664 | Real signal, but it is just a longer-horizon restatement of the existing continuation axis |
 | Residual long-horizon reversal (H346 / old H137 queue item) | best residual continuation control IC +0.0072; 90d/120d residual reversal IC −0.0063/−0.0072 | After removing C11, the residual is too weak and the hypothesized reversal sign is wrong |
 
@@ -804,12 +844,23 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 
 | Signal | IC | vs Random | Status | Use |
 |--------|-----|---------|--------|------|
-| monday_jan_combo | 0.1109 | +0.11 | REAL | calendar combo |
+| monday_jan_combo | 0.1109 | +0.11 | REAL / H390 PARKED | raw calendar combo; exact-state promotion parked |
 | february_mid | 0.0858 | +0.09 | REAL | calendar |
 | march_late | 0.0833 | +0.08 | REAL | calendar |
 | monday | 0.0836 | +0.08 | REAL | calendar |
 | october | 0.0817 | +0.08 | REAL | calendar |
 | january_first_10 | 0.0817 | +0.08 | REAL | calendar |
+
+H390 mechanism update:
+- Exact `monday_jan_combo` retained 1d residual C16-IC lift `+0.02745` after
+  liquidity, breadth, news-volume, buyability, C16, and down-market controls,
+  but it had only one active date per evaluated year, only `2 / 4` positive
+  1d residual-lift years, and negative mean 5d residual lift (`-0.04055`).
+  Do not promote it as an independent overlay under the current target.
+- Diagnostic `january_first_10` was cleaner after residualization
+  (`+0.03067` 1d residual lift, `5 / 5` positive years), but it was not a
+  predeclared primary H390 state. Reopen only with a fixed broader
+  January/weekday contract. Source anchors: `F351`, `D008`.
 
 ### Market State Filters (S237, S238)
 
@@ -817,7 +868,7 @@ https://cafef.vn/du-lieu/Ajax/PageNew/DataHistory/GDCoDong.ashx?Symbol=FPT&...
 |--------|-----|---------|--------|------|
 | vol_high | 0.0941 | +0.09 | REAL | volume regime |
 | tet | 0.097 | +0.10 | REAL | holiday filter |
-| quarter_start | 0.098 | +0.10 | timing |
+| quarter_start | 0.098 | +0.10 | timing / H390 PARKED | raw timing filter; exact-state promotion parked |
 | market_breadth A/D Q1 | 0.093 | +0.09 | breadth filter |
 
 **Source:** [session_244_log.md](./session_244_log.md), [session_243_log.md](./session_243_log.md), [session_242_log.md](./session_242_log.md)

@@ -7,6 +7,131 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 271](session_271_log.md): Ran H393 `nihilist_reversal` with
+  reusable script `analysis/h393_nihilist_reversal.py`. TRUE walk-forward
+  `2018-2025`, no `2026+`, fixed high-C16, stock-down, VNI-down, and
+  no-bullish-news definitions. H393 was MIXED: `nihilist_reversal` had mean
+  5d payoff `+0.010170` but failed `stock_down_high_c16` by `-0.002027`, had
+  only `+0.000169` lift versus parent `stock_market_down_high_c16`, and 2025
+  payoff was `-0.000982`. `stock_down_high_c16` remains the cleaner state.
+  Source anchors: `F354`, `D011`.
+
+- [Session 270](session_270_log.md): Ran H392 `source_triangle_sparse` with
+  reusable script `analysis/h392_source_triangle_sparse.py`. TRUE
+  walk-forward `2018-2025`, no `2026+`, fixed C16, C5 insider, source-news,
+  and forward-text sensors. H392 was MIXED: the required
+  `c16_insider_any_news` core had positive mean 5d payoff `+0.003177` but lost
+  to `c16_insider_no_news` by `-0.007315`, to
+  `c16_any_news_no_insider` by `-0.005205`, and had 2025 lift
+  `-0.003072` versus exactly-two sensors. Broader `three_plus_sensors` beat
+  exactly-two by `+0.005156` with `8 / 8` positive lift years, but the edge is
+  not the insider+C16 triangle. Source anchors: `F353`, `D010`.
+
+- [Session 269](session_269_log.md): Ran H391
+  `tradability_release_pulse` with reusable script
+  `analysis/h391_tradability_release_pulse.py`. TRUE walk-forward
+  `2021-2025`, no `2026+`, fixed top-5/top-10 release states from
+  `release_flag`, and same-year same-rank stable/non-release buyable matched
+  controls. H391 FAILED: `top5_release` mean cycle relative return was
+  `-0.032254` with matched-control lift `-0.033668`, only `1 / 5` positive
+  matched-control years, and 2025 lift `-0.080106`; `top10_release` was also
+  negative with matched-control lift `-0.028365` and 2025 lift `-0.066302`.
+  Source anchors: `F352`, `D009`.
+
+- [Session 268](session_268_log.md): Ran H390
+  `calendar_as_liquidity_mechanism` with reusable script
+  `analysis/h390_calendar_liquidity_mechanism.py`. Converted C16 into daily
+  IC, residualized walk-forward on liquidity, breadth, news-volume, buyability,
+  C16 availability, volume-pressure, and trailing down-market controls, and
+  avoided `2026+` (`2019-01-02` through `2025-12-31` daily panel; test years
+  `2021-2025`). H390 was MIXED: exact `monday_jan_combo` retained 1d residual
+  IC lift `+0.02745`, but it was only one active date per evaluated year, only
+  `2 / 4` positive 1d residual-lift years, and 5d residual lift was negative
+  (`-0.04055`). `quarter_start` and `late_quarter_month` did not retain clean
+  1d residual lift. Source anchors: `F351`, `D008`.
+
+- [Session 267](session_267_log.md): Ran H389
+  `post_ollama_event_cascade` with reusable script
+  `analysis/h389_post_ollama_event_cascade.py`. The first run exposed
+  non-finite target rows, so the script was patched and rerun; canonical
+  artifacts are timestamp `20260504_203158`. TRUE walk-forward `2018-2025`,
+  no `2026+`, guarded-Ollama first/repeat/family-transition event states, and
+  5d relative-return payoffs. H389 FAILED: best state `event_first20` had mean
+  lifts only `+0.00099` versus generic event and `+0.00114` versus repeat
+  event, below the `+0.002` gate; no family pocket cleared MIXED. Source
+  anchors: `F350`, `D007`.
+
+- [Session 266](session_266_log.md): Ran H388
+  `fresh_selection_pulse` with reusable script
+  `analysis/h388_fresh_selection_pulse.py`. Computed prior top-5/top-10
+  appearances using only earlier panel dates; TRUE walk-forward `2021-2025`,
+  no `2026+`, buyable candidate rows, and cycle relative-return labels. H388
+  FAILED: `top5_fresh20` beat incumbents but failed stale-repeat control
+  (mean lift `-0.00016`, 2025 lift `-0.00269`); `top10_fresh20` also failed
+  stale-repeat control (mean lift `-0.00068`, 2025 lift `-0.00098`). Source
+  anchors: `F349`, `D006`.
+
+- [Session 265](session_265_log.md): Ran H387
+  `insider_down_rescue` with reusable script
+  `analysis/h387_insider_down_rescue.py`. TRUE walk-forward `2018-2025`, no
+  `2026+`, fixed positive-C5, 1d/3d stock-down, and high-C16 states, with 5d
+  relative-return payoffs versus insider-only, insider-C16, and stock-down-C16
+  controls. H387 FAILED: `insider_down_high_c16` beat ordinary insider rows
+  but failed the meaningful controls, with mean 5d lift `+0.00087` versus
+  `insider_high_c16` and `-0.00308` versus `stock_down_high_c16`; 2025 lifts
+  versus both were negative. Source anchors: `F348`, `D005`.
+
+- [Session 264](session_264_log.md): Ran H386
+  `official_delay_consumer_router` with reusable script
+  `analysis/h386_official_delay_consumer_router.py`. TRUE walk-forward
+  `2021-2025`, no `2026+`, fixed H385 official/forward supported states,
+  train-before-test `K` choice only, deterministic candidate-rank selection,
+  and random same-support plus random-all policy benchmarks. H386 FAILED:
+  `official_supported` mean lift was `-0.00035` versus random-state and
+  `-0.00540` versus random-all; `official_forward_supported` mean lift was
+  `-0.00057` versus random-state and `-0.00555` versus random-all. Source
+  anchors: `F347`, `D004`.
+
+- [Session 263](session_263_log.md): Ran H385
+  `official_attention_delay` with reusable script
+  `analysis/h385_official_attention_delay.py`. TRUE walk-forward `2018-2025`,
+  no `2026+`, fixed official/forward local-news states, C16 or insider support,
+  and 1d/5d excess-return payoffs versus unsupported official/forward controls.
+  H385 PASSED as delayed offline evidence: `official_supported` 5d lift
+  `+0.007408`, `8 / 8` positive 5d-lift years, 2025 lift `+0.005566`;
+  `official_forward_supported` 5d lift `+0.007657`, `8 / 8` positive years,
+  2025 lift `+0.006799`. Source anchor: `F346`.
+
+- [Session 262](session_262_log.md): Ran H384
+  `news_flow_confirmation_consumer` with reusable script
+  `analysis/h384_news_flow_confirmation_consumer.py`. TRUE walk-forward
+  `2021-2025`, no `2026+`, fixed H383 states, train-before-test `K` choice
+  only, and random same-support plus random-all candidate-policy benchmarks.
+  H384 FAILED: `active_news_strong_flow` mean lift was `-0.00026` versus
+  random-state and `-0.00337` versus random-all; `positive_news_strong_flow`
+  mean lift was `-0.00020` versus random-state and `-0.00191` versus
+  random-all. Source anchors: `F345`, `D003`.
+
+- [Session 261](session_261_log.md): Ran H383 `news_flow_disagreement` with
+  reusable script `analysis/h383_news_flow_disagreement.py`. TRUE walk-forward
+  `2018-2025`, no `2026+`, fixed C16/news state definitions, primary target
+  1d close-to-close relative return versus VNINDEX, and secondary S1 `actual`
+  diagnostics. H383 PASSED as confirmation rather than disagreement:
+  `active_news_strong_flow` rel IC `+0.10293`, `8 / 8` positive years, 2025
+  `+0.12163`, and lift `+0.04005` versus strong-flow; `positive_news_strong_flow`
+  was also strong at `+0.10854`. No-news and weak-flow disagreement states did
+  not beat baselines. Source anchor: `F344`.
+
+- [Session 260](session_260_log.md): Ran H382
+  `h364_local_news_consumer_integration` with reusable script
+  `analysis/h382_h364_local_news_consumer_integration.py`. TRUE walk-forward
+  `2021-2025`, no `2026+`, train-before-test `K` choice only, and random
+  candidate-policy benchmarks because this is not a direct S1/C16 variation.
+  Script verdict PASSED on the primary same-support random-active benchmark:
+  mean lift `+0.00092`, `4 / 5` years above random-active mean, and 2025 lift
+  `+0.00296`. Caveat: broad random-all benchmark failed, mean lift `-0.00367`
+  and only `1 / 5` years above random-all mean. Source anchors: `F343`, `D002`.
+
 - [Session 259](session_259_log.md): Confirmed `ollama_guarded_backfill`
   complete, patched H364 to accept the authorized no-cutoff full Ollama
   backfill while filtering the audit to `2016-2025`, refreshed the combined

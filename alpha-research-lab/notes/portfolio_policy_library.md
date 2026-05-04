@@ -251,7 +251,8 @@ contract and do not accidentally treat policy state as ticker alpha.
 
 ### PP6 — Fresh Selection Pulse
 
-**Status:** queued / untested.
+**Status:** failed as long-dormancy fresh reappearance; short-repeat remains a
+possible different contract.
 
 Hypothesis:
 - a ticker entering the candidate set after long dormancy is different from a
@@ -266,9 +267,21 @@ Smallest honest test:
   then compare matched cycle returns for first-return, stale-repeat, and
   incumbent states.
 
+Result:
+- Session 266 `H388` tested prior-only top-5/top-10 history with buyable
+  candidate rows and cycle relative-return labels. `top5_fresh20` beat
+  incumbents but failed `top5_stale_repeat` (mean lift `-0.00016`, 2025 lift
+  `-0.00269`), and `top10_fresh20` failed stale-repeat control too. Do not use
+  long-dormancy fresh reappearance as a policy boost under this contract.
+
+Source anchors:
+- `F349`
+- `D006`
+- `session_266_log.md`
+
 ### PP7 — Tradability Release Pulse
 
-**Status:** queued / untested.
+**Status:** failed under current entry-panel release contract.
 
 Hypothesis:
 - alpha appears when a high-ranked name was good but unbuyable, then becomes
@@ -284,6 +297,25 @@ Smallest honest test:
   candidate rank,
   C16 support,
   and no immediate re-block.
+
+Result:
+- Session 269 `H391` tested fixed top-5/top-10 release states from
+  `release_flag` with same-year same-rank stable/non-release buyable controls.
+  `top5_release` had mean cycle relative return `-0.032254`, matched-control
+  lift `-0.033668`, only `1 / 5` positive matched-control years, and 2025
+  lift `-0.080106`; `top10_release` was also negative with matched-control
+  lift `-0.028365` and 2025 lift `-0.066302`. Do not use `wait_release` as an
+  inclusion boost under this contract.
+
+Reopening condition:
+- Reopen only with materially different evidence, such as order-book
+  queue/open-fill data, intraday post-release absorption, or a fixed rule that
+  waits for re-block risk and sellability to normalize before entry.
+
+Source anchors:
+- `F352`
+- `D009`
+- `session_269_log.md`
 
 ### PP8 — Anti-Signal Annihilation Veto
 

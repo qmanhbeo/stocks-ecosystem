@@ -5,9 +5,9 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_259_log.md](./session_259_log.md)
-Last verified: [Session 259](./session_259_log.md), 2026-05-04
-(Ollama residual complete; combined local-news aggregate refreshed; H364 passed).
+Latest full session detail: [session_270_log.md](./session_270_log.md)
+Last verified: [Session 270](./session_270_log.md), 2026-05-04
+(H392 source-triangle sparse).
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -44,6 +44,67 @@ Source durable memory:
   dev/validation/confirmation IC `+0.0173 / +0.0200 / +0.0156`, `10 / 10`
   positive years, S1 corr `-0.0104`, active rows `103,248`. This is candidate
   local-news evidence, not a live branch change. Source anchor: `F342`.
+- H382 passed H364 only as a same-support event-candidate ranker: mean lift
+  versus random-active `+0.00092`, `4 / 5` years above random-active mean, 2025
+  lift `+0.00296`. It failed broad random-all allocation: mean lift
+  `-0.00367`, `1 / 5` years above random-all. Do not promote H364 as a broad
+  candidate-pool allocator. Source anchors: `F343`, `D002`.
+- H383 passed `news_flow_disagreement` as flow/text confirmation, not
+  disagreement. `active_news_strong_flow` reached WF 1d relative-return IC
+  `+0.10293`, `8 / 8` positive years, 2025 IC `+0.12163`, and lift `+0.04005`
+  versus strong-flow; `positive_news_strong_flow` reached `+0.10854`. No-news
+  and weak-flow disagreement states did not beat their baselines. Offline
+  evidence only; no live or matrix-contract change. Source anchor: `F344`.
+- H384 rejected H383's active/positive-news strong-flow states as candidate-pool
+  allocators. `active_news_strong_flow` mean lift was `-0.00026` versus
+  random-state and `-0.00337` versus random-all; `positive_news_strong_flow`
+  mean lift was `-0.00020` versus random-state and `-0.00191` versus
+  random-all. Do not promote these states as broad allocators. Source anchors:
+  `F345`, `D003`.
+- H385 passed `official_attention_delay` as offline payoff evidence.
+  `official_supported` had 5d lift `+0.007408` versus unsupported official
+  rows, `8 / 8` positive 5d-lift years, and 2025 lift `+0.005566`;
+  `official_forward_supported` had 5d lift `+0.007657`, `8 / 8` positive
+  years, and 2025 lift `+0.006799`. This is not a live branch or broad
+  allocator until a fixed consumer audit passes. Source anchor: `F346`.
+- H386 rejected H385 official/forward supported states as candidate-pool
+  allocators. `official_supported` mean lift was `-0.00035` versus random-state
+  and `-0.00540` versus random-all; `official_forward_supported` mean lift was
+  `-0.00057` versus random-state and `-0.00555` versus random-all. Do not
+  promote these states as broad allocators. Source anchors: `F347`, `D004`.
+- H387 killed `insider_down_rescue` under current C5/stock-down/high-C16
+  representation. `insider_down_high_c16` beat ordinary insider rows but failed
+  the high-C16 controls: 5d lift `+0.00087` versus `insider_high_c16` and
+  `-0.00308` versus `stock_down_high_c16`, with negative 2025 lifts versus
+  both. Source anchors: `F348`, `D005`.
+- H388 killed long-dormancy `fresh_selection_pulse` under the current
+  entry-alpha candidate-history contract. `top5_fresh20` beat incumbents but
+  failed stale-repeat control: mean lift `-0.00016`, 2025 lift `-0.00269`.
+  `top10_fresh20` failed stale-repeat control too. Source anchors: `F349`,
+  `D006`.
+- H389 killed `post_ollama_event_cascade` under the current 5d payoff target.
+  Best state `event_first20` had lifts only `+0.00099` versus generic event
+  and `+0.00114` versus repeat event, below the `+0.002` gate; transition and
+  family pockets were weaker. Source anchors: `F350`, `D007`.
+- H390 parked exact calendar-state promotion under the current mechanism
+  residualization target. Exact `monday_jan_combo` retained 1d residual C16-IC
+  lift `+0.02745`, but it was only one active date per evaluated year, only
+  `2 / 4` positive 1d residual-lift years, and mean 5d residual lift was
+  negative (`-0.04055`). `quarter_start` and late quarter-month timing did not
+  retain positive 1d residual lift. Source anchors: `F351`, `D008`.
+- H391 killed `tradability_release_pulse` under the current entry-panel
+  `release_flag` and cycle-label target. `top5_release` mean cycle relative
+  return was `-0.032254` with same-rank matched-control lift `-0.033668`,
+  only `1 / 5` positive matched-control years, and 2025 lift `-0.080106`;
+  `top10_release` was also negative with matched-control lift `-0.028365`.
+  Source anchors: `F352`, `D009`.
+- H392 parked the C16+insider+news source-triangle core. `c16_insider_any_news`
+  had positive mean 5d payoff `+0.003177`, but lost to
+  `c16_insider_no_news` by `-0.007315`, to `c16_any_news_no_insider` by
+  `-0.005205`, and had negative 2025 lift versus exactly-two sensors. Broader
+  `three_plus_sensors` beat exactly-two by `+0.005156` with `8 / 8` positive
+  years, but this is a non-insider news-triangle clue, not an insider+C16
+  promotion. Source anchors: `F353`, `D010`.
 - C16 order pressure is a published shared feature contract at
   `data/features/xs_order_pressure_daily.parquet`, but downstream use is
   opt-in only. Do not run more C16 sizing/search unless a consumer asks for a
@@ -74,8 +135,45 @@ Source durable memory:
   sparse-clock portfolio rule. Source anchor: `F315`.
 - `rank_time_acceleration`: IC `0.0576`; weak state feature only.
 - `h364_official_sentiment_x_earnings_guidance`: avg IC `0.01766`, `10 / 10`
-  positive years, S1 corr `-0.0104`; candidate local-news signal pending fixed
-  consumer integration. Source anchor: `F342`.
+  positive years, S1 corr `-0.0104`; H382 keeps it as an event-subset ranker,
+  not a broad candidate-pool allocator. Source anchors: `F342-F343`, `D002`.
+- `active_news_strong_flow`: H383 1d relative-return IC `0.10293`, 2025 IC
+  `0.12163`; local-news/C16 confirmation context only. H384 failed the
+  candidate-policy consumer audit. Source anchors: `F344-F345`, `D003`.
+- `official_supported_delay`: H385 5d payoff lift `+0.007408`, `8 / 8`
+  positive 5d-lift years, 2025 lift `+0.005566`; support-confirmed official
+  attention context only. H386 failed the candidate-policy consumer audit.
+  Source anchors: `F346-F347`, `D004`.
+- `official_forward_supported_delay`: H385 5d payoff lift `+0.007657`,
+  `8 / 8` positive 5d-lift years, 2025 lift `+0.006799`; delay-aware
+  official/forward context only. H386 failed the candidate-policy consumer
+  audit. Source anchors: `F346-F347`, `D004`.
+- `stock_down_high_c16`: H387 control state had mean 5d relative payoff
+  `+0.01220`, 2025 payoff `+0.00217`, and mean 5d C16 IC `+0.09182`. This
+  beat the insider-down overlay and should remain a control in future
+  hidden-flow tests. Source anchor: `F348`.
+- Candidate-history clue: H388 found short-repeat top-5 candidates were
+  stronger than long-dormancy fresh reappearances. This is not promoted, but
+  it should be the control before any future selection-history policy. Source
+  anchor: `F349`.
+- Event timing clue: H321 remains the stronger offline sparse evidence, but
+  H361 and H389 block sparse-clock / guarded-Ollama event promotion under the
+  current target and consumer contracts. Source anchors: `F302`, `F350`,
+  `D007`.
+- Calendar timing clue: H390 says exact old calendar states are context only,
+  not independent overlays. Diagnostic `january_first_10` retained 1d residual
+  lift `+0.03067` with `5 / 5` positive years, but it was not a predeclared
+  primary state and needs a separate fixed contract before use. Source anchor:
+  `F351`.
+- Tradability-release lesson: H391 says becoming buyable after prior blocked
+  state is not a buy pulse under the current candidate-panel representation.
+  Treat it as exhaustion/reblock-risk context unless a materially different
+  queue/open-fill or intraday absorption source exists. Source anchors:
+  `F352`, `D009`.
+- Source-triangle clue: H392 says the insider-confirmed C16+news triangle is
+  not the edge; `c16_insider_no_news` was stronger. The possible survivor is a
+  non-insider C16+source+forward news pocket, but it needs a separate fixed
+  contract and 2025 was not clean. Source anchors: `F353`, `D010`.
 - C16 filter lesson: market-down, liquidity, and price/C16 divergence matter;
   macro regime, gap direction, same-signal persistence, sector-relative C16,
   streak compounding, and C16 extreme tails are already failed or overfit.
@@ -85,74 +183,31 @@ Source durable memory:
 Ranked by upside, novelty, current-data feasibility, and honesty of first test.
 Do not assign `H` numbers until one branch is activated.
 
-Activated next branch before returning to the ranked queue:
-`h364_consumer_integration` - one fixed portfolio/consumer audit for
-`h364_official_sentiment_x_earnings_guidance`; no `2026+` fitting.
+The explicit H389-H392 follow-through queue is exhausted. Continue by selecting
+new branches from the hidden-flow memo with H381-H392 as constraints.
 
-1. `news_flow_disagreement`: public text and posted orders disagree before the
-   best reversals and traps.
-   Smallest honest test: bucket `order_volume_ratio_rank` against PhoBERT
-   sentiment, `forward_looking`, `article_scope`, and `source_type`; compare
-   next-day relative-return IC for bullish-flow/negative-news, bullish-flow/no-news,
-   positive-news/weak-flow, and active-news/strong-flow confirmation states.
-   Why not killed: H381 killed no-news absence but inverted toward active-news
-   confirmation; C16 divergence worked for price-vs-flow; simple sentiment
-   failed only as a pooled standalone lane.
+1. `nihilist_reversal`: down stock, down market, weak/no bullish news, and high
+   C16 may mark hidden support after public capitulation.
+   Smallest honest test: require stock weakness, market weakness, high C16, and
+   weak or absent bullish local-news support; compare against
+   `stock_down_high_c16`, `down_market_c16`, raw high C16, and active-news C16
+   controls. Why not killed: H381 killed simple no-news C16 and H387 killed
+   insider-down rescue, but stock-down high-C16 itself remained a strong
+   control state.
 
-2. `official_attention_delay`: official/regulatory or forward-looking articles
-   need flow confirmation and may pay after a delay, not on the headline day.
-   Smallest honest test: TRUE WF IC and 1d/5d payoff by high
-   `phobert_source_type_official_or_regulatory_prob_*` plus C16/insider support
-   versus official-only rows. Why not killed: official-conditioned PhoBERT was
-   only offline evidence and standalone promotion failed; this tests a different
-   interaction target.
+2. `anti_signal_annihilation_veto`: high S1 should be vetoed when C16, insider,
+   news, tradability, and sector context disagree.
+   Smallest honest test: long-only cash veto on top-book rows with high
+   candidate/S1 rank but explicit side-channel disagreement; compare against
+   random same-breadth vetoes and no-veto top-book returns. Why not killed:
+   prior work has mostly tested additive boosts, not strict vetoes.
 
-3. `insider_down_rescue`: insider buys after visible weakness are different
-   from ordinary insider buys.
-   Smallest honest test: intersect prior insider buy, 1-3 day stock drawdown,
-   and C16 rank; require sample-size and TRUE WF checks against insider-only
-   and down-only controls. Why not killed: insider lead and consecutive-down
-   passed separately; C16 streak compounding failed, but not insider-vs-weakness
-   cross-source confirmation.
-
-4. `fresh_selection_pulse`: a ticker's first reappearance in the top candidate
-   set after dormancy carries more edge than repeated membership.
-   Smallest honest test: compute days since ticker last appeared in top-5/top-10
-   candidate pool from `entry_alpha/candidate_panel_daily.parquet`; compare
-   matched cycle returns for first-return, stale-repeat, and incumbent states.
-   Why not killed: sticky retention was a portfolio rule; freshness of selection
-   history was not tested as a separate alpha state.
-
-5. `post_ollama_event_cascade`: the narrow Ollama event-family residual can
-   revive event timing only if it changes the event representation.
-   Smallest honest test: after the guarded backfill finishes, build first-event,
-   repeat-event, and event-family transition states, then compare against the
-   old H321/H361 CafeF event-v2 sparse-clock controls. Why not killed: event-v2
-   is parked under old mappings; this branch requires new event-family data.
-
-6. `calendar_as_liquidity_mechanism`: calendar edges are proxies for settlement,
-   attention, and breadth states, not magic dates.
-   Smallest honest test: retest `monday_jan_combo`, quarter-start, and
-   late-month effects after matching or residualizing volume regime, market
-   breadth, news volume, buyable breadth, and C16 down-market state. Why not
-   killed: calendar filters passed, but the mechanism has not been decomposed.
-
-7. `tradability_release_pulse`: a high-ranked name becoming buyable after a
-   blocked or limit-constrained state has a short executable continuation edge.
-   Smallest honest test: use `release_flag`, `prev_can_buy_next_open`,
-   `can_buy_next_open`, price-limit features, and candidate rank from the entry
-   panel; compare next-cycle matched return and blocked-buy health. Why not
-   killed: generic blocked-buy complexity failed as a live overlay, but release
-   after constraint is a different stock-level entry event.
-
-8. `source_triangle_sparse`: insider, order pressure, and local-news source
-    type may form a sparse high-conviction state even when any two-way route is
-    too noisy.
-    Smallest honest test: require at least two of prior insider buy, high C16,
-    official/stock-scope news, and forward-looking text; measure IC and matched
-    returns with strict minimum support. Why not killed: foreign/proprietary and
-    broad news routes failed; the confirmed pieces here are insider, C16, and
-    local source/type heads.
+3. `shadow_liquidity_gravity_well`: order counts and average order size should
+   approximate missing book depth through fragmentation.
+   Smallest honest test: build order-fragmentation features from raw CafeF
+   order stats and test C16 IC/payoff buckets versus ordinary volume-spike and
+   high-C16 controls. Why not killed: raw C16 is strong, but no test has
+   separated pressure from fragmented liquidity/depth proxies.
 
 ## Hidden-Flow Branch Memo
 
@@ -200,9 +255,10 @@ Ranked activation ladder:
 7. `anti_signal_annihilation_veto`: high S1 should be vetoed when C16, insider,
    news, tradability, and sector context disagree. First test: long-only cash
    veto on top-book names, not shorting and not a dense rank feature.
-8. `official_attention_delay_confirmed`: official/regulatory/source-type news
-   may pay only after 1d/3d/5d delay and only with C16 or insider confirmation.
-   First test: official-only versus official-plus-flow rows.
+8. `official_attention_delay_confirmed`: H385 confirmed delayed official/forward
+   payoff with C16 or insider support, but H386 failed the broad candidate
+   consumer. Reopen only with a different event-sleeve, basket, or delayed
+   hold/exit contract.
 9. `fresh_selection_pulse`: a ticker newly noticed by the candidate panel after
    dormancy may be different from stale repeat membership. First test: first
    reappearance, stale repeat, incumbent, and never-before candidate buckets.
@@ -1201,12 +1257,11 @@ Triple Storm controls.
 
 ## Immediate Next Actions
 
-- Next branch: run one fixed portfolio/consumer integration audit for
-  `h364_official_sentiment_x_earnings_guidance`; do not fit on `2026+`.
-- If the fixed H364 consumer audit fails, keep H364 as offline local-news
-  evidence and continue with broader `news_flow_disagreement` using H381/H364
-  as anchors.
-- Do not retune the live sticky branch off the H364 standalone result.
+- Next branch: `official_attention_delay`.
+- Keep H383 active/positive-news strong-flow as offline context only; H384
+  failed the consumer allocator gate.
+- Do not retune the live sticky branch or add H364/H383 states as broad
+  portfolio allocators.
 
 ## Do Not Reopen Unless
 

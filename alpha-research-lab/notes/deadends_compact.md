@@ -20,6 +20,84 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
 
 ## Current Hard Stops
 
+- Same-day nihilist reversal is parked. H393 found high C16 after stock and
+  market weakness with no bullish news was positive, but it failed the simpler
+  `stock_down_high_c16` control by `-0.00203` mean 5d lift and had negative
+  2025 payoff. Reopen only with a predeclared weak-active-news subset,
+  intraday absorption after capitulation, or a delayed re-entry consumer.
+  Source anchors: `D011`, `F354`.
+
+- C16+insider+news source-triangle promotion is parked under the current
+  representation. H392 found `c16_insider_any_news` had positive mean 5d
+  payoff, but lost to C16+insider-without-news and C16+news-without-insider
+  controls, and 2025 lift versus exactly-two sensors was negative. The broader
+  `three_plus_sensors` clue should be reopened only as a predeclared
+  non-insider C16+source+forward news pocket or with materially different
+  insider-quality data. Source anchors: `D010`, `F353`.
+
+- Entry-panel tradability release is killed under the current cycle-label
+  target. H391 found top-5/top-10 rows that became buyable after a prior
+  blocked-buy state were negative and weaker than same-rank stable/non-release
+  buyable controls (`top5_release` matched lift `-0.03367`, 2025 lift
+  `-0.08011`; `top10_release` matched lift `-0.02837`, 2025 lift `-0.06630`).
+  Reopen only with order-book queue/open-fill data, intraday post-release
+  absorption, or a fixed wait-for-reblock/sellability-normalization contract.
+  Source anchors: `D009`, `F352`.
+
+- Calendar mechanism promotion is parked under the current target. H390 found
+  exact `monday_jan_combo` retained 1d residual C16-IC lift after mechanism
+  controls, but the state was only one active date per evaluated year, had
+  only `2 / 4` positive 1d residual-lift years, and had negative mean 5d
+  residual lift; `quarter_start` and late quarter-month timing did not retain
+  positive 1d residual lift. Reopen only with a broader predeclared
+  January/weekday contract, a different execution/5d target, or a downstream
+  mechanism-matched consumer. Source anchors: `D008`, `F351`.
+
+- Guarded-Ollama event cascade does not reopen event timing. H389 found the
+  best state, `event_first20`, had mean 5d lift only `+0.00099` versus generic
+  event and `+0.00114` versus repeat event, below the reopening gate; transition
+  and family pockets were weaker. Keep event timing parked unless the target,
+  source timestamping, or downstream consumer changes. Source anchors: `D007`,
+  `F350`.
+
+- Long-dormancy fresh selection is killed under the current entry-alpha
+  candidate-history representation. H388 found `top5_fresh20` beat incumbents
+  but failed stale-repeat control (mean lift `-0.00016`, 2025 lift
+  `-0.00269`), and `top10_fresh20` failed stale-repeat control too. Reopen only
+  with a materially different short-repeat, rank-transition, or portfolio
+  policy contract. Source anchors: `D006`, `F349`.
+
+- Insider-down rescue is killed under the current C5/stock-down/high-C16
+  representation. H387 found `insider_down_high_c16` beat ordinary insider
+  rows but failed the meaningful high-C16 controls: mean 5d lift was only
+  `+0.00087` versus `insider_high_c16` and `-0.00308` versus
+  `stock_down_high_c16`, with negative 2025 lifts versus both. Reopen only
+  with materially different insider event-quality or timing data. Source
+  anchors: `D005`, `F348`.
+
+- H385 official-delay consumer promotion is parked. H385 passed as offline
+  delayed-payoff evidence, but H386 failed the fixed candidate-policy
+  follow-through: `official_supported` mean lift was `-0.00035` versus
+  random-state and `-0.00540` versus random-all; `official_forward_supported`
+  mean lift was `-0.00057` versus random-state and `-0.00555` versus
+  random-all. Use H385 as delayed official-attention context, not as a broad
+  allocator. Source anchors: `D004`, `F346-F347`.
+
+- H383 active/positive-news strong-flow consumer promotion is parked. H383
+  passed as offline IC evidence, but H384 failed the fixed candidate-policy
+  follow-through: `active_news_strong_flow` mean lift was `-0.00026` versus
+  random-state and `-0.00337` versus random-all; `positive_news_strong_flow`
+  mean lift was `-0.00020` versus random-state and `-0.00191` versus
+  random-all. Use H383 as context, not as a broad allocator. Source anchors:
+  `D003`, `F344-F345`.
+
+- H364 broad candidate-pool consumer promotion is parked. H382 passed only the
+  same-support active-news random benchmark (`+0.00092` mean lift,
+  `4 / 5` years above random-active mean) but failed broad random-all
+  allocation (`-0.00367` mean lift, `1 / 5` years above random-all mean).
+  Use H364 as an event-subset ranker or interaction anchor, not as a broad
+  portfolio allocator. Source anchors: `D002`, `F343`.
+
 - Silent order pressure is killed under the current own-ticker PhoBERT
   article-count proxy. H381 found no-news C16 weaker than all-C16 and
   active-news C16: `silent_5d` WF IC `+0.0700` versus all-C16 `+0.0752` and

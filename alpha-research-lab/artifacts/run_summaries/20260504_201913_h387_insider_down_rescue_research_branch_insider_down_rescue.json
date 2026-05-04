@@ -1,0 +1,256 @@
+{
+  "artifacts": {
+    "c16": "data/features/xs_order_pressure_daily.parquet",
+    "folds": "artifacts/insider_down/20260504_201913_h387_insider_down_rescue_folds.parquet",
+    "matrix": "data/features/xs_rl_signal_matrix.parquet",
+    "s1": "data/features/xs_barrier_vol_1d_hose_full.parquet",
+    "states": "artifacts/insider_down/20260504_201913_h387_insider_down_rescue_states.parquet"
+  },
+  "metadata": {
+    "end_year": 2025,
+    "min_pass_lift_5d": 0.002,
+    "min_train_years": 2,
+    "min_year_rows": 20,
+    "start_year": 2016
+  },
+  "mode": "research_branch_insider_down_rescue",
+  "name": "h387_insider_down_rescue",
+  "summary": {
+    "branch": "insider_down_rescue",
+    "branch_decision": "No insider-down rescue state beat insider and down-control payoffs cleanly.",
+    "durable_status": "branch_kill_or_reframe",
+    "experiment_id": "H387",
+    "high_c16_share": 0.18245837481729404,
+    "insider_buy_share": 0.01305023619378482,
+    "key_states": {
+      "insider_buy": {
+        "confirmation_2025_rel_5d": -0.004673045998690298,
+        "family": "insider",
+        "label": "Positive C5 insider rows",
+        "mean_c16_ic_5d": 0.08399664324059589,
+        "mean_c16_rank": 0.5336918187732859,
+        "mean_c5": 337.36626028369403,
+        "mean_c5_ic_5d": -0.024084588522695495,
+        "mean_rel_1d": 0.0012229913371409737,
+        "mean_rel_5d": 0.002507631348205091,
+        "mean_rows": 1026.625,
+        "mean_stock_return_3d": 0.00683316160212989,
+        "median_rel_5d": -0.0020075947911475794,
+        "state": "insider_buy",
+        "wf_years": 8
+      },
+      "insider_deep_down_high_c16": {
+        "confirmation_2025_rel_5d": -0.002757152546515651,
+        "family": "insider_down_c16",
+        "label": "Positive insider rows after at least 2 percent 3d weakness with high C16",
+        "mean_c16_ic_5d": 0.10746680226703963,
+        "mean_c16_rank": 0.8743803548170332,
+        "mean_c5": 52.03153418372023,
+        "mean_c5_ic_5d": -0.07130074674449034,
+        "mean_rel_1d": 0.008005978214962656,
+        "mean_rel_5d": 0.007179974825771312,
+        "mean_rows": 40.57142857142857,
+        "mean_stock_return_3d": -0.05147363639106321,
+        "median_rel_5d": 0.0026752080350431274,
+        "state": "insider_deep_down_high_c16",
+        "wf_years": 7
+      },
+      "insider_down": {
+        "confirmation_2025_rel_5d": -0.007981043658488928,
+        "family": "insider_down",
+        "label": "Positive insider rows after stock weakness",
+        "mean_c16_ic_5d": 0.11849092120633364,
+        "mean_c16_rank": 0.48512691099617344,
+        "mean_c5": 251.58503829011508,
+        "mean_c5_ic_5d": -0.016466223291863598,
+        "mean_rel_1d": 0.0009159216403510764,
+        "mean_rel_5d": 0.0027115240075223563,
+        "mean_rows": 276.125,
+        "mean_stock_return_3d": -0.038007270601387644,
+        "median_rel_5d": -0.0013500543277881472,
+        "state": "insider_down",
+        "wf_years": 8
+      },
+      "insider_down_high_c16": {
+        "confirmation_2025_rel_5d": -0.0021428152978203506,
+        "family": "insider_down_c16",
+        "label": "Positive insider rows after stock weakness with high C16",
+        "mean_c16_ic_5d": -0.022403257192614347,
+        "mean_c16_rank": 0.8747988046484504,
+        "mean_c5": 63.757568892102995,
+        "mean_c5_ic_5d": -0.09296075352356054,
+        "mean_rel_1d": 0.007778972131790885,
+        "mean_rel_5d": 0.008874347608396449,
+        "mean_rows": 35.833333333333336,
+        "mean_stock_return_3d": -0.038300048987043166,
+        "median_rel_5d": 0.0055000845773569285,
+        "state": "insider_down_high_c16",
+        "wf_years": 6
+      },
+      "insider_high_c16": {
+        "confirmation_2025_rel_5d": 0.0007197544259700711,
+        "family": "insider_c16",
+        "label": "Positive insider rows with high C16",
+        "mean_c16_ic_5d": 0.021128532397548867,
+        "mean_c16_rank": 0.8800055612446628,
+        "mean_c5": 60.510343808001785,
+        "mean_c5_ic_5d": -0.005846514199679319,
+        "mean_rel_1d": 0.007755920523440865,
+        "mean_rel_5d": 0.009003454879972577,
+        "mean_rows": 185.5,
+        "mean_stock_return_3d": 0.01811218216306356,
+        "median_rel_5d": 0.003914558084231176,
+        "state": "insider_high_c16",
+        "wf_years": 8
+      },
+      "stock_down": {
+        "confirmation_2025_rel_5d": -0.004790076937148369,
+        "family": "down",
+        "label": "Rows after 1d and 3d stock weakness",
+        "mean_c16_ic_5d": 0.08489176071968295,
+        "mean_c16_rank": 0.4658020765082226,
+        "mean_c5": 3.3620193964518874,
+        "mean_c5_ic_5d": 0.007635085113680333,
+        "mean_rel_1d": 0.0007963618299198604,
+        "mean_rel_5d": 0.002176576463169032,
+        "mean_rows": 23511.0,
+        "mean_stock_return_3d": -0.03466276816892502,
+        "median_rel_5d": -0.001218198221443735,
+        "state": "stock_down",
+        "wf_years": 8
+      },
+      "stock_down_high_c16": {
+        "confirmation_2025_rel_5d": 0.0021735036226858003,
+        "family": "down_c16",
+        "label": "Stock-down rows with high C16",
+        "mean_c16_ic_5d": 0.09181507344906703,
+        "mean_c16_rank": 0.8840365929877313,
+        "mean_c5": 0.6178638329517627,
+        "mean_c5_ic_5d": 0.015313954818371563,
+        "mean_rel_1d": 0.005668205300206678,
+        "mean_rel_5d": 0.012197130983339948,
+        "mean_rows": 2965.625,
+        "mean_stock_return_3d": -0.03623943827898093,
+        "median_rel_5d": 0.005905877179367934,
+        "state": "stock_down_high_c16",
+        "wf_years": 8
+      }
+    },
+    "lift_diagnostics": {
+      "insider_deep_down_high_c16": {
+        "insider_buy": {
+          "confirmation_2025_lift_5d": 0.0019158934521746468,
+          "control": "insider_buy",
+          "mean_lift_1d": 0.006825642213524339,
+          "mean_lift_5d": 0.005067382273538424,
+          "pct_pos_lift_5d_years": 0.5714285714285714,
+          "pos_lift_5d_years": 4,
+          "state": "insider_deep_down_high_c16",
+          "years": 7
+        },
+        "insider_high_c16": {
+          "confirmation_2025_lift_5d": -0.0034769069724857223,
+          "control": "insider_high_c16",
+          "mean_lift_1d": 0.0003168025046548273,
+          "mean_lift_5d": -0.001718667468692337,
+          "pct_pos_lift_5d_years": 0.42857142857142855,
+          "pos_lift_5d_years": 3,
+          "state": "insider_deep_down_high_c16",
+          "years": 7
+        },
+        "stock_down_high_c16": {
+          "confirmation_2025_lift_5d": -0.004930656169201452,
+          "control": "stock_down_high_c16",
+          "mean_lift_1d": 0.0022971635759949922,
+          "mean_lift_5d": -0.0050118024323597965,
+          "pct_pos_lift_5d_years": 0.2857142857142857,
+          "pos_lift_5d_years": 2,
+          "state": "insider_deep_down_high_c16",
+          "years": 7
+        }
+      },
+      "insider_down": {
+        "insider_buy": {
+          "confirmation_2025_lift_5d": -0.0033079976597986307,
+          "control": "insider_buy",
+          "mean_lift_1d": -0.00030706969678989747,
+          "mean_lift_5d": 0.0002038926593172657,
+          "pct_pos_lift_5d_years": 0.5,
+          "pos_lift_5d_years": 4,
+          "state": "insider_down",
+          "years": 8
+        },
+        "stock_down": {
+          "confirmation_2025_lift_5d": -0.0031909667213405593,
+          "control": "stock_down",
+          "mean_lift_1d": 0.00011955981043121588,
+          "mean_lift_5d": 0.000534947544353324,
+          "pct_pos_lift_5d_years": 0.5,
+          "pos_lift_5d_years": 4,
+          "state": "insider_down",
+          "years": 8
+        }
+      },
+      "insider_down_high_c16": {
+        "insider_buy": {
+          "confirmation_2025_lift_5d": 0.002530230700869947,
+          "control": "insider_buy",
+          "mean_lift_1d": 0.0068327884738089185,
+          "mean_lift_5d": 0.007844428712953428,
+          "pct_pos_lift_5d_years": 1.0,
+          "pos_lift_5d_years": 6,
+          "state": "insider_down_high_c16",
+          "years": 6
+        },
+        "insider_high_c16": {
+          "confirmation_2025_lift_5d": -0.002862569723790422,
+          "control": "insider_high_c16",
+          "mean_lift_1d": 0.0006351540525595224,
+          "mean_lift_5d": 0.0008698510469053522,
+          "pct_pos_lift_5d_years": 0.5,
+          "pos_lift_5d_years": 3,
+          "state": "insider_down_high_c16",
+          "years": 6
+        },
+        "stock_down_high_c16": {
+          "confirmation_2025_lift_5d": -0.004316318920506151,
+          "control": "stock_down_high_c16",
+          "mean_lift_1d": 0.001999214235412914,
+          "mean_lift_5d": -0.0030769105548235434,
+          "pct_pos_lift_5d_years": 0.16666666666666666,
+          "pos_lift_5d_years": 1,
+          "state": "insider_down_high_c16",
+          "years": 6
+        }
+      }
+    },
+    "panel_dates": 2500,
+    "panel_rows": 755312,
+    "panel_tickers": 394,
+    "pass_rule": "PASS if insider_down_high_c16 or insider_deep_down_high_c16 has positive mean 5d payoff and beats insider_buy, insider_high_c16, and stock_down_high_c16 by more than min_pass_lift_5d on average, with at least 60% positive 5d-lift years and positive 2025 lifts. MIXED if insider_down clears insider_buy and stock_down controls but the high-C16 primary state does not. Otherwise FAILED.",
+    "pass_states": [],
+    "protocol": {
+      "deep_down_3d_threshold": -0.02,
+      "end_year": 2025,
+      "high_c16_threshold": 0.8,
+      "min_train_years": 2,
+      "min_year_rows": 20,
+      "primary_target": "future_rel_return_5d",
+      "start_year": 2016,
+      "test_years": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "visible_down_definition": "stock_return_1d < 0 and stock_return_3d < 0"
+    },
+    "stock_down_share": 0.2945696612790476,
+    "verdict": "FAILED"
+  },
+  "ts": "20260504_201913"
+}

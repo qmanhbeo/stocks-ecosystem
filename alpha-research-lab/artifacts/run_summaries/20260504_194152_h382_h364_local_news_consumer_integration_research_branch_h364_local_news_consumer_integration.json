@@ -1,0 +1,61 @@
+{
+  "artifacts": {
+    "daily": "artifacts/entry_alpha/20260504_194152_h382_h364_local_news_consumer_integration_daily.parquet",
+    "years": "artifacts/entry_alpha/20260504_194152_h382_h364_local_news_consumer_integration_years.parquet"
+  },
+  "metadata": {
+    "candidate_panel": "data/features/entry_alpha/candidate_panel_daily.parquet",
+    "candidate_pool_rank_max": 20,
+    "daily_rows": 1749,
+    "end_year": 2025,
+    "k_values": [
+      1,
+      2,
+      3,
+      5
+    ],
+    "labels": "data/features/entry_alpha/entry_labels_cycle5.parquet",
+    "min_active_dates_per_year": 20,
+    "min_train_years": 2,
+    "news": "data/features/news/datasets/news_daily_features.parquet",
+    "panel_rows": 34821,
+    "random_trials": 5000,
+    "seed": 382,
+    "start_year": 2019
+  },
+  "mode": "research_branch_h364_local_news_consumer_integration",
+  "name": "h382_h364_local_news_consumer_integration",
+  "summary": {
+    "branch": "h364_consumer_integration",
+    "confirmation_2025_lift_vs_random_active": 0.0029637965965065537,
+    "confirmation_2025_random_active_percentile": 0.855,
+    "durable_status": "offline_evidence",
+    "experiment_id": "H382",
+    "feature_formula": "phobert_sentiment_score_sum * phobert_source_type_official_or_regulatory_prob_mean * clip(ollama_guarded_event_family_earnings_share + ollama_guarded_event_family_guidance_share, 0, 1)",
+    "fixed_feature": "h364_official_sentiment_x_earnings_guidance",
+    "mean_lift_vs_random_active": 0.0009158489103507136,
+    "mean_lift_vs_random_all": -0.003674517808881732,
+    "mean_policy_abs_return": -0.0002559680395202714,
+    "mean_random_active_abs_return": -0.001171816949870985,
+    "mean_random_all_abs_return": 0.00341854976936146,
+    "min_active_dates_per_year": 192,
+    "pass_rule": "PASS if support is sufficient, mean lift vs random active same-K policy is positive, at least 60% of WF years beat random active mean, and 2025 confirmation lift is positive; MIXED if only partial consistency; otherwise FAILED.",
+    "primary_benchmark": "random same-K selection among active buyable H364 candidates",
+    "required_min_active_dates_per_year": 20,
+    "secondary_benchmark": "random same-K selection among all buyable candidate-pool rows",
+    "test_years": [
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "trained_component": "consumer K choice only, selected from prior years",
+    "verdict": "PASSED",
+    "wf_years": 5,
+    "years_gt_random_active_mean": 4,
+    "years_gt_random_active_p95": 0,
+    "years_gt_random_all_mean": 1
+  },
+  "ts": "20260504_194152"
+}
