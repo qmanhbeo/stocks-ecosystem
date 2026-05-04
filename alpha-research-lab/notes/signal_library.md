@@ -640,7 +640,7 @@ year-to-year variance is too high (some years strongly negative).
 or LLM-based scoring for higher quality (H98).
 
 ### C1b — PhoBERT Whole-Article Sentiment Family
-**Status: IMPLEMENTATION LANE — not yet validated as a signal**
+**Status: CANDIDATE IMPLEMENTATION LANE — H364 combined local-news transform passed standalone gate; consumer integration pending**
 
 - **Current implementation state:** full historical backfill completed on the
   tagged CafeF archive:
@@ -675,13 +675,23 @@ or LLM-based scoring for higher quality (H98).
   dev / validation / confirmation split: dev `+0.0143`, validation `+0.0146`,
   but 2025 confirmation `-0.0042`. This is offline evidence for source-gated
   sentiment, not a standalone promoted signal.
+- **Ollama residual update:** H364 ran after the guarded Ollama event-family
+  residual backfill completed and passed the combined local-news standalone
+  audit. Best fixed feature:
+  `h364_official_sentiment_x_earnings_guidance`, which multiplies sentiment,
+  official/regulatory source probability, and Ollama earnings/guidance
+  event-family agreement. It reached avg IC `+0.01766`, dev / validation /
+  confirmation IC `+0.0173 / +0.0200 / +0.0156`, `10 / 10` positive years,
+  S1 corr `-0.0104`, and `13.329%` coverage. Treat it as candidate local-news
+  evidence pending one fixed portfolio/consumer integration audit, not a live
+  branch change.
 - **Why this is different from H98:** the PhoBERT lane is local, GPU-friendly,
   and sentiment-focused; it does **not** claim to replace `event_type`,
   `rumor`, `source_authority`, `causal_impact_label`, or the rest of the
   hosted LLM schema
-- **Promotion rule:** do not treat this as a confirmed signal until the new
-  ticker-day surface is cleared against the usual standalone /
-  consistency gates
+- **Promotion rule:** do not promote this into a live or consumer-facing matrix
+  contract until the fixed H364 consumer integration audit passes. If that audit
+  fails, keep H364 as offline local-news context.
 
 ---
 

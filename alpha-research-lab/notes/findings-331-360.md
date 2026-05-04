@@ -86,3 +86,36 @@ Source:
 - [session_258_log.md](./session_258_log.md)
 - [deadends-001-030.md](./deadends-001-030.md) `D001`
 - `artifacts/run_summaries/20260504_130641_h381_silent_order_pressure_research_branch_silent_order_pressure.json`
+
+## F342: H364 Combined Local-News Audit Passes After The Ollama Residual Backfill Completes (2026-05-04, Session 259)
+
+Finding:
+- Claim: the completed local-news stack can produce a fixed confirmation-aware
+  signal stronger than BERT-only source-conditioned sentiment.
+- Evidence: Session 259 confirmed the guarded Ollama event-family residual
+  backfill complete at `7344 / 7344` checkpoint batches, refreshed the combined
+  local-news aggregate overlay, and ran
+  `analysis/h364_combined_local_news_audit.py`. The audit used only
+  `2016-2025` rows despite the authorized full Ollama input cache, with
+  dev years `2016-2022`, validation years `2023-2024`, and confirmation year
+  `2025`.
+- Result: H364 `PASSED`. The best fixed feature was
+  `h364_official_sentiment_x_earnings_guidance`, with avg IC `+0.01766`,
+  dev IC `+0.0173`, validation IC `+0.0200`, confirmation 2025 IC `+0.0156`,
+  `10 / 10` positive years, S1 corr `-0.0104`, and `103,248` active rows
+  (`13.329%` coverage).
+
+Why it matters:
+- The month-blocked Ollama residual surface has now produced a real local-news
+  candidate. The useful representation is official/regulatory source
+  probability times sentiment times Ollama earnings/guidance event-family
+  agreement, not pooled sentiment and not BERT-only sentiment.
+- This is not a live-branch change. The next honest step is one fixed
+  portfolio/consumer integration audit for
+  `h364_official_sentiment_x_earnings_guidance`, with no `2026+` fitting.
+- Broader `news_flow_disagreement`, official-delay, event-cascade, and
+  source-triangle branches should treat this as the new local-news anchor.
+
+Source:
+- [session_259_log.md](./session_259_log.md)
+- `artifacts/run_summaries/20260504_183132_h364_combined_local_news_audit_research_branch_combined_local_news_audit.json`

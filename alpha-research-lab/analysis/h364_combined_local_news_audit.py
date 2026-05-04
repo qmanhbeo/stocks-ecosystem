@@ -11,6 +11,9 @@ Design:
   PhoBERT sentiment, forward-looking, article-scope, source-type, and the
   guarded Ollama event-family residual.
 - Require the guarded Ollama checkpoint manifest to be complete before running.
+  Accept either the old explicit 2025 cutoff input cache or the current
+  authorized full Ollama backfill; the audit itself filters all feature frames
+  to 2016-2025 before merging to S1.
 - Use the 1d S1 target and the locked historical split:
   dev 2016-2022, validation 2023-2024, confirmation 2025.
 - Do not use 2026 data.
@@ -130,13 +133,14 @@ def _validate_ollama_ready() -> tuple[bool, list[str], dict[str, object]]:
     if not OLLAMA_PATH.exists():
         blockers.append(f"missing Ollama ticker-day dataset: {OLLAMA_PATH}")
     max_published_at = str(input_manifest.get("max_published_at") or "")
-    if not max_published_at:
-        blockers.append("Ollama input cache is missing the required 2025 lockbox cutoff")
-    if _max_published_at_exceeds_lockbox(max_published_at):
+    if max_published_at and _max_published_at_exceeds_lockbox(max_published_at):
         blockers.append(f"Ollama input cache cutoff exceeds 2025 lockbox: {max_published_at}")
+    input_scope = "locked_2025_cutoff" if max_published_at else "authorized_full_backfill"
     return not blockers, blockers, {
         "checkpoint_manifest": checkpoint_manifest,
         "input_manifest": input_manifest,
+        "ollama_input_scope": input_scope,
+        "audit_year_filter": "2016-2025",
     }
 
 
@@ -382,6 +386,8 @@ def main() -> None:
             "completed_batch_count": manifest_payload["checkpoint_manifest"].get("completed_batch_count"),
             "total_batches": manifest_payload["checkpoint_manifest"].get("total_batches"),
         },
+        "ollama_input_scope": manifest_payload["ollama_input_scope"],
+        "audit_year_filter": manifest_payload["audit_year_filter"],
         "ollama_input_manifest": manifest_payload["input_manifest"],
         "branch_ladder": {
             "pass_next": "Run one fixed portfolio/consumer integration audit for the best combined local-news feature.",

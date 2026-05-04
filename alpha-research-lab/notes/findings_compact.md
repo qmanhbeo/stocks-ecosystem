@@ -22,6 +22,14 @@ entry must include source anchors: stable finding IDs or source session links.
   IC, residual selector value, bounded executable uplift, publication, and
   published-contract parity. Source anchors: `F296-F301`.
 
+- Local-news status: the blocked Ollama residual backfill is complete and H364
+  produced the first combined local-news pass. The current anchor is
+  `h364_official_sentiment_x_earnings_guidance`, with avg IC `+0.01766`,
+  dev/validation/confirmation IC `+0.0173 / +0.0200 / +0.0156`, `10 / 10`
+  positive years, and S1 corr `-0.0104`. This is candidate/offline evidence
+  pending a fixed consumer integration audit, not a live change. Source anchor:
+  `F342`.
+
 ## Reference Baselines (Walk-Forward IC)
 - Random: ~0.00 (noise benchmark)
 - C16: +0.078 (order pressure)
@@ -303,7 +311,10 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
 
 - The default Ollama residual lane is intentionally narrow: event-family-only,
   BERT-gated, score-cached, and residual to PhoBERT rather than a broad
-  full-field local replacement. Source anchors: `F274`, `F282-F283`.
+  full-field local replacement. The first completed backfill enabled H364, where
+  official/regulatory source probability, sentiment, and Ollama
+  earnings/guidance agreement passed the standalone local-news gate. Source
+  anchors: `F274`, `F282-F283`, `F342`.
 
 ## Maintenance Rule
 

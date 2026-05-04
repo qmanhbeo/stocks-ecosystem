@@ -7,6 +7,15 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 259](session_259_log.md): Confirmed `ollama_guarded_backfill`
+  complete, patched H364 to accept the authorized no-cutoff full Ollama
+  backfill while filtering the audit to `2016-2025`, refreshed the combined
+  local-news aggregate overlay, and ran H364. H364 PASSED: best fixed feature
+  `h364_official_sentiment_x_earnings_guidance` had avg IC `+0.01766`,
+  dev/validation/confirmation IC `+0.0173 / +0.0200 / +0.0156`, `10 / 10`
+  positive years, S1 corr `-0.0104`, and `103,248` active rows. Source anchor:
+  `F342`.
+
 - [Session 258](session_258_log.md): Ran H381 `silent_order_pressure` with
   reusable script `analysis/h381_silent_order_pressure.py`. TRUE walk-forward
   `2018-2025`, no `2026+`, fixed no-news states, and direct C16 variation

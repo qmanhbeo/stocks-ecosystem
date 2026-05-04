@@ -20878,3 +20878,442 @@ Ollama guarded input scan 144860/146872; unique_articles=144860, article_rows=27
 Ollama guarded input scan 144880/146872; unique_articles=144880, article_rows=278720, cache_hits=0, cache_misses=17520, newly_scored=17520
 Ollama guarded input scan 144900/146872; unique_articles=144900, article_rows=278750, cache_hits=0, cache_misses=17540, newly_scored=17540
 Ollama guarded input scan 144920/146872; unique_articles=144920, article_rows=278812, cache_hits=0, cache_misses=17560, newly_scored=17560
+Ollama guarded input scan 144940/146872; unique_articles=144940, article_rows=278866, cache_hits=0, cache_misses=17580, newly_scored=17580
+Ollama guarded input scan 144960/146872; unique_articles=144960, article_rows=278925, cache_hits=0, cache_misses=17600, newly_scored=17600
+Ollama guarded input scan 144980/146872; unique_articles=144980, article_rows=278957, cache_hits=0, cache_misses=17620, newly_scored=17620
+Ollama guarded input scan 145000/146872; unique_articles=145000, article_rows=278990, cache_hits=0, cache_misses=17640, newly_scored=17640
+Ollama guarded input scan 145020/146872; unique_articles=145020, article_rows=279018, cache_hits=0, cache_misses=17660, newly_scored=17660
+Ollama guarded input scan 145040/146872; unique_articles=145040, article_rows=279055, cache_hits=0, cache_misses=17680, newly_scored=17680
+Ollama guarded input scan 145060/146872; unique_articles=145060, article_rows=279079, cache_hits=0, cache_misses=17700, newly_scored=17700
+Ollama guarded input scan 145080/146872; unique_articles=145080, article_rows=279107, cache_hits=0, cache_misses=17720, newly_scored=17720
+Ollama guarded input scan 145100/146872; unique_articles=145100, article_rows=279135, cache_hits=0, cache_misses=17740, newly_scored=17740
+Ollama guarded input scan 145120/146872; unique_articles=145120, article_rows=279194, cache_hits=0, cache_misses=17760, newly_scored=17760
+Ollama guarded input scan 145140/146872; unique_articles=145140, article_rows=279233, cache_hits=0, cache_misses=17780, newly_scored=17780
+Ollama guarded input scan 145160/146872; unique_articles=145160, article_rows=279273, cache_hits=0, cache_misses=17800, newly_scored=17800
+Ollama guarded input scan 145180/146872; unique_articles=145180, article_rows=279305, cache_hits=0, cache_misses=17820, newly_scored=17820
+Ollama guarded input scan 145200/146872; unique_articles=145200, article_rows=279329, cache_hits=0, cache_misses=17840, newly_scored=17840
+Ollama guarded input scan 145220/146872; unique_articles=145220, article_rows=279357, cache_hits=0, cache_misses=17860, newly_scored=17860
+Ollama guarded input scan 145240/146872; unique_articles=145240, article_rows=279397, cache_hits=0, cache_misses=17880, newly_scored=17880
+Ollama guarded input scan 145260/146872; unique_articles=145260, article_rows=279429, cache_hits=0, cache_misses=17900, newly_scored=17900
+Ollama guarded input scan 145280/146872; unique_articles=145280, article_rows=279455, cache_hits=0, cache_misses=17920, newly_scored=17920
+Ollama guarded input scan 145300/146872; unique_articles=145300, article_rows=279499, cache_hits=0, cache_misses=17940, newly_scored=17940
+Ollama guarded input scan 145320/146872; unique_articles=145320, article_rows=279529, cache_hits=0, cache_misses=17960, newly_scored=17960
+Ollama guarded input scan 145340/146872; unique_articles=145340, article_rows=279556, cache_hits=0, cache_misses=17980, newly_scored=17980
+Ollama guarded input scan 145360/146872; unique_articles=145360, article_rows=279581, cache_hits=0, cache_misses=18000, newly_scored=18000
+Ollama guarded input scan 145380/146872; unique_articles=145380, article_rows=279607, cache_hits=0, cache_misses=18020, newly_scored=18020
+Ollama guarded input scan 145400/146872; unique_articles=145400, article_rows=279633, cache_hits=0, cache_misses=18040, newly_scored=18040
+Ollama guarded input scan 145420/146872; unique_articles=145420, article_rows=279687, cache_hits=0, cache_misses=18060, newly_scored=18060
+Ollama guarded input scan 145440/146872; unique_articles=145440, article_rows=279714, cache_hits=0, cache_misses=18080, newly_scored=18080
+Ollama guarded input scan 145460/146872; unique_articles=145460, article_rows=279744, cache_hits=0, cache_misses=18100, newly_scored=18100
+Ollama guarded input scan 145480/146872; unique_articles=145480, article_rows=279781, cache_hits=0, cache_misses=18120, newly_scored=18120
+Ollama guarded input scan 145500/146872; unique_articles=145500, article_rows=279816, cache_hits=0, cache_misses=18140, newly_scored=18140
+Ollama guarded input scan 145520/146872; unique_articles=145520, article_rows=279853, cache_hits=0, cache_misses=18160, newly_scored=18160
+Ollama guarded input scan 145540/146872; unique_articles=145540, article_rows=279894, cache_hits=0, cache_misses=18180, newly_scored=18180
+Ollama guarded input scan 145560/146872; unique_articles=145560, article_rows=279929, cache_hits=0, cache_misses=18200, newly_scored=18200
+Ollama guarded input scan 145580/146872; unique_articles=145580, article_rows=279975, cache_hits=0, cache_misses=18220, newly_scored=18220
+Ollama guarded input scan 145600/146872; unique_articles=145600, article_rows=280023, cache_hits=0, cache_misses=18240, newly_scored=18240
+Ollama guarded input scan 145620/146872; unique_articles=145620, article_rows=280055, cache_hits=0, cache_misses=18260, newly_scored=18260
+Ollama guarded input scan 145640/146872; unique_articles=145640, article_rows=280103, cache_hits=0, cache_misses=18280, newly_scored=18280
+Ollama guarded input scan 145660/146872; unique_articles=145660, article_rows=280140, cache_hits=0, cache_misses=18300, newly_scored=18300
+Ollama guarded input scan 145680/146872; unique_articles=145680, article_rows=280183, cache_hits=0, cache_misses=18320, newly_scored=18320
+Ollama guarded input scan 145700/146872; unique_articles=145700, article_rows=280238, cache_hits=0, cache_misses=18340, newly_scored=18340
+Ollama guarded input scan 145720/146872; unique_articles=145720, article_rows=280271, cache_hits=0, cache_misses=18360, newly_scored=18360
+Ollama guarded input scan 145740/146872; unique_articles=145740, article_rows=280300, cache_hits=0, cache_misses=18380, newly_scored=18380
+Ollama guarded input scan 145760/146872; unique_articles=145760, article_rows=280328, cache_hits=0, cache_misses=18400, newly_scored=18400
+Ollama guarded input scan 145780/146872; unique_articles=145780, article_rows=280385, cache_hits=0, cache_misses=18420, newly_scored=18420
+Ollama guarded input scan 145800/146872; unique_articles=145800, article_rows=280460, cache_hits=0, cache_misses=18440, newly_scored=18440
+Ollama guarded input scan 145820/146872; unique_articles=145820, article_rows=280569, cache_hits=0, cache_misses=18460, newly_scored=18460
+Ollama guarded input scan 145840/146872; unique_articles=145840, article_rows=280593, cache_hits=0, cache_misses=18480, newly_scored=18480
+Ollama guarded input scan 145860/146872; unique_articles=145860, article_rows=280644, cache_hits=0, cache_misses=18500, newly_scored=18500
+Ollama guarded input scan 145880/146872; unique_articles=145880, article_rows=280677, cache_hits=0, cache_misses=18520, newly_scored=18520
+Ollama guarded input scan 145900/146872; unique_articles=145900, article_rows=280711, cache_hits=0, cache_misses=18540, newly_scored=18540
+Ollama guarded input scan 145920/146872; unique_articles=145920, article_rows=280743, cache_hits=0, cache_misses=18560, newly_scored=18560
+Ollama guarded input scan 145940/146872; unique_articles=145940, article_rows=280798, cache_hits=0, cache_misses=18580, newly_scored=18580
+Ollama guarded input scan 145960/146872; unique_articles=145960, article_rows=280828, cache_hits=0, cache_misses=18600, newly_scored=18600
+Ollama guarded input scan 145980/146872; unique_articles=145980, article_rows=280856, cache_hits=0, cache_misses=18620, newly_scored=18620
+Ollama guarded input scan 146000/146872; unique_articles=146000, article_rows=280885, cache_hits=0, cache_misses=18640, newly_scored=18640
+Ollama guarded input scan 146020/146872; unique_articles=146020, article_rows=280936, cache_hits=0, cache_misses=18660, newly_scored=18660
+Ollama guarded input scan 146040/146872; unique_articles=146040, article_rows=280963, cache_hits=0, cache_misses=18680, newly_scored=18680
+Ollama guarded input scan 146060/146872; unique_articles=146060, article_rows=280993, cache_hits=0, cache_misses=18700, newly_scored=18700
+Ollama guarded input scan 146080/146872; unique_articles=146080, article_rows=281026, cache_hits=0, cache_misses=18720, newly_scored=18720
+Ollama guarded input scan 146100/146872; unique_articles=146100, article_rows=281056, cache_hits=0, cache_misses=18740, newly_scored=18740
+Ollama guarded input scan 146120/146872; unique_articles=146120, article_rows=281097, cache_hits=0, cache_misses=18760, newly_scored=18760
+Ollama guarded input scan 146140/146872; unique_articles=146140, article_rows=281162, cache_hits=0, cache_misses=18780, newly_scored=18780
+Ollama guarded input scan 146160/146872; unique_articles=146160, article_rows=281184, cache_hits=0, cache_misses=18800, newly_scored=18800
+Ollama guarded input scan 146180/146872; unique_articles=146180, article_rows=281213, cache_hits=0, cache_misses=18820, newly_scored=18820
+Ollama guarded input scan 146200/146872; unique_articles=146200, article_rows=281240, cache_hits=0, cache_misses=18840, newly_scored=18840
+Ollama guarded input scan 146220/146872; unique_articles=146220, article_rows=281274, cache_hits=0, cache_misses=18860, newly_scored=18860
+Ollama guarded input scan 146240/146872; unique_articles=146240, article_rows=281304, cache_hits=0, cache_misses=18880, newly_scored=18880
+Ollama guarded input scan 146260/146872; unique_articles=146260, article_rows=281332, cache_hits=0, cache_misses=18900, newly_scored=18900
+Ollama guarded input scan 146280/146872; unique_articles=146280, article_rows=281364, cache_hits=0, cache_misses=18920, newly_scored=18920
+Ollama guarded input scan 146300/146872; unique_articles=146300, article_rows=281404, cache_hits=0, cache_misses=18940, newly_scored=18940
+Ollama guarded input scan 146320/146872; unique_articles=146320, article_rows=281429, cache_hits=0, cache_misses=18960, newly_scored=18960
+Ollama guarded input scan 146340/146872; unique_articles=146340, article_rows=281459, cache_hits=0, cache_misses=18980, newly_scored=18980
+Ollama guarded input scan 146360/146872; unique_articles=146360, article_rows=281492, cache_hits=0, cache_misses=19000, newly_scored=19000
+Ollama guarded input scan 146380/146872; unique_articles=146380, article_rows=281518, cache_hits=0, cache_misses=19020, newly_scored=19020
+Ollama guarded input scan 146400/146872; unique_articles=146400, article_rows=281547, cache_hits=0, cache_misses=19040, newly_scored=19040
+Ollama guarded input scan 146420/146872; unique_articles=146420, article_rows=281619, cache_hits=0, cache_misses=19060, newly_scored=19060
+Ollama guarded input scan 146440/146872; unique_articles=146440, article_rows=281650, cache_hits=0, cache_misses=19080, newly_scored=19080
+Ollama guarded input scan 146460/146872; unique_articles=146460, article_rows=281683, cache_hits=0, cache_misses=19100, newly_scored=19100
+Ollama guarded input scan 146480/146872; unique_articles=146480, article_rows=281716, cache_hits=0, cache_misses=19120, newly_scored=19120
+Ollama guarded input scan 146500/146872; unique_articles=146500, article_rows=281743, cache_hits=0, cache_misses=19140, newly_scored=19140
+Ollama guarded input scan 146520/146872; unique_articles=146520, article_rows=281770, cache_hits=0, cache_misses=19160, newly_scored=19160
+Ollama guarded input scan 146540/146872; unique_articles=146540, article_rows=281796, cache_hits=0, cache_misses=19180, newly_scored=19180
+Ollama guarded input scan 146560/146872; unique_articles=146560, article_rows=281825, cache_hits=0, cache_misses=19200, newly_scored=19200
+Ollama guarded input scan 146580/146872; unique_articles=146580, article_rows=281891, cache_hits=0, cache_misses=19220, newly_scored=19220
+Ollama guarded input scan 146600/146872; unique_articles=146600, article_rows=281938, cache_hits=0, cache_misses=19240, newly_scored=19240
+Ollama guarded input scan 146620/146872; unique_articles=146620, article_rows=281984, cache_hits=0, cache_misses=19260, newly_scored=19260
+Ollama guarded input scan 146640/146872; unique_articles=146640, article_rows=282014, cache_hits=0, cache_misses=19280, newly_scored=19280
+Ollama guarded input scan 146660/146872; unique_articles=146660, article_rows=282045, cache_hits=0, cache_misses=19300, newly_scored=19300
+Ollama guarded input scan 146680/146872; unique_articles=146680, article_rows=282072, cache_hits=0, cache_misses=19320, newly_scored=19320
+Ollama guarded input scan 146700/146872; unique_articles=146700, article_rows=282097, cache_hits=0, cache_misses=19340, newly_scored=19340
+Ollama guarded input scan 146720/146872; unique_articles=146720, article_rows=282129, cache_hits=0, cache_misses=19360, newly_scored=19360
+Ollama guarded input scan 146740/146872; unique_articles=146740, article_rows=282160, cache_hits=0, cache_misses=19380, newly_scored=19380
+Ollama guarded input scan 146760/146872; unique_articles=146760, article_rows=282193, cache_hits=0, cache_misses=19400, newly_scored=19400
+Ollama guarded input scan 146780/146872; unique_articles=146780, article_rows=282255, cache_hits=0, cache_misses=19420, newly_scored=19420
+Ollama guarded input scan 146800/146872; unique_articles=146800, article_rows=282292, cache_hits=0, cache_misses=19440, newly_scored=19440
+Ollama guarded input scan 146820/146872; unique_articles=146820, article_rows=282322, cache_hits=0, cache_misses=19460, newly_scored=19460
+Ollama guarded input scan 146840/146872; unique_articles=146840, article_rows=282389, cache_hits=0, cache_misses=19480, newly_scored=19480
+Ollama guarded input scan 146860/146872; unique_articles=146860, article_rows=282444, cache_hits=0, cache_misses=19500, newly_scored=19500
+Ollama guarded input scan 146872/146872; unique_articles=146872, article_rows=282471, cache_hits=0, cache_misses=19512, newly_scored=19512
+Ollama guarded checkpoint scoring complete. Finalizing published datasets...
+Ollama guarded finalize shard 1/7344
+Ollama guarded finalize shard 25/7344
+Ollama guarded finalize shard 50/7344
+Ollama guarded finalize shard 75/7344
+Ollama guarded finalize shard 100/7344
+Ollama guarded finalize shard 125/7344
+Ollama guarded finalize shard 150/7344
+Ollama guarded finalize shard 175/7344
+Ollama guarded finalize shard 200/7344
+Ollama guarded finalize shard 225/7344
+Ollama guarded finalize shard 250/7344
+Ollama guarded finalize shard 275/7344
+Ollama guarded finalize shard 300/7344
+Ollama guarded finalize shard 325/7344
+Ollama guarded finalize shard 350/7344
+Ollama guarded finalize shard 375/7344
+Ollama guarded finalize shard 400/7344
+Ollama guarded finalize shard 425/7344
+Ollama guarded finalize shard 450/7344
+Ollama guarded finalize shard 475/7344
+Ollama guarded finalize shard 500/7344
+Ollama guarded finalize shard 525/7344
+Ollama guarded finalize shard 550/7344
+Ollama guarded finalize shard 575/7344
+Ollama guarded finalize shard 600/7344
+Ollama guarded finalize shard 625/7344
+Ollama guarded finalize shard 650/7344
+Ollama guarded finalize shard 675/7344
+Ollama guarded finalize shard 700/7344
+Ollama guarded finalize shard 725/7344
+Ollama guarded finalize shard 750/7344
+Ollama guarded finalize shard 775/7344
+Ollama guarded finalize shard 800/7344
+Ollama guarded finalize shard 825/7344
+Ollama guarded finalize shard 850/7344
+Ollama guarded finalize shard 875/7344
+Ollama guarded finalize shard 900/7344
+Ollama guarded finalize shard 925/7344
+Ollama guarded finalize shard 950/7344
+Ollama guarded finalize shard 975/7344
+Ollama guarded finalize shard 1000/7344
+Ollama guarded finalize shard 1025/7344
+Ollama guarded finalize shard 1050/7344
+Ollama guarded finalize shard 1075/7344
+Ollama guarded finalize shard 1100/7344
+Ollama guarded finalize shard 1125/7344
+Ollama guarded finalize shard 1150/7344
+Ollama guarded finalize shard 1175/7344
+Ollama guarded finalize shard 1200/7344
+Ollama guarded finalize shard 1225/7344
+Ollama guarded finalize shard 1250/7344
+Ollama guarded finalize shard 1275/7344
+Ollama guarded finalize shard 1300/7344
+Ollama guarded finalize shard 1325/7344
+Ollama guarded finalize shard 1350/7344
+Ollama guarded finalize shard 1375/7344
+Ollama guarded finalize shard 1400/7344
+Ollama guarded finalize shard 1425/7344
+Ollama guarded finalize shard 1450/7344
+Ollama guarded finalize shard 1475/7344
+Ollama guarded finalize shard 1500/7344
+Ollama guarded finalize shard 1525/7344
+Ollama guarded finalize shard 1550/7344
+Ollama guarded finalize shard 1575/7344
+Ollama guarded finalize shard 1600/7344
+Ollama guarded finalize shard 1625/7344
+Ollama guarded finalize shard 1650/7344
+Ollama guarded finalize shard 1675/7344
+Ollama guarded finalize shard 1700/7344
+Ollama guarded finalize shard 1725/7344
+Ollama guarded finalize shard 1750/7344
+Ollama guarded finalize shard 1775/7344
+Ollama guarded finalize shard 1800/7344
+Ollama guarded finalize shard 1825/7344
+Ollama guarded finalize shard 1850/7344
+Ollama guarded finalize shard 1875/7344
+Ollama guarded finalize shard 1900/7344
+Ollama guarded finalize shard 1925/7344
+Ollama guarded finalize shard 1950/7344
+Ollama guarded finalize shard 1975/7344
+Ollama guarded finalize shard 2000/7344
+Ollama guarded finalize shard 2025/7344
+Ollama guarded finalize shard 2050/7344
+Ollama guarded finalize shard 2075/7344
+Ollama guarded finalize shard 2100/7344
+Ollama guarded finalize shard 2125/7344
+Ollama guarded finalize shard 2150/7344
+Ollama guarded finalize shard 2175/7344
+Ollama guarded finalize shard 2200/7344
+Ollama guarded finalize shard 2225/7344
+Ollama guarded finalize shard 2250/7344
+Ollama guarded finalize shard 2275/7344
+Ollama guarded finalize shard 2300/7344
+Ollama guarded finalize shard 2325/7344
+Ollama guarded finalize shard 2350/7344
+Ollama guarded finalize shard 2375/7344
+Ollama guarded finalize shard 2400/7344
+Ollama guarded finalize shard 2425/7344
+Ollama guarded finalize shard 2450/7344
+Ollama guarded finalize shard 2475/7344
+Ollama guarded finalize shard 2500/7344
+Ollama guarded finalize shard 2525/7344
+Ollama guarded finalize shard 2550/7344
+Ollama guarded finalize shard 2575/7344
+Ollama guarded finalize shard 2600/7344
+Ollama guarded finalize shard 2625/7344
+Ollama guarded finalize shard 2650/7344
+Ollama guarded finalize shard 2675/7344
+Ollama guarded finalize shard 2700/7344
+Ollama guarded finalize shard 2725/7344
+Ollama guarded finalize shard 2750/7344
+Ollama guarded finalize shard 2775/7344
+Ollama guarded finalize shard 2800/7344
+Ollama guarded finalize shard 2825/7344
+Ollama guarded finalize shard 2850/7344
+Ollama guarded finalize shard 2875/7344
+Ollama guarded finalize shard 2900/7344
+Ollama guarded finalize shard 2925/7344
+Ollama guarded finalize shard 2950/7344
+Ollama guarded finalize shard 2975/7344
+Ollama guarded finalize shard 3000/7344
+Ollama guarded finalize shard 3025/7344
+Ollama guarded finalize shard 3050/7344
+Ollama guarded finalize shard 3075/7344
+Ollama guarded finalize shard 3100/7344
+Ollama guarded finalize shard 3125/7344
+Ollama guarded finalize shard 3150/7344
+Ollama guarded finalize shard 3175/7344
+Ollama guarded finalize shard 3200/7344
+Ollama guarded finalize shard 3225/7344
+Ollama guarded finalize shard 3250/7344
+Ollama guarded finalize shard 3275/7344
+Ollama guarded finalize shard 3300/7344
+Ollama guarded finalize shard 3325/7344
+Ollama guarded finalize shard 3350/7344
+Ollama guarded finalize shard 3375/7344
+Ollama guarded finalize shard 3400/7344
+Ollama guarded finalize shard 3425/7344
+Ollama guarded finalize shard 3450/7344
+Ollama guarded finalize shard 3475/7344
+Ollama guarded finalize shard 3500/7344
+Ollama guarded finalize shard 3525/7344
+Ollama guarded finalize shard 3550/7344
+Ollama guarded finalize shard 3575/7344
+Ollama guarded finalize shard 3600/7344
+Ollama guarded finalize shard 3625/7344
+Ollama guarded finalize shard 3650/7344
+Ollama guarded finalize shard 3675/7344
+Ollama guarded finalize shard 3700/7344
+Ollama guarded finalize shard 3725/7344
+Ollama guarded finalize shard 3750/7344
+Ollama guarded finalize shard 3775/7344
+Ollama guarded finalize shard 3800/7344
+Ollama guarded finalize shard 3825/7344
+Ollama guarded finalize shard 3850/7344
+Ollama guarded finalize shard 3875/7344
+Ollama guarded finalize shard 3900/7344
+Ollama guarded finalize shard 3925/7344
+Ollama guarded finalize shard 3950/7344
+Ollama guarded finalize shard 3975/7344
+Ollama guarded finalize shard 4000/7344
+Ollama guarded finalize shard 4025/7344
+Ollama guarded finalize shard 4050/7344
+Ollama guarded finalize shard 4075/7344
+Ollama guarded finalize shard 4100/7344
+Ollama guarded finalize shard 4125/7344
+Ollama guarded finalize shard 4150/7344
+Ollama guarded finalize shard 4175/7344
+Ollama guarded finalize shard 4200/7344
+Ollama guarded finalize shard 4225/7344
+Ollama guarded finalize shard 4250/7344
+Ollama guarded finalize shard 4275/7344
+Ollama guarded finalize shard 4300/7344
+Ollama guarded finalize shard 4325/7344
+Ollama guarded finalize shard 4350/7344
+Ollama guarded finalize shard 4375/7344
+Ollama guarded finalize shard 4400/7344
+Ollama guarded finalize shard 4425/7344
+Ollama guarded finalize shard 4450/7344
+Ollama guarded finalize shard 4475/7344
+Ollama guarded finalize shard 4500/7344
+Ollama guarded finalize shard 4525/7344
+Ollama guarded finalize shard 4550/7344
+Ollama guarded finalize shard 4575/7344
+Ollama guarded finalize shard 4600/7344
+Ollama guarded finalize shard 4625/7344
+Ollama guarded finalize shard 4650/7344
+Ollama guarded finalize shard 4675/7344
+Ollama guarded finalize shard 4700/7344
+Ollama guarded finalize shard 4725/7344
+Ollama guarded finalize shard 4750/7344
+Ollama guarded finalize shard 4775/7344
+Ollama guarded finalize shard 4800/7344
+Ollama guarded finalize shard 4825/7344
+Ollama guarded finalize shard 4850/7344
+Ollama guarded finalize shard 4875/7344
+Ollama guarded finalize shard 4900/7344
+Ollama guarded finalize shard 4925/7344
+Ollama guarded finalize shard 4950/7344
+Ollama guarded finalize shard 4975/7344
+Ollama guarded finalize shard 5000/7344
+Ollama guarded finalize shard 5025/7344
+Ollama guarded finalize shard 5050/7344
+Ollama guarded finalize shard 5075/7344
+Ollama guarded finalize shard 5100/7344
+Ollama guarded finalize shard 5125/7344
+Ollama guarded finalize shard 5150/7344
+Ollama guarded finalize shard 5175/7344
+Ollama guarded finalize shard 5200/7344
+Ollama guarded finalize shard 5225/7344
+Ollama guarded finalize shard 5250/7344
+Ollama guarded finalize shard 5275/7344
+Ollama guarded finalize shard 5300/7344
+Ollama guarded finalize shard 5325/7344
+Ollama guarded finalize shard 5350/7344
+Ollama guarded finalize shard 5375/7344
+Ollama guarded finalize shard 5400/7344
+Ollama guarded finalize shard 5425/7344
+Ollama guarded finalize shard 5450/7344
+Ollama guarded finalize shard 5475/7344
+Ollama guarded finalize shard 5500/7344
+Ollama guarded finalize shard 5525/7344
+Ollama guarded finalize shard 5550/7344
+Ollama guarded finalize shard 5575/7344
+Ollama guarded finalize shard 5600/7344
+Ollama guarded finalize shard 5625/7344
+Ollama guarded finalize shard 5650/7344
+Ollama guarded finalize shard 5675/7344
+Ollama guarded finalize shard 5700/7344
+Ollama guarded finalize shard 5725/7344
+Ollama guarded finalize shard 5750/7344
+Ollama guarded finalize shard 5775/7344
+Ollama guarded finalize shard 5800/7344
+Ollama guarded finalize shard 5825/7344
+Ollama guarded finalize shard 5850/7344
+Ollama guarded finalize shard 5875/7344
+Ollama guarded finalize shard 5900/7344
+Ollama guarded finalize shard 5925/7344
+Ollama guarded finalize shard 5950/7344
+Ollama guarded finalize shard 5975/7344
+Ollama guarded finalize shard 6000/7344
+Ollama guarded finalize shard 6025/7344
+Ollama guarded finalize shard 6050/7344
+Ollama guarded finalize shard 6075/7344
+Ollama guarded finalize shard 6100/7344
+Ollama guarded finalize shard 6125/7344
+Ollama guarded finalize shard 6150/7344
+Ollama guarded finalize shard 6175/7344
+Ollama guarded finalize shard 6200/7344
+Ollama guarded finalize shard 6225/7344
+Ollama guarded finalize shard 6250/7344
+Ollama guarded finalize shard 6275/7344
+Ollama guarded finalize shard 6300/7344
+Ollama guarded finalize shard 6325/7344
+Ollama guarded finalize shard 6350/7344
+Ollama guarded finalize shard 6375/7344
+Ollama guarded finalize shard 6400/7344
+Ollama guarded finalize shard 6425/7344
+Ollama guarded finalize shard 6450/7344
+Ollama guarded finalize shard 6475/7344
+Ollama guarded finalize shard 6500/7344
+Ollama guarded finalize shard 6525/7344
+Ollama guarded finalize shard 6550/7344
+Ollama guarded finalize shard 6575/7344
+Ollama guarded finalize shard 6600/7344
+Ollama guarded finalize shard 6625/7344
+Ollama guarded finalize shard 6650/7344
+Ollama guarded finalize shard 6675/7344
+Ollama guarded finalize shard 6700/7344
+Ollama guarded finalize shard 6725/7344
+Ollama guarded finalize shard 6750/7344
+Ollama guarded finalize shard 6775/7344
+Ollama guarded finalize shard 6800/7344
+Ollama guarded finalize shard 6825/7344
+Ollama guarded finalize shard 6850/7344
+Ollama guarded finalize shard 6875/7344
+Ollama guarded finalize shard 6900/7344
+Ollama guarded finalize shard 6925/7344
+Ollama guarded finalize shard 6950/7344
+Ollama guarded finalize shard 6975/7344
+Ollama guarded finalize shard 7000/7344
+Ollama guarded finalize shard 7025/7344
+Ollama guarded finalize shard 7050/7344
+Ollama guarded finalize shard 7075/7344
+Ollama guarded finalize shard 7100/7344
+Ollama guarded finalize shard 7125/7344
+Ollama guarded finalize shard 7150/7344
+Ollama guarded finalize shard 7175/7344
+Ollama guarded finalize shard 7200/7344
+Ollama guarded finalize shard 7225/7344
+Ollama guarded finalize shard 7250/7344
+Ollama guarded finalize shard 7275/7344
+Ollama guarded finalize shard 7300/7344
+Ollama guarded finalize shard 7325/7344
+Ollama guarded finalize shard 7344/7344
+Ollama guarded daily aggregation progress: processed 1/406 tickers
+Ollama guarded daily aggregation progress: processed 10/406 tickers
+Ollama guarded daily aggregation progress: processed 20/406 tickers
+Ollama guarded daily aggregation progress: processed 30/406 tickers
+Ollama guarded daily aggregation progress: processed 40/406 tickers
+Ollama guarded daily aggregation progress: processed 50/406 tickers
+Ollama guarded daily aggregation progress: processed 60/406 tickers
+Ollama guarded daily aggregation progress: processed 70/406 tickers
+Ollama guarded daily aggregation progress: processed 80/406 tickers
+Ollama guarded daily aggregation progress: processed 90/406 tickers
+Ollama guarded daily aggregation progress: processed 100/406 tickers
+Ollama guarded daily aggregation progress: processed 110/406 tickers
+Ollama guarded daily aggregation progress: processed 120/406 tickers
+Ollama guarded daily aggregation progress: processed 130/406 tickers
+Ollama guarded daily aggregation progress: processed 140/406 tickers
+Ollama guarded daily aggregation progress: processed 150/406 tickers
+Ollama guarded daily aggregation progress: processed 160/406 tickers
+Ollama guarded daily aggregation progress: processed 170/406 tickers
+Ollama guarded daily aggregation progress: processed 180/406 tickers
+Ollama guarded daily aggregation progress: processed 190/406 tickers
+Ollama guarded daily aggregation progress: processed 200/406 tickers
+Ollama guarded daily aggregation progress: processed 210/406 tickers
+Ollama guarded daily aggregation progress: processed 220/406 tickers
+Ollama guarded daily aggregation progress: processed 230/406 tickers
+Ollama guarded daily aggregation progress: processed 240/406 tickers
+Ollama guarded daily aggregation progress: processed 250/406 tickers
+Ollama guarded daily aggregation progress: processed 260/406 tickers
+Ollama guarded daily aggregation progress: processed 270/406 tickers
+Ollama guarded daily aggregation progress: processed 280/406 tickers
+Ollama guarded daily aggregation progress: processed 290/406 tickers
+Ollama guarded daily aggregation progress: processed 300/406 tickers
+Ollama guarded daily aggregation progress: processed 310/406 tickers
+Ollama guarded daily aggregation progress: processed 320/406 tickers
+Ollama guarded daily aggregation progress: processed 330/406 tickers
+Ollama guarded daily aggregation progress: processed 340/406 tickers
+Ollama guarded daily aggregation progress: processed 350/406 tickers
+Ollama guarded daily aggregation progress: processed 360/406 tickers
+Ollama guarded daily aggregation progress: processed 370/406 tickers
+Ollama guarded daily aggregation progress: processed 380/406 tickers
+Ollama guarded daily aggregation progress: processed 390/406 tickers
+Ollama guarded daily aggregation progress: processed 400/406 tickers
+Ollama guarded daily aggregation progress: processed 406/406 tickers
+Timing summary: load=0.6s, build=26525.9s, write=0.0s, total=26547.0s
+Ollama guarded cache summary: total_candidate_rows=146872, reused_cached_rows=0, newly_scored_rows=19512, skipped_completed_rows=127360, checkpoint_files_written=976
+Built 282471 Ollama guarded article rows and 1406206 ticker-day rows -> /home/manh/stocks-ecosystem/data/features/news/datasets/ollama_guarded_ticker_day_features.parquet

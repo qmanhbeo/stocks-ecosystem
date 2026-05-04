@@ -5,9 +5,9 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_258_log.md](./session_258_log.md)
-Last verified: [Session 258](./session_258_log.md), 2026-05-04
-(H381 silent-order-pressure test; backfill status remains from Session 255).
+Latest full session detail: [session_259_log.md](./session_259_log.md)
+Last verified: [Session 259](./session_259_log.md), 2026-05-04
+(Ollama residual complete; combined local-news aggregate refreshed; H364 passed).
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -34,11 +34,16 @@ Source durable memory:
 - The local news stack is real: PhoBERT owns sentiment, forward-looking,
   `article_scope`, and `source_type`; Ollama is the guarded residual
   event-family lane.
-- `ollama_guarded_backfill` is active in tmux. Latest checked status during
-  this writeback: at least `6413 / 7344` checkpoint batches, phase `score`, no
-  cutoff, model `qwen2.5-coder:3b`, GPU occupied by Ollama. The 2026-05-04
-  resume successfully skipped completed shards through `6368` and wrote new
-  shards from `6369` onward.
+- `ollama_guarded_backfill` is complete: `7344 / 7344` checkpoint batches,
+  `146,872` gated input articles, and `1,406,206` ticker-day rows in
+  `data/features/news/datasets/ollama_guarded_ticker_day_features.parquet`.
+  Session 259 refreshed the combined local-news aggregate overlay, writing
+  `1,436,996` rows to `data/features/news/datasets/news_daily_features.parquet`.
+- H364 passed the combined local-news standalone audit. Best fixed feature:
+  `h364_official_sentiment_x_earnings_guidance`; avg IC `+0.01766`,
+  dev/validation/confirmation IC `+0.0173 / +0.0200 / +0.0156`, `10 / 10`
+  positive years, S1 corr `-0.0104`, active rows `103,248`. This is candidate
+  local-news evidence, not a live branch change. Source anchor: `F342`.
 - C16 order pressure is a published shared feature contract at
   `data/features/xs_order_pressure_daily.parquet`, but downstream use is
   opt-in only. Do not run more C16 sizing/search unless a consumer asks for a
@@ -51,7 +56,7 @@ Source durable memory:
 - H381 killed `silent_order_pressure` under current own-ticker PhoBERT
   article-count absence. No-news C16 was weaker than all-C16 and active-news
   C16 (`silent_5d` IC `+0.0700`, all-C16 `+0.0752`, active-5d-news `+0.0846`).
-  Continue through `news_flow_disagreement`, not simple no-news stealth.
+  Continue through local-news interaction states, not simple no-news stealth.
 - Event-v2, dividend-clock, legal-holiday timing, foreign/proprietary/sector-flow,
   old OHLCV queue, smart-exit linear tweaks, and BERT-only sentiment are parked
   or failed under the current target/consumer contracts. Use the compact
@@ -68,6 +73,9 @@ Source durable memory:
 - `dividend_30d`: IC `0.0934` but noisy; keep as event context, not a promoted
   sparse-clock portfolio rule. Source anchor: `F315`.
 - `rank_time_acceleration`: IC `0.0576`; weak state feature only.
+- `h364_official_sentiment_x_earnings_guidance`: avg IC `0.01766`, `10 / 10`
+  positive years, S1 corr `-0.0104`; candidate local-news signal pending fixed
+  consumer integration. Source anchor: `F342`.
 - C16 filter lesson: market-down, liquidity, and price/C16 divergence matter;
   macro regime, gap direction, same-signal persistence, sector-relative C16,
   streak compounding, and C16 extreme tails are already failed or overfit.
@@ -76,6 +84,10 @@ Source durable memory:
 
 Ranked by upside, novelty, current-data feasibility, and honesty of first test.
 Do not assign `H` numbers until one branch is activated.
+
+Activated next branch before returning to the ranked queue:
+`h364_consumer_integration` - one fixed portfolio/consumer audit for
+`h364_official_sentiment_x_earnings_guidance`; no `2026+` fitting.
 
 1. `news_flow_disagreement`: public text and posted orders disagree before the
    best reversals and traps.
@@ -1189,17 +1201,12 @@ Triple Storm controls.
 
 ## Immediate Next Actions
 
-- Do not start another heavy local-model job while `ollama_guarded_backfill`
-  is running.
-- When `ollama_guarded_backfill` finishes, aggregate the default local-first
-  news features:
-  `python -m research_pipelines.news_features.core.aggregate_daily_features --sources phobert phobert_forward_looking phobert_article_scope phobert_source_type ollama_guarded`
-- Then run the bounded downstream audit:
-  `python analysis/h364_combined_local_news_audit.py`
-  before promoting any local-news feature into the signal library.
-- For a CPU-only interim branch, prefer `dynamic_breadth_option`,
-  `insider_down_rescue`, or `fresh_selection_pulse`; they do not need the
-  running Ollama output.
+- Next branch: run one fixed portfolio/consumer integration audit for
+  `h364_official_sentiment_x_earnings_guidance`; do not fit on `2026+`.
+- If the fixed H364 consumer audit fails, keep H364 as offline local-news
+  evidence and continue with broader `news_flow_disagreement` using H381/H364
+  as anchors.
+- Do not retune the live sticky branch off the H364 standalone result.
 
 ## Do Not Reopen Unless
 
