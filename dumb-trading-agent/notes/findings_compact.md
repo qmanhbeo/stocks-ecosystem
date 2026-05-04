@@ -4,17 +4,18 @@
 
 ---
 
-## F00006 — S1+C16 blend beats S1 alone (2026-05-04)
+## F00006 — 70/30 blend is optimal (2026-05-04)
 
 [link: findings_00001_00030.md]
 
-With 10-day rebalance:
-- VNINDEX: +94.72% (2 trades)
-- S1 10-day: +43.14% (413 trades)
-- C16 10-day: +31.97% (68 trades)
-- **S1+C16 blend: +51.99%** (315 trades)
+Blend grid (10-day rebal, with filters):
+- 50/50: +51.99% (315tr)
+- 60/40: +54.81% (364tr)
+- **70/30: +82.39%** (397tr) ← USE LEGACY
+- 80/20: +75.30% (431tr)
 
-Blend (50/50) captures complementary signal value.
+**NOTE**: Pre-computed lookups give +99.86% but have a bug - use for param selection only.
+Always verify with legacy filters before publishing.
 
 
 ---

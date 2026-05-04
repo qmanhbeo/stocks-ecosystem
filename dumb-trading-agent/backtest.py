@@ -1,18 +1,5 @@
 """
-Constraint-compliant backtest engine with caching.
-
-Vietnam market constraints:
-- Decision: at close[T] based on signal available at T
-- Entry: execute at open[T+1] (next day opening price)
-- Earliest exit: open[T+min_hold_days+1] (after min hold days)
-- T+2 settlement means first legal sell is T+3 fill
-- Price limits: ±7%
-- Fees: buy 0.1%, sell 0.15%, CGT 0.01%
-
-Key artifacts cached:
-- VNINDEX baseline: same every time
-- Price cache: static by ticker
-- Tradability: static by date/ticker
+Constraint-compliant backtest engine.
 """
 
 import pandas as pd
@@ -23,7 +10,9 @@ from typing import Optional
 import constraints as c
 
 CACHE_DIR = Path("/home/manh/stocks-ecosystem/dumb-trading-agent/cache")
-CACHE_DIR.mkdir(exist_ok=True)
+PRICE_CACHE_FILE = CACHE_DIR / "price_cache.parquet"
+LIQUID_CACHE_FILE = CACHE_DIR / "liquid_lookup.joblib"
+TRAD_CACHE_FILE = CACHE_DIR / "trad_lookup.joblib"
 
 
 @dataclass
@@ -39,84 +28,57 @@ class BacktestResult:
     n_filtered: int = 0
 
 
-VNINDEX_BASELINE_FILE = CACHE_DIR / "vnindex_baseline.parquet"
-PRICE_CACHE_FILE = CACHE_DIR / "price_cache.parquet"
+# === Pre-computed lookup helpers ===
+
+def load_liquid_lookup() -> dict:
+    """Load cached liquid date->tickers lookup."""
+    import joblib
+    if LIQUID_CACHE_FILE.exists():
+        return joblib.load(LIQUID_CACHE_FILE)
+    return {}
 
 
-def get_cached_vnindex() -> BacktestResult:
-    """Get cached VNINDEX baseline. Computes and saves if missing."""
-    import constraints as cn
-    import numpy as np
+def load_trad_lookup() -> dict:
+    """Load cached tradability (ticker,date)->can_buy lookup."""
+    import joblib
+    if TRAD_CACHE_FILE.exists():
+        return joblib.load(TRAD_CACHE_FILE)
+    return {}
+
+
+def is_liquid(ticker: str, date, liquid_lookup: dict) -> bool:
+    """Fast liquid check using pre-computed lookup.
     
-    if VNINDEX_BASELINE_FILE.exists():
-        df = pd.read_parquet(VNINDEX_BASELINE_FILE)
-    else:
-        # Compute full baseline 2019-2025
-        vn = cn.load_vnindex(start="2019-01-01", end="2025-12-31")
-        if len(vn) == 0:
-            return BacktestResult("", 0, 0, 0, 0, 0, pd.DataFrame())
-        
-        start_open = vn["open"].iloc[0]
-        end_open = vn["open"].iloc[-1]
-        shares = int(100_000_000 / start_open)
-        cost = shares * start_open * 1.001
-        initial_cash = 100_000_000 - cost
-        proceeds = shares * end_open * 0.9984
-        final_value = initial_cash + proceeds
-        ret = (final_value / 100_000_000) - 1.0
-        
-        curve = vn[["time", "open"]].copy()
-        curve["holdings_value"] = curve["open"] * shares
-        curve["cash"] = initial_cash
-        curve["portfolio_value"] = curve["cash"] + curve["holdings_value"]
-        curve["return"] = curve["portfolio_value"] / 100_000_000 - 1.0
-        curve["return_pct"] = curve["portfolio_value"].pct_change()
-        
-        df = curve
-        VNINDEX_BASELINE_FILE.parent.mkdir(parents=True, exist_ok=True)
-        df.to_parquet(VNINDEX_BASELINE_FILE)
-        print(f"Cached VNINDEX baseline: {VNINDEX_BASELINE_FILE}")
+    Returns True only if:
+    - date IS in lookup AND ticker IS in the liquid set for that date
+    """
+    if date not in liquid_lookup:
+        return False  # No data = NOT liquid
+    return ticker in liquid_lookup.get(date, set())
+
+
+def can_buy_fast(ticker: str, date, trad_lookup: dict) -> bool:
+    """Fast tradability check using pre-computed lookup.
     
-    returns = df["return_pct"].dropna()
-    sharpe = returns.mean() / returns.std() * np.sqrt(252) if returns.std() > 0 else 0
-    max_dd = (df["portfolio_value"] / df["portfolio_value"].cummax() - 1.0).min()
-    
-    return BacktestResult(
-        "VNINDEX_hold",
-        df["return"].iloc[-1],
-        df["return"].iloc[-1] / (len(df) / 252) if len(df) > 0 else 0,
-        sharpe,
-        max_dd,
-        2,
-        df,
-    )
+    Returns True only if:
+    - (ticker, date) IS in lookup AND can_buy is True
+    """
+    if (ticker, date) not in trad_lookup:
+        return False  # No data = NOT allowed
+    return bool(trad_lookup.get((ticker, date), False))
 
 
-def load_universe_prices(
-    signal_df: pd.DataFrame,
-    price_dir: str = "/home/manh/stocks-ecosystem/data/stock",
-) -> dict[str, pd.DataFrame]:
-    """Pre-load price data for all tickers in signal matrix."""
-    tickers = set(signal_df["ticker"].unique())
-    price_cache: dict[str, pd.DataFrame] = {}
-    print(f"Loading price data for {len(tickers)} tickers...")
-    for ticker in tickers:
-        try:
-            df_stock = s.load_stock_daily(ticker)
-            if len(df_stock) > 0:
-                price_cache[ticker] = df_stock.set_index("time")
-        except Exception:
-            pass
-    print(f"Loaded {len(price_cache)} price series")
-    return price_cache
+# === Price lookups ===
+
+def load_price_cache() -> dict[str, pd.DataFrame]:
+    """Load cached price data."""
+    if PRICE_CACHE_FILE.exists():
+        pc = pd.read_parquet(PRICE_CACHE_FILE)
+        return {t: g.set_index("time") for t, g in pc.groupby("ticker")}
+    return {}
 
 
-def get_price(
-    cache: dict[str, pd.DataFrame],
-    ticker: str,
-    date,
-    price_type: str = "close"
-) -> float | None:
+def get_price(cache: dict, ticker: str, date, price_type: str = "close") -> float | None:
     """Get price for ticker at date."""
     if ticker not in cache:
         return None
@@ -126,56 +88,36 @@ def get_price(
         return None
 
 
-def check_liquid(
-    cache: dict[str, pd.DataFrame],
-    ticker: str,
-    date,
-    min_volume: int = 500_000,
-    price_change_threshold: float = 0.001,
-) -> bool:
-    """Check if ticker is liquid and price is not stale.
-    
-    Returns True if:
-    - Average volume over last 5 days > min_volume
-    - Price changed at least price_change_threshold over last 5 days (not stale)
-    """
+# === Legacy filter functions (for when pre-computed not available) ===
+
+def check_liquid(cache: dict, ticker: str, date, min_volume: int = 500_000) -> bool:
+    """Check liquidity (legacy - compute on the fly)."""
     if ticker not in cache:
         return False
     try:
         df = cache[ticker]
-        # Get last 5 days of data
         dates_sorted = sorted(df.index)
         idx = dates_sorted.index(date) if date in dates_sorted else len(dates_sorted) - 1
         start_idx = max(0, idx - 5)
         recent = df.iloc[start_idx:idx+1]
-        
         if len(recent) < 3:
             return False
-        
-        # Check volume
         avg_volume = recent['volume'].mean()
         if avg_volume < min_volume:
             return False
-        
-        # Check price change (detect stale data)
         if len(recent) >= 2:
             price_change = abs(recent['close'].iloc[-1] - recent['close'].iloc[0]) / recent['close'].iloc[0]
-            if price_change < price_change_threshold:
+            if price_change < 0.001:
                 return False
-        
         return True
     except:
         return False
 
 
-def check_can_buy(
-    tradability_df: pd.DataFrame | None,
-    ticker: str,
-    date,
-) -> bool:
-    """Check can_buy_next_open from tradability data."""
+def check_can_buy(tradability_df: pd.DataFrame | None, ticker: str, date) -> bool:
+    """Check can_buy_next_open (legacy - compute on the fly)."""
     if tradability_df is None:
-        return True  # No filter = allow all
+        return True
     try:
         row = tradability_df[(tradability_df['time'] == date) & (tradability_df['ticker'] == ticker)]
         if len(row) == 0:
@@ -185,13 +127,7 @@ def check_can_buy(
         return True
 
 
-def get_prev_trading_day(dates: list, current_idx: int, lookback: int = 1) -> pd.Timestamp | None:
-    """Get previous trading day index."""
-    for i in range(current_idx - lookback, -1, -1):
-        if i >= 0:
-            return dates[i]
-    return None
-
+# === Main backtest function ===
 
 def simulate_topk_constraint_compliant(
     signal_df: pd.DataFrame,
@@ -205,20 +141,11 @@ def simulate_topk_constraint_compliant(
     sell_fee: float = c.DEFAULT_SELL_FEE_RATE,
     tradability_df: pd.DataFrame | None = None,
     min_volume: int = 500_000,
+    use_filters: bool = True,
+    liquid_lookup: dict | None = None,  # NEW: pre-computed
+    trad_lookup: dict | None = None,     # NEW: pre-computed
 ) -> BacktestResult:
-    """Constraint-compliant top-K by signal backtest.
-
-    Flow:
-    1. At close[T]: decide which tickers to rank by signal
-    2. At open[T+1]: execute buys at open price (only if liquid and can_buy)
-    3. Hold for min_hold_days
-    4. At open[T+min_hold_days+1]: earliest sell at open price
-    
-    Filters:
-    - Volume filter: avg volume > min_volume over last 5 days
-    - Price change filter: detect stale data (no price change = reject)
-    - Tradability filter: can_buy_next_open from C16 data
-    """
+    """Constraint-compliant top-K by signal backtest."""
 
     signal_df = signal_df.sort_values("time").reset_index(drop=True)
     dates = sorted(signal_df["time"].unique())
@@ -238,11 +165,11 @@ def simulate_topk_constraint_compliant(
         if len(day_df) == 0:
             continue
 
-        # REBALANCE DECISION at close[T-1] -> execute at open[T]
+        # REBALANCE at every rebalance_days
         if i > 0 and i % rebalance_days == 0:
             prev_date = dates[i - 1]
             
-            # SELL: earliest at open[T] for positions entered at T-1
+            # SELL positions held >= min_hold_days
             for ticker in list(holdings.keys()):
                 shares, entry_idx = holdings[ticker]
                 hold_days = i - entry_idx
@@ -257,26 +184,36 @@ def simulate_topk_constraint_compliant(
                         n_skips += 1
                     del holdings[ticker]
 
-            # BUY: execute at open[T] based on signal at close[T-1]
-            # Filter by liquidity and tradability
+            # BUY new positions
             signal_day_df = signal_df[signal_df["time"] == prev_date]
             candidates = []
             for ticker in signal_day_df.nlargest(top_k * 3, signal_col)["ticker"]:
                 # Check tradability
-                if tradability_df is not None:
-                    if not check_can_buy(tradability_df, ticker, prev_date):
+                if use_filters:
+                    if trad_lookup is not None:
+                        if not can_buy_fast(ticker, prev_date, trad_lookup):
+                            n_filtered += 1
+                            continue
+                    elif tradability_df is not None:
+                        if not check_can_buy(tradability_df, ticker, prev_date):
+                            n_filtered += 1
+                            continue
+                
+                # Check liquidity
+                if use_filters:
+                    if liquid_lookup is not None:
+                        if not is_liquid(ticker, prev_date, liquid_lookup):
+                            n_filtered += 1
+                            continue
+                    elif not check_liquid(cache, ticker, prev_date, min_volume):
                         n_filtered += 1
                         continue
-                
-                # Check liquidity (volume + stale price)
-                if not check_liquid(cache, ticker, prev_date, min_volume):
-                    n_filtered += 1
-                    continue
                 
                 candidates.append(ticker)
                 if len(candidates) >= top_k:
                     break
             
+            # Execute buys
             for ticker in candidates:
                 if ticker in holdings:
                     continue
@@ -290,7 +227,7 @@ def simulate_topk_constraint_compliant(
                             cash -= cost
                             holdings[ticker] = (shares, i)
 
-        # Calculate portfolio value at close[T] for equity curve
+        # Calculate portfolio value
         holdings_value = 0
         for ticker, (shares, _) in holdings.items():
             close_price = get_price(cache, ticker, date, "close")
@@ -321,133 +258,58 @@ def simulate_topk_constraint_compliant(
     return BacktestResult(
         f"TopK_{signal_col}_K{top_k}_R{rebalance_days}_H{min_hold_days}",
         ret,
-        ret / (len(dates) / 252) if len(dates) > 0 else 0,
+        ret / (len(curve) / 252) if len(curve) > 0 else 0,
         sharpe,
         max_dd,
         n_trades,
         curve,
-        constraints_followed=f"decision@close[T-1], entry@open[T], exit@open[T+{min_hold_days}] + liq filter",
         n_filtered=n_filtered,
     )
 
 
-def simulate_vnindex_constraint_compliant(
-    start: str,
-    end: str,
-    initial_capital: float = 1_000_000_000.0,
-    buy_fee: float = c.DEFAULT_BUY_FEE_RATE,
-    sell_fee: float = c.DEFAULT_SELL_FEE_RATE,
-) -> BacktestResult:
-    """Buy and hold VNINDEX - constraint-compliant.
+def get_cached_vnindex() -> BacktestResult:
+    """Get VNINDEX baseline (cached)."""
+    import signals as s
     
-    - Buy at first open, hold through period, sell at last open
-    """
-    vn = c.load_vnindex(start=start, end=end)
-    if len(vn) == 0:
-        return BacktestResult("", 0, 0, 0, 0, 0, pd.DataFrame())
-
-    start_open = vn["open"].iloc[0]
-    end_open = vn["open"].iloc[-1]
-
-    shares = int(initial_capital / start_open)
-    cost = shares * start_open * (1 + buy_fee)
-    initial_cash = initial_capital - cost
-    proceeds = shares * end_open * (1 - sell_fee)
-    final_value = initial_cash + proceeds
-
-    ret = (final_value / initial_capital) - 1.0
-    days = len(vn)
-
-    curve = vn[["time", "open"]].copy()
-    curve["holdings_value"] = curve["open"] * shares
-    curve["cash"] = initial_cash
-    curve["portfolio_value"] = curve["cash"] + curve["holdings_value"]
-    curve["return"] = curve["portfolio_value"] / initial_capital - 1.0
-    curve["return_pct"] = curve["portfolio_value"].pct_change()
-
-    returns = curve["return_pct"].dropna()
+    VNINDEX_FILE = CACHE_DIR / "vnindex_baseline.parquet"
+    if VNINDEX_FILE.exists():
+        df = pd.read_parquet(VNINDEX_FILE)
+    else:
+        import constraints as cn
+        vn = cn.load_vnindex(start="2019-01-01", end="2025-12-31")
+        if len(vn) == 0:
+            return BacktestResult("", 0, 0, 0, 0, 0, pd.DataFrame())
+        
+        start_open = vn["open"].iloc[0]
+        end_open = vn["open"].iloc[-1]
+        shares = int(100_000_000 / start_open)
+        cost = shares * start_open * 1.001
+        initial_cash = 100_000_000 - cost
+        proceeds = shares * end_open * 0.9984
+        final_value = initial_cash + proceeds
+        ret = (final_value / 100_000_000) - 1.0
+        
+        curve = vn[["time", "open"]].copy()
+        curve["holdings_value"] = curve["open"] * shares
+        curve["cash"] = initial_cash
+        curve["portfolio_value"] = curve["cash"] + curve["holdings_value"]
+        curve["return"] = curve["portfolio_value"] / 100_000_000 - 1.0
+        curve["return_pct"] = curve["portfolio_value"].pct_change()
+        
+        df = curve
+        df.to_parquet(VNINDEX_FILE)
+    
+    import numpy as np
+    returns = df["return_pct"].dropna()
     sharpe = returns.mean() / returns.std() * np.sqrt(252) if returns.std() > 0 else 0
-    max_dd = (curve["portfolio_value"] / curve["portfolio_value"].cummax() - 1.0).min()
-
+    max_dd = (df["portfolio_value"] / df["portfolio_value"].cummax() - 1.0).min()
+    
     return BacktestResult(
         "VNINDEX_hold",
-        ret,
-        ret / (days / 252) if days > 0 else 0,
+        df["return"].iloc[-1],
+        df["return"].iloc[-1] / (len(df) / 252) if len(df) > 0 else 0,
         sharpe,
         max_dd,
         2,
-        curve,
-        constraints_followed="entry@open[start], exit@open[end]",
+        df,
     )
-
-
-def run_baseline_comparison(
-    start: str = "2019-01-01",
-    end: str = "2025-12-31",
-    top_k: int = 5,
-    rebalance_days: int = 5,
-    min_hold_days: int = 3,
-) -> pd.DataFrame:
-    """Run full baseline comparison with constraint compliance."""
-    results = []
-
-    print("\n=== VNINDEX Baseline (constraint-compliant) ===")
-    vn = simulate_vnindex_constraint_compliant(start, end)
-    print(f"Return: {vn.total_return:.2%}, Sharpe: {vn.sharpe:.2f}, Constraints: {vn.constraints_followed}")
-    results.append({
-        "strategy": "VNINDEX",
-        "return": vn.total_return,
-        "sharpe": vn.sharpe,
-        "max_dd": vn.max_drawdown,
-        "n_trades": vn.n_trades,
-        "constraints": vn.constraints_followed,
-    })
-
-    print("\n=== Signal Matrix ===")
-    df = s.load_rl_signal_matrix(start=start, end=end)
-    print(f"Loaded {df.shape}")
-    
-    cache = load_universe_prices(df)
-
-    print(f"\n=== S1 Top-{top_k} (constraint-compliant) ===")
-    s1 = simulate_topk_constraint_compliant(
-        df, cache, "s1_proba", top_k, rebalance_days, min_hold_days
-    )
-    print(f"Return: {s1.total_return:.2%}, Sharpe: {s1.sharpe:.2f}, Constraints: {s1.constraints_followed}")
-    results.append({
-        "strategy": f"S1_Top{top_k}",
-        "return": s1.total_return,
-        "sharpe": s1.sharpe,
-        "max_dd": s1.max_drawdown,
-        "n_trades": s1.n_trades,
-        "constraints": s1.constraints_followed,
-    })
-
-    return pd.DataFrame(results)
-
-
-if __name__ == "__main__":
-    print("=== Baseline Comparison 2019-2025 ===")
-    print("=== CONSTRAINT-COMPLIANT BACKTEST ===\n")
-    
-    # Test different configurations - focus on lower turnover
-    configs = [
-        (20, 3, "20-day rebalance (monthly), 3-day hold"),
-        (10, 3, "10-day rebalance, 3-day hold"),
-    ]
-    
-    all_results = []
-    
-    for reb, hold, desc in configs:
-        print(f"\n--- {desc} ---")
-        results = run_baseline_comparison(
-            "2019-01-01", "2025-12-31", 
-            rebalance_days=reb, 
-            min_hold_days=hold
-        )
-        all_results.append((desc, results))
-    
-    print("\n=== SUMMARY ===")
-    for desc, res in all_results:
-        print(f"\n{desc}:")
-        print(res.to_string(index=False))

@@ -2,30 +2,31 @@
 
 ## Current
 
-S00004 grid: **S1+C16 blend wins!**
-- VNINDEX: +94.72% (2 trades)
-- S1 10-day: +43.14% (413 trades)
-- C16 10-day: +31.97% (68 trades)
-- **S1+C16 blend: +51.99%** (315 trades) ← BEST
+**S00005: Pre-computed lookups working**
 
-## F00005
+- 70%S1/30%C16: ~82% (legacy, ~5min)
+- Pre-computed quick run: ~2.5sec
 
-10-day rebalance is sweet spot. 5-day killed by fees (770 trades = -37%).
+## Cached Artifacts
 
-## F00006
+- cache/vnindex_baseline.parquet
+- cache/price_cache.parquet  
+- cache/liquid_lookup.joblib (4764 dates)
+- cache/trad_lookup.joblib (666k entries)
 
-Blend beats single signals. Complementary info.
+## Speed 
+
+- Without filters: ~5 sec
+- Pre-computed: ~2.5 sec  
+- Legacy (truth): ~5 min
 
 ## Next (queue)
 
-1. ~~S1 10-day~~ → FOUND +43%
-2. ~~S1+C16 blend~~ → FOUND +52%
-3. Optimize blend weight
-4. Add more signals
-
-## Cached
-- cache/vnindex_baseline.parquet
-- cache/price_cache.parquet
+1. ~~S1 10-day rebal~~ → +43%
+2. ~~S1+C16 blend~~ → +52%
+3. ~~Blend weight 70/30~~ → +82%
+4. Grid search with pre-computed
+5. Verify with legacy
 
 ## Pointers
-- backtest.py, session_00004_fixed.py, signals.py
+- backtest.py, session_00005.py, signals.py
