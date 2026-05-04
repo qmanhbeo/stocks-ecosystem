@@ -1,9 +1,9 @@
 # Dead Ends Compact
 
 What this file is for: compact recovery notes for durable failed, parked,
-closed, blocked, or explicitly non-promotable paths. These entries are derived
-from the chunked findings and session logs because the repo does not currently
-maintain separate durable dead-end chunk files.
+closed, blocked, or explicitly non-promotable paths. The chunked source of
+truth now starts at [deadends.md](./deadends.md); older entries before that
+index are derived from chunked findings and session logs.
 
 Do not add a path here just because one test was mixed. Add it when the durable
 record says the current path should stop, stay parked, or reopen only under a
@@ -19,6 +19,14 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   Source: F337, F338
 
 ## Current Hard Stops
+
+- Silent order pressure is killed under the current own-ticker PhoBERT
+  article-count proxy. H381 found no-news C16 weaker than all-C16 and
+  active-news C16: `silent_5d` WF IC `+0.0700` versus all-C16 `+0.0752` and
+  active-5d-news C16 `+0.0846`. Reopen only with a materially different
+  "not public yet" representation, such as Ollama event-family states,
+  peer/co-mention narrative vacuum, source-type timing, or another non-count
+  proxy. Source anchors: `D001`, `F341`.
 
 - S244 weak/inconsistent signals:
   - c16_entropy: WEAK (inconsistent year-to-year) - dead end

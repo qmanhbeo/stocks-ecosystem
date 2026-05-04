@@ -60,3 +60,29 @@ Why it matters:
 Source:
 - [session_257_log.md](./session_257_log.md)
 - `artifacts/run_summaries/20260504_125947_h380_candidate_count_policy_router_research_branch_candidate_count_policy_router.json`
+
+## F341: H381 Inverts The Silent-Order-Pressure Thesis (2026-05-04, Session 258)
+
+Finding:
+- Claim tested: C16 order pressure should be strongest when PhoBERT article
+  counts show no public narrative.
+- Evidence: `analysis/h381_silent_order_pressure.py` used fixed no-news states,
+  TRUE walk-forward folds with train years strictly before each test year,
+  `2016-2025` data only, no `2026+`, and direct C16 variation benchmarks.
+- Result: no-news C16 was weaker, not stronger. `silent_5d` WF IC was `+0.0700`
+  versus all-C16 `+0.0752` and active-5d-news C16 `+0.0846`. `silent_1d` WF IC
+  was `+0.0720` versus active-1d-news C16 `+0.0890`. Down-market no-news
+  controls failed the same way.
+
+Why it matters:
+- Kill `silent_order_pressure` under the current own-ticker PhoBERT article-count
+  proxy. The result should be reframed as active narrative confirming C16 rather
+  than no-news stealth accumulation.
+- The next live queue item remains `news_flow_disagreement`, but it should start
+  from H381's inversion: active-news plus C16 may be confirmation, while no-news
+  C16 is not automatically cleaner.
+
+Source:
+- [session_258_log.md](./session_258_log.md)
+- [deadends-001-030.md](./deadends-001-030.md) `D001`
+- `artifacts/run_summaries/20260504_130641_h381_silent_order_pressure_research_branch_silent_order_pressure.json`

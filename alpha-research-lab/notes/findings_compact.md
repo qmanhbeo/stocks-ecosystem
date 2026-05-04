@@ -227,8 +227,11 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
 - Rebuilt LLM/news surfaces showed real edge only in routed states. Follow-up
   and miss-state news mattered more than pooled simple sentiment, news decay
   was real but not clean as a single-class half-life, and market-attention or
-  broad raw attention proxies did not stabilize an event-v2 router. Source anchors:
-  `F204`, `F213-F215`, `F237`.
+  broad raw attention proxies did not stabilize an event-v2 router. H381 killed
+  the simple no-news C16 stealth thesis under current PhoBERT article counts:
+  active-news C16 was stronger than no-news C16, so the next route is
+  text-flow disagreement / confirmation, not "absence of own news" by itself.
+  Source anchors: `F204`, `F213-F215`, `F237`, `F341`, `D001`.
 
 - Event-v2 source work reopened a real sparse timing branch: richer CafeF
   event-v2 mapping improved source quality, same-day first-public and

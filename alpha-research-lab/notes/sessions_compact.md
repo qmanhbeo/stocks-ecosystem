@@ -7,6 +7,14 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 258](session_258_log.md): Ran H381 `silent_order_pressure` with
+  reusable script `analysis/h381_silent_order_pressure.py`. TRUE walk-forward
+  `2018-2025`, no `2026+`, fixed no-news states, and direct C16 variation
+  benchmarks. The branch FAILED: `silent_5d` C16 IC `+0.0700` was below all-C16
+  `+0.0752` and active-5d-news C16 `+0.0846`; down-market no-news controls
+  failed too. Removed `silent_order_pressure` from the active queue. Source
+  anchors: `F341`, `D001`.
+
 - [Session 257](session_257_log.md): Ran H380 `candidate_count_policy_router`
   as the narrowed PP5 continuation. Reusable script
   `analysis/h380_candidate_count_policy_router.py`, TRUE walk-forward

@@ -117,6 +117,7 @@ XGBoost handles sparse signals poorly. An RL agent can selectively attend to sig
 - `notes/signal_library.md`: **the registry of confirmed and candidate signals**
 - `notes/portfolio_policy_library.md`: registry of portfolio-policy state
   such as K/exposure/hold/veto/release decisions
+- `notes/deadends.md`: index for chunked durable dead-end records
 - `README_for_AGENTS.md`: exact agent loop, commands, result artifacts, data, note conventions
 - `notes/findings.md`: index for the chunked durable findings files
 - if you are working on the local Vietnamese encoder / PhoBERT lane, also read:

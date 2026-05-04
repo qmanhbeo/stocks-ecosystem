@@ -5,9 +5,9 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_257_log.md](./session_257_log.md)
-Last verified: [Session 257](./session_257_log.md), 2026-05-04
-(H380 candidate-count policy router; backfill status remains from Session 255).
+Latest full session detail: [session_258_log.md](./session_258_log.md)
+Last verified: [Session 258](./session_258_log.md), 2026-05-04
+(H381 silent-order-pressure test; backfill status remains from Session 255).
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -18,6 +18,8 @@ Source durable memory:
 - [findings.md](./findings.md)
 - [findings-301-330.md](./findings-301-330.md)
 - [findings-331-360.md](./findings-331-360.md)
+- [deadends.md](./deadends.md)
+- [deadends-001-030.md](./deadends-001-030.md)
 - [signal_library.md](./signal_library.md)
 - [portfolio_policy_library.md](./portfolio_policy_library.md)
 
@@ -46,6 +48,10 @@ Source durable memory:
   with mean cycle lift `+0.00389`, `4 / 5` years above random K/cash mean, and
   positive 2025 confirmation; this is not a live promotion. The policy-state
   registry is [portfolio_policy_library.md](./portfolio_policy_library.md).
+- H381 killed `silent_order_pressure` under current own-ticker PhoBERT
+  article-count absence. No-news C16 was weaker than all-C16 and active-news
+  C16 (`silent_5d` IC `+0.0700`, all-C16 `+0.0752`, active-5d-news `+0.0846`).
+  Continue through `news_flow_disagreement`, not simple no-news stealth.
 - Event-v2, dividend-clock, legal-holiday timing, foreign/proprietary/sector-flow,
   old OHLCV queue, smart-exit linear tweaks, and BERT-only sentiment are parked
   or failed under the current target/consumer contracts. Use the compact
@@ -71,22 +77,17 @@ Source durable memory:
 Ranked by upside, novelty, current-data feasibility, and honesty of first test.
 Do not assign `H` numbers until one branch is activated.
 
-1. `silent_order_pressure`: C16 is strongest when order pressure appears before
-   any public narrative.
-   Smallest honest test: split C16 IC by `phobert_article_count_1d/5d == 0`
-   versus active stock-news days, with TRUE rolling holdout through 2025 and a
-   separate down-market control. Why not killed: pooled news sentiment failed,
-   but absence-of-news crossed with a proven side-channel has not been tested.
-
-2. `news_flow_disagreement`: public text and posted orders disagree before the
+1. `news_flow_disagreement`: public text and posted orders disagree before the
    best reversals and traps.
    Smallest honest test: bucket `order_volume_ratio_rank` against PhoBERT
    sentiment, `forward_looking`, `article_scope`, and `source_type`; compare
    next-day relative-return IC for bullish-flow/negative-news, bullish-flow/no-news,
-   and positive-news/weak-flow states. Why not killed: C16 divergence worked
-   for price-vs-flow; simple sentiment failed only as a pooled standalone lane.
+   positive-news/weak-flow, and active-news/strong-flow confirmation states.
+   Why not killed: H381 killed no-news absence but inverted toward active-news
+   confirmation; C16 divergence worked for price-vs-flow; simple sentiment
+   failed only as a pooled standalone lane.
 
-3. `official_attention_delay`: official/regulatory or forward-looking articles
+2. `official_attention_delay`: official/regulatory or forward-looking articles
    need flow confirmation and may pay after a delay, not on the headline day.
    Smallest honest test: TRUE WF IC and 1d/5d payoff by high
    `phobert_source_type_official_or_regulatory_prob_*` plus C16/insider support
@@ -94,7 +95,7 @@ Do not assign `H` numbers until one branch is activated.
    only offline evidence and standalone promotion failed; this tests a different
    interaction target.
 
-4. `insider_down_rescue`: insider buys after visible weakness are different
+3. `insider_down_rescue`: insider buys after visible weakness are different
    from ordinary insider buys.
    Smallest honest test: intersect prior insider buy, 1-3 day stock drawdown,
    and C16 rank; require sample-size and TRUE WF checks against insider-only
@@ -102,7 +103,7 @@ Do not assign `H` numbers until one branch is activated.
    passed separately; C16 streak compounding failed, but not insider-vs-weakness
    cross-source confirmation.
 
-5. `fresh_selection_pulse`: a ticker's first reappearance in the top candidate
+4. `fresh_selection_pulse`: a ticker's first reappearance in the top candidate
    set after dormancy carries more edge than repeated membership.
    Smallest honest test: compute days since ticker last appeared in top-5/top-10
    candidate pool from `entry_alpha/candidate_panel_daily.parquet`; compare
@@ -110,21 +111,21 @@ Do not assign `H` numbers until one branch is activated.
    Why not killed: sticky retention was a portfolio rule; freshness of selection
    history was not tested as a separate alpha state.
 
-6. `post_ollama_event_cascade`: the narrow Ollama event-family residual can
+5. `post_ollama_event_cascade`: the narrow Ollama event-family residual can
    revive event timing only if it changes the event representation.
    Smallest honest test: after the guarded backfill finishes, build first-event,
    repeat-event, and event-family transition states, then compare against the
    old H321/H361 CafeF event-v2 sparse-clock controls. Why not killed: event-v2
    is parked under old mappings; this branch requires new event-family data.
 
-7. `calendar_as_liquidity_mechanism`: calendar edges are proxies for settlement,
+6. `calendar_as_liquidity_mechanism`: calendar edges are proxies for settlement,
    attention, and breadth states, not magic dates.
    Smallest honest test: retest `monday_jan_combo`, quarter-start, and
    late-month effects after matching or residualizing volume regime, market
    breadth, news volume, buyable breadth, and C16 down-market state. Why not
    killed: calendar filters passed, but the mechanism has not been decomposed.
 
-8. `tradability_release_pulse`: a high-ranked name becoming buyable after a
+7. `tradability_release_pulse`: a high-ranked name becoming buyable after a
    blocked or limit-constrained state has a short executable continuation edge.
    Smallest honest test: use `release_flag`, `prev_can_buy_next_open`,
    `can_buy_next_open`, price-limit features, and candidate rank from the entry
@@ -132,7 +133,7 @@ Do not assign `H` numbers until one branch is activated.
    killed: generic blocked-buy complexity failed as a live overlay, but release
    after constraint is a different stock-level entry event.
 
-9. `source_triangle_sparse`: insider, order pressure, and local-news source
+8. `source_triangle_sparse`: insider, order pressure, and local-news source
     type may form a sparse high-conviction state even when any two-way route is
     too noisy.
     Smallest honest test: require at least two of prior insider buy, high C16,
