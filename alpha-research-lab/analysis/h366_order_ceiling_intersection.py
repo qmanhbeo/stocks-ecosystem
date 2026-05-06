@@ -118,7 +118,7 @@ def main():
     print(f"\nVerdict: {verdict} - {msg}")
     
     # Save
-    out_path = ROOT / f"alpha-research-lab/artifacts/run_summaries/{ts}_h366_order_ceiling_intersection.json"
+    out_path = ROOT / "artifacts/run_summaries" / f"{ts}_h366_order_ceiling_intersection.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w") as f:
         json.dump({"mode": "h366", "results": result, "verdict": verdict, "message": msg}, f, indent=2)

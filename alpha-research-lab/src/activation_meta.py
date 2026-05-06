@@ -14,14 +14,18 @@ if str(SHARED_MARKET_RULES_ROOT) not in sys.path:
 
 from shared_market_rules import required_holding_age_for_sell
 
+from src.artifact_contract import atomic_write_parquet, build_input_fingerprint, write_manifest
 from src.activation_alpha import (
     ACTIVATION_STATE_PATH,
     BENCHMARK_PATH,
     RL_MATRIX_PATH,
     STOCK_DIR,
     TRADABILITY_PATH,
+    _artifact_manifest_path,
     _frame_covers_time_bounds,
+    _manifest_matches,
     _requested_matrix_time_bounds,
+    _stock_1d_paths,
     load_activation_experiment_inputs,
     load_or_build_activation_state,
     selector_definitions,
@@ -29,6 +33,41 @@ from src.activation_alpha import (
 from src.deterministic_portfolio import simulate_strategy
 
 ACTIVATION_META_PATH = data_path("features/activation_meta_daily.parquet")
+
+
+def _activation_meta_input_fingerprint(
+    *,
+    matrix_path: Path,
+    tradability_path: Path,
+    stock_dir: Path,
+    benchmark_path: Path,
+    activation_state_path: Path,
+    start_year: int,
+    end_year: int,
+    round_trip_cost: float,
+    required_holding_age: int,
+    initial_notional_vnd: float,
+) -> dict[str, object]:
+    return build_input_fingerprint(
+        {
+            "artifact": "activation_meta_daily",
+            "schema_version": 1,
+            "paths": [
+                matrix_path,
+                tradability_path,
+                benchmark_path,
+                activation_state_path,
+                *_stock_1d_paths(stock_dir),
+            ],
+            "params": {
+                "start_year": int(start_year),
+                "end_year": int(end_year),
+                "round_trip_cost": float(round_trip_cost),
+                "required_holding_age": int(required_holding_age),
+                "initial_notional_vnd": float(initial_notional_vnd),
+            },
+        }
+    )
 
 
 def _forward_gross_returns(series: pd.Series, window: int) -> pd.Series:
@@ -204,24 +243,27 @@ def build_activation_meta_frame(
         "full_top5_mean_tv_to_adv20_rank",
         "selector_top5_jaccard",
     ]
+    derived_columns: dict[str, pd.Series] = {}
     for column in delta_columns:
         if column in meta.columns:
             numeric = pd.to_numeric(meta[column], errors="coerce")
-            meta[f"delta_{column}_1d"] = numeric.diff()
-            meta[f"delta_{column}_5d"] = numeric.diff(5)
+            derived_columns[f"delta_{column}_1d"] = numeric.diff()
+            derived_columns[f"delta_{column}_5d"] = numeric.diff(5)
 
-    meta["selector_confidence_combo"] = (
+    derived_columns["selector_confidence_combo"] = (
         pd.to_numeric(meta.get("full_top1_minus_top5_spread"), errors="coerce").rank(method="average", pct=True)
         + pd.to_numeric(meta.get("full_top5_mean_score"), errors="coerce").rank(method="average", pct=True)
         + pd.to_numeric(meta.get("full_top5_score_std"), errors="coerce").rank(method="average", pct=True)
         + pd.to_numeric(meta.get("full_top5_prev_overlap_ratio"), errors="coerce").rank(method="average", pct=True)
     ) / 4.0
 
-    meta["selector_entry_quality_combo"] = (
+    derived_columns["selector_entry_quality_combo"] = (
         pd.to_numeric(meta.get("full_top5_mean_clv"), errors="coerce").clip(0.0, 1.0)
         + pd.to_numeric(meta.get("full_top5_mean_tv_to_adv20_rank"), errors="coerce").clip(0.0, 1.0)
         + pd.to_numeric(meta.get("full_top5_buyable_count"), errors="coerce").clip(0.0, 5.0) / 5.0
     ) / 3.0
+    if derived_columns:
+        meta = pd.concat([meta, pd.DataFrame(derived_columns, index=meta.index)], axis=1)
 
     for column in meta.columns:
         if column != "time":
@@ -265,8 +307,36 @@ def persist_activation_meta(
         required_holding_age=required_holding_age,
         initial_notional_vnd=initial_notional_vnd,
     )
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    frame.to_parquet(out_path, index=False)
+    atomic_write_parquet(frame, out_path)
+    fingerprint = _activation_meta_input_fingerprint(
+        matrix_path=matrix_path,
+        tradability_path=tradability_path,
+        stock_dir=stock_dir,
+        benchmark_path=benchmark_path,
+        activation_state_path=activation_state_path,
+        start_year=start_year,
+        end_year=end_year,
+        round_trip_cost=round_trip_cost,
+        required_holding_age=required_holding_age,
+        initial_notional_vnd=initial_notional_vnd,
+    )
+    write_manifest(
+        _artifact_manifest_path(out_path),
+        {
+            "artifact": str(out_path),
+            "builder": "src.activation_meta.persist_activation_meta",
+            "input_fingerprint": fingerprint,
+            "row_count": int(len(frame)),
+            "columns": list(frame.columns),
+            "params": {
+                "start_year": int(start_year),
+                "end_year": int(end_year),
+                "round_trip_cost": float(round_trip_cost),
+                "required_holding_age": int(required_holding_age),
+                "initial_notional_vnd": float(initial_notional_vnd),
+            },
+        },
+    )
     return frame
 
 
@@ -300,6 +370,19 @@ def load_or_build_activation_meta(
         start_year=int(start_year),
         end_year=int(end_year),
     )
+    expected_fingerprint = _activation_meta_input_fingerprint(
+        matrix_path=matrix_path,
+        tradability_path=tradability_path,
+        stock_dir=stock_dir,
+        benchmark_path=benchmark_path,
+        activation_state_path=activation_state_path,
+        start_year=start_year,
+        end_year=end_year,
+        round_trip_cost=round_trip_cost,
+        required_holding_age=required_holding_age,
+        initial_notional_vnd=initial_notional_vnd,
+    )
+    manifest_path = _artifact_manifest_path(out_path)
     if out_path.exists():
         frame = pd.read_parquet(out_path)
         frame["time"] = pd.to_datetime(frame["time"])
@@ -307,8 +390,9 @@ def load_or_build_activation_meta(
             frame,
             required_start=required_start,
             required_end=required_end,
-        ):
+        ) and _manifest_matches(manifest_path, expected_fingerprint):
             return frame, "artifact"
+        print(f"activation_meta artifact is stale or missing manifest; rebuilding {out_path}")
     frame = persist_activation_meta(
         out_path=out_path,
         matrix_path=matrix_path,

@@ -105,7 +105,7 @@ def main():
     print(f"\nBest: {best[0]} with IC {best[1]['ic']:+.4f}")
     
     # Save
-    out_path = ROOT / f"alpha-research-lab/artifacts/run_summaries/{ts}_h367_order_gap_intersection.json"
+    out_path = ROOT / "artifacts/run_summaries" / f"{ts}_h367_order_gap_intersection.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w") as f:
         json.dump({"mode": "h367", "results": result}, f, indent=2)

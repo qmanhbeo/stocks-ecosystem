@@ -701,7 +701,9 @@ Build the consolidated RL signal surface from `S1` plus the current maintained c
 - **Status:** Active
 - **Output:** `data/features/xs_rl_signal_matrix.parquet`
 - **Inputs:** `xs_barrier_vol_1d_hose_full.parquet`, `xs_barrier_vol_1d_hose_live_current.parquet`, `xs_open_close_asymmetry.parquet`, `xs_insider_quality_features.parquet`, `xs_sector_rotation_daily.parquet`, `xs_price_limit_daily.parquet`, `xs_volume_zscore_daily.parquet`, `xs_shortterm_reversal.parquet`
+- **Internal caches:** OHLCV-derived C10-C14 components are cached under `data/features/_rl_signal_matrix_parts/` with JSON manifests, source fingerprints, and requested date windows.
 - **Usage:** `python data_tools/build_rl_signal_matrix.py`
+- **Bounded cache check:** `python data_tools/build_rl_signal_matrix.py --component-cache-only --end-date 2025-12-31 --verify-component-parity`
 
 ### `build_activation_state_features.py`
 Build the compact date-level activation surface used to test selector timing overlays.

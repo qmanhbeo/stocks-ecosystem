@@ -1,4 +1,3 @@
-import json
 import re
 from pathlib import Path
 from typing import Optional
@@ -6,6 +5,7 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
+from src.artifact_contract import atomic_write_json
 from src.repo_paths import artifact_path, lab_relative_path
 
 
@@ -65,7 +65,6 @@ def write_run_summary(*, ts: str, mode: str, name: str,
     out_path = RUN_SUMMARY_DIR / f"{ts}_{_slugify(name)}_{mode}.json"
     latest_path = RUN_SUMMARY_DIR / f"latest_{mode}.json"
 
-    body = json.dumps(payload, indent=2, sort_keys=True) + "\n"
-    out_path.write_text(body, encoding="utf-8")
-    latest_path.write_text(body, encoding="utf-8")
+    atomic_write_json(payload, out_path)
+    atomic_write_json(payload, latest_path)
     return str(out_path)

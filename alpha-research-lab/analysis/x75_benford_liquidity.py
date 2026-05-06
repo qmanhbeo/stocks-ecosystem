@@ -164,7 +164,7 @@ def main():
     print(f"Best: {best_name} with IC {best_ic:+.4f}")
     
     # Save
-    out_path = ROOT / f"alpha-research-lab/artifacts/run_summaries/{ts}_x75_benford_liquidity.json"
+    out_path = ROOT / "artifacts/run_summaries" / f"{ts}_x75_benford_liquidity.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w") as f:
         json.dump({"mode": "x75", "results": result, "verdict": verdict}, f, indent=2)

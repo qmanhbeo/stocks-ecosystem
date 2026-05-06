@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 from pathlib import Path
 from src.repo_paths import data_path
 from typing import Callable, Iterable, Mapping, Sequence
@@ -16,6 +17,7 @@ if str(SHARED_MARKET_RULES_ROOT) not in sys.path:
 
 from shared_market_rules import required_holding_age_for_sell
 
+from src.artifact_contract import atomic_write_parquet, build_input_fingerprint, write_manifest
 from src.deterministic_portfolio import (
     MarketInputs,
     compute_strategy_scores,
@@ -130,6 +132,54 @@ def _frame_covers_time_bounds(
     if times.empty:
         return False
     return pd.Timestamp(times.min()) <= required_start and pd.Timestamp(times.max()) >= required_end
+
+
+def _artifact_manifest_path(artifact_path: Path) -> Path:
+    return artifact_path.with_name(f"{artifact_path.stem}_manifest.json")
+
+
+def _read_manifest(path: Path) -> dict[str, object] | None:
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _manifest_matches(manifest_path: Path, fingerprint: dict[str, object]) -> bool:
+    manifest = _read_manifest(manifest_path)
+    if not manifest:
+        return False
+    stored = manifest.get("input_fingerprint")
+    return isinstance(stored, dict) and str(stored.get("digest")) == str(fingerprint.get("digest"))
+
+
+def _stock_1d_paths(stock_dir: Path) -> list[Path]:
+    return sorted(stock_dir.glob("gia_lich_su_*_1D.parquet"))
+
+
+def _activation_state_input_fingerprint(
+    *,
+    matrix_path: Path,
+    tradability_path: Path,
+    stock_dir: Path,
+    benchmark_path: Path,
+    start_year: int,
+    end_year: int,
+) -> dict[str, object]:
+    return build_input_fingerprint(
+        {
+            "artifact": "activation_state_daily",
+            "schema_version": 1,
+            "paths": [matrix_path, tradability_path, benchmark_path, *_stock_1d_paths(stock_dir)],
+            "params": {
+                "start_year": int(start_year),
+                "end_year": int(end_year),
+            },
+        }
+    )
 
 
 def _validate_matrix_signal_coverage(matrix: pd.DataFrame) -> None:
@@ -442,8 +492,29 @@ def persist_activation_state(
         tradability=inputs.tradability,
         benchmark_path=benchmark_path,
     )
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    frame.to_parquet(out_path, index=False)
+    atomic_write_parquet(frame, out_path)
+    fingerprint = _activation_state_input_fingerprint(
+        matrix_path=matrix_path,
+        tradability_path=tradability_path,
+        stock_dir=stock_dir,
+        benchmark_path=benchmark_path,
+        start_year=start_year,
+        end_year=end_year,
+    )
+    write_manifest(
+        _artifact_manifest_path(out_path),
+        {
+            "artifact": str(out_path),
+            "builder": "src.activation_alpha.persist_activation_state",
+            "input_fingerprint": fingerprint,
+            "row_count": int(len(frame)),
+            "columns": list(frame.columns),
+            "params": {
+                "start_year": int(start_year),
+                "end_year": int(end_year),
+            },
+        },
+    )
     return frame
 
 
@@ -470,6 +541,15 @@ def load_or_build_activation_state(
         start_year=int(start_year),
         end_year=int(end_year),
     )
+    expected_fingerprint = _activation_state_input_fingerprint(
+        matrix_path=matrix_path,
+        tradability_path=tradability_path,
+        stock_dir=stock_dir,
+        benchmark_path=benchmark_path,
+        start_year=start_year,
+        end_year=end_year,
+    )
+    manifest_path = _artifact_manifest_path(out_path)
     if out_path.exists():
         frame = pd.read_parquet(out_path)
         frame["time"] = pd.to_datetime(frame["time"])
@@ -477,8 +557,9 @@ def load_or_build_activation_state(
             frame,
             required_start=required_start,
             required_end=required_end,
-        ):
+        ) and _manifest_matches(manifest_path, expected_fingerprint):
             return frame, "artifact"
+        print(f"activation_state artifact is stale or missing manifest; rebuilding {out_path}")
     frame = persist_activation_state(
         matrix_path=matrix_path,
         tradability_path=tradability_path,
