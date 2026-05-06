@@ -13,12 +13,114 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
 
 ## Resolution: Methodology Skepticism
 
-- S253 TRUE walk-forward validation: CONFIRMED signals are REAL.
-  All 3 top signals passed stricter rolling holdout validation.
-  Low variance = no overfitting.
-  Source: F337, F338
+- S253 methodology resolution is superseded by S272. S272 found the S244/S246/S247/S253
+  market-down and consecutive-down claims used same-date S1 `actual` to define
+  regimes even though `actual` is a future binary barrier label. The leaky
+  states reproduced high ICs, but observable VNI-down states were only modestly
+  above C16 and observable stock-down states were weaker. Keep insider lead;
+  do not use S253 to promote `consecutive_down`, target-derived
+  `down_market_c16`, or `deep_down_c16`. Source anchors: `F355`, `D012`.
 
 ## Current Hard Stops
+
+- Forced-seller detector promotion is killed under H426's current daily
+  entry-alpha consumer. Fixed buyable forced-seller states from price weakness,
+  volume spike, sell-order pressure, rising/high avg sell size, floor pressure,
+  and no active bad PhoBERT news did not beat random policies: the broad core
+  had only `+0.000230` lift versus random-state, `1 / 5` positive WF years,
+  and `-0.002047` lift versus random-all; floor and large-down variants also
+  failed, while literal tradability release had only `7` rows. Reopen only
+  with an honest delayed-entry protocol for a post-sell-pressure C16 turn or
+  materially different intraday/queue/open-fill absorption data. Source
+  anchors: `D025`, [session_304_log.md](./session_304_log.md).
+
+- Broad anti-signal veto promotion is blocked under H401. Top-5 cash-veto
+  masks based on loose side-channel disagreement reduced cycle relative return
+  versus no-veto: `support_count_le1` `-0.000123`,
+  `pretty_price_weak_flow` `-0.000026`, `news_hype_weak_flow` `-0.000075`,
+  and `weak_flow_weak_sector` `-0.000225`. Only strict `support_count_zero`
+  survived as a tiny clue (`+0.000167` vs no-veto), below promotion and random
+  p95. Source anchors: `D017`, `F365`.
+
+- Order fragmentation promotion is parked under H402. Fragmentation ratio
+  (log order-count / log order-volume) added only marginal IC beyond C16
+  (+0.00753) with poor year consistency (2/8 positive years). C16 itself
+  was negative IC in this period, so the lift is marginal. Avg buy-minus-sell
+  size is the strongest standalone proxy (+0.03033 IC) but needs high-C16
+  conditioning or materially different queue/open-fill data. Source anchors:
+  `D018`, `F366`.
+
+- Haar wavelet cascade promotion is killed under H404. C16 wavelet energy at scales
+  1/2/4/8 days added no signal beyond C16 level. Haar 2d IC was only
+  -0.00447 with 3/8 positive years, Haar jump 2->4 was +0.00491,
+  and Haar energy sum was +0.00501. This confirms prior C16 acceleration
+  failures - scale derivatives are not the edge. Reopen only with materially
+  different wavelet basis or non-C16 base series. Source anchors: `D019`, `F368`.
+
+- Sector event lightcone is killed under H405. Both own-ticker and sector-peer
+  event intensity added negative IC (own: -0.00481, sector: -0.00698, both 0/8 pos years).
+  Confirms prior news/event feature failures. Reopen only with materially different
+  sector or event representation. Source anchors: `D020`, `F369`.
+
+- Conservation law residual is killed under H406. Expected from flow predicts forward
+  at +0.00983 IC (3/3 pos years) but residual inversely predicts (-0.02861 IC, 0/3 pos years).
+  The model captures flow in expected; residual is mean-reverting noise. Do not reopen as
+  conservation-break alpha. Source anchors: `D021`, `F370`.
+
+- Fixed calendar weak-prior voting is killed under the H400 representation.
+  Removing calendar votes from H395 left the quorum at `+0.05826` avg IC, but
+  adding one pooled January/weekday/month-end/T+2 prior lowered it to
+  `+0.05605`; calendar lift was `-0.00221` with `0 / 7` positive lift years,
+  and calendar-only IC was `-0.00827`. Reopen only with a different target or
+  mechanism-matched consumer, not by reweighting the same dense prior. Source
+  anchors: `D016`, `F364`.
+
+- Standalone buy-order count is not a promoted signal. H399 found
+  `buy_count_rank` anti-predictive (`-0.01075`, `3 / 8` positive years), and
+  `high_buy_count` only a modest C16 conditioner (`+0.08463` avg IC, `+0.00944`
+  lift versus all rows, `6 / 8` positive lift years). Do not treat
+  high-count plus high volume-z as a new crowd primitive; high volume-z already
+  owns the clean pocket. Reopen only for the high-average-buy-size plus
+  H394-low-weather clue or with materially different fragmentation/queue/
+  intraday data. Source anchors: `D015`, `F363`.
+
+- Volume Triple Storm (H411): Triple Storm does NOT amplify Volume like it amplifies C16.
+  Volume+Triple = +0.038 IC, WORSE than Volume alone (+0.075). Ablation shows
+  none of the 3 conditions help. C16-specific, not universal amplifier.
+  Do not reopen as Volume amplifier. Source anchors: `D022`.
+
+- Volume+C16 additive (H412): additive fails, C16 is too weak (-0.0008 IC).
+  Best additive = +0.073, WORSE than Volume alone (+0.075).
+  C16 has near-zero IC - cannot be rescued by additive.
+  H410 works with S1 (+0.126), not with C16.
+  Source anchors: `F376`.
+
+- Quiet insider pre-reaction is parked under the current same-day own-news and
+  high-buy-order-count absence proxy. H398 reproduced `insider_tplus1` as real
+  event-time evidence (`+0.10498` avg C16 IC, `11 / 11` positive years,
+  `+0.03000` lift versus same-ticker non-event dates), but
+  `insider_tplus1_pre_reaction` lost to reacted rows by `-0.01811` avg IC.
+  High buy-order-count T+1 insider rows were strongest (`+0.13776` avg IC).
+  Reopen only with materially different pre-reaction timing data such as
+  intraday absorption, source timestamp sequencing, queue timing, or peer-news
+  visibility. Source anchors: `D014`, `F362`.
+
+- Broad oracle-shadow weather promotion is parked under the current observable
+  aggregate contract. H394 weakly predicted future S1 barrier breadth (avg date
+  IC `+0.05019`, `7 / 8` positive years), but the best honest predicted bucket
+  lifted C16 only `+0.00342` versus all rows and `+0.00416` versus random
+  dates, below gates, and degraded S1. Observable `VNI down 2d` was cleaner.
+  Reopen only with materially different intraday/opening data, a different
+  regime target, or a quorum/consumer design where weak weather is one vote.
+  Source anchors: `D013`, `F358`.
+
+- S24x/S25x target-derived market-down promotions are invalid. The corrected
+  audit found `leaky_target_market_down` IC `+0.09248` and
+  `leaky_target_market_down_2d` `+0.09510`, but observable VNI-down states
+  were only `+0.07706` / `+0.08058` versus C16 `+0.07377`, and observable
+  stock-down states were weaker than C16. Reopen only with fixed observable
+  trailing market/stock/breadth states and proper controls. Source anchors:
+  `D012`, `F355`.
 
 - Same-day nihilist reversal is parked. H393 found high C16 after stock and
   market weakness with no bullish news was positive, but it failed the simpler

@@ -1,0 +1,219 @@
+{
+  "artifacts": {
+    "daily": "artifacts/h401_anti_signal_annihilation_veto/20260505_175516_h401_anti_signal_annihilation_veto_daily.parquet",
+    "state_summary": "artifacts/h401_anti_signal_annihilation_veto/20260505_175516_h401_anti_signal_annihilation_veto_summary.parquet",
+    "yearly": "artifacts/h401_anti_signal_annihilation_veto/20260505_175516_h401_anti_signal_annihilation_veto_yearly.parquet"
+  },
+  "metadata": {
+    "no_2026_rows": true,
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d",
+        "cycle_relative_return_vs_vnindex"
+      ],
+      "hypothesis": "High-ranked long candidates should be vetoed when side-channel evidence from C16, insider, news, tradability, and sector context disagrees with the candidate score.",
+      "min_phase_rows": 20,
+      "min_train_years": 2,
+      "min_year_rows": 20,
+      "mode": "research_branch_anti_signal_annihilation_veto",
+      "name": "h401_anti_signal_annihilation_veto",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "selection_score": "decision-time candidate score"
+      },
+      "start_year": 2019,
+      "target_columns": {
+        "cycle_relative_return_vs_vnindex": "future cycle relative return; target only"
+      }
+    },
+    "random_trials": 1000,
+    "top_k": 5,
+    "veto_specs": [
+      {
+        "name": "support_count_le1",
+        "note": "At most one support vote across C16/insider/news/tradability/sector",
+        "primary": true
+      },
+      {
+        "name": "support_count_zero",
+        "note": "No explicit support vote across the side channels",
+        "primary": true
+      },
+      {
+        "name": "weak_flow_weak_sector",
+        "note": "Weak C16, no insider, and weak sector support",
+        "primary": true
+      },
+      {
+        "name": "pretty_price_weak_flow",
+        "note": "High S1/candidate row but weak C16, weak volume, and no insider",
+        "primary": true
+      },
+      {
+        "name": "news_hype_weak_flow",
+        "note": "Positive/forward news but weak C16 and no insider support",
+        "primary": true
+      },
+      {
+        "name": "tradability_fragile_weak_flow",
+        "note": "Weak tradability plus weak C16 and no insider support",
+        "primary": true
+      }
+    ]
+  },
+  "mode": "research_branch_anti_signal_annihilation_veto",
+  "name": "h401_anti_signal_annihilation_veto",
+  "summary": {
+    "decision": "FAILED",
+    "decision_detail": {
+      "best_avg_delta_vs_no_veto": -2.6397791318051177e-05,
+      "best_avg_delta_vs_random_mean": 0.00020845279616572067,
+      "best_avg_delta_vs_random_p95": -0.0005222205499994967,
+      "best_positive_no_veto_years": 3,
+      "best_positive_random_mean_years": 3,
+      "best_state": "pretty_price_weak_flow",
+      "best_years": 7,
+      "mixed_gate": false,
+      "pass_gate": false
+    },
+    "decision_rule": "PASSED requires the best fixed primary veto to improve top-5 cycle relative return by >= +0.0015 versus no-veto and >= +0.0010 versus random same-breadth vetoes, with >= 5 positive years on both comparisons. MIXED requires positive mean lift versus no-veto with >= 4 positive no-veto years.",
+    "panel_rows": 8237,
+    "state_summary": [
+      {
+        "avg_delta_vs_no_veto": -2.6397791318051177e-05,
+        "avg_delta_vs_random_mean": 0.00020845279616572067,
+        "avg_delta_vs_random_p95": -0.0005222205499994967,
+        "avg_veto_dates": 73.0,
+        "avg_vetoed_slots": 86.14285714285714,
+        "mean_no_veto_relative_return": 0.0029045234439691826,
+        "mean_veto_relative_return": 0.0028781256526511307,
+        "note": "High S1/candidate row but weak C16, weak volume, and no insider",
+        "positive_no_veto_years": 3,
+        "positive_random_mean_years": 3,
+        "positive_random_p95_years": 2,
+        "primary": true,
+        "state": "pretty_price_weak_flow",
+        "years": 7
+      },
+      {
+        "avg_delta_vs_no_veto": -0.00012328293437475512,
+        "avg_delta_vs_random_mean": 0.00016739080447834154,
+        "avg_delta_vs_random_p95": -0.0010763384989611832,
+        "avg_veto_dates": 172.0,
+        "avg_vetoed_slots": 280.14285714285717,
+        "mean_no_veto_relative_return": 0.0029045234439691826,
+        "mean_veto_relative_return": 0.0027812405095944273,
+        "note": "At most one support vote across C16/insider/news/tradability/sector",
+        "positive_no_veto_years": 4,
+        "positive_random_mean_years": 3,
+        "positive_random_p95_years": 1,
+        "primary": true,
+        "state": "support_count_le1",
+        "years": 7
+      },
+      {
+        "avg_delta_vs_no_veto": 0.00016695196805926362,
+        "avg_delta_vs_random_mean": 0.0001558420428826004,
+        "avg_delta_vs_random_p95": -0.00031206930946653865,
+        "avg_veto_dates": 35.0,
+        "avg_vetoed_slots": 37.142857142857146,
+        "mean_no_veto_relative_return": 0.0029045234439691826,
+        "mean_veto_relative_return": 0.0030714754120284462,
+        "note": "No explicit support vote across the side channels",
+        "positive_no_veto_years": 6,
+        "positive_random_mean_years": 5,
+        "positive_random_p95_years": 0,
+        "primary": true,
+        "state": "support_count_zero",
+        "years": 7
+      },
+      {
+        "avg_delta_vs_no_veto": -7.54748742254657e-05,
+        "avg_delta_vs_random_mean": -1.5008559126344363e-05,
+        "avg_delta_vs_random_p95": -0.0005614414842273683,
+        "avg_veto_dates": 40.57142857142857,
+        "avg_vetoed_slots": 43.857142857142854,
+        "mean_no_veto_relative_return": 0.0029045234439691826,
+        "mean_veto_relative_return": 0.002829048569743716,
+        "note": "Positive/forward news but weak C16 and no insider support",
+        "positive_no_veto_years": 3,
+        "positive_random_mean_years": 4,
+        "positive_random_p95_years": 1,
+        "primary": true,
+        "state": "news_hype_weak_flow",
+        "years": 7
+      },
+      {
+        "avg_delta_vs_no_veto": -0.00022530567619779367,
+        "avg_delta_vs_random_mean": -0.00012904063016593348,
+        "avg_delta_vs_random_p95": -0.0007732355760860737,
+        "avg_veto_dates": 53.857142857142854,
+        "avg_vetoed_slots": 61.42857142857143,
+        "mean_no_veto_relative_return": 0.0029045234439691826,
+        "mean_veto_relative_return": 0.002679217767771389,
+        "note": "Weak C16, no insider, and weak sector support",
+        "positive_no_veto_years": 3,
+        "positive_random_mean_years": 3,
+        "positive_random_p95_years": 0,
+        "primary": true,
+        "state": "weak_flow_weak_sector",
+        "years": 7
+      },
+      {
+        "avg_delta_vs_no_veto": null,
+        "avg_delta_vs_random_mean": null,
+        "avg_delta_vs_random_p95": null,
+        "avg_veto_dates": null,
+        "avg_vetoed_slots": null,
+        "mean_no_veto_relative_return": null,
+        "mean_veto_relative_return": null,
+        "note": "Weak tradability plus weak C16 and no insider support",
+        "positive_no_veto_years": 0,
+        "positive_random_mean_years": 0,
+        "positive_random_p95_years": 0,
+        "primary": true,
+        "state": "tradability_fragile_weak_flow",
+        "years": 0
+      }
+    ],
+    "test_years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "ts": "20260505_175516"
+}

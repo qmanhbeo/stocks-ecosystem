@@ -1,0 +1,4 @@
+interface:
+  display_name: "Evergreen Research Loop"
+  short_description: "Run a low-token autonomous alpha research loop"
+  default_prompt: "Use $evergreen-research-loop to recover repo memory, select a branch, run one honest research iteration, and load specialist skills only when their phase needs escalation."

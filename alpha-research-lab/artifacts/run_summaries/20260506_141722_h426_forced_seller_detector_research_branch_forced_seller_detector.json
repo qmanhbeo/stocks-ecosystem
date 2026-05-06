@@ -1,0 +1,185 @@
+{
+  "artifacts": {
+    "daily": "artifacts/entry_alpha/20260506_141722_h426_forced_seller_detector_daily.parquet",
+    "years": "artifacts/entry_alpha/20260506_141722_h426_forced_seller_detector_years.parquet"
+  },
+  "metadata": {
+    "candidate_panel": "data/features/entry_alpha/candidate_panel_daily.parquet",
+    "candidate_pool_rank_max": 20,
+    "daily_rows": 1737,
+    "end_year": 2025,
+    "k_values": [
+      1,
+      2,
+      3,
+      5
+    ],
+    "labels": "data/features/entry_alpha/entry_labels_cycle5.parquet",
+    "min_active_dates_per_year": 20,
+    "min_train_years": 2,
+    "news": "data/features/news/datasets/news_daily_features.parquet",
+    "order_stats": "data/order_stats/cafef/order_stats_daily.parquet",
+    "panel_rows": 33925,
+    "random_trials": 5000,
+    "seed": 426,
+    "start_year": 2019,
+    "state_active_dates": {
+      "forced_seller_core_buyable": 1049,
+      "forced_seller_floor_buyable": 355,
+      "forced_seller_hard_release": 6,
+      "forced_seller_large_down_buyable": 883
+    },
+    "state_rows": {
+      "forced_seller_core_buyable": 1588,
+      "forced_seller_floor_buyable": 443,
+      "forced_seller_hard_release": 7,
+      "forced_seller_large_down_buyable": 1228
+    }
+  },
+  "mode": "research_branch_forced_seller_detector",
+  "name": "h426_forced_seller_detector",
+  "summary": {
+    "branch": "forced_seller_detector",
+    "branch_decision": "No fixed forced-seller state beat random policy gates cleanly.",
+    "broad_pass_states": [],
+    "deterministic_selector": "lowest candidate_pool_rank first, then highest sell_volume_pressure_rank tie-break",
+    "durable_status": "branch_kill_or_reframe",
+    "experiment_id": "H426",
+    "fixed_states": [
+      "forced_seller_core_buyable",
+      "forced_seller_large_down_buyable",
+      "forced_seller_floor_buyable",
+      "forced_seller_hard_release"
+    ],
+    "future_data_guardrail": "The queue memo's next-day C16 confirmation clause is not used here because it is not decision-time valid for the current T close -> T+1 open entry-label contract. A delayed-entry protocol would be needed before testing that clause honestly.",
+    "literal_release_state": "forced_seller_hard_release",
+    "no_s1_c16_baseline": true,
+    "partial_pass_states": [],
+    "pass_rule": "PASS if any fixed forced-seller state beats random same-support and random-all means on average, beats both in at least 60% of WF years, has positive 2025 lift versus both, and has enough support. MIXED if only one random-policy gate clears. Otherwise FAILED.",
+    "primary_benchmark": "random same-K selection among active buyable rows from the same fixed state",
+    "primary_state": "forced_seller_core_buyable",
+    "secondary_benchmark": "random same-K selection among all buyable candidate-pool rows",
+    "state_contract": {
+      "core": "buyable candidate with 3d weakness, volume spike, high sell pressure, rising/high average sell size, and no active bad PhoBERT news on the signal date",
+      "floor": "core plus recent floor-limit pressure",
+      "hard_release": "core plus literal transition from blocked/not buyable to buyable next open",
+      "large_down": "core plus large same-day down move"
+    },
+    "state_summaries": {
+      "forced_seller_core_buyable": {
+        "confirmation_2025_lift_vs_random_all": -0.0007588978697654831,
+        "confirmation_2025_lift_vs_random_state": -8.766324750176233e-05,
+        "confirmation_2025_random_all_percentile": 0.4276,
+        "deterministic_selector": "lowest candidate_pool_rank first, then highest sell_volume_pressure_rank tie-break",
+        "mean_lift_vs_random_all": -0.0020472222962892818,
+        "mean_lift_vs_random_state": 0.00022955534242412355,
+        "mean_policy_abs_return": 0.0016339280568212905,
+        "mean_policy_relative_return": 0.0004584639693173694,
+        "mean_random_all_abs_return": 0.003681150353110572,
+        "mean_random_state_abs_return": 0.001404372714397167,
+        "min_active_dates_per_year": 141,
+        "random_all_gate": false,
+        "required_min_active_dates_per_year": 20,
+        "same_support_gate": false,
+        "state": "forced_seller_core_buyable",
+        "test_years": [
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "trained_component": "consumer K choice only, selected from prior years for this fixed forced-seller state",
+        "wf_years": 5,
+        "years_gt_random_all_mean": 2,
+        "years_gt_random_state_mean": 1
+      },
+      "forced_seller_floor_buyable": {
+        "confirmation_2025_lift_vs_random_all": -0.0046541965069648045,
+        "confirmation_2025_lift_vs_random_state": -0.0001328835839893793,
+        "confirmation_2025_random_all_percentile": 0.0472,
+        "deterministic_selector": "lowest candidate_pool_rank first, then highest sell_volume_pressure_rank tie-break",
+        "mean_lift_vs_random_all": -0.0034078877963070833,
+        "mean_lift_vs_random_state": 2.3477227192575434e-05,
+        "mean_policy_abs_return": 5.248128864488461e-05,
+        "mean_policy_relative_return": -0.0005246508713105753,
+        "mean_random_all_abs_return": 0.003460369084951968,
+        "mean_random_state_abs_return": 2.9004061452309223e-05,
+        "min_active_dates_per_year": 27,
+        "random_all_gate": false,
+        "required_min_active_dates_per_year": 20,
+        "same_support_gate": false,
+        "state": "forced_seller_floor_buyable",
+        "test_years": [
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "trained_component": "consumer K choice only, selected from prior years for this fixed forced-seller state",
+        "wf_years": 5,
+        "years_gt_random_all_mean": 1,
+        "years_gt_random_state_mean": 2
+      },
+      "forced_seller_hard_release": {
+        "confirmation_2025_lift_vs_random_all": -0.0025303974934622483,
+        "confirmation_2025_lift_vs_random_state": 1.6940658945086007e-21,
+        "confirmation_2025_random_all_percentile": 0.0524,
+        "deterministic_selector": "lowest candidate_pool_rank first, then highest sell_volume_pressure_rank tie-break",
+        "mean_lift_vs_random_all": -0.003381990475561162,
+        "mean_lift_vs_random_state": -5.082197683525802e-21,
+        "mean_policy_abs_return": -2.533662360207328e-05,
+        "mean_policy_relative_return": -1.950798603026427e-05,
+        "mean_random_all_abs_return": 0.0033566538519590886,
+        "mean_random_state_abs_return": -2.5336623602073272e-05,
+        "min_active_dates_per_year": 0,
+        "random_all_gate": false,
+        "required_min_active_dates_per_year": 20,
+        "same_support_gate": false,
+        "state": "forced_seller_hard_release",
+        "test_years": [
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "trained_component": "consumer K choice only, selected from prior years for this fixed forced-seller state",
+        "wf_years": 5,
+        "years_gt_random_all_mean": 1,
+        "years_gt_random_state_mean": 1
+      },
+      "forced_seller_large_down_buyable": {
+        "confirmation_2025_lift_vs_random_all": -0.0022237434092692372,
+        "confirmation_2025_lift_vs_random_state": -0.000264806308248673,
+        "confirmation_2025_random_all_percentile": 0.2174,
+        "deterministic_selector": "lowest candidate_pool_rank first, then highest sell_volume_pressure_rank tie-break",
+        "mean_lift_vs_random_all": -0.003645535756901158,
+        "mean_lift_vs_random_state": -0.0004810875752062998,
+        "mean_policy_abs_return": -2.523868834955229e-06,
+        "mean_policy_relative_return": -0.0008757760282704141,
+        "mean_random_all_abs_return": 0.003643011888066203,
+        "mean_random_state_abs_return": 0.00047856370637134455,
+        "min_active_dates_per_year": 120,
+        "random_all_gate": false,
+        "required_min_active_dates_per_year": 20,
+        "same_support_gate": false,
+        "state": "forced_seller_large_down_buyable",
+        "test_years": [
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "trained_component": "consumer K choice only, selected from prior years for this fixed forced-seller state",
+        "wf_years": 5,
+        "years_gt_random_all_mean": 0,
+        "years_gt_random_state_mean": 1
+      }
+    },
+    "verdict": "FAILED"
+  },
+  "ts": "20260506_141722"
+}

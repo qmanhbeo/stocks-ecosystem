@@ -336,3 +336,314 @@ Reopening condition:
 Source:
 - [session_271_log.md](./session_271_log.md)
 - `artifacts/run_summaries/20260504_210147_h393_nihilist_reversal_research_branch_nihilist_reversal.json`
+
+## D012: S24x-S25x Target-Derived Market-Down Promotions Are Invalid (2026-05-05, Session 272)
+
+Dead end:
+- Claim audited: S244/S246/S247/S253 `consecutive_down`, `down_market_c16`,
+  and `deep_down_c16` were newly strong real regime filters.
+- Evidence: `analysis/audit_s24x_s25x_signal_claims.py` recomputed the claims
+  and found the original scripts used same-date S1 `actual` to define market
+  state. `actual` is a future binary barrier label, not a signed return.
+  `analysis/s253_true_wf_validation.py` also did not implement the advertised
+  train `T-2,T-1` -> test `T` protocol.
+- Result: the leaky target-derived states reproduced high ICs
+  (`market_down` `+0.092478`, `market_down_2d` `+0.095095`), but observable
+  VNI-down states were only modestly above baseline (`+0.077064` and
+  `+0.080584` versus C16 `+0.073765`), and observable stock-down states were
+  weaker than C16 (`+0.061540` and `+0.067884`).
+
+Do not reopen under current representation:
+- Do not use S253 as methodology resolution for the S24x/S25x claims.
+- Do not add `consecutive_down`, target-derived `down_market_c16`, or
+  `deep_down_c16` to signal libraries, matrix contracts, or live/recommendation
+  rules from those sessions.
+- Do not define market regimes from the same-date S1 `actual` target.
+
+Reopening condition:
+- Reopen only with fixed observable state variables such as trailing VNINDEX
+  returns, trailing stock returns, or predeclared market breadth, and benchmark
+  the result against C16, stock-down high-C16, and 2025 confirmation.
+
+Survivor from the audit:
+- `insider_lead_next_trading_day` remains real support context and should not
+  be killed by this dead end.
+
+Source:
+- [session_272_log.md](./session_272_log.md)
+- `artifacts/run_summaries/20260505_161922_s24x_s25x_signal_claim_audit_audit_s24x_s25x_signal_claims.json`
+
+## D013: Broad Oracle-Shadow Weather Promotion Fails Current Observable Contract (2026-05-05, Session 275)
+
+Dead end:
+- Claim tested: target-breadth weather, the future information accidentally
+  used by invalid S24x market regimes, can be honestly predicted from
+  pre-decision date aggregates strongly enough to bucket S1/C16 IC.
+- Evidence: H394 used `analysis/h394_oracle_shadow_regime_distiller.py` with
+  rolling train-before-test years `2018-2025`, no `2026+`, fixed
+  train-quantile ridge-predicted weather buckets, and random same-date bucket
+  controls. Target-breadth buckets were retained only as diagnostic leakage
+  upper bounds.
+- Result: the ridge model found only weak weather prediction: avg date IC
+  `+0.05019`, `7 / 8` positive years, below the `+0.10` gate. The best honest
+  bucket, `ridge_pred_low20`, lifted C16 by only `+0.00342` versus all rows and
+  `+0.00416` versus random same-date buckets, below the required gates; it
+  degraded S1 by `-0.00708`. Observable `VNI down 2d` was cleaner.
+
+Do not reopen under current representation:
+- Do not promote `ridge_pred_low20`, `ridge_pred_high80`, or broad predicted
+  barrier-breadth weather as standalone regime states from H394.
+- Do not rescue the old S24x market-down idea by substituting a broad
+  date-level ridge weather model under the same end-of-day observable contract.
+
+Reopening condition:
+- Reopen only with a materially different fixed representation, such as
+  intraday/opening absorption data, a different target-breadth definition, or a
+  quorum/consumer design where weak weather is one predeclared vote rather
+  than the promoted state.
+
+Source:
+- [session_275_log.md](./session_275_log.md)
+- `artifacts/run_summaries/20260505_170942_h394_oracle_shadow_regime_distiller_research_branch_oracle_shadow_regime_distiller.json`
+
+## D014: Quiet Insider Pre-Reaction Clock Fails Current News/Order-Count Proxy (2026-05-05, Session 279)
+
+Dead end:
+- Claim tested: the S272 positive-insider next-trading-day lead is strongest
+  before news or order-count sensors visibly react.
+- Evidence: H398 used `analysis/h398_insider_pre_reaction_clock.py` with no
+  `2026+`, event-time T-1/T0/T+1 mapping, same-ticker non-event controls,
+  C16 order-pressure rank, and fixed pre-reaction versus reacted T+1 insider
+  states.
+- Result: `insider_tplus1_pre_reaction` remained positive (`+0.09247` avg IC,
+  `11 / 11` positive years), but it lost to `insider_tplus1_reacted` by
+  `-0.01811` avg IC and by `-0.00771` hit-rate lift. High buy-order-count
+  T+1 insider rows were stronger (`+0.13776` avg IC) than not-high order-count
+  rows by `+0.04487` avg IC.
+
+Do not reopen under current representation:
+- Do not promote quiet/no-news/no-high-buy-count insider T+1 rows as the
+  cleaner insider clock from H398.
+- Do not use H398 to argue that visible order/news reaction pollutes insider
+  events; the tested evidence points the other way.
+
+Survivor from the audit:
+- `insider_tplus1` / `insider_buy_lead` remains real event-time evidence and
+  should not be killed by this dead end.
+- Order-count reaction confirmation is the live clue for the next
+  crowd-count branch.
+
+Reopening condition:
+- Reopen only with a materially different "pre-reaction" proxy, such as
+  intraday absorption, source timestamp sequencing, order-book queue timing,
+  or peer-news visibility rather than same-day own-news and high buy-order
+  count absence.
+
+Source:
+- [session_279_log.md](./session_279_log.md)
+- `artifacts/run_summaries/20260505_173706_h398_insider_pre_reaction_clock_research_branch_insider_pre_reaction_clock.json`
+
+## D015: Standalone Buy-Order Count Promotion Fails Under H399 (2026-05-05, Session 280)
+
+Dead end:
+- Claim tested: high buy-order count or buy-count rank is a standalone
+  crowd-ignition signal.
+- Evidence: H399 used `analysis/h399_crowd_count_ignition.py` with no
+  `2026+`, fixed `2018-2025` years, raw CafeF order stats, published C16,
+  C8 volume-z controls, and H394 predicted-weather buckets.
+- Result: `buy_count_rank` was anti-predictive as a standalone score
+  (`-0.01075`, only `3 / 8` positive years). The `high_buy_count` state was
+  only a modest C16 conditioner (`+0.08463` avg IC, `+0.00944` lift versus all
+  rows, `6 / 8` positive lift years) and had slightly lower target hit rate
+  than all rows (`-0.00214`).
+
+Do not reopen under current representation:
+- Do not promote buy-order count rank as an independent signal-library member.
+- Do not treat high buy count alone as more than modest C16 context.
+- Do not claim high-count plus high volume-z is a new crowd-count primitive;
+  H399 shows high volume-z already owns almost all of that pocket.
+
+Survivor from the audit:
+- `count_high_size_weather_low20` remains a mixed branch clue: avg IC
+  `+0.10083` and `+0.01620` average yearly lift versus high buy count, but
+  only `5 / 8` positive lift years.
+- `volume_z_high80` remains the cleaner volume-state context.
+
+Reopening condition:
+- Reopen only with a stability or consumer audit for the
+  high-average-buy-size plus H394-low-weather interaction, or with materially
+  different order-fragmentation/queue/intraday data.
+
+Source:
+- [session_280_log.md](./session_280_log.md)
+- `artifacts/run_summaries/20260505_174329_h399_crowd_count_ignition_research_branch_crowd_count_ignition.json`
+
+## D016: Fixed Calendar Weak-Prior Quorum Vote Fails (2026-05-05, Session 281)
+
+Dead end:
+- Claim tested: January/weekday/month-end/T+2 calendar residues can be pooled
+  into one weak prior and added to the H395 weak-signal quorum.
+- Evidence: H400 used `analysis/h400_calendar_as_weak_prior_not_clock.py`
+  with train-before-test folds, no `2026+`, H395 base components excluding
+  calendar votes, one fixed calendar weak-prior vote, and a random extra
+  weak-vote control.
+- Result: adding the calendar prior reduced the non-calendar quorum from
+  `+0.05826` avg IC to `+0.05605`. Incremental lift was `-0.00221` with
+  `0 / 7` positive lift years. Calendar-only IC was negative (`-0.00827`).
+
+Do not reopen under current representation:
+- Do not add `january_first_10`, `monday`, month-end, T+2 weekday residue, or
+  their pooled average as a fixed weak vote inside H395.
+- Do not use H390's sparse diagnostic calendar pockets to justify a dense
+  generic calendar prior.
+
+Survivor from the audit:
+- The T+2 weekday residue was mildly positive (`+0.00646`, `6 / 10` positive
+  years), but below the weak-candidate IC gate and not useful in the pooled
+  prior.
+
+Reopening condition:
+- Reopen only with a different calendar target or a mechanism-matched consumer
+  contract, not by reweighting the same dense fixed calendar prior.
+
+Source:
+- [session_281_log.md](./session_281_log.md)
+- `artifacts/run_summaries/20260505_174904_h400_calendar_as_weak_prior_not_clock_research_branch_calendar_as_weak_prior_not_clock.json`
+
+## D017: Broad Anti-Signal Veto Promotion Fails H401 (2026-05-05, Session 282)
+
+Dead end:
+- Claim tested: broad side-channel disagreement can be promoted as a top-5
+  long-only cash veto.
+- Evidence: H401 used `analysis/h401_anti_signal_annihilation_veto.py` with no
+  `2026+`, fixed top-5 buyable candidate rows, cycle relative-return labels,
+  fixed C16/insider/news/tradability/sector disagreement masks, and random
+  same-breadth veto controls.
+- Result: broad masks did not improve no-veto. `support_count_le1` averaged
+  `-0.000123` versus no-veto, `pretty_price_weak_flow` `-0.000026`,
+  `news_hype_weak_flow` `-0.000075`, and `weak_flow_weak_sector` `-0.000225`.
+
+Do not reopen under current representation:
+- Do not add a broad side-channel disagreement veto to the portfolio policy
+  library or live selector.
+- Do not tune the same C16/insider/news/tradability/sector support-count masks
+  under the current top-5 cycle-return contract.
+
+Survivor from the audit:
+- `support_count_zero` is a weak clue only: `+0.000167` avg lift versus
+  no-veto and `6 / 7` positive no-veto years, but too small for promotion and
+  below random p95.
+
+Reopening condition:
+- Reopen only as a narrower strict no-support scale-down/veto audit, or with a
+  materially different top-book target, intraday/queue evidence, or learned
+  portfolio consumer.
+
+Source:
+- [session_282_log.md](./session_282_log.md)
+- `artifacts/run_summaries/20260505_175823_h401_anti_signal_annihilation_veto_research_branch_anti_signal_annihilation_veto.json`
+
+---
+
+## D022: Volume Triple Storm Fails (2026-05-05, Session 292)
+
+Dead end:
+- Claim tested: Triple Storm conditions amplify Volume signal (like C16-Triple).
+- Evidence: H411 used `analysis/h411_volume_triple_storm.py` with liquid + market-down + divergence.
+- Result: Volume+Triple = +0.038 IC, WORSE than Volume alone (+0.075 IC).
+
+Why it killed:
+- Triple Storm is C16-specific, not a universal signal amplifier
+- Ablation: none of liquid (+0.084), down (+0.077), divergence (+0.032) helped
+- The mechanism that makes Triple Storm work on C16 is C16-specific
+
+Do not reopen:
+- Do not test Triple Storm on other signals expecting the same amplification
+- Do not generalize C16-Triple as a universal amplifier recipe
+- The C16-Triple result was a special case, not a generalizable pattern
+
+Reopening condition:
+- Reopen only with a materially different signal/condition/mechanism
+
+Source:
+- [session_292_log.md](./session_292_log.md)
+
+---
+
+## D023: Foreign Flow Addition Fails (2026-05-05, Session 299)
+
+Dead end:
+- Claim tested: foreign flow adds to Vol+S1 additive.
+- Evidence: H418 used foreign data with H413 formula.
+- Result: -0.006 IC drop vs H413. Foreign alone +0.004.
+
+Why it killed:
+- Foreign has near-zero IC alone (+0.004)
+- Adding weak signal HURTS performance
+- Same pattern as C16 - some signals are too weak to contribute
+
+Do not reopen:
+- Do not try adding more weak signals to H413
+- Focus on strong signals only (S1, Volume)
+
+Reopening condition:
+- Only reopen with a STRONG new signal (>0.05 standalone IC)
+
+Source:
+- [session_299_log.md](./session_299_log.md)
+
+---
+
+## D024: Insider Addition Fails (2026-05-05, Session 300)
+
+Dead end:
+- Claim tested: insider adds to Vol+S1 additive.
+- Evidence: H419 tested insider with H413 formula.
+- Result: Insider alone is NEGATIVE (-0.002). Adding gives +0.0004 (noise).
+
+Why it killed:
+- Insider is now NEGATIVE - historically strong but no longer
+- Adding weak signal gives negligible lift
+- Pattern matches C16 and Foreign
+
+Source:
+- [session_300_log.md](./session_300_log.md)
+
+---
+
+## D025: Forced-Seller Detector Fails Under Current Entry-Alpha Consumer (2026-05-06, Session 304)
+
+Dead end:
+- Claim tested: daily forced-seller / margin-cascade states can select better
+  buyable entry candidates using observable negative return, volume spike,
+  sell-order pressure, rising or high average sell size, floor-limit proximity,
+  and absence of active bad PhoBERT news.
+- Evidence: H426 used `analysis/h426_forced_seller_detector.py` with the
+  existing entry-alpha candidate panel and cycle labels, `2019-2025` only,
+  walk-forward K selection from prior years, and random same-support plus
+  random-all policy baselines.
+- Result: no fixed state cleared both random gates. `forced_seller_core_buyable`
+  had mean lift only `+0.000230` versus random-state, only `1 / 5` positive
+  WF years, and mean lift `-0.002047` versus random-all. Large-down and floor
+  variants also failed broad allocation; the literal tradability-release state
+  had only `7` rows and no usable support.
+
+Do not reopen under current representation:
+- Do not retune the same daily thresholds around sell pressure, volume spike,
+  floor pressure, and no-bad-news inside the current entry-label consumer.
+- Do not treat the queue memo's "next-day C16 turns positive" clause as
+  decision-time valid under the current T close -> T+1 open entry contract.
+
+Survivor from the audit:
+- None for the current daily candidate-policy allocator. The broad core state
+  is at most a weak distress context, not a buy selector.
+
+Reopening condition:
+- Reopen only with a delayed-entry protocol that can honestly observe a
+  post-sell-pressure C16/order-pressure turn before execution, or with
+  materially different intraday / queue / opening-fill data that measures
+  actual absorption and tradability release timing.
+
+Source:
+- [session_304_log.md](./session_304_log.md)
+- `artifacts/run_summaries/20260506_141722_h426_forced_seller_detector_research_branch_forced_seller_detector.json`

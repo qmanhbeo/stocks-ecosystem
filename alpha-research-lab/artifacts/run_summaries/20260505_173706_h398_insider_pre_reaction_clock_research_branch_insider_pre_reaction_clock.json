@@ -1,0 +1,209 @@
+{
+  "artifacts": {
+    "results": "artifacts/h398_insider_pre_reaction_clock/20260505_173706_h398_insider_pre_reaction_clock_results.parquet",
+    "yearly": "artifacts/h398_insider_pre_reaction_clock/20260505_173706_h398_insider_pre_reaction_clock_yearly.parquet"
+  },
+  "metadata": {
+    "no_2026_rows": true,
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "S272 insider lead may be strongest before news/order-count reaction is visible; event-time insider states should improve C16 quality most on the next trading day and in pre-reaction rows.",
+      "min_phase_rows": 200,
+      "min_train_years": 2,
+      "min_year_rows": 50,
+      "mode": "research_branch_insider_pre_reaction_clock",
+      "name": "h398_insider_pre_reaction_clock",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "order_volume_ratio_rank": "decision-time C16 order-pressure rank"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    }
+  },
+  "mode": "research_branch_insider_pre_reaction_clock",
+  "name": "h398_insider_pre_reaction_clock",
+  "summary": {
+    "decision": "MIXED",
+    "decision_detail": {
+      "insider_tplus1_avg_ic": 0.10498076653840008,
+      "insider_tplus1_lift_vs_non_event": 0.029999149039195955,
+      "insider_tplus1_positive_years": 11,
+      "pre_minus_reacted_avg_ic": -0.018109660108803063,
+      "pre_reaction_avg_ic": 0.09246567814224159,
+      "pre_reaction_gate": false,
+      "reacted_avg_ic": 0.11057533825104465,
+      "tplus_gate": true
+    },
+    "panel_rows": 810201,
+    "protocol_note": "T+1 mapping follows S272: first trading day strictly after published_date for calendar trading days, or next available trading day for non-trading publication dates.",
+    "result_rows": [
+      {
+        "avg_ic": 0.08762930906703471,
+        "baseline_avg_ic": 0.07498161749920412,
+        "baseline_col": "same_ticker_non_event",
+        "baseline_hit_rate": 0.464930858093376,
+        "dates": 2160,
+        "hit_rate": 0.48474830954169795,
+        "hit_rate_lift": 0.019817451448321977,
+        "lift_vs_baseline_avg_ic": 0.01264769156783059,
+        "mask_col": "insider_tminus1",
+        "positive_years": 11,
+        "primary": false,
+        "rows": 6655,
+        "state": "insider_tminus1",
+        "tickers": 381,
+        "years": 11
+      },
+      {
+        "avg_ic": 0.10815592849497793,
+        "baseline_avg_ic": 0.07498161749920412,
+        "baseline_col": "same_ticker_non_event",
+        "baseline_hit_rate": 0.464930858093376,
+        "dates": 2170,
+        "hit_rate": 0.5006642066420665,
+        "hit_rate_lift": 0.03573334854869048,
+        "lift_vs_baseline_avg_ic": 0.03317431099577381,
+        "mask_col": "insider_t0",
+        "positive_years": 11,
+        "primary": false,
+        "rows": 6775,
+        "state": "insider_t0",
+        "tickers": 383,
+        "years": 11
+      },
+      {
+        "avg_ic": 0.10498076653840008,
+        "baseline_avg_ic": 0.07498161749920412,
+        "baseline_col": "same_ticker_non_event",
+        "baseline_hit_rate": 0.464930858093376,
+        "dates": 2331,
+        "hit_rate": 0.49484687868080096,
+        "hit_rate_lift": 0.029916020587424985,
+        "lift_vs_baseline_avg_ic": 0.029999149039195955,
+        "mask_col": "insider_tplus1",
+        "positive_years": 11,
+        "primary": true,
+        "rows": 6792,
+        "state": "insider_tplus1",
+        "tickers": 383,
+        "years": 11
+      },
+      {
+        "avg_ic": 0.09246567814224159,
+        "baseline_avg_ic": 0.11057533825104465,
+        "baseline_col": "insider_tplus1_reacted",
+        "baseline_hit_rate": 0.498093058733791,
+        "dates": 1544,
+        "hit_rate": 0.49038125218607903,
+        "hit_rate_lift": -0.007711806547711975,
+        "lift_vs_baseline_avg_ic": -0.018109660108803063,
+        "mask_col": "insider_tplus1_pre_reaction",
+        "positive_years": 11,
+        "primary": true,
+        "rows": 2859,
+        "state": "insider_tplus1_pre_reaction",
+        "tickers": 345,
+        "years": 11
+      },
+      {
+        "avg_ic": 0.11057533825104465,
+        "baseline_avg_ic": 0.09246567814224159,
+        "baseline_col": "insider_tplus1_pre_reaction",
+        "baseline_hit_rate": 0.49038125218607903,
+        "dates": 1912,
+        "hit_rate": 0.498093058733791,
+        "hit_rate_lift": 0.007711806547711975,
+        "lift_vs_baseline_avg_ic": 0.018109660108803063,
+        "mask_col": "insider_tplus1_reacted",
+        "positive_years": 11,
+        "primary": false,
+        "rows": 3933,
+        "state": "insider_tplus1_reacted",
+        "tickers": 342,
+        "years": 11
+      },
+      {
+        "avg_ic": -0.00851949754605948,
+        "baseline_avg_ic": 0.06632081395307407,
+        "baseline_col": "insider_tplus1_no_c16_support",
+        "baseline_hit_rate": 0.47327555074033945,
+        "dates": 965,
+        "hit_rate": 0.5901116427432217,
+        "hit_rate_lift": 0.11683609200288225,
+        "lift_vs_baseline_avg_ic": -0.07484031149913355,
+        "mask_col": "insider_tplus1_c16_support",
+        "positive_years": 6,
+        "primary": false,
+        "rows": 1254,
+        "state": "insider_tplus1_c16_support",
+        "tickers": 306,
+        "years": 11
+      },
+      {
+        "avg_ic": 0.13776021866128788,
+        "baseline_avg_ic": 0.09288777631298223,
+        "baseline_col": "insider_tplus1_order_count_not_high",
+        "baseline_hit_rate": 0.4948921679909194,
+        "dates": 1483,
+        "hit_rate": 0.49476330121491413,
+        "hit_rate_lift": -0.0001288667760052653,
+        "lift_vs_baseline_avg_ic": 0.04487244234830565,
+        "mask_col": "insider_tplus1_order_count_high",
+        "positive_years": 11,
+        "primary": false,
+        "rows": 2387,
+        "state": "insider_tplus1_order_count_high",
+        "tickers": 189,
+        "years": 11
+      }
+    ],
+    "test_years": [
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "ts": "20260505_173706"
+}

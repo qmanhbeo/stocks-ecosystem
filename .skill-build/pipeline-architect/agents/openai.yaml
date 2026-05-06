@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pipeline Architect"
+  short_description: "Split mixed-responsibility pipelines under Manh's structure defaults"
+  default_prompt: "Use $pipeline-architect to keep a non-trivial workflow thin, stage-oriented, and low-context under Manh's machine-wide defaults, with observable heavy scripts, safe persistence boundaries, and contract-aware docs and notes."

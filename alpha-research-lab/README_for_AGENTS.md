@@ -25,6 +25,34 @@ Sequential hypothesis ladders are the default lab method.
 
 The point is to keep the lab falsifiable and to reduce quiet test-set tuning.
 
+## Reusable Research Scaffold
+
+For new lightweight research-branch scripts, start from the shared scaffold
+instead of hand-rolling the protocol:
+
+```bash
+cp analysis/_template_research_branch.py analysis/hNNN_branch_name.py
+```
+
+Then edit only the branch-specific sections:
+
+- `BRANCH_NAME`, `MODE`, and the `ExperimentSpec.hypothesis`
+- the decision-time feature merges in `load_panel`
+- the fixed `STATE_SPECS` / controls
+- the predeclared pass / mixed / fail ladder
+
+The template uses `src/experiment_contract.py`, which provides role-safe S1
+loading, default `2026+` blocking, target/state overlap checks, yearly and
+phase IC helpers, run-summary writing, and a small runnable smoke audit.
+Prefer this scaffold for standalone signal, state, and context audits unless a
+branch needs a more specialized family helper such as the deterministic
+portfolio or entry-alpha utilities.
+
+Important S272 guardrail: load the S1 parquet through
+`load_s1_decision_panel`. It renames raw `actual` to `s1_barrier_hit_1d`, a
+future target label. Do not use that column, raw `actual`, future returns, or
+same-date target aggregates to define states or regimes.
+
 Execution reality is shared at the workspace level:
 
 - canonical spec: `../docs/execution_reality.md`

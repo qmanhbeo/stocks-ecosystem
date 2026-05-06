@@ -100,6 +100,14 @@ re-fetching HNX.
 8. The lab can publish canonical model-agnostic recommendation candidates at `data/features/recommendations/<profile>/latest_candidates.parquet`
 9. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 
+For new lightweight signal/state/context experiments, start from
+`alpha-research-lab/analysis/_template_research_branch.py` and
+`alpha-research-lab/src/experiment_contract.py` instead of hand-rolling the
+protocol. The scaffold provides role-safe S1 loading that renames raw `actual`
+to target-only `s1_barrier_hit_1d`, blocks `2026+` by default, checks
+target/state overlap, computes pooled/yearly/phase IC summaries, and writes
+standard run-summary artifacts.
+
 ## Lightweight-First Execution Rule
 
 This workspace treats constrained local execution as a real contract, not a convenience preference.
@@ -160,6 +168,8 @@ Current active live branch:
 Current research posture:
 - keep the live sticky branch frozen
 - do not retune timing rules on `2026+`
+- use the reusable experiment scaffold for new lightweight lab audits unless a
+  specialized portfolio, entry-alpha, or pipeline helper is a better fit
 - keep `llm-cache-fill` as the highest-value blocked branch
 - if a non-LLM branch is intentionally reopened, prefer:
   - richer company-event timing follow-through on the saved CafeF event-v2 work

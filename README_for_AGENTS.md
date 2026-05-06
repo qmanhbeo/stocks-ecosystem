@@ -61,9 +61,15 @@ under:
 
 - `.skill-build/`
 
-The installed runtime copy for `job-watchdog` lives under:
+Installed runtime copies currently include:
 
-- `~/.codex/skills/job-watchdog/`
+- Codex: `~/.codex/skills/<skill-name>/`
+- OpenCode: `~/.config/opencode/skills/<skill-name>/`
 
-Treat `.skill-build/job-watchdog/` as the versioned source of truth and keep
-the installed copy mirrored from it.
+Treat `.skill-build/<skill-name>/` as the versioned source of truth and keep
+installed runtime copies mirrored from it. The `experimentor` skill now points
+new lightweight VN stock-lab experiments to
+`alpha-research-lab/analysis/_template_research_branch.py` and
+`alpha-research-lab/src/experiment_contract.py` so agents do not hand-roll S1
+target semantics, no-`2026+` guards, state validation, IC summaries, or
+run-summary artifacts.

@@ -499,3 +499,36 @@ Why it matters:
 
 Source:
 - [session_288_log.md](./session_288_log.md)
+
+---
+
+## F382: H426 Rejects Daily Forced-Seller States As Entry-Candidate Allocators (2026-05-06, Session 304)
+
+Finding:
+- Claim tested: forced-seller / margin-cascade states from large negative
+  return, volume spike, sell-order pressure, rising/high average sell size,
+  floor-limit proximity, and no active bad news can identify rebound candidates.
+- Evidence: `analysis/h426_forced_seller_detector.py` used the entry-alpha
+  candidate panel and cycle labels over `2019-2025`, with only prior-year K
+  selection and random same-support / random-all baselines. No S1 or C16
+  baseline was used because this is not a direct variation of those signals.
+- Result: H426 `FAILED`. `forced_seller_core_buyable` had only `+0.000230`
+  mean lift versus random-state, only `1 / 5` positive WF years, and
+  `-0.002047` mean lift versus random-all. `forced_seller_large_down_buyable`
+  and `forced_seller_floor_buyable` also failed random-all, while the literal
+  hard-release state had only `7` rows.
+
+Why it matters:
+- Daily sell-pressure distress is not enough to make a buy pulse under the
+  current entry-alpha consumer.
+- The queue memo's next-day C16 confirmation clause was not tested because it
+  is not decision-time valid for the current T close -> T+1 open entry-label
+  contract.
+- Future work needs a delayed-entry protocol or intraday/queue/open-fill data
+  that can observe absorption before execution; threshold tuning the same
+  daily state is not justified.
+
+Source:
+- [session_304_log.md](./session_304_log.md)
+- `artifacts/run_summaries/20260506_141722_h426_forced_seller_detector_research_branch_forced_seller_detector.json`
+- Dead-end anchor: `D025`

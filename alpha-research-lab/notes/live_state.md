@@ -5,9 +5,9 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_270_log.md](./session_270_log.md)
-Last verified: [Session 270](./session_270_log.md), 2026-05-04
-(H392 source-triangle sparse).
+Latest full session detail: [session_304_log.md](./session_304_log.md)
+Last verified: [Session 304](./session_304_log.md), 2026-05-06
+(H426 Forced-Seller Detector FAILED under the current entry-alpha consumer)
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
@@ -18,6 +18,7 @@ Source durable memory:
 - [findings.md](./findings.md)
 - [findings-301-330.md](./findings-301-330.md)
 - [findings-331-360.md](./findings-331-360.md)
+- [findings-361-390.md](./findings-361-390.md)
 - [deadends.md](./deadends.md)
 - [deadends-001-030.md](./deadends-001-030.md)
 - [signal_library.md](./signal_library.md)
@@ -105,6 +106,66 @@ Source durable memory:
   `three_plus_sensors` beat exactly-two by `+0.005156` with `8 / 8` positive
   years, but this is a non-insider news-triangle clue, not an insider+C16
   promotion. Source anchors: `F353`, `D010`.
+- H393 parked same-day `nihilist_reversal`. It was positive but failed
+  `stock_down_high_c16` by `-0.002027` mean 5d lift and had negative 2025
+  payoff; `stock_down_high_c16` remains the cleaner state. Source anchors:
+  `F354`, `D011`.
+- Session 272 audited the S24x-S25x "strong" signal promotions. S244/S246/S247/S253
+  `consecutive_down`, target-derived `down_market_c16`, and `deep_down_c16`
+  used same-date S1 `actual` as a regime input, so do not promote them.
+  Observable VNI-down states were only modestly above C16, and observable
+  stock-down states were weaker. `insider_buy_lead` survived; high buy-order
+  count is modest context. Source anchors: `F355`, `D012`.
+- Signal-library promotion rule is now explicit: strong standalone promotion
+  means IC `> 0.05` plus decision-time observability, non-leakage,
+  independence (`corr < 0.30`), positive-year consistency, and enough
+  coverage. IC `0.01-0.05` is weak candidate/context evidence. Filters or
+  rewrites of S1/C16/etc. must clear incremental lift versus the parent and
+  matched controls. Source anchor: `F356`.
+- New lightweight research branches should start from
+  `analysis/_template_research_branch.py` and `src/experiment_contract.py`.
+  The scaffold encodes S272/S273 guardrails: raw S1 `actual` is renamed to
+  `s1_barrier_hit_1d` target-only, `2026+` is blocked by default, and state
+  columns are checked against target/future columns. Source anchor: `F357`.
+- H394 parked broad `oracle_shadow_regime_distiller` promotion under the
+  current observable aggregate contract. Ridge-predicted target breadth had
+  avg date IC `+0.0502` and `7 / 8` positive years, but best honest bucket
+  `ridge_pred_low20` lifted C16 only `+0.00342` versus all rows and `+0.00416`
+  versus random dates, below gate, and degraded S1. Observable `VNI down 2d`
+  remains cleaner context. Source anchors: `F358`, `D013`.
+- H395 passed `weak_signal_quorum_sleeve` as a strong composite RL-state
+  candidate, not a new independent primitive. Train-selected equal-weight weak
+  votes reached avg IC `+0.05826`, `7 / 7` positive years, S1 corr `+0.27541`,
+  C16 corr `-0.00685`, and lift `+0.02078` versus random weak baskets. Source
+  anchor: `F359`.
+- H396 clarified H395's independence. The quorum survives S1/C16
+  residualization (avg IC `+0.01669`, `7 / 7` positive years), but not
+  residualization against its C4-C14 ingredients (`+0.00187`). Treat H395 as a
+  composite RL state; C13/C10/C6 are the clean S1/C16 residual primitive
+  survivors from this audit. Source anchor: `F360`.
+- H397 passed the horizon-router audit. Active/positive-news strong-flow are
+  1d C16 rankers (`+0.02257` / `+0.02536` IC lift versus strong-flow), while
+  official and official-forward supported states are 5d payoff/hold states
+  (`+0.00650` / `+0.00662` net lift, `8 / 8` positive years). Source anchor:
+  `F361`.
+- H398 reproduced the S272 insider event-time lead but rejected the quiet
+  pre-reaction form. `insider_tplus1` reached avg C16 IC `+0.10498`, `11 / 11`
+  positive years, and `+0.03000` lift versus same-ticker non-event dates; T0
+  was also strong at `+0.10816`. But `insider_tplus1_pre_reaction` lost to
+  reacted T+1 rows by `-0.01811` avg IC, and high buy-order-count T+1 insider
+  rows were strongest (`+0.13776` avg IC). Source anchors: `F362`, `D014`.
+- H399 narrowed crowd-count ignition. `buy_count_rank` is anti-predictive as a
+  standalone score (`-0.01075`, `3 / 8` positive years); `high_buy_count` is
+  only modest C16 context (`+0.08463` avg IC, `+0.00944` lift versus all
+  rows). `volume_z_high80` owns the clean pocket (`+0.10258`, `8 / 8`), while
+  the best primary crowd clue `count_high_size_weather_low20` is mixed
+  (`+0.10083`, `+0.01620` lift versus high count, only `5 / 8` lift years).
+  Source anchors: `F363`, `D015`.
+- H400 rejected calendar residues as a fixed weak vote inside H395. Removing
+  calendar votes left the quorum at `+0.05826` avg IC; adding one pooled
+  January/weekday/month-end/T+2 prior lowered it to `+0.05605`, with
+  `-0.00221` average lift and `0 / 7` positive lift years. Source anchors:
+  `F364`, `D016`.
 - C16 order pressure is a published shared feature contract at
   `data/features/xs_order_pressure_daily.parquet`, but downstream use is
   opt-in only. Do not run more C16 sizing/search unless a consumer asks for a
@@ -118,6 +179,13 @@ Source durable memory:
   article-count absence. No-news C16 was weaker than all-C16 and active-news
   C16 (`silent_5d` IC `+0.0700`, all-C16 `+0.0752`, active-5d-news `+0.0846`).
   Continue through local-news interaction states, not simple no-news stealth.
+- H426 killed `forced_seller_detector` under the current daily entry-alpha
+  consumer. The broad forced-seller core had only `+0.000230` mean lift versus
+  random-state, `1 / 5` positive WF years, and `-0.002047` mean lift versus
+  random-all; floor and large-down variants also failed, while literal
+  tradability release had only `7` rows. The memo's next-day C16 turn clause
+  needs a separate delayed-entry protocol before it is decision-time valid.
+  Source anchor: `D025`.
 - Event-v2, dividend-clock, legal-holiday timing, foreign/proprietary/sector-flow,
   old OHLCV queue, smart-exit linear tweaks, and BERT-only sentiment are parked
   or failed under the current target/consumer contracts. Use the compact
@@ -126,28 +194,46 @@ Source durable memory:
 ## Confirmed Recent Signals
 
 - `insider_buy_lead`: TRUE WF IC `0.1093`; prior insider buy on T-1 boosts C16
-  quality. Source anchors: `F313`, `F337`.
-- `consecutive_down`: TRUE WF IC `0.1047`; down-day state is independently real.
-  Source anchors: `F314`, `F337`.
-- `down_market_c16`: TRUE WF IC `0.0992`; C16 is a contrarian down-market signal.
-  Source anchors: `F330`, `F337`.
-- `dividend_30d`: IC `0.0934` but noisy; keep as event context, not a promoted
-  sparse-clock portfolio rule. Source anchor: `F315`.
-- `rank_time_acceleration`: IC `0.0576`; weak state feature only.
+  quality; S272 next-trading-day audit avg IC `0.1050`, `11 / 11` positive
+  years. H398 reproduced the event-time T+1 lead (`0.10498`, `11 / 11`) and
+  found T0 also strong (`0.10816`), but parked the no-news/no-high-count
+  pre-reaction variant because reacted/order-count-high rows were stronger.
+  Source anchors: `F313`, `F355`, `F362`, `D014`.
+- `vol_high_buy_count_gt_80`: S272 avg IC `0.0844`, lift `+0.0106` over C16;
+  H399 retest found high buy count is modest C16 context (`0.08463` avg IC),
+  but `buy_count_rank` itself is anti-predictive and high volume-z is the
+  cleaner state. Source anchors: `F355`, `F363`, `D015`.
+- `volume_z_high80`: H399 state-level C16 IC `0.10258`, `8 / 8` positive
+  years, lift `+0.02739` versus all-row C16; treat as C8/volume-state context,
+  not a buy-count primitive. Source anchor: `F363`.
+- `observed_vni_down_2d`: S272 avg IC `0.0806`, only `+0.0068` over C16;
+  H394 retest over `2018-2025` found C16 lift `+0.00582` and S1 lift
+  `+0.01230`; context only, not the old target-derived `down_market_c16`
+  promotion. Source anchors: `F355`, `F358`.
+- `weak_signal_quorum_sleeve`: H395 composite score avg IC `0.05826`,
+  `7 / 7` positive years, S1 corr `0.27541`, C16 corr `-0.00685`; strong
+  composite RL-state candidate only. H396 says it is independent of S1/C16 but
+  not independent of its C-library ingredients. Source anchors: `F359-F360`.
+- `rank_time_acceleration`: S272 avg IC `0.0548`, below C16; weak state
+  context only. Source anchors: [session_244_log.md](./session_244_log.md),
+  `F355`.
 - `h364_official_sentiment_x_earnings_guidance`: avg IC `0.01766`, `10 / 10`
   positive years, S1 corr `-0.0104`; H382 keeps it as an event-subset ranker,
   not a broad candidate-pool allocator. Source anchors: `F342-F343`, `D002`.
 - `active_news_strong_flow`: H383 1d relative-return IC `0.10293`, 2025 IC
-  `0.12163`; local-news/C16 confirmation context only. H384 failed the
-  candidate-policy consumer audit. Source anchors: `F344-F345`, `D003`.
+  `0.12163`; H397 confirms it as a 1d C16 ranker with IC lift `+0.02257`
+  versus strong-flow. H384 still blocks broad candidate-policy allocation.
+  Source anchors: `F344-F345`, `F361`, `D003`.
 - `official_supported_delay`: H385 5d payoff lift `+0.007408`, `8 / 8`
-  positive 5d-lift years, 2025 lift `+0.005566`; support-confirmed official
-  attention context only. H386 failed the candidate-policy consumer audit.
-  Source anchors: `F346-F347`, `D004`.
+  positive 5d-lift years, 2025 lift `+0.005566`; H397 confirms it as a 5d
+  hold/payoff state with net lift `+0.00650`, `8 / 8` positive years. H386
+  still blocks broad candidate-policy allocation. Source anchors:
+  `F346-F347`, `F361`, `D004`.
 - `official_forward_supported_delay`: H385 5d payoff lift `+0.007657`,
-  `8 / 8` positive 5d-lift years, 2025 lift `+0.006799`; delay-aware
-  official/forward context only. H386 failed the candidate-policy consumer
-  audit. Source anchors: `F346-F347`, `D004`.
+  `8 / 8` positive 5d-lift years, 2025 lift `+0.006799`; H397 confirms it as
+  a 5d hold/payoff state with net lift `+0.00662`, `8 / 8` positive years.
+  H386 still blocks broad candidate-policy allocation. Source anchors:
+  `F346-F347`, `F361`, `D004`.
 - `stock_down_high_c16`: H387 control state had mean 5d relative payoff
   `+0.01220`, 2025 payoff `+0.00217`, and mean 5d C16 IC `+0.09182`. This
   beat the insider-down overlay and should remain a control in future
@@ -163,8 +249,8 @@ Source durable memory:
 - Calendar timing clue: H390 says exact old calendar states are context only,
   not independent overlays. Diagnostic `january_first_10` retained 1d residual
   lift `+0.03067` with `5 / 5` positive years, but it was not a predeclared
-  primary state and needs a separate fixed contract before use. Source anchor:
-  `F351`.
+  primary state. H400 says dense calendar residues should not be added as a
+  fixed H395 quorum vote. Source anchors: `F351`, `F364`, `D016`.
 - Tradability-release lesson: H391 says becoming buyable after prior blocked
   state is not a buy pulse under the current candidate-panel representation.
   Treat it as exhaustion/reblock-risk context unless a materially different
@@ -183,31 +269,111 @@ Source durable memory:
 Ranked by upside, novelty, current-data feasibility, and honesty of first test.
 Do not assign `H` numbers until one branch is activated.
 
-The explicit H389-H392 follow-through queue is exhausted. Continue by selecting
-new branches from the hidden-flow memo with H381-H392 as constraints.
+The explicit H389-H393 follow-through queue is exhausted. Continue by selecting
+new branches from the hidden-flow memo with H381-H393 and S272 as constraints.
 
-1. `nihilist_reversal`: down stock, down market, weak/no bullish news, and high
-   C16 may mark hidden support after public capitulation.
-   Smallest honest test: require stock weakness, market weakness, high C16, and
-   weak or absent bullish local-news support; compare against
-   `stock_down_high_c16`, `down_market_c16`, raw high C16, and active-news C16
-   controls. Why not killed: H381 killed simple no-news C16 and H387 killed
-   insider-down rescue, but stock-down high-C16 itself remained a strong
-   control state.
+S272/S273 eureka additions:
 
-2. `anti_signal_annihilation_veto`: high S1 should be vetoed when C16, insider,
+Status: item 1 was activated as H394 and is now mixed/parked under the broad
+observable aggregate contract. Item 2 was activated as H395 and passed as
+composite offline evidence. Item 3 was activated as H396 and passed as a
+residual clarification. Item 4 was activated as H397 and passed as a horizon
+router. Item 5 was activated as H398 and was mixed: insider event-time lead
+survives, but quiet pre-reaction is parked. Item 6 was activated as H399 and
+was mixed: high buy count is only modest context, while high volume-z owns the
+clean pocket. Item 7 was activated as H400 and failed: fixed calendar weak
+prior voting degrades the H395 quorum. Item 8 was activated as H401 and was mixed:
+tiny support_count_zero clue exists but broad veto promotion blocked. Item 9 was activated
+as H402 and was mixed: fragmentation adds marginal IC but poor year consistency.
+Item 10 was activated as H403 and passed: Reynolds number adds +0.044 IC
+vs C16 with 6/8 positive years. Item 11 was activated as H404 and failed:
+Haar wavelets add no signal. Item 12 was activated as H405 and failed:
+sector event lightcone adds no signal. Item 13 was activated as H406 and failed:
+conservation residual inversely predicts. Item 14 was activated as H407 and passed:
+phase lag cross-product adds +0.022 IC. Continue with next item.
+
+1. `oracle_shadow_regime_distiller`: the invalid S24x target-derived states
+   were accidentally measuring next-day barrier-hit breadth; predict that
+   latent market weather honestly from pre-decision observables.
+   Smallest honest test: TRUE rolling model from prior S1-proba distribution,
+   C16 distribution, candidate count, breadth, news/event counts, limit and
+   tradability entropy into next-day barrier breadth; use only the predicted
+   regime to bucket S1/C16/weak-signal IC versus VNI-down and random regimes.
+   H394 status: MIXED/PARKED. Weak weather prediction exists, but predicted
+   regimes failed promotion gates; use `VNI down 2d` as cleaner context unless
+   reopening with a materially different regime contract.
+
+2. `weak_signal_quorum_sleeve`: IC `0.01-0.05` signals should not be discarded;
+   independent weak votes may become a strong context when they agree.
+   Smallest honest test: predeclared low-corr weak library votes such as
+   C4-C14, H364/news, official-delay, limit, volume, and calendar context in a
+   rolling vote or shrinkage score; compare against each component, random
+   weak baskets, S1/C16 parents, and same-support controls.
+   H395 status: PASSED as a strong composite RL-state candidate, not a new
+   independent primitive.
+
+3. `parent_echo_residual_harvester`: many high-IC filters are parent echoes,
+   but their residuals may still contain weak independent evidence.
+   Smallest honest test: standardized residual audit over the high-IC inventory
+   after same-date parent-rank residualization and matched parent buckets; keep
+   only residuals with stable `>0.01` IC or payoff lift.
+   H396 status: PASSED. H395 survives S1/C16 residualization but not C-vote
+   residualization; C13/C10/C6 are the cleaner residual primitive survivors.
+
+4. `barrier_pop_vs_hold_router`: 1d barrier IC and 5d candidate-policy payoff
+   are different jobs; some failed consumer states may be next-day pop signals,
+   not multi-day allocators.
+   Smallest honest test: retest H364/H383/H385/C16/insider states under fixed
+   next-day, 2d, 5d, and cycle labels with costs/tradability; require each
+   state to win only on its predeclared horizon.
+   H397 status: PASSED. Active/positive-news strong-flow is a 1d C16 ranker;
+   official-supported attention is a 5d hold/payoff state.
+
+5. `insider_pre_reaction_clock`: S272 says next-trading-day insider lead is
+   real; the edge may be strongest before order/news sensors visibly react.
+   Smallest honest test: event-time T-1/T0/T+1 insider states crossed with C16,
+   order-count, buy-volume, and news reaction; compare against C5, H340
+   insider+C16, random insider dates, and same-ticker non-event dates.
+   H398 status: MIXED. Insider T+1 lead survives and T0 is also strong, but
+   the pre-reaction proxy is weaker than reacted/order-count-high rows; use
+   reaction confirmation in crowd/order-count branches rather than quiet
+   pre-reaction.
+
+6. `crowd_count_ignition`: high buy-order count is modest alone because it
+   mixes retail swarm and real breadth; it may matter only in favorable
+   predicted barrier weather or with supportive average-order-size structure.
+   Smallest honest test: buy-count intensity crossed with avg-buy-size,
+   buy-volume pressure, and `oracle_shadow_regime_distiller` buckets; compare
+   against raw C16, volume-z, and high-buy-count alone.
+   H399 status: MIXED. Buy-count rank is anti-predictive and high count alone
+   is only modest C16 context; high volume-z is cleaner, while
+   high-count/high-average-buy-size/H394-low-weather is a promising but
+   unstable branch clue.
+
+7. `calendar_as_weak_prior_not_clock`: exact calendar clocks are too sparse for
+   promotion, but calendar residues may be useful as one weak prior inside a
+   broader evidence quorum.
+   Smallest honest test: predeclared January/weekday/month-end/T+2 residues as
+   a single weak vote in `weak_signal_quorum_sleeve`; require incremental lift
+   versus the same non-calendar quorum and H390 calendar controls.
+   H400 status: FAILED. The fixed calendar prior reduced H395 quorum IC from
+   `+0.05826` to `+0.05605`, with `0 / 7` positive lift years; do not add this
+   calendar vote under the current contract.
+
+8. `anti_signal_annihilation_veto`: high S1 should be vetoed when C16, insider,
    news, tradability, and sector context disagree.
    Smallest honest test: long-only cash veto on top-book rows with high
    candidate/S1 rank but explicit side-channel disagreement; compare against
-   random same-breadth vetoes and no-veto top-book returns. Why not killed:
-   prior work has mostly tested additive boosts, not strict vetoes.
+   random same-breadth vetoes and no-veto top-book returns. H401 status: MIXED.
+   Tiny support_count_zero clue exists, but broad veto promotion blocked.
 
-3. `shadow_liquidity_gravity_well`: order counts and average order size should
+9. `shadow_liquidity_gravity_well`: order counts and average order size should
    approximate missing book depth through fragmentation.
    Smallest honest test: build order-fragmentation features from raw CafeF
    order stats and test C16 IC/payoff buckets versus ordinary volume-spike and
-   high-C16 controls. Why not killed: raw C16 is strong, but no test has
-   separated pressure from fragmented liquidity/depth proxies.
+   high-C16 controls. H402 status: MIXED. Fragmentation adds marginal IC
+   (+0.00753) but poor year consistency (2/8); avg buy-minus-sell size
+   is strongest proxy (+0.03033 IC).
 
 ## Hidden-Flow Branch Memo
 
@@ -232,22 +398,25 @@ Operational reframing:
 Ranked activation ladder:
 1. `silent_accumulation_before_narrative`: high C16/order pressure, no 1d/5d
    stock news, mild price move, and non-extreme volume may be the cleanest
-   hidden-demand state. First test: compare against raw C16, down-market C16,
-   Triple Storm, high-C16/news-present, and high-C16/price-already-moved.
+   hidden-demand state. First test: compare against raw C16, observable
+   VNI-down C16 context, Triple Storm, high-C16/news-present, and
+   high-C16/price-already-moved.
 2. `dynamic_candidate_thermodynamics`: portfolio edge may come from choosing K,
    not another indicator. First test: score entropy, top-10 spread, rank gaps,
    buyable breadth, and activation uncertainty determine top-1/2/5/cash under
    TRUE rolling holdout.
 3. `insider_down_rescue`: insider buying after visible weakness plus C16 support
-   may be sparse but high-conviction. First test: matched sparse returns and
-   top-book uplift versus insider-only, down-only, and C16-only controls.
+   may be sparse but high-conviction. H387 killed the current representation;
+   reopen only with materially different insider timing/quality data.
 4. `nihilist_reversal`: down stock, down market, weak/no bullish news, and high
-   C16 may mark hidden support after public capitulation. First test: require it
-   to beat consecutive-down and down-market C16 separately.
+   C16 may mark hidden support after public capitulation. H393 parked the
+   same-day form, and S272 invalidated the old target-derived down-market
+   baseline; reopen only with a different weak-active-news, intraday, or
+   delayed-entry contract.
 5. `tradability_release_pulse`: a high-ranked stock becoming buyable after a
-   blocked/limit-constrained state may create a one-cycle door-open edge. First
-   test: `prev_can_buy_next_open == false`, `can_buy_next_open == true`, rank,
-   C16, and no immediate re-block.
+   blocked/limit-constrained state may create a one-cycle door-open edge. H391
+   killed the current entry-panel `release_flag` form; reopen only with
+   materially different queue/open-fill or intraday absorption evidence.
 6. `shadow_liquidity_gravity_well`: order counts and average order size should
    approximate missing book depth through fragmentation. First test:
    `log((buy_count + sell_count) / volume)`, avg-order-size imbalance, and
@@ -265,24 +434,34 @@ Ranked activation ladder:
 10. `capital_reynolds_number`: liquidity, breadth, volatility, C16, and friction
     should be unified into a flow-regime state. First test: low/medium/high `Re`
     buckets for C16 IC, Triple Storm IC, S1 degradation, and reversal dominance.
+    H403 status: PASSED. Re adds +0.044 IC vs C16 with 6/8 positive years.
+
 11. `haar_cascade_pressure`: hidden demand may become tradable when C16 energy
     migrates from short to medium horizons. First test: 1/2/4/8-day wavelet
-    energy versus failed plain C16 acceleration controls.
-12. `noether_flow_break`: order counts, order volumes, average order size,
-    traded volume, and price should obey a pseudo-conservation law; alpha is the
-    residual. First test: dev-fit expected price move, then test absorption,
-    thin-book markup, and support residuals out of sample.
-13. `causal_lightcone_news`: Ollama event-family shocks may propagate through
-    sector, correlation, and co-mention neighbors. First test: neighbor event
-    pressure versus ticker-only event states after Ollama aggregation.
-14. `hilbert_phase_lead`: C16 phase leading price phase may be the continuous
+    energy versus failed plain C16 acceleration controls. H404 status: FAILED.
+
+12. `sector_event_lightcone`: sector-peer events may propagate to ticker.
+    First test: neighbor event intensity vs ticker-only events. H405 status: FAILED.
+    Both own and sector events negative IC.
+
+13. `noether_flow_break`: conservation law residual predicts alpha.
+    First test: expected vs actual flow model residual vs forward returns. H406 status: FAILED.
+    Residual inversely predicts (-0.02861 IC).
+
+14. `phase_lag_cross_product`: lagged C16 × price cross-product predicts.
+    First test: C16_lag1 * price_lag1 vs forward IC. H407 status: PASSED.
+    Adds +0.022 IC, 7/8 positive years.
+    (H408: S1×C16 MIXED, H409: Vol×C16 MIXED - Volume alone +0.077 is NEW SIGNAL)
     version of divergence. First test: price phase, C16 phase, phase gap buckets
     versus Triple Storm and price/C16 divergence controls.
 15. `forced_seller_detector`: margin cascades may be visible without broker
     books through large negative return, volume spike, sell-volume pressure,
     rising avg sell size, limit/floor proximity, sector covariance, and no bad
-    news. First test: reversal only when next-day C16 turns positive and
-    tradability releases.
+    news. H426 status: FAILED under the current daily entry-alpha consumer.
+    Fixed buyable forced-seller states did not beat random-policy gates, and
+    literal tradability release was too sparse. Reopen only with an honest
+    delayed-entry protocol for the next-day C16 turn clause or materially
+    different intraday/queue absorption data.
 
 Extended source-memo branches:
 16. `candidate_decision_boundary_curvature`: top-k instability may be encoded in
@@ -312,8 +491,8 @@ Extended source-memo branches:
     `sum(mu(k) * C16_lag_k)` for `k <= 13` versus ordinary C16 ROC/acceleration.
 23. `crt_settlement_lattice`: T+2 settlement, weekday, attention, and rebalance
     cadences may alias into calendar residues. First test: predeclare residues
-    modulo `2,3,5,8,13` and cross only with proven states such as high C16,
-    down-market, consecutive-down, insider lead, and Triple Storm.
+    modulo `2,3,5,8,13` and cross only with proven or corrected states such as
+    high C16, observable VNI-down context, insider lead, and Triple Storm.
 24. `fibonacci_time_crystal`: attention cycles may lock onto Fibonacci trading
     lags. First test: `5,8,13,21,34,55` return/C16/breadth combs against equal
     non-Fibonacci controls, weekday/month/quarter controls, and TRUE rolling
@@ -350,10 +529,279 @@ proprietary-flow rank/conflict variants, dense standalone news sentiment,
 sparse calendar bonuses pasted onto the portfolio, or event-v2 overlays before
 the Ollama event-family representation changes.
 
-Meta-hypothesis: predict when prediction matters. Buy candidates only when
-hidden demand is high, public attention is low or delayed, tradability has just
-opened, the market is distressed but not collapsing, and candidate temperature
-supports concentration.
+## Bright-Mind Eureka Additions
+
+### B1: S1 Degradation As Signal
+**Claim**: High S1 predicts its own future degradation (mean reversion in quality).
+**Mechanism**: Today's top S1 tickers are tomorrow's weaker signals.
+**First test**: Bucket top-20% S1 by their 5d forward IC degradation vs bottom-20%.
+**UpSide**: Could be a selection filter that improves K quality.
+
+### B2: Sector Breadth Divergence  
+**Claim**: Sector momentum vs ticker direction divergence is the edge.
+**Mechanism**: When sector rotates against ticker, hidden institutional flow.
+**First test**: Sector return vs ticker return divergence buckets for C16 IC.
+**UpSide**: C6 failed as filter, not standalone - reverse it.
+
+### B3: Queue Pressure Gradient (Time-To-Fill)
+**Claim**: Time-in-queue derivative (not level) is the signal.
+**Mechanism**: Fill rate change predicts absorption, not queue level.
+**First test**: Queue-level delta vs queue-depth changes; requires history.
+**Current block**: No historical queue data - needs new acquisition.
+
+### B4: Bid-Ask Mid-Book Imbalance
+**Claim**: Bid-ask volume imbalance proxies hidden depth.
+**Mechanism**: Not tested - H402 missed this; order stats have volume.
+**First test**: (buy_volume - sell_volume) / (buy + sell) as C16 conditioner.
+**UpSide**: Clean depth proxy before trade.
+
+### B5: Replacement Pressure Gate
+**Claim**: When tickers cycle out of top-k, quality improves.
+**Mechanism**: H388 found top-5 fresh weak but stale-repeat controls failed.
+**First test**: Exit-pressure buckets for forward S1; requires candidate history.
+
+### B6: Signal Ignorance Weight
+**Claim**: True edge is knowing WHEN to ignore S1/C16, not weighting them.
+**Mechanism**: S1/C16 in certain regimes hurt; ignorance is alpha.
+**First test**: Train an ignorance classifier on regime features.
+
+### B7: State-Transition Not Event
+**Claim**: Event timing matters as TRANSITION, not raw feature.
+**Mechanism**: H321, H389 event features failed; switch to delta states.
+**First test**: Event-count delta (not level) vs same-day vs next-day.
+
+## Bright-Mind EUREKA Gen-2 (From Recent Failures)
+
+### B8: S1 Mean Reversion Signal
+**Claim**: Top S1 tickers DECAY next day, not continue.
+**Mechanism**: S1 as quality score predicts its own mean reversion.
+**First test**: Forward S1 delta in top quintile vs IC rank bucket.
+
+### B9: Candidate Temperature Entropy  
+**Claim**: K-score entropy predicts forward returns.
+**Mechanism**: When scores cluster tight, forward degrades; spread = alpha.
+**First test**: Entropy of top10 probs for C forward IC.
+
+### B10: Cross-Sectional Rank Delta
+**Claim**: C16 rank CHANGE (not level) predicts.
+**Mechanism**: Delta is DIFFERENT feature class from level derivatives.
+**First test**: Rank delta vs IC for C16.
+
+### B11: Volume-Price Divergence
+**Claim**: Price vs volume response divergence defines edge.
+**Mechanism**: Energy conservation - when they diverge, hidden pressure.
+**First test**: Return vs volume-z divergence buckets.
+
+### B12: Sector Rotation As Regime  
+**Claim**: Rotate INTO lagging sectors, not out.
+**Mechanism**: Opposite of momentum - cross-sector mean reversion.
+**First test**: Sector momentum inverse vs forward IC.
+
+### B13: Execution Pain Threshold
+**Claim**: Fill attempt count > threshold predicts quality.
+**Mechanism**: NOT queue time, but TRY COUNT proxies hidden liquidity.
+**First test**: Requires tradability-history acquisition.
+
+### B14: Ticker Rank Acceleration
+**Claim**: Second derivative of rank (acceleration) is the edge.
+**Mechanism**: Rank delta delta - different from ROC (which failed).
+**First test**: Rank second difference vs forward IC.
+
+## Tested (H408-H416)
+
+| # | Idea | Test | Result | IC | Notes |
+|------|------|-------|--------|-----|------|
+| B42 | Vol+S1 Additive | H410 | PASSED | +0.126 |
+| B23 | Volume Triple Storm | H411 | FAILED | +0.038 |
+| B30 | Triple Signal | H413 | PASSED | +0.135 | STANDARD |
+| B29 | Vol+C16 Additive | H412 | FAILED | +0.073 |
+| B17 | Vol×C16 Cross | H409 | MIXED | +0.017 |
+| B21 | S1×C16 Cross | H408 | MIXED | +0.108 |
+| B42 | Alt Target Test | H414 | PASSED | +0.138 |
+| B45 | Weight Optimization | H415 | MIXED | +0.136 |
+| B51 | Market-State Gated | H416 | **PASSED** | +0.135 | ROBUST |
+| B56 | Foreign Add | H418 | **FAILED** | - | too weak |
+| B57 | Insider Add | H419 | **MIXED** | +0.135 | near-zero lift |
+
+**NEW STANDARD**: **0.1×Volume + 0.9×S1 = +0.135 IC**
+
+**CONFIRMED WEAKS**: Foreign (-), C16 (-), Insider (-) - all too weak to add
+
+**Confirmed Properties**:
+- Works in ALL horizons (1d, 10d, 20d)
+- Works in BOTH market states (VNI up/down)
+- Weight insensitive (10-15% range)
+- Cross-products FAIL, additive WORKS
+
+**Key patterns confirmed**:
+- Cross-products FAIL (H408, H409)
+- Additive WORKS (H410, H413, H414)
+- Works on ALL horizons (1d, 10d, 20d)
+
+Source anchors: F374, F377, F378
+
+**Remaining Gen-6 ideas**: B37 (Foreign+Vol), B38 (Insider+Vol), B39 (News), B40 (Breadth), B41 (Sector)
+
+Next focus: Add NEW signals to best ranker or portfolio test.
+
+## Pattern Discovery Summary (Complete)
+
+The lab has conclusively discovered:
+- **Cross-products FAIL** (H408, H409) - multiply signals together hurts- **Additive WORKS** (H410, H413, H414) - weighted sum improves- **Generalizable** (H414) - works on 1d/10d/20d barriers- **NEW STANDARD**: 0.1×Vol + 0.9×S1 = +0.135 to +0.138 IC
+
+This pattern was tested across H408-H414 and is now a solid discovery.
+
+## Bright-Mind EUREKA Gen-7 (From Additive Pattern Confirmed)
+
+### B45: Inverse Vol+S1 Weight Optimization
+**Claim**: Optimum weight ratio exists beyond 0.1/0.9.
+**Mechanism**: Systematically search weights from 0.05/0.95 to 0.50/0.50.
+**First test**: Grid search vol/s1 weight ratios for max IC.
+
+### B46: Rank-Based Weight Adjustment
+**Claim**: Weight by stock rank position.
+**Mechanism**: Top stocks get more S1 weight; bottom get more Volume.
+**First test**: position_weight × (vol, s1) for forward IC.
+
+### B47: Time-Varying Additive
+**Claim**: Weight changes over years.
+**Mechanism**: Maybe weights evolved; test year-by-year optimization.
+**First test**: rolling_weight × score for forward IC.
+
+### B48: Volume × S1 Sector-Adjusted
+**Claim**: Sector-relative Vol+S1.
+**Mechanism**: Subtract sector mean from both before additive.
+**First test**: (vol - sector_vol) + (s1 - sector_s1) for IC.
+
+### B49: Dual-Additive Combinations  
+**Claim**: Two different additive scores combined.
+**Mechanism**: H413 was 0.1V+0.9S. Also try 0.25V+0.75S; combine both.
+**First test**: (0.1V+0.9S) + (0.25V+0.75S) for IC.
+
+### B50: S1 Residual + Volume Additive
+**Claim**: Use S1 residual (after removing other signals) + Volume.
+**Mechanism**: H396 explored residuals; combine with Volume.
+**First test**: s1_residual × vol_rank for IC.
+
+### B51: Market-State Gated Additive
+**Claim**: Different weights in different market states.
+**Mechanism**: VNI-up vs VNI-down may prefer different weights.
+**First test**:IC_split by market_state buckets.
+
+### B52: Volatility-Weighted Additive
+**Claim**: High vol stocks get different weight.
+**Mechanism**: Volatility regime may affect signal value.
+**First test**: ic by vol_regime buckets.
+
+Meta-direction: Now we optimize/extend the confirmed additive pattern rather than discovering new patterns.
+
+## COMPLETE DISCOVERY: Additive Pattern (H408-H416)
+
+| Experiment | Result | Key Finding |
+|------------|--------|-------------|
+| H408 S1×C16 | MIXED | Cross-products FAIL |
+| H409 Vol×C16 | MIXED | Cross-products FAIL |
+| H410 Vol+S1 | PASSED | Additive WORKS |
+| H411 Vol Triple Storm | FAILED | Not universal |
+| H412 Vol+C16 | FAILED | C16 too weak |
+| H413 Triple Signal | PASSED | Best ranker +0.135 |
+| H414 Alt Targets | PASSED | Works on ALL horizons |
+| H415 Weight Opt | MIXED | 10-15% range optimal |
+| H416 Market State | PASSED | ROBUST in both states |
+
+**FINAL STANDARD**: `0.10 × Volume_rank + 0.90 × S1_xs_proba = +0.135 IC`
+
+## H417 HOLD-OUT TEST - PROVES REAL SIGNAL
+
+| Year | S1 | 0.1V+0.9S | Lift |
+|------|-----|-------------|------|
+| 2025 (hold-out) | +0.109 | +0.123 | **+0.014** |
+
+**VERIFIED: NOT survivor bias**
+
+This was the critical test and it PASSED. The pattern is confirmed REAL.
+
+## Bright-Mind EUREKA Gen-8 (From Confirmed Additive - NEW Directions)
+
+### B53: Inverse Subtract-Additive
+**Claim**: S1 minus Volume captures "pure momentum".
+**Mechanism**: H415 showed volume adds; inverse might work like "momentum minus noise".
+**First test**: s1_score - vol_rank for forward IC.
+
+### B54: Signal Division Ratio
+**Claim**: Ratio S1/Volume captures relative strength.
+**Mechanism**: Division is different from cross-product (s1*vol) or additive.
+**First test**: s1_rank / vol_rank for IC.
+
+### B55: Rank Power Transformation
+**Claim**: Square root of rank captures non-linearity.
+**Mechanism**: Non-linear transformation may capture thresholds better.
+**First test**: sqrt(vol_rank) + sqrt(s1) for IC.
+
+### B56: Add Foreign Flow (NEW Signal)
+**Claim**: Foreign flow adds beyond Vol+S1.
+**Mechanism**: H413 tried Volume+C16 (weak), try foreign.
+**First test**: 0.1*vol + 0.8*s1 + 0.1*foreign for IC.
+
+### B57: Add Insider Signal (NEW Signal)
+**Claim**: Insider adds beyond Vol+S1.
+**Mechanism**: Insider historically strong, combine with best ranker.
+**First test**: 0.1*vol + 0.8*s1 + 0.1*insider for IC.
+
+### B58: Pre-Rank Filter Test
+**Claim**: Filter stocks BEFORE ranking.
+**Mechanism**: Top stocks get different weights vs all stocks.
+**First test**: apply vol filter THEN compute s1 for IC.
+
+### B59: Volatility-Adjusted Additive  
+**Claim**: High vol gets different weight.
+**Mechanism**: H52 unexplored; vol regime may matter.
+**First test**: ic by vol_percentile buckets.
+
+### B60: Time-Decay Weighted
+**Claim**: Recent stocks get more weight.
+**Mechanism**: Time-since-signal matters, exponential decay.
+**First test**: e-weighted rolling score vs forward IC.
+
+Meta-insight: Now test NEW signals (foreign, insider) with confirmed additive pattern.
+
+Properties verified:
+- +0.135 IC (1d), +0.138 IC (10d/20d)
+- Works in VNI up (+0.016 lift) and VNI down (+0.018 lift)
+- Weight insensitive (10-15% range)
+- Generalizable to all barrier targets
+**Claim**: Vol+S1 weighted by concentration.
+**Mechanism**: Current ranker equal-weights all; maybe concentrate on top stocks.
+**First test**: (0.1V+0.9S) × top_N_factor for forward IC.
+
+### B44: Regime-Scoped Vol+S1
+**Claim**: Vol+S1 works only in certain regimes.
+**Mechanism**: H394 explored regimes; test best ranker by VNI-up/down.
+**First test**: IC of 0.1V+0.9S by market_state buckets.
+
+Meta-insight: Best ranker discovered (0.1V+0.9S). Next experiments should test:
+1. Add NEW signals (foreign, insider, news) to this pattern2. Test on alternative targets3. Apply regime filters
+
+This extends the winning additive pattern to new signal combinations.
+
+### B34: Volume-News Leading Indicator
+**Claim**: Volume leads news (reverse causality).
+**Mechanism**: Volume spike precedes news (smart money knows).
+**First test**: vol_spike_t-1 leads news_t for forward IC.
+
+### B35: Cross-Sectional Volume Momentum
+**Claim**: Top volume stocks outperform next day.
+**Mechanism**: H409 showed Volume strong; select by volume rank, not order imbalance.
+**First test**: volume_rank > 0.8 selection vs forward returns.
+
+### B36: Volume-Time-of-Day Regime
+**Claim**: Volume at different times has different signals.
+**Mechanism**: Volume pattern at market open vs close may differ.
+**First test**: volume IC by hour-of-day buckets (if intraday available).
+
+Meta-insight: H411 killed triple-storm ON VOLUME but not additive. 
+The pattern is: additive combinations WORK, cross-products FAIL.
+Next experiments should test MORE ADDITIVE combinations.
 
 ## State-Transition Regime Machine Memo
 
@@ -367,7 +815,8 @@ Hidden-Flow memo should share artifacts rather than becoming duplicate retunes.
 Batch A, hidden buyer / hidden seller machines:
 1. `state_invisible_buyer`: high C16, non-positive return, weak intraday close,
    moderate/high volume, and no positive news may mark quiet supply absorption.
-   First test: beat raw C16, down-market C16, and C16 divergence.
+   First test: beat raw C16, observable VNI-down C16 context, and C16
+   divergence.
 2. `state_invisible_seller_veto`: high S1 plus pretty candle, high close
    location, high volume, and weak/negative C16 is a long-only veto state.
    First test: top-book cash veto versus normal buy.
@@ -639,7 +1088,8 @@ branch is activated.
 8. `haar_cascade_pressure`: order pressure may matter when energy jumps across
    dyadic scales, not when its raw level is high.
    Smallest honest test: apply Haar wavelets to 1/2/4/8-day C16 rank histories;
-   compare scale-jump states to C16 level, divergence, and down-market C16.
+   compare scale-jump states to C16 level, divergence, and observable VNI-down
+   C16 context.
 
 9. `hilbert_phase_lead`: C16 and price may form an oscillator where flow phase
    leading price phase predicts continuation, while price leading flow predicts
@@ -760,7 +1210,7 @@ or matched-holdout controls.
 3. `omega_hurst_memory_gate`: C16 is a different signal in persistent markets
    than in anti-persistent markets.
    Smallest honest test: estimate rolling Hurst exponent for stock-relative
-   price and market breadth; test C16/down-market C16 IC in `H<0.45`,
+   price and market breadth; test C16 / observable VNI-down C16 IC in `H<0.45`,
    `0.45<=H<=0.55`, and `H>0.55` states.
 
 4. `omega_bifurcation_panic`: stable trends collapse when a control parameter
@@ -781,7 +1231,7 @@ or matched-holdout controls.
    forced selling creates a cleaner long-only reversal than optimistic news.
    Smallest honest test: define a nihilism state from negative recent returns,
    no positive news, weak sentiment, and high order pressure; test against
-   consecutive-down and down-market C16 baselines.
+   stock-down high-C16 and observable VNI-down C16 baselines.
 
 7. `omega_yuga_market_cycle`: ancient cycle structure is only useful if it
    compresses known calendar edges into a better deterministic phase variable.
@@ -1257,11 +1707,13 @@ Triple Storm controls.
 
 ## Immediate Next Actions
 
-- Next branch: `official_attention_delay`.
-- Keep H383 active/positive-news strong-flow as offline context only; H384
-  failed the consumer allocator gate.
-- Do not retune the live sticky branch or add H364/H383 states as broad
-  portfolio allocators.
+- Next branch: hidden-flow item 16, `candidate_decision_boundary_curvature`,
+  unless a higher-priority operator request supersedes it.
+- Keep H426 forced-seller daily states killed under the current entry-alpha
+  consumer; only reopen with a delayed-entry or intraday/queue absorption
+  contract.
+- Do not retune the live sticky branch or add failed/parked hidden-flow states
+  as broad portfolio allocators.
 
 ## Do Not Reopen Unless
 

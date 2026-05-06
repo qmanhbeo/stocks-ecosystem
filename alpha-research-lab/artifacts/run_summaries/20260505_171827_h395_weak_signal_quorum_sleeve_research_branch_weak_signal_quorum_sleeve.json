@@ -1,0 +1,328 @@
+{
+  "artifacts": {
+    "component_selection": "artifacts/h395_weak_signal_quorum_sleeve/20260505_171827_h395_weak_signal_quorum_sleeve_component_selection.parquet",
+    "component_summary": "artifacts/h395_weak_signal_quorum_sleeve/20260505_171827_h395_weak_signal_quorum_sleeve_component_summary.parquet",
+    "component_test_yearly": "artifacts/h395_weak_signal_quorum_sleeve/20260505_171827_h395_weak_signal_quorum_sleeve_component_test_yearly.parquet",
+    "fold_summary": "artifacts/h395_weak_signal_quorum_sleeve/20260505_171827_h395_weak_signal_quorum_sleeve_fold_summary.parquet",
+    "test_scores": "artifacts/h395_weak_signal_quorum_sleeve/20260505_171827_h395_weak_signal_quorum_sleeve_test_scores.parquet"
+  },
+  "metadata": {
+    "max_parent_corr": 0.3,
+    "min_train_avg_ic": 0.005,
+    "min_train_positive_share": 0.6,
+    "no_2026_rows": true,
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Independent weak signals with IC around 0.01-0.05 may become a stronger context when they agree, as long as the quorum is selected train-before-test and remains low-correlation to S1/C16 parents.",
+      "min_phase_rows": 500,
+      "min_train_years": 3,
+      "min_year_rows": 500,
+      "mode": "research_branch_weak_signal_quorum_sleeve",
+      "name": "h395_weak_signal_quorum_sleeve",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "order_volume_ratio_rank": "decision-time C16 order-pressure rank",
+        "s1_xs_proba": "decision-time S1 probability score",
+        "weak_quorum_score": "train-selected equal-weight weak-vote quorum score"
+      },
+      "start_year": 2016,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "random_iterations": 200
+  },
+  "mode": "research_branch_weak_signal_quorum_sleeve",
+  "name": "h395_weak_signal_quorum_sleeve",
+  "summary": {
+    "candidate_components": [
+      "vote_c4_oc_asym",
+      "vote_c5_positive_size",
+      "vote_c6_sector_laggard",
+      "vote_c7_ceiling_count",
+      "vote_c8_volume_z",
+      "vote_c9_reversal",
+      "vote_c10_illiq",
+      "vote_c11_ret_lag",
+      "vote_c12_gap_absorb",
+      "vote_c13_compression",
+      "vote_c14_clv_volconf",
+      "vote_official_supported_delay_vote",
+      "vote_h364_positive_vote",
+      "vote_observed_vni_down_2d_vote",
+      "vote_january_first_10_vote",
+      "vote_monday_vote"
+    ],
+    "component_summary_top": [
+      {
+        "avg_ic": 0.03081232507640099,
+        "component": "vote_c13_compression",
+        "pct_positive_years": 0.8571428571428571,
+        "positive_years": 6,
+        "selected_years": 7,
+        "years": 7
+      },
+      {
+        "avg_ic": 0.029189974101755476,
+        "component": "vote_c9_reversal",
+        "pct_positive_years": 1.0,
+        "positive_years": 7,
+        "selected_years": 7,
+        "years": 7
+      },
+      {
+        "avg_ic": 0.027625166752716025,
+        "component": "vote_c6_sector_laggard",
+        "pct_positive_years": 1.0,
+        "positive_years": 7,
+        "selected_years": 7,
+        "years": 7
+      },
+      {
+        "avg_ic": 0.02478209613696352,
+        "component": "vote_c4_oc_asym",
+        "pct_positive_years": 1.0,
+        "positive_years": 7,
+        "selected_years": 7,
+        "years": 7
+      },
+      {
+        "avg_ic": 0.023922794106566583,
+        "component": "vote_c12_gap_absorb",
+        "pct_positive_years": 1.0,
+        "positive_years": 7,
+        "selected_years": 7,
+        "years": 7
+      },
+      {
+        "avg_ic": 0.016941996252283847,
+        "component": "vote_official_supported_delay_vote",
+        "pct_positive_years": 1.0,
+        "positive_years": 7,
+        "selected_years": 7,
+        "years": 7
+      },
+      {
+        "avg_ic": 0.014624896287017351,
+        "component": "vote_c10_illiq",
+        "pct_positive_years": 0.8571428571428571,
+        "positive_years": 6,
+        "selected_years": 7,
+        "years": 7
+      },
+      {
+        "avg_ic": 0.011119281782303604,
+        "component": "vote_c14_clv_volconf",
+        "pct_positive_years": 1.0,
+        "positive_years": 7,
+        "selected_years": 7,
+        "years": 7
+      },
+      {
+        "avg_ic": 0.008465283342377675,
+        "component": "vote_c11_ret_lag",
+        "pct_positive_years": 1.0,
+        "positive_years": 7,
+        "selected_years": 7,
+        "years": 7
+      },
+      {
+        "avg_ic": 0.008034375404000179,
+        "component": "vote_c8_volume_z",
+        "pct_positive_years": 0.8571428571428571,
+        "positive_years": 6,
+        "selected_years": 7,
+        "years": 7
+      },
+      {
+        "avg_ic": 0.005610340900764869,
+        "component": "vote_h364_positive_vote",
+        "pct_positive_years": 0.8571428571428571,
+        "positive_years": 6,
+        "selected_years": 0,
+        "years": 7
+      },
+      {
+        "avg_ic": 0.005375909568137219,
+        "component": "vote_c7_ceiling_count",
+        "pct_positive_years": 0.7142857142857143,
+        "positive_years": 5,
+        "selected_years": 5,
+        "years": 7
+      }
+    ],
+    "decision": "PASSED",
+    "decision_detail": {
+      "best_component_avg_ic": 0.03081232507640099,
+      "c16_avg_ic": 0.07710658140387974,
+      "corr_c16": -0.006854588308823714,
+      "corr_s1": 0.2754085447120286,
+      "lift_vs_best_component_ic": 0.027446318859546508,
+      "lift_vs_random_mean_ic": 0.020783373943087095,
+      "quorum_avg_ic": 0.0582586439359475,
+      "quorum_pct_positive_years": 1.0,
+      "quorum_positive_years": 7,
+      "quorum_years": 7,
+      "random_basket_mean_ic": 0.037475269992860404,
+      "s1_avg_ic": 0.11663017060714762
+    },
+    "fold_summary": [
+      {
+        "best_component_ic": 0.04346134243871528,
+        "c16_ic": 0.06318799919423831,
+        "low_corr_pool_count": 16,
+        "quorum_ic": 0.06432939437834409,
+        "quorum_p_value": 2.6293206722798307e-66,
+        "quorum_rows": 71348,
+        "random_mean_ic": 0.05525803718185303,
+        "random_p05_ic": 0.046237212287678804,
+        "random_p95_ic": 0.06330543329204336,
+        "s1_ic": 0.1435795653315095,
+        "selected_components": "vote_c4_oc_asym,vote_c5_positive_size,vote_c6_sector_laggard,vote_c7_ceiling_count,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote,vote_observed_vni_down_2d_vote",
+        "selected_count": 13,
+        "test_year": 2019,
+        "train_years": "2016,2017,2018"
+      },
+      {
+        "best_component_ic": 0.041644798086792036,
+        "c16_ic": 0.0916304365283272,
+        "low_corr_pool_count": 16,
+        "quorum_ic": 0.06430101566327179,
+        "quorum_p_value": 4.953097472374876e-69,
+        "quorum_rows": 74430,
+        "random_mean_ic": 0.05167460933516715,
+        "random_p05_ic": 0.04074701202386108,
+        "random_p95_ic": 0.06209339349928777,
+        "s1_ic": 0.10859986453797485,
+        "selected_components": "vote_c4_oc_asym,vote_c6_sector_laggard,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote,vote_observed_vni_down_2d_vote",
+        "selected_count": 11,
+        "test_year": 2020,
+        "train_years": "2016,2017,2018,2019"
+      },
+      {
+        "best_component_ic": 0.038831494855395825,
+        "c16_ic": 0.10533974401124029,
+        "low_corr_pool_count": 16,
+        "quorum_ic": 0.046657385766802235,
+        "quorum_p_value": 5.621523288148212e-41,
+        "quorum_rows": 82463,
+        "random_mean_ic": 0.034844259339858914,
+        "random_p05_ic": 0.024244142050681452,
+        "random_p95_ic": 0.050752553730515924,
+        "s1_ic": 0.12305608302619715,
+        "selected_components": "vote_c4_oc_asym,vote_c5_positive_size,vote_c6_sector_laggard,vote_c7_ceiling_count,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote,vote_observed_vni_down_2d_vote",
+        "selected_count": 13,
+        "test_year": 2021,
+        "train_years": "2016,2017,2018,2019,2020"
+      },
+      {
+        "best_component_ic": 0.025965759046840193,
+        "c16_ic": 0.08960831645876993,
+        "low_corr_pool_count": 16,
+        "quorum_ic": 0.04309735090229735,
+        "quorum_p_value": 1.6622465878742736e-36,
+        "quorum_rows": 85654,
+        "random_mean_ic": 0.0063417757863924624,
+        "random_p05_ic": -0.013028535091389945,
+        "random_p95_ic": 0.03640257489365916,
+        "s1_ic": 0.07898916767927806,
+        "selected_components": "vote_c4_oc_asym,vote_c6_sector_laggard,vote_c7_ceiling_count,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote",
+        "selected_count": 11,
+        "test_year": 2022,
+        "train_years": "2016,2017,2018,2019,2020,2021"
+      },
+      {
+        "best_component_ic": 0.05285128589002195,
+        "c16_ic": 0.05766247626402014,
+        "low_corr_pool_count": 16,
+        "quorum_ic": 0.06426541564411745,
+        "quorum_p_value": 1.1805513286489407e-76,
+        "quorum_rows": 82969,
+        "random_mean_ic": 0.04151633870718005,
+        "random_p05_ic": 0.01933194370314092,
+        "random_p95_ic": 0.05990838322808885,
+        "s1_ic": 0.12174235576522317,
+        "selected_components": "vote_c4_oc_asym,vote_c6_sector_laggard,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote",
+        "selected_count": 10,
+        "test_year": 2023,
+        "train_years": "2016,2017,2018,2019,2020,2021,2022"
+      },
+      {
+        "best_component_ic": 0.04764723778059522,
+        "c16_ic": 0.06105876143263337,
+        "low_corr_pool_count": 16,
+        "quorum_ic": 0.06484010855967726,
+        "quorum_p_value": 1.5492876446201643e-79,
+        "quorum_rows": 84643,
+        "random_mean_ic": 0.03748572109019542,
+        "random_p05_ic": 0.020618981479301097,
+        "random_p95_ic": 0.05443594334428822,
+        "s1_ic": 0.1314885053290383,
+        "selected_components": "vote_c4_oc_asym,vote_c5_positive_size,vote_c6_sector_laggard,vote_c7_ceiling_count,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote",
+        "selected_count": 12,
+        "test_year": 2024,
+        "train_years": "2016,2017,2018,2019,2020,2021,2022,2023"
+      },
+      {
+        "best_component_ic": 0.036863462447104554,
+        "c16_ic": 0.07125833593792893,
+        "low_corr_pool_count": 16,
+        "quorum_ic": 0.06031983663712235,
+        "quorum_p_value": 9.735756063346469e-71,
+        "quorum_rows": 86749,
+        "random_mean_ic": 0.0352061485093758,
+        "random_p05_ic": 0.01755109381008625,
+        "random_p95_ic": 0.05708259799911429,
+        "s1_ic": 0.10895565258081218,
+        "selected_components": "vote_c4_oc_asym,vote_c6_sector_laggard,vote_c7_ceiling_count,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote",
+        "selected_count": 11,
+        "test_year": 2025,
+        "train_years": "2016,2017,2018,2019,2020,2021,2022,2023,2024"
+      }
+    ],
+    "panel_rows": 758414,
+    "protocol_note": "Components are selected using only prior years, with low train correlation to S1/C16 and equal weights in the test year.",
+    "test_rows": 568256,
+    "test_years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "ts": "20260505_171827"
+}

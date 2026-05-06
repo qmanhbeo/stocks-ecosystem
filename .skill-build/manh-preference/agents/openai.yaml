@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manh Preference"
+  short_description: "Apply Manh's machine-wide defaults for ownership, scripts, notes, and planning"
+  default_prompt: "Use $manh-preference broadly on substantial work to apply Manh's machine-wide defaults, keep cross-cutting preferences mechanical with explicit carve-outs, detect repeated hidden-preference drift, and align other skills by reference instead of duplicating the whole contract."

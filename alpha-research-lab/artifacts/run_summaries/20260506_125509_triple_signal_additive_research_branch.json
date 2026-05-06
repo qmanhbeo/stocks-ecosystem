@@ -1,0 +1,80 @@
+{
+  "artifacts": {
+    "additive_panel_cache": "artifacts/cache/triple_signal_additive_2025_2025.parquet",
+    "additive_panel_manifest": "artifacts/cache/triple_signal_additive_2025_2025_manifest.json"
+  },
+  "metadata": {
+    "order_pressure_path": "data/features/xs_order_pressure_daily.parquet",
+    "panel_cache_source": "built",
+    "panel_end": "2025-12-31",
+    "panel_rows": 86749,
+    "panel_start": "2025-01-02",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test whether volume rank plus C16 rank adds to the S1 decision-time score.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "triple_signal_additive",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "c16_rank": "date-wise rank of order_pressure_h359_active",
+        "s1_xs_proba": "decision-time S1 probability score",
+        "vol_rank": "date-wise rank of order_volume_ratio"
+      },
+      "start_year": 2025,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    }
+  },
+  "mode": "research_branch",
+  "name": "triple_signal_additive",
+  "summary": {
+    "best_combo": "0.1V+0.9S1",
+    "best_ic": 0.1225054922660845,
+    "ic_c16": -0.022416982851036372,
+    "ic_h410": 0.11240946353111878,
+    "ic_s1": 0.10895565258081218,
+    "ic_trip1": 0.1103138428481864,
+    "ic_trip2": 0.1108225803861209,
+    "ic_trip3": 0.1225054922660845,
+    "ic_trip4": 0.11894984297281382,
+    "ic_vol": 0.06961456384408247,
+    "lift_vs_h410": 0.01009602873496572,
+    "pos_s1": 1
+  },
+  "ts": "20260506_125509"
+}

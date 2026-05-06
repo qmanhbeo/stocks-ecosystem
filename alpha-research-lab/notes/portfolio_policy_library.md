@@ -319,7 +319,7 @@ Source anchors:
 
 ### PP8 — Anti-Signal Annihilation Veto
 
-**Status:** queued / untested.
+**Status:** mixed / broad veto blocked; strict no-support clue only.
 
 Hypothesis:
 - the long-only system may gain more by vetoing pretty candidates than by
@@ -333,6 +333,28 @@ Smallest honest test:
 - apply veto only to candidate-book names,
 - compare against random veto policies or matched random candidate drops,
 - do not treat this as a short signal.
+
+Result:
+- Session 282 `H401` tested fixed top-5 buyable candidate veto masks with
+  cycle relative-return labels and random same-breadth veto controls. Broad
+  disagreement masks failed versus no-veto: `support_count_le1` `-0.000123`,
+  `pretty_price_weak_flow` `-0.000026`, `news_hype_weak_flow` `-0.000075`,
+  and `weak_flow_weak_sector` `-0.000225`.
+- The only survivor was strict `support_count_zero`, where the candidate had
+  no C16, insider, news, tradability, or sector support. It had tiny mean lift
+  versus no-veto (`+0.000167`) with `6 / 7` positive years, but did not beat
+  random same-breadth veto p95. Treat it as a weak scale-down clue, not a
+  promoted veto policy.
+
+Reopening condition:
+- Reopen only as a narrower strict no-support scale-down/veto audit, or with a
+  materially different top-book target, intraday/queue evidence, or learned
+  portfolio consumer.
+
+Source anchors:
+- `F365`
+- `D017`
+- `session_282_log.md`
 
 ### PP9 — Candidate Civil War / Portfolio Uncertainty
 

@@ -17,6 +17,67 @@ entry must include source anchors: stable finding IDs or source session links.
   side-channel driven rather than live-branch retuning. Source anchors: `F117-F143`,
   `F155-F156`, `F271-F283`, `F296-F303`.
 
+- S24x/S25x methodology correction: S272 supersedes the old S253
+  "skepticism resolved" note. `actual` in the S1 parquet is a future binary
+  barrier label, so S244/S246/S247/S253 market-down and consecutive-down
+  states were partly target-derived. Correct observable VNI-down states are
+  only modest C16 context (`+0.0771` / `+0.0806` avg IC versus C16 `+0.0738`),
+  and observable stock-down states are weaker than C16. `insider_buy_lead`
+  survives as real support context (`+0.1050`, `11 / 11` positive years);
+  high buy-order-count volume context is modest (`+0.0844`). Do not promote
+  S244 `consecutive_down`, target-derived `down_market_c16`, or
+  `deep_down_c16`. Source anchors: `F355`, `D012`.
+
+- Insider event-time clock: H398 independently reproduced the S272 positive
+  insider lead. `insider_tplus1` reached avg C16 IC `+0.10498`, `11 / 11`
+  positive years, and `+0.03000` lift versus same-ticker non-event dates; T0
+  was also strong at `+0.10816`. The quiet pre-reaction thesis failed:
+  reacted T+1 rows beat pre-reaction by `+0.01811` avg IC, and high buy-order-
+  count T+1 rows were the strongest rank-quality pocket (`+0.13776` avg IC).
+  Keep insider lead; park the current no-news/no-high-count pre-reaction
+  variant. Source anchors: `F362`, `D014`.
+
+- Crowd-count context: H399 says high buy-order count is a modest conditioner,
+  not a signal. `buy_count_rank` was anti-predictive (`-0.01075`, `3 / 8`
+  positive years); `high_buy_count` improved C16 IC only to `+0.08463`
+  (`+0.00944` lift versus all rows). The clean pocket was C8 high volume-z
+  (`+0.10258`, `8 / 8`), and high count added almost nothing on top. The best
+  real crowd clue was `count_high_size_weather_low20` (`+0.10083`, `+0.01620`
+  lift versus high count) but with only `5 / 8` positive lift years. Source
+  anchors: `F363`, `D015`.
+
+- Oracle-shadow regime follow-through: H394 found only a weak honest
+  observable shadow of the target-breadth weather that made the invalid S24x
+  states look strong. A rolling ridge date model predicted future S1
+  barrier-breadth with avg date IC `+0.05019` and `7 / 8` positive years, but
+  the best honest predicted bucket lifted C16 by only `+0.00342` versus all
+  rows and `+0.00416` versus random dates, below promotion gates, and degraded
+  S1. H399 found the H394 low-weather bucket can still be weak context inside
+  high-count/high-average-buy-size rows, but not stable enough for promotion.
+  Observable `VNI down 2d` remained the cleaner context. Source anchors:
+  `F358`, `F363`, `D013`.
+
+- Weak-signal quorum: H395 confirms that weak IC `0.01-0.05` evidence should
+  not be discarded. A train-selected equal-weight low-parent-corr quorum from
+  predeclared C4-C14/news/official/calendar/context votes reached avg IC
+  `+0.05826`, `7 / 7` positive years, S1 corr `+0.27541`, C16 corr `-0.00685`,
+  and beat both random weak baskets and the best component. This is a strong
+  composite RL-state candidate, not a new independent primitive. H396 then
+  confirmed the distinction: H395 survives S1/C16 residualization
+  (`+0.01669`, `7 / 7`) but not residualization against its C-vote ingredients
+  (`+0.00187`). C13/C10/C6 are the clean residual primitive survivors. H400
+  then rejected adding a fixed calendar weak-prior vote: the non-calendar
+  quorum stayed at `+0.05826`, while the calendar-added quorum fell to
+  `+0.05605` with `0 / 7` positive lift years. Source anchors:
+  `F359-F360`, `F364`, `D016`.
+
+- Experiment hygiene: lightweight signal/state/context branches now have a
+  shared scaffold. Start from `analysis/_template_research_branch.py` and
+  `src/experiment_contract.py`; the contract renames raw S1 `actual` to
+  target-only `s1_barrier_hit_1d`, blocks `2026+` by default, validates
+  target/state overlap, computes pooled/yearly/phase IC summaries, and writes
+  standard run summaries. Source anchor: `F357`.
+
 - Best currently published side-channel promotion: C16 scoped CafeF order
   pressure is a shared opt-in feature contract. H356-H360 show strong standalone
   IC, residual selector value, bounded executable uplift, publication, and
@@ -25,7 +86,10 @@ entry must include source anchors: stable finding IDs or source session links.
 - Insider/weakness interactions: H387 rejected the insider-down rescue overlay.
   Positive insider plus stock weakness plus high C16 beat ordinary insider rows
   but failed the stronger insider-C16 and stock-down-C16 controls; stock-down
-  high-C16 remained the cleaner control state. Source anchors: `F348`, `D005`.
+  high-C16 remained the cleaner control state. H398 says this does not kill
+  event-time insider lead; the stronger continuation clue is reaction
+  confirmation, especially high buy-order count. Source anchors: `F348`,
+  `F362`, `D005`, `D014`.
 
 - Calendar/timing context: old calendar filters remain useful as context, but
   H390 parks exact-state calendar promotion under the current target. Exact
@@ -33,7 +97,9 @@ entry must include source anchors: stable finding IDs or source session links.
   controls, but it was only one active test date per evaluated year, had only
   `2 / 4` positive 1d residual-lift years, and had negative mean 5d residual
   lift; `quarter_start` and late quarter-month timing did not retain positive
-  1d residual lift. Source anchors: `F351`, `D008`.
+  1d residual lift. H400 also rejected dense calendar as a weak quorum prior:
+  the pooled calendar vote had `-0.00827` avg IC and reduced the H395 quorum.
+  Source anchors: `F351`, `F364`, `D008`, `D016`.
 
 - Tradability-release context: H391 rejected the current entry-panel
   `release_flag` as a `wait_release` buy signal. Top-5/top-10 rows becoming
@@ -41,6 +107,95 @@ entry must include source anchors: stable finding IDs or source session links.
   negative same-rank matched-control lifts, weak 2025 confirmation, and weaker
   sellability health than stable buyable controls. Source anchors: `F352`,
   `D009`.
+
+- Forced-seller daily states: H426 rejected the current forced-seller detector
+  as an entry-candidate allocator. The broad core from 3d weakness, volume
+  spike, sell-pressure, rising/high average sell size, and no active bad news
+  had only `+0.000230` mean lift versus random-state, `1 / 5` positive WF
+  years, and `-0.002047` lift versus random-all. Floor and large-down variants
+  also failed, and literal tradability release had only `7` rows. The
+  next-day C16 turn clause needs a delayed-entry or intraday/queue protocol
+  before it is decision-time valid. Source anchors: `F382`, `D025`.
+
+- Portfolio veto context (H401): rejected broad side-channel disagreement as a
+  top-5 cash veto. `support_count_le1`, `pretty_price_weak_flow`,
+  `news_hype_weak_flow`, and `weak_flow_weak_sector` all reduced cycle
+  relative returns versus no-veto. The only survivor is strict
+  `support_count_zero`, with tiny lift (`+0.000167` vs no-veto, `6 / 7`
+  positive years) that failed random p95. Source anchors: `F365`, `D017`.
+
+- Order fragmentation context (H402): tested order-count/volume fragmentation
+  ratios as proxies for book depth beyond raw C16. Fragmentation added marginal
+  IC beyond C16 (+0.00753) but with poor year consistency (2/8 positive)
+  and C16 itself was negative IC in this period. The only strong standalone
+  proxy was avg buy-minus-sell size (+0.03033 IC). Do not promote as a
+  ranker; avg size could be useful as a high-C16 conditioner with different
+  data. Source anchors: `F366`.
+
+- Flow regime context (H403): Reynolds number Re = velocity * breadth / viscosity
+  (using volume-z as velocity proxy) adds +0.044 IC beyond C16 baseline
+  with 6/8 positive years. Re high bucket is strongest (+0.01429 IC).
+  NOT a signal-library promotion (IC < 0.05) but useful as C16 ranker
+  within Re regime or portfolio policy context. Source anchors: `F367`.
+
+- Sector event lightcone (H405): both own-ticker and sector-peer events
+  add negative IC (own: -0.00481, sector: -0.00698, both 0/8/1/8 pos years).
+  Confirms prior news/event feature failures. Do not reopen as count-based
+  features. Source anchors: `F369`, `D020`.
+
+- Conservation residual (H406): expected from flow predicts forward at
+  +0.00983 IC (3/3 pos years) but residual inversely predicts -0.02861 IC
+  (0/3 pos years). Model captures flow; residual is mean-reverting noise.
+  Do not reopen as conservation-break alpha. Source anchors: `F370`, `D021`.
+
+- Phase lag cross-product (H407): lagged C16 × price cross-product adds +0.022 IC
+  with 7/8 positive years. This is NEW feature class - cross-product of lags,
+  different from level derivatives (ROC, Haar - failed) or simple lags.
+  NOT signal-library (IC < 0.05) but useful as C16 conditioner. Source anchors: `F371`.
+
+- S1×C16 cross-product (H408): cross adds +0.108 but WORSE than S1 alone (+0.118).
+  C16 alone is negative (-0.030). Cross doesn't beat S1 standalone - 0.010 IC penalty.
+  Do not promote as signal. Source anchors: `F372`.
+
+- Volume×C16 cross-product (H409): cross adds +0.017 but WORSE than Volume alone (+0.077).
+  CRITICAL: Volume alone (`order_volume_ratio`) is +0.077 IC, 8/8 pos years - NEW SIGNAL!
+  Recommend signal library addition. Source anchors: `F373`.
+
+- Volume+S1 additive (H410): additive 0.25V+0.75S = +0.12649 IC, BEATS both standalones!
+  Cross-products hurt (H408, H409) but additive works (+0.009 IC lift over S1).
+  Recommend: 0.25×Vol + 0.75×S1 as simple combination ranker. Source anchors: `F374`.
+
+- Volume+C16 additive (H412): FAILED. C16 is too weak (-0.0008 IC).
+  Best additive = +0.073, WORSE than Volume alone (+0.075). C16 cannot be rescued.
+  Source anchors: `F376`.
+
+- Triple signal additive (H413): PASSED! 0.1V+0.9S = +0.135 IC, beats H410.
+  Lower volume (10%) + higher S1 (90%) wins. New standard: 0.1V+0.9S.
+  Source anchors: `F377`.
+
+- Alternative target test (H414): PASSED! Additive works on ALL horizons (1d, 10d, 20d).
+  Same +0.017 to +0.019 lift across targets. Generalizable pattern confirmed.
+  Source anchors: `F378`.
+
+- Weight optimization (H415): MIXED. 15V+85S = +0.136 (marginal +0.001 over H413).
+  Optimum in 10-15% volume range. Keep H413 as standard.
+  Source anchors: `F379`.
+
+- Market state gated (H416): PASSED! Works in BOTH market states.
+  VNI up: +0.016 lift, VNI down: +0.018 lift. ROBUST pattern.
+  Source anchors: `F380`.
+
+- Hold-out 2025 test (H417): PASSED! +0.014 lift on 2025, same as long-term +0.017.
+  PROVES NOT survivor bias - pattern is REAL.
+  Source anchors: `F381`.
+
+- Foreign flow addition (H418): FAILED. Foreign has near-zero IC (+0.004).
+  Adding it HURTS (-0.006). Same as C16 - too weak to contribute.
+  Source anchors: `D023`.
+
+- Insider addition (H419): MIXED. Insider alone NEGATIVE (-0.002).
+  Adding gives +0.0004 (within noise). All weak signals confirmed.
+  Source anchors: `D024`.
 
 - Source-triangle context: H392 rejected the C16+insider+news core under the
   current C5/PhoBERT representation. `c16_insider_any_news` was positive but
@@ -76,10 +231,30 @@ entry must include source anchors: stable finding IDs or source session links.
   selection and random same-support/random-all policy benchmarks. Source
   anchors: `F342-F347`, `D002-D004`.
 
+- Horizon routing for local-news states: H397 explains why some IC/payoff
+  evidence failed broad candidate allocation. Active/positive-news strong-flow
+  is a 1d C16 ranker (`+0.02257` / `+0.02536` IC lift versus strong-flow), not
+  a 5d allocator; official and official-forward supported attention are 5d
+  payoff states (`+0.00650` / `+0.00662` net lift, `8 / 8` positive years).
+  H364 positive was too sparse under the min-row gate, and C5 rank-within-
+  insider failed without killing S272 insider lead. Source anchor: `F361`.
+
 ## Reference Baselines (Walk-Forward IC)
 - Random: ~0.00 (noise benchmark)
 - C16: +0.078 (order pressure)
 - S1: +0.149 (best published - PRIMARY for RL)
+
+## Signal Promotion Rule
+
+- Strong standalone signal promotion: IC `> 0.05`, decision-time observable,
+  independent from existing library signals (`corr < 0.30`), positive in at
+  least `60%` of tested years, and not a target-derived state.
+- Weak candidate/context: IC between `0.01` and `0.05`, or IC `> 0.05` with
+  limited coverage, sparse-state caveats, or unresolved consumer fit.
+- Parent-signal filters and rewrites must be judged by incremental lift versus
+  the parent and matched controls. IC `> 0.05` versus random is real edge but
+  not a new promotion if it is mostly raw S1/C16/etc. re-bucketing.
+  Source anchor: `F356`.
 
 ## Reference Baselines (Walk-Forward IC)
 - Random: ~0.00 (noise benchmark)
@@ -122,16 +297,18 @@ entry must include source anchors: stable finding IDs or source session links.
 ### S244 New Signals (independent vs Random)
 | Signal | IC | vs Random | Verdict |
 |--------|-----|---------|--------|
-| insider_buy_lead | 0.1113 | +0.11 | REAL (+40% boost) |
-| consecutive_down_days | 0.1030 | +0.10 | REAL - filter |
-| dividend_30d | 0.0934 | +0.09 | REAL - event driver |
-| rank_time_acceleration | 0.0576 | +0.06 | REAL - state feature |
+| insider_buy_lead | 0.1050 | +0.11 | REAL after S272 next-trading-day audit |
+| consecutive_down_days | target-derived | n/a | INVALID from S244/S253 record |
+| dividend_30d | 0.0526-0.0557 | +0.05 | weak/context only after corrected window audit |
+| rank_time_acceleration | 0.0548 | +0.05 | weak, below C16 |
 
 ### S245-S247 C16 Contrarian Signals
 | Signal | IC | vs Baseline | Verdict |
 |--------|-----|-------------|--------|
-| down_market_c16 | +0.098 | +26% | **REAL** - TIER 2 |
-| deep_down_c16 | +0.093 | +20% | **REAL** - TIER 2 |
+| target-derived down_market_c16 | +0.098 | leaky | INVALID |
+| observable_vni_down | +0.077 | +0.003 | modest context only |
+| observable_vni_down_2d | +0.081 | +0.007 | modest context only |
+| target-derived deep_down_c16 | +0.093 | leaky / mislabeled | INVALID |
 | sector_pressure_momentum | +0.078 | +0% | FAILED |
 
 ### S248-S252 Bright-Mind Failed
@@ -143,12 +320,11 @@ entry must include source anchors: stable finding IDs or source session links.
 | c16_extreme_down | +0.028 | -63% | FAILED (sparse) |
 | c16_entropy | ~0.08 | ~0.08 | WEAK - dead end |
 
-### S253 TRUE Walk-Forward Validation (IC > 0.05)
-| Signal | True WF IC | Std | Verdict |
-|--------|-----------|-----|--------|
-| insider_lead | 0.1093 | 0.036 | **REAL** ✅ |
-| consecutive_down | 0.1047 | 0.011 | **REAL** ✅ |
-| down_market_c16 | 0.0992 | 0.007 | **REAL** ✅ |
+### S253 Validation Status
+Superseded by S272. S253 did not implement the advertised TRUE train
+`T-2,T-1` -> test `T` protocol, and its market/consecutive regimes were
+derived from same-date S1 `actual`. Keep only the insider-lead survivor from
+the corrected audit. Source anchors: `F355`, `D012`.
 
 ## All Real Signals for RL (IC > 0.05 vs Random) — Complete Inventory
 
@@ -159,8 +335,7 @@ entry must include source anchors: stable finding IDs or source session links.
 | Triple Storm | 0.158 | +0.16 | enhancement |
 | monday_jan_combo | 0.1109 | +0.11 | raw calendar combo; exact promotion parked by H390 |
 | X53 (Liquid C16) | 0.137 | +0.14 | liquidity filter |
-| consecutive_down_days | 0.1030 | +0.10 | market streak |
-| **insider_buy_lead** | **0.1113** | **+0.11** | **insider lead** |
+| **insider_buy_lead** | **0.1050** | **+0.11** | **insider lead; S272 survivor** |
 
 ### Tier 2: Enhancement/Filters (IC 0.08-0.10)
 | Signal | IC | vs Random | Type |
@@ -179,7 +354,7 @@ entry must include source anchors: stable finding IDs or source session links.
 ### Tier 3: State Features (IC 0.05-0.08)
 | Signal | IC | vs Random | Type |
 |--------|-----|---------|------|
-| rank_time_acceleration | 0.0576 | +0.06 | state feature |
+| rank_time_acceleration | 0.0548 | +0.05 | weak, below C16 after S272 |
 | X54 (Braid) | 0.080 | +0.08 | sector filter |
 | C16 baseline | 0.078 | +0.08 | order pressure |
 | vol_low | 0.0695 | +0.07 | volume regime |
@@ -188,7 +363,8 @@ entry must include source anchors: stable finding IDs or source session links.
 
 ### Key RL Use Cases
 1. **Primary signal**: S1 (0.149)
-2. **Enhancement filters**: vol_high, monday_jan, divergence, liquid, down_market
+2. **Enhancement filters**: vol_high, monday_jan context, divergence, liquid,
+   observable VNI-down context only
 3. **RL state features**: calendar-day, volume regime, market breadth, quarter timing
 
 Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 238, 242, 243.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tailscale Transfer"
+  short_description: "Send and receive Tailscale files"
+  default_prompt: "Use $tailscale-transfer to transfer files between this machine and Manh's phone over Tailscale."

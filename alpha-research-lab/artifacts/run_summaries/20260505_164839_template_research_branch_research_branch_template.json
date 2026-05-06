@@ -1,0 +1,88 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_templates/20260505_164839_template_research_branch_results.parquet",
+    "yearly": "artifacts/research_templates/20260505_164839_template_research_branch_yearly.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Template smoke branch: demonstrates role-safe S1 loading, fixed state definitions, yearly IC summaries, and run-summary artifacts.",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch_template",
+      "name": "template_research_branch",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2024,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": "all_rows",
+        "family": "example",
+        "label": "Example only: S1 score >= threshold",
+        "name": "example_high_s1",
+        "peer": null,
+        "primary": false
+      }
+    ],
+    "template": true
+  },
+  "mode": "research_branch_template",
+  "name": "template_research_branch",
+  "summary": {
+    "best_avg_year_ic": 0.12031098314764894,
+    "best_positive_years": 2,
+    "best_state_by_avg_year_ic": "all_rows",
+    "best_years": 2,
+    "decision": "TEMPLATE_ONLY",
+    "panel_rows": 173437,
+    "states_evaluated": 2,
+    "template_note": "Copy this file before using it for a real branch."
+  },
+  "ts": "20260505_164839"
+}

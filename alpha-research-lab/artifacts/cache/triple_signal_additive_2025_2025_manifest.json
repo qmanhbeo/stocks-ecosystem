@@ -1,0 +1,166 @@
+{
+  "artifact": "artifacts/cache/triple_signal_additive_2025_2025.parquet",
+  "builder": "src.additive_signal_research.load_or_build_additive_research_panel",
+  "columns": [
+    "time",
+    "ticker",
+    "s1_xs_proba",
+    "s1_barrier_hit_1d",
+    "order_volume_ratio",
+    "order_pressure_h359_active",
+    "vol_rank",
+    "c16_rank"
+  ],
+  "experiment": {
+    "end_year": 2025,
+    "forbidden_state_columns": [
+      "actual",
+      "s1_barrier_hit_1d"
+    ],
+    "hypothesis": "Test whether volume rank plus C16 rank adds to the S1 decision-time score.",
+    "min_phase_rows": 500,
+    "min_train_years": 2,
+    "min_year_rows": 500,
+    "mode": "research_branch",
+    "name": "triple_signal_additive",
+    "phases": [
+      {
+        "name": "dev",
+        "years": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022
+        ]
+      },
+      {
+        "name": "validation",
+        "years": [
+          2023,
+          2024
+        ]
+      },
+      {
+        "name": "confirmation",
+        "years": [
+          2025
+        ]
+      }
+    ],
+    "score_columns": {
+      "c16_rank": "date-wise rank of order_pressure_h359_active",
+      "s1_xs_proba": "decision-time S1 probability score",
+      "vol_rank": "date-wise rank of order_volume_ratio"
+    },
+    "start_year": 2025,
+    "target_columns": {
+      "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+    }
+  },
+  "input_fingerprint": {
+    "algorithm": "sha256-path-stat-v1",
+    "digest": "c3204db22811320ba33348ec92b478e4400cc1c26cef1c6a825e0d9352e7a14d",
+    "items": {
+      "experiment": {
+        "end_year": "2025",
+        "forbidden_state_columns": [
+          "actual",
+          "s1_barrier_hit_1d"
+        ],
+        "hypothesis": "Test whether volume rank plus C16 rank adds to the S1 decision-time score.",
+        "min_phase_rows": "500",
+        "min_train_years": "2",
+        "min_year_rows": "500",
+        "mode": "research_branch",
+        "name": "triple_signal_additive",
+        "phases": [
+          {
+            "name": "dev",
+            "years": [
+              "2015",
+              "2016",
+              "2017",
+              "2018",
+              "2019",
+              "2020",
+              "2021",
+              "2022"
+            ]
+          },
+          {
+            "name": "validation",
+            "years": [
+              "2023",
+              "2024"
+            ]
+          },
+          {
+            "name": "confirmation",
+            "years": [
+              "2025"
+            ]
+          }
+        ],
+        "score_columns": {
+          "c16_rank": "date-wise rank of order_pressure_h359_active",
+          "s1_xs_proba": "decision-time S1 probability score",
+          "vol_rank": "date-wise rank of order_volume_ratio"
+        },
+        "start_year": "2025",
+        "target_columns": {
+          "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+        }
+      },
+      "feature_paths": [
+        {
+          "exists": true,
+          "is_dir": false,
+          "mtime_ns": 1777412391127014995,
+          "path": "/home/manh/stocks-ecosystem/data/features/xs_order_pressure_daily.parquet",
+          "size": 14163330,
+          "type": "path"
+        }
+      ],
+      "features": [
+        {
+          "columns": [
+            "order_volume_ratio",
+            "order_pressure_h359_active"
+          ],
+          "join_keys": [
+            "time",
+            "ticker"
+          ],
+          "name": "order_pressure_volume_c16",
+          "path": {
+            "exists": true,
+            "is_dir": false,
+            "mtime_ns": 1777412391127014995,
+            "path": "data/features/xs_order_pressure_daily.parquet",
+            "size": 14163330,
+            "type": "path"
+          },
+          "rank_columns": {
+            "order_pressure_h359_active": "c16_rank",
+            "order_volume_ratio": "vol_rank"
+          },
+          "rename": {}
+        }
+      ],
+      "s1_path": {
+        "exists": true,
+        "is_dir": false,
+        "mtime_ns": 1775131531000000000,
+        "path": "/home/manh/stocks-ecosystem/data/features/xs_barrier_vol_1d_hose_full.parquet",
+        "size": 1842439,
+        "type": "path"
+      },
+      "schema_version": "1"
+    }
+  },
+  "row_count": 86749
+}

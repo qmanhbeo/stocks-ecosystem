@@ -13,8 +13,10 @@ Run experiments the way the lab expects: pick the smallest valid mode, define th
 
 1. Read workspace and lab state.
 - `README.md`
+- `README_for_AGENTS.md` when changing shared or root-owned skill behavior
 - `alpha-research-lab/README.md`
-- `alpha-research-lab/notes/next_steps.md`
+- `alpha-research-lab/README_for_AGENTS.md`
+- `alpha-research-lab/notes/live_state.md`
 
 2. Read durable branch memory.
 - `alpha-research-lab/notes/signal_library.md`
@@ -44,6 +46,16 @@ Run experiments the way the lab expects: pick the smallest valid mode, define th
 2. Choose the smallest valid mode.
 - Prefer the cheapest honest runner that can answer the question.
 - Use the existing experiment entrypoints and compact-summary writers.
+- For new lightweight signal/state/context audits, start from
+  `alpha-research-lab/analysis/_template_research_branch.py` and
+  `alpha-research-lab/src/experiment_contract.py` instead of hand-rolling a
+  script.
+- Use `load_s1_decision_panel` from `src/experiment_contract.py` when reading
+  the S1 parquet. It renames raw `actual` to `s1_barrier_hit_1d`, a future
+  target label; do not use it, raw `actual`, future returns, or same-date
+  target aggregates to define states or regimes.
+- The scaffold blocks `2026+` by default, checks target/state overlap,
+  computes pooled/yearly/phase IC summaries, and writes standard artifacts.
 - Do not jump to broad sweeps when a one-shot, audit, ablation, or branch-local comparison can falsify the idea faster.
 - If the hypothesis depends on missing data, stop and record the data constraint instead of faking an experiment.
 
@@ -62,7 +74,7 @@ Run experiments the way the lab expects: pick the smallest valid mode, define th
 5. Record the pass immediately.
 - After each material run, update the current `alpha-research-lab/notes/session_NN_log.md`.
 - Keep failed and mixed outcomes; do not erase dead ends.
-- If the pass changes live state, branch priority, or branch closure, update `alpha-research-lab/notes/next_steps.md`.
+- If the pass changes live state, branch priority, or branch closure, update `alpha-research-lab/notes/live_state.md`.
 - If the pass confirms, promotes, or sharply constrains a signal, update `alpha-research-lab/notes/signal_library.md`.
 - Promote durable conclusions into the current `alpha-research-lab/notes/findings-*.md` chunk and update `alpha-research-lab/notes/findings.md` if needed.
 

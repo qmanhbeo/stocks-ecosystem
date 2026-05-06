@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verification First"
+  short_description: "Probe, patch narrowly, and verify proportionally under Manh's defaults"
+  default_prompt: "Use $verification-first to inspect before editing, verify proportionally after patching, apply Manh's machine-wide defaults for probe-first work and concise handoff, and write verification outcomes into the right note surface when the pass is material."

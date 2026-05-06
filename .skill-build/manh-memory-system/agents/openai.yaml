@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manh Memory System"
+  short_description: "Lightweight repo memory write-back"
+  default_prompt: "Use $manh-memory-system to keep lightweight live-state, session, and durable repo notes after material work."

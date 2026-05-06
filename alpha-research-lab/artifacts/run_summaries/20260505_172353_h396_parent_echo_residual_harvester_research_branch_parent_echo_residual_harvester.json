@@ -1,0 +1,483 @@
+{
+  "artifacts": {
+    "residual_scores": "artifacts/h396_parent_echo_residual_harvester/20260505_172353_h396_parent_echo_residual_harvester_residual_scores.parquet",
+    "results": "artifacts/h396_parent_echo_residual_harvester/20260505_172353_h396_parent_echo_residual_harvester_results.parquet",
+    "yearly": "artifacts/h396_parent_echo_residual_harvester/20260505_172353_h396_parent_echo_residual_harvester_yearly.parquet"
+  },
+  "metadata": {
+    "no_2026_rows": true,
+    "parent_columns_c_votes": [
+      "vote_c4_oc_asym",
+      "vote_c5_positive_size",
+      "vote_c6_sector_laggard",
+      "vote_c7_ceiling_count",
+      "vote_c8_volume_z",
+      "vote_c9_reversal",
+      "vote_c10_illiq",
+      "vote_c11_ret_lag",
+      "vote_c12_gap_absorb",
+      "vote_c13_compression",
+      "vote_c14_clv_volconf"
+    ],
+    "parent_columns_market": [
+      "s1_xs_proba",
+      "order_volume_ratio_rank"
+    ],
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "High-IC composite or filter signals may be parent echoes; after same-date residualization against their parent signals, only residuals with stable IC > 0.01 should be treated as independent evidence.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch_parent_echo_residual_harvester",
+      "name": "h396_parent_echo_residual_harvester",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "order_volume_ratio_rank": "decision-time C16 order-pressure rank",
+        "s1_xs_proba": "decision-time S1 probability score",
+        "weak_quorum_score": "H395 train-selected weak-vote quorum score"
+      },
+      "start_year": 2019,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    }
+  },
+  "mode": "research_branch_parent_echo_residual_harvester",
+  "name": "h396_parent_echo_residual_harvester",
+  "summary": {
+    "decision": "PASSED",
+    "decision_detail": {
+      "q1_independent_of_c_votes": false,
+      "q1_independent_of_s1_c16": true,
+      "q1_resid_c_votes_avg_ic": 0.0018726071337009543,
+      "q1_resid_c_votes_positive_years": 5,
+      "q1_resid_c_votes_years": 7,
+      "q1_resid_s1_c16_avg_ic": 0.016692299948936635,
+      "q1_resid_s1_c16_positive_years": 7,
+      "q1_resid_s1_c16_years": 7,
+      "s1_c16_residual_survivor_count": 4,
+      "s1_c16_residual_survivors": [
+        {
+          "avg_ic": 0.018389022315876417,
+          "candidate": "vote_c13_compression",
+          "positive_years": 6,
+          "years": 7
+        },
+        {
+          "avg_ic": 0.016692299948936635,
+          "candidate": "weak_quorum_score",
+          "positive_years": 7,
+          "years": 7
+        },
+        {
+          "avg_ic": 0.012777425741747523,
+          "candidate": "vote_c10_illiq",
+          "positive_years": 5,
+          "years": 7
+        },
+        {
+          "avg_ic": 0.011148313007741616,
+          "candidate": "vote_c6_sector_laggard",
+          "positive_years": 7,
+          "years": 7
+        }
+      ]
+    },
+    "panel_rows": 568256,
+    "protocol_note": "resid_s1_c16 tests market-parent independence; resid_c_votes tests whether H395 is new beyond its C-library ingredients.",
+    "test_years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "top_results": [
+      {
+        "avg_ic": 0.0582586439359475,
+        "candidate": "weak_quorum_score",
+        "max_year_ic": 0.06484010855967726,
+        "min_year_ic": 0.04309735090229735,
+        "pct_positive_years": 1.0,
+        "pooled_ic": 0.057013442021965954,
+        "pooled_p_value": 0.0,
+        "pooled_rows": 568256,
+        "positive_years": 7,
+        "survives_residual_gate": true,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.03081232507640099,
+        "candidate": "vote_c13_compression",
+        "max_year_ic": 0.05285128589002195,
+        "min_year_ic": -7.628685271055937e-05,
+        "pct_positive_years": 0.8571428571428571,
+        "pooled_ic": 0.030514163367529382,
+        "pooled_p_value": 3.901147334115772e-117,
+        "pooled_rows": 568256,
+        "positive_years": 6,
+        "survives_residual_gate": true,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.029189974101755476,
+        "candidate": "vote_c9_reversal",
+        "max_year_ic": 0.038831494855395825,
+        "min_year_ic": 0.017009541369044277,
+        "pct_positive_years": 1.0,
+        "pooled_ic": 0.02913225423767773,
+        "pooled_p_value": 6.183438440808781e-107,
+        "pooled_rows": 568256,
+        "positive_years": 7,
+        "survives_residual_gate": true,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.027625166752716025,
+        "candidate": "vote_c6_sector_laggard",
+        "max_year_ic": 0.03789793681892637,
+        "min_year_ic": 0.019676556887705907,
+        "pct_positive_years": 1.0,
+        "pooled_ic": 0.02752052341820653,
+        "pooled_p_value": 1.235814550857494e-95,
+        "pooled_rows": 568256,
+        "positive_years": 7,
+        "survives_residual_gate": true,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.02478209613696352,
+        "candidate": "vote_c4_oc_asym",
+        "max_year_ic": 0.04591581861665305,
+        "min_year_ic": 0.011509250167254674,
+        "pct_positive_years": 1.0,
+        "pooled_ic": 0.024669432587181413,
+        "pooled_p_value": 3.2560522600456443e-77,
+        "pooled_rows": 568256,
+        "positive_years": 7,
+        "survives_residual_gate": true,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.023922794106566583,
+        "candidate": "vote_c12_gap_absorb",
+        "max_year_ic": 0.041644798086792036,
+        "min_year_ic": 0.01293751205005506,
+        "pct_positive_years": 1.0,
+        "pooled_ic": 0.025802687374985426,
+        "pooled_p_value": 2.69702562052291e-84,
+        "pooled_rows": 568256,
+        "positive_years": 7,
+        "survives_residual_gate": true,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.014624896287017351,
+        "candidate": "vote_c10_illiq",
+        "max_year_ic": 0.026571054218941233,
+        "min_year_ic": -0.004129372125988047,
+        "pct_positive_years": 0.8571428571428571,
+        "pooled_ic": 0.014449889001285604,
+        "pooled_p_value": 1.2410350142118424e-27,
+        "pooled_rows": 568256,
+        "positive_years": 6,
+        "survives_residual_gate": true,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.011119281782303604,
+        "candidate": "vote_c14_clv_volconf",
+        "max_year_ic": 0.020709512686992868,
+        "min_year_ic": 0.0037911602369999136,
+        "pct_positive_years": 1.0,
+        "pooled_ic": 0.01118146215864911,
+        "pooled_p_value": 3.4821674888715995e-17,
+        "pooled_rows": 568256,
+        "positive_years": 7,
+        "survives_residual_gate": true,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.008465283342377675,
+        "candidate": "vote_c11_ret_lag",
+        "max_year_ic": 0.01651295618716991,
+        "min_year_ic": 0.0006449227281470954,
+        "pct_positive_years": 1.0,
+        "pooled_ic": 0.008640848834945997,
+        "pooled_p_value": 7.326459643906466e-11,
+        "pooled_rows": 568256,
+        "positive_years": 7,
+        "survives_residual_gate": false,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.008034375404000179,
+        "candidate": "vote_c8_volume_z",
+        "max_year_ic": 0.01946778169458401,
+        "min_year_ic": -0.009319560147323804,
+        "pct_positive_years": 0.8571428571428571,
+        "pooled_ic": 0.008003320906720164,
+        "pooled_p_value": 1.6073703576594647e-09,
+        "pooled_rows": 568256,
+        "positive_years": 6,
+        "survives_residual_gate": false,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.005375909568137219,
+        "candidate": "vote_c7_ceiling_count",
+        "max_year_ic": 0.018577386767067227,
+        "min_year_ic": -0.011446393261028648,
+        "pct_positive_years": 0.7142857142857143,
+        "pooled_ic": 0.0072395585161692715,
+        "pooled_p_value": 4.830529701183528e-08,
+        "pooled_rows": 568256,
+        "positive_years": 5,
+        "survives_residual_gate": false,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.0013999541422568677,
+        "candidate": "vote_c5_positive_size",
+        "max_year_ic": 0.023803533869103496,
+        "min_year_ic": -0.021237504337635833,
+        "pct_positive_years": 0.5714285714285714,
+        "pooled_ic": 0.010211420000265491,
+        "pooled_p_value": 1.3839238942259604e-14,
+        "pooled_rows": 568256,
+        "positive_years": 4,
+        "survives_residual_gate": false,
+        "variant": "raw",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.0018726071337009543,
+        "candidate": "weak_quorum_score",
+        "max_year_ic": 0.011862867524639192,
+        "min_year_ic": -0.014670685099615811,
+        "pct_positive_years": 0.7142857142857143,
+        "pooled_ic": 0.0023518658951539816,
+        "pooled_p_value": 0.07630918297447271,
+        "pooled_rows": 568009,
+        "positive_years": 5,
+        "survives_residual_gate": false,
+        "variant": "resid_c_votes",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.018389022315876417,
+        "candidate": "vote_c13_compression",
+        "max_year_ic": 0.039293491951446546,
+        "min_year_ic": -0.0023666536625468345,
+        "pct_positive_years": 0.8571428571428571,
+        "pooled_ic": 0.018639151913623014,
+        "pooled_p_value": 7.830401762942101e-45,
+        "pooled_rows": 568009,
+        "positive_years": 6,
+        "survives_residual_gate": true,
+        "variant": "resid_s1_c16",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.016692299948936635,
+        "candidate": "weak_quorum_score",
+        "max_year_ic": 0.023647691266904167,
+        "min_year_ic": 0.006460451330050273,
+        "pct_positive_years": 1.0,
+        "pooled_ic": 0.01718073531753986,
+        "pooled_p_value": 2.367234254234008e-38,
+        "pooled_rows": 568009,
+        "positive_years": 7,
+        "survives_residual_gate": true,
+        "variant": "resid_s1_c16",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.012777425741747523,
+        "candidate": "vote_c10_illiq",
+        "max_year_ic": 0.033486702426216826,
+        "min_year_ic": -0.009115164052687912,
+        "pct_positive_years": 0.7142857142857143,
+        "pooled_ic": 0.012636832411379988,
+        "pooled_p_value": 1.6618770041618734e-21,
+        "pooled_rows": 568009,
+        "positive_years": 5,
+        "survives_residual_gate": true,
+        "variant": "resid_s1_c16",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.011148313007741616,
+        "candidate": "vote_c6_sector_laggard",
+        "max_year_ic": 0.016673408820207892,
+        "min_year_ic": 0.0021562211542415495,
+        "pct_positive_years": 1.0,
+        "pooled_ic": 0.011205984752542374,
+        "pooled_p_value": 3.0199433657334044e-17,
+        "pooled_rows": 568009,
+        "positive_years": 7,
+        "survives_residual_gate": true,
+        "variant": "resid_s1_c16",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.00925340856598089,
+        "candidate": "vote_c11_ret_lag",
+        "max_year_ic": 0.016705169429606828,
+        "min_year_ic": -0.0004974704537589736,
+        "pct_positive_years": 0.8571428571428571,
+        "pooled_ic": 0.00954080302254117,
+        "pooled_p_value": 6.445766531202066e-13,
+        "pooled_rows": 568009,
+        "positive_years": 6,
+        "survives_residual_gate": false,
+        "variant": "resid_s1_c16",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.008578235211244177,
+        "candidate": "vote_c4_oc_asym",
+        "max_year_ic": 0.03304387229526439,
+        "min_year_ic": -0.0021840231305123962,
+        "pct_positive_years": 0.7142857142857143,
+        "pooled_ic": 0.008700899096097156,
+        "pooled_p_value": 5.465804890782148e-11,
+        "pooled_rows": 568009,
+        "positive_years": 5,
+        "survives_residual_gate": false,
+        "variant": "resid_s1_c16",
+        "years": 7
+      },
+      {
+        "avg_ic": 0.0025327906446194113,
+        "candidate": "vote_c9_reversal",
+        "max_year_ic": 0.012881286156945608,
+        "min_year_ic": -0.00707939656743584,
+        "pct_positive_years": 0.5714285714285714,
+        "pooled_ic": 0.0024755319736917076,
+        "pooled_p_value": 0.06208091617260264,
+        "pooled_rows": 568009,
+        "positive_years": 4,
+        "survives_residual_gate": false,
+        "variant": "resid_s1_c16",
+        "years": 7
+      },
+      {
+        "avg_ic": -0.001749161574844183,
+        "candidate": "vote_c14_clv_volconf",
+        "max_year_ic": 0.00957572852104356,
+        "min_year_ic": -0.012771737843350828,
+        "pct_positive_years": 0.42857142857142855,
+        "pooled_ic": -0.0015789668336782376,
+        "pooled_p_value": 0.234043193674989,
+        "pooled_rows": 568009,
+        "positive_years": 3,
+        "survives_residual_gate": false,
+        "variant": "resid_s1_c16",
+        "years": 7
+      },
+      {
+        "avg_ic": -0.006858779505013993,
+        "candidate": "vote_c5_positive_size",
+        "max_year_ic": 0.03762458277967439,
+        "min_year_ic": -0.031155236158784273,
+        "pct_positive_years": 0.2857142857142857,
+        "pooled_ic": -0.0053971087098181585,
+        "pooled_p_value": 4.7494592304163096e-05,
+        "pooled_rows": 568009,
+        "positive_years": 2,
+        "survives_residual_gate": false,
+        "variant": "resid_s1_c16",
+        "years": 7
+      },
+      {
+        "avg_ic": -0.009657201272713408,
+        "candidate": "vote_c8_volume_z",
+        "max_year_ic": 0.005413622672435722,
+        "min_year_ic": -0.027035743582256067,
+        "pct_positive_years": 0.14285714285714285,
+        "pooled_ic": -0.00954271408345406,
+        "pooled_p_value": 6.378110437784317e-13,
+        "pooled_rows": 568009,
+        "positive_years": 1,
+        "survives_residual_gate": false,
+        "variant": "resid_s1_c16",
+        "years": 7
+      },
+      {
+        "avg_ic": -0.018125568794422432,
+        "candidate": "vote_c12_gap_absorb",
+        "max_year_ic": -0.01168334420679675,
+        "min_year_ic": -0.04065468677044363,
+        "pct_positive_years": 0.0,
+        "pooled_ic": -0.015013115112503493,
+        "pooled_p_value": 1.1003261570033598e-29,
+        "pooled_rows": 568009,
+        "positive_years": 0,
+        "survives_residual_gate": false,
+        "variant": "resid_s1_c16",
+        "years": 7
+      },
+      {
+        "avg_ic": -0.04434603573590599,
+        "candidate": "vote_c7_ceiling_count",
+        "max_year_ic": -0.037825576439776055,
+        "min_year_ic": -0.053263041809780275,
+        "pct_positive_years": 0.0,
+        "pooled_ic": -0.039025122699832,
+        "pooled_p_value": 2.7929760429298474e-190,
+        "pooled_rows": 568009,
+        "positive_years": 0,
+        "survives_residual_gate": false,
+        "variant": "resid_s1_c16",
+        "years": 7
+      }
+    ]
+  },
+  "ts": "20260505_172353"
+}

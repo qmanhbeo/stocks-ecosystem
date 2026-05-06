@@ -1,0 +1,294 @@
+{
+  "artifacts": {
+    "component_selection": "artifacts/h400_calendar_as_weak_prior_not_clock/20260505_174904_h400_calendar_as_weak_prior_not_clock_component_selection.parquet",
+    "fold_summary": "artifacts/h400_calendar_as_weak_prior_not_clock/20260505_174904_h400_calendar_as_weak_prior_not_clock_fold_summary.parquet",
+    "test_scores": "artifacts/h400_calendar_as_weak_prior_not_clock/20260505_174904_h400_calendar_as_weak_prior_not_clock_test_scores.parquet"
+  },
+  "metadata": {
+    "base_calendar_components_removed": [
+      "vote_january_first_10_vote",
+      "vote_monday_vote"
+    ],
+    "calendar_control_columns": [
+      "vote_january_first_10_vote",
+      "vote_monday_vote",
+      "vote_month_end5_vote",
+      "vote_t2_weekday_residue_vote",
+      "vote_calendar_weak_prior"
+    ],
+    "h395_source": "analysis/h395_weak_signal_quorum_sleeve.py",
+    "no_2026_rows": true,
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Exact calendar clocks are too sparse for independent promotion, but a predeclared calendar-residue vote may add weak incremental context inside the H395 weak-signal quorum.",
+      "min_phase_rows": 500,
+      "min_train_years": 3,
+      "min_year_rows": 500,
+      "mode": "research_branch_calendar_as_weak_prior_not_clock",
+      "name": "h400_calendar_as_weak_prior_not_clock",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "calendar_quorum_score": "same quorum plus one fixed calendar weak-prior vote",
+        "non_calendar_quorum_score": "train-selected H395 weak quorum excluding calendar votes",
+        "vote_calendar_weak_prior": "single predeclared calendar weak-prior vote"
+      },
+      "start_year": 2016,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    }
+  },
+  "mode": "research_branch_calendar_as_weak_prior_not_clock",
+  "name": "h400_calendar_as_weak_prior_not_clock",
+  "summary": {
+    "decision": "FAILED",
+    "decision_detail": {
+      "calendar_component_summary": {
+        "vote_calendar_weak_prior": {
+          "avg_ic": -0.006770535130414572,
+          "max_year_ic": 0.012937633694920823,
+          "min_year_ic": -0.02150167284635053,
+          "pct_positive_years": 0.3,
+          "positive_years": 3,
+          "years": 10
+        },
+        "vote_january_first_10_vote": {
+          "avg_ic": -0.007899179059571554,
+          "max_year_ic": 0.03857415392337291,
+          "min_year_ic": -0.03667767962910917,
+          "pct_positive_years": 0.2,
+          "positive_years": 2,
+          "years": 10
+        },
+        "vote_monday_vote": {
+          "avg_ic": -0.012816344468533336,
+          "max_year_ic": 0.011784478958862378,
+          "min_year_ic": -0.04938544719500229,
+          "pct_positive_years": 0.4,
+          "positive_years": 4,
+          "years": 10
+        },
+        "vote_month_end5_vote": {
+          "avg_ic": -0.0018122932423285446,
+          "max_year_ic": 0.031208549875936836,
+          "min_year_ic": -0.026694227041869117,
+          "pct_positive_years": 0.5,
+          "positive_years": 5,
+          "years": 10
+        },
+        "vote_t2_weekday_residue_vote": {
+          "avg_ic": 0.006463904546876087,
+          "max_year_ic": 0.026423986646750365,
+          "min_year_ic": -0.007688690211173805,
+          "pct_positive_years": 0.6,
+          "positive_years": 6,
+          "years": 10
+        }
+      },
+      "calendar_lift_avg_ic": -0.002208567268677673,
+      "calendar_lift_pct_positive_years": 0.0,
+      "calendar_lift_positive_years": 0,
+      "calendar_lift_years": 7,
+      "calendar_only_avg_ic": -0.008267717131699189,
+      "calendar_only_pct_positive_years": 0.2857142857142857,
+      "calendar_only_positive_years": 2,
+      "calendar_only_years": 7,
+      "calendar_quorum_avg_ic": 0.056050076667269834,
+      "calendar_quorum_pct_positive_years": 1.0,
+      "calendar_quorum_positive_years": 7,
+      "calendar_quorum_years": 7,
+      "non_calendar_avg_ic": 0.0582586439359475,
+      "non_calendar_pct_positive_years": 1.0,
+      "non_calendar_positive_years": 7,
+      "non_calendar_years": 7,
+      "random_extra_mean_lift_avg": -0.001700565439942183,
+      "random_extra_p95_lift_avg": 0.0005679483216424772
+    },
+    "decision_rule": "PASSED requires the fixed calendar prior to add >= +0.003 avg IC over the non-calendar quorum, >= 5/7 positive lift years, calendar quorum avg IC >= +0.05, and lift above the random extra weak-vote mean by at least +0.001. MIXED requires >= +0.001 lift, >= 4 positive lift years, and avg IC >= +0.05.",
+    "fold_summary": [
+      {
+        "best_calendar_control_ic": 0.011784478958862378,
+        "c16_ic": 0.06318799919423831,
+        "calendar_lift_vs_non_calendar": -0.0001427992052656507,
+        "calendar_only_ic": 0.0038148519326824423,
+        "calendar_quorum_ic": 0.06418659517307844,
+        "non_calendar_ic": 0.06432939437834409,
+        "random_extra_mean_lift": -0.0010209906832921722,
+        "random_extra_p95_lift": -0.0010209906832921722,
+        "s1_ic": 0.1435795653315095,
+        "selected_components": "vote_c4_oc_asym,vote_c5_positive_size,vote_c6_sector_laggard,vote_c7_ceiling_count,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote,vote_observed_vni_down_2d_vote",
+        "selected_count": 13,
+        "test_year": 2019,
+        "train_years": "2016,2017,2018",
+        "vote_calendar_weak_prior_ic": 0.0038148519326824423,
+        "vote_january_first_10_vote_ic": -0.009918279512700908,
+        "vote_monday_vote_ic": 0.011784478958862378,
+        "vote_month_end5_vote_ic": 0.0052272259235961885,
+        "vote_t2_weekday_residue_vote_ic": -0.0010475903848114756
+      },
+      {
+        "best_calendar_control_ic": 0.010584281966517223,
+        "c16_ic": 0.0916304365283272,
+        "calendar_lift_vs_non_calendar": -0.0010407979668403539,
+        "calendar_only_ic": 0.002365920664916953,
+        "calendar_quorum_ic": 0.06326021769643143,
+        "non_calendar_ic": 0.06430101566327179,
+        "random_extra_mean_lift": 0.0012554391300560503,
+        "random_extra_p95_lift": 0.002280256836164965,
+        "s1_ic": 0.10859986453797485,
+        "selected_components": "vote_c4_oc_asym,vote_c6_sector_laggard,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote,vote_observed_vni_down_2d_vote",
+        "selected_count": 11,
+        "test_year": 2020,
+        "train_years": "2016,2017,2018,2019",
+        "vote_calendar_weak_prior_ic": 0.002365920664916953,
+        "vote_january_first_10_vote_ic": -0.016253947156722206,
+        "vote_monday_vote_ic": 0.008949399122990594,
+        "vote_month_end5_vote_ic": 0.010584281966517223,
+        "vote_t2_weekday_residue_vote_ic": -0.007688690211173805
+      },
+      {
+        "best_calendar_control_ic": 0.011526734188883418,
+        "c16_ic": 0.10533974401124029,
+        "calendar_lift_vs_non_calendar": -0.002575554026106118,
+        "calendar_only_ic": -0.013190888583237316,
+        "calendar_quorum_ic": 0.04408183174069612,
+        "non_calendar_ic": 0.046657385766802235,
+        "random_extra_mean_lift": 0.00013187476482436067,
+        "random_extra_p95_lift": 0.00013187476482436067,
+        "s1_ic": 0.12305608302619715,
+        "selected_components": "vote_c4_oc_asym,vote_c5_positive_size,vote_c6_sector_laggard,vote_c7_ceiling_count,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote,vote_observed_vni_down_2d_vote",
+        "selected_count": 13,
+        "test_year": 2021,
+        "train_years": "2016,2017,2018,2019,2020",
+        "vote_calendar_weak_prior_ic": -0.013190888583237316,
+        "vote_january_first_10_vote_ic": -0.006798488024573353,
+        "vote_monday_vote_ic": -0.004052795859198771,
+        "vote_month_end5_vote_ic": -0.026694227041869117,
+        "vote_t2_weekday_residue_vote_ic": 0.011526734188883418
+      },
+      {
+        "best_calendar_control_ic": 0.009104607200010528,
+        "c16_ic": 0.08960831645876993,
+        "calendar_lift_vs_non_calendar": -0.0036487001905650546,
+        "calendar_only_ic": -0.02150167284635053,
+        "calendar_quorum_ic": 0.03944865071173229,
+        "non_calendar_ic": 0.04309735090229735,
+        "random_extra_mean_lift": -0.008860445631134634,
+        "random_extra_p95_lift": 0.0006852112340292246,
+        "s1_ic": 0.07898916767927806,
+        "selected_components": "vote_c4_oc_asym,vote_c6_sector_laggard,vote_c7_ceiling_count,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote",
+        "selected_count": 11,
+        "test_year": 2022,
+        "train_years": "2016,2017,2018,2019,2020,2021",
+        "vote_calendar_weak_prior_ic": -0.02150167284635053,
+        "vote_january_first_10_vote_ic": -0.004945783072586485,
+        "vote_monday_vote_ic": -0.04005728890492783,
+        "vote_month_end5_vote_ic": 0.009104607200010528,
+        "vote_t2_weekday_residue_vote_ic": -0.0009449832330128728
+      },
+      {
+        "best_calendar_control_ic": 0.010383916679882444,
+        "c16_ic": 0.05766247626402014,
+        "calendar_lift_vs_non_calendar": -0.0019025016869193834,
+        "calendar_only_ic": -0.0032198575795628934,
+        "calendar_quorum_ic": 0.06236291395719806,
+        "non_calendar_ic": 0.06426541564411745,
+        "random_extra_mean_lift": -0.0005633235762048249,
+        "random_extra_p95_lift": 0.000799724744703495,
+        "s1_ic": 0.12174235576522317,
+        "selected_components": "vote_c4_oc_asym,vote_c6_sector_laggard,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote",
+        "selected_count": 10,
+        "test_year": 2023,
+        "train_years": "2016,2017,2018,2019,2020,2021,2022",
+        "vote_calendar_weak_prior_ic": -0.0032198575795628934,
+        "vote_january_first_10_vote_ic": -0.03042237297394072,
+        "vote_monday_vote_ic": 0.0018354563408811047,
+        "vote_month_end5_vote_ic": -0.0066794624974731535,
+        "vote_t2_weekday_residue_vote_ic": 0.010383916679882444
+      },
+      {
+        "best_calendar_control_ic": 0.01749592915573072,
+        "c16_ic": 0.06105876143263337,
+        "calendar_lift_vs_non_calendar": -0.004955813488521525,
+        "calendar_only_ic": -0.021392135056316132,
+        "calendar_quorum_ic": 0.05988429507115573,
+        "non_calendar_ic": 0.06484010855967726,
+        "random_extra_mean_lift": -0.001528660888873508,
+        "random_extra_p95_lift": 0.0002373390827163091,
+        "s1_ic": 0.1314885053290383,
+        "selected_components": "vote_c4_oc_asym,vote_c5_positive_size,vote_c6_sector_laggard,vote_c7_ceiling_count,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote",
+        "selected_count": 12,
+        "test_year": 2024,
+        "train_years": "2016,2017,2018,2019,2020,2021,2022,2023",
+        "vote_calendar_weak_prior_ic": -0.021392135056316132,
+        "vote_january_first_10_vote_ic": -0.03667767962910917,
+        "vote_monday_vote_ic": -0.013842305851602569,
+        "vote_month_end5_vote_ic": -0.02539121774683794,
+        "vote_t2_weekday_residue_vote_ic": 0.01749592915573072
+      },
+      {
+        "best_calendar_control_ic": 0.031208549875936836,
+        "c16_ic": 0.07125833593792893,
+        "calendar_lift_vs_non_calendar": -0.0011938043165256249,
+        "calendar_only_ic": -0.004750238454026842,
+        "calendar_quorum_ic": 0.059126032320596725,
+        "non_calendar_ic": 0.06031983663712235,
+        "random_extra_mean_lift": -0.0013178511949705524,
+        "random_extra_p95_lift": 0.0008622222723511583,
+        "s1_ic": 0.10895565258081218,
+        "selected_components": "vote_c4_oc_asym,vote_c6_sector_laggard,vote_c7_ceiling_count,vote_c8_volume_z,vote_c9_reversal,vote_c10_illiq,vote_c11_ret_lag,vote_c12_gap_absorb,vote_c13_compression,vote_c14_clv_volconf,vote_official_supported_delay_vote",
+        "selected_count": 11,
+        "test_year": 2025,
+        "train_years": "2016,2017,2018,2019,2020,2021,2022,2023,2024",
+        "vote_calendar_weak_prior_ic": -0.004750238454026842,
+        "vote_january_first_10_vote_ic": 0.024479240667059872,
+        "vote_monday_vote_ic": -0.04938544719500229,
+        "vote_month_end5_vote_ic": 0.031208549875936836,
+        "vote_t2_weekday_residue_vote_ic": -0.0008115251903235919
+      }
+    ],
+    "panel_rows": 758414,
+    "test_rows": 568256,
+    "test_years": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "ts": "20260505_174904"
+}

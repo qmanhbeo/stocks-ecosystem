@@ -519,3 +519,217 @@ Source:
 - [session_271_log.md](./session_271_log.md)
 - [deadends-001-030.md](./deadends-001-030.md) `D011`
 - `artifacts/run_summaries/20260504_210147_h393_nihilist_reversal_research_branch_nihilist_reversal.json`
+
+## F355: S24x-S25x Strong-Signal Audit Downgrades Target-Derived Regime Claims (2026-05-05, Session 272)
+
+Finding:
+- Claim audited: the S242-S253 "new strong" C16 context signals were real
+  rather than methodology artifacts.
+- Evidence: `analysis/audit_s24x_s25x_signal_claims.py` recomputed the claims
+  on `2015-2025` data only, no `2026+`, using the canonical S1 1d barrier
+  target and separating observable states from states derived from same-date
+  `actual`.
+- Result: several high S24x/S25x results were target-derived. The S1 `actual`
+  column is a binary future barrier label, not a signed market return. Leaky
+  target-defined `market_down` had avg year IC `+0.092478`, and target-defined
+  `market_down_2d` had `+0.095095`; correct observable VNI-down states were
+  much weaker: `observed_vni_down` avg IC `+0.077064` and
+  `observed_vni_down_2d` `+0.080584` versus C16 baseline `+0.073765`.
+  Observable stock-down states were weaker than C16
+  (`+0.061540` / `+0.067884`).
+- Surviving evidence: `insider_lead_next_trading_day` remained strong with avg
+  year IC `+0.104981`, `11 / 11` positive years, and 2023-2025 avg IC
+  `+0.086101`. High buy-order-count context remained a modest conditioner:
+  `vol_high_buy_count_gt_80` avg IC `+0.084359`, lift `+0.010594` over C16.
+- Downgraded context: the coded `january_doy_le10` state had avg IC
+  `+0.082334`, but true first-10-trading-days was only `+0.074432`.
+  `monday_january_doy_le10` stayed high (`+0.105363`) but used only `2,891`
+  rows on `11` dates and remains parked by H390. Correct dividend next-30-day
+  windows were weak (`+0.052616` / `+0.055744`), and `rank_accel_5d`
+  (`+0.054809`) remained below C16.
+- Methodology correction: S253 did not implement the advertised train
+  `T-2,T-1` -> test `T` protocol; its train-year selector is positional, and
+  its monotonic z-score step leaves Spearman IC unchanged from subset IC.
+
+Why it matters:
+- Keep `insider_buy_lead` as real C16 support context.
+- Keep high buy-order-count volume as modest context.
+- Do not promote S244 `consecutive_down`, S246/S253 target-derived
+  `down_market_c16`, or S247 `deep_down_c16` as real independent signals from
+  the S24x/S25x record.
+- Treat calendar and dividend claims from S242-S244 as context/parked paths
+  unless reopened with fixed observable definitions and stronger controls.
+
+Source:
+- [session_272_log.md](./session_272_log.md)
+- [deadends-001-030.md](./deadends-001-030.md) `D012`
+- `artifacts/run_summaries/20260505_161922_s24x_s25x_signal_claim_audit_audit_s24x_s25x_signal_claims.json`
+
+## F356: Signal-Library Promotion Rule Is IC > 0.05 Plus Independence And Controls (2026-05-05, Session 273)
+
+Finding:
+- Claim clarified: whether any independent signal with IC `> 0.05` is good
+  enough to promote as a real signal.
+- Rule: IC `> 0.05` is the strong standalone signal-library promotion bar when
+  the feature is decision-time observable, not target-derived, independent from
+  existing library signals (`corr < 0.30`), positive in at least `60%` of
+  tested years, and sufficiently covered for the claim. IC between `0.01` and
+  `0.05` is weak candidate/context evidence rather than a strong promotion.
+- Parent-signal caveat: filters, buckets, and rewrites of S1, C16, or any
+  existing parent must be judged by incremental lift versus that parent and
+  mechanism-matched controls. Absolute IC `> 0.05` versus random is real
+  market edge, but not enough to claim a new independent signal if most of the
+  edge is inherited from the parent.
+- Scope: this is a signal-library / RL-state rule, not a live-strategy
+  promotion rule. Live changes still require consumer, portfolio, execution,
+  and pseudo-live/forward checks.
+
+Why it matters:
+- Resolves the ambiguity between the older formal `IC > 0.01` wording and the
+  compact-note `IC > 0.05` shorthand.
+- Prevents future repeats of the S272 issue, where C16-derived context with
+  real absolute IC was mistaken for a new independent signal.
+
+Source:
+- [session_273_log.md](./session_273_log.md)
+
+## F357: Lightweight Research Branches Now Have A Shared Experiment Contract (2026-05-05, Session 274)
+
+Finding:
+- Claim implemented: new lightweight signal/state/context experiments need a
+  copyable base contract so future agents do not hand-roll target semantics,
+  year guards, state validation, IC summaries, and artifact writes.
+- Added `src/experiment_contract.py` with `ExperimentSpec`,
+  `ExperimentContext`, `StateSpec`, role-safe S1 loading, default `2026+`
+  blocking, target/state overlap validation, safe pooled/yearly/phase Spearman
+  IC helpers, signal-tier classification, rolling train/test-year helpers, and
+  standardized parquet/run-summary artifact writes.
+- Added `analysis/_template_research_branch.py`, a runnable copy template for
+  new branches. The unchanged template performs a small S1 scaffold smoke audit
+  and writes standard summary artifacts.
+- Updated `README_for_AGENTS.md` and `README.md` to make this the preferred
+  starting point for standalone signal, state, and context audits unless a
+  branch needs a more specialized family helper.
+
+Why it matters:
+- Encodes the S272/S273 guardrails directly into code. The S1 source parquet's
+  raw `actual` column is renamed to `s1_barrier_hit_1d`, making it explicit
+  that it is a future target label, not a signed return or decision-time regime
+  input.
+- Reduces the chance of repeating the S24x/S25x target-derived state error by
+  making the correct scaffold easier to copy than ad hoc scripts.
+
+Source:
+- [session_274_log.md](./session_274_log.md)
+
+## F358: H394 Finds Only A Weak Honest Shadow Of Target-Breadth Weather (2026-05-05, Session 275)
+
+Finding:
+- Claim tested: the invalid S24x target-derived market states may have been
+  measuring a real latent barrier-breadth regime that can be predicted from
+  decision-time observables.
+- Evidence: `analysis/h394_oracle_shadow_regime_distiller.py` used no `2026+`
+  rows, rolling train-before-test years with tests `2018-2025`, and a fixed
+  ridge model from date-level S1/C16/order-stat/news/market/tradability
+  aggregates into future S1 target breadth. Only train-quantile buckets of the
+  ridge prediction were eligible for the verdict; actual target-breadth
+  buckets were diagnostic-only leakage upper bounds.
+- Result: H394 was `MIXED`. The ridge weather score weakly predicted
+  target breadth with avg date IC `+0.05019` and `7 / 8` positive years,
+  better than S1 mean (`+0.00523`) and same-day VNI return (`-0.01030`), but
+  below the `+0.10` model gate. The best honest predicted bucket,
+  `ridge_pred_low20`, lifted C16 avg IC from `+0.07519` to `+0.07862`
+  (`+0.00342`) and beat random same-date buckets by only `+0.00416`, below the
+  `+0.01` / `+0.005` bucket gates. It degraded S1 by `-0.00708`.
+- Control: observable `VNI down 2d` remained cleaner than the ridge weather
+  state, with C16 lift `+0.00582` and S1 lift `+0.01230` versus all rows.
+  The target-derived oracle low-breadth diagnostic had C16 lift `+0.01575`,
+  confirming that the leaky state had access to materially stronger future
+  breadth information.
+
+Why it matters:
+- Do not promote broad predicted target-breadth weather as a standalone regime
+  or signal-library state under the current observable aggregate contract.
+- The invalid S24x regime had a real-looking target-breadth upper bound, but
+  current end-of-day observables recover only weak context. Use observable
+  `VNI down 2d` as the cleaner context until a materially different regime
+  representation exists.
+- H394 can still inform `weak_signal_quorum_sleeve`: weak date-weather may be
+  one vote in a quorum, not an independently promoted regime.
+
+Source:
+- [session_275_log.md](./session_275_log.md)
+- [deadends-001-030.md](./deadends-001-030.md) `D013`
+- `artifacts/run_summaries/20260505_170942_h394_oracle_shadow_regime_distiller_research_branch_oracle_shadow_regime_distiller.json`
+
+## F359: H395 Weak-Signal Quorum Passes As A Strong Composite RL-State Candidate (2026-05-05, Session 276)
+
+Finding:
+- Claim tested: independent weak votes with IC around `0.01-0.05` can become a
+  stronger context when combined under a train-before-test, low-parent-corr
+  rule.
+- Evidence: `analysis/h395_weak_signal_quorum_sleeve.py` used no `2026+`
+  rows, start year `2016`, rolling train-before-test folds with test years
+  `2019-2025`, predeclared weak votes from C4-C14, H364/news,
+  official-delay, observable VNI-down-2d, and calendar context, and no fitted
+  component weights. Components were selected using only prior years if train
+  avg IC was at least `+0.005`, positive-year share at least `60%`, and train
+  absolute correlation to both S1 and C16 was below `0.30`. Each fold used 200
+  same-size random weak-basket controls.
+- Result: H395 `PASSED`. The train-selected equal-weight quorum had avg IC
+  `+0.05826`, `7 / 7` positive test years, S1 corr `+0.27541`, and C16 corr
+  `-0.00685`. It beat the random weak-basket mean by `+0.02078` and the best
+  individual component by `+0.02745`. 2025 confirmation IC was `+0.06032`.
+- Selected-component pattern: stable components were mostly known C-library
+  atoms (`C4`, `C6`, `C8-C14`) plus `official_supported_delay`; `C5` and `C7`
+  entered only some folds. H364 positive news was weak positive but never
+  selected, and January/Monday calendar votes were not useful.
+
+Why it matters:
+- This validates Manh's concern that IC `0.01-0.05` evidence should not be
+  discarded. Weak independent votes can form a strong composite context.
+- Do not mislabel H395 as a new independent primitive signal: it is a
+  composite of existing candidate atoms. It is still valuable as an RL aggregate
+  or sleeve candidate, and it should be the anchor for the next
+  parent/residual audit.
+- The next honest step is `parent_echo_residual_harvester`: test how much of
+  H395 survives residualization against known C-library parents and matched
+  component controls.
+
+Source:
+- [session_276_log.md](./session_276_log.md)
+- `artifacts/run_summaries/20260505_171827_h395_weak_signal_quorum_sleeve_research_branch_weak_signal_quorum_sleeve.json`
+
+## F360: H396 Confirms H395 Is Independent Of S1/C16 But Not A New Primitive (2026-05-05, Session 277)
+
+Finding:
+- Claim tested: high-IC composite or filter signals should keep only the
+  residual evidence that survives same-date parent-rank residualization.
+- Evidence: `analysis/h396_parent_echo_residual_harvester.py` used no `2026+`
+  rows, H395's canonical `2019-2025` test scores, and the C4-C14 vote columns
+  from the RL signal matrix. Each candidate was residualized cross-sectionally
+  by date against S1 and C16. H395 was additionally residualized against all
+  C4-C14 vote ingredients.
+- Result: H396 `PASSED` as a residual clarification. H395 raw quorum IC was
+  `+0.05826` with `7 / 7` positive years. After residualizing against S1 and
+  C16, H395 retained avg IC `+0.01669` with `7 / 7` positive years, so it is
+  not merely an S1/C16 echo. After residualizing against its C-vote
+  ingredients, H395 fell to avg IC `+0.00187`, below the residual gate, so it
+  is not a new primitive beyond known C-library atoms.
+- Residual primitive survivors versus S1/C16: `C13` retained avg residual IC
+  `+0.01839` with `6 / 7` positive years; `C10` retained `+0.01278` with
+  `5 / 7`; `C6` retained `+0.01115` with `7 / 7`.
+
+Why it matters:
+- H395's correct status is now precise: strong composite RL state, independent
+  from S1/C16, but not independent from the C-library ingredients that define
+  it.
+- Future signal-library or matrix promotion should avoid double-counting H395
+  as a new primitive. Use it as an aggregate sleeve, and treat C13/C10/C6 as
+  the cleaner residual primitive evidence from this audit.
+- This confirms the S273 parent-echo rule: absolute IC can be real edge while
+  still failing the "new independent signal" interpretation.
+
+Source:
+- [session_277_log.md](./session_277_log.md)
+- `artifacts/run_summaries/20260505_172353_h396_parent_echo_residual_harvester_research_branch_parent_echo_residual_harvester.json`

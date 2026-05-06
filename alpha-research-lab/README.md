@@ -97,16 +97,29 @@ This is especially important on local WSL setups with limited RAM. Producer and 
 
 ## Signal Evaluation Criteria
 
-For a signal to enter the library it must meet:
+Signal-library promotion is not the same as live-strategy promotion. A signal
+can be real enough for RL state without being ready to change the active
+portfolio branch.
+
+Use these tiers:
 
 | Criterion | Threshold | Rationale |
 |-----------|-----------|-----------|
-| Standalone IC | > 0.01 | Any reliable predictive content is useful |
-| Correlation with primary signal | < 0.30 | Orthogonality = RL diversity value |
-| IC positive in ≥ years | 60% of in-sample years | Consistency, not noise |
+| Strong standalone signal | IC > 0.05 | Real enough to promote as an RL signal if the other gates pass |
+| Weak candidate signal | 0.01 < IC <= 0.05 | Useful evidence, but keep as candidate/context unless strengthened |
+| Correlation with existing library | < 0.30 | Orthogonality = RL diversity value |
+| IC positive years | >= 60% | Consistency, not noise |
+| Decision-time validity | observable before execution | No target-derived or future-derived states |
+| Coverage | enough rows / years for the claim | Sparse states need stronger controls and explicit caveats |
 
-Note: a signal that "fails" to improve a combined XGBoost model may still be RL-valuable.
-XGBoost handles sparse signals poorly. An RL agent can selectively attend to signals.
+If a candidate is a filter, bucket, or variation of an existing parent signal
+such as S1 or C16, judge it by incremental lift versus that parent and
+mechanism-matched controls. Absolute IC > 0.05 versus random is not enough for
+a new signal-library promotion when the parent already carries the edge.
+
+Note: a signal that "fails" to improve a combined XGBoost model may still be
+RL-valuable. XGBoost handles sparse signals poorly. An RL agent can
+selectively attend to signals.
 
 ## Start Here
 
@@ -415,6 +428,9 @@ Default Drive destination: `stocks-ecosystem-data-snapshots:project-backup/stock
 - `cross_sectional_wf.py`: default for market-wide hypotheses.
 - `ensemble_wf.py`: combine saved FPT probability streams.
 - `analysis/*.py`: portfolio, ranking, filter, and meta-analysis scripts on saved outputs.
+- `analysis/_template_research_branch.py`: copyable scaffold for new lightweight
+  state/signal/context audits, backed by `src/experiment_contract.py` for
+  role-safe S1 loading, no-`2026+` guards, IC helpers, and run-summary writes.
 - `analysis/h135_signal_library_portfolio_baseline.py`: realistic deterministic portfolio baseline for `S1`, `recent_core`, and `full_library`
 - `analysis/h136_portfolio_construction_sweep.py`: realistic construction sweep for the corrected `full_library` blend
 - `analysis/h137_nested_portfolio_selection.py`: honest walk-forward selector over the H136 construction menu

@@ -7,6 +7,223 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 304](session_304_log.md): Ran H426 `forced_seller_detector` with a
+  reusable walk-forward entry-candidate script and random baselines only. H426
+  FAILED: `forced_seller_core_buyable` had tiny same-support lift
+  (`+0.00023`) but only `1 / 5` positive WF years and random-all lift
+  `-0.00205`; floor and large-down variants also failed, and literal release
+  had only `7` rows. The next-day C16 clause was not used because it is not
+  decision-time valid under the current T close -> T+1 open entry-label
+  contract. Source anchors: `D025`, Session 304.
+
+- [Session 303](session_303_log.md): Continued safe-first artifact hardening.
+  Added lockbox-window-aware C10-C14 RL component caches with manifest
+  fingerprints, exact old-inline parity checks, component-only reuse mode, and
+  a lightweight artifact integrity CLI. Migrated H413 onto the additive harness
+  with legacy summary fields preserved, and batched activation-meta derived
+  columns to remove fragmentation warnings. Source anchor: Session 303.
+
+- [Session 299](session_299_log.md): Ran H418
+  `foreign_additive` with reusable script
+  `analysis/h418_foreign_additive.py`. Tested adding foreign flow to H413.
+  H418 FAILED: foreign has +0.004 IC, adding HURTS (-0.006).
+  Same pattern as C16 - too weak to contribute.
+  Source anchors: `D023`.
+
+- [Session 298](session_298_log.md): Ran H417
+  `holdout_2025` with reusable script
+  `analysis/h417_holdout_2025.py`. Tested on completely held-out 2025.
+  H417 PASSED: +0.014 lift on 2025 = same as long-term (+0.017).
+  PROVES NOT survivor bias - pattern is REAL.
+  Source anchors: `F381`.
+
+- [Session 297](session_297_log.md): Ran H416
+  `market_state_gated` with reusable script
+  `analysis/h416_market_state_gated.py`. Tested additive in VNI-up/down.
+  H416 PASSED: works in BOTH market states (+0.016 to +0.018 lift).
+  ROBUST pattern confirmed.
+  Source anchors: `F380`.
+
+- [Session 296](session_296_log.md): Ran H415
+  `weight_optimization` with reusable script
+  `analysis/h415_weight_optimization.py`. Grid search Vol/S1 weights.
+  H415 MIXED: 15V+85S = +0.136 IC, marginal +0.001 over H413.
+  Optimum in 10-15% volume range. Keep H413 as standard.
+  Source anchors: `F379`.
+
+- [Session 295](session_295_log.md): Ran H414
+  `alternative_target_additive` with reusable script
+  `analysis/h414_alternative_target_additive.py`. Tested Vol+S1 on 1d/10d/20d barriers.
+  H414 PASSED: additive works on ALL horizons (+0.017 to +0.019 lift).
+  This confirms generalizable pattern, not target-specific.
+  Source anchors: `F378`.
+
+- [Session 294](session_294_log.md): Ran H413
+  `triple_signal_additive` with reusable script
+  `analysis/h413_triple_signal_additive.py`. Tested three-signal additive combos.
+  H413 PASSED: 0.1×Vol + 0.9×S1 = +0.135 IC, beats H410 (+0.126) by +0.009.
+  Lower volume weight (10% vs 25%) is key. New standard: 0.1V+0.9S.
+  Source anchors: `F377`.
+
+- [Session 293](session_293_log.md): Ran H412
+  `volume_c16_additive` with reusable script
+  `analysis/h412_volume_c16_additive.py`. Tested Volume+C16 additive.
+  H412 FAILED: additive doesn't beat Volume alone (+0.073 vs +0.075).
+  C16 too weak to rescue. Source anchors: `F376`.
+
+- [Session 292](session_292_log.md): Ran H411
+  `volume_triple_storm` with reusable script
+  `analysis/h411_volume_triple_storm.py`. Tested Triple Storm on Volume.
+  H411 FAILED: Volume+Triple = +0.038, WORSE than Volume alone (+0.075).
+  Triple Storm is C16-specific, not universal amplifier.
+  Source anchors: `F375`, `D022`.
+
+- [Session 291](session_291_log.md): Ran H410
+  `volume_s1_additive` with reusable script
+  `analysis/h410_volume_s1_additive.py`. Tested Volume+S1 additive combos.
+  H410 PASSED: 0.25×Vol + 0.75×S1 = +0.12649 IC, beats both standalones!
+  Adds +0.009 IC lift over S1 - additive beats cross-product.
+  Source anchors: `F374`.
+
+- [Session 290](session_290_log.md): Ran H409
+  `volume_c16_cross_product` with reusable script
+  `analysis/h409_volume_c16_cross_product.py`. Tested Vol×C16 cross-product.
+  H409 was MIXED: cross +0.017 but Volume alone +0.077 is NEW SIGNAL!
+  CRITICAL: `order_volume_ratio` standalone is +0.077 IC, 8/8 pos years.
+  Source anchors: `F373`.
+
+- [Session 289](session_289_log.md): Ran H408
+  `s1_c16_cross_product` with reusable script
+  `analysis/h408_s1_c16_cross_product.py`. Tested S1×C16 cross-product.
+  H408 was MIXED: cross +0.108 but S1 alone +0.118 (worse).
+  Source anchors: `F372`.
+
+- [Session 288](session_288_log.md): Ran H407
+  `phase_lead` (simplified) with reusable script
+  `analysis/h407_hilbert_phase_lead.py`. Tested lagged C16 × price cross-product.
+  H407 PASSED: phase lag added +0.022 IC with 7/8 positive years.
+  Source anchors: `F371`.
+
+- [Session 282](session_282_log.md): Ran H401
+  `anti_signal_annihilation_veto` with reusable script
+  `analysis/h401_anti_signal_annihilation_veto.py`. Fixed top-5 buyable
+  candidate rows, no `2026+`, cycle relative-return labels, long-only cash
+  vetoes with denominator `K=5`, and random same-breadth veto controls. H401
+  was MIXED: strict `support_count_zero` had tiny lift versus no-veto
+  (`+0.000167`, `6 / 7` positive years) and random mean (`+0.000152`), but did
+  not beat random p95. Broader disagreement masks were negative versus no-veto.
+  Source anchors: `F365`, `D017`.
+
+- [Session 281](session_281_log.md): Ran H400
+  `calendar_as_weak_prior_not_clock` with reusable script
+  `analysis/h400_calendar_as_weak_prior_not_clock.py`. Rebuilt the H395
+  train-before-test quorum with calendar votes removed, then added one fixed
+  calendar prior averaging January-first-10, Monday, month-end, and T+2 weekday
+  residues. H400 FAILED: non-calendar quorum avg IC was `+0.05826`, calendar
+  quorum avg IC fell to `+0.05605`, and calendar lift was `-0.00221` with
+  `0 / 7` positive lift years. Calendar-only IC was `-0.00827`. Source
+  anchors: `F364`, `D016`.
+
+- [Session 280](session_280_log.md): Ran H399
+  `crowd_count_ignition` with reusable script
+  `analysis/h399_crowd_count_ignition.py`. Fixed `2018-2025` audit, no
+  `2026+`, published C16, raw CafeF order stats, C8 volume-z from the RL
+  matrix, and H394 predicted-weather buckets. H399 was MIXED: high buy count
+  alone is only modest C16 context (`+0.08463` avg IC, `+0.00944` lift versus
+  all rows), while `buy_count_rank` is anti-predictive as a standalone score
+  (`-0.01075`). `volume_z_high80` owns the clean pocket (`+0.10258`, `8 / 8`);
+  `count_high_size_weather_low20` is the best crowd clue (`+0.10083`, `+0.01620`
+  lift versus high count) but only `5 / 8` lift years. Source anchors:
+  `F363`, `D015`.
+
+- [Session 279](session_279_log.md): Ran H398
+  `insider_pre_reaction_clock` with reusable script
+  `analysis/h398_insider_pre_reaction_clock.py`. Positive insider events from
+  `RealBuyVolume - RealSellVolume > 0`, S272-style T-1/T0/T+1 event mapping,
+  same-ticker non-event controls, no `2026+`, and test years `2015-2025`.
+  H398 was MIXED: `insider_tplus1` reproduced the S272 lead with avg C16 IC
+  `+0.10498`, `11 / 11` positive years, and `+0.03000` lift versus
+  same-ticker non-event dates, but the quiet pre-reaction form failed because
+  reacted T+1 rows beat pre-reaction by `+0.01811` avg IC. High buy-order-count
+  T+1 insider rows were strongest (`+0.13776` avg IC). Source anchors:
+  `F362`, `D014`.
+
+- [Session 278](session_278_log.md): Ran H397
+  `barrier_pop_vs_hold_router` with reusable script
+  `analysis/h397_barrier_pop_vs_hold_router.py`. Fixed H364/H383/H385/C16/
+  insider states, buyable rows only, no `2026+`, 15 bps per-row cost, and
+  `1d/2d/5d` future relative-return horizons. H397 PASSED: active-news
+  strong-flow and positive-news strong-flow are 1d C16 rankers
+  (`+0.02257` / `+0.02536` IC lift versus strong-flow), while official and
+  official-forward supported states are 5d payoff/hold states (`+0.00650` /
+  `+0.00662` net lift, `8 / 8` positive years). H364 positive was too sparse;
+  the C5 rank-within-insider form failed and does not kill S272 insider lead.
+  Source anchor: `F361`.
+
+- [Session 277](session_277_log.md): Ran H396
+  `parent_echo_residual_harvester` with reusable script
+  `analysis/h396_parent_echo_residual_harvester.py`. No `2026+`; test years
+  `2019-2025`; same-date cross-sectional residualization of H395 and C4-C14
+  votes against S1/C16, plus H395 residualization against all C-vote
+  ingredients. H396 PASSED as a clarification: H395 survives S1/C16
+  residualization (`+0.01669`, `7 / 7` positive years), but fails
+  residualization against C votes (`+0.00187`), so it is a strong composite
+  RL state, not a new primitive. C13/C10/C6 are the clean S1/C16 residual
+  primitive survivors. Source anchor: `F360`.
+
+- [Session 276](session_276_log.md): Ran H395
+  `weak_signal_quorum_sleeve` with reusable script
+  `analysis/h395_weak_signal_quorum_sleeve.py`. TRUE rolling train-before-test
+  folds, test years `2019-2025`, no `2026+`, predeclared weak votes from
+  C4-C14, H364/news, official-delay, observable VNI-down-2d, and calendar
+  context, train-only low-corr/positive-IC component selection, and equal
+  weights in test. H395 PASSED as a strong composite RL-state candidate:
+  quorum avg IC `+0.05826`, `7 / 7` positive years, S1 corr `+0.27541`, C16
+  corr `-0.00685`, lift `+0.02078` versus random weak baskets and `+0.02745`
+  versus the best component. Not a new independent primitive. Source anchor:
+  `F359`.
+
+- [Session 275](session_275_log.md): Ran H394
+  `oracle_shadow_regime_distiller` with reusable script
+  `analysis/h394_oracle_shadow_regime_distiller.py`. TRUE rolling
+  train-before-test date-regime model, test years `2018-2025`, no `2026+`,
+  from observable S1/C16/order/news/market/tradability aggregates into future
+  S1 barrier-breadth weather. H394 was MIXED: ridge weather weakly predicted
+  breadth (avg date IC `+0.05019`, `7 / 8` positive years) but failed the
+  promotion gates; best honest bucket `ridge_pred_low20` lifted C16 only
+  `+0.00342` versus all rows and `+0.00416` versus random dates, and degraded
+  S1. Observable `VNI down 2d` remained cleaner context. Source anchors:
+  `F358`, `D013`.
+
+- [Session 274](session_274_log.md): Added the reusable lightweight
+  research-branch scaffold: `src/experiment_contract.py` plus runnable copy
+  template `analysis/_template_research_branch.py`. The contract provides
+  role-safe S1 loading that renames raw `actual` to target-only
+  `s1_barrier_hit_1d`, default `2026+` blocking, target/state overlap checks,
+  yearly and phase IC helpers, and standard run-summary/artifact writes.
+  Updated `README_for_AGENTS.md` and `README.md` so future agents start from
+  the scaffold for state/signal/context audits. Source anchor: `F357`.
+
+- [Session 273](session_273_log.md): Clarified the signal-library promotion
+  rule in `README.md`, `notes/signal_library.md`, and compact findings. Strong
+  standalone promotion now explicitly means IC `> 0.05` plus decision-time
+  observability, non-leakage, independence from existing library signals,
+  positive-year consistency, and enough coverage. IC `0.01-0.05` is weak
+  candidate/context evidence. Parent-signal filters must show incremental lift
+  versus the parent and matched controls; absolute IC `> 0.05` alone is not a
+  new independent promotion. Source anchor: `F356`.
+
+- [Session 272](session_272_log.md): Audited the S24x-S25x "strong" signal
+  promotions with reusable script `analysis/audit_s24x_s25x_signal_claims.py`.
+  The audit found that `actual` is a binary future 1d barrier label, so the
+  S244/S246/S247/S253 market-down and consecutive-down states were partly
+  target-derived. Leaky target-market-down ICs reproduced high
+  (`+0.0925` / `+0.0951`), but observable VNI-down states dropped to
+  `+0.0771` / `+0.0806` versus C16 baseline `+0.0738`; stock-down states were
+  weaker than C16. `insider_lead_next_trading_day` survived (`+0.1050`,
+  `11 / 11` positive years), while high buy-order-count volume context was
+  modest (`+0.0844`). Source anchors: `F355`, `D012`.
+
 - [Session 271](session_271_log.md): Ran H393 `nihilist_reversal` with
   reusable script `analysis/h393_nihilist_reversal.py`. TRUE walk-forward
   `2018-2025`, no `2026+`, fixed high-C16, stock-down, VNI-down, and
@@ -183,12 +400,11 @@ to its source session or state an explicit source anchor.
   disagreement, official-delay confirmation, dynamic breadth, insider-down
   rescue, selection freshness, and post-Ollama event cascades.
 
-- [Session 253](session_253_log.md): TRUE walk-forward validation - **ALL 3 PASSED**.
-  - insider_lead: IC=0.1093 ✅
-  - consecutive_down: IC=0.1047 ✅
-  - down_market_c16: IC=0.0992 ✅
-  - **Skepticism RESOLVED**: Signals REAL under stricter validation.
-  - Low variance confirms robustness (std ~0.01-0.04).
+- [Session 253](session_253_log.md): Superseded by S272. The original log
+  claimed TRUE walk-forward validation passed for insider lead, consecutive
+  down, and down-market C16, but S272 found the market/consecutive states were
+  target-derived and the train/test protocol was not the advertised TRUE WF.
+  Keep only the insider-lead survivor. Source anchors: `F355`, `D012`.
 
 - [Sessions 248-252](session_248_252_log.md): Bright-mind eureka tests - **ALL 5 FAILED**.
   - S248 macro_c16_regime: FAILED (+0%) - no regime boost.
@@ -196,20 +412,23 @@ to its source session or state an explicit source anchor.
   - S250 vol_shock: FAILED (data proxy insufficient).
   - S251 consecutive_down: FAILED (+0%) - no day-to-day compounding.
   - S252 c16_extreme: FAILED (-63%) - too sparse.
-  - **Key insight**: C16 IS the down-market signal - no conditioning helps.
+  - S272 later corrected the target-derived down-market/consecutive framing;
+    keep only the non-leaky failed-filter conclusions here.
 
-- [Sessions 245-247](session_245_log.md): C16 contrarian tests.
-  - S245 sector_pressure_momentum: FAILED (+0%) - sector context doesn't help.
-  - S246 down_market_c16: PASSED (+26%) - IC=+0.098 **REAL**.
-  - S247 deep_down_c16: PASSED (+20%) - IC=+0.093.
-  - **Confirms**: C16 works in down markets - use as filter.
+- [Sessions 245-247](session_245_log.md): C16 contrarian tests. S245 failed;
+  S246/S247 down-market/deep-down promotions are superseded by S272 because
+  their market states were derived from same-date S1 `actual`, not observable
+  returns. Observable VNI-down context is only modest. Source anchors: `F355`,
+  `D012`.
 
 - [Session 244](session_244_log.md): S244 eureka tests - **5 signals tested**.
-  - insider_buy_lead PASSED (+40% boost): IC=0.1113, **REAL**.
+  - insider_buy_lead PASSED (+40% boost): IC=0.1113, still survives S272 at
+    `+0.1050`.
   - c16_entropy FAILED (inconsistent year-to-year): WEAK - dead end.
   - disclosure_shock_reaction: NO DATA (empty source).
-  - Prior: consecutive_down_days PASSED (+0.10), dividend PASSED (+0.09), rank_time_accel PASSED (+0.06).
-  - **4 REAL signals promoted**: insider_buy_lead (0.1113), consecutive_down (0.103), dividend (0.093), rank_time (0.058).
+  - S272 invalidated the old `consecutive_down` promotion and downgraded
+    dividend / rank-time acceleration to weak context. Source anchors: `F355`,
+    `D012`.
 - [Session 243](session_243_log.md): Calendar + combo tests.
 - [Session 243](session_243_log.md): Calendar + combo tests.
   monday_jan_combo IC=0.1109 (+42% - STRONGEST!), feb_mid +10%, march_late +7%.
