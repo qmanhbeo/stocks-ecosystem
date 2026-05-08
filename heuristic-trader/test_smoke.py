@@ -39,74 +39,21 @@ def test_artifact_production():
     """B. Valid run produces artifacts."""
     print("\n[B] Testing artifact production...")
 
-    # Change to heuristic-trader dir for relative imports
     os.chdir(Path(__file__).parent)
 
-    # Create temp output dir
     with tempfile.TemporaryDirectory() as tmpdir:
-        # Run tiny backtest
         import run_backtest as rb
 
-        # Override artifact dir
-        rb.ARTIFACT_DIR = Path(tmpdir)
+        output_dir = Path(tmpdir) / "smoke_test"
 
-        # Run tiny test: 2025-01-01 to 2025-03-31, k=3
-        # Need to set up caches first
-        import backtest as bt
-
-        # Set up cache paths
-        cache_dir = Path(__file__).parent / "cache"
-        bt.CACHE_DIR = cache_dir
-        bt.PRICE_CACHE_FILE = cache_dir / "price_cache.parquet"
-        bt.LIQUID_CACHE_FILE = cache_dir / "liquid_lookup.joblib"
-        bt.TRAD_CACHE_FILE = cache_dir / "trad_lookup.joblib"
-
-        # Load caches
-        liquid_lookup = bt.load_liquid_lookup()
-        trad_lookup = bt.load_trad_lookup()
-        price_cache = bt.load_price_cache()
-
-        # Prepare signal
-        s1 = rb.s.load_rl_signal_matrix(start="2025-01-01", end="2025-03-31")
-
-        # Run backtest
-        result = bt.simulate_topk_constraint_compliant(
-            s1, price_cache, "s1_proba",
-            top_k=3, rebalance_days=10, min_hold_days=3,
-            use_filters=True, liquid_lookup=liquid_lookup, trad_lookup=trad_lookup,
+        metrics = rb.run_strategy_for_test(
+            strategy_name="s1_top3_rebal10",
+            start_date="2025-01-01",
+            end_date="2025-03-31",
+            output_dir=output_dir,
+            allow_2026=False,
         )
 
-        # Save artifacts manually
-        output_dir = Path(tmpdir) / "smoke_test"
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        # Write config.json
-        config = {
-            "strategy": "s1_only",
-            "start_date": "2025-01-01",
-            "end_date": "2025-03-31",
-            "top_k": 3,
-            "rebalance_days": 10,
-            "timestamp": datetime.now().isoformat(),
-        }
-        import json
-        with open(output_dir / "config.json", "w") as f:
-            json.dump(config, f)
-
-        # Write metrics.json
-        metrics = {
-            "strategy_name": result.name,
-            "total_return": result.total_return,
-            "total_trades": result.n_trades,
-        }
-        with open(output_dir / "metrics.json", "w") as f:
-            json.dump(metrics, f)
-
-        # Write daily_equity.parquet
-        if result.curve is not None and len(result.curve) > 0:
-            result.curve.to_parquet(output_dir / "daily_equity.parquet", index=False)
-
-        # Verify artifacts exist
         required = ["config.json", "metrics.json", "daily_equity.parquet"]
         missing = [f for f in required if not (output_dir / f).exists()]
 
@@ -114,7 +61,11 @@ def test_artifact_production():
             print(f"  FAIL: Missing artifacts: {missing}")
             return False
 
-        print(f"  PASS: All artifacts created ({len(result.curve)} equity rows)")
+        import json
+        with open(output_dir / "metrics.json") as f:
+            saved_metrics = json.load(f)
+
+        print(f"  PASS: All artifacts created (return: {saved_metrics.get('total_return')})")
         return True
 
 
@@ -124,37 +75,28 @@ def test_artifact_respects_end_date():
 
     os.chdir(Path(__file__).parent)
 
-    # Read the daily_equity from previous test
-    # We'll re-run a quick test to generate fresh data
     with tempfile.TemporaryDirectory() as tmpdir:
         import run_backtest as rb
-        import backtest as bt
+        import json
 
-        rb.ARTIFACT_DIR = Path(tmpdir)
-        cache_dir = Path(__file__).parent / "cache"
-        bt.CACHE_DIR = cache_dir
-        bt.PRICE_CACHE_FILE = cache_dir / "price_cache.parquet"
-        bt.LIQUID_CACHE_FILE = cache_dir / "liquid_lookup.joblib"
-        bt.TRAD_CACHE_FILE = cache_dir / "trad_lookup.joblib"
-
-        liquid_lookup = bt.load_liquid_lookup()
-        trad_lookup = bt.load_trad_lookup()
-        price_cache = bt.load_price_cache()
+        output_dir = Path(tmpdir) / "smoke_test"
 
         test_end = "2025-03-31"
-        s1 = rb.s.load_rl_signal_matrix(end=test_end)
-
-        result = bt.simulate_topk_constraint_compliant(
-            s1, price_cache, "s1_proba",
-            top_k=3, rebalance_days=10, min_hold_days=3,
-            use_filters=True, liquid_lookup=liquid_lookup, trad_lookup=trad_lookup,
+        metrics = rb.run_strategy_for_test(
+            strategy_name="s1_top3_rebal10",
+            start_date="2025-01-01",
+            end_date=test_end,
+            output_dir=output_dir,
+            allow_2026=False,
         )
 
-        if result.curve is None or len(result.curve) == 0:
+        curve_path = output_dir / "daily_equity.parquet"
+        if not curve_path.exists():
             print("  FAIL: No equity curve generated")
             return False
 
-        max_date = result.curve["date"].max()
+        curve = pd.read_parquet(curve_path)
+        max_date = pd.to_datetime(curve["date"]).max()
         requested_end = pd.to_datetime(test_end)
 
         if max_date <= requested_end:

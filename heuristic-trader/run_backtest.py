@@ -33,6 +33,38 @@ bt.PRICE_CACHE_FILE = CACHE_DIR / "price_cache.parquet"
 bt.LIQUID_CACHE_FILE = CACHE_DIR / "liquid_lookup.joblib"
 bt.TRAD_CACHE_FILE = CACHE_DIR / "trad_lookup.joblib"
 
+BENCHMARK_CACHE = None
+
+
+def get_benchmark(start_date: str, end_date: str) -> dict | None:
+    """Get VNINDEX benchmark for the date range."""
+    global BENCHMARK_CACHE
+    if BENCHMARK_CACHE is not None:
+        return BENCHMARK_CACHE
+
+    import constraints as cn
+    try:
+        vn = cn.load_vnindex(start=start_date, end=end_date)
+        if len(vn) == 0:
+            return None
+
+        start_price = vn["open"].iloc[0]
+        end_price = vn["open"].iloc[-1]
+        shares = int(100_000_000 / start_price)
+        cost = shares * start_price * 1.001
+        initial_cash = 100_000_000 - cost
+        proceeds = shares * end_price * 0.9984
+        final_value = initial_cash + proceeds
+        total_return = (final_value / 100_000_000) - 1.0
+
+        BENCHMARK_CACHE = {
+            "total_return": total_return,
+            "name": "VNINDEX",
+        }
+        return BENCHMARK_CACHE
+    except Exception:
+        return None
+
 
 def create_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
@@ -84,6 +116,40 @@ def load_caches():
     return liquid_lookup, trad_lookup, price_cache
 
 
+def run_strategy_for_test(
+    strategy_name: str,
+    start_date: str,
+    end_date: str,
+    output_dir: Path,
+    allow_2026: bool = False,
+) -> dict:
+    """Run a single strategy for testing (uses real artifact path).
+
+    This is a thin wrapper around the real artifact-writing path.
+    Use this in smoke tests instead of manually writing artifacts.
+    """
+    config = strategy_loader.load_strategy_config(strategy_name)
+    liquid_lookup, trad_lookup, price_cache = load_caches()
+
+    signal_df = prepare_signal_df_from_config(config, start_date, end_date, allow_2026)
+
+    metrics = run_backtest_and_save(
+        signal_df,
+        price_cache,
+        strategy_name=config["name"],
+        signal_col=config["signal_col"],
+        top_k=config["top_k"],
+        rebalance_days=config["rebalance_days"],
+        min_hold_days=config["min_hold_days"],
+        liquid_lookup=liquid_lookup,
+        trad_lookup=trad_lookup,
+        output_dir=output_dir,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    return metrics
+
+
 def prepare_signal_df_from_config(
     config: dict,
     start_date: str,
@@ -98,9 +164,7 @@ def prepare_signal_df_from_config(
         return s1[['time', 'ticker', 's1_proba']].copy()
     elif signal_type == "c16_only":
         c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
-        df = c16[['time', 'ticker', 'order_volume_ratio_rank']].copy()
-        df = df.rename(columns={'order_volume_ratio_rank': 's1_proba'})
-        return df
+        return c16[['time', 'ticker', 'order_volume_ratio_rank']].copy()
     elif signal_type in ("blend_70_30", "blend_50_50"):
         c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
         df = s1[['time', 'ticker', 's1_proba']].merge(
@@ -182,6 +246,10 @@ def run_backtest_and_save(
                     "days": len(grp),
                 })
 
+    benchmark = get_benchmark(start_date, end_date)
+    benchmark_return = benchmark["total_return"] if benchmark else None
+    excess_return = (result.total_return - benchmark_return) if benchmark_return is not None else None
+
     metrics = {
         "strategy_name": strategy_name,
         "start_date": start_date,
@@ -193,6 +261,8 @@ def run_backtest_and_save(
         "total_trades": result.n_trades,
         "n_filtered": result.n_filtered if hasattr(result, 'n_filtered') else 0,
         "per_year": per_year,
+        "benchmark_return": round(benchmark_return, 6) if benchmark_return is not None else None,
+        "excess_return": round(excess_return, 6) if excess_return is not None else None,
     }
     with open(output_dir / "metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)
@@ -210,10 +280,12 @@ def run_single_strategy(
     trad_lookup: dict,
     price_cache: dict,
     run_id: str,
+    output_dir: Path = None,
 ) -> dict:
     """Run a single strategy and return metrics."""
     strategy_name = config["name"]
-    output_dir = ARTIFACT_DIR / "runs" / run_id / strategy_name
+    if output_dir is None:
+        output_dir = ARTIFACT_DIR / "runs" / run_id / strategy_name
 
     signal_df = prepare_signal_df_from_config(config, start_date, end_date, allow_2026)
 
@@ -256,23 +328,36 @@ def save_summary_table(all_metrics: list[dict], run_id: str):
     return df
 
 
-def print_summary_table(all_metrics: list[dict]):
+def print_summary_table(all_metrics: list[dict], failed_strategies: list[tuple] = None):
     """Print a compact summary table to console."""
-    if not all_metrics:
+    if not all_metrics and not failed_strategies:
         return
 
     print("\n" + "=" * 80)
     print("STRATEGY COMPARISON")
     print("=" * 80)
-    print(f"{'Strategy':<25} {'Return':>10} {'Sharpe':>8} {'MDD':>10} {'Trades':>8}")
-    print("-" * 80)
 
-    for m in sorted(all_metrics, key=lambda x: x.get('annualized_return') or 0, reverse=True):
-        ret = f"{m.get('total_return', 0):.1%}" if m.get('total_return') else "N/A"
-        sharpe = f"{m['sharpe']:.2f}" if m.get('sharpe') else "N/A"
-        mdd = f"{m['max_drawdown']:.1%}" if m.get('max_drawdown') else "N/A"
-        trades = str(m.get('total_trades', 0))
-        print(f"{m['strategy_name']:<25} {ret:>10} {sharpe:>8} {mdd:>10} {trades:>8}")
+    has_benchmark = any(m.get('benchmark_return') is not None for m in all_metrics)
+
+    if has_benchmark:
+        print(f"{'Strategy':<25} {'Return':>10} {'Benchmark':>10} {'Excess':>10} {'Sharpe':>8} {'Trades':>8}")
+        print("-" * 80)
+        for m in sorted(all_metrics, key=lambda x: x.get('annualized_return') or 0, reverse=True):
+            ret = f"{m.get('total_return', 0):.1%}" if m.get('total_return') else "N/A"
+            bench = f"{m.get('benchmark_return', 0):.1%}" if m.get('benchmark_return') is not None else "N/A"
+            excess = f"{m.get('excess_return', 0):+.1%}" if m.get('excess_return') is not None else "N/A"
+            sharpe = f"{m['sharpe']:.2f}" if m.get('sharpe') else "N/A"
+            trades = str(m.get('total_trades', 0))
+            print(f"{m['strategy_name']:<25} {ret:>10} {bench:>10} {excess:>10} {sharpe:>8} {trades:>8}")
+    else:
+        print(f"{'Strategy':<25} {'Return':>10} {'Sharpe':>8} {'MDD':>10} {'Trades':>8}")
+        print("-" * 80)
+        for m in sorted(all_metrics, key=lambda x: x.get('annualized_return') or 0, reverse=True):
+            ret = f"{m.get('total_return', 0):.1%}" if m.get('total_return') else "N/A"
+            sharpe = f"{m['sharpe']:.2f}" if m.get('sharpe') else "N/A"
+            mdd = f"{m.get('max_drawdown', 0):.1%}" if m.get('max_drawdown') else "N/A"
+            trades = str(m.get('total_trades', 0))
+            print(f"{m['strategy_name']:<25} {ret:>10} {sharpe:>8} {mdd:>10} {trades:>8}")
 
     print("=" * 80)
 
@@ -292,6 +377,7 @@ def main():
     allow_2026 = args.allow_lockbox
     start_date = args.start_date
     end_date = args.end_date
+    custom_output_dir = Path(args.output_dir) if args.output_dir else None
 
     if not allow_2026 and end_date > "2025-12-31":
         print(f"ERROR: end-date {end_date} is past lockbox date 2025-12-31.")
@@ -310,6 +396,7 @@ def main():
 
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     all_metrics = []
+    failed_strategies = []
 
     print(f"\nRunning {len(strategy_names)} strategy(ies) from {start_date} to {end_date}...")
 
@@ -317,27 +404,47 @@ def main():
         print(f"\n[{i+1}/{len(strategy_names)}] ", end="")
         try:
             config = strategy_loader.load_strategy_config(name)
+
+            if custom_output_dir and not args.all_strategies:
+                output_dir = custom_output_dir / name
+            else:
+                output_dir = ARTIFACT_DIR / "runs" / run_id / name
+
             metrics = run_single_strategy(
                 config, start_date, end_date, allow_2026,
-                liquid_lookup, trad_lookup, price_cache, run_id
+                liquid_lookup, trad_lookup, price_cache, run_id,
+                output_dir=output_dir
             )
             all_metrics.append(metrics)
-        except (KeyError, ValueError) as e:
-            print(f"ERROR loading strategy '{name}': {e}")
+        except Exception as e:
+            print(f"FAILED: {name} - {e}")
+            failed_strategies.append((name, str(e)))
             continue
 
     # Generate summary
     if all_metrics:
         df = save_summary_table(all_metrics, run_id)
-        print_summary_table(all_metrics)
+        print_summary_table(all_metrics, failed_strategies)
 
         summary_dir = ARTIFACT_DIR / "summaries"
         print(f"\nSummary saved to:")
         print(f"  {summary_dir / run_id}_summary.parquet")
         print(f"  {summary_dir / run_id}_summary.csv")
         print(f"  {summary_dir / 'latest_summary.parquet'}")
+
+        if custom_output_dir and not args.all_strategies:
+            print(f"  {custom_output_dir / name}")
     else:
         print("\nNo strategies completed successfully.")
+
+    # Report failed strategies
+    if failed_strategies:
+        print(f"\n{'='*80}")
+        print(f"FAILED STRATEGIES: {len(failed_strategies)}")
+        print("=" * 80)
+        for name, err in failed_strategies:
+            print(f"  {name}: {err}")
+        print(f"\nSuccessful: {len(all_metrics)}, Failed: {len(failed_strategies)}")
 
 
 if __name__ == "__main__":
