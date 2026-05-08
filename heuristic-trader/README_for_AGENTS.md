@@ -122,3 +122,17 @@ artifacts/runs/<timestamp>/
 - Quick run (with pre-computed filters): ~2.5 seconds
 - Legacy run (compute on-the-fly): ~5 minutes
 - Target: ~100+ return for good strategies
+
+## Smoke Tests
+
+Run safety/audit tests:
+
+```bash
+python test_smoke.py
+```
+
+Tests verify:
+- A: Lockbox blocks 2026 by default
+- B: Valid run produces artifacts (config.json, metrics.json, daily_equity.parquet)
+- C: Artifact respects --end-date
+- D: All loader functions contain lockbox filtering (protects against duplicate-definition regressions)
