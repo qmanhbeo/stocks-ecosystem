@@ -1,0 +1,1 @@
+/manh-memory-system make sure you have written session log. update findings chunks and deadends chunks correctly (specifically in chunks of 30 only) + compact appropriately in *_compact + keep live_state.md lean (remove hypotheses from queue if done addressing). Update signal_library.md and portfolio_policy_library.md when you promote new signals.

@@ -11,6 +11,8 @@ LIVE_STATE_PATH = os.path.join(RESEARCH_LAB, "notes", "live_state.md")
 SESSIONS_COMPACT_PATH = os.path.join(RESEARCH_LAB, "notes", "sessions_compact.md")
 FINDINGS_COMPACT_PATH = os.path.join(RESEARCH_LAB, "notes", "findings_compact.md")
 DEADENDS_COMPACT_PATH = os.path.join(RESEARCH_LAB, "notes", "deadends_compact.md")
+NOTES_DIR = os.path.join(RESEARCH_LAB, "notes")
+RUN_SUMMARIES_DIR = os.path.join(RESEARCH_LAB, "artifacts", "run_summaries")
 
 LOOP_STATE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "state")
 LOOP_STATE_FILE = os.path.join(LOOP_STATE_DIR, "loop_state.json")

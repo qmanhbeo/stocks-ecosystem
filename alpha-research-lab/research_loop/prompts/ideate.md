@@ -1,0 +1,1 @@
+/bright-mind what eurekas do current state and latest results spark? come up with the most creative hypotheses. add them to live_state.md hypothesis queue

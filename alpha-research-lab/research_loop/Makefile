@@ -1,16 +1,26 @@
-.PHONY: cycle dry-run status reset loop help
+.PHONY: cycle dry-run status reset loop check-interrupted recover-interrupted ideate experiment memory evergreen-cycle help
 
 MAX_CYCLES ?= 2
 
 help:
-	@echo "Research Loop Orchestrator - MVP"
+	@echo "Research Loop Orchestrator"
 	@echo ""
-	@echo "Targets:"
-	@echo "  make cycle      - Run one orchestrator cycle (invokes evergreen)"
-	@echo "  make dry-run    - Run decision logic WITHOUT invoking opencode"
-	@echo "  make status     - Display current saved state"
-	@echo "  make reset      - Reset/delete loop state safely"
-	@echo "  make loop       - Run bounded loop (MAX_CYCLES=$(MAX_CYCLES), default 2)"
+	@echo "3-Phase Cycle (NEW):"
+	@echo "  make cycle              - Run complete 3-phase cycle (ideate→experiment→memory)"
+	@echo "  make ideate             - Run only Phase 1 (bright-mind)"
+	@echo "  make experiment        - Run only Phase 2 (experimentor)"
+	@echo "  make memory            - Run only Phase 3 (manh-memory-system)"
+	@echo ""
+	@echo "Legacy:"
+	@echo "  make evergreen-cycle   - Run old single evergreen call"
+	@echo ""
+	@echo "Utilities:"
+	@echo "  make dry-run            - Run decision logic WITHOUT invoking opencode"
+	@echo "  make status             - Display current saved state"
+	@echo "  make reset              - Reset/delete loop state safely"
+	@echo "  make loop               - Run bounded loop (MAX_CYCLES=$(MAX_CYCLES), default 2)"
+	@echo "  make check-interrupted  - Check for stale interrupted runs"
+	@echo "  make recover-interrupted - Recover from an interrupted run"
 	@echo ""
 	@echo "Variables:"
 	@echo "  MAX_CYCLES       - Number of cycles for loop (default: 2)"
@@ -19,13 +29,31 @@ help:
 	@echo "  state/loop_state.json - Persistent state"
 	@echo "  logs/cycle_*.log      - Per-cycle logs"
 	@echo "  logs/loop_*.log       - Loop summary logs"
+	@echo "  prompts/              - Phase prompt templates"
 
 cycle:
-	@echo "Running orchestrator cycle..."
+	@echo "Running 3-phase cycle (ideate→experiment→memory)..."
 	python3 orchestrator.py cycle
 
+ideate:
+	@echo "Running Phase 1: Ideate (bright-mind)..."
+	@echo "WARNING: Standalone phase uses fresh session, not same-session as cycle"
+	python3 orchestrator.py ideate
+
+experiment:
+	@echo "Running Phase 2: Experiment (experimentor)..."
+	@echo "WARNING: Standalone phase uses --continue which may resume wrong session!"
+	@echo "Only use after make ideate in same session, or use make cycle instead"
+	python3 orchestrator.py experiment
+
+memory:
+	@echo "Running Phase 3: Memory (manh-memory-system)..."
+	@echo "WARNING: Standalone phase uses --continue which may resume wrong session!"
+	@echo "Only use after make experiment in same session, or use make cycle instead"
+	python3 orchestrator.py memory
+
 dry-run:
-	@echo "Running dry-run (no evergreen invocation)..."
+	@echo "Running dry-run (no agent invocation)..."
 	python3 orchestrator.py dry-run
 
 status:
@@ -40,3 +68,15 @@ reset:
 loop:
 	@echo "Running bounded loop (max_cycles=$(MAX_CYCLES))..."
 	python3 orchestrator.py loop --max-cycles $(MAX_CYCLES)
+
+check-interrupted:
+	@echo "Checking for interrupted runs..."
+	python3 orchestrator.py check-interrupted
+
+recover-interrupted:
+	@echo "Recovering from interrupted run..."
+	python3 orchestrator.py recover-interrupted
+
+evergreen-cycle:
+	@echo "Running legacy evergreen cycle..."
+	python3 orchestrator.py evergreen-cycle
