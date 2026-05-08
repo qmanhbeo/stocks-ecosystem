@@ -1,108 +1,72 @@
-# Session 121 Log
+# Session 121 Log — 2026-05-08
 
-## Objective
-Audit the two next macro/news branches while the LLM extractor keeps running: the `news-decay-contract` half-life question and the macro-theme router idea.
+## H472: liquidity_adjusted_return
 
-This session did not change the live branch.
-It did not read `2026+`.
+**Decision: FAILED**
 
-## What changed
+### Hypothesis
+Return normalized by Amihud illiquidity (|return| / turnover) captures "quality of flow":
+high ratio (return despite liquidity) = institutional demand; low ratio = fragile illiquid returns.
+Test 5d return / 20d avg Amihud quintiles vs forward IC.
 
-Added and ran the H291 news decay contract audit script, then added and ran the H292 macro theme router audit script.
+### Command / code
+```bash
+python analysis/h472_liquidity_adjusted_return.py
+```
 
-Saved artifacts:
-- `artifacts/run_summaries/20260405_232606_h291_news_decay_contract_audit_details.json`
-- `artifacts/run_summaries/20260405_232606_h291_news_decay_contract_audit_standalone_signal.json`
-- `artifacts/run_summaries/20260405_232906_h292_macro_theme_router_audit_details.json`
-- `artifacts/run_summaries/20260405_232906_h292_macro_theme_router_audit_standalone_signal.json`
+### Inputs
+- S1 panel: `data/features/xs_barrier_vol_1d_hose_full.parquet` (start_year=2018)
+- OHLCV: 406 per-ticker 1D files from `data/stock/gia_lich_su_*_1D.parquet`
+- Order stats: `data/order_stats/cafef/order_stats_daily.parquet`
 
-### H291 - News Decay Contract Audit
-**Hypothesis:**
-The raw CafeF LLM news stream should obey a learnable novelty half-life, where `follow_up`, `new`, and `recycled` stories matter on different forward horizons.
+### Saved artifact
+`artifacts/run_summaries/20260508_193633_liquidity_adjusted_return_research_branch.json`
 
-**Command / code:**
-`conda run -n stocks python analysis/h291_news_decay_contract_audit.py`
+### Results
 
-**Inputs:**
-- `data/llm_cache/*.jsonl`
-- `data/features/xs_llm_news_market_daily.parquet`
+| State | IC | Lift vs Baseline | Positive Years |
+|-------|-----|-------------------|----------------|
+| all_rows (baseline) | 0.1194 | — | 8/8 |
+| return_5d_pos_illiq | 0.1632 | **+0.0438** | 8/8 |
+| mid_lar (Q3) | 0.1448 | +0.0254 | 8/8 |
+| high_lar_expansion | 0.1343 | +0.0149 | 8/8 |
+| low_lar_expansion | 0.1158 | -0.0036 | 8/8 |
+| high_lar (Q5) | 0.0873 | **-0.0321** | 8/8 |
+| low_lar (Q1) | 0.0809 | -0.0385 | 8/8 |
+| return_5d_pos_liq | 0.0524 | **-0.0670** | 8/8 |
 
-**Saved artifact:**
-`artifacts/run_summaries/20260405_232606_h291_news_decay_contract_audit_standalone_signal.json`
+Panel: 646,982 rows, 2018–2025.
 
-| Metric | Value | Note |
-|--------|-------|------|
-| verdict | `MIXED` | decay exists, but not a clean one-class contract |
-| best feature | `follow_up` | strongest 1d class |
-| best horizon | `1d` | strongest pooled row |
-| mean rho | `+0.0196` | follow-up is real on the shortest horizon |
-| daily hit rate | `0.5256` | slightly above chance |
-| positive years | `2 / 2` | both active years positive |
-| 5d best feature | `follow_up_minus_new` | horizon reshuffle at 5d |
-| 30d best feature | `new` | pooled long-horizon ordering changes again |
-| panel dates | `366` | nonzero 2015-2017 window |
+### Interpretation
 
-**Result:**
-The half-life signal is real, but the clean contract fails. `follow_up` is the strongest 1d class, yet the 5d horizon shifts to `follow_up_minus_new` rather than preserving `follow_up` itself. That means there is decay structure, but not a stable single-class ordering that would justify promotion as one compact router.
+**LAR ratio alone is anti-predictive**: high LAR (Q5) = IC 0.087 (-0.032 lift) —
+investors chasing "efficient" stocks do worse. Mid LAR (Q3) is strongest at +0.025 lift.
+This is the OPPOSITE of the hypothesis; "return despite liquidity" = crowd-following, not institutional depth.
 
-**Verdict: MIXED**
+**return_5d_pos_illiq = IC 0.163 (+0.044 lift)**: positive 5d return + low liquidity (high Amihud)
+is the strongest state. This is the illiquid momentum / C23-style effect — stocks moving up in
+thin markets, not "flow quality." Confirms H447 contrarian and H432/H463 patterns.
 
-### H292 - Macro Theme Router Audit
-**Hypothesis:**
-Macro themes should route into the matching sector basket rather than behaving like one pooled macro-news count.
+**return_5d_pos_liq = IC 0.052 (-0.067 lift)**: positive 5d return in liquid stocks is the WORST state.
+"Real force" (liquid + rising) = crowd blowoff. Confirms D036.
 
-**Command / code:**
-`conda run -n stocks python analysis/h292_macro_theme_router_audit.py`
+**high_lar_expansion = IC 0.134 (+0.015)**: LAR works better with vol expansion, but not enough
+to overcome the anti-predictive baseline effect.
 
-**Inputs:**
-- `data/features/xs_llm_news_market_daily.parquet`
-- `data/features/xs_sector_rotation_daily.parquet`
-- `data/features/event_surface_daily.parquet`
-- `data/features/sector_classification.parquet`
+**C23 reference**: 0.2616 vs this best at 0.163. LAR adds no incremental value over raw illiq.
 
-**Saved artifact:**
-`artifacts/run_summaries/20260405_232906_h292_macro_theme_router_audit_standalone_signal.json`
+### Result: FAILED
 
-| Metric | Value | Note |
-|--------|-------|------|
-| verdict | `MIXED` | real signal, but not a clean router |
-| best basket | `regulated_combo` | combined bank + real-estate basket |
-| best feature | `frac_real_estate_theme` | strongest pooled row |
-| mean rho | `+0.0988` | strong, but not sector-specific |
-| daily hit rate | `1.0000` | positive in both years |
-| positive years | `2 / 2` | both active years positive |
-| banking matched feature | `frac_banking_theme` | positive but weaker |
-| real-estate matched feature | `frac_real_estate_theme` | positive and strongest |
-| regulation theme | weak / negative | does not cleanly own the regulated basket |
+The LAR ratio is anti-predictive as a standalone ranker. The mechanism is inverted:
+"high return + low Amihud" = liquid crowd chase (negative), while "high return + high Amihud"
+= illiquid momentum (positive, aligns with C23). The ratio collapses two correlated effects
+into one confusing metric that loses to the raw components.
 
-**Result:**
-Macro themes do matter, but the effect is not a crisp sector router. The real-estate theme is the strongest feature even on the combined regulated basket, while banking and regulation are weaker. That looks more like a broad property / balance-sheet state factor than a clean theme-to-sector switch.
+**Key finding**: In VN market, illiquid stocks amplify everything. The Amihud LEVEL (C23) is
+the signal, not the return/Amihud RATIO.
 
-**Verdict: MIXED**
+### Verdict: FAILED
 
-## Branch decision
-
-Keep the live branch unchanged.
-Keep `C15` as offline evidence only.
-Keep `news-marginal-slot` blocked until active-book years have nonzero news coverage.
-Park `news-decay-contract` as a mixed evidence line.
-Park `macro-theme-router` as a mixed evidence line.
-Move the queue to `breadth-activation-gate`.
-
-## Validation
-
-Completed before the runs:
-- `conda run -n stocks python analysis/h291_news_decay_contract_audit.py`
-- `conda run -n stocks python analysis/h292_macro_theme_router_audit.py`
-
-Completed for the experiments:
-- read `artifacts/run_summaries/20260405_232606_h291_news_decay_contract_audit_standalone_signal.json`
-- read `artifacts/run_summaries/20260405_232906_h292_macro_theme_router_audit_standalone_signal.json`
-
-Verdict:
-- `H291`: **MIXED**
-- `H292`: **MIXED**
-
-## Parked Here
-
-Session 121 is the stop point for today. The next active branch is `breadth-activation-gate`, and no further runs were started after the H291/H292 audits.
+**Next:** Queue item AL (liquidity_adjusted_return) is DEAD-END. Continue with AM (news_velocity_as_signal)
+— 3d article count delta — using existing news features. Do not reopen LAR ratio as a standalone ranker.
+The `return_5d_pos_illiq` state is a weak confirmation of C23 but not an independent signal.

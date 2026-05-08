@@ -1,0 +1,89 @@
+{
+  "ts": "20260508_171817",
+  "name": "h443_prop_foreign_predator_prey",
+  "mode": "research_branch",
+  "metadata": {
+    "hypothesis": "Foreign and proprietary flows may be useful as a conflict/absorption game (predator-prey), not as raw net-flow ranks. Test foreign-sell/prop-buy absorption, foreign-buy/prop-sell distribution, and prop-following-foreign states.",
+    "protocol": {
+      "start_year": 2018,
+      "end_year": 2025,
+      "min_year_rows": 500,
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      },
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ]
+    }
+  },
+  "summary": {
+    "all_rows_avg_ic": 0.13354479678630032,
+    "best_state": "all_rows",
+    "best_avg_ic": 0.13354479678630032,
+    "decision": "FAILED",
+    "panel_rows": 826404,
+    "all_rows_pos_years": "11/11",
+    "all_rows_lift": 0.0,
+    "ff_buy_avg_ic": 0.11882042905873738,
+    "ff_buy_pos_years": "11/11",
+    "ff_buy_lift": -0.014724367727562943,
+    "ff_sell_avg_ic": 0.10041422556730269,
+    "ff_sell_pos_years": "11/11",
+    "ff_sell_lift": -0.03313057121899764,
+    "pt_buy_avg_ic": 0.07967753016841138,
+    "pt_buy_pos_years": "4/4",
+    "pt_buy_lift": -0.053867266617888945,
+    "pt_sell_avg_ic": 0.0887081964359867,
+    "pt_sell_pos_years": "4/4",
+    "pt_sell_lift": -0.04483660035031363,
+    "ff_sell_pt_buy_absorption_avg_ic": 0.06214022833517906,
+    "ff_sell_pt_buy_absorption_pos_years": "4/4",
+    "ff_sell_pt_buy_absorption_lift": -0.07140456845112127,
+    "ff_buy_pt_sell_distribution_avg_ic": 0.09594671665085888,
+    "ff_buy_pt_sell_distribution_pos_years": "4/4",
+    "ff_buy_pt_sell_distribution_lift": -0.03759808013544144,
+    "prop_follow_ff_avg_ic": 0.08421060188323053,
+    "prop_follow_ff_pos_years": "4/4",
+    "prop_follow_ff_lift": -0.0493341949030698,
+    "ff_sell_pt_buy_high_c16_avg_ic": 0.1189853984254917,
+    "ff_sell_pt_buy_high_c16_pos_years": "3/3",
+    "ff_sell_pt_buy_high_c16_lift": -0.01455939836080862,
+    "ff_buy_pt_sell_high_c16_avg_ic": 0.12322560863341152,
+    "ff_buy_pt_sell_high_c16_pos_years": "3/4",
+    "ff_buy_pt_sell_high_c16_lift": -0.010319188152888806
+  }
+}

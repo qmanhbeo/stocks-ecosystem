@@ -2,6 +2,8 @@
 
 MAX_CYCLES ?= 2
 SESSION_BATCH_SIZE ?= 3
+VERBOSE ?= 0
+HEARTBEAT_SECONDS ?= 30
 
 help:
 	@echo "Research Loop Orchestrator (run from alpha-research-lab root)"
@@ -18,31 +20,41 @@ help:
 	@echo "Variables:"
 	@echo "  MAX_CYCLES         - Number of cycles (default: 2)"
 	@echo "  SESSION_BATCH_SIZE - Cycles per session batch (default: 3)"
+	@echo "  VERBOSE            - Enable verbose output (default: 0)"
+	@echo "  HEARTBEAT_SECONDS  - Heartbeat interval in seconds (default: 30)"
 
 loop:
-	@echo "Running bounded loop (max_cycles=$(MAX_CYCLES), session_batch_size=$(SESSION_BATCH_SIZE))..."
-	python3 -u research_loop/orchestrator.py loop --max-cycles $(MAX_CYCLES) --session-batch-size $(SESSION_BATCH_SIZE)
+	@echo "Running bounded loop (max_cycles=$(MAX_CYCLES), session_batch_size=$(SESSION_BATCH_SIZE), verbose=$(VERBOSE))..."
+	@if [ "$(VERBOSE)" = "1" ]; then \
+		python3 -u evergreen-research-loop/orchestrator.py loop --max-cycles $(MAX_CYCLES) --session-batch-size $(SESSION_BATCH_SIZE) --verbose --heartbeat-seconds $(HEARTBEAT_SECONDS); \
+	else \
+		python3 -u evergreen-research-loop/orchestrator.py loop --max-cycles $(MAX_CYCLES) --session-batch-size $(SESSION_BATCH_SIZE) --heartbeat-seconds $(HEARTBEAT_SECONDS); \
+	fi
 
 dry-run:
 	@echo "Running dry-run (no agent invocation)..."
-	python3 -u research_loop/orchestrator.py dry-run --max-cycles $(MAX_CYCLES) --session-batch-size $(SESSION_BATCH_SIZE)
+	@if [ "$(VERBOSE)" = "1" ]; then \
+		python3 -u evergreen-research-loop/orchestrator.py dry-run --max-cycles $(MAX_CYCLES) --session-batch-size $(SESSION_BATCH_SIZE) --verbose --heartbeat-seconds $(HEARTBEAT_SECONDS); \
+	else \
+		python3 -u evergreen-research-loop/orchestrator.py dry-run --max-cycles $(MAX_CYCLES) --session-batch-size $(SESSION_BATCH_SIZE) --heartbeat-seconds $(HEARTBEAT_SECONDS); \
+	fi
 
 status:
 	@echo "Current state:"
-	python3 -u research_loop/orchestrator.py status
+	python3 -u evergreen-research-loop/orchestrator.py status
 
 reset:
 	@echo "Resetting loop state..."
-	python3 -u research_loop/orchestrator.py reset
+	python3 -u evergreen-research-loop/orchestrator.py reset
 
 check-interrupted:
 	@echo "Checking for interrupted runs..."
-	python3 -u research_loop/orchestrator.py check-interrupted
+	python3 -u evergreen-research-loop/orchestrator.py check-interrupted
 
 recover-interrupted:
 	@echo "Recovering from interrupted run..."
-	python3 -u research_loop/orchestrator.py recover-interrupted
+	python3 -u evergreen-research-loop/orchestrator.py recover-interrupted
 
 tail:
 	@echo "Tailing latest log file..."
-	@ls -t research_loop/logs/cycle_*.log research_loop/logs/loop_*.log 2>/dev/null | head -1 | xargs tail -f
+	@ls -t evergreen-research-loop/logs/cycle_*.log evergreen-research-loop/logs/loop_*.log 2>/dev/null | head -1 | xargs tail -f

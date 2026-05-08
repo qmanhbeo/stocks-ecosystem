@@ -1,67 +1,70 @@
 # Session 111 Log
 
-## Objective
-Run the next possible queued branch after H281 failed:
-- `H282`: test the simple momentum-disagreement construction
-- `xs_mom_disagree = xs_proba_rank - xs_reversal_1d_rank`
-- check whether the disagreement is a new standalone signal or just a blend of the existing momentum and reversal axes
+## H455: sector_momentum_as_regime_not_filter
 
-This session did not change the live branch.
-It did not read `2026+`.
+**Hypothesis:** S248-S252 used sector as FILTER (failed). Use SECTOR RETURN as REGIME to gate signal behavior: C16, C19, C20, S1 IC in sector_up vs sector_down separately.
 
-## What changed
-
-Added:
-- `analysis/h282_momentum_disagreement_audit.py`
-
-Saved artifacts:
-- `artifacts/run_summaries/20260405_210858_h282_momentum_disagreement_audit_signal_library_momentum_disagreement.json`
-- `artifacts/run_summaries/20260405_210858_h282_momentum_disagreement_summary.json`
-- `artifacts/portfolio_baselines/20260405_210858_h282_momentum_disagreement_results.parquet`
-
-### H282 - Momentum Disagreement Audit
-**Hypothesis:**
-The rank difference between the primary momentum signal and the 1-day reversal signal adds a new orthogonal alpha axis.
-
-**Command / code:**
-`conda run -n stocks python analysis/h282_momentum_disagreement_audit.py`
+**Command / code:** `python analysis/h455_sector_momentum_as_regime_not_filter.py`
 
 **Inputs:**
-- `data/features/xs_barrier_vol_1d_hose_full.parquet`
-- `data/features/xs_shortterm_reversal.parquet`
-- evaluation window:
-  - `2015-2025`
+- `data/features/xs_barrier_vol_1d_hose_full.parquet` - S1 scores and targets
+- `data/order_stats/cafef/order_stats_daily.parquet` - order stats for signals
 
 **Saved artifact:**
-`artifacts/run_summaries/20260405_210858_h282_momentum_disagreement_summary.json`
+`artifacts/run_summaries/20260508_181059_sector_momentum_as_regime_not_filter_research_branch.json`
 
-| Metric | Value | Note |
-|--------|-------|------|
-| candidate | `xs_mom_disagree` | `xs_proba_rank - xs_reversal_1d_rank` |
-| avg IC | `+0.0854` | strong standalone predictive content |
-| positive years | `11 / 11` | perfectly consistent |
-| corr vs S1 | `+0.5333` | fails orthogonality gate |
-| corr vs C9 | `-0.6260` | fails orthogonality gate |
-| rows | `825,481` | full merged support |
+### Results
 
-**Result:**
-The disagreement feature is real, but it is not new information. It is too correlated with both S1 and C9 to qualify as a standalone library signal.
+| State | IC | Lift vs Baseline | Notes |
+|-------|-----|------------------|-------|
+| all_rows (baseline) | 0.1298 | 0.0000 | |
+| buy_heavy_expansion | 0.2105 | +0.0807 | Signal alone |
+| buy_heavy_expansion_sector_up | 0.2028 | +0.0730 | |
+| buy_heavy_expansion_sector_down | 0.1902 | +0.0604 | |
+| vol_expansion_sector_up | 0.1644 | +0.0346 | |
+| vol_expansion_sector_down | 0.1627 | +0.0329 | |
+| sector_down | 0.1301 | +0.0003 | |
+| sector_up | 0.1234 | -0.0064 | |
+| high_volume_sector_up | 0.0970 | -0.0328 | Negative |
+| high_volume_sector_down | 0.0681 | -0.0617 | Negative |
 
-**Verdict: MIXED**
+### Key Findings
 
-## Branch decision
+1. **Sector regime does NOT significantly change signal behavior**
+   - vol_expansion regime diff (down - up): -0.0017 (essentially equal)
+   - buy_heavy_expansion regime diff (down - up): -0.0127 (marginally different)
+   - Both signals work similarly in both regimes
 
-Do not promote `xs_mom_disagree` as a new signal.
-If this idea is revisited, it should be as a residualized or interaction-only construct, not as the raw subtraction.
+2. **Signals work slightly BETTER in sector_up (not down as hypothesized)**
+   - buy_heavy_expansion_sector_up: IC=0.2028 vs sector_down: IC=0.1902
+   - vol_expansion_sector_up: IC=0.1644 vs sector_down: IC=0.1627
 
-## Validation
+3. **Sector regime has minimal baseline effect**
+   - sector_up: IC=0.1234 (slightly below baseline)
+   - sector_down: IC=0.1301 (slightly above baseline)
+   - The market excess signal is not a strong regime indicator
 
-Completed before the run:
-- `conda run -n stocks python -m py_compile alpha-research-lab/analysis/h282_momentum_disagreement_audit.py`
+4. **High volume is ALWAYS negative**
+   - high_volume_sector_up: IC=0.0970 (-0.0328 lift)
+   - high_volume_sector_down: IC=0.0681 (-0.0617 lift)
+   - Pure volume level is not informative
 
-Completed for the experiment:
-- `conda run -n stocks python analysis/h282_momentum_disagreement_audit.py`
-- read `artifacts/run_summaries/20260405_210858_h282_momentum_disagreement_summary.json`
+5. **The signal regime router hypothesis fails**
+   - S248-S252 failed as FILTERS, and now also fails as REGIME GATES
+   - Signals don't need sector context to work better
 
-Verdict:
-- `H282`: **MIXED**
+**Decision Rule**
+- If regime difference > 0.02 for any signal: PASSED
+- If regime difference <= 0.01 for all signals: FAILED
+- Result: FAILED - regime differences are small (-0.0017 to -0.0127)
+
+**Verdict: FAILED** (Dead-end D038)
+
+### Why Failed
+- Sector momentum (market excess) is not a meaningful regime for signal gating
+- Signals work similarly across regimes - no router benefit
+- The hypothesis was that market DOWN regimes would amplify contrarian signals, but they don't
+
+---
+
+Session 111 - 2026-05-08

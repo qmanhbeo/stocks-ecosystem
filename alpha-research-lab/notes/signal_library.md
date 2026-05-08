@@ -689,6 +689,230 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 
 ---
 
+### C19 — Vol Expansion + Low Return Low Volume Combo (H448)
+**Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- **Standalone IC:** +0.2069 (vs baseline +0.1298 = **+59% boost**)
+- **Lift vs vol_expansion alone:** +0.0316 (11/11 positive years)
+- **Lift vs low_return_low_vol alone:** +0.0025
+
+**What it captures:**
+- vol_expansion (5d vol change top 20%) × low_return_low_vol (return rank bottom 30% × volume rank bottom 30%)
+- Captures the oversold-in-expanding-vol regime better than either component alone
+- Both components are positive, COMBO adds incremental lift
+
+**Formula:** `vol_expansion AND low_return_low_vol`
+
+**Why it matters:**
+- NEW SIGNAL - adds +0.0316 IC vs vol_expansion alone
+- Use as conditioner: captures regime-specific contrarian edge
+
+**Source:** Session 104, F393.
+
+---
+
+### C20 — Buy-Heavy Imbalance In Vol Expansion (H451)
+**Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- **Standalone IC:** +0.1809 (vs baseline +0.1301 = **+39% boost**)
+- **Lift vs vol_expansion alone:** +0.0053
+- **Expansion vs Contraction (buy):** +0.0699 (11/11 positive years)
+
+**What it captures:**
+- buy_sell_volume_imbalance (top 20% = buy-heavy) × vol_expansion (top 20% 5d vol change)
+- Buy-heavy imbalance works ONLY in vol expansion periods
+- Sell-heavy is always negative - no regime benefit
+
+**Formula:** `buy_heavy_imbalance AND vol_expansion`
+
+**Why it matters:**
+- NEW SIGNAL - regime-dependent imbalance is real
+- Use as conditioner: buy-heavy only in vol expansion periods
+- Source anchor for signal library promotion
+
+**Source:** Session 107, F394.
+
+---
+
+### C21 — Level + Momentum + Vol Expansion Combos (H453)
+**Status: NEW SIGNALS — PASSED walk-forward validation**
+
+- **buy_heavy_accel_expansion IC:** +0.2320 (vs baseline +0.1301 = **+78% boost**)
+- **sell_heavy_decel_expansion IC:** +0.2369 (vs baseline +0.1301 = **+82% boost**)
+- **Lift vs H451 level-only:** +0.0201-0.0260 incremental IC
+- **Consistency:** 11/11 positive years (both combos)
+
+**What it captures:**
+- `buy_heavy_accel_expansion`: buy-heavy imbalance LEVEL + ACCELERATING imbalance + vol_expansion
+- `sell_heavy_decel_expansion`: sell-heavy imbalance LEVEL + DECELERATING imbalance + vol_expansion
+- Two distinct mechanisms:
+  - Buy-heavy acceleration in expansion = hidden demand building
+  - Sell-heavy deceleration in expansion = exhaustion/reversal
+
+**Formula:**
+- `buy_heavy_accel_expansion`: imbalance_rank ≥ 0.8 AND imbalance_delta_rank ≥ 0.8 AND vol_change_rank ≥ 0.8
+- `sell_heavy_decel_expansion`: imbalance_rank ≤ 0.2 AND imbalance_delta_rank ≤ 0.2 AND vol_change_rank ≥ 0.8
+
+**Independent components:**
+- `imbalance_accelerating` alone: IC +0.1601, +0.0300 lift (11/11 pos years)
+- `imbalance_decelerating` alone: IC +0.1503, +0.0202 lift (11/11 pos years)
+- `accel_expansion` (delta × vol): IC +0.2126, +0.0825 lift
+
+**Why it matters:**
+- NEW SIGNALS - level + momentum + regime combos beat level-only by +0.02-0.03 IC
+- Imbalance momentum (delta) is an independent information dimension beyond level
+- Both acceleration AND deceleration in vol expansion are positive signals (different mechanisms)
+- Stable imbalance (no change) underperforms - change IS the signal
+
+**Source:** Session 109, F391.
+
+---
+
+### C22 — Limit Proximity Momentum (H454)
+**Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- **Standalone IC:** +0.2166 (vs baseline +0.1298 = **+67% boost**)
+- **Lift vs vol_expansion alone:** +0.0415
+- **Consistency:** 11/11 positive years
+
+**What it captures:**
+- Stocks APPROACHING the daily +7% price limit (+5% to +7%)
+- Strong upward momentum toward the limit queue
+- NOT vol-dependent: vol expansion adds only +0.0004 incremental IC
+
+**Formula:** `pct_change >= 5.0 AND pct_change < 7.0`
+
+**Why it matters:**
+- NEW SIGNAL - regime-independent momentum signal
+- Near-ceiling momentum is stronger than vol regime effects
+- High volume WITH near-limit is WEAKER (0.1375 vs 0.2166) - queue pressure thesis fails
+- Use as standalone ranker, NOT volume-augmented
+
+**Source:** Session 110, F392.
+
+---
+
+### C23 — Amihud Illiquidity × Vol Expansion Combo (H463)
+**Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- **Standalone IC:** +0.2029 (vs baseline +0.1298 = **+56% boost**)
+- **Combo IC:** +0.2616 (vs baseline = **+101% boost**)
+- **Lift vs vol_expansion alone:** +0.0862
+- **Consistency:** 11/11 positive years
+
+**What it captures:**
+- amihud_20d_avg (computed inline from OHLCV: |return| / turnover_billions_VND, 20d rolling avg)
+- rank in top 20% illiquidity (high_illiq) × vol_expansion (top 20% 5d vol change)
+- Illiquid stocks (under-followed) amplify regime effects dramatically
+
+**Formula:** `amihud_20d_avg_rank >= 0.80 AND vol_change_rank >= 0.80`
+
+**Independent components:**
+- high_illiq alone: IC +0.2029, +0.0731 lift
+- vol_expansion alone: IC +0.1753 (from H460)
+- high_illiq_expansion: IC +0.2616, +0.1318 lift
+
+**Cross-checks:**
+- beats C21 sell_heavy_decel (0.2393) by +0.0223
+- beats C20 buy_heavy_expansion (0.2105) by +0.0511
+- beats C22 approaching_ceiling (0.2170) by +0.0446
+- high_illiq_buy_expansion (0.2396) < high_illiq_expansion (0.2616) — imbalance redundant with illiq
+
+**Why it matters:**
+- C23 is now the STRONGEST standalone signal in the library
+- regime-independent: vol_contraction also boosts illiq (0.1790 vs 0.0652)
+- OHLCV-based inline computation works; no pre-built feature needed
+- Mechanism: under-followed illiquid stocks respond more to market regime signals
+
+**Source:** Session 116, F393.
+
+---
+
+### C24 — Multi-Day Price Limit Ceiling Pressure (H467)
+**Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- **Standalone IC:** +0.2353 (vs baseline +0.1302 = **+81% boost**)
+- **Lift vs baseline:** +0.1052
+- **Consistency:** 8/8 positive years
+
+**What it captures:**
+- stocks hitting the +7% price limit 2+ times in last 3 days (multi-day ceiling count)
+- sustained queue pressure at daily ceiling creates next-day release
+- multi-day beats single-day by +0.0191 IC (C22 single-day near_limit: 0.2162)
+
+**Formula:** `ceiling_count_3d >= 2 AND vol_expansion`
+
+**Independent components:**
+- limit_2_of_3 alone: IC +0.2353, +0.1052 lift
+- near_limit (C22) alone: IC +0.2162
+- ceiling_exhaustion: IC +0.2119 (+0.0818)
+
+**Why it matters:**
+- multi-day sustained pressure is stronger than single-day
+- C24 beats C22 single-day by +0.0191 IC
+- mechanism: queue buildup → next-day release; works in vol_expansion regime
+- independent of vol_expansion regime (works even when vol_expansion is low)
+
+**Source:** Session 117, F396.
+
+---
+
+### C25 — VWAP Deviation Below Average + Vol Expansion (H470)
+**Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- **Standalone IC:** +0.1733 (vs baseline +0.1302 = **+33% boost**)
+- **Lift vs baseline:** +0.0431
+- **Consistency:** 11/11 positive years
+
+**What it captures:**
+- stocks trading far below daily VWAP (bottom 10% of daily VWAP deviation) in vol expansion regime
+- VWAP below = "cheap" vs day's average transaction price
+- under-followed/illiquid stocks amplify this effect (similar to C23 mechanism)
+
+**Formula:** `vwap_deviation_rank <= 0.10 AND vol_expansion_q80`
+
+**Independent components:**
+- vwap_below_10_exp: IC +0.1733, +0.0431 lift
+- vwap_below_20_exp: IC +0.1668, +0.0366
+- vwap_dev_bot10 (no regime): IC +0.1610, +0.0308
+
+**Why it matters:**
+- C25 captures a different dimension of "under-followed" than C23
+- C23: illiquidity (turnover-based)
+- C25: VWAP deviation (price-based)
+- Both amplify in vol expansion regime
+
+**Source:** Session 119, F399.
+
+---
+
+### C26 — Buy-Heavy Order Flow + Illiquidity + Vol Expansion (H471)
+**Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- **Standalone IC:** +0.1889 (vs baseline +0.1302 = **+45% boost**)
+- **Lift vs baseline:** +0.0587
+- **Consistency:** 11/11 positive years
+
+**What it captures:**
+- buy-heavy order flow imbalance (buy volume > sell volume by 5%+) in illiquid stocks during vol expansion
+- institutional hidden demand accumulates in illiquid names during volatile markets
+- both buy_heavy and sell_heavy work with illiq+expansion (different mechanisms: buy = accumulation, sell = forced-sell rebound)
+
+**Formula:** `buy_heavy (imbalance > 0.05) AND illiq_rank >= 0.70 AND vol_expansion_q80`
+
+**Independent components:**
+- buy_heavy_illiq_exp: IC +0.1889, +0.0587 lift
+- sell_heavy_illiq_exp: IC +0.1828, +0.0526
+- buy_heavy_exp (no illiq): IC +0.1680, +0.0378
+
+**Why it matters:**
+- D041 found signals share vol_expansion as universal amplifier
+- C26 confirms: buy_heavy WITH illiq+expansion is stronger than buy_heavy alone
+- institutional hidden demand in illiquid volatile markets is real edge
+- Do NOT combine C23/C24/C25/C26 as composite — each captures different regime facet
+
+**Source:** Session 119, F399.
+
 ---
 
 ### C16-Triple — CafeF Order Pressure + Triple Storm Conditions (S229)

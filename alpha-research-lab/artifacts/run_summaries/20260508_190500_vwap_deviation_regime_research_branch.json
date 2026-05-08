@@ -1,0 +1,176 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260508_190500_vwap_deviation_regime_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_190500_vwap_deviation_regime_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "VWAP deviation (price far from day's average transaction price) × vol_expansion is signal. Under-followed stocks amplify regime effects (like C23 illiq_expansion).",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "VWAP deviation (price far from day's average transaction price) × vol_expansion is signal. Under-followed stocks amplify regime effects (like C23 illiq_expansion).",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "vwap_deviation_regime",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP far above + vol expansion",
+        "name": "vwap_above_80_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP far below + vol expansion",
+        "name": "vwap_below_20_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP above median + vol expansion",
+        "name": "vwap_above_50_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP far above (any regime)",
+        "name": "vwap_above_80_any",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP far below (any regime)",
+        "name": "vwap_below_20_any",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP deviation rank top 20%",
+        "name": "vwap_dev_top20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP deviation rank bottom 20%",
+        "name": "vwap_dev_bot20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP deviation rank top 10%",
+        "name": "vwap_dev_top10",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP deviation rank bottom 10%",
+        "name": "vwap_dev_bot10",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP mid-50% + vol expansion",
+        "name": "vwap_mid50_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP extreme above + vol expansion",
+        "name": "vwap_above_90_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap_regime",
+        "label": "VWAP extreme below + vol expansion",
+        "name": "vwap_below_10_exp",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "vwap_deviation_regime",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_ic": 0.17328878180890545,
+    "best_lift": 0.043069491182009395,
+    "best_state": "vwap_below_10_exp",
+    "branch": "vwap_deviation_regime",
+    "decision": "PASSED",
+    "panel_rows": 826404,
+    "states_evaluated": 13
+  },
+  "ts": "20260508_190500"
+}

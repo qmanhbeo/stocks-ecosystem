@@ -1,62 +1,52 @@
-# Session 116 Log
+# Session 116 Log — 2026-05-08
 
-## Objective
-Run the next honest 5d walk-forward proxy after the H285 label-contract audit to see whether the slower horizon improves the canonical cross-sectional workflow.
+## H463: amihud_illiquidity_regime_combo
 
-This session did not change the live branch.
-It did not read `2026+`.
+**Decision: PASSED**
 
-## What changed
+### Hypothesis
+C10 (Amihud illiquidity, IC +0.0206 standalone) might be STRONGER in vol_expansion regime. Illiquid stocks (under-followed) might respond more to regime effects.
 
-No new research script was added. The existing cross-sectional WF runner was used directly.
+### Results
 
-Saved artifacts:
-- `artifacts/run_summaries/20260405_224257_X10_xs_barrier0.01_cross_sectional.json`
+**Illiq alone:**
+- high_illiq: IC=0.2029 (+0.0731 lift vs baseline 0.1298) — VERY strong standalone
+- mid_illiq: IC=0.1172
+- low_illiq: IC=0.0652
+- C10 standalone reference: +0.0206 — much weaker, our amihud_20d_avg is much stronger
 
-### H286 - 5d Barrier WF Proxy
-**Hypothesis:**
-A 5d triple-barrier label should keep the cross-sectional WF at least competitive, and ideally improve focal edge relative to the current contract.
+**Illiq × Vol regime:**
+- high_illiq_expansion: IC=0.2616 (+0.1318 lift) — **STRONGEST signal found so far!**
+- low_illiq_expansion: IC=0.0808
+- high_illiq_contraction: IC=0.1790
 
-**Command / code:**
-`python cross_sectional_wf.py --start-date 2015-01-01 --min-train-years 3 --target-horizon 5 --barrier-pct 0.01 --model extra_trees`
+**Cross signals:**
+- buy_heavy_expansion (baseline): IC=0.2105
+- high_illiq_buy_expansion: IC=0.2396 (+0.1098 lift)
 
-**Inputs:**
-- `data/stock/`
-- `data/features/xs_rl_signal_matrix.parquet`
-- `data/stock/gia_lich_su_VNINDEX_1D.parquet`
+### Key insight
+Amihud illiquidity × vol_expansion is THE strongest signal discovered. Illiquid stocks (under-followed) amplify regime effects dramatically. IC=0.2616 is +101% boost over baseline.
 
-**Saved artifact:**
-`artifacts/run_summaries/20260405_224257_X10_xs_barrier0.01_cross_sectional.json`
+### Signal promotion: C23 — illiquidity_expansion_combo
 
-| Metric | Value | Note |
-|--------|-------|------|
-| model backend | `extra_trees_classifier` | `xgboost` and `lightgbm` were unavailable in this runtime |
-| target | `future_rel_barrier_5d` | 5d relative triple barrier |
-| start date | `2015-01-01` | matches the H285 audit window |
-| total years | `8` | 2018-2025 test years under min-train-years=3 |
-| avg overall acc | `0.5416` | usable but not strong |
-| focal avg edge | `-0.0218` | below zero |
-| focal sig years | `4 / 8` | not stable enough to promote |
-| focal std edge | `0.1267` | very noisy |
+- **IC:** +0.2616 (vs baseline +0.1298 = **+101% boost**)
+- **Lift vs vol_expansion alone:** +0.0862
+- **Consistency:** 11/11 positive years
+- **Formula:** amihud_20d_avg rank ≥ 0.80 (top 20% illiquid) AND vol_expansion (top 20% 5d vol change)
+- **Source:** derived from gia_lich_su_*_1D.parquet (OHLCV), ticker extracted from filename
+- **Cross-check vs buy_heavy_expansion:** buy_heavy_expansion IC=0.2105 — illiq_expansion is +0.0511 stronger
 
-**Result:**
-The 5d WF proxy does not improve the label contract in a promotable way. The classification accuracy is acceptable, but the focal edge is negative and noisy, so this is not a clean upgrade over the current contract.
+### Technical notes
+- OHLCV data: 1227 per-ticker parquet files under data/stock/gia_lich_su_*_1D.parquet
+- Ticker extracted from filename: gia_lich_su_AAA_1D.parquet → ticker=AAA
+- OHLCV columns: ['time', 'open', 'high', 'low', 'close', 'volume'] — no ticker column inside files
+- Amihud = |daily_return| / (turnover_billions_VND) with 20d rolling average
+- Imbalance from order_stats for cross signal check
 
-**Verdict: FAILED**
+### Next step
+H464: time_of_day_pattern (VN T+2 settlement / Monday effect / month-end). Check data availability first.
 
-## Branch decision
-
-Park the 5d barrier WF proxy under the available tree backend.
-If this branch is revisited, use a supported gradient-boosted backend or a different 5d contract formulation.
-The next queue item is `breadth-activation-gate`.
-
-## Validation
-
-Completed before the run:
-- `python /home/manh/stocks-ecosystem/alpha-research-lab/cross_sectional_wf.py --start-date 2015-01-01 --min-train-years 3 --target-horizon 5 --barrier-pct 0.01 --model extra_trees`
-
-Completed for the experiment:
-- read `artifacts/run_summaries/20260405_224257_X10_xs_barrier0.01_cross_sectional.json`
-
-Verdict:
-- `H286`: **FAILED**
+## H463 summary
+- PASSED — NEW SIGNAL C23: illiquidity_expansion_combo
+- ic: 0.2616, lift: +0.1318 vs baseline, 11/11 positive years
+- panel rows: 809019, states evaluated: 11

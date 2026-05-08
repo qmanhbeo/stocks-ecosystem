@@ -1,67 +1,72 @@
 # Session 115 Log
 
-## Objective
-Check whether the current signal-library ranking stays roughly the same if the contract moves from the canonical 1d label to a 5d forward excess-return label.
+## H462: activation_rate_hidden_signal
 
-This session did not change the live branch.
-It did not read `2026+`.
+**Hypothesis:** H388/H395 tested membership (fresh vs stale), not VELOCITY of activation. A stock suddenly appearing might signal different info than gradual entry. Test rank_change speed × vol_expansion vs forward IC.
 
-## What changed
-
-Added:
-- `analysis/h285_5d_label_contract_audit.py`
-
-Saved artifacts:
-- `artifacts/run_summaries/20260405_223611_h285_5d_label_contract_audit_standalone_signal.json`
-
-### H285 - 5d Label Contract Audit
-**Hypothesis:**
-The current C4-C14 library and the upward-W family should keep roughly the same ranking under a 5d excess-return contract.
-
-**Command / code:**
-`python analysis/h285_5d_label_contract_audit.py`
+**Command / code:** `python analysis/h462_activation_rate_hidden_signal.py`
 
 **Inputs:**
-- `data/features/xs_rl_signal_matrix.parquet`
-- `data/features/xs_barrier_vol_1d_hose_full.parquet`
-- `data/stock/`
+- `data/features/xs_barrier_vol_1d_hose_full.parquet` - S1 scores and targets
+- `data/order_stats/cafef/order_stats_daily.parquet` - order stats
 
 **Saved artifact:**
-`artifacts/run_summaries/20260405_223611_h285_5d_label_contract_audit_standalone_signal.json`
+`artifacts/run_summaries/20260508_182313_activation_rate_hidden_signal_research_branch.json`
 
-| Metric | Value | Note |
-|--------|-------|------|
-| merged rows | `826,404` | full 2015-2025 panel |
-| tickers | `394` | cross-sectional support |
-| dates | `2,748` | 2015-01-05 through 2025-12-31 |
-| top1 under 1d | `c13_compress_blowoff_2` | current contract champion |
-| top1 under 5d | `c6_contrarian_intra_5d` | new horizon champion |
-| top3 overlap | `1 / 3` | low rank stability |
-| rank Spearman | `+0.5786` | materially below “same ordering” |
-| 1d IC for `c13_compress_blowoff_2` | `+0.0350` | still strong, but no longer top-ranked |
-| 5d IC for `c6_contrarian_intra_5d` | `+0.0393` | strongest 5d row in the library |
-| 5d IC for `c4_oc_asym_5d` | `+0.0269` | also stronger on 5d than on 1d |
-| 5d IC for `xs_upward_w_reclaim_12d` | `+0.0100` | reclaim evidence survives on the slower horizon |
-| material change | `True` | the contract shift changes the ranking enough to matter |
+### Results
 
-**Result:**
-The 5d contract is not just a relabel of the 1d contract. The top of the ranking changes, the top-3 overlap is only `1 / 3`, and the W-style reclaim features become more relevant on the slower horizon.
+| State | IC | Lift vs Baseline | Notes |
+|-------|-----|------------------|-------|
+| all_rows (baseline) | 0.1298 | 0.0000 | |
+| buy_heavy_expansion | 0.2105 | +0.0807 | H451 baseline |
+| rank_accel_sell_expansion | 0.1705 | +0.0407 | Sell pressure building |
+| rank_accel_buy_expansion | 0.1521 | +0.0223 | WORSE than baseline |
+| rank_accel_expansion | 0.1465 | +0.0167 | |
+| rank_stable | 0.1292 | -0.0006 | |
+| rank_accelerating | 0.1132 | -0.0166 | ANTI-predictive |
+| high_rank_expansion | 0.1131 | -0.0167 | |
+| rank_decel_buy_expansion | 0.0872 | -0.0426 | Anti-predictive |
+| low_rank_expansion | 0.0519 | -0.0779 | Anti-predictive |
+| rank_decelerating | 0.0633 | -0.0665 | ANTI-predictive |
 
-**Verdict: PASSED**
+### Key Findings
 
-## Branch decision
+1. **Rank acceleration is ANTI-predictive when used alone**
+   - rank_accelerating: IC=0.1132 (-0.0166 lift) - below baseline
+   - rank_decelerating: IC=0.0633 (-0.0665 lift) - strongly anti-predictive
+   - rank_stable: IC=0.1292 (-0.0006 lift) - neutral
 
-Park the assumption that the current 1d ordering should be reused unchanged.
-The next step is a 5d WF pass on the horizon-specific ordering.
+2. **Rank acceleration DOES NOT improve buy_heavy_expansion**
+   - rank_accel_buy_expansion: IC=0.1521 (+0.0223 lift)
+   - vs buy_heavy_expansion: IC=0.2105 (+0.0807 lift)
+   - IMPROVEMENT: -0.0584 (MUCH WORSE!)
+   - Adding rank acceleration HURTS the signal
 
-## Validation
+3. **Surprising: rank_accel_sell_expansion is positive**
+   - IC=0.1705 (+0.0407 lift)
+   - This suggests: buy pressure DECREASING (acceleration negative) + sell-heavy + vol expansion = sell pressure building
+   - But this is a different mechanism than the hypothesis
 
-Completed before the run:
-- `python -m py_compile analysis/h285_5d_label_contract_audit.py`
+4. **High/low rank × vol are anti-predictive**
+   - high_rank_expansion: IC=0.1131 (-0.0167) - high rank alone is not good
+   - low_rank_expansion: IC=0.0519 (-0.0779) - contrarian in vol expansion doesn't work
 
-Completed for the experiment:
-- `python analysis/h285_5d_label_contract_audit.py`
-- read `artifacts/run_summaries/20260405_223611_h285_5d_label_contract_audit_standalone_signal.json`
+**Decision Rule:**
+- If rank acceleration adds >0.005 IC lift: PASSED
+- Else: FAILED
 
-Verdict:
-- `H285`: **PASSED**
+**Verdict: FAILED** (Dead-end D040)
+
+### Why Failed
+- Rank acceleration is ANTI-predictive as a standalone signal
+- Adding rank acceleration to buy_heavy_expansion makes it MUCH WORSE
+- The hypothesis that "suddenly appearing = hidden info" is not supported
+- High/low rank are anti-predictive
+
+### Note
+- rank_accel_sell_expansion might be worth exploring separately (different mechanism)
+- But H462 as designed is a dead-end
+
+---
+
+Session 115 - 2026-05-08

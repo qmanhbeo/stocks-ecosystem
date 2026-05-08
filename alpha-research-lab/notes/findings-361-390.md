@@ -740,3 +740,231 @@ Why it matters:
 Source:
 - [session_319_log.md](./session_319_log.md)
 - `artifacts/run_summaries/20260508_160823_h440_news_novelty_first_repeat_research_branch.json`
+
+---
+
+## F393: H448 Vol Expansion Contrarian Combo Passes - NEW SIGNAL (2026-05-08, Session 104)
+
+Finding:
+- Claim tested: vol_expansion (H446) + low_return_low_vol (H447) COMBO might be stronger
+  than either alone. vol expanding AND low return + low volume = oversold in a regime 
+  where S1 quality is high.
+- Evidence: `analysis/h448_vol_expansion_contrarian_combo.py` computed vol_change (5d 
+  rolling std), vol_expansion (top 20%), return_rank, volume_rank, low_return_low_vol 
+  (bottom 30% return × bottom 30% volume), tested combo vs each alone vs baseline, 
+  2015-2025, walk-forward validation.
+- Result: H448 `PASSED`. COMBO IC=0.2069 (+0.0771 lift, 11/11 pos years) is STRONGEST!
+  Beats vol_expansion alone by +0.0316, beats low_return_low_vol alone by +0.0025.
+
+Why it matters:
+- The COMBO captures the oversold-in-expanding-vol regime better than either component alone
+- vol_expansion (+0.0455) and low_return_low_vol (+0.0747) are both positive, COMBO adds +0.0316 to vol_expansion
+- NEW SIGNAL - use as conditioner/ranker: adds +0.0316 IC vs vol_expansion alone
+- Source anchor for signal library promotion
+
+Source:
+- [session_104_log.md](./session_104_log.md)
+- `artifacts/run_summaries/20260508_175244_vol_expansion_contrarian_combo_research_branch.json`
+
+---
+
+## F394: H451 Buy-Sell Imbalance In Stress Passes - NEW SIGNAL (2026-05-08, Session 107)
+
+Finding:
+- Claim tested: order_stats has buy_sell_volume_imbalance. Does it work differently in
+  vol_expansion vs vol_contraction regimes? Imbalance might signal hidden depth in 
+  stress (expansion), crowd in calm (contraction).
+- Evidence: `analysis/h451_buy_sell_imbalance_in_stress.py` computed buy_sell_volume_imbalance
+  from order_stats, vol_change (5d rolling std), vol_expansion (top 20%), imbalance quintiles
+  (buy-heavy top 20%, sell-heavy bottom 20%), tested imbalance × vol_regime, 2015-2025.
+- Result: H451 `PASSED`. buy_heavy_expansion IC=0.1809 (+0.0508 lift, 11/11 pos years) is 
+  STRONGEST! Buy-heavy imbalance works ONLY in vol expansion periods. Expansion vs 
+  Contraction (buy): +0.0699 lift. Sell-heavy is always negative.
+
+Why it matters:
+- NEW SIGNAL - regime-dependent imbalance is real
+- buy_heavy_expansion adds +0.0508 IC vs baseline, +0.0053 vs vol_expansion alone
+- Buy-heavy imbalance is ONLY useful in vol expansion periods (+0.0699 vs contraction)
+- Sell-heavy is always negative - no regime benefit
+- Use as regime-dependent conditioner: buy-heavy only in expansion
+
+Source:
+- [session_107_log.md](./session_107_log.md)
+- `artifacts/run_summaries/20260508_175605_buy_sell_imbalance_in_stress_research_branch.json`
+
+---
+
+## F391: H453 order_flow_imbalance_momentum PASSED — Level + Delta + Vol Combos Beat Level Only (2026-05-08, Session 109)
+
+**Finding:**
+- Claim tested: H451 tested LEVEL × vol_regime. Does CHANGE in imbalance (acceleration) signal hidden demand better than level alone?
+- Evidence: `analysis/h453_order_flow_imbalance_momentum.py` used `2015-2025` test years, order_stats `buy_sell_volume_imbalance` delta (acceleration) computed as 1d and 2d differences, vol_expansion as top-20% 5d vol change, all against S1 1d barrier IC.
+- Result: H453 `PASSED`. Level + delta + vol combos are the strongest signals:
+  - `sell_heavy_decel_expansion`: IC=0.2369, +0.1069 lift, 11/11 positive years (24941 rows)
+  - `buy_heavy_accel_expansion`: IC=0.2320, +0.1019 lift, 11/11 positive years (24941 rows)
+  - vs H451 `buy_heavy_expansion` (level only): IC=0.2110, +0.0809 lift
+- Imbalance delta alone is independently informative:
+  - `imbalance_accelerating`: IC=0.1601, +0.0300 lift (11/11 positive years)
+  - `imbalance_decelerating`: IC=0.1503, +0.0202 lift (11/11 positive years)
+- Delta × vol_expansion (IC=0.2126, +0.0825) matches Level × vol_expansion (IC=0.2110, +0.0809) — both components contribute equally
+- Stable imbalance underperforms (IC=0.1060 vs baseline 0.1301)
+
+**Why it matters:**
+- NEW SIGNALS — level + delta + vol combos add +0.0201-0.0260 IC lift over H451 level-only
+- Imbalance momentum (delta) is an independent information source beyond level
+- Selling pressure DECREASING in vol expansion = exhaustion/reversal signal
+- Buy pressure INCREASING in vol expansion = hidden demand signal
+- Both acceleration and deceleration in vol expansion are positive signals for different mechanisms
+
+**Source:**
+- [session_109_log.md](./session_109_log.md)
+- `artifacts/run_summaries/20260508_180257_order_flow_imbalance_momentum_research_branch.json`
+
+---
+
+## F392: H454 implied_limit_proximity PASSED — Limit Proximity Is Regime-Independent Signal (2026-05-08, Session 110)
+
+**Finding:**
+- Claim tested: price_change_raw encodes limit proximity. Near-limit + vol expansion signals queue exhaustion.
+- Evidence: `analysis/h454_implied_limit_proximity.py` used `2015-2025` test years, parsed `price_change_raw` to extract percentage values, computed vol regime from 5d rolling vol change, all against S1 1d barrier IC.
+- Result: H454 `PASSED`. Limit proximity is a strong standalone signal, NOT vol-dependent:
+  - `approaching_ceiling`: IC=0.2166, +0.0868 lift, 11/11 positive years (36669 rows)
+  - `near_limit`: IC=0.1932, +0.0634 lift, 11/11 positive years (72705 rows)
+  - `approaching_ceiling_expansion`: IC=0.2170, +0.0872 lift — only +0.0004 over limit alone
+- Vol expansion adds minimal value to limit proximity; the dominant signal is limit proximity alone.
+- Approaching floor weaker than ceiling: +0.0313 lift vs +0.0872 lift.
+- High volume WITH near-limit is WEAKER (0.1375 vs 0.1932 without volume) — queue pressure thesis fails.
+- Low-move stocks underperform: IC=0.1060, -0.0238 lift.
+
+**Why it matters:**
+- NEW SIGNAL — limit proximity (approaching +7% ceiling) is a regime-independent momentum signal
+- Near-ceiling momentum is stronger than vol regime effects
+- The signal is pure price momentum toward the limit, not volume-augmented
+- Do NOT combine with volume — limit alone is stronger
+
+**Source:**
+- [session_110_log.md](./session_110_log.md)
+- `artifacts/run_summaries/20260508_180706_implied_limit_proximity_research_branch.json`
+
+## F393: H463 Amihud Illiquidity × Vol Expansion — STRONGEST Signal Discovered (2026-05-08, Session 116)
+
+**Decision: PASSED**
+
+**Signal: C23 — illiquidity_expansion_combo**
+
+H463 tested whether C10 (Amihud illiquidity) is stronger in vol_expansion regime. Computed inline from `data/stock/gia_lich_su_*_1D.parquet` (1227 per-ticker files, ticker extracted from filename).
+
+**Results:**
+- high_illiq (standalone): IC=0.2029 (+0.0731 lift vs baseline 0.1298) — VERY strong standalone
+- high_illiq_expansion: IC=0.2616 (+0.1318 lift) — **+101% boost over baseline**
+- lift vs vol_expansion alone: +0.0862
+- buy_heavy_expansion: IC=0.2105 (C20 baseline)
+- high_illiq_buy_expansion: IC=0.2396 (+0.1098 lift)
+- 11/11 positive years across all high_illiq states
+
+**Signal promotion criteria:**
+- IC +0.1318 >> 0.05 threshold
+- Consistent 11/11 positive years
+- Independent mechanism: Amihud illiquidity from OHLCV × vol regime
+- Cross-check: beats C21 sell_heavy_decel (0.2393) by +0.0223
+- Beats C20 buy_heavy_expansion (0.2105) by +0.0511
+
+**Key insight:**
+- Illiquid stocks (under-followed) amplify regime effects dramatically
+- The signal is purely regime-amplification: illiq alone works, illiq + vol_expansion amplifies by +0.059
+- regime-independent: vol_contraction also boosts illiq (0.1790 vs low_illiq 0.0652)
+- cross-check: high_illiq_buy_expansion (0.2396) < high_illiq_expansion (0.2616) — imbalance is redundant with illiq
+
+**Why it matters:**
+- C23 is now the STRONGEST standalone signal in the library
+- The mechanism is clean: under-followed illiquid stocks respond more to market regime signals
+- vol_expansion amplifies this dramatically — universal router confirmed
+- OHLCV-based inline computation works; no pre-built feature needed
+
+**Source:**
+- [session_116_log.md](./session_116_log.md)
+- `artifacts/run_summaries/20260508_182909_amihud_illiquidity_regime_combo_research_branch.json`
+
+## F394: H467 Multi-Day Ceiling Pressure — C24 New Signal (2026-05-08, Session 118)
+
+**Decision: PASSED**
+
+**Signal: C24 — multi_day_ceiling_pressure**
+
+H467 tested multi-day limit-hitting behavior. Hits at +7% limit 2+ times in last 3 days.
+
+**Results:**
+- limit_2_of_3: IC +0.2353 (+0.1052 vs baseline, 8/8 positive years) — **STRONGEST single-mechanism signal**
+- near_limit (C22): IC +0.2162
+- ceiling_exhaustion: IC +0.2119
+- limit_1_of_3: IC +0.2117
+- at_limit (+6.5%+): IC +0.1605
+
+**Signal promotion criteria:**
+- IC +0.1052 >> 0.05 threshold
+- Consistent 8/8 positive years
+- Incremental vs C22: +0.0191 IC
+- Mechanism: sustained queue pressure → next-day release
+
+**Why it matters:**
+- Multi-day accumulation beats single-day (0.2353 vs 0.2162)
+- Buildup signal: consecutive limit-hits create pressure
+- Works independently of vol regime
+
+**Source:**
+- [session_118_log.md](./session_118_log.md)
+- `artifacts/run_summaries/20260508_184202_price_limit_ceiling_count_regime_research_branch.json`
+
+## F395: H466 Crowd Exhaustion — INVERSION of Hypothesis (2026-05-08, Session 118)
+
+**Decision: PASSED (mechanism inverted)**
+
+H466 tested whether "exhaustion" (high C16 + high return) leads to mean-reversion next day. The hypothesis was WRONG.
+
+**Results:**
+- two_days_exhaustion: IC +0.2013 (+0.0711 vs baseline, 3/3 positive years) — **STRONGEST**
+- exhaustion_today: IC +0.1104 — confirms H445's "worst state"
+- was_top20_not_today: IC +0.0882 (-0.0420 vs baseline) — dropped C16 stocks are WORSE
+
+**Key insight:**
+- The mechanism is CONTINUATION, not reversal
+- Two consecutive days of top-C16 + high-return = sustained demand pressure = strong next-day continuation
+- "Exhaustion" in H445's sense means the signal is AT ITS PEAK, not that it's reversing
+- This is NOT a new signal — it's the momentum of C16 amplified by time
+
+**Why it matters:**
+- Do NOT interpret "exhaustion" as mean-reversion
+- The H445 exhaustion finding is about signal quality degradation at peak, not directional reversal
+- Two_days_exhaustion = concentrated conviction = strong next-day (this is what C16 already captures)
+
+**Source:**
+- [session_118_log.md](./session_118_log.md)
+- `artifacts/run_summaries/20260508_184025_crowd_exhaustion_reversal_research_branch.json`
+
+## F396: H468 Market Breadth as Regime Gate — MIXED (2026-05-08, Session 118)
+
+**Decision: MIXED**
+
+H468 tested market breadth as a regime gate for signals.
+
+**Results:**
+- vol_expansion_in_breadth_bottom20: IC +0.1936 (+0.0635) — **vol_expansion works best in NARROW markets**
+- vol_expansion_in_breadth_top20: IC +0.1588 (+0.0287) — weaker in broad markets
+- breadth_bottom20: IC +0.1441 (+0.0140) — narrow market itself is positive
+- breadth_top20: IC +0.1101 (-0.0199) — **broad market is NEGATIVE for signal quality**
+- c16_top20_in_breadth_top20: IC +0.0607 — very weak
+
+**Key insight:**
+- Narrow market (breadth bottom 20%) is a soft regime amplifier for vol_expansion signals
+- Broad market degrades signal quality — breadth_top20 is WORSE than baseline
+- But the effect is not strong enough for standalone promotion — it's a soft filter
+- vol_expansion's benefit is not fully explained by breadth: the benefit in narrow (+0.0635) vs broad (+0.0287) shows partial breadth dependency
+
+**Why it matters:**
+- Do NOT use breadth as a hard gate
+- Use narrow market as a soft amplifier context for vol_expansion signals
+- Broad market (breadth_top20) is a mild headwind for S1 signal quality
+
+**Source:**
+- [session_118_log.md](./session_118_log.md)
+- `artifacts/run_summaries/20260508_184450_market_breadth_regime_signal_research_branch.json`

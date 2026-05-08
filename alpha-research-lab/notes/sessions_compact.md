@@ -7,6 +7,48 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 123](session_123_log.md): Ran H474 `capacity_as_signal_not_veto` (AN queue). PASSED: tight_capacity (Q1: lowest order count) = IC 0.184 (+0.065 lift, 8/8 pos years). loose_capacity = IC 0.074 (-0.046, anti-predictive). Mechanism: sparse order flow = hidden demand / under-followed alpha, not tradability. tight_expansion sparse (2/8 years). NEW capacity signal — fundamentally different from H391 binary release. Use as positive filter for low-activity names, not as veto. Source: [session_123_log.md](./session_123_log.md).
+
+- [Session 122](session_122_log.md): Ran H473 `news_velocity_as_signal` (AM queue). FAILED: high_velocity (Q5) = IC 0.088 (-0.032 lift) = ANTI-predictive. burst_has_news = IC 0.082 (-0.037). Fast-arriving news = crowd-following, not hidden alpha. mid_velocity only +0.008. Low_velocity too sparse (0 news). News velocity adds no value beyond presence. Dead-end. Source: [session_122_log.md](./session_122_log.md).
+
+- [Session 121](session_121_log.md): Ran H472 `liquidity_adjusted_return` (AL queue). FAILED: high LAR (Q5) = IC 0.087 (-0.032 lift) = ANTI-predictive. return_5d_pos_illiq = IC 0.163 (+0.044) = illiquid momentum (C23-style), not flow quality. return_5d_pos_liq = IC 0.052 (-0.067) = liquid crowd blowoff (confirms D036). The ratio collapses two correlated effects into one confusing metric that loses to raw components. Dead-end for LAR ratio. Source: [session_121_log.md](./session_121_log.md).
+
+- [Session 120](session_120_log.md): Ran H449 `order_flow_momentum` to test C16 acceleration (2nd diff) vs forward IC. PASSED but with OPPOSITE insight: c16_level_high IC=0.1614 (+0.0326 lift, 11/11) — BEST. BUT c16_accel_expanding IC=0.1219 (-0.0069), c16_accel_contracting IC=0.1303 (+0.0015) BOTH WORSE than baseline. ACCELERATION does NOT add value - the edge comes from LEVELS (high pressure), not MOMENTUM (changes in pressure). Confirms H443 pattern: both foreign flow momentum and C16 momentum are NEGATIVE. Confirms H446/H447 patterns: vol LEVEL matters, not change. Use C16 level as regime conditioner, not its derivative. Dead-end D041 for acceleration signals. Source: [session_120_log.md](./session_120_log.md).
+
+- [Session 119](session_119_log.md): Ran H469 `foreign_flow_momentum`. MIXED: ff_decel_exp IC=0.1376 (+0.0074, 11/11) — marginal, not promotion. Ran H470 `vwap_deviation_regime`. PASSED: NEW SIGNAL C25! vwap_below_10_exp IC=0.1733 (+0.0431 lift, 11/11). Mechanism: VWAP far below average + vol expansion in illiquid stocks. C25 is strong signal. Ran H471 `order_flow_microstructure_regime`. PASSED: NEW SIGNAL C26! buy_heavy_illiq_exp IC=0.1889 (+0.0587 lift, 11/11). Buy-heavy order flow + illiquidity + vol expansion = institutional hidden demand. Pattern confirmed: ALL strong signals share structure: behavior + illiquidity + vol_expansion. Do NOT combine C23/C24/C25/C26 as composite entries. Source: [session_119_log.md](./session_119_log.md).
+
+- [Session 116](session_116_log.md): Ran H463 `amihud_illiquidity_regime_combo`. PASSED: NEW SIGNAL C23! high_illiq_expansion IC=0.2616 (+0.1318 lift vs baseline 0.1298). STRONGEST signal found — +101% boost over baseline. OHLCV computed inline from 1227 per-ticker files (ticker extracted from filename). Source: [session_116_log.md](./session_116_log.md).
+
+- [Session 115](session_115_log.md): Ran H462 `activation_rate_hidden_signal` to test rank_change speed × vol_expansion. FAILED: rank_accelerating ANTI-predictive (-0.0166 lift). rank_accel_buy_expansion WORSE than buy_heavy_expansion (-0.0584). "Suddenly appearing = hidden info" hypothesis NOT supported. Dead-end D040. Source: [session_115_log.md](./session_115_log.md).
+
+- [Session 114](session_114_log.md): Ran H461 `momentum_regime_combo` to test if momentum improves C21 combos. MIXED: momentum doesn't improve C21 (-0.0017 to -0.0047). C21 signals are complete as-is. Source: [session_114_log.md](./session_114_log.md).
+
+- [Session 113](session_113_log.md): Ran H460 `volume_regime_dependency_of_signals`. PASSED: ALL signals work best in vol_expansion. Rankings: C21 sell_heavy_decel (0.2393) > C21 buy_heavy_accel (0.2338) > C22 approaching_ceiling (0.2170) > C20 buy_heavy_expansion (0.2105). Vol contraction NO-GO. Source: [session_113_log.md](./session_113_log.md).
+
+- [Session 112](session_112_log.md): Ran H456 `spread_turnover_regime`. MIXED: Wide spread amplifies signals (+0.0948), but tight side sparse. Dead-end D039. Source: [session_112_log.md](./session_112_log.md).
+
+- [Session 111](session_111_log.md): Ran H455 `sector_momentum_as_regime_not_filter`. FAILED: sector differences tiny, no router benefit. Dead-end D038. Source: [session_111_log.md](./session_111_log.md).
+
+- [Session 110](session_110_log.md): Ran H454 `implied_limit_proximity`. PASSED: NEW SIGNAL C22! approaching_ceiling IC=0.2170 (+0.0872 lift). Source: [session_110_log.md](./session_110_log.md).
+
+- [Session 107](session_107_log.md): Ran H451 `buy_sell_imbalance_in_stress` to test buy_sell_volume_imbalance × vol_regime. PASSED: buy_heavy_expansion IC=0.1809 (+0.0508 lift, 11/11 pos years) is STRONGEST! NEW SIGNAL - buy-heavy imbalance works ONLY in vol expansion (+0.0699 vs contraction). Sell-heavy always negative. Source: [session_107_log.md](./session_107_log.md).
+
+- [Session 106](session_106_log.md): Ran H450 `volume_acceleration_signal` to test vol_delta × return vs volume LEVEL × return. MIXED: Accel helps high return (+0.0474 vs level), but low_vol (+0.0522) still dominates overall. Source: [session_106_log.md](./session_106_log.md).
+
+- [Session 105](session_105_log.md): Ran H449 `vol_contraction_mean_reversion` to test vol_contraction × high_return vs vol_expansion × high_return. MIXED: Pattern confirmed real (combo vs momentum -0.0628), but vol_contraction_exhaustion has NEGATIVE IC (-0.0255) = mean reversion, not a positive long-only signal. vol_expansion_momentum (+0.0373) is the useful side. Dead-end D037 for direct long-only use. Source: [session_105_log.md](./session_105_log.md).
+
+- [Session 104](session_104_log.md): Ran H448 `vol_expansion_contrarian_combo` to test vol_expansion (H446) × low_return_low_vol (H447) combo. PASSED: COMBO IC=0.2069 (+0.0771 lift, 11/11 pos years) is STRONGEST! Beats vol_expansion alone by +0.0316, beats low_return_low_vol alone by +0.0025. Captures oversold-in-expanding-vol regime better than either component alone. New signal - use as conditioner. Source: [session_104_log.md](./session_104_log.md).
+
+- [Session 103](session_103_log.md): Ran H447 `volume_adjusted_price_momentum` to test return/volume buckets for forward IC. MIXED (OPPOSITE of hypothesis): low_return_low_vol IC=0.2045 (+0.0746 lift, 11/11 pos years) is STRONGEST - this is CONTRARIAN not momentum. high_return_high_vol (real_force) IC=0.1109 (-0.019 lift) UNDERPERFORMS. Hypothesis inverted: cheap moves work, real force doesn't. Dead-end D036. Source: [session_103_log.md](./session_103_log.md).
+
+- [Session 326](session_102_log.md): Ran H446 `volatility_regime_transition` to test vol 5d change (expansion vs contraction) vs forward IC. PASSED: vol_expansion (top 20% 5d vol change) has IC=0.1750 vs baseline 0.1301 (+0.0449 lift, 11/11 pos years). vol_contraction (bottom 20%) IC=0.1216 (-0.0085 lift). Volatility REGIME TRANSITION is a real signal - when vol is expanding, S1 quality improves significantly. Use as regime conditioner. Source: [session_102_log.md](./session_102_log.md).
+
+- [Session 325](session_101_log.md): Ran H445 `semantic_novelty_saturation` to test news novelty vs repetition. FAILED (NEGATIVE): All news states NEGATIVE IC lift. no_news (IC=0.1409) beats has_news (IC=0.1038) by +0.037. Exhaustion state worst (IC=0.0861, -0.0474 lift). News counts NOT predictive - degrade S1 quality. Dead-end D035. Source: [session_101_log.md](./session_101_log.md).
+
+- [Session 324](session_100_log.md): Ran H444 `signal_ignorance_weight` to test whether S1/C16 have regimes where they hurt. PASSED (offline evidence): Found strong ignorance opportunity - worst regime "low_ic_low_temp" has IC=-0.0034 (negative!) vs baseline 0.1335, lift -0.1369. High IC + high temp regime has IC=0.2606 (+0.1271 lift). Caveat: regime buckets use same-period IC (lookahead), not a deployable rule - shows POTENTIAL only. Use as diagnostic or requires lagged regime prediction for deployable version. Source: [session_100_log.md](./session_100_log.md).
+
+- [Session 323](session_323_log.md): Ran H443 `prop_foreign_predator_prey` to test predator-prey interaction between foreign and proprietary flows. FAILED: All predator-prey states (ff_sell_pt_buy_absorption IC=0.0621, ff_buy_pt_sell_distribution IC=0.0959, prop_follow_ff IC=0.0842) are BELOW baseline IC=0.1335. Raw foreign flow (ff_buy IC=0.1188, ff_sell IC=0.1004) also underperforms baseline. Hypothesis not supported - flow direction alone is not predictive. Dead-end D034. Source anchor: [session_323_log.md](./session_323_log.md).
+
 - [Session 321](session_321_log.md): Ran H442 `ticker_rank_acceleration` to test second derivative of C16 rank
   (acceleration = delta of delta) vs H431 first derivative. FAILED: Accel Up vs Down lift only +0.0009,
   near zero. C16 rank LEVEL dominates (IC=0.158 vs accel 0.120). Both accel_up/down+flow equal (~0.147).

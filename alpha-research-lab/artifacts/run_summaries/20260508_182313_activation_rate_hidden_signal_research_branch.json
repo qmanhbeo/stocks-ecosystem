@@ -1,0 +1,186 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260508_182313_activation_rate_hidden_signal_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_182313_activation_rate_hidden_signal_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "H388/H395 tested membership (fresh vs stale), not VELOCITY of activation. A stock suddenly appearing might signal different info than gradual entry. Test rank_change speed × vol_expansion vs forward IC.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "H388/H395 tested membership (fresh vs stale), not VELOCITY of activation. A stock suddenly appearing might signal different info than gradual entry. Test rank_change speed × vol_expansion vs forward IC.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "activation_rate_hidden_signal",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "rank_change",
+        "label": "Rank accelerating (top 20% delta)",
+        "name": "rank_accelerating",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "rank_change",
+        "label": "Rank decelerating (bottom 20% delta)",
+        "name": "rank_decelerating",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "rank_change",
+        "label": "Rank stable (40-60%)",
+        "name": "rank_stable",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "rank_vol",
+        "label": "Rank accel + Vol expansion",
+        "name": "rank_accel_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "rank_vol",
+        "label": "Rank decel + Vol expansion",
+        "name": "rank_decel_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "rank_vol",
+        "label": "High rank + Vol expansion",
+        "name": "high_rank_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "rank_vol",
+        "label": "Low rank + Vol expansion",
+        "name": "low_rank_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "imbalance",
+        "label": "H451: Buy-heavy + Vol expansion",
+        "name": "buy_heavy_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cross",
+        "label": "Rank accel + Buy-heavy + Vol expansion",
+        "name": "rank_accel_buy_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "cross",
+        "label": "Rank decel + Buy-heavy + Vol expansion",
+        "name": "rank_decel_buy_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cross",
+        "label": "Rank accel + Sell-heavy + Vol expansion",
+        "name": "rank_accel_sell_expansion",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "activation_rate_hidden_signal",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_year_ic": 0.21051950626933127,
+    "best_positive_years": 11,
+    "best_state_by_avg_year_ic": "buy_heavy_expansion",
+    "best_years": 11,
+    "buy_heavy_expansion_ic": 0.21051950626933127,
+    "buy_heavy_expansion_lift": 0.08072797290930792,
+    "decision": "FAILED",
+    "high_rank_expansion_ic": 0.11309568645103395,
+    "low_rank_expansion_ic": 0.051881144585842746,
+    "panel_rows": 809019,
+    "rank_accel_buy_expansion_ic": 0.15212278029094362,
+    "rank_accel_buy_expansion_lift": 0.022331246930920257,
+    "rank_accel_expansion_ic": 0.14651896432587028,
+    "rank_accel_expansion_lift": 0.016727430965846918,
+    "rank_accel_sell_expansion_ic": 0.1704664586043081,
+    "rank_accel_vs_buy_improvement": -0.05839672597838766,
+    "rank_accelerating_ic": 0.11322609725557292,
+    "rank_accelerating_lift": -0.016565436104450437,
+    "rank_decel_buy_expansion_ic": 0.08721564762456085,
+    "rank_decel_expansion_ic": 0.07921592384616911,
+    "rank_decel_expansion_lift": -0.050575609513854244,
+    "rank_decelerating_ic": 0.06325739736725464,
+    "rank_decelerating_lift": -0.06653413599276872,
+    "rank_stable_ic": 0.12924190360259388,
+    "states_evaluated": 12
+  },
+  "ts": "20260508_182313"
+}

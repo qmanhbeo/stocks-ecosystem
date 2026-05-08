@@ -1,65 +1,70 @@
-# Session 122 Log — Breadth Activation Gate (2026-04-06)
+# Session 122 Log — 2026-05-08
 
-## Objective
-Test whether lagged sector breadth predicts day-to-day IC variation of S1 on the active book.
+## H473: news_velocity_as_signal
 
-This session did not change the live branch.
-It did not read `2026+`.
+**Decision: FAILED**
 
----
+### Hypothesis
+News VELOCITY (3d count delta = 5d - 1d article count) tests a third dimension beyond
+novelty (H440) and presence (H445): fast-arriving news = breaking alpha, slow/steady = absorbed.
 
-## What changed
+### Command / code
+```bash
+python analysis/h473_news_velocity_as_signal.py
+```
 
-Added and ran the H293 breadth activation gate audit script.
+### Inputs
+- S1 panel: `data/features/xs_barrier_vol_1d_hose_full.parquet` (start_year=2018)
+- News: `data/features/news/datasets/news_daily_features.parquet`
+- PhoBERT article counts (1d and 5d), 406 tickers
 
-Saved artifact:
-- `artifacts/run_summaries/20260406_122241_h293_breadth_activation_gate_standalone_signal.json`
+### Saved artifact
+`artifacts/run_summaries/20260508_193939_news_velocity_as_signal_research_branch.json`
 
-### H293 - Breadth Activation Gate
-**Hypothesis:**
-Lagged sector breadth should explain day-to-day variation in the daily IC of S1 on the active book.
+### Results
 
-**Command / code:**
-`conda run -n stocks python analysis/h293_breadth_activation_gate.py`
+| State | IC | Lift vs Baseline | Positive Years |
+|-------|-----|-------------------|----------------|
+| all_rows (baseline) | 0.1196 | — | 8/8 |
+| mid_velocity (Q3) | 0.1275 | +0.0079 | 8/8 |
+| no_news (1d) | 0.1259 | +0.0063 | 8/8 |
+| has_news (1d) | 0.0968 | **-0.0228** | 8/8 |
+| high_velocity (Q5) | 0.0876 | **-0.0320** | 8/8 |
+| high_vel_has_news | 0.0849 | **-0.0347** | 8/8 |
+| burst_has_news (delta > 3) | 0.0823 | **-0.0373** | 8/8 |
+| low_velocity (Q1) | NaN | — | 0/8 (too sparse) |
+| low_vel_has_news | NaN | — | 0/8 (too sparse) |
 
-**Inputs:**
-- `data/features/xs_barrier_vol_1d_hose_full.parquet`
-- `data/features/xs_sector_rotation_daily.parquet`
+Panel: 652,527 rows, 22.1% have PhoBERT news.
 
-**Saved artifact:**
-`artifacts/run_summaries/20260406_122241_h293_breadth_activation_gate_standalone_signal.json`
+### Interpretation
 
-| Metric | Value | Note |
-|--------|-------|------|
-| verdict | `FAIL` | breadth_lag1 is not a useful daily IC router |
-| spearman rho | `+0.0032` | no meaningful relationship |
-| p-value | `0.8664` | not significant |
-| panel days | `2748` | 2015-01-05 to 2025-12-31 |
-| daily IC mean | `+0.1491` | S1 remains strongly positive on average |
-| q5 minus q1 IC mean | `-0.0042` | high breadth does not lift daily IC |
+**High news velocity is ANTI-predictive**: high_velocity (Q5) = IC 0.088 (-0.032 lift),
+burst_has_news = IC 0.082 (-0.037). The fastest-arriving news is the worst signal.
+This is the OPPOSITE of the hypothesis — fast news is already crowd-priced, not hidden alpha.
 
-**Result:**
-The breadth state does not explain day-to-day variation in S1 IC. The daily IC series stays strongly positive on average, but the lagged sector breadth proxy is effectively flat against it and the breadth quintiles do not form a useful activation gradient.
+**mid_velocity (Q3) = IC 0.128 (+0.008)**: moderate velocity is slightly positive,
+but not strong enough for promotion.
 
-**Verdict: FAILED**
+**has_news = IC 0.097 (-0.023)**: confirms H445 — news is harmful overall.
+no_news = IC 0.126 (+0.006): confirms H445 — absence of news is positive.
 
----
+**low_velocity = NaN (too sparse)**: most tickers have 0 news, so low-velocity
+bucket has insufficient rows per year. The distribution is too skewed for this test.
 
-## Branch decision
+**Key insight**: News VELOCITY adds no value beyond news PRESENCE. The third dimension
+(H440 novelty, H445 presence, AM velocity) is noise. The lab should stop testing
+raw article count derivatives. Only structured features (source-type, sentiment
+with forward-looking, official disclosure) have survived.
 
-Keep the live branch unchanged.
-Park `breadth-activation-gate`.
-Move the queue to `llm-news-gate`.
+### Result: FAILED
 
----
+News velocity (3d delta) is anti-predictive at high velocity, and the low-velocity
+bucket is too sparse. The mechanism is inverted: fast news = crowd-following,
+not hidden information.
 
-## Validation
+### Verdict: FAILED
 
-Completed before the run:
-- `conda run -n stocks python -m py_compile analysis/h293_breadth_activation_gate.py`
-
-Completed for the experiment:
-- read `artifacts/run_summaries/20260406_122241_h293_breadth_activation_gate_standalone_signal.json`
-
-Verdict:
-- `H293`: **FAILED**
+**Next:** Queue item AM (news_velocity_as_signal) is DEAD-END. Continue with AN
+(capacity_as_signal_not_veto) — tradability percentile. Do not reopen news
+velocity as a standalone ranker or news-count derivative.

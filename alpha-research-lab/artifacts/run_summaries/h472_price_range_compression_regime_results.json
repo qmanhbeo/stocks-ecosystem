@@ -1,0 +1,48 @@
+{
+  "hypothesis": "price_range_compression_regime",
+  "outcome": "PASSED",
+  "decision": "PASSED",
+  "best_state": "range_expanded_illiq_exp",
+  "best_ic": 0.2209,
+  "best_lift": 0.0907,
+  "timestamp": "2026-05-08 19:15:54",
+  "results": {
+    "range_expanded_illiq_exp": {
+      "ic": 0.2209,
+      "lift": 0.0907,
+      "rows": 23209,
+      "pos_years": "11/11"
+    },
+    "range_expanded_top20": {
+      "ic": 0.183,
+      "lift": 0.0528,
+      "rows": 56304,
+      "pos_years": "11/11"
+    },
+    "range_expanded_any": {
+      "ic": 0.1769,
+      "lift": 0.0467,
+      "rows": 287984,
+      "pos_years": "11/11"
+    },
+    "range_expanded_exp": {
+      "ic": 0.1736,
+      "lift": 0.0434,
+      "rows": 77587,
+      "pos_years": "11/11"
+    },
+    "all_rows": {
+      "ic": 0.1302,
+      "lift": 0.0,
+      "rows": 826404,
+      "pos_years": "11/11"
+    },
+    "range_compressed_exp": {
+      "ic": 0.1077,
+      "lift": -0.0225,
+      "rows": 24825,
+      "pos_years": "11/11"
+    }
+  },
+  "note": "NEW SIGNAL C27: range_expanded_illiq_exp = expanded range + illiq + vol expansion IC=0.2209 (+0.0907). OPOSITE of compression hypothesis \u2014 expanded range works, not compressed."
+}

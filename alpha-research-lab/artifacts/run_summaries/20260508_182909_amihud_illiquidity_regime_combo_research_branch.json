@@ -1,0 +1,172 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260508_182909_amihud_illiquidity_regime_combo_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_182909_amihud_illiquidity_regime_combo_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "C10 (Amihud illiquidity, IC +0.0206 standalone) might be STRONGER in vol_expansion regime. Test illiquidity × vol_expansion vs forward IC.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "C10 (Amihud illiquidity, IC +0.0206 standalone) might be STRONGER in vol_expansion regime. Test illiquidity × vol_expansion vs forward IC.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "amihud_illiquidity_regime_combo",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "vol_regime",
+        "label": "Vol expansion (top 20%)",
+        "name": "vol_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vol_regime",
+        "label": "Vol contraction (bottom 20%)",
+        "name": "vol_contraction",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "illiq",
+        "label": "High illiquidity (top 20%)",
+        "name": "high_illiq",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "illiq",
+        "label": "Mid illiquidity (40-60%)",
+        "name": "mid_illiq",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "illiq",
+        "label": "Low illiquidity (bottom 20%)",
+        "name": "low_illiq",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "illiq_vol",
+        "label": "High illiq + Vol expansion",
+        "name": "high_illiq_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "illiq_vol",
+        "label": "Low illiq + Vol expansion",
+        "name": "low_illiq_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "illiq_vol",
+        "label": "High illiq + Vol contraction",
+        "name": "high_illiq_contraction",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "imbalance",
+        "label": "H451: Buy-heavy + Vol expansion",
+        "name": "buy_heavy_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cross",
+        "label": "High illiq + Buy-heavy + Vol expansion",
+        "name": "high_illiq_buy_expansion",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "amihud_illiquidity_regime_combo",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_year_ic": 0.2615583747889963,
+    "best_positive_years": 11,
+    "best_state_by_avg_year_ic": "high_illiq_expansion",
+    "best_years": 11,
+    "buy_heavy_expansion_ic": 0.21051950626933127,
+    "decision": "PASSED",
+    "high_illiq_buy_expansion_ic": 0.23960203215605602,
+    "high_illiq_buy_expansion_lift": 0.10981049879603266,
+    "high_illiq_contraction_ic": 0.17900974500421085,
+    "high_illiq_expansion_ic": 0.2615583747889963,
+    "high_illiq_expansion_lift": 0.13176684142897294,
+    "high_illiq_ic": 0.20293358950988225,
+    "high_illiq_lift": 0.07314205614985889,
+    "high_illiq_vs_c10_baseline": 0.052542056149858886,
+    "low_illiq_expansion_ic": 0.08079251898091261,
+    "low_illiq_ic": 0.0652052633980457,
+    "mid_illiq_ic": 0.11715310590064601,
+    "panel_rows": 809019,
+    "states_evaluated": 11
+  },
+  "ts": "20260508_182909"
+}

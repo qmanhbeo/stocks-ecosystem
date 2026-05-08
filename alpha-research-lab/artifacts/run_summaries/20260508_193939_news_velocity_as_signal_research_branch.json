@@ -1,0 +1,155 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260508_193939_news_velocity_as_signal_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_193939_news_velocity_as_signal_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "News VELOCITY (3d count delta) tests a third dimension beyond novelty (H440) and presence (H445): fast-arriving news = breaking alpha, slow/steady = absorbed.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "News VELOCITY (3d count delta) tests a third dimension beyond novelty (H440) and presence (H445): fast-arriving news = breaking alpha, slow/steady = absorbed.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "news_velocity_as_signal",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2018,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "presence",
+        "label": "Has PhoBERT news (1d)",
+        "name": "has_news",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "presence",
+        "label": "No news (1d)",
+        "name": "no_news",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "velocity",
+        "label": "High news velocity Q5 (3d delta top 20%)",
+        "name": "high_velocity",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "velocity",
+        "label": "Mid news velocity Q3",
+        "name": "mid_velocity",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "velocity",
+        "label": "Low news velocity Q1 (3d delta bottom 20%)",
+        "name": "low_velocity",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vel_presence",
+        "label": "High velocity + has news",
+        "name": "high_vel_has_news",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vel_presence",
+        "label": "Low velocity + has news",
+        "name": "low_vel_has_news",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "burst",
+        "label": "Velocity > 3 + has news (fast burst)",
+        "name": "burst_has_news",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "news_velocity_as_signal",
+  "summary": {
+    "baseline_ic": 0.11962173428339475,
+    "best_avg_ic": 0.12753676332203148,
+    "best_positive_years": 8,
+    "best_state": "mid_velocity",
+    "burst_has_news_ic": 0.08231233524308075,
+    "decision": "FAILED",
+    "h440_first_ref": 0.123,
+    "h440_repeat_ref": 0.091,
+    "has_news_ic": 0.09680879938460205,
+    "has_news_lift": -0.0228129348987927,
+    "high_vel_has_news_ic": 0.08492988344754865,
+    "high_velocity_ic": 0.08761317114263273,
+    "high_velocity_lift": -0.03200856314076202,
+    "low_vel_has_news_ic": null,
+    "low_velocity_ic": null,
+    "mid_velocity_ic": 0.12753676332203148,
+    "no_news_ic": 0.12591255696735335,
+    "panel_rows": 652527,
+    "states_evaluated": 9
+  },
+  "ts": "20260508_193939"
+}

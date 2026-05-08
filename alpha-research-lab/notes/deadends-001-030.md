@@ -810,3 +810,31 @@ Reopening condition:
 Source:
 - [session_314_log.md](./session_314_log.md)
 - `artifacts/run_summaries/20260508_152427_h435_candidate_rank_actual_gap_research_branch_candidate_rank_actual_gap.json`
+
+---
+
+## D034: Predator-Prey Foreign-Proprietary Flow Interaction Fails (2026-05-08, Session 323)
+
+Dead end:
+- Claim tested: Foreign and proprietary flows may be useful as a conflict/absorption game (predator-prey), not as raw net-flow ranks. Test foreign-sell/prop-buy absorption, foreign-buy/prop-sell distribution, and prop-following-foreign states.
+- Evidence: H443 ran `analysis/h443_prop_foreign_predator_prey.py` with TRUE walk-forward test years `2018-2025`, raw foreign and proprietary flow data from CafeF, and cross-sectional IC benchmarks.
+- Result: `FAILED` - all predator-prey states have LOWER IC than baseline:
+  - all_rows (baseline): IC=0.1335, 826,404 rows
+  - ff_buy: IC=0.1188 (-0.0147 lift)
+  - ff_sell: IC=0.1004 (-0.0331 lift)
+  - ff_sell_pt_buy_absorption: IC=0.0621 (-0.0714 lift)
+  - ff_buy_pt_sell_distribution: IC=0.0959 (-0.0376 lift)
+  - prop_follow_ff: IC=0.0842 (-0.0493 lift)
+
+Do not reopen under current representation:
+- Raw foreign flow (buy/sell direction) is already captured by the S1 signal - flow direction alone does not add predictive value.
+- Proprietary flow data is sparse (22k-24k rows vs 826k baseline) and weak (IC ~0.08).
+- The predator-prey interaction states are even weaker than the individual flows.
+- S1 signal already incorporates any useful information from these flow sources.
+
+Reopening condition:
+- Reopen only with materially different flow representation, such as flow momentum/acceleration, flow relative to sector/market, or flow surprise vs expectations.
+
+Source:
+- [session_323_log.md](./session_323_log.md)
+- `artifacts/run_summaries/20260508_171817_h443_prop_foreign_predator_prey_research_branch.json`

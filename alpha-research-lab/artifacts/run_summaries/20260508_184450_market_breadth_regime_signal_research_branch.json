@@ -1,0 +1,150 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260508_184450_market_breadth_regime_signal_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_184450_market_breadth_regime_signal_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Market breadth (up vs down ratio) is a regime indicator. Test breadth as regime gate for S1/C16 signals. Also test breadth ACCELERATION. C3 tested dispersion as FEATURE, not as REGIME GATE.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Market breadth (up vs down ratio) is a regime indicator. Test breadth as regime gate for S1/C16 signals. Also test breadth ACCELERATION. C3 tested dispersion as FEATURE, not as REGIME GATE.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "market_breadth_regime_signal",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Broad market (breadth rank top 20%)",
+        "name": "breadth_top20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Narrow market (breadth rank bottom 20%)",
+        "name": "breadth_bottom20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Breadth improving (breadth_change rank top 20%)",
+        "name": "breadth_widening",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Breadth deteriorating (breadth_change rank bottom 20%)",
+        "name": "breadth_narrowing",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "High C16 in broad market",
+        "name": "c16_top20_in_breadth_top20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "High C16 in narrow market",
+        "name": "c16_top20_in_breadth_bottom20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Vol expansion in broad market",
+        "name": "vol_expansion_in_breadth_top20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Vol expansion in narrow market",
+        "name": "vol_expansion_in_breadth_bottom20",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "market_breadth_regime_signal",
+  "summary": {
+    "baseline_ic": 0.13008386609341366,
+    "best_lift": 0.06356590303562823,
+    "best_state": "vol_expansion_in_breadth_bottom20",
+    "breadth_bottom20_ic": 0.14410676911108447,
+    "breadth_narrowing_ic": null,
+    "breadth_top20_ic": 0.11014780589079876,
+    "breadth_widening_ic": null,
+    "c16_top_breadth_bot_ic": 0.10999455335330172,
+    "c16_top_breadth_top_ic": 0.06071623720918742,
+    "decision": "PASSED",
+    "panel_rows": 824795,
+    "states_evaluated": 9,
+    "vol_breadth_bot_ic": 0.1936497691290419,
+    "vol_breadth_top_ic": 0.15877626068047274
+  },
+  "ts": "20260508_184450"
+}

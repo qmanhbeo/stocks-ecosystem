@@ -1,0 +1,175 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260508_183554_cross_signal_orthogonality_audit_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_183554_cross_signal_orthogonality_audit_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Test orthogonality of top signals (C20/C21/C22/C23). Does combo add incremental IC beyond each alone?",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test orthogonality of top signals (C20/C21/C22/C23). Does combo add incremental IC beyond each alone?",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "cross_signal_orthogonality_audit",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "individual",
+        "label": "C20: buy_heavy_expansion",
+        "name": "buy_heavy_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "individual",
+        "label": "C21a: buy_heavy_accel_expansion",
+        "name": "buy_heavy_accel_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "individual",
+        "label": "C21b: sell_heavy_decel_expansion",
+        "name": "sell_heavy_decel_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "individual",
+        "label": "C22: approaching_ceiling",
+        "name": "approaching_ceiling",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "C21a × C22 combo",
+        "name": "c21a_c22",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "C21b × C22 combo",
+        "name": "c21b_c22",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "C20 × C22 combo",
+        "name": "c20_c22",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "C21a × C21b combo",
+        "name": "c21a_c21b",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "C21a × C22 × C20 combo",
+        "name": "c21a_c22_c20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "C21b × C22 × C20 combo",
+        "name": "c21b_c22_c20",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "cross_signal_orthogonality_audit",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_combo": "c21a_c22",
+    "best_combo_ic": 0.21189964647056944,
+    "best_combo_lift": -0.01147570373311771,
+    "c20_c22_ic": 0.19970373629117794,
+    "c20_c22_lift": -0.016891362184821263,
+    "c20_ic": 0.21044410819997614,
+    "c21a_c21b_ic": null,
+    "c21a_c21b_lift": null,
+    "c21a_c22_c20_ic": 0.21189964647056944,
+    "c21a_c22_c20_lift": -0.01147570373311771,
+    "c21a_c22_ic": 0.21189964647056944,
+    "c21a_c22_lift": -0.01147570373311771,
+    "c21a_ic": 0.22337535020368715,
+    "c21b_c22_c20_ic": null,
+    "c21b_c22_c20_lift": null,
+    "c21b_c22_ic": null,
+    "c21b_c22_lift": null,
+    "c21b_ic": 0.22063519170595888,
+    "c22_ic": 0.2165950984759992,
+    "decision": "MIXED",
+    "panel_rows": 809019,
+    "states_evaluated": 11
+  },
+  "ts": "20260508_183554"
+}

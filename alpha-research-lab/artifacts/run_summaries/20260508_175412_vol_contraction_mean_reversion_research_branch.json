@@ -1,0 +1,153 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260508_175412_vol_contraction_mean_reversion_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_175412_vol_contraction_mean_reversion_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "H446 showed vol_contraction (-0.0085) underperforms. But vol contraction + HIGH return might be the reversal: vol contracting after a rally indicates exhaustion. Test vol_contraction × high_return vs vol_expansion × high_return vs baseline.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "H446 showed vol_contraction (-0.0085) underperforms. But vol contraction + HIGH return might be the reversal: vol contracting after a rally indicates exhaustion. Test vol_contraction × high_return vs vol_expansion × high_return vs baseline.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "vol_contraction_mean_reversion",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "vol_regime",
+        "label": "Volatility expanding (top 20% 5d vol change)",
+        "name": "vol_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vol_regime",
+        "label": "Volatility contracting (bottom 20%)",
+        "name": "vol_contraction",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "return",
+        "label": "High return (top 30%)",
+        "name": "high_return",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "return",
+        "label": "Low return (bottom 30%)",
+        "name": "low_return",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Vol contraction + High return (exhaustion)",
+        "name": "vol_contraction_exhaustion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Vol expansion + High return (momentum)",
+        "name": "vol_expansion_momentum",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Vol contraction + Low return (contrarian)",
+        "name": "vol_contraction_contrarian",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Vol expansion + Low return (oversold)",
+        "name": "vol_expansion_contrarian",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "vol_contraction_mean_reversion",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_year_ic": 0.17533967765099975,
+    "best_positive_years": 11,
+    "best_state_by_avg_year_ic": "vol_expansion",
+    "best_years": 11,
+    "combo_lift": -0.025500913315829654,
+    "combo_vs_momentum_lift": -0.06280957095030396,
+    "decision": "PASSED",
+    "high_return_ic": 0.13096150220959324,
+    "high_return_lift": 0.0011699688495698801,
+    "momentum_lift": 0.0373086576344743,
+    "panel_rows": 809019,
+    "states_evaluated": 9,
+    "vol_contraction_exhaustion_ic": 0.1042906200441937,
+    "vol_contraction_ic": 0.12118491064089021,
+    "vol_contraction_lift": -0.00860662271913315,
+    "vol_expansion_momentum_ic": 0.16710019099449766
+  },
+  "ts": "20260508_175412"
+}

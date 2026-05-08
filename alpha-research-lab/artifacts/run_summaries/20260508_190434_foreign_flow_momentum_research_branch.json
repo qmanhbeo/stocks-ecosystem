@@ -1,0 +1,176 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260508_190434_foreign_flow_momentum_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_190434_foreign_flow_momentum_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Foreign flow MOMENTUM (acceleration/deceleration) is the signal, not direction alone. Test foreign net flow momentum × vol_expansion vs forward IC.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Foreign flow MOMENTUM (acceleration/deceleration) is the signal, not direction alone. Test foreign net flow momentum × vol_expansion vs forward IC.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "foreign_flow_momentum",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "Foreign accelerating + vol expansion",
+        "name": "ff_accel_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "Foreign decelerating + vol expansion",
+        "name": "ff_decel_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "Strong foreign buy + vol expansion",
+        "name": "ff_strong_buy_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "Strong foreign sell + vol expansion",
+        "name": "ff_strong_sell_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "Foreign accelerating (any regime)",
+        "name": "ff_accel_any",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "Foreign decelerating (any regime)",
+        "name": "ff_decel_any",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "20d avg flow high + vol expansion",
+        "name": "ff_20d_high_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "20d avg flow low + vol expansion",
+        "name": "ff_20d_low_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "5d flow spike + vol expansion",
+        "name": "ff_5d_spike_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "Flow delta top 20% + vol expansion",
+        "name": "ff_delta_top20_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "Net positive top 20% + vol expansion",
+        "name": "ff_net_pos_top20_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ff_momentum",
+        "label": "Net negative bottom 20% + vol expansion",
+        "name": "ff_net_neg_bot20_exp",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "foreign_flow_momentum",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_ic": 0.1376332450347793,
+    "best_lift": -0.02288752688805412,
+    "best_state": "ff_decel_exp",
+    "branch": "foreign_flow_momentum",
+    "decision": "MIXED",
+    "panel_rows": 826404,
+    "states_evaluated": 13
+  },
+  "ts": "20260508_190434"
+}

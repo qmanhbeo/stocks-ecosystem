@@ -1,0 +1,184 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260508_190836_order_flow_microstructure_regime_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_190836_order_flow_microstructure_regime_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Order flow imbalance × vol_expansion × illiquidity is a combined signal. D041 found vol_expansion is the universal amplifier — test if imbalance is independent driver or just echoes vol_expansion.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Order flow imbalance × vol_expansion × illiquidity is a combined signal. D041 found vol_expansion is the universal amplifier — test if imbalance is independent driver or just echoes vol_expansion.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "order_flow_microstructure_regime",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "Buy-heavy imbalance + vol expansion",
+        "name": "buy_heavy_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "Sell-heavy imbalance + vol expansion",
+        "name": "sell_heavy_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "Buy-heavy imbalance (any regime)",
+        "name": "buy_heavy_no_regime",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "Sell-heavy imbalance (any regime)",
+        "name": "sell_heavy_no_regime",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "Buy-heavy + illiq + vol expansion",
+        "name": "buy_heavy_illiq_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "Sell-heavy + illiq + vol expansion",
+        "name": "sell_heavy_illiq_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "Large avg buy order + vol expansion",
+        "name": "large_order_buy_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "Large avg sell order + vol expansion",
+        "name": "large_order_sell_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "High order count + vol expansion",
+        "name": "order_count_spike_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "High fragmentation + vol expansion",
+        "name": "fragmentation_high_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "Low fragmentation + vol expansion",
+        "name": "fragmentation_low_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "Buy-heavy + vol expansion (no illiq)",
+        "name": "buy_heavy_exp_no_illiq",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "of_micro",
+        "label": "Sell-heavy + vol expansion (no illiq)",
+        "name": "sell_heavy_exp_no_illiq",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "order_flow_microstructure_regime",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_ic": 0.18889285768563732,
+    "best_lift": 0.05867356705874127,
+    "best_state": "buy_heavy_illiq_exp",
+    "branch": "order_flow_microstructure_regime",
+    "decision": "PASSED",
+    "panel_rows": 826404,
+    "states_evaluated": 14
+  },
+  "ts": "20260508_190836"
+}

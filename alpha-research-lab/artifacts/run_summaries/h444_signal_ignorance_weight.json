@@ -1,0 +1,90 @@
+{
+  "experiment": "signal_ignorance_weight",
+  "hypothesis": "S1/C16 are robust across most regimes, but there may be specific regime corners where they degrade. The edge is knowing when to ignore them.",
+  "baseline_ic": 0.13354479678630032,
+  "best_regime": "high_ic_high_temp",
+  "best_lift": 0.12707080995841852,
+  "worst_regime": "low_ic_low_temp",
+  "worst_lift": -0.13690344392787307,
+  "results": [
+    {
+      "state": "all_rows",
+      "ic": 0.13354479678630032,
+      "rows": 826404,
+      "years": 11
+    },
+    {
+      "state": "high_ic",
+      "ic": 0.23478271664411113,
+      "rows": 157150,
+      "years": 11
+    },
+    {
+      "state": "low_ic",
+      "ic": 0.02786667279188389,
+      "rows": 171906,
+      "years": 11
+    },
+    {
+      "state": "high_temp",
+      "ic": 0.14768716037834062,
+      "rows": 152542,
+      "years": 11
+    },
+    {
+      "state": "low_temp",
+      "ic": 0.12311788023059844,
+      "rows": 170889,
+      "years": 11
+    },
+    {
+      "state": "high_breadth",
+      "ic": 0.11105195788619548,
+      "rows": 160011,
+      "years": 11
+    },
+    {
+      "state": "low_breadth",
+      "ic": 0.15150759194702956,
+      "rows": 165725,
+      "years": 11
+    },
+    {
+      "state": "high_ic_high_temp",
+      "ic": 0.26061560674471884,
+      "rows": 34611,
+      "years": 11
+    },
+    {
+      "state": "high_ic_low_temp",
+      "ic": 0.2512596329145719,
+      "rows": 29376,
+      "years": 11
+    },
+    {
+      "state": "low_ic_high_temp",
+      "ic": 0.023959743619154924,
+      "rows": 31367,
+      "years": 11
+    },
+    {
+      "state": "low_ic_low_temp",
+      "ic": -0.0033586471415727355,
+      "rows": 39793,
+      "years": 11
+    },
+    {
+      "state": "high_breadth_high_ic",
+      "ic": 0.23452337135783172,
+      "rows": 20893,
+      "years": 11
+    },
+    {
+      "state": "low_breadth_low_ic",
+      "ic": 0.04625335996313004,
+      "rows": 26950,
+      "years": 11
+    }
+  ],
+  "verdict": "PASSED"
+}

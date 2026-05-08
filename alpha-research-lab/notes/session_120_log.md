@@ -1,64 +1,48 @@
-# Session 120 Log
+# Session 120 Log — 2026-05-08
 
-## Objective
-Test whether the rebuilt LLM news surface contains a real state-gated edge in the early nonzero window, and whether that edge survives bucketed audits better than raw pooled sentiment.
+## H449: order_flow_momentum
 
-This session did not change the live branch.
-It did not read `2026+`.
+**Decision: PASSED** (but ACCELERATION does NOT add value)
 
-## What changed
+### Results
+- c16_level_high: IC=0.1614 (+0.0326 lift, 11/11 pos years) — BEST
+- c16_accel_expanding: IC=0.1219 (-0.0069)
+- c16_accel_neutral: IC=0.1287 (-0.0001)
+- c16_accel_contracting: IC=0.1303 (+0.0015)
+- c16_level_low: IC=0.1192 (-0.0096)
+- all_rows: IC=0.1288 (baseline)
 
-Added the H290 LLM news state-router audit script.
+### Key insight
+**C16 ACCELERATION (second derivative) is NOT predictive** - the acceleration/deceleration 
+states perform WORSE than the baseline. However, C16 LEVEL (high) is the strongest state 
+at IC=0.1614 (+0.0326 lift), confirming that order pressure MAGNITUDE matters, not its 
+change rate.
 
-Saved artifacts:
-- `artifacts/run_summaries/20260405_231037_h290_llm_news_state_router_audit_details.json`
-- `artifacts/run_summaries/20260405_231037_h290_llm_news_state_router_audit_standalone_signal.json`
+This confirms H443's "order flow momentum doesn't help" pattern:
+- H443: Foreign flow momentum - marginal at best
+- H449: C16 acceleration - NEGATIVE (accelerating flows underperform)
 
-### H290 - LLM News State Router Audit
-**Hypothesis:**
-The rebuilt CafeF LLM news surface should separate follow-up / miss-state news from the weak pooled sentiment surface, with the edge showing up in the right news-state buckets rather than in raw sentiment alone.
+The edge comes from LEVELS (high pressure, high volume), not MOMENTUM (changes in pressure).
+Use current order pressure as a regime conditioner, not its derivative.
 
-**Command / code:**
-`conda run -n stocks python analysis/h290_llm_news_state_router_audit.py`
+### Connection to queue
+- AJ in queue was "order_flow_momentum" - tested and CONFIRMED NEGATIVE
+- H447 showed vol LEVEL + return works (contrarian), not vol CHANGE
+- H446 showed vol EXPANSION works (REGIME), not momentum
 
-**Inputs:**
-- `data/features/xs_llm_news_ticker_day.parquet`
+This is a dead-end for acceleration-based signals.
 
-**Saved artifact:**
-`artifacts/run_summaries/20260405_231037_h290_llm_news_state_router_audit_standalone_signal.json`
+---
 
-| Metric | Value | Note |
-|--------|-------|------|
-| verdict | `PASS` | state-gated edge exists, but only offline |
-| best feature | `llm_sentiment_5d` | strongest bucketed surface |
-| best state kind | `novelty` | best gate family |
-| best bucket | `follow` | strongest bucket |
-| mean daily IC | `+0.4796` | very strong in-window edge |
-| daily hit rate | `0.8667` | 13/15 positive days in the bucket |
-| positive years | `1 / 1` | only one nonzero year in this bucket |
-| best nonzero rows | `75` | bucket-level nonzero rows |
-| window years | `2015-2017` | only nonzero news window |
-| nonzero window rows | `4308` | raw active rows in the nonzero window |
-| pooled `llm_sentiment_30d` IC | `-0.0121` | weak / negative overall surface |
+## Session 120 Summary
 
-**Result:**
-The rebuilt LLM news surface does contain real signal, but it is state-gated rather than generic. Follow-up news and miss-state news carry the useful edge, while pooled sentiment and beat/new states are weak or negative. The active-book years remain effectively zero-valued in this cache surface, so this is offline evidence only for now.
+**H449 PASSED but with OPPOSITE insight: acceleration is NOT signal, level IS.**
 
-**Verdict: PASS**
+The queue item "order_flow_momentum" (AJ) is now DEAD-END. C16 level works, not acceleration.
 
-## Branch decision
-
-Keep `C15` as offline evidence only.
-Keep `news-marginal-slot` blocked until active-book years have nonzero news coverage.
-The next queue item is `news-decay-contract`.
-
-## Validation
-
-Completed before the run:
-- `conda run -n stocks python analysis/h290_llm_news_state_router_audit.py`
-
-Completed for the experiment:
-- read `artifacts/run_summaries/20260405_231037_h290_llm_news_state_router_audit_standalone_signal.json`
-
-Verdict:
-- `H290`: **PASS**
+### Next session: session 121
+Queue items remaining:
+- AK: replacement_quality_revival
+- AL: volume_adjusted_return (H447 already tested)
+- AM: liquidity_adjusted_return
+- AN: news_velocity_as_signal

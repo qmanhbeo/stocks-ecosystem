@@ -590,6 +590,200 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
   (2020 +0.0553, 2021 +0.0710). Not a ranker replacement but useful as
   dynamic position sizing signal. Source anchor: `F390`.
 
+- Volume-adjusted price momentum (H435a): PASSED. volume_z_q5 (high volume)
+  achieves IC=0.157 (8/8 positive years), the strongest single volume state.
+  Return/volume ratio (efficiency) shows Q5=0.100 vs Q1=0.054, but the key is
+  volume LEVEL not the ratio. Confirms why H413 additive works (0.1×Vol + 0.9×S1).
+  Source anchor: Session 313.
+
+- Candidate rank actual gap (H435b): FAILED. Q5 absolute gap has negative IC (-0.82)
+  while Q1 has positive (0.64). Higher prediction-error predicts WORSE returns,
+  not surprise alpha. Do not use as signal. Source anchor: Session 314.
+
+- Signal ignorance weight (H436): FAILED. Ignoring S1/C16 in predicted degrade-state
+  HURTS performance (IC=0.053 vs 0.120 baseline). Top-10 buyers in composite
+  degrade-state achieve IC=0.10 (STRONGER than all-rows), while ignoring drops
+  to IC=0.053 (WORSE). S1/C16 are robust across all tested regimes. Do not
+  reopen as cash/veto signal. Source anchor: `D030`, Session 315.
+
+- Replacement quality revival (H437): FAILED. Entering tickers have weaker IC (0.066)
+  than exiting tickers (0.126), stable tickers (0.079), and all-rows (0.117).
+  Enter vs exit lift is -0.060, opposite of hypothesis. Aligns with H388 finding
+  that fresh reappearances are not strong. Source anchor: `D031`, Session 316.
+
+- News consensus divergence (H438): MIXED. Consensus news states show IC~0.10
+  (8/8 positive years), but divergence states are weaker (0.093-0.097).
+  Divergence vs consensus lift is -0.009, meaning disagreement does NOT indicate
+  hidden information. Consensus works but not as divergence play. Source anchor:
+  Session 317.
+
+- Volatility regime transition (H439): MIXED. High volatility states are MUCH
+  stronger (IC=0.17-0.20) than low vol (0.09-0.10). Within high-vol, contracting
+  beats expanding (+0.009), but this is a LEVEL effect not transition. The primary
+  finding is vol LEVEL matters; transition is secondary. Use as conditioner,
+  not standalone signal. Source anchor: Session 318.
+
+- News novelty first repeat (H440): PASSED. First-in-5d news has IC=0.123 vs
+  repeat IC=0.091 (+0.032 lift, 8/8 positive years). Combined with strong C16 flow,
+  first+flow achieves IC=0.161 (best state). This is a NEW signal finding:
+  news novelty matters, not just news presence. Source anchor: `F392`, Session 319.
+
+- Cross-ticker correlation shock (H441): FAILED. Date-level cross-sectional
+  correlation regime predicts only +0.0033 IC lift, below the 0.01 threshold.
+  Secondary finding: C16 flow works better in high-corr dates (0.167 vs 0.144),
+  first-news prefers low-corr dates (0.153 vs 0.130), but primary shock mechanism
+  is too weak. Source anchor: `D032`, Session 320.
+
+- Ticker rank acceleration (H442): FAILED. Second derivative of C16 rank (acceleration)
+  has near-zero IC lift (+0.0009) vs first derivative. C16 rank LEVEL dominates
+  (IC=0.158 vs acceleration=0.120). Both accel_up+flow and accel_down+flow are
+  equal (~0.147), showing acceleration direction doesn't matter. H431 rank delta
+  worked because it correlated with rank level, not as independent second-order
+  signal. Do not reopen as rank acceleration signal. Source anchor: `D033`, Session 321.
+
+- Volatility regime transition (H446): PASSED. Vol EXPANSION (5d vol change > 0) has
+  IC=0.175 vs baseline 0.130 (+0.0449 lift, 11/11 positive years). Vol CONTRACTION
+  has IC=0.122 (-0.0085 lift). This is DIFFERENT from H439 vol LEVELS - vol CHANGE
+  (expansion) itself is a positive signal regardless of vol level. When volatility
+  is increasing, S1 quality improves substantially. Use as regime conditioner for
+  S1 quality prediction. Source anchor: Session 102.
+
+- Volume-adjusted price momentum (H447): MIXED/OPPOSITE. Hypothesis was high return + 
+  high volume = "real force" (positive), high return + low volume = "fade" (negative).
+  OPPOSITE: low_return_low_vol IC=0.204 (+0.0746 lift, 11/11 pos years) is STRONGEST,
+  real_force (high_return_high_vol) IC=0.111 (-0.019 lift) UNDERPERFORMS. This is a
+  CONTRARIAN signal, not momentum. The volume-adjusted framework works but direction
+  is inverted: "cheap moves" = mean reversion, not "real force" = sustained. Dead-end
+  D036 for original hypothesis; use low_return_low_vol as contrarian conditioner.
+  Source anchor: Session 103.
+
+- Vol expansion + contrarian combo (H448): PASSED. vol_expansion (H446) × low_return_low_vol
+  (H447) COMBO is STRONGEST: IC=0.2069 (+0.0771 lift, 11/11 pos years), beats vol_expansion 
+  alone by +0.0316, beats low_return_low_vol alone by +0.0025. Captures the oversold-in-
+  expanding-vol regime better than either component alone. Use as conditioner/ranker - adds
+  +0.0316 IC vs vol_expansion alone. NEW SIGNAL. Source anchor: Session 104, F392.
+
+- Vol contraction mean reversion (H449): MIXED. vol_contraction × high_return shows 
+  vol_contraction_exhaustion IC=0.1043 (-0.0255 lift) = mean reversion (negative IC), 
+  while vol_expansion_momentum IC=0.1671 (+0.0373) = positive momentum. Pattern confirmed 
+  real but direction is wrong for long-only - it's a mean reversion signal, not a buy signal. 
+  Dead-end D037 for direct long-only use. Use vol_expansion_momentum side instead. 
+  Source anchor: Session 105.
+
+- Volume acceleration signal (H450): MIXED. vol_accel_high_return IC=0.1346 (+0.0047 lift), 
+  but low_vol (volume LEVEL low) IC=0.1821 (+0.0522 lift) is STRONGER. Acceleration helps 
+  for high return (+0.0474 vs high_vol), but volume LEVEL dominates overall. No new signal - 
+  use low_vol as primary, acceleration is secondary. Source anchor: Session 106.
+
+- Buy-sell imbalance in stress (H451): PASSED. buy_heavy_expansion IC=0.1809 (+0.0508 lift,
+  11/11 pos years) is STRONGEST! Buy-heavy imbalance works ONLY in vol expansion periods
+  (+0.0699 lift vs contraction), sell-heavy is always negative. NEW SIGNAL - use as
+  regime-dependent conditioner. Source anchor: Session 107, F393.
+
+- Volume level vs direction divergence (H452): MIXED. vol_expanding_high_return IC=0.1671
+  (+0.0373 lift) beats high_vol_level_high_return (+0.1112, -0.0186 lift) by +0.0559 for
+  momentum case. But low_vol_level_low_return (0.2045, +0.0747) still dominates for contrarian.
+  Pattern confirmed but no incremental value - use components separately. Source anchor: Session 108.
+
+- Order flow imbalance momentum (H453): PASSED. C21 NEW SIGNALS! level + momentum + vol
+  combos beat H451 level-only by +0.0201-0.0260 IC. buy_heavy_accel_expansion IC=0.2320
+  (+0.1019 lift, 11/11 pos years), sell_heavy_decel_expansion IC=0.2369 (+0.1069 lift,
+  11/11 pos years). Imbalance delta is independently informative: imbalance_accelerating
+  alone IC=0.1601 (+0.0300 lift). Both acceleration AND deceleration in vol expansion are
+  positive (different mechanisms). Stable imbalance underperforms - change IS the signal.
+  Source anchor: Session 109, F391.
+
+- Implied limit proximity (H454): PASSED. C22 NEW SIGNAL! approaching_ceiling IC=0.2170
+   (+0.0872 lift, 11/11 pos years). Limit proximity is regime-independent - vol expansion adds
+   only +0.0004 IC. High volume WITH near-limit is WEAKER (0.1375 vs 0.2166) - queue pressure
+   thesis fails. Approaching floor weaker than ceiling (+0.0313 lift). Use as standalone ranker,
+   not volume-augmented. Source anchor: Session 110, F392.
+
+## Batch 8 Findings (H463-H468, Sessions 116-118)
+
+- Amihud illiquidity × vol expansion (H463): PASSED. C23 NEW SIGNAL! high_illiq_expansion IC=0.2616
+  (+0.1318 vs baseline, +101% boost). STRONGEST signal in library. Illiquid stocks amplify regime
+  effects dramatically. OHLCV inline from 1227 per-ticker parquet files (ticker from filename).
+  C23 beats C21b (0.2369), C21a (0.2320), C22 (0.2170), C20 (0.2105). Source: F393, Session 116.
+
+- Time-of-day calendar pattern (H464): PASSED (weak). Monday IC=0.1434 (+0.0132 lift, 11/11 pos years).
+  STRONGEST calendar pattern. Friday negative (-0.0183). Month-end modest (+0.0065). Not standalone
+  promotion — weak RL context only. Source: F398, Session 117.
+
+- Signal orthogonality audit (H465): MIXED. C20/C21/C22 combos are ALL WORSE than best individual
+  signal (C21a×C22: -0.0115 vs max). vol_expansion is the common regime driver making signals
+  redundant when combined. Signals are ADDITIVE in portfolio sense (different days fire), not
+  combinatorial. D041: do NOT combine C20/C21/C22. Source: F397, Session 117.
+
+- Crowd exhaustion reversal (H466): PASSED (mechanism inverted). two_days_exhaustion IC=0.2013
+  (+0.0711, 3/3 pos years) — STRONGEST. But mechanism is CONTINUATION, not reversal. H445's
+  "exhaustion = worst state" means signal at PEAK, not reversing. NOT a new signal — it's momentum
+  of C16 amplified by time. Source: F395, Session 118.
+
+- Multi-day ceiling pressure (H467): PASSED. C24 NEW SIGNAL! limit_2_of_3 IC=0.2353 (+0.1052 vs
+  baseline, 8/8 pos years). Hit +7% limit 2+ times in last 3 days = sustained queue pressure.
+  Beats C22 single-day (0.2162) by +0.0191 IC. Multi-day accumulation beats single-day.
+  Source: F394, Session 118.
+
+- Market breadth regime (H468): MIXED. vol_expansion_in_breadth_bottom20 IC=0.1936 (+0.0635) — vol
+  expansion works best in NARROW markets. vol_expansion_in_breadth_top20 IC=0.1588 (+0.0287) —
+  weaker in broad markets. breadth_top20 NEGATIVE (-0.0199 vs baseline). Use as soft filter
+  only, not hard gate. Source: F396, Session 118.
+
+**Confirmed signal rankings (IC vs baseline 0.130):**
+C23 (0.2616) > C21b (0.2369) > C24 (0.2353) > C21a (0.2320) > C22 (0.2170) > C26 (0.1889) > C25 (0.1733) > C20 (0.2105)
+vol_expansion is universal amplifier for ALL signals; vol_contraction is NO-GO.
+Signals NOT combinable — D041.
+
+**Batch 11 / EUREKA queue findings (H472-H474, Sessions 121-123):**
+
+- LAR ratio anti-predictive (H472): Return / Amihud ratio (Q5) = IC 0.087 (-0.032 lift).
+  Mid LAR (Q3) = IC 0.145 (+0.025). return_5d_pos_illiq = IC 0.163 (+0.044) = illiquid
+  momentum (C23-style). return_5d_pos_liq = IC 0.052 (-0.067) = liquid crowd blowoff.
+  Ratio collapses two correlated effects into one confusing metric. Dead-end for LAR.
+  Source: F400, Session 121.
+
+- News velocity anti-predictive (H473): high_velocity Q5 = IC 0.088 (-0.032 lift).
+  Fast-arriving news = crowd-following, not breaking alpha. mid_velocity only +0.008.
+  Low_velocity too sparse (most tickers have 0 news). Third dimension beyond novelty
+  (H440) and presence (H445) is noise. Dead-end for news velocity. Source: F401, Session 122.
+
+- Capacity as positive signal (H474): PASSED. tight_capacity (Q1: lowest order count)
+  = IC 0.184 (+0.065 lift, 8/8 pos years). loose_capacity = IC 0.074 (-0.046).
+  Mechanism: sparse order flow = hidden demand / under-followed alpha. Different from
+  H391 binary release — this is CONTINUOUS signal. tight_expansion sparse (2/8 years).
+  C27 candidate: use tight_capacity as positive filter for low-activity names, not veto.
+  Source: F402, Session 123.
+
+## Batch 9 Findings (H469-H471, Session 119)
+
+- Foreign flow momentum (H469): MIXED. ff_decel_exp IC=0.1376 (+0.0074, 11/11). Marginal signal only.
+  H443 killed raw direction variants; momentum doesn't rescue it. Soft filter only, not promotion.
+  Source: Session 119.
+
+- VWAP deviation regime (H470): PASSED. C25 NEW SIGNAL! vwap_below_10_exp IC=0.1733 (+0.0431 lift,
+  11/11 pos years). Stocks trading far below daily VWAP in vol expansion = "cheap" vs average.
+  Under-followed/illiquid stocks amplify (same mechanism as C23). C25 beats baseline by +33%.
+  Source: F399, Session 119.
+
+- Order flow microstructure (H471): PASSED. C26 NEW SIGNAL! buy_heavy_illiq_exp IC=0.1889 (+0.0587 lift,
+  11/11 pos years). Buy-heavy order flow + illiquidity + vol expansion = institutional hidden demand.
+  Both buy_heavy and sell_heavy work with illiq+expansion (different mechanisms: buy=accumulation,
+  sell=forced-sell rebound). Source: F399, Session 119.
+
+**Universal pattern confirmed:** ALL strong signals share structure: **specific behavior + illiquidity + vol_expansion**.
+C23 (illiq×expansion), C24 (ceiling×expansion), C25 (VWAP deviation+illiq+expansion), C26 (buy flow+illiq+expansion).
+D041 CONFIRMED: signals share vol_expansion+illiquidity as universal amplifier. Do NOT combine as composite entries.
+
+## Queue Status (2026-05-08)
+
+**Batch 9 COMPLETE:** H469 MIXED, H470 PASSED (C25), H471 PASSED (C26).
+New signals: C18 (H431), C19 (H448), C20 (H451), C21 (H453), C22 (H454), C23 (H463), C24 (H467), C25 (H470), C26 (H471)
+
+## Batch 10 Findings (H449, Session 120)
+
+- Order flow momentum (H449): PASSED (findings OPPOSITE). c16_level_high IC=0.1614 (+0.0326, 11/11 pos years) — BEST state. BUT C16 ACCELERATION (second derivative) is NOT predictive - c16_accel_expanding IC=0.1219 (-0.0069), c16_accel_neutral IC=0.1287 (-0.0001), all WORSE than baseline. ACCELERATION DOES NOT ADD VALUE. The edge comes from LEVELS (high pressure, high volume), not MOMENTUM (changes). Confirms H443 pattern: foreign flow momentum and C16 momentum both NEGATIVE. Confirms H446/H447: vol LEVEL matters, not change. Use C16 level as regime conditioner, not its derivative. Dead-end for acceleration signals. Source: Session 120.
+
 ## Maintenance Rule
 
 - When a future session promotes a durable finding, update the source

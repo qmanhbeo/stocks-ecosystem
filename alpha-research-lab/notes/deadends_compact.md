@@ -11,7 +11,34 @@ specified changed condition. Keep links to source `F` IDs so the original
 evidence remains traceable. Every compact dead-end entry must include source
 anchors: stable dead-end IDs, finding IDs, or source session links.
 
-## Resolution: Methodology Skepticism
+## Resolution: LAR Ratio Is Anti-Predictive
+
+- H472 liquidity_adjusted_return (AL queue) is killed. Return / Amihud illiquidity ratio
+  is ANTI-predictive as a standalone ranker: high LAR (Q5) = IC 0.087 (-0.032 lift) vs
+  baseline 0.119. The mechanism is inverted: "high return + low Amihud" (high LAR) = liquid
+  crowd chase (negative), while "high return + high Amihud" (return_5d_pos_illiq) = illiquid
+  momentum (IC 0.163, +0.044 lift) = C23-style effect, not independent flow quality. The ratio
+  collapses two correlated effects into one confusing metric that loses to raw components.
+  Do not reopen LAR ratio as standalone ranker. Use Amihud LEVEL (C23) as the signal, not
+  the return/Amihud ratio. Source: [session_121_log.md](./session_121_log.md).
+
+## Resolution: Acceleration/Momentum Signals Are Dead-End
+
+- H449 order_flow_momentum is D041 for acceleration signals. C16 ACCELERATION (second derivative) is NOT predictive — c16_accel_expanding IC=0.1219 (-0.0069 lift), c16_accel_neutral IC=0.1287 (-0.0001), c16_accel_contracting IC=0.1303 (+0.0015) ALL WORSE or equal to baseline. Confirms H443 pattern: foreign flow momentum also NEGATIVE (ff_accel_exp IC=0.1243). Confirms H446/H447: vol LEVEL matters, not vol CHANGE. The edge comes from LEVELS (high pressure, high volume), not MOMENTUM (changes in pressure/volume). Use C16 level as regime conditioner, not its derivative. Dead-end D041 for all acceleration/momentum signals. Source: [session_120_log.md](./session_120_log.md), D041.
+
+- H428 bid_ask_midbook_imbalance is D027. Higher buy/sell volume imbalance was hypothesized to proxy hidden depth but instead correlates with WEAKER C16 signal (Q5 vs Q1 IC lift -0.0385 dev, -0.0116 val). Direct prediction vs S1 is weakly positive (IC +0.0194 dev, +0.0373 val) but below IC > 0.05 threshold. Interpretation: high imbalance indicates weakness, not hidden depth. Do not reopen as C16 conditioner or standalone signal. Source anchor: Session 307, D027.
+
+## Resolution: Signal Combination Skepticism
+
+- H465 cross_signal_orthogonality_audit is D041. Signals C20/C21/C22 are NOT orthogonal — all combos are WORSE than best individual. C21a×C22 IC=0.2119 (-0.0115 vs max), C20×C22 IC=0.1997 (-0.0169 vs max). vol_expansion is the common regime driver making signals redundant when combined. Do NOT create composite signals from C20/C21/C22. They are additive in portfolio sense (different days fire) not combinatorial. Source: [session_117_log.md](./session_117_log.md), D041.
+
+- H449 vol_contraction_mean_reversion is dead-end for direct long-only use. Pattern confirmed real (vol_contraction + high_return = mean reversion with IC=-0.0255), but the direction is wrong for long-only: vol_expansion_momentum IC=+0.0373 is positive while vol_contraction_exhaustion is negative. Use vol_expansion_momentum side (positive), do not use exhaustion pattern as buy signal. Source: [session_105_log.md](./session_105_log.md), D037.
+
+- H447 volume_adjusted_price_momentum "real force" hypothesis is killed. Original hypothesis: high return + high volume = "real force" (positive), high return + low volume = "fade" (negative). OPPOSITE found: high_return_high_vol (real_force) IC=0.111 (-0.019 lift) UNDERPERFORMS baseline. The volume-adjusted framework works but direction is inverted: low_return_low_vol (cheap moves/contrarian) is the STRONGEST state at IC=0.204 (+0.0746 lift). This is a CONTRARIAN signal, not momentum. Use low_return_low_vol as contrarian conditioner if desired, but do not use high_return_high_vol as "real force" - it's dead. Source: [session_103_log.md](./session_103_log.md), D036.
+
+- H445 semantic_novelty_saturation is killed (NEGATIVE result). News article counts (PhoBERT) are NOT predictive - they DEGRADE S1 signal quality. All news states have NEGATIVE IC lift vs baseline. "no_news" (IC=0.1409) actually beats "has_news" (IC=0.1038) by +0.037. Exhaustion state (repeat coverage + high attention) is worst at -0.0474 lift. Raw article counts are not useful as standalone signals. Continue using source-type and sentiment features which H440/H383 found useful. Do not reopen with raw count features. Source: [session_101_log.md](./session_101_log.md), D035.
+
+- H443 prop_foreign_predator_prey is killed. Predator-prey interaction between foreign and proprietary flows does NOT add predictive value. All states (ff_sell_pt_buy_absorption IC=0.0621, ff_buy_pt_sell_distribution IC=0.0959, prop_follow_ff IC=0.0842) are BELOW baseline IC=0.1335. Raw foreign flow (ff_buy IC=0.1188, ff_sell IC=0.1004) also underperforms baseline. Flow direction alone is not predictive - S1 already captures any useful information from these flows. Do not reopen unless materially different data or representation. Source anchor: [session_323_log.md](./session_323_log.md), D034.
 
 - S253 methodology resolution is superseded by S272. S272 found the S244/S246/S247/S253
   market-down and consecutive-down claims used same-date S1 `actual` to define
@@ -438,6 +465,14 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   accel_down+flow are equal (~0.147), showing acceleration direction doesn't matter. H431
   rank delta worked because it correlated with rank level, not as independent signal. Do not
   reopen as a rank acceleration signal. Source anchors: `D033`, [session_321_log.md](./session_321_log.md).
+
+- Sector momentum as regime gate is killed under H455. Cross-sectional market excess (sector_up vs sector_down) as regime gate has tiny signal differences (-0.0017 to -0.0127). Signals work SIMILARLY across both regimes - no router benefit. High volume is always negative in both regimes. S248-S252 failed as FILTERS, this fails as REGIME GATES. Do not reopen as a sector-momentum regime router. Source anchor: `D038`, [session_111_log.md](./session_111_log.md).
+
+- Spread as hard regime gate is killed under H456. Wide spread amplifies buy_heavy_expansion significantly (+0.0948), but tight spread states are TOO SPARSE (356-1703 rows) for robust inference. Hard regime gate fails due to sparse support. Use spread as SOFT FILTER instead of hard gate. Source anchor: `D039`, [session_112_log.md](./session_112_log.md).
+
+- News velocity as signal is killed under H473. News VELOCITY (3d delta = 5d-1d article count) is ANTI-predictive: high_velocity Q5 = IC 0.088 (-0.032 lift vs baseline 0.120), burst_has_news = IC 0.082 (-0.037). Fast-arriving news = crowd-following, not breaking alpha. mid_velocity only +0.008 (weak). low_velocity too sparse (most tickers have 0 news). The third dimension beyond novelty (H440) and presence (H445) is noise. Do not reopen with news-count velocity or acceleration derivatives. Only structured features (source-type, forward-looking, official) survive. Source: [session_122_log.md](./session_122_log.md).
+
+- Rank acceleration as hidden signal is killed under H462. Rank acceleration (rank_change speed) is ANTI-predictive alone (-0.0166 lift for accelerating, -0.0665 for decelerating). Adding rank acceleration to buy_heavy_expansion makes it MUCH WORSE (-0.0584). The "suddenly appearing = hidden info" hypothesis is NOT supported. Do not reopen with rank_change velocity features. Source anchor: `D040`, [session_115_log.md](./session_115_log.md).
 
 ## Maintenance Rule
 

@@ -1,0 +1,220 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260508_180257_order_flow_imbalance_momentum_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_180257_order_flow_imbalance_momentum_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "H451 tested LEVEL × vol_regime. What about CHANGE in imbalance? Acceleration in buy pressure might signal hidden demand better than level alone. Test imbalance_delta × vol_regime vs forward IC.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "H451 tested LEVEL × vol_regime. What about CHANGE in imbalance? Acceleration in buy pressure might signal hidden demand better than level alone. Test imbalance_delta × vol_regime vs forward IC.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "order_flow_imbalance_momentum",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "vol_regime",
+        "label": "Volatility expanding (top 20%)",
+        "name": "vol_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vol_regime",
+        "label": "Volatility contracting (bottom 20%)",
+        "name": "vol_contraction",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "imb_level",
+        "label": "Buy-heavy imbalance level (top 20%)",
+        "name": "imbalance_buy_heavy",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "imb_level",
+        "label": "Sell-heavy imbalance level (bottom 20%)",
+        "name": "imbalance_sell_heavy",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "imb_delta",
+        "label": "Imbalance accelerating (top 20%)",
+        "name": "imbalance_accelerating",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "imb_delta",
+        "label": "Imbalance decelerating (bottom 20%)",
+        "name": "imbalance_decelerating",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "imb_delta",
+        "label": "Imbalance stable (40-60%)",
+        "name": "imbalance_stable",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "level_vol",
+        "label": "H451: Buy-heavy level + Vol expansion",
+        "name": "buy_heavy_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "level_vol",
+        "label": "Sell-heavy level + Vol expansion",
+        "name": "sell_heavy_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "delta_vol",
+        "label": "Imbalance accelerating + Vol expansion",
+        "name": "accel_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "delta_vol",
+        "label": "Imbalance accelerating + Vol contraction",
+        "name": "accel_contraction",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "delta_vol",
+        "label": "Imbalance decelerating + Vol expansion",
+        "name": "decel_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "delta_vol",
+        "label": "Imbalance decelerating + Vol contraction",
+        "name": "decel_contraction",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Buy-heavy + Accelerating + Vol expansion",
+        "name": "buy_heavy_accel_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Sell-heavy + Decelerating + Vol expansion",
+        "name": "sell_heavy_decel_expansion",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "order_flow_imbalance_momentum",
+  "summary": {
+    "accel_contraction_ic": 0.1350674748281161,
+    "accel_contraction_lift": 0.004990115393585959,
+    "accel_expansion_ic": 0.21257320256211643,
+    "accel_expansion_lift": 0.08249584312758629,
+    "accel_lift": 0.029984083938399325,
+    "accel_vs_level_expansion": 0.001582503090324705,
+    "baseline_ic": 0.13007735943453014,
+    "best_avg_year_ic": 0.23693650179794387,
+    "best_positive_years": 11,
+    "best_state_by_avg_year_ic": "sell_heavy_decel_expansion",
+    "best_years": 11,
+    "buy_heavy_accel_expansion_ic": 0.23202185439533424,
+    "buy_heavy_accel_expansion_lift": 0.1019444949608041,
+    "buy_heavy_expansion_ic": 0.21099069947179172,
+    "buy_heavy_expansion_lift": 0.08091334003726158,
+    "decel_contraction_ic": 0.14198821100714076,
+    "decel_contraction_lift": 0.011910851572610626,
+    "decel_expansion_ic": 0.19990873818074162,
+    "decel_expansion_lift": 0.06983137874621148,
+    "decel_lift": 0.020177591084746233,
+    "decision": "PASSED",
+    "imbalance_accelerating_ic": 0.16006144337292946,
+    "imbalance_decelerating_ic": 0.15025495051927637,
+    "imbalance_stable_ic": 0.10599186222261267,
+    "panel_rows": 820582,
+    "sell_heavy_decel_expansion_ic": 0.23693650179794387,
+    "sell_heavy_decel_expansion_lift": 0.10685914236341373,
+    "states_evaluated": 16
+  },
+  "ts": "20260508_180257"
+}

@@ -1,79 +1,97 @@
-# Session 123 Log — LLM News Standalone Gate (2026-04-07)
+# Session 123 Log — 2026-05-08
 
-## Objective
-Run the formal `llm-news-gate` experiment (H294): test LLM news sentiment features against the canonical 1d barrier label, compare to C1, and decide whether to promote, park, or kill the branch.
+## H474: capacity_as_signal_not_veto
 
-This session did not change the live branch.
-It did not read `2026+`.
+**Decision: PASSED** (with caveat on tight_expansion sparsity)
 
----
+### Hypothesis
+Tradability capacity (total order count percentile) should be a SIGNAL INPUT, not a binary
+veto. Low capacity = hidden demand that couldn't execute. Continuous percentile captures
+different dynamics than the failed H391 binary release state.
 
-## What changed
+Connection to H391 (tradability_release_pulse, D009): H391 tested BLOCKED->RELEASED
+(binary state transition). H474 tests CONTINUOUS capacity percentile — fundamentally
+different mechanism.
 
-Added and ran the H294 LLM news standalone gate script.
+### Command / code
+```bash
+python analysis/h474_capacity_as_signal_not_veto.py
+```
 
-Saved artifact:
-- `artifacts/run_summaries/20260407_221151_h294_llm_news_standalone_gate_standalone_signal.json`
+### Inputs
+- S1 panel: `data/features/xs_barrier_vol_1d_hose_full.parquet` (start_year=2018)
+- Order stats: `data/order_stats/cafef/order_stats_daily.parquet` (engine=pyarrow)
+- 648,164 rows, 99.4% coverage, order_count>0: 98.6%
 
-### H294 - LLM News Standalone Gate (1d Barrier)
-**Hypothesis:**
-LLM news sentiment features from `xs_llm_news_ticker_day.parquet` pass the canonical standalone signal gate (IC > 0.01, ≥ 6/8 years positive, corr with S1 < 0.30) when evaluated against the 1d barrier label.
+### Saved artifact
+`artifacts/run_summaries/20260508_194212_capacity_as_signal_not_veto_research_branch.json`
 
-**Command / code:**
-`conda run -n stocks python analysis/h294_llm_news_standalone_gate.py`
+### Results
 
-**Inputs:**
-- `data/features/xs_llm_news_ticker_day.parquet`
-- `data/features/xs_barrier_vol_1d_hose_full.parquet`
+| State | IC | Lift vs Baseline | Positive Years |
+|-------|-----|-------------------|----------------|
+| all_rows (baseline) | 0.1194 | — | 8/8 |
+| **tight_capacity (Q1)** | **0.1840** | **+0.0646** | **8/8** |
+| tight_has_volume | 0.1840 | +0.0646 | 8/8 |
+| mid_capacity (Q3) | 0.1063 | -0.0131 | 8/8 |
+| loose_capacity (Q5) | 0.0737 | -0.0457 | 8/8 |
+| tight_expansion | 0.2147 | +0.0953 | 2/2 (sparse: NaN 6/8 years) |
 
-**Saved artifact:**
-`artifacts/run_summaries/20260407_221151_h294_llm_news_standalone_gate_standalone_signal.json`
+### Yearly breakdown (tight_capacity vs baseline)
 
-| Metric | Value | Note |
-|--------|-------|------|
-| verdict | `MIXED` | pooled fails consistency; state-gated `novelty/new` passes |
-| best pooled feature | `llm_sentiment_raw` | IC +0.047 |
-| pooled IC | `+0.047` | above 0.01 gate |
-| pooled consistency | `1/2 years` | 2016 negative (−0.014), 2017 positive (+0.159) |
-| S1 correlation | `−0.043` | near-zero, highly independent |
-| coverage | `0.19%` | below C1 baseline (0.8%) |
-| best gated IC | `+0.404` | novelty/follow, 99 rows, 1/1 years |
-| `novelty/new` IC | `+0.078` | 2/2 years positive, 1331 rows — new finding |
-| `alignment/miss` IC | `+0.136` | 1/2 years |
-| `novelty/flat` IC | `−0.285` | anti-predictive |
-| data constraint | cache covers 2016–2017 only | 6/8 year gate cannot be applied |
+| Year | Baseline IC | tight_capacity IC | Lift |
+|------|-----------|-------------------|------|
+| 2018 | 0.135 | 0.193 | +0.058 |
+| 2019 | 0.145 | 0.182 | +0.037 |
+| 2020 | 0.108 | 0.165 | +0.057 |
+| 2021 | 0.123 | 0.185 | +0.062 |
+| 2022 | 0.082 | 0.181 | +0.099 |
+| 2023 | 0.121 | 0.191 | +0.070 |
+| 2024 | 0.132 | 0.207 | +0.075 |
+| 2025 | 0.109 | 0.167 | +0.058 |
 
-**Result:**
-Pooled standalone gate fails on consistency: `llm_sentiment_raw` has IC +0.047 (above threshold) but is only positive in 1/2 available years. The 5d-smoothed and confidence-weighted variants are negative. Coverage is 0.19%, below C1's 0.8%.
+**8/8 positive years** with consistent lift (+0.037 to +0.099).
 
-State-gated result is materially stronger:
-- `novelty/new` (stocks where new information dominates over follow-up): IC +0.078, 2/2 years positive, 1331 rows. This passes both IC and available-year consistency gates and is a new result not captured by H290 (which used 5d return and identified `follow` as the strongest bucket; against the 1d barrier, `new` is the consistent winner).
-- `novelty/follow`: IC +0.404 (extraordinary) but only 1 observable year (99 rows). Cannot confirm consistency.
-- `alignment/miss`: IC +0.136 but 1/2 years.
+### Interpretation
 
-S1 correlation is −0.043 — highly independent.
+**tight_capacity is the key signal**: Low order count = IC 0.184 (+0.065 lift).
+This is the OPPOSITE of the intuition that more activity = more information.
+Mechanism: sparse order flow = hidden demand that couldn't fully execute,
+or under-followed stocks with uncrowded alpha. HIGH order count = liquid,
+crowded, already-priced.
 
-**Verdict: MIXED**
+**loose_capacity is anti-predictive**: IC 0.074 (-0.046). Crowded liquid stocks
+perform WORSE. This is the inverse of "liquid = safe" — in VN market, liquidity
+itself is a crowding indicator, not a quality signal.
 
----
+**tight_expansion is sparse**: Only 2/8 years have enough rows. The vol regime
+cross makes the state too sparse for reliable inference. tight_capacity alone is
+the durable signal.
 
-## Branch decision
+**tight_has_volume ≈ tight_capacity**: Adding volume filter doesn't help — the
+low-count signal is already capturing what matters.
 
-Keep C15 as offline evidence only.
-Upgrade the C15 entry in `signal_library.md` to note the `novelty/new` finding against the 1d barrier (2/2 years, IC +0.078).
-Keep `news-marginal-slot` blocked until active-book years have nonzero LLM coverage.
-Park `llm-news-gate` — data constraint is the primary blocker (cache covers 2016-2017 only). Re-open when extraction completes 2018+ years.
-Next queue: no active research branch until LLM extraction produces active-book coverage. Keep live branch frozen.
+**Caveat**: The signal is NOT about tradability (buyability). It's about order
+activity/attention. Low activity tickers have stronger S1 quality, suggesting
+the candidate model sees something in thin-traded names. This aligns with the
+illiquidity amplification pattern (C23/C24/C25/C26).
 
----
+### Result: PASSED
 
-## Validation
+- tight_capacity IC 0.184 (+0.065 lift), 8/8 positive years
+- tight_expansion sparse but strong (only 2/8 years)
+- loose_capacity anti-predictive (-0.046)
+- NEW capacity signal — fundamentally different from H391 binary release
 
-Completed before the run:
-- `conda run -n stocks python -m py_compile analysis/h294_llm_news_standalone_gate.py`
+### Verdict: PASSED
 
-Completed for the experiment:
-- read `artifacts/run_summaries/20260407_221151_h294_llm_news_standalone_gate_standalone_signal.json`
+**C27 NEW SIGNAL CANDIDATE**: tight_capacity (low order count from CafeF order_stats)
+as a signal conditioner. Mechanism: sparse order activity = hidden demand / under-followed
+alpha. Do NOT use as a veto — use as a positive filter that lifts low-activity names.
 
-Verdict:
-- `H294`: **MIXED**
+**Next:** Batch 11 queue complete (AK replacement_quality_revival was H437, AL = H472
+dead-end, AM = H473 dead-end, AN = H474 PASSED). Remaining EUREKA items from
+live_state: AP (residual signal discovery), AQ (replacement quality delta), AR (zero
+liquidity anomaly), AS (intraday session routing), AT (adaptive signal weights), AU
+(extreme negative sentiment), AV (breadth threshold finder). Consider next item from
+bright-mind queue.

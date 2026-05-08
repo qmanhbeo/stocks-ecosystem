@@ -1,0 +1,75 @@
+{
+  "experiment": "semantic_novelty_saturation",
+  "hypothesis": "News volume may be harmful when semantic novelty is exhausted, while high novelty plus muted price response may be delayed alpha.",
+  "baseline_ic": 0.13354479678630032,
+  "exhaustion_lift": -0.04741306529857836,
+  "novel_delayed_lift": -0.07588250211424633,
+  "novel_responded_lift": -0.04540699589834718,
+  "first_lift": -0.007075287926097018,
+  "repeat_lift": -0.028832197107318283,
+  "exhaustion_hurts": true,
+  "delayed_alpha_signal": false,
+  "results": [
+    {
+      "state": "all_rows",
+      "ic": 0.13354479678630032,
+      "rows": 826404,
+      "years": 11
+    },
+    {
+      "state": "has_news",
+      "ic": 0.10383674605330709,
+      "rows": 174158,
+      "years": 11
+    },
+    {
+      "state": "no_news",
+      "ic": 0.14087713602807947,
+      "rows": 652246,
+      "years": 11
+    },
+    {
+      "state": "first_in_5d",
+      "ic": 0.1264695088602033,
+      "rows": 47322,
+      "years": 11
+    },
+    {
+      "state": "repeat_coverage",
+      "ic": 0.10471259967898204,
+      "rows": 230156,
+      "years": 11
+    },
+    {
+      "state": "high_attention",
+      "ic": 0.10383674605330709,
+      "rows": 174158,
+      "years": 11
+    },
+    {
+      "state": "exhaustion",
+      "ic": 0.08613173148772196,
+      "rows": 61516,
+      "years": 10
+    },
+    {
+      "state": "delayed_alpha",
+      "ic": 0.04519331041596401,
+      "rows": 112734,
+      "years": 11
+    },
+    {
+      "state": "novel_delayed",
+      "ic": 0.057662294672054,
+      "rows": 29616,
+      "years": 11
+    },
+    {
+      "state": "novel_responded",
+      "ic": 0.08813780088795314,
+      "rows": 4039,
+      "years": 11
+    }
+  ],
+  "verdict": "PASSED"
+}

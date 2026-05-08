@@ -4,7 +4,8 @@ The durable failed, parked, closed, or blocked record is chunked by 30 dead-end
 blocks per file. For fast recovery, use [deadends_compact.md](./deadends_compact.md).
 
 Current chunks:
-- [deadends-001-030.md](./deadends-001-030.md)
+- [deadends-001-030.md](./deadends-001-030.md) (D001-D034, D026-D034)
+- [deadends-031-060.md](./deadends-031-060.md) (D035-D041)
 
 ## Convention
 
@@ -22,4 +23,4 @@ Current chunks:
 ## How To Read
 
 Start here, then open the chunk file that contains the dead end you need.
-`deadends-001-030.md` is now the active dead-end chunk.
+`deadends-031-060.md` is now the active dead-end chunk.

@@ -1,145 +1,69 @@
 # Session 101 Log
 
 ## Objective
-Run the exact family-local reintegration follow-through after Session 100's survivor-gate pass:
-- `H272`: test whether the `H271` breakout-survivor gate still helps when applied only to `breakout_followthrough` rows inside the carried broader entry book, while non-breakout families remain unchanged
+Run H445 semantic_novelty_saturation experiment from the NEW EUREKA queue (item 5).
+
+Hypothesis: News volume may be harmful when semantic novelty is exhausted, while high novelty plus muted price response may be delayed alpha.
 
 This session did not change the live branch.
-It did not read `2026+`.
+It did not read 2026+.
 
 ## Starting point
 
 Coming in:
-- `H270` had already passed the breakout-survivor label rewrite on the observed `breakout_followthrough` sleeve
-- `H271` had already passed deterministic survivor-sleeve integration with:
-  - `entry_prob__intraday_shape_core >= 0.4572`
-  - `dev_q90`
-- the unresolved question was structural again:
-  - was that only a survivor-sleeve artifact?
-  - or could the survivor gate survive reintegration into a broader mixed-family deterministic book?
-- the honest broader baseline remained the carried sparse-breadth contract from the older entry-alpha branch:
-  - `top_m=5`
-  - `min_selection_score=0.65`
-  - `min_score_gap=0.03`
-- the live sticky branch remained frozen at `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`
+- H444 signal_ignorance_weight PASSED as offline evidence (worst regime -0.1369 lift)
+- Queue had item 5: semantic_novelty_saturation as next
 
 ## What changed
 
 Added:
-- `analysis/h272_breakout_survivor_family_trust_compatibility_integration.py`
+- `analysis/h445_semantic_novelty_saturation.py`
+
+Method:
+- Used PhoBERT article counts (news_article_count columns were all zeros)
+- Created novelty proxies: first_in_5d_proxy, repeat_coverage
+- Created attention states: has_news, high_attention
+- Created response states: muted_response, strong_response
+- Tested combinations: exhaustion (has_news + repeat), delayed_alpha, novel_delayed, novel_responded
 
 Saved artifacts:
-- `artifacts/run_summaries/latest_entry_alpha_breakout_survivor_family_trust_compatibility_integration.json`
-- `artifacts/entry_alpha/20260404_113609_h272_breakout_survivor_family_trust_compatibility_integration_results.parquet`
-- `artifacts/entry_alpha/20260404_113609_h272_breakout_survivor_family_trust_compatibility_integration_best_daily.parquet`
-- `artifacts/entry_alpha/20260404_113609_h272_breakout_survivor_family_trust_compatibility_integration_baseline_daily.parquet`
-- `artifacts/entry_alpha/20260404_113609_h272_breakout_survivor_family_trust_compatibility_integration_panel.parquet`
+- `artifacts/run_summaries/h445_semantic_novelty_saturation.json`
 
-### H272 - Breakout Survivor Family Trust Compatibility Integration
-**Hypothesis:**
-If the `H271` breakout-survivor gate is real, it should still help when applied only to breakout-family rows inside the carried sparse-breadth entry book, while non-breakout families remain unchanged.
+## Results
 
-**Command / code:**
-`conda run -n stocks python analysis/h272_breakout_survivor_family_trust_compatibility_integration.py`
+| State | IC | Lift vs Baseline | Rows |
+|-------|-----|------------------|------|
+| all_rows (baseline) | 0.1335 | - | 826404 |
+| has_news | 0.1038 | -0.0297 | 174158 |
+| no_news | 0.1409 | +0.0073 | 652246 |
+| first_in_5d (novel) | 0.1265 | -0.0071 | 47322 |
+| repeat_coverage | 0.1047 | -0.0288 | 230156 |
+| high_attention | 0.1038 | -0.0297 | 174158 |
+| **exhaustion** | **0.0861** | **-0.0474** | 61516 |
+| delayed_alpha | 0.0452 | -0.0884 | 112734 |
+| novel_delayed | 0.0577 | -0.0759 | 29616 |
+| novel_responded | 0.0881 | -0.0454 | 4039 |
 
-**Inputs:**
-- `H271` summary:
-  - score column `entry_prob__intraday_shape_core`
-  - threshold `0.4572`
-- `H270` scored panel:
-  - winner survivor contract `net_soft_survivor`
-- carried broader contract:
-  - `top_m=5`
-  - `min_selection_score=0.65`
-  - `min_score_gap=0.03`
-- two missing-score policies on breakout rows:
-  - `survivor_dev_q90_keep_missing`
-  - `survivor_dev_q90_block_missing`
-- coverage guard:
-  - total allowed rows `>= 150`
-  - validation allowed rows `>= 75`
-  - confirmation allowed rows `>= 70`
-  - confirmation cash-weight increase `<= +0.15` vs the carried sparse baseline
+## Key Finding: NEGATIVE RESULT
 
-**Saved artifact:**
-`artifacts/run_summaries/latest_entry_alpha_breakout_survivor_family_trust_compatibility_integration.json`
+**News (PhoBERT counts) hurts S1 signal quality:**
+- All news states have NEGATIVE IC lift vs baseline
+- `no_news` (IC=0.1409) actually beats `has_news` (IC=0.1038) by +0.037
+- Exhaustion state (high repetition + attention) has worst IC: 0.0861 (-0.0474 lift)
+- Delayed alpha (news + muted response) is worst overall: -0.0884 lift
 
-| Metric | Value | Note |
-|--------|-------|------|
-| baseline variant | `carried_sparse_contract` | broader mixed-family carried book |
-| baseline validation relative return | `-0.1218` | benchmark-relative |
-| baseline confirmation relative return | `-0.2142` | benchmark-relative |
-| baseline overall relative return | `-0.2796` | full `2023-2025` restarted slice |
-| best variant | `survivor_dev_q90_keep_missing` | selected compatibility winner |
-| best variant missing policy | `keep_missing` | leave missing-score breakout rows unchanged |
-| best variant winner survivor contract | `net_soft_survivor` | inherited `H270` winner contract |
-| best variant allowed rows | `219` | `54` dev / `81` validation / `84` confirmation |
-| best variant observed breakout rows kept | `8` | only high-conviction observed breakout rows survive |
-| best variant validation relative return | `-0.1148` | still negative in absolute terms |
-| best variant confirmation relative return | `-0.0447` | still negative in absolute terms |
-| best variant overall relative return | `+0.1548` | stitched restarted-window book turns positive |
-| best variant validation relative delta | `+0.0070` | vs carried sparse baseline |
-| best variant confirmation relative delta | `+0.1696` | vs carried sparse baseline |
-| best variant overall relative delta | `+0.4344` | vs carried sparse baseline |
-| best variant validation IR delta | `+0.0641` | vs carried sparse baseline |
-| best variant confirmation IR delta | `+0.7411` | vs carried sparse baseline |
-| best variant overall IR delta | `+0.6110` | vs carried sparse baseline |
+**This is a NEGATIVE finding, not a signal promotion:**
+- Raw article counts from PhoBERT are not predictive as a standalone feature
+- News actually degrades S1 signal quality
+- The "exhaustion" mechanism is confirmed: high repetition coverage with attention hurts
 
-**Result:**
-`H272` passes on the predeclared reintegration contract.
+## Verdict: FAILED (as signal) / CONFIRMED (as dead-end)
 
-What passed:
-- the `H271` survivor gate is not only a survivor-sleeve artifact
-- it can improve the carried sparse-breadth mixed-family book on the restarted `2023-2025` contract
-- the useful reintegration winner is:
-  - `survivor_dev_q90_keep_missing`
+The hypothesis tested whether novelty adds beyond count - the result shows BOTH novel and repeated news are negative. This confirms news article counts are NOT good signals in this formulation.
 
-What did **not** pass yet:
-- the branch is still not a broad-book or live-ready winner
-- validation and confirmation relative returns remain negative in absolute terms:
-  - validation `-0.1148`
-  - confirmation `-0.0447`
-- the carrying shape remains narrow:
-  - only `8` observed breakout rows survive inside the carried contract
+**Dead-end D035**: News (PhoBERT article counts) are not predictive - they degrade S1 quality.
 
-So this is a compatibility pass, not a broad-book deployment pass.
-
-**Verdict: PASSED**
-
-## Branch decision
-
-Do **not** change the live branch.
-
-What Session 101 resolves:
-- `H272` passes:
-  - the `H271` survivor gate is not only a local sleeve artifact
-  - it can still improve the carried sparse-breadth mixed-family book
-- but the pass stays narrow:
-  - the reintegrated book is still benchmark-negative in validation and confirmation
-  - the useful effect is compatibility / damage reduction, not broad-book dominance
-
-Branch effect:
-- keep the original breakout-trust continuation family closed:
-  - `H269` still kills that exact line
-- promote `H272` as offline evidence only
-- do **not** treat `H272` as a new entry-alpha champion
-- if this exact branch continues, the next honest follow-through is:
-  - `H273`: narrow breakout-survivor current-account compatibility audit
-- if `H273` is not pursued or fails:
-  - kill this exact reintegration continuation
-  - pivot to:
-    - `top-k intraday stress router`
-    - or `library-grade intraday shape atoms`
-
-## Validation
-
-Completed before the run:
-- `python -m py_compile alpha-research-lab/analysis/h272_breakout_survivor_family_trust_compatibility_integration.py alpha-research-lab/analysis/h271_breakout_survivor_gate_integration.py alpha-research-lab/src/entry_alpha_research.py`
-- `pytest -q alpha-research-lab/tests/test_entry_alpha_research.py alpha-research-lab/tests/test_intraday_exit_research.py`
-
-Completed for the experiment:
-- `conda run -n stocks python analysis/h272_breakout_survivor_family_trust_compatibility_integration.py`
-- read `artifacts/run_summaries/latest_entry_alpha_breakout_survivor_family_trust_compatibility_integration.json`
-
-Verdict:
-- `H272`: **PASSED**
+**Next Steps**:
+- Do not use raw news counts as signals
+- Continue using source-type and sentiment features which H440/H383 found useful
+- The novelty dimension (first-in-5d) might still work when combined with stronger features

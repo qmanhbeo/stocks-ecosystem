@@ -3,33 +3,55 @@
 What this file is for: current working state, active constraints or blockers,
 and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
-in dead-end chunks, and cheap recovery context in the compact files.
+in dead ends chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_320_log.md](./session_320_log.md)
-Last verified: [Session 320](./session_320_log.md), 2026-05-08
-(H440 news_novelty_first_repeat PASSED: First-in-5d IC=0.123 vs repeat IC=0.091 (+0.032 lift, 8/8 pos years); first+flow IC=0.161 is strongest news-state; F392)
-(H441 cross_ticker_correlation_shock FAILED: high vs low corr date lift +0.0033 only, below threshold; D032)
-(H440 PASSED found real news novelty signal - first-in-5d is stronger than repeat coverage)
-(H433 state_transition_not_event MIXED: D2 best (+0.0088 lift), but pattern inconsistent)
-(H432 volume_price_divergence FAILED: all divergence states have negative lift, hypothesis not supported)
-(H431 cross_sectional_rank_delta PASSED: C16 rank delta adds +0.0114 IC lift, 8/8 positive years, validation confirms)
-(H430 candidate_temperature_entropy MIXED: Q2 best in dev (+0.0105), but validation prefers high-entropy (+0.0143), inconsistent pattern)
-(H429 signal_half_life_router FAILED: all half-life classes degrade at longer horizons, no horizon-specific advantage)
-(H428 ranker_error_taxonomy FAILED: top S1 tickers IMPROVE next-day +0.0263 IC, no degradation found; D027)
-(H427 volume_attention_budget PASSED: mid-concentration Q3 has +0.0125 IC lift vs baseline, 8/8 positive years)
+Latest full session detail: [session_123_log.md](./session_123_log.md)
+Last verified: [Session 123](./session_123_log.md), 2026-05-08
+**QUEUE STATUS: batch 11 COMPLETE** — AK=H437 dead-end, AL=H472 dead-end, AM=H473 dead-end, AN=H474 PASSED (C27 candidate: tight_capacity)
+
+**Remaining EUREKA queue (unactivated):**
+- AP: residual_signal_discovery — S1 residual after C23-C26 removal
+- AQ: replacement_quality_delta — delta_S1 of entering vs exiting tickers
+- AR: zero_liquidity_anomaly — zero volume days × C16 pressure
+- AS: intraday_session_routing — session-specific IC by time-of-day (needs 1H data)
+- AT: adaptive_signal_weights — IC-weighted C23-C26
+- AU: extreme_negative_sentiment — capitulation-reversal (extreme bottom PhoBERT)
+- AV: breadth_threshold_finder — threshold where narrow vs broad switches signal efficacy
+
+---
+
+## Bright-Mind Creative EUREKA (2026-05-08)
+
+Based on lab's full memory: all C23-C26 share vol_expansion×illiquidity — they might be SAME mechanism. H449 killed acceleration. H468 narrow>broad markets. Multiple barrier labels exist but unused.
+
+**Ranked by upside + novelty + testability:**
+
+1. **AO: multi_horizon_label_synthesis** — Route signals to label where they work. C23 works at 1d but works worse at 5d? Test C23/C24/C25/C26 IC at 0.5d/1d/5d/10d/20d. Each has natural horizon — use as router.
+
+2. **AP: residual_signal_discovery** — After removing C23-C26 vol_expansion correlation, what's LEFT? Use S1 residualized on C23-C26 vs forward IC. If positive, independent signal exists. If zero, all current signals are vol_expansion proxies — the lab needs NEW dimensions.
+
+3. **AQ: replacement_quality_delta** — H388 tested FRESHNESS, not QUALITY. Test delta_S1 = new_ticker_S1 - old_ticker_S1. Bucket by positive/negative delta + forward IC. Quality CHANGE predicts, not freshness.
+
+4. **AR: zero_liquidity_anomaly** — EXTREME illiquidity (zero volume days) with high C16 = hidden demand that couldn't execute? Test zero-volume tickers × C16 pressure. If positive, hidden demand.
+
+5. **AS: intraday_session_routing** — Same signal different IC in morning vs afternoon? Test S1/C16/C23 IC by time-of-day buckets (9-11:30 vs 13-15:00). Session as router.
+
+6. **AT: adaptive_signal_weights** — Weight C23-C26 by their RECENT 60d IC, not equal weight. If IC-weighted outperforms, adaptive weighting adds value.
+
+7. **AU: extreme_negative_sentiment** — EXTREME negative PhoBERT (bottom 10%) + next-day reversal? H383 passed positive; test EXTREME negative for capitulation-reversal.
+
+8. **AV: breadth_threshold_finder** — H468 found narrow>broad. Find the THRESHOLD number (not quintile) where signal switches. Is it 20% breadth? 30%?
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)
 - [findings_compact.md](./findings_compact.md)
 - [deadends_compact.md](./deadends_compact.md)
-
-Source durable memory:
-- [findings.md](./findings.md)
-- [findings-301-330.md](./findings-301-330.md)
 - [findings-331-360.md](./findings-331-360.md)
 - [findings-361-390.md](./findings-361-390.md)
+- [findings-391-420.md](./findings-391-420.md)
 - [deadends.md](./deadends.md)
 - [deadends-001-030.md](./deadends-001-030.md)
+- [deadends-031-060.md](./deadends-031-060.md)
 - [signal_library.md](./signal_library.md)
 - [portfolio_policy_library.md](./portfolio_policy_library.md)
 
@@ -317,14 +339,9 @@ H427 volume_attention_budget PASSED (+0.0125 IC), additive pattern confirmed
    rows into easy/slow interpretation buckets; require 5d payoff lift versus
    H397 official-supported controls and same-ticker non-event dates.
 
-7. **prop_foreign_predator_prey**: foreign and proprietary flows may be useful
-   only as a conflict/absorption game, not as raw net-flow ranks. Connection:
-   standalone foreign/proprietary paths and foreign additive H418 failed, but
-   the raw surfaces now exist. Smallest honest test: predeclare foreign-sell/
-   prop-buy absorption, foreign-buy/local-distribution, and prop-following-
-   foreign states crossed only with Vol+S1 strength, C16, and news support;
-   compare to raw foreign, raw proprietary, H418, and random same-support
-   controls.
+7. **prop_foreign_predator_prey**: [TESTED: H443 FAILED] - All predator-prey states
+    (ff_sell_pt_buy IC=0.0621, ff_buy_pt_sell IC=0.0959) are BELOW baseline IC=0.1335.
+    Raw flows also underperform baseline. Dead-end D034.
 
 8. **selector_hysteresis_field**: the portfolio should resist or accept
    replacement based on boundary energy around current holdings, not simply
@@ -349,7 +366,7 @@ D. **volume_price_divergence** → H432 FAILED: All states negative lift.
 
 E. **sector_rotation_reversal** → DATA-GATED.
 
-F. **signal_ignorance_weight** → Not tested yet.
+F. **signal_ignorance_weight** → H444 PASSED (offline evidence): worst regime IC=-0.0034 vs baseline 0.1335 (-0.1369 lift); best regime IC=0.2606 (+0.1271); needs lagged prediction for deployable version
 
 G. **state_transition_not_event** → H433 MIXED: D2 best (+0.0088).
 
@@ -406,7 +423,7 @@ D. **volume_price_divergence** → H432 FAILED: All divergence states negative l
 
 E. **sector_rotation_reversal**: DATA-GATED - no sector data available.
 
-F. **signal_ignorance_weight**: Not tested yet.
+F. **signal_ignorance_weight**: [TESTED: H444 PASSED offline evidence] - worst regime low_ic_low_temp IC=-0.0034 vs baseline 0.1335 (-0.1369 lift); best regime high_ic_high_temp IC=0.2606 (+0.1271). Regimes defined with lookahead, needs lagged prediction for deployable version.
 
 G. **state_transition_not_event** → H433 MIXED: D2 best (+0.0088 lift), pattern inconsistent.
 
@@ -465,6 +482,80 @@ Haar wavelets add no signal. Item 12 was activated as H405 and failed:
 sector event lightcone adds no signal. Item 13 was activated as H406 and failed:
 conservation residual inversely predicts. Item 14 was activated as H407 and passed:
 phase lag cross-product adds +0.022 IC. Continue with next item.
+
+---
+
+**NEW BRIGHT-MIND EUREKA (2026-05-08 batch 3 - from bright-mind analysis):**
+
+Based on H43x-H44x failures and unexplored data:
+- H440 showed news NOVELTY matters (+0.032 IC lift)
+- Signal ignorance FAILED - S1/C16 are robust across all regimes
+- Rank acceleration FAILED - second derivative is noise
+- Many data sources exist but aren't being used as signals (tradability, bid-ask)
+
+**New creative hypotheses:**
+
+U. **order_book_imbalance_as_signal**: Buy-sell volume imbalance (not net volume) predicts differently than C16. H402 tested fragmentation RATIO, not raw imbalance. First test: (buy_volume - sell_volume)/(buy_volume+sell_volume) cross-sectional rank vs random. Uses order_stats data. Upside: orthogonal to C16.
+
+V. **capacity_as_signal_not_veto**: Tradability tightness should be a signal input, not binary veto. H391 tested blocked->released, not capacity TIGHTNESS. First test: tradability percentile buckets (not binary) vs always-buyable. Upside: captures hidden demand in tight-but-buyable states.
+
+W. **cross_sectional_dispersion_regime**: Market dispersion LEVEL is a regime indicator that changes signal efficacy. C3 tested dispersion AS FEATURE, not as REGIME GATE. First test: gate C16/Vol/S1 IC by dispersion quintile. Upside: route signals to regimes where they work.
+
+X. **liquidity_adjusted_return**: Return normalized by Amihud illiquidity separates real vs noisy moves. H432 tested bucketed divergence, not continuous ratio. First test: return_5d / Amihud_illiq as rank vs S1. Upside: separates real force from crowd blowoff.
+
+Y. **news_velocity_as_signal**: RATE of news arrival predicts differently than novelty. H440 tested first vs repeat, not FAST vs SLOW arrival. First test: 3d article count delta (velocity) buckets. Upside: captures event unfolding before price adjusts.
+
+Z. **sector_momentum_regime_not_filter**: Sector momentum direction as regime selector, not ticker filter. S248-S252 tested sector as FILTER (failed); as REGIME not tested. First test: C16/S1 IC in sector-up vs sector-down days. Upside: explains signal regime dependency.
+
+AA. **price_limit_exhaustion_state**: Near-ceiling + declining C16 = buyer queue exhaustion, not demand. C7 passed positive ceiling count; exhaustion not tested. First test: ceiling_count>=3 AND c16_rank_delta<0 vs baseline. Upside: captures crowd exhaustion before reversal.
+
+---
+
+**NEW BRIGHT-MIND EUREKA (2026-05-09 batch 4 - from H444/H445 analysis):**
+
+Based on H444/H445 findings:
+- H444: S1 has NEGATIVE IC (-0.0034) in "low IC + low temp" regimes vs +0.1271 in "high IC + high temp" - strong regime effect
+- H445: "no_news" (IC=0.1409) beats "has_news" (IC=0.1038) by +0.037 - absence is signal
+- H445: Exhaustion state (repeat+attention) worst at -0.0474 lift - attention can be harmful
+
+**New creative hypotheses:**
+
+AB. **inverted_signal_router**: H444 shows S1 hurts in low-IC/low-temp regimes. Instead of predicting regime, try INVERTING signals in bad regimes. Mechanism: buy low-S1 in bad regimes, buy high-S1 in good regimes. First test: regime-scoped IC buckets vs always-high-S1 baseline. Upside: captures the insight that S1 reversals in bad regimes.
+
+AC. **no_news_alpha**: H445 showed "no news" beats "has news" by +0.037 IC. Mechanism: absence of news may indicate low attention/more alpha. First test: no-news vs has-news IC comparison, then no-news + other features. Upside: counter-intuitive but real - the absence of attention is the edge.
+
+AD. **exhaustion_avoidance_state**: H445 exhaustion (repeat+attention) worst at -0.0474. Build a state that AVOIDS exhaustion rather than predicts it. Mechanism: low repetition + low attention or no-news states as filters. First test: add exhaustion filter vs raw signal baseline. Upside: protects against the worst-performing states.
+
+AE. **ticker_persistence_taxonomy**: H428 showed top S1 tickers IMPROVE next-day (momentum). But maybe different stocks have different PERSISTENCE profiles. Connection: H427 volume-attention budget found mid-concentration works. First test: cluster tickers by historical momentum persistence, test if high-persistence tickers have different optimal holding periods. Upside: personalized holding period per ticker.
+
+AF. **price_distribution_regime**: The lab has 0.5%/1%/1.5%/10d/20d barrier labels but uses only 1d. Different labels capture different return distributions. Mechanism: price distribution skew/kurtosis as regime indicator. First test: compare S1 IC across different barrier labels, test if label choice matters for different market conditions. Upside: multi-horizon alpha.
+
+AG. **microstructure_asymmetry**: VN market has specific auction mechanics - opening/closing auctions behave differently. Mechanism: same signal might work differently in morning vs afternoon sessions. First test: split by session (9:00-11:30 vs 13:00-15:00), test if IC differs. Upside: session-specific alpha.
+
+AH. **crowd_exhaustion_reversal**: H445 exhaustion state (high repeat + high attention) worst at -0.0474. Could the REVERSAL work? Mechanism: after exhaustion, mean-reversion might be stronger. First test: exhaustion->next-day reversal vs baseline. Upside: captures post-exhaustion opportunities.
+
+AI. **regime_adaptive_k**: K selection might need to adapt to regime. Mechanism: high-IC regimes support larger K, low-IC regimes need smaller K. First test: compare top1/top3/top5 performance in high vs low IC regimes. Upside: adaptive sizing improves risk-adjusted returns.
+
+AJ. **order_flow_momentum**: [TESTED: H449 FAILED/dead-end D041] - C16 acceleration is NOT predictive. c16_accel_expanding IC=0.1219 (-0.0069), c16_accel_neutral IC=0.1287 (-0.0001), c16_accel_contracting IC=0.1303 (+0.0015). Confirms H443: foreign flow momentum also NEGATIVE. Confirms H446/H447: vol LEVEL matters, not vol CHANGE. Dead-end D041 for acceleration/momentum signals. Use C16 level as conditioner, not derivative.
+
+---
+
+**NEW EUREKA SPARKS (2026-05-08 batch 2 - generated from bright-mind analysis):**
+
+**Status: ALL COMPLETED (H453-H462)**
+
+1. **order_flow_imbalance_momentum** → H453 PASSED: C21 NEW SIGNALS (+0.020-0.026 IC vs level-only)
+2. **intraday_volume_profile_at_close** → H457 SKIPPED: data too sparse (625 rows, 2023+)
+3. **sector_momentum_as_regime_not_filter** → H455 FAILED: D038 — sector differences tiny
+4. **activation_rate_as_hidden_signal** → H462 FAILED: D040 — rank acceleration anti-predictive
+5. **exit_performance_correlation** → H458 PENDING: needs exit data not yet acquired
+6. **macro_regime_cross_asset_signal** → H459 PENDING: data not available
+7. **spread_turnover_regime** → H456 MIXED: D039 — wide spread OK, tight too sparse for hard gate
+8. **volume_regime_dependency_of_signals** → H460 PASSED: vol_expansion universal router confirmed
+
+---
+
+**Legacy Branches (Parked/Pending Review):**
 
 1. `oracle_shadow_regime_distiller`: the invalid S24x target-derived states
    were accidentally measuring next-day barrier-hit breadth; predict that
@@ -1879,15 +1970,50 @@ Triple Storm controls.
   is stronger when dimension is below `1.15`. Original 1-minute version is
   blocked until true minute bars exist.
 
+## Batch 9 Results (Sessions 119, 2026-05-08)
+
+- H469 `foreign_flow_momentum`: MIXED. ff_decel_exp IC=0.1376 (+0.0074, 11/11) — marginal, not promotion.
+  H443 killed raw direction; momentum doesn't rescue it. Soft filter only.
+- H470 `vwap_deviation_regime`: PASSED. **NEW SIGNAL C25: vwap_below_10_exp IC=0.1733 (+0.0431, 11/11)**.
+  VWAP far below + vol expansion in illiquid stocks. Same mechanism as C23.
+- H471 `order_flow_microstructure_regime`: PASSED. **NEW SIGNAL C26: buy_heavy_illiq_exp IC=0.1889 (+0.0587, 11/11)**.
+  Buy-heavy order flow + illiquidity + vol expansion = institutional hidden demand.
+
+**Universal pattern:** ALL strong signals share structure: **behavior + illiquidity + vol_expansion**.
+Signal ranking: C23 (0.2616) > C21b (0.2369) > C24 (0.2353) > C21a (0.2320) > C22 (0.2170) > C26 (0.1889) > C25 (0.1733) > C20 (0.2105).
+D041 CONFIRMED: Do NOT combine C23/C24/C25/C26 as composite entries — each captures different regime facet.
+
 ## Immediate Next Actions
 
-- Next branch: hidden-flow item 16, `candidate_decision_boundary_curvature`,
-  unless a higher-priority operator request supersedes it.
-- Keep H426 forced-seller daily states killed under the current entry-alpha
-  consumer; only reopen with a delayed-entry or intraday/queue absorption
-  contract.
-- Do not retune the live sticky branch or add failed/parked hidden-flow states
-  as broad portfolio allocators.
+- H473 (market_regime_duration_combo) script ready — run next
+- H474 (session_timing_signal), H475 (price_limit_floor_symmetry), H476 (illiq_vol_decoupling) queued after
+- Keep H426 forced-seller daily states killed; only reopen with delayed-entry or intraday/queue absorption contract
+- Do not retune the live sticky branch or add failed/parked hidden-flow states as broad portfolio allocators
+
+## Do Not Reopen Unless
+
+- Do not retune timing rules on `2026+`; 2026 remains monitor/forward context
+  unless the user explicitly authorizes that branch.
+- Do not tune more C16 macro/gap/streak/extreme/sector-relative/persistence
+  filters; those mechanisms are already failed.
+- Do not continue standalone foreign-flow windows, foreign-support-on-C5
+  variants, proprietary-flow rank/conflict variants, or sector-pressure
+  variants unless a materially different data source, target, or market
+  contract exists.
+- Do not tune more event-v2 overlays, entry-label variants, payoff-shape
+  filters, or sparse-clock variants unless the local Ollama event-family data
+  changes the event representation or a downstream consumer contract changes.
+- Do not tune more dividend or legal-holiday sparse-clock portfolio bonuses
+  under the current top-5 executable selector.
+- Do not continue linear smart-exit feature-set tweaks unless richer post-entry
+  state/data or a materially different model contract appears.
+
+## Immediate Next Actions
+
+- Next batch: H472 (price_range_compression_regime), H473 (market_regime_duration_combo), H474 (session_timing_signal)
+- Bright-mind batch 10 additions (EM1-EM12) added to hypothesis queue below
+- Keep H426 forced-seller daily states killed under the current entry-alpha consumer; only reopen with a delayed-entry or intraday/queue absorption contract.
+- Do not retune the live sticky branch or add failed/parked hidden-flow states as broad portfolio allocators.
 
 ## Do Not Reopen Unless
 
@@ -1919,6 +2045,113 @@ Triple Storm controls.
 - Timing source scorecard:
   [timing_data_source_scorecard.csv](./timing_data_source_scorecard.csv)
 
+## Bright-Mind EUREKA — Batch 10 (From Session 119 Results)
+
+Based on H469-H472 findings, the following structural insights drive new hypotheses:
+
+**Confirmed pattern:** ALL strong signals = **specific behavior + illiquidity + vol_expansion**
+- C23/C24/C25/C26 all share this structure, but from DIFFERENT behavioral angles
+- D041 CONFIRMED: signals are NOT combinable — they capture different regime facets
+- vol_expansion is universal amplifier, illiquidity is the condition, behavior is the signal
+
+**Key structural observations:**
+1. **C23 is strongest** (0.2616) — Amihud illiquidity × vol_expansion. Under-followed stocks amplify everything.
+2. **C472 OPPOSITE of hypothesis** — expanded range (high H-L %) works MUCH better than compressed range. range_expanded_illiq_exp = 0.2209 (+0.0907), range_compressed_illiq_exp = 0.1232 (-0.007). This is a CONTRARIAN insight: compressed range does NOT predict breakout.
+3. **All signals tested so far are behavioral/price/volume.** No candidate-panel or flow-history features have been tested as signal primitives (only as regime gates that failed).
+4. **The lab has NOT tested signal BLENDING** — not combination, but rotation. When C23 fires, C26 also likely fires. The lab should test whether different signals fire on DIFFERENT days (portfolio rotation) vs same days (redundancy).
+5. **Exit is unexplored** — all tests use 1d barrier IC. No signal has been tested for exit quality (holding 2-5 days vs S1-only exit).
+
+---
+
+### NEW HYPOTHESES (Batch 10)
+
+**BE1. signal_rotation_beta (Signal Rotation Beta)**
+- **Claim:** Signals fire on different market "flavors" — when C23 fires, C26 may not. Test whether rotating between signals by their VOLUME PROFILE (not time) improves.
+- **Mechanism:** Each signal captures a different flavor of vol_expansion regime. C23 = illiquidity flavor, C24 = ceiling flavor, C25 = VWAP flavor, C26 = flow flavor. If flavors are sufficiently uncorrelated over time, rotation between them reduces drawdown while maintaining IC.
+- **Why not killed:** D041 confirmed signals are NOT combinable (combinatorial) — but rotation (non-simultaneous use) was never tested. D041 only killed stacking, not temporal rotation.
+- **Evidence:** D041 shows C20/C21/C22 combos are WORSE (same-day redundancy), but says "signals are ADDITIVE in portfolio sense (different days they fire)". If different days fire, rotation is the exploit.
+- **Required data:** Historical signal firing days from S1 panel + OHLCV + order_stats
+- **First test:** Compute daily signal firing overlap for C23/C24/C25/C26; if mean co-occurrence < 30%, test equal-weight rotation vs best single signal in walk-forward. If co-occurrence > 60%, rotation adds nothing.
+- **Upside:** If signals capture different regime flavors, rotation could increase Sharpe 2-3x while maintaining IC.
+
+**BE2. return_velocity_regime (Return Velocity vs Price Acceleration)**
+- **Claim:** H472 confirmed expanded range (0.2209) works, compressed range (-0.007) fails. But what about the DIRECTION of range change? Stocks whose daily range is GROWING (from compressed to expanded) vs stocks whose range is SHRINKING (from expanded to compressed) may have opposite behaviors.
+- **Mechanism:** D036 found low_return_low_vol (contrarian) is strong. But the DIRECTION of range velocity might matter: expanding from compressed = release energy building, contracting from expanded = exhaustion. This is a second-derivative test.
+- **Why not killed:** H472 tested STATIC range level, not DYNAMIC range velocity. No one tested range ACCELERATION.
+- **Evidence:** H472: range_expanded IC=0.2209, range_compressed IC=0.1077. The DIRECTION of change between days was never tested.
+- **Required data:** OHLCV for daily range computation + lagged range state
+- **First test:** Define range_accel = (today_range_pct - yesterday_range_pct) > 0; bucket into range_accel + illiq + vol_expansion vs range_decel + illiq + vol_expansion. Test vs C16 baseline.
+- **Upside:** Second-derivative of range captures energy accumulation vs dissipation. Could rival C23 if energy release hypothesis holds.
+
+**BE3. order_size_momentum_inversion (Order Size Momentum Inversion)**
+- **Claim:** H471 found buy_heavy works (+0.0587), sell_heavy works (+0.0526) in illiq+expansion. But what about the MOMENTUM of order SIZE? Stocks where avg buy size is GROWING vs SHRINKING may have opposite outcomes, independent of direction.
+- **Mechanism:** avg_buy_size is the cleanest proxy for institutional vs retail (H402: avg buy size IC=+0.0303). If avg buy size MOMENTUM captures institutional conviction building, growing size = stronger institutional support. H471 tested imbalance level + momentum, but not SIZE momentum.
+- **Why not killed:** H471 tested imbalance (buy/sell ratio) momentum, not SIZE momentum. H402 confirmed avg buy size is meaningful alone. No one tested SIZE momentum in illiq+vol regime.
+- **Evidence:** H471: buy_heavy_illiq_exp = 0.1889, sell_heavy_illiq_exp = 0.1828. Both work! This suggests DIRECTION is less important than PRESENCE of institutional flow. SIZE momentum captures this better than imbalance.
+- **Required data:** order_stats (avg_buy_order_volume, avg_sell_order_volume) from `data/order_stats/cafef/order_stats_daily.parquet`
+- **First test:** Compute avg_buy_size_delta_5d; bucket into size_growing + illiq + vol_expansion vs size_shrinking + illiq + vol_expansion. Test vs baseline and vs H471 buy_heavy states.
+- **Upside:** If institutional conviction momentum (size growth) is the signal, this could be stronger than imbalance alone. Could beat C26 (0.1889).
+
+**BE4. illiq_vol_decoupling (Illiquidity-Volume Decoupling)**
+- **Claim:** All signals use illiquidity + vol_expansion together (C23/C25/C26). But what if the TRUE signal is their DECOUPLING — illiquid stocks WITHOUT vol expansion, or liquid stocks DURING vol expansion?
+- **Mechanism:** The lab has ONLY tested the COMBO (illiq + exp). It has NEVER tested the ANTI-COMBO. What if illiquid stocks INDEPENDENT of vol expansion are the best signal? Or what if LIQUID stocks during vol expansion are NEGATIVE (crowded)?
+- **Why not killed:** The lab never tested ANTI-combos. D041 killed combinations of C20/C21/C22, not combinations of regime conditions with illiquidity.
+- **Evidence:** C23: high_illiq alone IC=+0.2029 (+0.0731). vol_expansion alone IC=+0.1753. high_illiq_expansion IC=+0.2616. But what about high_illiq WITHOUT vol_expansion? Or liquid (low_illiq) WITH vol_expansion?
+- **Required data:** OHLCV for Amihud + vol regime
+- **First test:** Define illiq_high (top 20%), illiq_low (bottom 20%), vol_exp (top 20%), vol_contraction (bottom 20%). Test all four combinations: illiq_high×exp (C23), illiq_high×contraction, illiq_low×exp, illiq_low×contraction. The ANTI-combos may be informative.
+- **Upside:** If illiq_high × vol_contraction (illiquid calm) or illiq_low × vol_expansion (liquid panic) has interesting IC, the signal space expands significantly.
+
+**BE5. price_limit_floor_symmetry (Price Limit Floor vs Ceiling Asymmetry)**
+- **Claim:** C24 (multi-day CEILING pressure) works at IC=0.2353. But the lab has NEVER tested FLOOR pressure (stocks hitting -7% limit repeatedly). Floor pressure could mean capitulation = reversal or capitulation = more pain.
+- **Mechanism:** VN market has symmetric ±7% limits. C24 tested CEILING (upside pressure). FLOOR (downside pressure) could be a different signal: forced selling exhaustion, or institutional support failure. No one tested it.
+- **Why not killed:** H467 tested near-ceiling (+5% to +7%) and limit_2_of_3. H115 tested price_limit_standalone. None tested FLOOR analogs. H393 (nihilist_reversal) was parked, not tested.
+- **Evidence:** No data on floor analogs in current session logs. H467 ceiling_count_3d >= 2 = +0.2353. Floor equivalent is unexplored.
+- **Required data:** OHLCV for price_change_raw parsing (already implemented in H467)
+- **First test:** Parse price_change_raw for -5% to -7% (approaching floor), floor_count_3d >= 2 (multi-day floor). Test floor_approaching + vol_expansion + illiq vs floor_2_of_3 + vol_expansion + illiq. Compare to C24 ceiling analogs.
+- **Upside:** If floor pressure = capitulation + reversal, this could be a strong contrarian signal. Symmetry suggests if ceiling works, floor might too.
+
+**BE6. intraday_recovery_regime (Intraday Shape as Signal Primitive)**
+- **Claim:** I1 (reduced-shape intraday disagreement) survived as offline-only because 1H data only covers 2023+. But the LAB HAS 1H data for 2023-2025. A new test: does intraday RECOVERY shape in the 1H bars predict 1d barrier IC for the NEXT day, independent of S1/C16?
+- **Mechanism:** "First-half down, second-half up" = intraday absorption. The lab tested I1 reduced-shape but got limited by scope. A new angle: use the 1H bar's SHAPE (not just reduced axes) as a signal primitive, not a filter. Specifically: first-half return, second-half return, recovery ratio = (close-open)/(high-open) for the day, from 1H bars.
+- **Why not killed:** I1 was constrained to 2023-2025 by source data limitations. A new test with fresh 1H data and a different representation (recovery ratio vs reduced-shape atoms) is materially different.
+- **Evidence:** I1: fade_tension_disagreement IC +0.0323/+0.0367/+0.0202. That's positive but weak. The recovery ratio approach is untested.
+- **Required data:** 1H adjusted bars for 2023-2025 (exists: `data/stock/gia_lich_su_*_1H.parquet` or similar)
+- **First test:** Compute recovery_ratio = (close - open) / (high - low) from 1H bars, bucket into recovery (>0.5), neutral (0.3-0.5), fade (<0.3), test in illiq+expansion regime. Compare to I1 reduced-shape.
+- **Upside:** If recovery ratio is a clean signal primitive with full 2023-2025 coverage, it could become a published signal like C16-Triple.
+
+**BE7. turnover_quality_regime (Turnover Quality vs Turnover Quantity)**
+- **Claim:** The lab uses vol_expansion (QUANTITY of volume) as regime. But TURNOVER QUALITY (buy vs sell turnover ratio) may be more important than volume level. D036 found volume adjusted return works in contrarian mode — but TURNOVER quality in vol expansion was never tested.
+- **Mechanism:** volume = quantity. buy_vol / (buy_vol + sell_vol) = quality. H471 tested imbalance (buy-sell)/(buy+sell) which is quality-adjacent. But what about turnover quality MOMENTUM: is quality improving or deteriorating?
+- **Why not killed:** H471 tested level + momentum of IMBALANCE, not quality. H453 tested imbalance momentum. Turnover QUALITY (buy% of total) not tested.
+- **Evidence:** H471: buy_heavy_illiq_exp = 0.1889. buy_heavy = imbalance > 0.05. But what if buy% of total turnover is more informative than imbalance ratio? And what if the MOMENTUM of buy% is the signal?
+- **Required data:** order_stats buy/sell volumes to compute buy_pct_of_total + its 5d delta
+- **First test:** Compute buy_pct_total = buy_vol / (buy_vol + sell_vol), buy_pct_delta_5d; test buy_pct_top20 + buy_pct_growing + illiq + vol_expansion vs vs buy_pct_top20 + buy_pct_shrinking + illiq + vol_expansion.
+- **Upside:** Turnover quality captures institutional vs retail more directly than imbalance. Growth in quality = institutional conviction building.
+
+**BE8. cross_signal_timing_lag (Signal Timing Asymmetry)**
+- **Claim:** The lab tests signals on SAME day as target (1d barrier). But what if signals work DIFFERENTLY with a 1-3 day LAG? C24 multi-day ceiling (2 hits in 3 days) already showed temporal structure matters. What about testing signals with explicit LAG gates?
+- **Mechanism:** C24 worked because sustained pressure over multiple days has delayed release. Maybe other signals ALSO work better with lag. Test: signal fires today, but target is T+2 or T+3, not T+1. The 1d barrier is too short for some signals to fully express.
+- **Why not killed:** ALL signals in the library were tested against 1d barrier IC. No signal was tested against T+2/T+3 barriers as a FIRST test. This is a LABEL DIFFERENCE, not a feature difference.
+- **Evidence:** C24 (multi-day ceiling) is essentially a 2-3 day lagged signal — the signal builds over days, release happens next day. This works. If this works for ceiling, it might work for other signals.
+- **Required data:** Existing signals + target at T+2, T+3 (not T+1)
+- **First test:** Retest C23 (high_illiq_expansion) with 1d, 2d, 3d barrier labels. Compare IC. If C23 IC at 2d is similar to 1d, the signal is robust across horizons. If IC at 2d is MUCH higher, signal timing is the exploit.
+- **Upside:** If signals have optimal horizons beyond 1d, this opens a new axis for signal optimization. Could double or triple the usable signal set.
+
+---
+
+### Hypothesis Queue (Ranked by upside, novelty, feasibility)
+
+1. **BE4 illiq_vol_decoupling** — EASY, uses existing data, potentially large signal space expansion. First test can kill or advance quickly.
+2. **BE1 signal_rotation_beta** — MEDIUM, requires overlap analysis, could fundamentally change portfolio construction if signals are temporally complementary.
+3. **BE2 return_velocity_regime** — EASY, extends H472 finding, second-derivative of range has clear mechanism.
+4. **BE5 price_limit_floor_symmetry** — EASY, uses existing price_change_raw parsing from H467, symmetry argument compelling.
+5. **BE7 turnover_quality_regime** — MEDIUM, extends H471, order_stats already loaded, quality vs quantity distinction is novel.
+6. **BE3 order_size_momentum_inversion** — MEDIUM, extends H471, avg_buy_size momentum not tested.
+7. **BE6 intraday_recovery_regime** — HARDER, needs 1H data verification, limited scope.
+8. **BE8 cross_signal_timing_lag** — MEDIUM, changes label target, needs careful 1d vs 2d vs 3d comparison design.
+
+**Note:** Do NOT assign H numbers until branches are intentionally activated. These are queue entries, not active experiments.
+
 ## Working Rules
 
 - For any material experiment, save a compact result summary and update the
@@ -1935,3 +2168,219 @@ Triple Storm controls.
     memory changed, with source anchors included
 - Keep this file focused on current state and immediate action. If a detail is
   not needed to decide the next pass, move it to a source note or compact view.
+
+---
+
+## Bright-Mind EUREKA Additions (Batch 10, 2026-05-08)
+
+Mining failures and the universal pattern (behavior + illiquidity + vol_expansion → strong signal).
+All signals C18-C26 share vol_expansion + illiquidity as amplifier. What gaps remain?
+
+### EM1: Return Asymmetry Amplification
+**Claim:** High-return stocks in vol expansion behave OPPOSITE to low-return. H466 showed
+exhaustion = continuation (momentum). But maybe asymmetry is the key: stocks with LARGE
+positive returns amplify differently than modest gains.
+**Mechanism:** Large positive return + illiq + vol_expansion = institutional accumulation
+signature (they moved the price). Small positive return + illiq + vol_expansion = retail
+chase. The SIZE of the move encodes who moved it.
+**Evidence:** H466 (two_days_exhaustion IC=0.2013), D036 (low_return_low_vol IC=0.204),
+H464 (Friday negative — large week-end exposure = negative)
+**Why not killed:** D036 found LOW return works, but never tested LARGE return WITH
+illiq+expansion as a distinct state. The asymmetry within "positive return" was never tested.
+**First test:** Large_return (top 20% of positive returns) × illiq × vol_expansion vs
+moderate_return × illiq × vol_expansion vs C23/C26 controls.
+**Upside:** Could split the current unified signals into size-scoped versions.
+
+### EM2: Imbalance VOLUME vs Imbalance RATIO
+**Claim:** The signals (C20/C21/C26) use ORDER IMBALANCE RATIO (buy-sell)/(buy+sell).
+But maybe ABSOLUTE imbalance VOLUME matters more — large buy flow on a big-cap stock
+vs small-cap with the same ratio are completely different.
+**Mechanism:** Imbalance RATIO = direction only. Imbalance VOLUME = real money flow.
+Institutional sponsorship is measured in billions, not percentages.
+**Evidence:** C26 (buy_heavy_illiq_exp IC=0.1889) uses RATIO > 0.05. H451/H453 used RATIO.
+H469 foreign flow uses ABSOLUTE billions. The lab never mixed the two.
+**Why not killed:** No test has crossed imbalance RATIO × imbalance VOLUME magnitude
+in vol_expansion with illiq. H469 was momentum of ABSOLUTE flow, not magnitude of flow × ratio.
+**First test:** Buy_heavy RATIO × high ABSOLUTE imbalance volume × illiq × vol_expansion
+vs buy_heavy RATIO × low abs volume vs C26 controls.
+**Upside:** Could reveal that the RATIO signal is driven by a subset of high-volume rows.
+
+### EM3: Bid-Ask Spread as Illiquidity Proxy
+**Claim:** The lab uses Amihud illiquidity (C23) but never uses bid-ask spread as an
+illiquidity proxy. Spread captures information not in turnover-based measures.
+**Mechanism:** High spread = informed traders demand compensation = illiquid. Spread may
+predict differently than Amihud in different regimes.
+**Evidence:** C23 (Amihud IC=0.2616) is strongest signal. H122 bid-ask spread FAILED
+standalone (IC ~0.01), but standalone is not the same as regime combination.
+**Why not killed:** H122 was standalone, never crossed with vol_expansion. D039 found
+spread has amplification effects (wide spread + buy_heavy = +0.0948 lift).
+**First test:** Spread × vol_expansion combo, spread × illiq × vol_expansion vs C23 controls.
+**Upside:** Spread-based illiq may capture a different dimension than Amihud-based illiq.
+
+### EM4: Price Limit FRICTION as Signal (Not Just Count)
+**Claim:** C24 tests how many times a stock hit the limit. But the FRICTION of hitting
+the limit (time at limit, how close to limit it stopped, ratio of limit touches to
+total volume) may encode information about queue urgency.
+**Mechanism:** Stock at limit for 30 minutes vs 4 hours = different queue dynamics.
+Stock stopped at +6.9% vs +7.1% = different ceiling proximity.
+**Evidence:** C24 (limit_2_of_3 IC=0.2353). C22 (approaching_ceiling IC=0.2170).
+H467 showed multi-day BEATS single-day (+0.0191). The COUNT works, but not the QUALITY.
+**Why not killed:** No test has measured TIME AT LIMIT or proximity ratio. OHLCV data
+has intraday (1H) bars with open/high/low/close — can measure time proxies.
+**First test:** Compute time-at-limit proxy (H-L range near limit), ceiling-proximity ratio,
+vs forward IC in vol_expansion with illiq.
+**Upside:** Could add quality dimension to C24's strong count signal.
+
+### EM5: Cumulative Illiquidity Buildup
+**Claim:** Single-day illiq is good (C23 IC=0.2616). But 3-day CUMULATIVE illiq may
+be even better — institutional accumulation over multiple days creates sustained pressure.
+**Mechanism:** One day of illiq is noise. Three consecutive days of illiq + vol_expansion
+is institutional hiding in thin books.
+**Evidence:** C23 (single-day illiq_expansion IC=0.2616). C24 (multi-day ceiling count).
+H466 (two_days_exhaustion IC=0.2013). Multi-day patterns consistently outperform.
+**Why not killed:** C23 never tested multi-day cumulative illiq. D041 found signals share
+vol_expansion — cumulative builds on the same mechanism.
+**First test:** 3-day cumulative illiq rank × vol_expansion vs single-day C23 controls.
+**Upside:** Could extend C23's strongest signal into a multi-day version.
+
+### EM6: Order Flow CONVERGENCE
+**Claim:** Buy-heavy AND sell-heavy both work with illiq+expansion (C26: buy=0.1889,
+sell=0.1828). This means DIRECTION is not the signal — CONVERGENCE toward price is.
+**Mechanism:** Both buyers and sellers pushing price toward the VWAP/limit = institutional
+pressure accumulating, not directional bet. Convergence = pressure, divergence = noise.
+**Evidence:** C26 shows buy_heavy and sell_heavy both positive. C25 shows VWAP deviation
+below works (price below average). H466 two_days_exhaustion = price CHASING the ceiling.
+**Why not killed:** No test has defined convergence vs divergence states. Buy+sell
+together was never tested as a joint feature.
+**First test:** Imbalance CONVERGENCE (both buy and sell pressure simultaneously pushing
+price toward a boundary) × illiq × vol_expansion vs C26 controls.
+**Upside:** Could unify the bidirectional signal into a cleaner mechanism.
+
+### EM7: Vol Expansion REGIME PERSISTENCE
+**Claim:** H468 found vol_expansion works BEST in narrow markets. But what about HOW
+LONG the vol_expansion has persisted? One-day spike vs 10-day sustained expansion.
+**Mechanism:** Sudden vol spike may be noise/panic. Sustained vol expansion may be
+institutional repositioning.
+**Evidence:** H473 already queued as next test. H469 foreign momentum was marginal.
+H460 (vol regime dependency) confirmed vol_expansion amplifies but didn't test persistence.
+**Why not killed:** No test has measured vol_expansion DURATION vs vol_expansion MAGNITUDE.
+The lab always tests "is vol expanding?" not "how long has it been expanding?"
+**First test:** Vol_expansion PERSISTENCE (days of continuous expansion) × illiq ×
+forward IC. Also test vol_expansion BREAK (sudden contraction after sustained expansion).
+**Upside:** Could split vol_expansion into spike vs sustained, with different behaviors.
+
+### EM8: Return DECELERATION (Not Acceleration)
+**Claim:** H466 showed two consecutive days of high return = momentum continuation.
+But what about return SLOWING DOWN in vol_expansion? Stock that was going up but is
+NOW decelerating toward the limit.
+**Mechanism:** Return deceleration toward ceiling = queue building but momentum fading
+= strong next-day release. Like C24's ceiling count but with a MOMENTUM twist.
+**Evidence:** C24 (multi-day ceiling count IC=0.2353). H466 (two_days_exhaustion IC=0.2013).
+C22 (approaching_ceiling IC=0.2170). All capture ceiling-adjacent states.
+**Why not killed:** No test combined RETURN DECELERATION with CEILING PROXIMITY.
+H466 tested return ACCELERATION (two_days of rising), not DECELERATION (slowing down).
+**First test:** Return deceleration (3d return momentum falling) × near_ceiling × vol_expansion
+vs C24/C22 controls.
+**Upside:** Could add a momentum component to the ceiling signal family.
+
+### EM9: Liquidity-Adjusted Return Rank
+**Claim:** C25 uses VWAP deviation (price-based). C23 uses Amihud (turnover-based).
+What about RETURN normalized by ILLIQUIDITY? Small return in illiquid stock = large
+signal. Large return in liquid stock = noise.
+**Mechanism:** `return / Amihud` = price move divided by liquidity cost. High ratio =
+real force. This was tested in D036 but direction was wrong (high return + high vol
+was "real force" but actually negative). Now test: return / illiq RANK, not return × volume.
+**Evidence:** D036 failed "real force" (high_return_high_vol was IC=0.111, negative).
+But the failure was using VOLUME, not ILLIQUIDITY. C23 is strong with illiq.
+**Why not killed:** D036 used volume, not illiquidity. The return/illiq ratio was never tested.
+**First test:** Return_5d / Amihud_20d ratio × vol_expansion vs C23/C25 controls.
+**Upside:** Combines price momentum with liquidity quality in one number.
+
+### EM10: Intraday Fracture Point Detection
+**Claim:** 1H bars exist (from OHLCV files). The lab never used them for INTRADAY
+patterns. First-hour direction vs last-hour direction is a well-known anomaly.
+**Mechanism:** VN market has specific auction mechanics: morning session 9:00-11:30,
+afternoon 13:00-15:00. First-hour behavior predicts daily outcome differently than
+last-hour behavior.
+**Evidence:** H464 Monday/weekday calendar (Monday IC=0.1434). H457 intraday profile
+was skipped (data sparse). But 1H bars from 406 OHLCV files might have enough data.
+**Why not killed:** H457 was skipped because fpt_intraday only had 625 rows (2023+).
+But the main OHLCV files are 1D. Need to check if they contain intraday or if
+separate 1H acquisition is needed.
+**First test:** Compute first-hour return and last-hour return from 1H bars if available.
+Test first_hour_positive × last_hour_negative × illiq × vol_expansion vs daily controls.
+**Upside:** Intraday disagreement between first and last hour may capture information
+not available in daily bars.
+
+### EM11: S1 Quality Score Momentum
+**Claim:** S1 scores themselves have momentum — high S1 today predicts high S1 tomorrow.
+But maybe the DELTA of S1 (improvement vs deterioration) is the real signal.
+**Mechanism:** S1 improving = quality getting better = positive. S1 deteriorating =
+quality fading = negative. The delta captures momentum in the quality signal itself.
+**Evidence:** H428 showed top S1 tickers IMPROVE next-day (momentum in S1).
+H431 C18 rank_delta worked (+0.0114 IC). D028 half-life router failed.
+**Why not killed:** H431 tested rank DELTA of C16, not S1 score delta. H428 tested
+level, not delta. S1 delta was never tested.
+**First test:** S1_score_delta (1d change in S1 probability) × illiq × vol_expansion
+vs S1 level controls.
+**Upside:** Could capture quality momentum similar to how C18 captures rank momentum.
+
+### EM12: Cross-Ticker Liquidity Commonality
+**Claim:** The lab tests individual-stock illiquidity. But MARKET-WIDE illiquidity
+may be the true regime — when ALL stocks become illiquid, it's a different regime
+than when just one stock is illiquid.
+**Mechanism:** Cross-sectional median illiquidity = market temperature. Hot market
+(low illiquidity everywhere) vs cold market (high illiquidity everywhere) = different
+signal behaviors.
+**Evidence:** H468 breadth regime (narrow markets amplify). C23 individual illiquidity.
+C25 individual VWAP deviation. All are stock-local.
+**Why not killed:** No test has used CROSS-SECTIONAL ILLIQUIDITY REGIME as a modifier.
+H468 used breadth, not illiquidity level.
+**First test:** Market-wide illiquidity (cross-sectional median) as regime gate for
+C23/C25/C26 signals. Test if individual signals work differently in hot vs cold markets.
+**Upside:** Could reveal that individual signals are subsumed by or modified by
+market-wide liquidity regime.
+
+---
+
+## Bright-Mind Priority Queue (Ranked by upside, novelty, feasibility)
+
+1. **EM5: Cumulative Illiquidity Buildup** — extends C23 (strongest signal) into multi-day.
+   Feasible with existing OHLCV. High upside. One-shot test.
+
+2. **EM1: Return Asymmetry Amplification** — tests size-of-move effect within positive returns.
+   Feasible with OHLCV. Novel dimension never tested. Medium-high upside.
+
+3. **EM9: Liquidity-Adjusted Return Rank** — combines price and liquidity in one ratio.
+   Uses existing C23 mechanism with a different formula. Feasible. Medium upside.
+
+4. **EM7: Vol Expansion REGIME PERSISTENCE** — queued as H473 already. Tests duration, not magnitude.
+   Feasible. Medium upside.
+
+5. **EM2: Imbalance VOLUME vs RATIO** — tests absolute magnitude of flow.
+   Uses existing order_stats. Medium upside.
+
+6. **EM3: Bid-Ask Spread as Illiq Proxy** — spread × vol_expansion never tested.
+   Uses existing order_stats (spread can be proxied from avg_buy/sell size ratio).
+   Medium upside.
+
+7. **EM4: Price Limit FRICTION** — quality dimension to C24's count.
+   Needs 1H bars or time-at-limit proxy. Lower priority unless 1H data available.
+
+8. **EM6: Order Flow CONVERGENCE** — bidirectional unified mechanism.
+   Feasible with existing data. Medium upside.
+
+9. **EM8: Return DECELERATION × Ceiling** — adds momentum to ceiling signal.
+   Feasible with OHLCV. Medium upside.
+
+10. **EM10: Intraday Fracture Point** — first/last hour disagreement.
+    Depends on 1H data availability. Low priority until data confirmed.
+
+11. **EM11: S1 Quality Score Momentum** — S1 delta test.
+    Uses existing S1 matrix. Medium upside.
+
+12. **EM12: Cross-Ticker Illiq Regime** — market-wide illiq as gate.
+    Uses existing data. Low priority until individual signals exhausted.
+
+Source: [session_119_log.md](./session_119_log.md), F399, bright-mind analysis of
+C18-C26 signals and D035-D041 failures.
