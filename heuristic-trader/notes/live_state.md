@@ -2,31 +2,19 @@
 
 ## Current
 
-**S00005: Pre-computed lookups working**
+**S00006: Lockbox + CLI + Artifacts implemented**
 
-- 70%S1/30%C16: ~82% (legacy, ~5min)
-- Pre-computed quick run: ~2.5sec
+- run_backtest.py: CLI with --allow-lockbox flag
+- signals.py: automatic 2026 lockbox filtering
+- artifacts/runs/<ts>/: config.json, metrics.json, daily_equity.parquet
 
-## Cached Artifacts
+## Verified (quick run)
 
-- cache/vnindex_baseline.parquet
-- cache/price_cache.parquet  
-- cache/liquid_lookup.joblib (4764 dates)
-- cache/trad_lookup.joblib (666k entries)
-
-## Speed 
-
-- Without filters: ~5 sec
-- Pre-computed: ~2.5 sec  
-- Legacy (truth): ~5 min
-
-## Next (queue)
-
-1. ~~S1 10-day rebal~~ → +43%
-2. ~~S1+C16 blend~~ → +52%
-3. ~~Blend weight 70/30~~ → +82%
-4. Grid search with pre-computed
-5. Verify with legacy
+- s1_only (2019-2025): +41.57% (416tr, 2.2s) ✅
+- Lockbox reject: 2026 dates fail without --allow-lockbox ✅
+- --allow-lockbox works: 2026 data included ✅
 
 ## Pointers
-- backtest.py, session_00005.py, signals.py
+- run_backtest.py (new CLI)
+- signals.py (lockbox loaders)
+- artifacts/runs/20260508_104327/ (example output)
