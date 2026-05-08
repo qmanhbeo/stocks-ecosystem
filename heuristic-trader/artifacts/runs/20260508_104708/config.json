@@ -1,0 +1,10 @@
+{
+  "strategy": "s1_only",
+  "signal_col": "s1_proba",
+  "top_k": 5,
+  "rebalance_days": 10,
+  "min_hold_days": 3,
+  "start_date": "2019-01-01",
+  "end_date": "2025-12-31",
+  "timestamp": "2026-05-08T10:47:15.209288"
+}

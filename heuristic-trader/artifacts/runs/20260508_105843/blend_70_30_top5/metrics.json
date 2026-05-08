@@ -1,0 +1,20 @@
+{
+  "strategy_name": "blend_70_30_top5",
+  "start_date": "2025-01-01",
+  "end_date": "2025-03-31",
+  "total_return": 0.017199,
+  "annualized_return": 0.074725,
+  "sharpe": 0.822531,
+  "max_drawdown": -0.032763,
+  "total_trades": 10,
+  "n_filtered": 63,
+  "per_year": [
+    {
+      "year": 2025,
+      "return": 0.017199,
+      "days": 58
+    }
+  ],
+  "benchmark_return": 0.032451,
+  "excess_return": -0.015252
+}

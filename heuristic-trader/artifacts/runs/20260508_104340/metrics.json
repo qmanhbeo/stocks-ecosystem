@@ -1,0 +1,53 @@
+{
+  "strategy_name": "TopK_s1_proba_K5_R5_H3",
+  "start_date": "2019-01-01",
+  "end_date": "2026-03-31",
+  "total_return": -0.333356,
+  "annualized_return": -0.046515,
+  "sharpe": -0.11182,
+  "max_drawdown": -0.523182,
+  "total_trades": 791,
+  "n_filtered": 4327,
+  "per_year": [
+    {
+      "year": 2019,
+      "return": -0.199176,
+      "days": 250
+    },
+    {
+      "year": 2020,
+      "return": 0.262814,
+      "days": 252
+    },
+    {
+      "year": 2021,
+      "return": 0.308632,
+      "days": 250
+    },
+    {
+      "year": 2022,
+      "return": -0.351614,
+      "days": 249
+    },
+    {
+      "year": 2023,
+      "return": -0.171053,
+      "days": 249
+    },
+    {
+      "year": 2024,
+      "return": 0.130059,
+      "days": 250
+    },
+    {
+      "year": 2025,
+      "return": -0.210823,
+      "days": 249
+    },
+    {
+      "year": 2026,
+      "return": 0.01047,
+      "days": 57
+    }
+  ]
+}

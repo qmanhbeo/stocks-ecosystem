@@ -1,0 +1,10 @@
+{
+  "strategy": "c16_only_top5",
+  "signal_col": "order_volume_ratio_rank",
+  "top_k": 5,
+  "rebalance_days": 10,
+  "min_hold_days": 3,
+  "start_date": "2025-01-01",
+  "end_date": "2025-03-31",
+  "timestamp": "2026-05-08T10:58:43.987383"
+}

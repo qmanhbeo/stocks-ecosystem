@@ -269,6 +269,78 @@ Source durable memory:
 Ranked by upside, novelty, current-data feasibility, and honesty of first test.
 Do not assign `H` numbers until one branch is activated.
 
+Bright-mind frontier additions from the 2026-05-08 ideation pass. These are
+queued ideas, not activated branches, and should stay subordinate to the
+current immediate next action unless explicitly selected.
+
+1. `ranker_error_taxonomy`: the confirmed `0.1*Vol + 0.9*S1` ranker may be
+   less important than the states where it is predictably wrong. Connection:
+   H413-H417 made the additive ranker real, while H401 showed broad vetoes are
+   too blunt. Smallest honest test: build fixed error buckets for the additive
+   ranker using no-support, news-hype/weak-flow, weak sector, tradability pain,
+   Re regime, candidate-count, and boundary entropy; evaluate actions
+   `trust`, `cash-veto`, `shorten-to-1d`, and `hold-to-5d` against random
+   same-breadth policies. Kill if no bucket beats the ranker baseline and
+   random action controls in walk-forward.
+2. `signal_half_life_router`: alpha states should carry an estimated decay
+   half-life rather than one universal label. Connection: H397 proved
+   active-news strong-flow is a 1d ranker, official-supported attention is a
+   5d hold state, and H414 says Vol+S1 survives across horizons. Smallest
+   honest test: predeclare half-life classes from S1 slope, volume-state,
+   news/source type, official support, insider event-time, candidate age, and
+   tradability; require each class to win only on its assigned 1d/2d/5d/cycle
+   horizon versus horizon-random controls.
+3. `volume_attention_budget`: robust volume alpha may come from where the
+   market spends attention, not only ticker-level volume. Connection:
+   H409-H417 found volume is strong and additive with S1, while H403 says flow
+   regime matters. Smallest honest test: date-level and sector-level volume
+   Herfindahl/Gini, volume migration, and volume-z breadth split S1, Vol,
+   `0.1*Vol + 0.9*S1`, Re, and candidate-count policy performance. Kill if
+   budget concentration does not improve activation or K routing versus
+   candidate-count-only and VNI-state controls.
+4. `intraday_absorption_acceptance`: failed daily forced-seller and nihilist
+   states may need an intraday acceptance signature before they are tradable.
+   Connection: H426 killed daily forced-seller allocation but explicitly left a
+   delayed/intraday absorption contract open; H393 left stock-down high-C16 as
+   the cleaner control. Smallest honest test: from available 1H CafeF bars,
+   define first-hour rejection/acceptance, late-session recovery, close-location
+   strength, path efficiency, and volume-burst shape at T close; test delayed
+   T+1 entries for stock-down/high-C16 and sell-pressure states versus the
+   daily controls. Data-gated only if the needed 1H coverage is too thin.
+5. `semantic_novelty_saturation`: news volume may be harmful when semantic
+   novelty is exhausted, while high novelty plus muted price response may be
+   delayed alpha. Connection: H364/H383/H385/H397 say local-news features are
+   useful only under source/horizon-specific consumers, and count-based event
+   propagation failed in H405. Smallest honest test: compute rolling novelty
+   from article embeddings if present, otherwise from PhoBERT/Ollama feature
+   vectors and normalized text hashes; test low-novelty/high-attention
+   exhaustion and high-novelty/low-price-response delayed states against raw
+   article count, source type, and active-news strong-flow controls.
+6. `official_attachment_latency_clock`: official disclosures may be alpha
+   because complex attachments delay interpretation, not because an event flag
+   exists. Connection: H385/H397 show official-supported rows pay at 5d, while
+   raw event counts and sector event lightcones failed. Smallest honest test:
+   use official-disclosure attachment count, OCR/text availability, transaction
+   extract presence, source timestamp, and CafeF/news lag to split official
+   rows into easy/slow interpretation buckets; require 5d payoff lift versus
+   H397 official-supported controls and same-ticker non-event dates.
+7. `prop_foreign_predator_prey`: foreign and proprietary flows may be useful
+   only as a conflict/absorption game, not as raw net-flow ranks. Connection:
+   standalone foreign/proprietary paths and foreign additive H418 failed, but
+   the raw surfaces now exist. Smallest honest test: predeclare foreign-sell/
+   prop-buy absorption, foreign-buy/local-distribution, and prop-following-
+   foreign states crossed only with Vol+S1 strength, C16, and news support;
+   compare to raw foreign, raw proprietary, H418, and random same-support
+   controls.
+8. `selector_hysteresis_field`: the portfolio should resist or accept
+   replacement based on boundary energy around current holdings, not simply
+   freshness. Connection: sticky live branch remains frozen, H388 killed
+   long-dormancy fresh selection, and H379/H380 showed candidate-count policy
+   has offline value. Smallest honest test: candidate-panel transition graph
+   with incumbent rank distance, rank 5/6 gap, top-book overlap, short-repeat
+   pressure, and buyability; compare sticky/replace/top1/top5 actions against
+   stale-repeat, fresh-selection, and random K/cash controls.
+
 The explicit H389-H393 follow-through queue is exhausted. Continue by selecting
 new branches from the hidden-flow memo with H381-H393 and S272 as constraints.
 

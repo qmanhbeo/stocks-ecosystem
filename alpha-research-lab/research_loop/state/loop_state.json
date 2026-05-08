@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "cycle_count": 0,
+  "last_phase": "dry_run",
+  "last_run_timestamp": null,
+  "last_session_hint": null,
+  "last_h_hint": null,
+  "last_decision": "dry_run",
+  "heavy_job_detected": false,
+  "last_exit_status": "dry_run",
+  "created_at": "2026-05-08T12:16:30.737374"
+}

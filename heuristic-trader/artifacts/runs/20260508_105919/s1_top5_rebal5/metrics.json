@@ -1,0 +1,20 @@
+{
+  "strategy_name": "s1_top5_rebal5",
+  "start_date": "2025-01-01",
+  "end_date": "2025-03-31",
+  "total_return": -0.082523,
+  "annualized_return": -0.358546,
+  "sharpe": -2.04839,
+  "max_drawdown": -0.098771,
+  "total_trades": 26,
+  "n_filtered": 126,
+  "per_year": [
+    {
+      "year": 2025,
+      "return": -0.082523,
+      "days": 58
+    }
+  ],
+  "benchmark_return": 0.032451,
+  "excess_return": -0.114974
+}

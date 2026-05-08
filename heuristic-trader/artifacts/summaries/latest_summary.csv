@@ -1,0 +1,2 @@
+strategy_name,start_date,end_date,total_return,annualized_return,sharpe,max_drawdown,total_trades,n_filtered,per_year,benchmark_return,excess_return
+s1_top3_rebal10,2025-01-01,2025-03-31,0.040145,0.174424,1.3328,-0.049066,6,31,"[{'year': 2025, 'return': 0.040145, 'days': 58}]",0.032451,0.007694
