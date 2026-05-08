@@ -197,6 +197,13 @@ entry must include source anchors: stable finding IDs or source session links.
   Adding gives +0.0004 (within noise). All weak signals confirmed.
   Source anchors: `D024`.
 
+- Volume attention budget (H427): PASSED. Date-level volume concentration
+  (Herfindahl) acts as market regime indicator. Mid-concentration (Q3) has
+  mean IC 0.1389 vs baseline 0.1264, lift +0.0125, 8/8 positive years.
+  Both extreme concentration (Q5) and extreme distribution (Q1) hurt signal
+  quality. Offline evidence, needs candidate-count policy follow-through.
+  Source anchor: Session 306.
+
 - Source-triangle context: H392 rejected the C16+insider+news core under the
   current C5/PhoBERT representation. `c16_insider_any_news` was positive but
   lost to both C16+insider-without-news and C16+news-without-insider controls;

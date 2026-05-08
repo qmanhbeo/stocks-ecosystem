@@ -1,0 +1,10 @@
+{
+  "branch": "volume_attention_budget",
+  "verdict": "PASSED",
+  "baseline_mean_ic": 0.12635702616683345,
+  "best_concentration": "Q3",
+  "best_concentration_ic": 0.1388980026158047,
+  "lift_vs_baseline": 0.012540976448971258,
+  "positive_years": 8,
+  "total_years": 8
+}

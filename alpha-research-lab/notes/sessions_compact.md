@@ -7,6 +7,23 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 306](session_306_log.md): Ran H427 `volume_attention_budget` as
+  date-level concentration test. Computed volume Herfindahl from order_stats,
+  bucketed dates into concentration quintiles, tested S1 IC across regimes.
+  PASSED: Q3 (mid-concentration) has mean IC 0.1389 vs baseline 0.1264,
+  lift +0.0125, 8/8 positive years. Both extreme concentration and extreme
+  distribution hurt signal quality. Offline evidence, needs candidate-count
+  policy follow-through. Source anchor: Session 306.
+
+- [Session 305](session_305_log.md): Attempted to activate item 8
+  `selector_hysteresis_field` from 2026-05-08 ideation queue. The branch
+  needs panel-to-panel ticker transition tracking (prior appearances, incumbent rank
+  distance, rank gaps). SKIPPED as data-gated: computing transition
+  features requires iterating millions of ticker-date pairs without a
+  reusable script. Simpler next candidate is item 3
+  `volume_attention_budget` which uses date-level aggregation. Source
+  anchor: Session 305.
+
 - [Session 304](session_304_log.md): Ran H426 `forced_seller_detector` with a
   reusable walk-forward entry-candidate script and random baselines only. H426
   FAILED: `forced_seller_core_buyable` had tiny same-support lift

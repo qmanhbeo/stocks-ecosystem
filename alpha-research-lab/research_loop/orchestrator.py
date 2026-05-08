@@ -5,6 +5,7 @@ This module handles:
 - State persistence
 - Decision logic (lightweight)
 - Invoking the evergreen-research-loop skill
+- Bounded loop execution
 - Logging
 - Clean exit
 
@@ -16,12 +17,18 @@ import subprocess
 import sys
 import time
 import glob
+import re
+import argparse
 from datetime import datetime
 from typing import Tuple, Optional, Dict, Any
 
 import config
 import state
 import log
+
+
+DEFAULT_MAX_CYCLES = 2
+DEFAULT_SLEEP_SECONDS = 5
 
 
 def check_heavy_job_running() -> bool:
@@ -68,6 +75,7 @@ def check_heavy_job_running() -> bool:
 def check_hypothesis_queue() -> Tuple[bool, int]:
     """
     Check if hypothesis queue exists in live_state.md.
+    Counts lines that look like list items under ## Hypothesis Queue.
     Returns: (exists, rough_item_count)
     """
     if not os.path.exists(config.LIVE_STATE_PATH):
@@ -76,17 +84,24 @@ def check_hypothesis_queue() -> Tuple[bool, int]:
         with open(config.LIVE_STATE_PATH, "r") as f:
             content = f.read()
 
-        if "Hypothesis Queue" not in content:
+        if "## Hypothesis Queue" not in content:
             return False, 0
 
         start_idx = content.find("## Hypothesis Queue")
         if start_idx == -1:
             return False, 0
 
-        queue_section = content[start_idx:start_idx+2000]
-        bullet_count = queue_section.count("\n- ")
+        next_heading = content.find("\n## ", start_idx + 1)
+        if next_heading == -1:
+            queue_section = content[start_idx:]
+        else:
+            queue_section = content[start_idx:next_heading]
 
-        return True, bullet_count
+        list_pattern = r"(?:^|\n)(\s*)(?:[-*]|\d+\.)\s+"
+        matches = re.findall(list_pattern, queue_section)
+        count = len(matches)
+
+        return True, count
     except Exception:
         return False, 0
 
@@ -123,6 +138,9 @@ def decide_action(inspect_info: Dict[str, Any], dry_run: bool = False) -> Tuple[
 
     if not inspect_info["hypothesis_queue_exists"]:
         return "skip_empty_queue", "No hypothesis queue in live_state.md"
+
+    if inspect_info["hypothesis_queue_count"] == 0:
+        log.log_message("Warning: Queue section exists but no items detected", "WARN")
 
     if dry_run:
         return "dry_run", "Dry-run mode requested"
@@ -202,38 +220,40 @@ def invoke_evergreen(prompt: str) -> Tuple[int, str, str]:
         return -3, "", str(e)
 
 
-def run_cycle(dry_run: bool = False) -> int:
+def run_single_cycle(dry_run: bool = False) -> Tuple[int, str]:
     """
     Execute one complete cycle.
 
-    Returns: exit code (0 = success, non-zero = failure)
+    Returns: (exit_code, decision_made)
     """
     start_time = time.time()
 
-    log_path = log.start_cycle_log()
-    log.write_log(log_path, f"Working directory: {config.REPO_ROOT}")
-    log.write_log(log_path, f"Research lab: {config.RESEARCH_LAB}")
+    cycle_log_path = log.start_cycle_log()
+    log.write_log(cycle_log_path, f"Working directory: {config.REPO_ROOT}")
+    log.write_log(cycle_log_path, f"Research lab: {config.RESEARCH_LAB}")
 
     current_state = state.load_state()
-    log.write_log(log_path, log.format_state_summary(current_state))
+    log.write_log(cycle_log_path, log.format_state_summary(current_state))
 
     inspect_info = inspect_current_state()
-    log.write_log(log_path, f"Inspection: {inspect_info}")
+    log.write_log(cycle_log_path, f"Inspection: {inspect_info}")
 
     decision, reason = decide_action(inspect_info, dry_run)
-    log.write_log(log_path, f"Decision: {decision} ({reason})")
+    log.write_log(cycle_log_path, f"Decision: {decision} ({reason})")
 
     state.update_state(phase="decision", decision=decision)
 
+    exit_code = 0
+
     if decision == "run_evergreen":
-        log.write_log(log_path, "Invoking evergreen-research-loop...")
+        log.write_log(cycle_log_path, "Invoking evergreen-research-loop...")
 
         prompt = build_prompt()
-        log.write_log(log_path, f"Prompt length: {len(prompt)} chars")
+        log.write_log(cycle_log_path, f"Prompt length: {len(prompt)} chars")
 
         returncode, stdout, stderr = invoke_evergreen(prompt)
 
-        log.write_log(log_path, f"Return code: {returncode}")
+        log.write_log(cycle_log_path, f"Return code: {returncode}")
 
         if returncode == 0:
             state.update_state(
@@ -241,27 +261,112 @@ def run_cycle(dry_run: bool = False) -> int:
                 exit_status="success",
                 real_cycle=True,
             )
-            log.write_log(log_path, "Evergreen completed successfully, cycle_count incremented")
+            log.write_log(cycle_log_path, "Evergreen completed successfully, cycle_count incremented")
         else:
+            exit_code = returncode
             state.update_state(
                 phase="failed",
                 exit_status=f"error_{returncode}",
             )
-            log.write_log(log_path, f"Evergreen failed: {stderr[:200]}")
+            log.write_log(cycle_log_path, f"Evergreen failed: {stderr[:200]}")
 
     elif decision == "dry_run":
-        log.write_log(log_path, "Dry-run completed, no evergreen invoked")
+        log.write_log(cycle_log_path, "Dry-run completed, no evergreen invoked")
         state.update_state(phase="dry_run", exit_status="dry_run")
 
     else:
-        log.write_log(log_path, f"Skipped: {reason}")
+        log.write_log(cycle_log_path, f"Skipped: {reason}")
         state.update_state(phase="skipped", exit_status="skipped")
+        if decision == "skip_heavy":
+            exit_code = 10
 
     elapsed = time.time() - start_time
-    log.end_cycle_log(log_path, "completed", elapsed)
+    log.end_cycle_log(cycle_log_path, "completed", elapsed)
 
     log.log_message(f"Cycle completed in {elapsed:.1f}s")
+
+    return exit_code, decision
+
+
+def run_loop(max_cycles: int = DEFAULT_MAX_CYCLES, sleep_seconds: int = DEFAULT_SLEEP_SECONDS) -> int:
+    """
+    Execute up to max_cycles bounded passes.
+
+    Returns: exit code
+    """
+    start_time = time.time()
+
+    loop_log_path = log.start_loop_log(max_cycles)
+    log.write_log(loop_log_path, f"Starting bounded loop with max_cycles={max_cycles}")
+    log.write_log(loop_log_path, f"Working directory: {config.REPO_ROOT}")
+
+    state.update_state(
+        loop_start=True,
+        loop_max_cycles=max_cycles,
+        loop_completed_cycles=0,
+        stop_reason=None,
+    )
+
+    completed = 0
+    stop_reason = "completed_all"
+
+    for cycle_num in range(1, max_cycles + 1):
+        log.log_message(f"Loop cycle {cycle_num}/{max_cycles}")
+
+        inspect_info = inspect_current_state()
+
+        if inspect_info["heavy_job"]:
+            stop_reason = "heavy_job_detected"
+            log.log_message(f"Stopping loop: heavy job detected", "WARN")
+            break
+
+        cycle_start = time.time()
+        exit_code, decision = run_single_cycle(dry_run=False)
+        cycle_elapsed = time.time() - cycle_start
+
+        completed += 1
+
+        log.log_message(f"Cycle {cycle_num} decision: {decision}, exit_code: {exit_code}")
+        log.log_cycle_to_loop(loop_log_path, cycle_num, decision,
+                              "success" if exit_code == 0 else f"error_{exit_code}",
+                              cycle_elapsed)
+
+        if exit_code != 0:
+            stop_reason = f"cycle_{cycle_num}_failed"
+            log.log_message(f"Stopping loop: cycle failed with exit_code={exit_code}", "ERROR")
+            break
+
+        if decision in ["skip_heavy", "skip_empty_queue"]:
+            stop_reason = f"cycle_{cycle_num}_{decision}"
+            log.log_message(f"Stopping loop: {decision}", "WARN")
+            break
+
+        if cycle_num < max_cycles:
+            log.log_message(f"Sleeping {sleep_seconds}s before next cycle...")
+            time.sleep(sleep_seconds)
+
+    total_elapsed = time.time() - start_time
+
+    state.update_state(
+        loop_complete=True,
+        loop_completed_cycles=completed,
+        stop_reason=stop_reason,
+    )
+
+    log.end_loop_log(loop_log_path, completed, stop_reason, total_elapsed)
+    log.log_message(f"Loop completed: {completed} cycles, stop_reason={stop_reason}, total_time={total_elapsed:.1f}s")
+
     return 0
+
+
+def run_cycle(dry_run: bool = False) -> int:
+    """
+    Execute one complete cycle (single cycle, not loop).
+
+    Returns: exit code
+    """
+    exit_code, _ = run_single_cycle(dry_run=dry_run)
+    return exit_code
 
 
 def show_status() -> int:
@@ -283,23 +388,28 @@ def reset_loop() -> int:
 
 def main() -> int:
     """Main entry point for the orchestrator."""
-    if len(sys.argv) < 2:
-        print("Usage: orchestrator.py <command>")
-        print("Commands: cycle, dry-run, status, reset")
-        return 1
+    parser = argparse.ArgumentParser(description="Research Loop Orchestrator")
+    parser.add_argument("command", choices=["cycle", "dry-run", "status", "reset", "loop"],
+                        help="Command to run")
+    parser.add_argument("--max-cycles", type=int, default=DEFAULT_MAX_CYCLES,
+                        help=f"Maximum cycles for loop (default: {DEFAULT_MAX_CYCLES})")
+    parser.add_argument("--sleep", type=int, default=DEFAULT_SLEEP_SECONDS,
+                        help=f"Sleep seconds between cycles (default: {DEFAULT_SLEEP_SECONDS})")
 
-    command = sys.argv[1]
+    args = parser.parse_args()
 
-    if command == "cycle":
+    if args.command == "cycle":
         return run_cycle(dry_run=False)
-    elif command == "dry-run":
+    elif args.command == "dry-run":
         return run_cycle(dry_run=True)
-    elif command == "status":
+    elif args.command == "status":
         return show_status()
-    elif command == "reset":
+    elif args.command == "reset":
         return reset_loop()
+    elif args.command == "loop":
+        return run_loop(max_cycles=args.max_cycles, sleep_seconds=args.sleep)
     else:
-        print(f"Unknown command: {command}")
+        print(f"Unknown command: {args.command}")
         return 1
 
 

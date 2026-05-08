@@ -5,9 +5,9 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_304_log.md](./session_304_log.md)
-Last verified: [Session 304](./session_304_log.md), 2026-05-06
-(H426 Forced-Seller Detector FAILED under the current entry-alpha consumer)
+Latest full session detail: [session_306_log.md](./session_306_log.md)
+Last verified: [Session 306](./session_306_log.md), 2026-05-08
+(H427 volume_attention_budget PASSED: mid-concentration Q3 has +0.0125 IC lift vs baseline, 8/8 positive years)
 
 Compact recovery:
 - [sessions_compact.md](./sessions_compact.md)

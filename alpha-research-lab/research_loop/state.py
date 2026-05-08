@@ -22,6 +22,11 @@ def create_initial_state() -> Dict[str, Any]:
         "heavy_job_detected": False,
         "last_exit_status": "none",
         "created_at": datetime.now().isoformat(),
+        "loop_started_at": None,
+        "loop_completed_at": None,
+        "last_loop_max_cycles": None,
+        "last_loop_completed_cycles": 0,
+        "last_stop_reason": None,
     }
 
 
@@ -47,6 +52,11 @@ def update_state(
     heavy_job: bool = None,
     exit_status: str = None,
     real_cycle: bool = False,
+    loop_start: bool = False,
+    loop_complete: bool = False,
+    loop_max_cycles: int = None,
+    loop_completed_cycles: int = None,
+    stop_reason: str = None,
 ) -> Dict[str, Any]:
     """
     Update specific fields in state.
@@ -55,6 +65,11 @@ def update_state(
     Args:
         real_cycle: If True, increment cycle_count (only for real evergreen pass).
                    If False, do not increment (for dry-runs/skips).
+        loop_start: If True, record loop_started_at.
+        loop_complete: If True, record loop_completed_at.
+        loop_max_cycles: Set last_loop_max_cycles.
+        loop_completed_cycles: Set last_loop_completed_cycles.
+        stop_reason: Set last_stop_reason.
     """
     state = load_state()
 
@@ -73,6 +88,16 @@ def update_state(
     if real_cycle:
         state["cycle_count"] += 1
         state["last_run_timestamp"] = datetime.now().isoformat()
+    if loop_start:
+        state["loop_started_at"] = datetime.now().isoformat()
+    if loop_complete:
+        state["loop_completed_at"] = datetime.now().isoformat()
+    if loop_max_cycles is not None:
+        state["last_loop_max_cycles"] = loop_max_cycles
+    if loop_completed_cycles is not None:
+        state["last_loop_completed_cycles"] = loop_completed_cycles
+    if stop_reason is not None:
+        state["last_stop_reason"] = stop_reason
 
     save_state(state)
     return state
