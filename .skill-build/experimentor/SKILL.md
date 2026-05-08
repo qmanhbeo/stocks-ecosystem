@@ -116,6 +116,18 @@ Use this session-log block shape:
 - Treat `alpha-research-lab/artifacts/` as the canonical lab artifact root.
 - If a pass changes a producer-consumer contract across repos, update the affected docs and notes on both sides.
 
+## Safety Checklist: Runner Before Results
+
+Before trusting any experiment runner or framework, verify it is safe:
+
+- **Lockbox**: grep loaders for `_apply_lockbox_filter`; confirm 2026 excluded by default.
+- **Real-path tests**: smoke tests must call actual runner/writer, not manually reimplement outputs.
+- **Artifact contract**: each run writes config.json, metrics.json; batch runs write comparison summaries.
+- **Batch visibility**: report "Successful: X, Failed: Y" with failed names and errors.
+- **Semantic clarity**: config["signal_col"] must match real dataframe column; do not disguise signals.
+- **Audit silent failures**: check duplicate functions, dead CLI args, shadowed paths, stale caches, ignored params.
+- **Postmortem**: after major phases, record what worked and what almost broke.
+
 ## Working Style
 
 - Convert a `bright-mind` idea into a falsifiable branch, not a vague research wish.
