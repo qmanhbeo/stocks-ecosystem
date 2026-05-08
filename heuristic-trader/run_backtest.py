@@ -3,7 +3,8 @@
 CLI entrypoint for heuristic-trader backtests.
 
 Usage:
-    python run_backtest.py --strategy s1_only --start-date 2019-01-01 --end-date 2025-12-31 --top-k 5 --rebalance-days 5
+    python run_backtest.py --strategy s1_top5_rebal10 --start-date 2019-01-01 --end-date 2025-12-31
+    python run_backtest.py --all-strategies --start-date 2019-01-01 --end-date 2025-12-31
 
 The lockbox is enforced by default: end dates past 2025-12-31 are forbidden.
 Use --allow-lockbox to override (only for testing).
@@ -20,6 +21,7 @@ import pandas as pd
 
 import backtest as bt
 import signals as s
+from strategies import loader as strategy_loader
 
 
 ARTIFACT_DIR = Path("/home/manh/stocks-ecosystem/heuristic-trader/artifacts")
@@ -40,9 +42,13 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--strategy",
         type=str,
-        default="s1_only",
-        choices=["s1_only", "blend_70_30", "blend_50_50", "c16_only"],
-        help="Signal strategy to use",
+        default=None,
+        help="Strategy name from strategies.json (e.g., s1_top5_rebal10)",
+    )
+    parser.add_argument(
+        "--all-strategies",
+        action="store_true",
+        help="Run all strategies from strategies.json",
     )
     parser.add_argument(
         "--start-date",
@@ -55,24 +61,6 @@ def create_argument_parser() -> argparse.ArgumentParser:
         type=str,
         default="2025-12-31",
         help="End date (YYYY-MM-DD). Lockbox defaults to 2025-12-31 max.",
-    )
-    parser.add_argument(
-        "--top-k",
-        type=int,
-        default=5,
-        help="Number of top stocks to hold",
-    )
-    parser.add_argument(
-        "--rebalance-days",
-        type=int,
-        default=5,
-        help="Rebalance every N days",
-    )
-    parser.add_argument(
-        "--min-hold-days",
-        type=int,
-        default=3,
-        help="Minimum holding days before selling",
     )
     parser.add_argument(
         "--allow-lockbox",
@@ -96,35 +84,36 @@ def load_caches():
     return liquid_lookup, trad_lookup, price_cache
 
 
-def prepare_signal_df(
-    strategy: str,
+def prepare_signal_df_from_config(
+    config: dict,
     start_date: str,
     end_date: str,
     allow_2026: bool = False,
 ) -> pd.DataFrame:
-    """Prepare signal DataFrame based on strategy."""
+    """Prepare signal DataFrame from strategy config."""
+    signal_type = config["signal_type"]
     s1 = s.load_rl_signal_matrix(start=start_date, end=end_date, allow_2026=allow_2026)
 
-    if strategy == "s1_only":
+    if signal_type == "s1_only":
         return s1[['time', 'ticker', 's1_proba']].copy()
-    elif strategy == "c16_only":
+    elif signal_type == "c16_only":
         c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
         df = c16[['time', 'ticker', 'order_volume_ratio_rank']].copy()
         df = df.rename(columns={'order_volume_ratio_rank': 's1_proba'})
         return df
-    elif strategy in ("blend_70_30", "blend_50_50"):
+    elif signal_type in ("blend_70_30", "blend_50_50"):
         c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
         df = s1[['time', 'ticker', 's1_proba']].merge(
             c16[['time', 'ticker', 'order_volume_ratio_rank']],
             on=['time', 'ticker']
         )
-        if strategy == "blend_70_30":
-            df['signal'] = df['s1_proba'] * 0.7 + df['order_volume_ratio_rank'] * 0.3
+        if signal_type == "blend_70_30":
+            df['blend'] = df['s1_proba'] * 0.7 + df['order_volume_ratio_rank'] * 0.3
         else:
-            df['signal'] = df['s1_proba'] * 0.5 + df['order_volume_ratio_rank'] * 0.5
-        return df[['time', 'ticker', 'signal']]
+            df['blend'] = df['s1_proba'] * 0.5 + df['order_volume_ratio_rank'] * 0.5
+        return df[['time', 'ticker', 'blend']]
     else:
-        raise ValueError(f"Unknown strategy: {strategy}")
+        raise ValueError(f"Unknown signal_type: {signal_type}")
 
 
 def run_backtest_and_save(
@@ -144,9 +133,8 @@ def run_backtest_and_save(
     """Run backtest and save artifacts."""
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"\nRunning backtest: {strategy_name}")
-    print(f"  Signal column: {signal_col}")
-    print(f"  Top-K: {top_k}, Rebalance: {rebalance_days}d, Min hold: {min_hold_days}d")
+    print(f"\n  Running: {strategy_name}")
+    print(f"    Signal: {signal_col}, Top-K: {top_k}, Rebal: {rebalance_days}d, Hold: {min_hold_days}d")
 
     start_time = time.time()
     result = bt.simulate_topk_constraint_compliant(
@@ -162,7 +150,7 @@ def run_backtest_and_save(
     )
     elapsed = time.time() - start_time
 
-    print(f"  Result: {result.total_return:.2%} return, {result.n_trades} trades, {elapsed:.1f}s")
+    print(f"    Result: {result.total_return:.2%} return, {result.n_trades} trades, {elapsed:.1f}s")
 
     curve = result.curve
     if curve is not None and len(curve) > 0:
@@ -181,7 +169,6 @@ def run_backtest_and_save(
     with open(output_dir / "config.json", "w") as f:
         json.dump(config, f, indent=2)
 
-    years_in_data = pd.to_datetime(curve['date']).dt.year.unique() if curve is not None and len(curve) > 0 else []
     per_year = []
     if curve is not None and len(curve) > 0:
         curve_copy = curve.copy()
@@ -196,7 +183,7 @@ def run_backtest_and_save(
                 })
 
     metrics = {
-        "strategy_name": result.name,
+        "strategy_name": strategy_name,
         "start_date": start_date,
         "end_date": end_date,
         "total_return": round(result.total_return, 6),
@@ -210,18 +197,97 @@ def run_backtest_and_save(
     with open(output_dir / "metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)
 
-    print(f"\nArtifacts saved to: {output_dir}")
-    print(f"  - config.json")
-    print(f"  - metrics.json")
-    if curve is not None and len(curve) > 0:
-        print(f"  - daily_equity.parquet ({len(curve)} rows)")
-
+    print(f"    Artifacts: {output_dir.name}")
     return metrics
+
+
+def run_single_strategy(
+    config: dict,
+    start_date: str,
+    end_date: str,
+    allow_2026: bool,
+    liquid_lookup: dict,
+    trad_lookup: dict,
+    price_cache: dict,
+    run_id: str,
+) -> dict:
+    """Run a single strategy and return metrics."""
+    strategy_name = config["name"]
+    output_dir = ARTIFACT_DIR / "runs" / run_id / strategy_name
+
+    signal_df = prepare_signal_df_from_config(config, start_date, end_date, allow_2026)
+
+    return run_backtest_and_save(
+        signal_df,
+        price_cache,
+        strategy_name=strategy_name,
+        signal_col=config["signal_col"],
+        top_k=config["top_k"],
+        rebalance_days=config["rebalance_days"],
+        min_hold_days=config["min_hold_days"],
+        liquid_lookup=liquid_lookup,
+        trad_lookup=trad_lookup,
+        output_dir=output_dir,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
+
+def save_summary_table(all_metrics: list[dict], run_id: str):
+    """Save comparison summary table."""
+    summary_dir = ARTIFACT_DIR / "summaries"
+    summary_dir.mkdir(parents=True, exist_ok=True)
+
+    df = pd.DataFrame(all_metrics)
+    df = df.sort_values("annualized_return", ascending=False)
+
+    # Save as parquet
+    parquet_path = summary_dir / f"{run_id}_summary.parquet"
+    df.to_parquet(parquet_path, index=False)
+
+    # Save as CSV
+    csv_path = summary_dir / f"{run_id}_summary.csv"
+    df.to_csv(csv_path, index=False)
+
+    # Also save as "latest"
+    df.to_parquet(summary_dir / "latest_summary.parquet", index=False)
+    df.to_csv(summary_dir / "latest_summary.csv", index=False)
+
+    return df
+
+
+def print_summary_table(all_metrics: list[dict]):
+    """Print a compact summary table to console."""
+    if not all_metrics:
+        return
+
+    print("\n" + "=" * 80)
+    print("STRATEGY COMPARISON")
+    print("=" * 80)
+    print(f"{'Strategy':<25} {'Return':>10} {'Sharpe':>8} {'MDD':>10} {'Trades':>8}")
+    print("-" * 80)
+
+    for m in sorted(all_metrics, key=lambda x: x.get('annualized_return') or 0, reverse=True):
+        ret = f"{m.get('total_return', 0):.1%}" if m.get('total_return') else "N/A"
+        sharpe = f"{m['sharpe']:.2f}" if m.get('sharpe') else "N/A"
+        mdd = f"{m['max_drawdown']:.1%}" if m.get('max_drawdown') else "N/A"
+        trades = str(m.get('total_trades', 0))
+        print(f"{m['strategy_name']:<25} {ret:>10} {sharpe:>8} {mdd:>10} {trades:>8}")
+
+    print("=" * 80)
 
 
 def main():
     parser = create_argument_parser()
     args = parser.parse_args()
+
+    # Validate arguments
+    if not args.strategy and not args.all_strategies:
+        print("ERROR: Must specify --strategy or --all-strategies")
+        print("Available strategies:")
+        for name in strategy_loader.list_strategies():
+            print(f"  {name}")
+        sys.exit(1)
 
     allow_2026 = args.allow_lockbox
     start_date = args.start_date
@@ -232,46 +298,46 @@ def main():
         print("Use --allow-lockbox to override (only for testing).")
         sys.exit(1)
 
-    if args.output_dir:
-        output_dir = Path(args.output_dir)
+    # Determine strategies to run
+    if args.all_strategies:
+        strategy_names = strategy_loader.list_strategies()
     else:
-        run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_dir = ARTIFACT_DIR / "runs" / run_id
+        strategy_names = [args.strategy]
 
     print("Loading caches...")
     liquid_lookup, trad_lookup, price_cache = load_caches()
-    print(f"  Liquid dates: {len(liquid_lookup)}")
-    print(f"  Trad entries: {len(trad_lookup)}")
-    print(f"  Price tickers: {len(price_cache)}")
+    print(f"  Liquid: {len(liquid_lookup)} dates, Trad: {len(trad_lookup)} entries, Price: {len(price_cache)} tickers")
 
-    signal_col = "s1_proba" if args.strategy == "s1_only" else "signal"
-    signal_df = prepare_signal_df(args.strategy, start_date, end_date, allow_2026)
-    print(f"  Signal rows: {len(signal_df)}")
+    run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+    all_metrics = []
 
-    metrics = run_backtest_and_save(
-        signal_df,
-        price_cache,
-        strategy_name=args.strategy,
-        signal_col=signal_col,
-        top_k=args.top_k,
-        rebalance_days=args.rebalance_days,
-        min_hold_days=args.min_hold_days,
-        liquid_lookup=liquid_lookup,
-        trad_lookup=trad_lookup,
-        output_dir=output_dir,
-        start_date=start_date,
-        end_date=end_date,
-    )
+    print(f"\nRunning {len(strategy_names)} strategy(ies) from {start_date} to {end_date}...")
 
-    print("\n=== Summary ===")
-    print(f"Total Return: {metrics['total_return']:.2%}")
-    if metrics['annualized_return'] is not None:
-        print(f"Annualized Return: {metrics['annualized_return']:.2%}")
-    if metrics['sharpe'] is not None:
-        print(f"Sharpe: {metrics['sharpe']:.2f}")
-    if metrics['max_drawdown'] is not None:
-        print(f"Max Drawdown: {metrics['max_drawdown']:.2%}")
-    print(f"Total Trades: {metrics['total_trades']}")
+    for i, name in enumerate(strategy_names):
+        print(f"\n[{i+1}/{len(strategy_names)}] ", end="")
+        try:
+            config = strategy_loader.load_strategy_config(name)
+            metrics = run_single_strategy(
+                config, start_date, end_date, allow_2026,
+                liquid_lookup, trad_lookup, price_cache, run_id
+            )
+            all_metrics.append(metrics)
+        except (KeyError, ValueError) as e:
+            print(f"ERROR loading strategy '{name}': {e}")
+            continue
+
+    # Generate summary
+    if all_metrics:
+        df = save_summary_table(all_metrics, run_id)
+        print_summary_table(all_metrics)
+
+        summary_dir = ARTIFACT_DIR / "summaries"
+        print(f"\nSummary saved to:")
+        print(f"  {summary_dir / run_id}_summary.parquet")
+        print(f"  {summary_dir / run_id}_summary.csv")
+        print(f"  {summary_dir / 'latest_summary.parquet'}")
+    else:
+        print("\nNo strategies completed successfully.")
 
 
 if __name__ == "__main__":

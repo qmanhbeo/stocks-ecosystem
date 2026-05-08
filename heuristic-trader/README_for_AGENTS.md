@@ -55,23 +55,43 @@ Caches are stored in `cache/` directory and loaded automatically by `run_backtes
 
 This matches the workspace-wide lockbox policy in `alpha-research-lab/src/experiment_contract.py` (`MAX_RESEARCH_YEAR = 2025`).
 
-## CLI Entrypoint
+## Strategy Configuration
 
-```bash
-python run_backtest.py \
-  --strategy s1_only \
-  --start-date 2019-01-01 \
-  --end-date 2025-12-31 \
-  --top-k 5 \
-  --rebalance-days 5 \
-  --min-hold-days 3
+Strategies are defined in `strategies/strategies.json`:
+
+```json
+{
+  "s1_top5_rebal10": {
+    "name": "s1_top5_rebal10",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3
+  }
+}
 ```
 
-Available strategies:
-- `s1_only` - Use primary S1 probability signal
-- `blend_70_30` - 70% S1 + 30% C16 order pressure
-- `blend_50_50` - 50% S1 + 50% C16 order pressure
-- `c16_only` - Use C16 order pressure only
+### Add a New Strategy
+
+1. Edit `strategies/strategies.json`
+2. Add a new entry with required fields: `name`, `signal_type`, `signal_col`, `top_k`, `rebalance_days`, `min_hold_days`
+
+Available signal types: `s1_only`, `c16_only`, `blend_70_30`, `blend_50_50`
+
+## CLI Entrypoint
+
+### Single strategy:
+```bash
+python run_backtest.py --strategy s1_top5_rebal10 --start-date 2019-01-01 --end-date 2025-12-31
+```
+
+### All strategies:
+```bash
+python run_backtest.py --all-strategies --start-date 2019-01-01 --end-date 2025-12-31
+```
+
+This runs all strategies in `strategies.json` and produces a comparison table.
 
 ## Artifact Outputs
 
@@ -83,6 +103,19 @@ artifacts/runs/<timestamp>/
 ├── metrics.json    # Performance metrics
 └── daily_equity.parquet  # Daily equity curve (optional)
 ```
+
+### Multi-Strategy Summary
+
+When running with `--all-strategies`, comparison summaries are also generated:
+
+```
+artifacts/summaries/
+├── latest_summary.parquet
+├── latest_summary.csv
+└── <run_id>_summary.parquet
+```
+
+Columns: `strategy_name`, `total_return`, `annualized_return`, `sharpe`, `max_drawdown`, `total_trades`, `start_date`, `end_date`
 
 ### metrics.json schema:
 ```json

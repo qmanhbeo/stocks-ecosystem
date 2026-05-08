@@ -1,0 +1,56 @@
+{
+  "s1_top5_rebal10": {
+    "name": "s1_top5_rebal10",
+    "description": "S1 signal only, top 5 holdings, 10-day rebalance",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3
+  },
+  "s1_top5_rebal5": {
+    "name": "s1_top5_rebal5",
+    "description": "S1 signal only, top 5 holdings, 5-day rebalance",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 5,
+    "min_hold_days": 3
+  },
+  "s1_top3_rebal10": {
+    "name": "s1_top3_rebal10",
+    "description": "S1 signal only, top 3 holdings, 10-day rebalance",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 3,
+    "rebalance_days": 10,
+    "min_hold_days": 3
+  },
+  "blend_70_30_top5": {
+    "name": "blend_70_30_top5",
+    "description": "70% S1 + 30% C16 order pressure, top 5 holdings, 10-day rebalance",
+    "signal_type": "blend_70_30",
+    "signal_col": "blend",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3
+  },
+  "blend_50_50_top5": {
+    "name": "blend_50_50_top5",
+    "description": "50% S1 + 50% C16 order pressure, top 5 holdings, 10-day rebalance",
+    "signal_type": "blend_50_50",
+    "signal_col": "blend",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3
+  },
+  "c16_only_top5": {
+    "name": "c16_only_top5",
+    "description": "C16 order pressure only, top 5 holdings, 10-day rebalance",
+    "signal_type": "c16_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3
+  }
+}
