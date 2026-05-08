@@ -1,0 +1,162 @@
+{
+  "artifacts": {
+    "panel": "artifacts/research_branches/20260508_163124_h442_ticker_rank_acceleration_panel.parquet",
+    "results": "artifacts/research_branches/20260508_163124_h442_ticker_rank_acceleration_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_163124_h442_ticker_rank_acceleration_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Rank acceleration (second derivative of rank) is the edge. Different from H407 (phase lag cross-product) and H412 (additive levels) and H431 (rank delta first derivative). H431 passed with C16 rank delta (+0.0114 IC lift). Now test the SECOND derivative: rank acceleration = delta of delta. Buckets: accelerating, stable, decelerating. Test whether rank acceleration predicts forward IC differently from rank level or rank delta.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Rank acceleration (second derivative of rank) is the edge. Different from H407 (phase lag cross-product) and H412 (additive levels) and H431 (rank delta first derivative). H431 passed with C16 rank delta (+0.0114 IC lift). Now test the SECOND derivative: rank acceleration = delta of delta. Buckets: accelerating, stable, decelerating. Test whether rank acceleration predicts forward IC differently from rank level or rank delta.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "h442_ticker_rank_acceleration",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2018,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "rank_level",
+        "label": "High C16 rank (Q5)",
+        "name": "c16_rank_high",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "rank_level",
+        "label": "Low C16 rank (Q1)",
+        "name": "c16_rank_low",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "rank_delta",
+        "label": "Rank delta positive (rank increasing)",
+        "name": "rank_delta_pos",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "rank_delta",
+        "label": "Rank delta negative (rank decreasing)",
+        "name": "rank_delta_neg",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "rank_accel",
+        "label": "Rank acceleration positive (delta of delta > 0.05)",
+        "name": "rank_accel_up",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "rank_accel",
+        "label": "Rank acceleration negative (delta of delta < -0.05)",
+        "name": "rank_accel_down",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combined",
+        "label": "Rank accel up + strong C16 flow",
+        "name": "rank_accel_up_strong_flow",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combined",
+        "label": "Rank accel down + strong C16 flow",
+        "name": "rank_accel_down_strong_flow",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "h431_combo",
+        "label": "Rank delta positive + strong C16 flow (H431 combo)",
+        "name": "rank_delta_pos_strong_flow",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h442_ticker_rank_acceleration",
+  "summary": {
+    "accel_up_vs_delta_pos_lift": 6.497625953431896e-05,
+    "accel_up_vs_down_lift": 0.0009065520021848128,
+    "all_rows_avg_ic": 0.11962173428339475,
+    "best_avg_ic": 0.1575991058803593,
+    "best_state": "c16_rank_high",
+    "c16_rank_high_avg_ic": 0.1575991058803593,
+    "decision": "FAILED",
+    "panel_rows": 652527,
+    "rank_accel_down_avg_ic": 0.11906335559839014,
+    "rank_accel_down_rows": 291119,
+    "rank_accel_down_strong_flow_avg_ic": 0.1467739997895715,
+    "rank_accel_up_avg_ic": 0.11996990760057495,
+    "rank_accel_up_pos_years": "8/8",
+    "rank_accel_up_rows": 295747,
+    "rank_accel_up_strong_flow_avg_ic": 0.14759570754626178,
+    "rank_delta_pos_avg_ic": 0.11990493134104063,
+    "rank_delta_pos_strong_flow_avg_ic": 0.14817606678245404
+  },
+  "ts": "20260508_163124"
+}

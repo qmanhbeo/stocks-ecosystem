@@ -666,6 +666,29 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 
 ---
 
+### C18 — C16 Rank Delta (H431)
+**Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- **Standalone IC:** +0.1290 (vs C16 level +0.0752 = **+72% boost**)
+- **Lift vs baseline:** +0.0114 (8/8 positive years)
+- **Validation (2023-2025):** Q5_incr +0.1310 vs level +0.0633
+
+**What it captures:**
+- C16 rank CHANGE (delta) captures flow acceleration, a different feature class from level
+- Q5_incr (increasing rank) is the best bucket
+- Both extremes beat the middle - flow momentum that level misses
+
+**Formula:** `c16_rank_delta = c16_rank_today - c16_rank_yesterday`
+
+**Why it matters:**
+- NEW SIGNAL adds +0.0114 IC lift over baseline
+- Use as a conditioner or additive component with Vol+S1
+- Independent of C16 level (captures different information)
+
+**Source:** Session 310, F384.
+
+---
+
 ---
 
 ### C16-Triple — CafeF Order Pressure + Triple Storm Conditions (S229)

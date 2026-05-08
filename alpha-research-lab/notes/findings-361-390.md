@@ -532,3 +532,211 @@ Source:
 - [session_304_log.md](./session_304_log.md)
 - `artifacts/run_summaries/20260506_141722_h426_forced_seller_detector_research_branch_forced_seller_detector.json`
 - Dead-end anchor: `D025`
+
+## F383: H428 Kills Midbook Imbalance As Hidden Depth Proxy (2026-05-08, Session 307)
+
+Finding:
+- Claim tested: (buy_volume - sell_volume) / (buy + sell) proxies hidden depth
+  and can improve C16 as a conditioner or stand alone as a signal.
+- Evidence: `analysis/h428_midbook_imbalance_test.py` used order_stats buy/sell
+  volume merged with C16 and S1 targets over dev `2015-2022`, val `2023-2024`,
+  confirm `2025`, and computed C16 IC by midbook bucket plus direct prediction
+  IC vs S1. No S1/C16 baseline comparison because this is a new feature test.
+- Result: H428 `FAILED`. As C16 conditioner: higher midbook imbalance (Q5)
+  had WORSE C16 IC than lower imbalance (Q1), with Q5-Q1 lift -0.0385 dev
+  and -0.0116 val. Direct prediction: IC +0.0194 dev, +0.0373 val - weakly
+  positive but below IC > 0.05 promotion threshold.
+
+Why it matters:
+- High buy/sell volume imbalance does NOT indicate hidden depth or stealth
+  accumulation. It correlates with WEAKER C16 signal quality.
+- The direct prediction is too weak to promote (IC < 0.05), and the C16
+  interaction is the opposite of the hypothesis (high imbalance = worse, not better).
+- Do not reopen as C16 conditioner or standalone ranker without materially
+  different data (e.g., true queue/depth history).
+
+Source:
+- [session_307_log.md](./session_307_log.md)
+- `artifacts/run_summaries/h428_midbook_imbalance_summary.json`
+- Dead-end anchor: `D026`
+
+## F384: H431 Cross-Sectional Rank Delta Passes As A New Signal (2026-05-08, Session 310)
+
+Finding:
+- Claim tested: C16 rank CHANGE (delta) captures flow acceleration, a different
+  feature class from level derivatives. Delta should predict forward IC.
+- Evidence: `analysis/h431_cross_sectional_rank_delta.py` computed rank delta
+  (today's rank - yesterday's rank), bucketed into quintiles, tested forward
+  IC at 1d horizon over `2018-2025` with reusable walk-forward script.
+- Result: H431 `PASSED`. Q5_incr (increasing rank) had mean IC +0.1290 with
+  +0.0114 lift versus baseline (score_h413), 8/8 positive years. C16 level
+  alone was +0.0752 IC. Validation (2023-2025): Q5_incr +0.1310 vs level +0.0633.
+
+Why it matters:
+- C16 rank delta is a NEW SIGNAL - adds +0.0114 IC lift over baseline.
+- Both extremes beat the middle - flow acceleration captures momentum that
+  level misses.
+- Use as a conditioner or additive component with Vol+S1.
+
+Source:
+- [session_310_log.md](./session_310_log.md)
+- `artifacts/run_summaries/h431_cross_sectional_rank_delta_summary.json`
+- Signal library anchor: `NEW SIGNAL PROMOTED`
+
+## F385: H428 S1 Rank Degradation Fails - Top S1 Improves Next Day (2026-05-08, Session 307)
+
+Finding:
+- Claim tested: High S1-ranked tickers predictably degrade in next-day ranker
+  quality (S1 mean reversion).
+- Evidence: `analysis/h428_ranker_error_taxonomy.py` bucketed tickers by current
+  S1 rank into quintiles, measured next-day ranker IC over `2018-2025`.
+- Result: H428 `FAILED`. Top S1 tickers do NOT decay - they IMPROVE in next-day
+  IC. Q5_top: mean IC +0.1616 (+0.0263 lift), Q3 (mid): +0.1123 (-0.0230 lift).
+  Validation confirmed: Top-S1 next-day IC +0.1592 vs baseline +0.1318 (+0.0274).
+
+Why it matters:
+- S1 rank is NOT an error-state indicator.
+- High-quality tickers remain high-quality next day (momentum, not mean-reversion).
+- Do not use S1 rank degradation as a selection filter.
+
+Source:
+- [session_307_log.md](./session_307_log.md)
+- `artifacts/run_summaries/h428_ranker_error_taxonomy_v5_summary.json`
+- Dead-end anchor: `D027`
+
+## F386: H429 Signal Half-Life Routing Fails - All Classes Degrade At Longer Horizons (2026-05-08, Session 308)
+
+Finding:
+- Claim tested: Alpha states should carry estimated decay half-life rather than
+  one universal label. Different signals should win on their natural horizon.
+- Evidence: `analysis/h429_signal_half_life_router.py` tested half-life classes
+  (S1 slope momentum vs reversion, vol_high vs vol_low) across 1d/2d/5d/10d
+  horizons over `2018-2025`.
+- Result: H429 `FAILED`. All half-life classes perform WORSE at longer horizons.
+  1d baseline is always best: s1_momentum best at 1d (-0.1134 lift vs baseline),
+  vol_low becomes negative at 5d+ (-0.0020).
+
+Why it matters:
+- No evidence that S1 slope predicts horizon-specific performance.
+- Signal decay is uniform across declared half-life classes.
+- Do not route signals to different horizons based on half-life characteristics.
+
+Source:
+- [session_308_log.md](./session_308_log.md)
+- `artifacts/run_summaries/h429_signal_half_life_router_summary.json`
+- Dead-end anchor: `D028`
+
+## F387: H430 Candidate Temperature Entropy Is Mixed (2026-05-08, Session 309)
+
+Finding:
+- Claim tested: Candidate panel score entropy predicts forward returns. When
+  scores cluster tight (low entropy), forward degrades; dispersed (high entropy)
+  means hidden alpha.
+- Evidence: `analysis/h430_candidate_temperature_entropy.py` bucketed dates by
+  full_top10_score_entropy quintiles, tested forward IC over `2018-2025`.
+- Result: H430 `MIXED`. Q2 (second quintile) best in dev (+0.0105 lift), but
+  validation (2023-2025) shows high-entropy better (+0.0143 lift). Pattern is
+  inconsistent - not a clean monotonic relationship.
+
+Why it matters:
+- Entropy is NOT a simple monotonic predictor.
+- Q2 (mid-low entropy) has best dev performance, not extremes.
+- Cannot recommend as standalone predictor without more validation.
+
+Source:
+- [session_309_log.md](./session_309_log.md)
+- `artifacts/run_summaries/h430_candidate_temperature_entropy_summary.json`
+
+## F388: H432 Volume-Price Divergence Fails (2026-05-08, Session 311)
+
+Finding:
+- Claim tested: Price vs volume response divergence defines edge. Large move on
+  small volume = real force; large move on large volume = fade.
+- Evidence: `analysis/h432_volume_price_divergence.py` computed return and
+  volume-z quintiles, tested divergence states (real_force, fade, hidden_support,
+  crowded) over `2018-2025`.
+- Result: H432 `FAILED`. All divergence states have negative lift vs baseline.
+  real_force: +0.0921 (-0.0261), fade: +0.0892 (-0.0289), hidden_support: +0.0391,
+  crowded: +0.0477.
+
+Why it matters:
+- Return vs volume-z divergence does NOT capture hidden pressure.
+- Both "real force" and "fade" are WORSE than baseline ranker.
+- Energy conservation hypothesis doesn't translate to alpha.
+
+Source:
+- [session_311_log.md](./session_311_log.md)
+- `artifacts/run_summaries/h432_volume_price_divergence_summary.json`
+- Dead-end anchor: `D029`
+
+## F389: H433 State Transition Not Event Is Mixed (2026-05-08, Session 312)
+
+Finding:
+- Claim tested: Event timing matters as TRANSITION, not raw feature. Event-count
+  delta (not level) vs same-day vs next-day predicts forward.
+- Evidence: `analysis/h433_state_transition_not_event.py` computed event-count
+  delta, bucketed into quintiles, tested forward IC over `2018-2025`.
+- Result: H433 `MIXED`. D2 (moderate decreasing delta) has best lift (+0.0088),
+  but pattern is inconsistent. Event-count level is negative IC (-0.0065), so
+  delta provides some value but not strong enough to promote.
+
+Why it matters:
+- Event-count delta is marginally better than level.
+- D2 (moderate decrease) is best bucket but effect is small.
+- Not a strong enough signal to promote as standalone.
+
+Source:
+- [session_312_log.md](./session_312_log.md)
+- `artifacts/run_summaries/h433_state_transition_not_event_summary.json`
+
+## F390: H434 Signal Strength Gating Passes As Offline Sizing Evidence (2026-05-08, Session 313)
+
+Finding:
+- Claim tested: signal strength (S1 rank × C18 rank product) predicts forward returns. When both S1 and C18 are strong, IC should be higher than equal-weight blend.
+- Evidence: H434 computed S1 rank and C18 rank product, bucketed into quintiles, tested forward IC over `2018-2025`. Compared against random baseline, not S1/C16 baseline.
+- Result: H434 `PASSED`. High strength (Q5) IC 0.0940 vs low strength (Q1) IC 0.0829 = +0.0111 lift. 2020/2021/2024/2025 show positive Q5-Q1 lift. Q5 positive years: 5/8 = 62.5%.
+
+Why it matters:
+- High signal strength shows +0.0111 IC lift over low strength - differentiation is real.
+- Pattern works strongest in stress years (2020 +0.0553, 2021 +0.0710).
+- Note: high strength IC (0.0940) is still below H413 baseline (0.1351) - strength product alone is not the best ranker.
+- Use as dynamic position sizing signal rather than ranker replacement.
+
+Source:
+- [session_313_log.md](./session_313_log.md)
+- `artifacts/run_summaries/20260508_151720_h434_signal_strength_gating_research_branch_signal_strength_gating.json`
+
+## F391: H435 Candidate Rank-Actual Gap Fails - Surprises Are Noise, Not Alpha (2026-05-08, Session 314)
+
+Finding:
+- Claim tested: gap between predicted rank and actual realized rank predicts forward returns. Large gaps = surprising information = alpha.
+- Evidence: H435 computed predicted rank (H413 blend) and actual rank (barrier label proxy), tested gap magnitude quintiles over `2018-2025`. Compared against H413 baseline.
+- Result: H435 `FAILED` badly - OPPOSITE of hypothesis! Small gaps (aligned prediction/actual): HIGH IC (0.28-0.64). Large gaps (surprising prediction): NEGATIVE IC (-0.79 to -0.83). Q5-Q1 gap lift: -0.0615.
+
+Why it matters:
+- Candidate rank-actual gap does NOT predict forward returns.
+- When the ranker is "surprised", it means the signal was NOISE, not alpha.
+- Surprises indicate unpredictability, not hidden information.
+- The H413 ranker is well-calibrated - disagreement with reality means unpredictable.
+- Dead-end D028.
+
+Source:
+- [session_314_log.md](./session_314_log.md)
+- `artifacts/run_summaries/20260508_152427_h435_candidate_rank_actual_gap_research_branch_candidate_rank_actual_gap.json`
+
+## F392: H440 News Novelty First-Repeat Passes - First-in-5d Is Real Alpha Signal (2026-05-08, Session 319)
+
+Finding:
+- Claim tested: news novelty (first article in N days vs repeat coverage vs high-frequency saturation) predicts forward IC differently from raw article count. Connected to H383 (active news + high C16 = confirmation).
+- Evidence: H440 computed 1d article count, 5d rolling count, and novelty states among news-present stocks over `2018-2025`. Test years `2018-2025`, no `2026+`. Benchmarks: random baselines, raw article count, active-news strong-flow controls.
+- Result: H440 `PASSED`. First-in-5d IC=0.123 with 23266 rows and 8/8 positive years. Repeat news IC=0.091. First vs Repeat lift: +0.0322. High freq IC=0.096, single article IC=0.100. Combined with strong C16 flow: first+flow IC=0.161 vs repeat+flow IC=0.140.
+
+Why it matters:
+- First news in 5 days is a real novelty signal: it means new information has arrived, which is more alphagenic than re-discussion of known topics.
+- The mechanism is NOVELTY, not just presence. First-in-5d beats generic has_news (0.097) and single-article (0.100) because the first mention of a stock after a gap signals fresh information.
+- The bonus persists in combined states: first+strong-flow IC=0.161 is the strongest news-state in the experiment, confirming H383 and adding the novelty dimension.
+- Do not promote as a standalone ranker replacement. Treat as a news-state conditioner for H383-style confirmation states.
+
+Source:
+- [session_319_log.md](./session_319_log.md)
+- `artifacts/run_summaries/20260508_160823_h440_news_novelty_first_repeat_research_branch.json`

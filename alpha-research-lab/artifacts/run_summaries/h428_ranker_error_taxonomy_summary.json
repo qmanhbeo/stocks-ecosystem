@@ -1,0 +1,63 @@
+{
+  "decision": "PASSED",
+  "branch": "ranker_error_taxonomy",
+  "overall_ranker_ic": 0.13458333750074838,
+  "dev_years": [
+    2018,
+    2019,
+    2020,
+    2021,
+    2022
+  ],
+  "val_years": [
+    2023,
+    2024,
+    2025
+  ],
+  "bucket_dev_results": {
+    "no_support": {
+      "mean_rank_ic": 0.11211928868265947,
+      "positive_years": 8,
+      "total_years": 8
+    },
+    "weak_confidence": {
+      "mean_rank_ic": 0.06411276927432259,
+      "positive_years": 8,
+      "total_years": 8
+    },
+    "boundary": {
+      "mean_rank_ic": 0.2660259047167734,
+      "positive_years": 8,
+      "total_years": 8
+    },
+    "all_rows": {
+      "mean_rank_ic": 0.13536471046594833,
+      "positive_years": 8,
+      "total_years": 8
+    }
+  },
+  "bucket_val_results": {
+    "no_support": {
+      "mean_rank_ic": 0.10681244660353763,
+      "positive_years": 3,
+      "total_years": 3
+    },
+    "weak_confidence": {
+      "mean_rank_ic": 0.06890031127876396,
+      "positive_years": 3,
+      "total_years": 3
+    },
+    "boundary": {
+      "mean_rank_ic": 0.2623810143837642,
+      "positive_years": 3,
+      "total_years": 3
+    },
+    "all_rows": {
+      "mean_rank_ic": 0.13204728754571365,
+      "positive_years": 3,
+      "total_years": 3
+    }
+  },
+  "best_bucket": "boundary",
+  "val_lift_vs_ranker": 0.12779767688301583
+}

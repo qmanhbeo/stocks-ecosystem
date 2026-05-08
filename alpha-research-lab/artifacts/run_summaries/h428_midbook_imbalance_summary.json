@@ -1,0 +1,15 @@
+{
+  "hypothesis": "bid_ask_midbook_imbalance",
+  "dev_q5_c16_ic": 0.048659982973718846,
+  "dev_q1_c16_ic": 0.08716916705069719,
+  "dev_lift": -0.03850918407697834,
+  "dev_positive_years": 8,
+  "dev_total_years": 8,
+  "val_q5_c16_ic": 0.017519030852912516,
+  "val_q1_c16_ic": 0.02907607746686036,
+  "val_lift": -0.011557046613947845,
+  "val_positive_years": 2,
+  "val_total_years": 2,
+  "direct_dev_ic": 0.019398518327741806,
+  "direct_val_ic": 0.03732345023866937
+}

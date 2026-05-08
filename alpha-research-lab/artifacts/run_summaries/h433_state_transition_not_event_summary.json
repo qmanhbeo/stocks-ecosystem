@@ -1,0 +1,38 @@
+{
+  "decision": "MIXED",
+  "branch": "state_transition_not_event",
+  "baseline_ic": 0.11805873350768581,
+  "event_count_level_ic": -0.006485547144833138,
+  "delta_results": {
+    "D1_decr": {
+      "mean_ic": 0.11091100562612709,
+      "lift": -0.007147727881558721,
+      "pos_years": 8,
+      "total": 8
+    },
+    "D2": {
+      "mean_ic": 0.12685003167155728,
+      "lift": 0.008791298163871475,
+      "pos_years": 8,
+      "total": 8
+    },
+    "D3": {
+      "mean_ic": 0.12210213111230869,
+      "lift": 0.004043397604622884,
+      "pos_years": 8,
+      "total": 8
+    },
+    "D4": {
+      "mean_ic": 0.1116349680031466,
+      "lift": -0.006423765504539214,
+      "pos_years": 8,
+      "total": 8
+    },
+    "D5_incr": {
+      "mean_ic": 0.12072726268231097,
+      "lift": 0.0026685291746251644,
+      "pos_years": 8,
+      "total": 8
+    }
+  }
+}

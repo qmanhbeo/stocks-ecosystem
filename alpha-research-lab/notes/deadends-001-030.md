@@ -647,3 +647,166 @@ Reopening condition:
 Source:
 - [session_304_log.md](./session_304_log.md)
 - `artifacts/run_summaries/20260506_141722_h426_forced_seller_detector_research_branch_forced_seller_detector.json`
+
+## D026: Midbook Imbalance Fails As Hidden Depth Proxy (2026-05-08, Session 307)
+
+Dead end:
+- Claim tested: (buy_volume - sell_volume) / (buy + sell) proxies hidden depth
+  and can improve C16 as a conditioner or stand alone as a signal.
+- Evidence: H428 used `analysis/h428_midbook_imbalance_test.py` with order_stats
+  buy/sell volume merged with C16 (order_volume_ratio) and S1 targets over
+  dev `2015-2022`, val `2023-2024`, confirm `2025`; computed C16 IC by midbook
+  bucket and direct prediction IC vs S1.
+- Result: FAILED as C16 conditioner - higher midbook imbalance (Q5) had WORSE
+  C16 IC than lower imbalance (Q1), with Q5-Q1 lift -0.0385 dev, -0.0116 val.
+  Direct prediction was weakly positive (IC +0.0194 dev, +0.0373 val) but below
+  IC > 0.05 promotion threshold.
+
+Do not reopen under current representation:
+- Do not treat high buy/sell volume imbalance as hidden depth or stealth
+  accumulation - it correlates with WEAKER signal quality.
+- Do not test as C16 conditioner without materially different data (e.g., true
+  queue/depth history that captures actual order-book state).
+
+Survivor from the audit:
+- None for the current hypothesis. The opposite direction holds: high
+  imbalance = weak signal quality.
+
+Reopening condition:
+- Reopen only with true historical queue/depth data that captures actual
+  order-book state at different price levels, not just aggregated daily
+  buy/sell volumes.
+
+---
+
+## D027: S1 Rank Degradation Hypothesis Fails (2026-05-08, Session 307)
+
+Dead end:
+- Claim tested: High S1-ranked tickers predictably degrade in next-day ranker
+  quality (S1 mean reversion).
+- Evidence: H428 used `analysis/h428_ranker_error_taxonomy.py` bucketed tickers
+  by current S1 rank into quintiles, measured next-day ranker IC over
+  `2018-2025`.
+- Result: FAILED - Top S1 tickers do NOT decay; they IMPROVE in next-day IC.
+  Q5_top: mean IC +0.1616 (+0.0263 lift), Q3 (mid): +0.1123 (-0.0230 lift).
+  Validation confirmed: Top-S1 +0.1592 vs baseline +0.1318 (+0.0274).
+
+Do not reopen under current representation:
+- Do not use S1 rank as an error-state indicator.
+- High-quality tickers remain high-quality next day (momentum, not mean-reversion).
+
+Reopening condition:
+- Reopen only with materially different quality/continuation proxy (e.g.,
+  changes in analyst coverage, institutional ownership, or other fundamental
+  quality signals).
+
+---
+
+## D028: Signal Half-Life Routing Fails (2026-05-08, Session 308)
+
+Dead end:
+- Claim tested: Alpha states should carry estimated decay half-life rather than
+  one universal label. Different signals should win on their natural horizon.
+- Evidence: H429 used `analysis/h429_signal_half_life_router.py` to test half-life
+  classes (S1 slope momentum vs reversion, vol_high vs vol_low) across
+  1d/2d/5d/10d horizons over `2018-2025`.
+- Result: FAILED - All half-life classes perform WORSE at longer horizons. 1d
+  baseline always best: s1_momentum best at 1d (-0.1134 lift), vol_low becomes
+  negative at 5d+ (-0.0020).
+
+Do not reopen under current representation:
+- No evidence that S1 slope predicts horizon-specific performance.
+- Signal decay is uniform across declared half-life classes.
+- Do not route signals to different horizons based on half-life characteristics.
+
+Reopening condition:
+- Reopen only with materially different horizon definition or target (e.g.,
+  different barrier percentages, different cost models, or alternative
+  execution contracts).
+
+---
+
+## D029: Volume-Price Divergence Hypothesis Fails (2026-05-08, Session 311)
+
+Dead end:
+- Claim tested: Price vs volume response divergence defines edge. Large move on
+  small volume = real force; large move on large volume = fade.
+- Evidence: H432 used `analysis/h432_volume_price_divergence.py` to compute
+  return and volume-z quintiles and test divergence states (real_force, fade,
+  hidden_support, crowded) over `2018-2025`.
+- Result: FAILED - All divergence states have negative lift vs baseline.
+  real_force: +0.0921 (-0.0261), fade: +0.0892 (-0.0289), hidden_support: +0.0391,
+  crowded: +0.0477.
+
+Do not reopen under current representation:
+- Return vs volume-z divergence does NOT capture hidden pressure.
+- Both "real force" and "fade" are WORSE than baseline ranker.
+- Energy conservation hypothesis doesn't translate to alpha.
+
+Reopening condition:
+- Reopen only with materially different volume data (e.g., intraday volume
+  profile, order-flow fragmentation metrics) or alternative divergence measures.
+
+Source:
+- [session_307_log.md](./session_307_log.md)
+- `artifacts/run_summaries/h428_midbook_imbalance_summary.json`
+
+## D026: Volume-Price Divergence Fails Under Return vs Volume-Z Representation (2026-05-08, Session 311)
+
+Dead end:
+- Claim tested: price vs volume response divergence defines edge. Large move on small volume = real force; large move on large volume = fade.
+- Evidence: H432 computed return and volume-z quintiles, tested divergence states (real_force, fade, hidden_support, crowded) over `2018-2025`. All states compared against H413 baseline.
+- Result: H432 `FAILED`. All divergence states have negative lift vs baseline: real_force +0.0921 (-0.0261), fade +0.0892 (-0.0289), hidden_support +0.0391, crowded +0.0477.
+
+Do not reopen under current representation:
+- Do not test energy conservation / return vs volume-z divergence as a standalone split.
+- The hypothesis does not translate to alpha in this market.
+
+Reopening condition:
+- Reopen only with materially different volume representation or price response metric.
+
+Source:
+- [session_311_log.md](./session_311_log.md)
+- `artifacts/run_summaries/h432_volume_price_divergence_summary.json`
+
+## D027: Signal Half-Life Routing Fails Under Pre-Declared Half-Life Classes (2026-05-08, Session 308)
+
+Dead end:
+- Claim tested: pre-declared half-life classes (S1 momentum vs reversion, vol_high vs vol_low) should win only on their natural horizon vs random horizon controls.
+- Evidence: H429 bucketed tickers by S1 slope (momentum vs reversion) and volume state (high vs low), tested IC at 1d/2d/5d/10d horizons over `2018-2025`.
+- Result: H429 `FAILED`. All classes degrade at longer horizons; 1d baseline always best. vol_low becomes negative at 5d+ horizons. No horizon-specific advantage found.
+
+Do not reopen under current representation:
+- Do not route signals to different horizons based on half-life characteristics.
+- The horizon specialization hypothesis is not supported by data.
+
+Reopening condition:
+- Reopen only with materially different horizon definition, target, or market regime classification.
+
+Source:
+- [session_308_log.md](./session_308_log.md)
+- `artifacts/run_summaries/h429_signal_half_life_router_summary.json`
+
+## D028: Candidate Rank-Actual Gap Fails - Surprises Are Noise, Not Alpha (2026-05-08, Session 314)
+
+Dead end:
+- Claim tested: gap between predicted rank and actual realized rank predicts forward returns. Large gaps = surprising information = alpha.
+- Evidence: H435 computed predicted rank (H413 blend) and actual rank (barrier label proxy), tested gap magnitude quintiles over `2018-2025`. Compared against H413 baseline.
+- Result: H435 `FAILED` badly - OPPOSITE of hypothesis!
+  - Small gaps (aligned prediction/actual): HIGH IC (0.28-0.64)
+  - Large gaps (surprising prediction): NEGATIVE IC (-0.79 to -0.83)
+  - Q5-Q1 gap lift: -0.0615 (badly negative)
+
+Do not reopen under current representation:
+- Candidate rank-actual gap does NOT predict forward returns.
+- When the ranker is "surprised", it means the signal was NOISE, not alpha.
+- Surprises indicate unpredictability, not hidden information.
+- The H413 ranker is well-calibrated - disagreement with reality means unpredictable.
+
+Reopening condition:
+- Reopen only if you can prove that model "surprise" contains information about future model error correction.
+- The current formulation uses the label proxy, which introduces look-ahead bias.
+
+Source:
+- [session_314_log.md](./session_314_log.md)
+- `artifacts/run_summaries/20260508_152427_h435_candidate_rank_actual_gap_research_branch_candidate_rank_actual_gap.json`

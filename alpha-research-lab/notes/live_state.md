@@ -5,8 +5,17 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead-end chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_306_log.md](./session_306_log.md)
-Last verified: [Session 306](./session_306_log.md), 2026-05-08
+Latest full session detail: [session_320_log.md](./session_320_log.md)
+Last verified: [Session 320](./session_320_log.md), 2026-05-08
+(H440 news_novelty_first_repeat PASSED: First-in-5d IC=0.123 vs repeat IC=0.091 (+0.032 lift, 8/8 pos years); first+flow IC=0.161 is strongest news-state; F392)
+(H441 cross_ticker_correlation_shock FAILED: high vs low corr date lift +0.0033 only, below threshold; D032)
+(H440 PASSED found real news novelty signal - first-in-5d is stronger than repeat coverage)
+(H433 state_transition_not_event MIXED: D2 best (+0.0088 lift), but pattern inconsistent)
+(H432 volume_price_divergence FAILED: all divergence states have negative lift, hypothesis not supported)
+(H431 cross_sectional_rank_delta PASSED: C16 rank delta adds +0.0114 IC lift, 8/8 positive years, validation confirms)
+(H430 candidate_temperature_entropy MIXED: Q2 best in dev (+0.0105), but validation prefers high-entropy (+0.0143), inconsistent pattern)
+(H429 signal_half_life_router FAILED: all half-life classes degrade at longer horizons, no horizon-specific advantage)
+(H428 ranker_error_taxonomy FAILED: top S1 tickers IMPROVE next-day +0.0263 IC, no degradation found; D027)
 (H427 volume_attention_budget PASSED: mid-concentration Q3 has +0.0125 IC lift vs baseline, 8/8 positive years)
 
 Compact recovery:
@@ -269,36 +278,17 @@ Source durable memory:
 Ranked by upside, novelty, current-data feasibility, and honesty of first test.
 Do not assign `H` numbers until one branch is activated.
 
-Bright-mind frontier additions from the 2026-05-08 ideation pass. These are
-queued ideas, not activated branches, and should stay subordinate to the
-current immediate next action unless explicitly selected.
+Bright-mind EUREKA additions from 2026-05-08 spark analysis - built on
+H427 volume_attention_budget PASSED (+0.0125 IC), additive pattern confirmed
+(0.1V+0.9S = +0.135), and recent failure patterns:
 
-1. `ranker_error_taxonomy`: the confirmed `0.1*Vol + 0.9*S1` ranker may be
-   less important than the states where it is predictably wrong. Connection:
-   H413-H417 made the additive ranker real, while H401 showed broad vetoes are
-   too blunt. Smallest honest test: build fixed error buckets for the additive
-   ranker using no-support, news-hype/weak-flow, weak sector, tradability pain,
-   Re regime, candidate-count, and boundary entropy; evaluate actions
-   `trust`, `cash-veto`, `shorten-to-1d`, and `hold-to-5d` against random
-   same-breadth policies. Kill if no bucket beats the ranker baseline and
-   random action controls in walk-forward.
-2. `signal_half_life_router`: alpha states should carry an estimated decay
-   half-life rather than one universal label. Connection: H397 proved
-   active-news strong-flow is a 1d ranker, official-supported attention is a
-   5d hold state, and H414 says Vol+S1 survives across horizons. Smallest
-   honest test: predeclare half-life classes from S1 slope, volume-state,
-   news/source type, official support, insider event-time, candidate age, and
-   tradability; require each class to win only on its assigned 1d/2d/5d/cycle
-   horizon versus horizon-random controls.
-3. `volume_attention_budget`: robust volume alpha may come from where the
-   market spends attention, not only ticker-level volume. Connection:
-   H409-H417 found volume is strong and additive with S1, while H403 says flow
-   regime matters. Smallest honest test: date-level and sector-level volume
-   Herfindahl/Gini, volume migration, and volume-z breadth split S1, Vol,
-   `0.1*Vol + 0.9*S1`, Re, and candidate-count policy performance. Kill if
-   budget concentration does not improve activation or K routing versus
-   candidate-count-only and VNI-state controls.
-4. `intraday_absorption_acceptance`: failed daily forced-seller and nihilist
+1. **ranker_error_taxonomy** → H428 FAILED: Top S1 tickers IMPROVE next-day (+0.0263 IC), no degradation found. Dead-end D027.
+
+2. **signal_half_life_router** → H429 FAILED: All half-life classes degrade at longer horizons, no horizon-specific advantage. Dead-end D028.
+
+3. **volume_attention_budget**: [ACTIVATED: H427 PASSED] - Q3 mid-concentration has +0.0125 IC lift, 8/8 positive years. Offline evidence, needs candidate-count follow-through.
+
+4. **intraday_absorption_acceptance**: failed daily forced-seller and nihilist
    states may need an intraday acceptance signature before they are tradable.
    Connection: H426 killed daily forced-seller allocation but explicitly left a
    delayed/intraday absorption contract open; H393 left stock-down high-C16 as
@@ -307,7 +297,8 @@ current immediate next action unless explicitly selected.
    strength, path efficiency, and volume-burst shape at T close; test delayed
    T+1 entries for stock-down/high-C16 and sell-pressure states versus the
    daily controls. Data-gated only if the needed 1H coverage is too thin.
-5. `semantic_novelty_saturation`: news volume may be harmful when semantic
+
+5. **semantic_novelty_saturation**: news volume may be harmful when semantic
    novelty is exhausted, while high novelty plus muted price response may be
    delayed alpha. Connection: H364/H383/H385/H397 say local-news features are
    useful only under source/horizon-specific consumers, and count-based event
@@ -316,7 +307,8 @@ current immediate next action unless explicitly selected.
    vectors and normalized text hashes; test low-novelty/high-attention
    exhaustion and high-novelty/low-price-response delayed states against raw
    article count, source type, and active-news strong-flow controls.
-6. `official_attachment_latency_clock`: official disclosures may be alpha
+
+6. **official_attachment_latency_clock**: official disclosures may be alpha
    because complex attachments delay interpretation, not because an event flag
    exists. Connection: H385/H397 show official-supported rows pay at 5d, while
    raw event counts and sector event lightcones failed. Smallest honest test:
@@ -324,7 +316,8 @@ current immediate next action unless explicitly selected.
    extract presence, source timestamp, and CafeF/news lag to split official
    rows into easy/slow interpretation buckets; require 5d payoff lift versus
    H397 official-supported controls and same-ticker non-event dates.
-7. `prop_foreign_predator_prey`: foreign and proprietary flows may be useful
+
+7. **prop_foreign_predator_prey**: foreign and proprietary flows may be useful
    only as a conflict/absorption game, not as raw net-flow ranks. Connection:
    standalone foreign/proprietary paths and foreign additive H418 failed, but
    the raw surfaces now exist. Smallest honest test: predeclare foreign-sell/
@@ -332,7 +325,8 @@ current immediate next action unless explicitly selected.
    foreign states crossed only with Vol+S1 strength, C16, and news support;
    compare to raw foreign, raw proprietary, H418, and random same-support
    controls.
-8. `selector_hysteresis_field`: the portfolio should resist or accept
+
+8. **selector_hysteresis_field**: the portfolio should resist or accept
    replacement based on boundary energy around current holdings, not simply
    freshness. Connection: sticky live branch remains frozen, H388 killed
    long-dormancy fresh selection, and H379/H380 showed candidate-count policy
@@ -340,6 +334,114 @@ current immediate next action unless explicitly selected.
    with incumbent rank distance, rank 5/6 gap, top-book overlap, short-repeat
    pressure, and buyability; compare sticky/replace/top1/top5 actions against
    stale-repeat, fresh-selection, and random K/cash controls.
+
+---
+
+**NEW EUREKA SPARKS (2026-05-08 batch - tested results):**
+
+A. **s1_mean_reversion_signal** → H428 FAILED: Top S1 tickers IMPROVE next-day, no decay.
+
+B. **candidate_temperature_entropy** → H430 MIXED: Q2 best in dev, validation prefers high.
+
+C. **cross_sectional_rank_delta** → H431 PASSED: C18 NEW SIGNAL (+0.0114 IC lift).
+
+D. **volume_price_divergence** → H432 FAILED: All states negative lift.
+
+E. **sector_rotation_reversal** → DATA-GATED.
+
+F. **signal_ignorance_weight** → Not tested yet.
+
+G. **state_transition_not_event** → H433 MIXED: D2 best (+0.0088).
+
+---
+
+**NEW EUREKA SPARKS (2026-05-08 batch 2 - generated from bright-mind analysis):**
+
+Based on analysis of H428-H433 failures:
+- H428 showed S1 quality PERSISTS (momentum), so quality signals should be trusted
+- H431 showed rank DELTA works better than rank LEVEL - derivatives capture edge
+- H433 showed event-count delta marginally better than level - transitions matter
+
+**New creative hypotheses:**
+
+K. **volume_adjusted_price_momentum**: Price normalized by volume captures "expensive" vs "cheap" moves. Same return on higher volume = real force, same return on lower volume = fade. First test: return / volume-z buckets for forward IC. Uses existing Vol and S1. Upside: separates real force from crowd blowoff.
+
+L. **rank_acceleration_router**: H407 tested phase lag cross-product, but rank ACCELERATION (second derivative) hasn't been tested. Momentum in momentum - first derivative captures velocity, second captures acceleration. First test: C18 rank_delta delta (second difference) vs forward IC. Upside: captures flow momentum changes.
+
+M. **opening_auction_leakage**: T+0 open auction has information that T+1 daily signal misses. First 15min returns predict daily. Connection: current system uses T close entry, but open auction may contain alpha. First test: compute first-15min returns from available 1H data, bucket by auction return vs subsequent daily return. Requires 1H data. Upside: captures overnight information.
+
+N. **signal_strength_gating**: [ACTIVATED: H434 PASSED] - High strength Q5 vs Q1 = +0.0111 IC lift, 5/8 positive years, works strongest in stress years (2020 +0.0553, 2021 +0.0710). Use as dynamic position sizing signal rather than ranker replacement. Offline evidence only.
+
+O. **news_consensus_divergence**: When all news sources agree vs when they disagree - disagreement could mean hidden information. Connection: H382 shows source type matters, but consensus vs disagreement not tested. First test: compute news sentiment agreement across PhoBERT sources, test disagreement buckets for forward IC. Uses existing news features. Upside: captures hidden information in disagreement.
+
+P. **candidate_rank_actual_gap**: The gap between candidate panel's predicted rank and actual realized rank. Large gaps = surprising information. Connection: H395 quorum uses panel probabilities, but gap between predicted and realized not tested. First test: compute rank prediction error (predicted rank - actual return rank), bucket by gap magnitude. Uses existing activation_state. Upside: captures model surprises.
+
+Q. **volatility_regime_transition**: Volatility expansion vs contraction is a different state than static high/low vol. Connection: H411 tested volume levels, but volatility TRANSITION not tested. First test: compute vol_z 5d change (vol expansion vs contraction buckets), test forward IC. Upside: regime change detection.
+
+R. **cross_ticker_correlation_shock**: When a ticker's correlation with market suddenly changes - correlation breakdown = hidden information. First test: compute rolling correlation with VNI, bucket by correlation CHANGE (not level), test forward IC. Upside: correlation breakdown as alpha.
+
+S. **time_of_day_momentum_session**: Morning vs afternoon sessions behave differently. VN market has specific auction mechanics. First test: bucket by time-of-day (morning session 9:00-11:30 vs afternoon 13:00-15:00), test if same signal has different IC. Requires time-of-day data. Upside: session-specific alpha.
+
+T. **replacement_quality_revival**: H388 killed fresh selection, but replacement quality (new entrant vs exiting incumbent quality) not tested. First test: compute quality of entering tickers vs exiting tickers, test if quality CHANGE predicts forward IC. Upside: captures entry quality dynamics.
+
+A. **s1_mean_reversion_signal**: Top S1 tickers DECAY next day, not continue.
+   Mechanism: S1 as quality score predicts its own mean reversion; yesterday's
+   leaders become tomorrow's laggards. First test: forward S1 delta in top
+   quintile vs IC rank bucket. Why not killed: H413-H417 focused on additive
+   COMBINATION, not S1 behavior ALONE; H395 quorum used weak signals, not S1
+   decay. Data: uses existing S1 from xs_rl_signal_matrix. Upside: could be a
+   selection filter that improves K quality.
+
+B. **candidate_temperature_entropy**: When scores cluster tight, forward degrades;
+   spread = alpha. Mechanism: candidate-panel score entropy predicts forward
+   returns - concentrated confidence means crowded trade, dispersed uncertainty
+   means hidden alpha. First test: entropy of top10 probs for C forward IC.
+   Why not killed: H379/H380 tested candidate-count POLICY, not score ENTROPY;
+   no entropy test exists. Data: candidate-panel probs. Upside: could route
+   K/breadth decisions.
+
+C. **cross_sectional_rank_delta** → H431 PASSED: C18 NEW SIGNAL. Q5_incr has +0.1290 IC (+0.0114 lift), 8/8 pos years. Captures flow acceleration.
+
+D. **volume_price_divergence** → H432 FAILED: All divergence states negative lift (real_force -0.0261, fade -0.0289). Dead-end D029.
+
+E. **sector_rotation_reversal**: DATA-GATED - no sector data available.
+
+F. **signal_ignorance_weight**: Not tested yet.
+
+G. **state_transition_not_event** → H433 MIXED: D2 best (+0.0088 lift), pattern inconsistent.
+
+H. **bid_ask_midbook_imbalance**: [TESTED: H428 FAILED] - higher imbalance 
+   correlates with WEAKER C16 IC (-0.0385 dev lift). Direct prediction is weak
+   (IC +0.0194 dev / +0.0373 val) but below promotion threshold. Do not promote.
+
+I. **replacement_pressure_gate**: When tickers cycle out of top-k, quality
+   improves. Mechanism: H388 found top-5 fresh weak but stale-repeat controls
+   failed; exit-pressure may signal new information. First test: exit-pressure
+   buckets for forward S1. Why not killed: H388 tested FRESHNESS of RETURNING
+   tickers, not PRESSURE of EXITING tickers. Data: candidate-panel history.
+   Upside: could refine entry timing.
+
+J. **queue_pressure_gradient**: Time-in-queue derivative (not level) is signal.
+   Mechanism: fill rate change predicts absorption, not queue level; acceleration
+   in queue clearance means successful absorption. First test: queue-level delta
+   vs queue-depth changes. Current block: No historical queue data - needs new
+   acquisition. If data exists: use order_stats depth metrics.
+
+K. **execution_pain_threshold**: Fill attempt count > threshold predicts quality.
+   Mechanism: NOT queue time, but TRY COUNT proxies hidden liquidity; repeated
+   fills mean hidden supply. First test: requires tradability-history acquisition
+   (data-gated).
+
+L. **ticker_rank_acceleration**: Second derivative of rank (acceleration) is edge.
+   Mechanism: rank delta delta - different from ROC (which failed). First test:
+   rank second difference vs forward IC. Why not killed: H407 tested LAG CROSS,
+   not RANK ACCELERATION; H412 tested additive LEVELS. Data: existing S1/C16
+   ranks. Upside: captures flow momentum.
+
+---
+
+These queued ideas are not activated branches and should stay subordinate to
+the current immediate next action unless explicitly selected.
 
 The explicit H389-H393 follow-through queue is exhausted. Continue by selecting
 new branches from the hidden-flow memo with H381-H393 and S272 as constraints.

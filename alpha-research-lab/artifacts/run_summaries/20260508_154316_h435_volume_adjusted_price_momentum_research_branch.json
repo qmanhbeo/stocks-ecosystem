@@ -1,0 +1,170 @@
+{
+  "artifacts": {
+    "panel": "artifacts/research_branches/20260508_154316_h435_volume_adjusted_price_momentum_panel.parquet",
+    "results": "artifacts/research_branches/20260508_154316_h435_volume_adjusted_price_momentum_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_154316_h435_volume_adjusted_price_momentum_yearly.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Return / volume_z cross-sectional rank captures flow efficiency (real force vs blowoff). Different feature class from H431 rank delta (which tested rank change) and H432 divergence (which tested bucketed states). Test ratio as continuous score.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "h435_volume_adjusted_price_momentum",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2018,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": "all_rows",
+        "family": "volume",
+        "label": "High volume (Q5: volume_z > 80th pctile)",
+        "name": "volume_z_q5",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "volume",
+        "label": "Low volume (Q1: volume_z < 20th pctile)",
+        "name": "volume_z_q1",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "return",
+        "label": "High 5d return (Q5)",
+        "name": "ret_5d_q5",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "return",
+        "label": "Low 5d return (Q5)",
+        "name": "ret_5d_q1",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "efficiency",
+        "label": "High efficiency ratio: ret_5d / vol_z (Q5)",
+        "name": "efficiency_q5",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "efficiency",
+        "label": "Low efficiency ratio: ret_5d / vol_z (Q1)",
+        "name": "efficiency_q1",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "flow_type",
+        "label": "High return + high volume",
+        "name": "real_force",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "flow_type",
+        "label": "High return + low volume",
+        "name": "blowoff",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "flow_type",
+        "label": "Low return + high volume",
+        "name": "hidden_accumulation",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "flow_type",
+        "label": "Low return + low volume",
+        "name": "quiet_distribution",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h435_volume_adjusted_price_momentum",
+  "summary": {
+    "all_rows_avg_ic": 0.1195502870143696,
+    "best_avg_ic": 0.15738924574927732,
+    "best_state_by_avg_ic": "volume_z_q5",
+    "blowoff_avg_ic": 0.09905937188042749,
+    "decision": "PASSED",
+    "eff_q1_avg_ic": 0.05406354420228854,
+    "eff_q5_avg_ic": 0.09991753480007473,
+    "eff_q5_eff_q1_lift": 0.04585399059778619,
+    "eff_q5_positive_years": 8,
+    "eff_q5_total_years": 8,
+    "hidden_accumulation_avg_ic": 0.06318346599477265,
+    "panel_rows": 652133,
+    "quiet_distribution_avg_ic": 0.060075129096174275,
+    "real_force_avg_ic": 0.11239682703341955,
+    "ret_5d_q5_avg_ic": 0.10353838170417225,
+    "volume_z_q5_avg_ic": 0.15738924574927732,
+    "volume_z_q5_positive_years": 8,
+    "volume_z_q5_total_years": 8
+  },
+  "ts": "20260508_154316"
+}

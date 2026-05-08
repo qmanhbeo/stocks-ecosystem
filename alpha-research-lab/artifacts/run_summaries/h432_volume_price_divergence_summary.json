@@ -1,0 +1,45 @@
+{
+  "decision": "FAILED",
+  "branch": "volume_price_divergence",
+  "baseline_ic": 0.11812777313438735,
+  "divergence_results": {
+    "real_force": {
+      "mean_ic": 0.09206753246955726,
+      "lift": -0.026060240664830092,
+      "pos_years": 8,
+      "total": 8
+    },
+    "fade": {
+      "mean_ic": 0.08919169679601391,
+      "lift": -0.028936076338373445,
+      "pos_years": 8,
+      "total": 8
+    },
+    "hidden_support": {
+      "mean_ic": 0.03905003640950351,
+      "lift": -0.07907773672488384,
+      "pos_years": 7,
+      "total": 8
+    },
+    "crowded": {
+      "mean_ic": 0.04766009072669074,
+      "lift": -0.07046768240769662,
+      "pos_years": 7,
+      "total": 8
+    }
+  },
+  "dev_years": [
+    2018,
+    2019,
+    2020,
+    2021,
+    2022
+  ],
+  "val_years": [
+    2023,
+    2024,
+    2025
+  ],
+  "val_real_force_ic": 0.09552547696775197,
+  "val_fade_ic": 0.07708742791206695
+}

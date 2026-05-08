@@ -1,0 +1,54 @@
+{
+  "decision": "MIXED",
+  "branch": "candidate_temperature_entropy",
+  "baseline_ic": 0.13536471046594833,
+  "baseline_pos_years": 8,
+  "baseline_total_years": 8,
+  "entropy_results": {
+    "Q1_low": {
+      "mean_ic": 0.12911980544713683,
+      "lift": -0.006244905018811503,
+      "pos_years": 8,
+      "total": 8
+    },
+    "Q2": {
+      "mean_ic": 0.14583663088829685,
+      "lift": 0.010471920422348513,
+      "pos_years": 8,
+      "total": 8
+    },
+    "Q3": {
+      "mean_ic": 0.1305205573425292,
+      "lift": -0.004844153123419126,
+      "pos_years": 8,
+      "total": 8
+    },
+    "Q4": {
+      "mean_ic": 0.14215455372851163,
+      "lift": 0.006789843262563294,
+      "pos_years": 8,
+      "total": 8
+    },
+    "Q5_high": {
+      "mean_ic": 0.1324200362390367,
+      "lift": -0.0029446742269116366,
+      "pos_years": 8,
+      "total": 8
+    }
+  },
+  "dev_years": [
+    2018,
+    2019,
+    2020,
+    2021,
+    2022
+  ],
+  "val_years": [
+    2023,
+    2024,
+    2025
+  ],
+  "val_high_entropy_ic": 0.12756030344548797,
+  "val_low_entropy_ic": 0.11328429514631294,
+  "val_lift": 0.014276008299175025
+}

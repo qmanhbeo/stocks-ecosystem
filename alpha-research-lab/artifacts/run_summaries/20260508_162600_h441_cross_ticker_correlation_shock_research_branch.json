@@ -1,0 +1,136 @@
+{
+  "artifacts": {
+    "panel": "artifacts/research_branches/20260508_162600_h441_cross_ticker_correlation_shock_panel.parquet",
+    "results": "artifacts/research_branches/20260508_162600_h441_cross_ticker_correlation_shock_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_162600_h441_cross_ticker_correlation_shock_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "When market-level cross-sectional correlation drops (stocks less aligned), individual stock IC may change. Compute date-level cross-sectional correlation between S1 scores and returns. Flag high vs low corr dates. Test whether S1 IC differs by date-level correlation regime. Fast date-level computation.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "When market-level cross-sectional correlation drops (stocks less aligned), individual stock IC may change. Compute date-level cross-sectional correlation between S1 scores and returns. Flag high vs low corr dates. Test whether S1 IC differs by date-level correlation regime. Fast date-level computation.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "h441_cross_ticker_correlation_shock",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2018,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "corr_regime",
+        "label": "High cross-sectional correlation dates (Q5)",
+        "name": "high_corr_date",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "corr_regime",
+        "label": "Low cross-sectional correlation dates (Q1)",
+        "name": "low_corr_date",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combined",
+        "label": "High corr date + strong C16 flow",
+        "name": "high_corr_strong_flow",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combined",
+        "label": "Low corr date + strong C16 flow",
+        "name": "low_corr_strong_flow",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combined2",
+        "label": "High corr date + first-in-5d news",
+        "name": "high_corr_first_news",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combined2",
+        "label": "Low corr date + first-in-5d news",
+        "name": "low_corr_first_news",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h441_cross_ticker_correlation_shock",
+  "summary": {
+    "all_rows_avg_ic": 0.11962173428339475,
+    "best_avg_ic": 0.1667165324975899,
+    "best_state": "high_corr_strong_flow",
+    "decision": "FAILED",
+    "hc_vs_lc_lift": 0.0033014048897933856,
+    "high_corr_date_avg_ic": 0.13153307667692637,
+    "high_corr_date_pos_years": "8/8",
+    "high_corr_date_rows": 130431,
+    "high_corr_first_news_avg_ic": 0.12979519419725635,
+    "high_corr_strong_flow_avg_ic": 0.1667165324975899,
+    "low_corr_date_avg_ic": 0.128231671787133,
+    "low_corr_date_rows": 130373,
+    "low_corr_first_news_avg_ic": 0.1534472831460541,
+    "low_corr_strong_flow_avg_ic": 0.14369806687280157,
+    "panel_rows": 652527
+  },
+  "ts": "20260508_162600"
+}

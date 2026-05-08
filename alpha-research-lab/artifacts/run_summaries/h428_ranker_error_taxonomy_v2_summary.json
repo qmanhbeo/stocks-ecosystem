@@ -1,0 +1,8 @@
+{
+  "decision": "FAILED",
+  "branch": "ranker_error_taxonomy_v2",
+  "overall_ranker_ic": 0.1354,
+  "tested_buckets": ["cand_low", "cand_mid", "cand_high", "vni_down", "vni_down_2d", "vni_down_2d_high_cand", "vni_up_low_cand", "up_low_cand", "up_mid_cand", "up_high_cand"],
+  "error_buckets_found": 0,
+  "note": "Ranker is robust across all observable date-level states. No bucket with IC < ranker IC - 0.02. cand_high is weakest at -0.0139 but not below -0.02 threshold."
+}

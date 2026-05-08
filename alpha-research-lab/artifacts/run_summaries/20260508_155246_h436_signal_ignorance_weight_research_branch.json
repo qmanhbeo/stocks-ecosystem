@@ -1,0 +1,109 @@
+{
+  "artifacts": {
+    "panel": "artifacts/research_branches/20260508_155246_h436_signal_ignorance_weight_panel.parquet",
+    "results": "artifacts/research_branches/20260508_155246_h436_signal_ignorance_weight_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_155246_h436_signal_ignorance_weight_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "True edge is knowing WHEN to ignore S1/C16, not how to weight them. Train a classifier to predict signal degradation regimes, use as cash/veto. Compare against random baselines, not S1/C16 direct variations.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "True edge is knowing WHEN to ignore S1/C16, not how to weight them. Train a classifier to predict signal degradation regimes, use as cash/veto. Compare against random baselines, not S1/C16 direct variations.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "h436_signal_ignorance_weight",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2018,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "Top-10 S1 always buy",
+        "name": "always_buy_top10",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ignorance",
+        "label": "Ignore signal when degrade-state predicted",
+        "name": "ignore_degrade_state",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "degrade_control",
+        "label": "Always buy even in degrade-state",
+        "name": "always_buy_in_degrade",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h436_signal_ignorance_weight",
+  "summary": {
+    "all_rows_avg_ic": 0.11962173428339475,
+    "always_buy_top10_avg_ic": 0.08588460025152292,
+    "always_buy_top10_pos_years": "8/8",
+    "best_avg_ic": 0.11962173428339475,
+    "best_state": "all_rows",
+    "decision": "FAILED",
+    "degrade_buy_avg_ic": 0.100133795943215,
+    "degrade_lift_ignore_vs_buy": -0.046871175589393244,
+    "ignore_degrade_avg_ic": 0.05326262035382176,
+    "ignore_degrade_pos_years": "8/8",
+    "ignore_vs_baseline_lift": -0.06635911392957299,
+    "panel_rows": 652527
+  },
+  "ts": "20260508_155246"
+}

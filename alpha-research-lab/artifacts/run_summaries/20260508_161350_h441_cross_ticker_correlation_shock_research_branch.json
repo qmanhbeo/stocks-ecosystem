@@ -1,0 +1,143 @@
+{
+  "artifacts": {
+    "panel": "artifacts/research_branches/20260508_161350_h441_cross_ticker_correlation_shock_panel.parquet",
+    "results": "artifacts/research_branches/20260508_161350_h441_cross_ticker_correlation_shock_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_161350_h441_cross_ticker_correlation_shock_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "When a ticker's correlation with market suddenly changes, correlation breakdown = hidden information. Compute rolling 20d correlation with VNI, then 5d change in that correlation (shock). Buckets: stable, shock up, shock down. Test IC. Different from H407 (lag cross-product) and H431 (rank delta first derivative) - this tests correlation SHIFT as a second-order effect.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "When a ticker's correlation with market suddenly changes, correlation breakdown = hidden information. Compute rolling 20d correlation with VNI, then 5d change in that correlation (shock). Buckets: stable, shock up, shock down. Test IC. Different from H407 (lag cross-product) and H431 (rank delta first derivative) - this tests correlation SHIFT as a second-order effect.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "h441_cross_ticker_correlation_shock",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2018,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "corr_transition",
+        "label": "Stable correlation (shock near zero)",
+        "name": "corr_stable",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "corr_transition",
+        "label": "Correlation shock UP (more correlated with market)",
+        "name": "corr_shock_up",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "corr_transition",
+        "label": "Correlation shock DOWN (less correlated / decorrelated)",
+        "name": "corr_shock_down",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combined",
+        "label": "Shock up + strong C16 flow",
+        "name": "corr_shock_up_strong_flow",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combined",
+        "label": "Shock down + strong C16 flow",
+        "name": "corr_shock_down_strong_flow",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "corr_level",
+        "label": "High correlation level (Q5)",
+        "name": "corr_level_high",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "corr_level",
+        "label": "Low correlation level (Q1)",
+        "name": "corr_level_low",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h441_cross_ticker_correlation_shock",
+  "summary": {
+    "all_rows_avg_ic": 0.11962173428339475,
+    "best_avg_ic": 0.11962173428339475,
+    "best_state": "all_rows",
+    "corr_level_high_avg_ic": null,
+    "corr_level_low_avg_ic": null,
+    "corr_shock_down_avg_ic": null,
+    "corr_shock_down_strong_flow_avg_ic": null,
+    "corr_shock_up_avg_ic": null,
+    "corr_shock_up_strong_flow_avg_ic": null,
+    "corr_stable_avg_ic": 0.11953879445689185,
+    "corr_stable_pos_years": "8/8",
+    "decision": "FAILED",
+    "panel_rows": 652527,
+    "up_vs_down_lift": null
+  },
+  "ts": "20260508_161350"
+}

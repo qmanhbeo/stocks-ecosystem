@@ -7,6 +7,109 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 321](session_321_log.md): Ran H442 `ticker_rank_acceleration` to test second derivative of C16 rank
+  (acceleration = delta of delta) vs H431 first derivative. FAILED: Accel Up vs Down lift only +0.0009,
+  near zero. C16 rank LEVEL dominates (IC=0.158 vs accel 0.120). Both accel_up/down+flow equal (~0.147).
+  H431 worked because it's correlated with rank level, not as independent signal. Second derivative is noise.
+  Dead-end D033. Source anchor: [session_321_log.md](./session_321_log.md).
+
+- [Session 320](session_320_log.md): Ran H441 `cross_ticker_correlation_shock` to test whether date-level
+  cross-sectional correlation regime (high vs low) predicts forward IC. FAILED: High vs Low corr date
+  lift only +0.0033, below 0.01 threshold. Secondary: C16 flow prefers high-corr dates (0.167 vs 0.144),
+  first-news prefers low-corr dates (0.153 vs 0.130). Shock mechanism weak. Dead-end D032. Source anchor:
+  [session_320_log.md](./session_320_log.md).
+
+- [Session 319](session_319_log.md): Ran H440 `news_novelty_first_repeat` to test whether first-in-N-days
+  novelty (vs repeat coverage vs high-frequency) predicts forward IC. PASSED: First-in-5d IC=0.123
+  beats repeat IC=0.091 (+0.032 lift, 8/8 pos years, 23266 rows). First+strong-flow IC=0.161 vs
+  repeat+flow IC=0.140. Novelty is the key dimension, not just presence. Aligns with H383
+  active-news confirmation and adds the NOVELTY dimension. Use as news-state conditioner. Source
+  anchor: [session_319_log.md](./session_319_log.md).
+
+- [Session 318](session_318_log.md): Ran H439 `volatility_regime_transition` to test whether vol_z 5d change
+  (expansion vs contraction) predicts forward IC differently than static vol. MIXED:
+  High vol states are MUCH stronger (IC=0.17-0.20 vs 0.09-0.10 low vol). High vol+contracting
+  IC=0.195 is strongest, but this is vol LEVEL effect, not transition effect. Transition
+  component is weak (+0.009 expanding vs contracting overall). Aligns with H411 and H434:
+  vol level matters, transition is secondary. Not promoted as new signal. Source anchor:
+  [session_318_log.md](./session_318_log.md).
+
+- [Session 317](session_317_log.md): Ran H438 `news_consensus_divergence` to test whether news source
+  disagreement vs consensus predicts forward IC. MIXED: Consensus IC=0.102 beats divergence IC=0.093
+  (-0.0086 lift), opposite of hypothesis. Both positive but neither beats all-rows (0.120). Aligns
+  with H382: source TYPE matters but consensus vs divergence does not create alpha. Neither
+  promoted. Source anchor: [session_317_log.md](./session_317_log.md).
+
+- [Session 316](session_316_log.md): Ran H437 `replacement_quality_revival` to test whether
+  quality (S1 IC) of entering tickers vs exiting tickers predicts forward alpha.
+  FAILED: Exiting tickers IC=0.126 (STRONGEST), stable IC=0.079, entering IC=0.066
+  (WEAKEST). Entering vs exiting lift = -0.060. Opposite of hypothesis. Aligns with
+  H388 finding that fresh reappearances are not strong. Dead-end D031. Source anchor:
+  [session_316_log.md](./session_316_log.md).
+
+- [Session 315](session_315_log.md): Ran H436 `signal_ignorance_weight` to test whether
+  composite regime features predict signal degradation with cash/veto action.
+  FAILED badly: Top-10 S1 in degrade-state still IC=0.10 (STRONGER than all-rows
+  IC=0.12), while ignoring signal drops to IC=0.053. Composite degrade indicators
+  do NOT capture signal degradation. S1/C16 are robust across regime conditions.
+  Dead-end D030. Source anchor: [session_315_log.md](./session_315_log.md).
+
+- [Session 314](session_314_log.md): Ran H435 `candidate_rank_actual_gap` to test whether
+  prediction error (ranker predicted vs actual) predicts forward returns.
+  FAILED: small gaps have HIGH IC (0.28-0.64), large gaps have NEGATIVE IC
+  (-0.79 to -0.83). When ranker is surprised it's NOISE, not alpha. Confirms H413
+  ranker is well-calibrated. Dead-end D028. Source anchor:
+  [session_314_log.md](./session_314_log.md).
+
+- [Session 313](session_313_log.md): Ran H434 `signal_strength_gating` to test
+  whether signal strength (S1 rank × C18 rank product) predicts forward returns.
+  PASSED: High strength (Q5) IC 0.0940 vs low strength (Q1) IC 0.0829 = +0.0111 lift.
+  Works strongest in stress years (2020 +0.0553, 2021 +0.0710). Not a ranker
+  replacement but useful as dynamic position sizing signal. Offline evidence only.
+  Source anchor: [session_313_log.md](./session_313_log.md).
+
+- [Session 312](session_312_log.md): Ran H433 `state_transition_not_event` to test
+  event-count delta (change) vs level as predictor. Computed daily event count
+  from order_pressure_h359_active, computed delta, bucketed into quintiles.
+  MIXED: D2 (moderate decreasing delta) best (+0.0088 lift), but pattern
+  inconsistent. Event-count level negative IC (-0.0065), delta provides some
+  value but not strong enough to promote. Source anchor:
+  [session_312_log.md](./session_312_log.md).
+
+- [Session 311](session_311_log.md): Ran H432 `volume_price_divergence` to test
+  return vs volume-z divergence as predictor. Computed return and volume-z
+  quintiles, tested divergence states (real_force, fade, hidden_support, crowded).
+  FAILED: all states have negative lift vs baseline. real_force = +0.0921 (-0.0261),
+  fade = +0.0892 (-0.0289). Hypothesis not supported. Source anchor:
+  [session_311_log.md](./session_311_log.md).
+
+- [Session 310](session_310_log.md): Ran H431 `cross_sectional_rank_delta` to test
+  C16 rank change (delta) vs level as predictor. Computed rank delta from
+  order_volume_ratio_rank, bucketed into quintiles, tested forward IC.
+  PASSED: Q5_incr (increasing rank) has best IC +0.1290 (+0.0114 lift), 8/8
+  pos years. C16 level = +0.0752, delta boosts to +0.1290. Validation confirms
+  Q5_incr +0.1310 vs level +0.0633. New signal - use as conditioner. Source
+  anchor: [session_310_log.md](./session_310_log.md).
+
+- [Session 309](session_309_log.md): Ran H430 `candidate_temperature_entropy` to test
+  whether entropy of top-10 candidate scores predicts forward IC. Bucketed dates
+  by full_top10_score_entropy quintiles. MIXED: Q2 best in dev (+0.0105), but
+  validation shows high-entropy better (+0.0143). Pattern inconsistent - not a
+  clean predictor. Source anchor: [session_309_log.md](./session_309_log.md).
+
+- [Session 308](session_308_log.md): Ran H429 `signal_half_life_router` to test
+  whether pre-declared half-life classes (S1 slope, volume state) win only on
+  their natural horizon vs random horizon controls. Bucketed tickers by S1 slope
+  (momentum vs reversion) and volume state (high vs low), tested IC at 1d/2d/5d/10d.
+  FAILED: All classes degrade at longer horizons, no horizon-specific advantage.
+  1d baseline always best. Dead-end D027. Source anchor: [session_308_log.md](./session_308_log.md).
+
+- [Session 307](session_307_log.md): Ran H428 tests: (1) `ranker_error_taxonomy`
+  - S1 rank degradation FAILED: Top S1 tickers IMPROVE next-day (+0.0263 IC), no
+  decay found. (2) `bid_ask_midbook_imbalance` FAILED: higher imbalance has
+  WORSE C16 IC (Q5-Q1 lift -0.0385 dev). Both below promotion threshold.
+  Dead-ends D026, D027. Source anchor: [session_307_log.md](./session_307_log.md).
+
 - [Session 306](session_306_log.md): Ran H427 `volume_attention_budget` as
   date-level concentration test. Computed volume Herfindahl from order_stats,
   bucketed dates into concentration quintiles, tested S1 IC across regimes.

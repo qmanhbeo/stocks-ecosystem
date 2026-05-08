@@ -1,0 +1,152 @@
+{
+  "artifacts": {
+    "panel": "artifacts/research_branches/20260508_155930_h438_news_consensus_divergence_panel.parquet",
+    "results": "artifacts/research_branches/20260508_155930_h438_news_consensus_divergence_results.parquet",
+    "yearly": "artifacts/research_branches/20260508_155930_h438_news_consensus_divergence_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "When news sources agree (consensus) vs disagree (divergence), disagreement may indicate hidden information and alpha. Use PhoBERT source type and sentiment to define consensus vs divergence. Connected to H382 which showed source type matters but consensus vs disagreement not tested.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "When news sources agree (consensus) vs disagree (divergence), disagreement may indicate hidden information and alpha. Use PhoBERT source type and sentiment to define consensus vs divergence. Connected to H382 which showed source type matters but consensus vs disagreement not tested.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "h438_news_consensus_divergence",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2018,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "news_volume",
+        "label": "High article count (Q5)",
+        "name": "high_news_count",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "news_volume",
+        "label": "Low article count (Q1)",
+        "name": "low_news_count",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "consensus",
+        "label": "All same source type (official or company only)",
+        "name": "consensus_news",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "divergence",
+        "label": "Mixed source types (official+market+company)",
+        "name": "divergence_news",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "consensus",
+        "label": "Consensus + positive sentiment",
+        "name": "consensus_positive",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "divergence",
+        "label": "Divergence + positive sentiment",
+        "name": "divergence_positive",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "consensus",
+        "label": "Consensus + negative sentiment",
+        "name": "consensus_negative",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "divergence",
+        "label": "Divergence + negative sentiment",
+        "name": "divergence_negative",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h438_news_consensus_divergence",
+  "summary": {
+    "active_news_strong_flow_avg_ic": null,
+    "all_rows_avg_ic": 0.11962173428339475,
+    "best_avg_ic": 0.11962173428339475,
+    "best_state": "all_rows",
+    "consensus_negative_avg_ic": 0.10578677164402656,
+    "consensus_news_avg_ic": 0.10204218267094065,
+    "consensus_pos_years": "8/8",
+    "consensus_positive_avg_ic": 0.10567245582103743,
+    "decision": "MIXED",
+    "diverge_vs_consensus_lift": -0.008627750753272462,
+    "divergence_negative_avg_ic": 0.09774336585572466,
+    "divergence_news_avg_ic": 0.09341443191766818,
+    "divergence_pos_years": "8/8",
+    "divergence_positive_avg_ic": 0.09542756245927098,
+    "panel_rows": 652527
+  },
+  "ts": "20260508_155930"
+}

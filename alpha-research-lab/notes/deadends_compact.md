@@ -21,6 +21,34 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   do not use S253 to promote `consecutive_down`, target-derived
   `down_market_c16`, or `deep_down_c16`. Source anchors: `F355`, `D012`.
 
+- Midbook imbalance promotion is killed under H428. Higher buy/sell volume
+  imbalance was hypothesized to proxy hidden depth but instead correlates
+  with WEAKER C16 signal (Q5 vs Q1 IC lift -0.0385 dev, -0.0116 val).
+  Direct prediction vs S1 is weakly positive (IC +0.0194 dev, +0.0373 val)
+  but below IC > 0.05 threshold. Interpretation: high imbalance indicates
+  weakness, not hidden depth. Do not reopen as C16 conditioner or standalone
+  signal. Source anchor: Session 307.
+
+- S1 rank degradation hypothesis is killed under H428 (ranker_error_taxonomy).
+  Top S1 quintile tickers do NOT decay in next-day IC - they actually IMPROVE
+  by +0.0263 lift. This is the opposite of hypothesized mean-reversion. Q3 (mid)
+  is the weakest pocket (-0.0230), not top. Do not use S1 rank as error-state
+  indicator. Reopen only with materially different quality/continuation proxy.
+  Source anchor: [session_307_log.md](./session_307_log.md), D027.
+
+- Signal half-life routing hypothesis is killed under H429. Pre-declared half-life
+  classes (S1 momentum vs reversion, vol_high vs vol_low) do NOT show horizon-specific
+  advantage. All classes degrade at longer horizons - 1d baseline is always best.
+  vol_low becomes negative at 5d+ horizons. Do not route signals to different
+  horizons based on half-life characteristics. Reopen only with materially different
+  horizon definition or target. Source anchor: [session_308_log.md](./session_308_log.md), D027.
+
+- Volume-price divergence hypothesis is killed under H432. Return vs volume-z
+  divergence states do NOT capture hidden pressure - all states have negative
+  lift vs baseline (real_force -0.0261, fade -0.0289, hidden_support -0.0791,
+  crowded -0.0705). Energy conservation hypothesis doesn't translate to alpha.
+  Source anchor: [session_311_log.md](./session_311_log.md), D026.
+
 ## Current Hard Stops
 
 - Forced-seller detector promotion is killed under H426's current daily
@@ -380,6 +408,36 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   local-news architecture is PhoBERT-first plus a narrow event-family Ollama
   residual; broad generator fields remain optional diagnostics. Source anchors:
   `F274`, `F282-F283`.
+
+- Signal ignorance / regime-gated cash-veto is killed under H436. Composite regime
+  features (market breadth, C16 volatility, news state, calendar) do NOT predict
+  signal degradation. Top-10 S1 buyers in composite degrade-state still achieve IC=0.10
+  (STRONGER than all-rows IC=0.12), while ignoring signal in degrade-state drops to
+  IC=0.053 (WORSE than always-buy top10 IC=0.086). Composite degrade indicators capture
+  nothing useful; S1/C16 are robust across all tested regime conditions. Do not reopen
+  as a regime-gated cash/veto signal unless materially different regime features are
+  introduced. Source anchors: `D030`, [session_315_log.md](./session_315_log.md).
+
+- Replacement quality revival is killed under H437. Entering tickers have WEAKER
+  S1 IC (0.066) than exiting tickers (0.126), stable tickers (0.079), and all-rows
+  (0.117). Enter vs exit lift is -0.060, opposite of hypothesis. Aligns with H388's
+  finding that fresh reappearances are not strong and stale-repeat controls failed.
+  Do not reopen as a replacement quality signal unless materially different quality
+  metrics are introduced. Source anchors: `D031`, [session_316_log.md](./session_316_log.md).
+
+- Cross-ticker correlation shock promotion is killed under H441. Date-level cross-sectional
+  correlation regime (high vs low) predicted only +0.0033 IC lift, below the 0.01 threshold.
+  Secondary finding: C16 flow works better in high-corr dates (0.167 vs 0.144) while first-news
+  novelty prefers low-corr dates (0.153 vs 0.130), but the primary shock mechanism is weak.
+  Do not reopen as a date-level correlation shock signal unless materially different correlation
+  or shock representations are introduced. Source anchors: `D032`, [session_320_log.md](./session_320_log.md).
+
+- Ticker rank acceleration promotion is killed under H442. Second derivative of C16 rank
+  (acceleration = delta of delta) has near-zero IC lift (+0.0009) versus first derivative.
+  C16 rank LEVEL dominates (IC=0.158 vs acceleration IC=0.120). Both accel_up+flow and
+  accel_down+flow are equal (~0.147), showing acceleration direction doesn't matter. H431
+  rank delta worked because it correlated with rank level, not as independent signal. Do not
+  reopen as a rank acceleration signal. Source anchors: `D033`, [session_321_log.md](./session_321_log.md).
 
 ## Maintenance Rule
 

@@ -1,0 +1,56 @@
+{
+  "decision": "FAILED",
+  "branch": "ranker_error_taxonomy_v5",
+  "next_day_baseline_ic": 0.13528945115478783,
+  "baseline_pos_years": 8,
+  "total_baseline_years": 8,
+  "quintile_degradation": {
+    "Q1_bot": {
+      "mean_ic": 0.14712115521157298,
+      "lift": 0.011831704056785158,
+      "pos_years": 8,
+      "total": 8
+    },
+    "Q2": {
+      "mean_ic": 0.11839216544340875,
+      "lift": -0.01689728571137908,
+      "pos_years": 8,
+      "total": 8
+    },
+    "Q3": {
+      "mean_ic": 0.11231501303596692,
+      "lift": -0.02297443811882091,
+      "pos_years": 8,
+      "total": 8
+    },
+    "Q4": {
+      "mean_ic": 0.11960012948267143,
+      "lift": -0.015689321672116396,
+      "pos_years": 8,
+      "total": 8
+    },
+    "Q5_top": {
+      "mean_ic": 0.1616247146875118,
+      "lift": 0.026335263532723974,
+      "pos_years": 8,
+      "total": 8
+    }
+  },
+  "val_top_mean_ic": 0.1591709735385424,
+  "val_baseline_mean_ic": 0.1317930094498073,
+  "val_degradation": 0.027377964088735107,
+  "val_top_pos_years": 3,
+  "val_top_total_years": 3,
+  "dev_years": [
+    2018,
+    2019,
+    2020,
+    2021,
+    2022
+  ],
+  "val_years": [
+    2023,
+    2024,
+    2025
+  ]
+}

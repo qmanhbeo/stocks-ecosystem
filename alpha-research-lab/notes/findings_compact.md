@@ -198,11 +198,18 @@ entry must include source anchors: stable finding IDs or source session links.
   Source anchors: `D024`.
 
 - Volume attention budget (H427): PASSED. Date-level volume concentration
-  (Herfindahl) acts as market regime indicator. Mid-concentration (Q3) has
-  mean IC 0.1389 vs baseline 0.1264, lift +0.0125, 8/8 positive years.
-  Both extreme concentration (Q5) and extreme distribution (Q1) hurt signal
-  quality. Offline evidence, needs candidate-count policy follow-through.
-  Source anchor: Session 306.
+   (Herfindahl) acts as market regime indicator. Mid-concentration (Q3) has
+   mean IC 0.1389 vs baseline 0.1264, lift +0.0125, 8/8 positive years.
+   Both extreme concentration (Q5) and extreme distribution (Q1) hurt signal
+   quality. Offline evidence, needs candidate-count policy follow-through.
+   Source anchor: Session 306.
+
+- Midbook imbalance (H428): FAILED. Higher buy/sell volume imbalance
+   correlates with WEAKER C16 signal (Q5 vs Q1 IC lift -0.0385 dev, -0.0116 val).
+   Direct prediction is weakly positive (IC +0.0194 dev, +0.0373 val) but below
+   IC > 0.05 threshold. Interpretation: high imbalance indicates weakness,
+   not hidden depth. Do not reopen as C16 conditioner or standalone signal.
+   Source anchor: Session 307.
 
 - Source-triangle context: H392 rejected the C16+insider+news core under the
   current C5/PhoBERT representation. `c16_insider_any_news` was positive but
@@ -548,6 +555,40 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
   earnings/guidance agreement passed the standalone local-news gate. H382 says
   the feature is an event-subset ranker, not a broad candidate allocator. Source
   anchors: `F274`, `F282-F283`, `F342-F343`, `D002`.
+
+## New Signal Discovery (H428-H433 Batch)
+
+- C18 rank delta (H431): NEW SIGNAL. C16 rank CHANGE (delta) predicts better than
+  level. Q5_incr (increasing rank) has +0.1290 IC (+0.0114 lift vs baseline), 8/8
+  positive years. Validation confirms Q5_incr +0.1310 vs level +0.0633. Captures
+  flow acceleration that level misses. Use as conditioner or additive component.
+  Source anchors: `F384`, signal library updated.
+
+- S1 rank degradation (H428): FAILED. Top S1 quintile tickers do NOT decay in
+  next-day IC - they IMPROVE by +0.0263 lift. Q3 (mid-S1) is weakest pocket.
+  Do not use S1 rank as error-state indicator. Source anchors: `F385`, `D027`.
+
+- Signal half-life routing (H429): FAILED. Pre-declared half-life classes do NOT
+  show horizon-specific advantage. All classes degrade at longer horizons;
+  1d baseline always best. Do not route signals to different horizons.
+  Source anchors: `F386`, `D028`.
+
+- Candidate entropy (H430): MIXED. Q2 best in dev (+0.0105), validation prefers
+  high-entropy (+0.0143). Pattern inconsistent - not a clean predictor.
+  Source anchors: `F387`.
+
+- Volume-price divergence (H432): FAILED. All divergence states have negative
+  lift vs baseline (real_force -0.0261, fade -0.0289). Energy conservation
+  hypothesis doesn't translate to alpha. Source anchors: `F388`, `D029`.
+
+- State transition (H433): MIXED. D2 (moderate decreasing delta) best (+0.0088),
+  but pattern inconsistent. Event-count level negative (-0.0065), delta provides
+  some value but not strong enough to promote. Source anchors: `F389`.
+
+- Signal strength gating (H434): PASSED. High strength (S1×C18 product) shows
+  +0.0111 IC lift over low strength. Works strongest in stress years
+  (2020 +0.0553, 2021 +0.0710). Not a ranker replacement but useful as
+  dynamic position sizing signal. Source anchor: `F390`.
 
 ## Maintenance Rule
 
