@@ -29,6 +29,7 @@ import log
 
 DEFAULT_MAX_CYCLES = 2
 DEFAULT_SLEEP_SECONDS = 5
+DEFAULT_SESSION_BATCH_SIZE = 3
 
 
 def check_heavy_job_running() -> bool:
@@ -222,7 +223,9 @@ def invoke_evergreen(prompt: str) -> Tuple[int, str, str]:
 
 def invoke_phase(prompt: str, use_continue: bool = False, title: str = None) -> Tuple[int, str, str]:
     """
-    Invoke a single phase using opencode run.
+    Invoke a single phase using opencode run with TRUE live stdout/stderr streaming.
+
+    Uses threads to stream output in real-time while the process runs.
 
     Args:
         prompt: The prompt to send
@@ -231,6 +234,8 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None) -> 
 
     Returns: (return_code, stdout, stderr)
     """
+    import threading
+
     cmd = [config.OPENCODE_BINARY, "run"]
 
     if use_continue:
@@ -241,17 +246,47 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None) -> 
 
     cmd.extend(["--dir", "alpha-research-lab"])
 
+    stdout_chunks = []
+    stderr_chunks = []
+    stdout_lock = threading.Lock()
+    stderr_lock = threading.Lock()
+
+    def stream_reader(stream, prefix, chunks, lock):
+        try:
+            for line in stream:
+                if line.rstrip():
+                    print(f"  {prefix} {line.rstrip()}", flush=True)
+                    with lock:
+                        chunks.append(line.rstrip())
+        except Exception:
+            pass
+
     try:
-        result = subprocess.run(
+        process = subprocess.Popen(
             cmd,
-            input=prompt,
-            capture_output=True,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=config.OPENCODE_TIMEOUT_SECONDS,
+            bufsize=1,
             cwd=config.REPO_ROOT,
         )
-        return result.returncode, result.stdout, result.stderr
+
+        stdout_thread = threading.Thread(target=stream_reader, args=(process.stdout, "[opencode]", stdout_chunks, stdout_lock))
+        stderr_thread = threading.Thread(target=stream_reader, args=(process.stderr, "[opencode:err]", stderr_chunks, stderr_lock))
+
+        stdout_thread.start()
+        stderr_thread.start()
+
+        stdout, stderr = process.communicate(input=prompt, timeout=config.OPENCODE_TIMEOUT_SECONDS)
+
+        stdout_thread.join(timeout=2)
+        stderr_thread.join(timeout=2)
+
+        return process.returncode, "\n".join(stdout_chunks), "\n".join(stderr_chunks)
+
     except subprocess.TimeoutExpired:
+        process.kill()
         return -1, "", f"Timeout after {config.OPENCODE_TIMEOUT_SECONDS}s"
     except FileNotFoundError:
         return -2, "", f"opencode binary not found: {config.OPENCODE_BINARY}"
@@ -271,14 +306,20 @@ def load_phase_prompt(phase_name: str) -> str:
     return f"Run {phase_name} phase."
 
 
-def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = True) -> Dict[str, Any]:
+def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = True,
+                           is_first_in_batch: bool = True) -> Dict[str, Any]:
     """
     Execute one complete cycle with four phases in same session.
 
-    Phase 1: Experiment (experimentor) - fresh session
+    Phase 1: Experiment (experimentor) - fresh session if first in batch, else /compact then --continue
     Phase 2: Experiment (experimentor) - --continue
     Phase 3: Memory (manh-memory-system) - --continue
     Phase 4: Ideate (bright-mind) - --continue
+
+    Args:
+        dry_run: If True, skip execution
+        stop_on_phase_failure: If True, stop on phase failure
+        is_first_in_batch: If False, send /compact before phase 1
 
     Returns: dict with phase results
     """
@@ -318,6 +359,12 @@ def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = T
         is_first = idx == 0
         use_continue = not is_first
 
+        if is_first and not is_first_in_batch:
+            log.write_log(cycle_log_path, "Not first in batch: sending /compact before phase 1")
+            compact_code, compact_out, compact_err = invoke_phase("/compact", use_continue=True)
+            log.write_log(cycle_log_path, f"/compact return code: {compact_code}")
+            use_continue = True
+
         log.log_message(f"=== Phase {idx + 1}: {phase_name} {'(2nd attempt)' if idx == 1 else ''} ===")
 
         state.update_state(
@@ -332,9 +379,9 @@ def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = T
         prompt = load_phase_prompt(phase_name)
         wrapped_prompt = prompt
 
-        log.write_log(cycle_log_path, f"Phase {idx + 1} ({phase_name}): using /{skill_name}")
+        log.write_log(cycle_log_path, f"Phase {idx + 1} ({phase_name}): using /{skill_name}, use_continue={use_continue}")
 
-        returncode, stdout, stderr = invoke_phase(wrapped_prompt, use_continue=use_continue, title=f"cycle-{current_state.get('cycle_count', 0) + 1}" if is_first else None)
+        returncode, stdout, stderr = invoke_phase(wrapped_prompt, use_continue=use_continue, title=f"cycle-{current_state.get('cycle_count', 0) + 1}" if is_first and is_first_in_batch else None)
 
         log.write_log(cycle_log_path, f"Phase {idx + 1} return code: {returncode}")
 
@@ -400,9 +447,13 @@ def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = T
     return results
 
 
-def run_single_cycle(dry_run: bool = False) -> Tuple[int, str]:
+def run_single_cycle(dry_run: bool = False, is_first_in_batch: bool = True) -> Tuple[int, str]:
     """
     Execute one complete cycle.
+
+    Args:
+        dry_run: If True, skip execution
+        is_first_in_batch: If True, first phase starts fresh; else send /compact first
 
     Returns: (exit_code, decision_made)
     """
@@ -426,26 +477,12 @@ def run_single_cycle(dry_run: bool = False) -> Tuple[int, str]:
     exit_code = 0
 
     if decision == "run_evergreen":
-        log.write_log(cycle_log_path, "Invoking evergreen-research-loop...")
+        log.write_log(cycle_log_path, f"Invoking three-phase cycle (is_first_in_batch={is_first_in_batch})...")
 
-        active_command = f"{config.OPENCODE_BINARY} run --dir alpha-research-lab --agent evergreen-research-loop --title research-loop-cycle"
-        state.update_state(
-            phase="running_evergreen",
-            exit_status="running",
-            active_cycle_started_at=datetime.now().isoformat(),
-            active_cycle_log_path=cycle_log_path,
-            active_command=active_command,
-            active_pid=os.getpid(),
-        )
+        result = run_three_phase_cycle(dry_run=False, is_first_in_batch=is_first_in_batch)
 
-        prompt = build_prompt()
-        log.write_log(cycle_log_path, f"Prompt length: {len(prompt)} chars")
-
-        returncode, stdout, stderr = invoke_evergreen(prompt)
-
-        log.write_log(cycle_log_path, f"Return code: {returncode}")
-
-        if returncode == 0:
+        if result.get("cycle_complete"):
+            log.write_log(cycle_log_path, "Three-phase cycle completed, cycle_count incremented")
             state.update_state(
                 phase="completed",
                 exit_status="success",
@@ -453,15 +490,14 @@ def run_single_cycle(dry_run: bool = False) -> Tuple[int, str]:
                 clear_active=True,
                 last_completed_at=datetime.now().isoformat(),
             )
-            log.write_log(cycle_log_path, "Evergreen completed successfully, cycle_count incremented")
         else:
-            exit_code = returncode
+            exit_code = 1
             state.update_state(
                 phase="failed",
-                exit_status=f"error_{returncode}",
+                exit_status="incomplete",
                 clear_active=True,
             )
-            log.write_log(cycle_log_path, f"Evergreen failed: {stderr[:200]}")
+            log.write_log(cycle_log_path, "Three-phase cycle incomplete")
 
     elif decision == "dry_run":
         log.write_log(cycle_log_path, "Dry-run completed, no evergreen invoked")
@@ -481,16 +517,17 @@ def run_single_cycle(dry_run: bool = False) -> Tuple[int, str]:
     return exit_code, decision
 
 
-def run_loop(max_cycles: int = DEFAULT_MAX_CYCLES, sleep_seconds: int = DEFAULT_SLEEP_SECONDS) -> int:
+def run_loop(max_cycles: int = DEFAULT_MAX_CYCLES, sleep_seconds: int = DEFAULT_SLEEP_SECONDS,
+             session_batch_size: int = DEFAULT_SESSION_BATCH_SIZE) -> int:
     """
-    Execute up to max_cycles bounded passes.
+    Execute up to max_cycles bounded passes with session batching.
 
     Returns: exit code
     """
     start_time = time.time()
 
     loop_log_path = log.start_loop_log(max_cycles)
-    log.write_log(loop_log_path, f"Starting bounded loop with max_cycles={max_cycles}")
+    log.write_log(loop_log_path, f"Starting bounded loop with max_cycles={max_cycles}, session_batch_size={session_batch_size}")
     log.write_log(loop_log_path, f"Working directory: {config.REPO_ROOT}")
 
     state.update_state(
@@ -506,7 +543,11 @@ def run_loop(max_cycles: int = DEFAULT_MAX_CYCLES, sleep_seconds: int = DEFAULT_
 
     try:
         for cycle_num in range(1, max_cycles + 1):
-            log.log_message(f"Loop cycle {cycle_num}/{max_cycles}")
+            batch_index = (cycle_num - 1) // session_batch_size + 1
+            cycle_in_batch = (cycle_num - 1) % session_batch_size + 1
+            is_first_in_batch = cycle_in_batch == 1
+
+            log.log_message(f"Loop cycle {cycle_num}/{max_cycles} (batch {batch_index}, cycle {cycle_in_batch} in batch, fresh={is_first_in_batch})")
 
             inspect_info = inspect_current_state()
 
@@ -515,8 +556,10 @@ def run_loop(max_cycles: int = DEFAULT_MAX_CYCLES, sleep_seconds: int = DEFAULT_
                 log.log_message(f"Stopping loop: heavy job detected", "WARN")
                 break
 
+            log.write_log(loop_log_path, f"=== Cycle {cycle_num} === batch={batch_index}, cycle_in_batch={cycle_in_batch}, is_first_in_batch={is_first_in_batch}")
+
             cycle_start = time.time()
-            exit_code, decision = run_single_cycle(dry_run=False)
+            exit_code, decision = run_single_cycle(dry_run=False, is_first_in_batch=is_first_in_batch)
             cycle_elapsed = time.time() - cycle_start
 
             completed += 1
@@ -632,6 +675,10 @@ def recover_interrupted() -> int:
     Inspects logs and artifacts to determine what happened and update state accordingly.
     Only modifies state if active running state exists (last_phase=running_evergreen or last_exit_status=running).
     Otherwise, just reports warnings without modifying state.
+
+    Special handling for running_ideate:
+    - If last_phase is running_ideate with exit_status=running, check if phases 1-3 completed
+    - Mark as interrupted_after_memory_before_ideate_done, clear active fields, NOT increment cycle_count
     """
     st = state.load_state()
 
@@ -643,8 +690,41 @@ def recover_interrupted() -> int:
 
     print("=== Recovery Check ===")
 
-    is_running_phase = last_phase in ["running_evergreen", "running"]
+    is_running_phase = last_phase in ["running_evergreen", "running", "running_ideate", "running_memory", "running_experiment"]
     is_running_exit = last_exit == "running"
+
+    if last_phase == "running_ideate" and is_running_exit:
+        print("Detected running_ideate with exit_status=running - likely phases 1-3 completed, ideate interrupted")
+        print(f"Active cycle log: {active_cycle_log}")
+
+        if active_cycle_log and os.path.exists(active_cycle_log):
+            with open(active_cycle_log, "r") as f:
+                log_content = f.read()
+
+            has_phase1 = "Phase 1 return code: 0" in log_content or "Phase 1 (experiment)" in log_content
+            has_phase2 = "Phase 2 return code: 0" in log_content or "Phase 2 (experiment)" in log_content
+            has_phase3 = "Phase 3 return code: 0" in log_content or "Phase 3 (memory)" in log_content
+
+            if has_phase1 and has_phase2 and has_phase3:
+                print("Confirmed: phases 1-3 completed, phase 4 (ideate) was interrupted")
+                print("Recovery: marking phase='interrupted_after_memory_before_ideate_done', exit_status='interrupted'")
+                print("Recovery: clearing all active fields, NOT incrementing cycle_count")
+                state.update_state(
+                    phase="interrupted_after_memory_before_ideate_done",
+                    exit_status="interrupted",
+                    stop_reason="interrupted_after_memory_before_ideate_done",
+                    clear_active=True,
+                )
+                return 0
+
+        print("Could not confirm phases 1-3 from log, performing generic recovery")
+        state.update_state(
+            phase="interrupted",
+            exit_status="interrupted",
+            stop_reason="interrupted_unknown",
+            clear_active=True,
+        )
+        return 0
 
     if not is_running_phase and not is_running_exit:
         print("No active interrupted state detected (no running_evergreen phase or running exit status).")
@@ -849,22 +929,39 @@ def run_memory_phase(dry_run: bool = False) -> int:
     return returncode
 
 
-def run_three_phase(dry_run: bool = False) -> int:
+def run_three_phase(dry_run: bool = False, max_cycles: int = 1, session_batch_size: int = 3) -> int:
     """Run complete 4-phase cycle."""
     if dry_run:
         experiment_prompt = load_phase_prompt("experiment").split("\n")[0]
         memory_prompt = load_phase_prompt("memory").split("\n")[0]
         ideate_prompt = load_phase_prompt("ideate").split("\n")[0]
 
-        print("Dry-run: would run 4-phase cycle (experiment→experiment→memory→ideate)")
-        print(f"Phase 1: opencode run --dir alpha-research-lab --title 'cycle-N'")
-        print(f"  Prompt: {experiment_prompt[:80]}...")
-        print(f"Phase 2: opencode run --continue --dir alpha-research-lab")
-        print(f"  Prompt: {experiment_prompt[:80]}...")
-        print(f"Phase 3: opencode run --continue --dir alpha-research-lab")
-        print(f"  Prompt: {memory_prompt[:80]}...")
-        print(f"Phase 4: opencode run --continue --dir alpha-research-lab")
-        print(f"  Prompt: {ideate_prompt[:80]}...")
+        print(f"Dry-run: would run up to {max_cycles} cycles with session batching (batch_size={session_batch_size})")
+        print(f"Phase order: experiment → experiment → memory → ideate")
+        print("")
+
+        for cycle_num in range(1, max_cycles + 1):
+            batch_index = (cycle_num - 1) // session_batch_size + 1
+            cycle_in_batch = (cycle_num - 1) % session_batch_size + 1
+            is_first_in_batch = cycle_in_batch == 1
+
+            if is_first_in_batch:
+                print(f"Cycle {cycle_num}: [Batch {batch_index}, cycle 1] FRESH session (no --continue)")
+            else:
+                print(f"Cycle {cycle_num}: [Batch {batch_index}, cycle {cycle_in_batch}] CONTINUED session (first send /compact)")
+
+            if cycle_num == 1 or not is_first_in_batch:
+                prefix = "  → " if not is_first_in_batch else ""
+                print(f"{prefix}Phase 1: experiment (fresh={is_first_in_batch})")
+                print(f"{prefix}  Prompt: {experiment_prompt[:60]}...")
+                print(f"{prefix}Phase 2: experiment (--continue)")
+                print(f"{prefix}  Prompt: {experiment_prompt[:60]}...")
+                print(f"{prefix}Phase 3: memory (--continue)")
+                print(f"{prefix}  Prompt: {memory_prompt[:60]}...")
+                print(f"{prefix}Phase 4: ideate (--continue)")
+                print(f"{prefix}  Prompt: {ideate_prompt[:60]}...")
+                print("")
+
         return 0
 
     results = run_three_phase_cycle(dry_run=dry_run)
@@ -887,19 +984,21 @@ def main() -> int:
                         help=f"Maximum cycles for loop (default: {DEFAULT_MAX_CYCLES})")
     parser.add_argument("--sleep", type=int, default=DEFAULT_SLEEP_SECONDS,
                         help=f"Sleep seconds between cycles (default: {DEFAULT_SLEEP_SECONDS})")
+    parser.add_argument("--session-batch-size", type=int, default=DEFAULT_SESSION_BATCH_SIZE,
+                        help=f"Cycles per session batch (default: {DEFAULT_SESSION_BATCH_SIZE})")
 
     args = parser.parse_args()
 
     if args.command == "cycle" or args.command == "three-phase":
         return run_three_phase(dry_run=False)
     elif args.command == "dry-run":
-        return run_three_phase(dry_run=True)
+        return run_three_phase(dry_run=True, max_cycles=args.max_cycles, session_batch_size=args.session_batch_size)
     elif args.command == "status":
         return show_status()
     elif args.command == "reset":
         return reset_loop()
     elif args.command == "loop":
-        return run_loop(max_cycles=args.max_cycles, sleep_seconds=args.sleep)
+        return run_loop(max_cycles=args.max_cycles, sleep_seconds=args.sleep, session_batch_size=args.session_batch_size)
     elif args.command == "check-interrupted":
         return check_interrupted()
     elif args.command == "recover-interrupted":

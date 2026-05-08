@@ -1,0 +1,4 @@
+=== Research Loop Started at 2026-05-08T15:11:15.912632 (max_cycles=3) ===
+Starting bounded loop with max_cycles=3, session_batch_size=3
+Working directory: /home/manh/stocks-ecosystem
+=== Cycle 1 === batch=1, cycle_in_batch=1, is_first_in_batch=True

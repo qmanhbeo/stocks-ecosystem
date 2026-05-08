@@ -35,7 +35,7 @@ def log_message(message: str, level: str = "INFO") -> None:
     """Log a message to both stdout and the current log file."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     formatted = f"[{timestamp}] [{level}] {message}"
-    print(formatted)
+    print(formatted, flush=True)
 
 
 def write_log(log_path: str, content: str) -> None:

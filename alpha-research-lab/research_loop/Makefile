@@ -1,6 +1,7 @@
-.PHONY: cycle dry-run status reset loop check-interrupted recover-interrupted ideate experiment memory evergreen-cycle help
+.PHONY: cycle dry-run status reset loop check-interrupted recover-interrupted ideate experiment memory evergreen-cycle help tail
 
 MAX_CYCLES ?= 2
+SESSION_BATCH_SIZE ?= 3
 
 help:
 	@echo "Research Loop Orchestrator"
@@ -21,9 +22,11 @@ help:
 	@echo "  make loop               - Run bounded loop (MAX_CYCLES=$(MAX_CYCLES), default 2)"
 	@echo "  make check-interrupted  - Check for stale interrupted runs"
 	@echo "  make recover-interrupted - Recover from an interrupted run"
+	@echo "  make tail               - Tail -f latest cycle/loop log"
 	@echo ""
 	@echo "Variables:"
 	@echo "  MAX_CYCLES       - Number of cycles for loop (default: 2)"
+	@echo "  SESSION_BATCH_SIZE - Cycles per session batch (default: 3)"
 	@echo ""
 	@echo "Files:"
 	@echo "  state/loop_state.json - Persistent state"
@@ -33,50 +36,54 @@ help:
 
 cycle:
 	@echo "Running 3-phase cycle (ideate→experiment→memory)..."
-	python3 orchestrator.py cycle
+	python3 -u orchestrator.py cycle
 
 ideate:
 	@echo "Running Phase 1: Ideate (bright-mind)..."
 	@echo "WARNING: Standalone phase uses fresh session, not same-session as cycle"
-	python3 orchestrator.py ideate
+	python3 -u orchestrator.py ideate
 
 experiment:
 	@echo "Running Phase 2: Experiment (experimentor)..."
 	@echo "WARNING: Standalone phase uses --continue which may resume wrong session!"
 	@echo "Only use after make ideate in same session, or use make cycle instead"
-	python3 orchestrator.py experiment
+	python3 -u orchestrator.py experiment
 
 memory:
 	@echo "Running Phase 3: Memory (manh-memory-system)..."
 	@echo "WARNING: Standalone phase uses --continue which may resume wrong session!"
 	@echo "Only use after make experiment in same session, or use make cycle instead"
-	python3 orchestrator.py memory
+	python3 -u orchestrator.py memory
 
 dry-run:
 	@echo "Running dry-run (no agent invocation)..."
-	python3 orchestrator.py dry-run
+	python3 -u orchestrator.py dry-run --max-cycles $(MAX_CYCLES) --session-batch-size $(SESSION_BATCH_SIZE)
 
 status:
 	@echo "Current state:"
-	python3 orchestrator.py status
+	python3 -u orchestrator.py status
 
 reset:
 	@echo "Resetting loop state..."
-	python3 orchestrator.py reset
+	python3 -u orchestrator.py reset
 	@echo "State reset complete"
 
 loop:
-	@echo "Running bounded loop (max_cycles=$(MAX_CYCLES))..."
-	python3 orchestrator.py loop --max-cycles $(MAX_CYCLES)
+	@echo "Running bounded loop (max_cycles=$(MAX_CYCLES), session_batch_size=$(SESSION_BATCH_SIZE))..."
+	python3 -u orchestrator.py loop --max-cycles $(MAX_CYCLES) --session-batch-size $(SESSION_BATCH_SIZE)
 
 check-interrupted:
 	@echo "Checking for interrupted runs..."
-	python3 orchestrator.py check-interrupted
+	python3 -u orchestrator.py check-interrupted
 
 recover-interrupted:
 	@echo "Recovering from interrupted run..."
-	python3 orchestrator.py recover-interrupted
+	python3 -u orchestrator.py recover-interrupted
 
 evergreen-cycle:
 	@echo "Running legacy evergreen cycle..."
-	python3 orchestrator.py evergreen-cycle
+	python3 -u orchestrator.py evergreen-cycle
+
+tail:
+	@echo "Tailing latest log file..."
+	@ls -t logs/cycle_*.log logs/loop_*.log 2>/dev/null | head -1 | xargs tail -f

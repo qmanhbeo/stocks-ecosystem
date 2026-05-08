@@ -144,6 +144,10 @@ def update_state(
         state["active_loop_log_path"] = None
         state["active_command"] = None
         state["active_pid"] = None
+        state["active_phase"] = None
+        state["active_agent"] = None
+        state["active_phase_started_at"] = None
+        state["active_phase_log_path"] = None
     if last_completed_at is not None:
         state["last_completed_at"] = last_completed_at
     if active_phase is not None:

@@ -54,6 +54,33 @@ make dry-run
 make reset
 ```
 
+## Production Usage
+
+**Recommended: Run inside tmux to survive SSH disconnects**
+
+```bash
+# Start a new tmux session
+tmux new -s research_loop
+
+# Navigate to the orchestrator
+cd ~/stocks-ecosystem/alpha-research-lab/research_loop
+
+# Run the loop (watch live output)
+make loop MAX_CYCLES=3 SESSION_BATCH_SIZE=3
+
+# In another terminal, tail the logs
+make tail
+```
+
+If the session is interrupted (SSH disconnect, timeout), you can recover:
+```bash
+# Check for interrupted state
+make check-interrupted
+
+# Recover safely
+make recover-interrupted
+```
+
 ## What `make cycle` Does
 
 1. Loads state from `state/loop_state.json`
