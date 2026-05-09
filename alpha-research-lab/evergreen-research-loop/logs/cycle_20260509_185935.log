@@ -1,0 +1,47 @@
+=== Research Loop Cycle Started at 2026-05-09T18:59:35.407245 ===
+Working directory: /home/manh/stocks-ecosystem
+Research lab: /home/manh/stocks-ecosystem/alpha-research-lab
+--- Current State ---
+  version: 1.0
+  cycle_count: 17
+  last_phase: failed
+  last_run_timestamp: 2026-05-08T19:29:46.302078
+  last_decision: run_evergreen
+  heavy_job_detected: False
+  last_exit_status: incomplete
+  created_at: 2026-05-08T12:25:02.512120
+  loop_started_at: 2026-05-09T18:59:35.403444
+  loop_completed_at: 2026-05-09T18:59:06.527629
+  last_loop_max_cycles: 30
+  last_loop_completed_cycles: 0
+  last_stop_reason: cycle_1_failed
+  last_completed_phase: ideate
+  active_loop_log_path: /home/manh/stocks-ecosystem/alpha-research-lab/evergreen-research-loop/logs/loop_20260509_185935.log
+  last_completed_at: 2026-05-08T19:29:46.302045
+Inspection: {'heavy_job': False, 'hypothesis_queue_exists': True, 'hypothesis_queue_count': 35, 'last_session': None, 'last_h': None, 'cycle_count': 17}
+Decision: run_evergreen (Ready to run evergreen-research-loop pass)
+Invoking three-phase cycle (is_first_in_batch=True, verbose=False)...
+=== Research Loop Cycle Started at 2026-05-09T18:59:35.410449 ===
+Working directory: /home/manh/stocks-ecosystem
+Research lab: /home/manh/stocks-ecosystem/alpha-research-lab
+--- Current State ---
+  version: 1.0
+  cycle_count: 17
+  last_phase: decision
+  last_run_timestamp: 2026-05-08T19:29:46.302078
+  last_decision: run_evergreen
+  heavy_job_detected: False
+  last_exit_status: incomplete
+  created_at: 2026-05-08T12:25:02.512120
+  loop_started_at: 2026-05-09T18:59:35.403444
+  loop_completed_at: 2026-05-09T18:59:06.527629
+  last_loop_max_cycles: 30
+  last_loop_completed_cycles: 0
+  last_stop_reason: cycle_1_failed
+  last_completed_phase: ideate
+  active_cycle_started_at: 2026-05-09T18:59:35.410473
+  active_cycle_log_path: /home/manh/stocks-ecosystem/alpha-research-lab/evergreen-research-loop/logs/cycle_20260509_185935.log
+  active_loop_log_path: /home/manh/stocks-ecosystem/alpha-research-lab/evergreen-research-loop/logs/loop_20260509_185935.log
+  last_completed_at: 2026-05-08T19:29:46.302045
+Heavy job check: False
+Phase 1 (experiment): using /experimentor, use_continue=False

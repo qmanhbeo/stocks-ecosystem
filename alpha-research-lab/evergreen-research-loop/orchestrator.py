@@ -34,6 +34,15 @@ DEFAULT_VERBOSE = False
 DEFAULT_HEARTBEAT_SECONDS = 30
 
 
+def is_running_state(last_phase: Optional[str], last_exit_status: Optional[str]) -> bool:
+    """Return True when state indicates an active phase or legacy running state."""
+    if last_exit_status == "running":
+        return True
+    if not last_phase:
+        return False
+    return last_phase == "running" or last_phase.startswith("running_")
+
+
 def check_heavy_job_running() -> bool:
     """
     Check if any heavy job is running.
@@ -200,7 +209,7 @@ def invoke_evergreen(prompt: str) -> Tuple[int, str, str]:
     cmd = [
         config.OPENCODE_BINARY,
         "run",
-        "--dir", "alpha-research-lab",
+        "--dir", config.RESEARCH_LAB,
         "--agent", "evergreen-research-loop",
         "--title", "research-loop-cycle",
     ]
@@ -255,7 +264,7 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None,
     if title:
         cmd.extend(["--title", title])
 
-    cmd.extend(["--dir", "alpha-research-lab"])
+    cmd.extend(["--dir", config.RESEARCH_LAB])
 
     stdout_chunks = []
     stderr_chunks = []
@@ -278,6 +287,14 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None,
             return f"{phase_label} {status} in {elapsed}s"
         return f"Phase {'completed' if success else 'failed'} in {elapsed}s"
 
+    def send_prompt_and_wait() -> int:
+        if process.stdin is not None:
+            process.stdin.write(prompt)
+            process.stdin.close()
+        return process.wait(timeout=config.OPENCODE_TIMEOUT_SECONDS)
+
+    process = None
+
     if verbose:
         def stream_reader(stream, prefix, chunks, lock):
             try:
@@ -299,6 +316,7 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None,
                 bufsize=1,
                 cwd=config.REPO_ROOT,
             )
+            state.update_state(active_command=" ".join(cmd), active_pid=process.pid)
 
             stdout_thread = threading.Thread(target=stream_reader, args=(process.stdout, "[opencode]", stdout_chunks, stdout_lock))
             stderr_thread = threading.Thread(target=stream_reader, args=(process.stderr, "[opencode:err]", stderr_chunks, stderr_lock))
@@ -306,15 +324,17 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None,
             stdout_thread.start()
             stderr_thread.start()
 
-            stdout, stderr = process.communicate(input=prompt, timeout=config.OPENCODE_TIMEOUT_SECONDS)
+            returncode = send_prompt_and_wait()
 
             stdout_thread.join(timeout=2)
             stderr_thread.join(timeout=2)
 
-            return process.returncode, "\n".join(stdout_chunks), "\n".join(stderr_chunks)
+            return returncode, "\n".join(stdout_chunks), "\n".join(stderr_chunks)
 
         except subprocess.TimeoutExpired:
             process.kill()
+            stdout_thread.join(timeout=2)
+            stderr_thread.join(timeout=2)
             return -1, "", f"Timeout after {config.OPENCODE_TIMEOUT_SECONDS}s"
         except FileNotFoundError:
             return -2, "", f"opencode binary not found: {config.OPENCODE_BINARY}"
@@ -324,8 +344,16 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None,
     else:
         def heartbeat_worker():
             while not stop_heartbeat.is_set():
+                poll_code = None if process is None else process.poll()
+                if poll_code is not None:
+                    log.log_message(
+                        f"{phase_label or 'Phase'} child pid={process.pid} exited with rc={poll_code}; stopping heartbeat",
+                        "WARN",
+                    )
+                    return
                 elapsed = int(time_module.time() - start_time)
-                log.log_message(format_heartbeat(elapsed), "INFO")
+                pid_suffix = f", pid={process.pid}" if process is not None else ""
+                log.log_message(format_heartbeat(elapsed) + pid_suffix, "INFO")
                 stop_heartbeat.wait(heartbeat_seconds)
 
         def stream_reader_silent(stream, chunks, lock):
@@ -347,6 +375,7 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None,
                 bufsize=1,
                 cwd=config.REPO_ROOT,
             )
+            state.update_state(active_command=" ".join(cmd), active_pid=process.pid)
 
             stdout_thread = threading.Thread(target=stream_reader_silent, args=(process.stdout, stdout_chunks, stdout_lock))
             stderr_thread = threading.Thread(target=stream_reader_silent, args=(process.stderr, stderr_chunks, stderr_lock))
@@ -357,7 +386,7 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None,
             heartbeat_thread = threading.Thread(target=heartbeat_worker)
             heartbeat_thread.start()
 
-            stdout, stderr = process.communicate(input=prompt, timeout=config.OPENCODE_TIMEOUT_SECONDS)
+            returncode = send_prompt_and_wait()
 
             stop_heartbeat.set()
             heartbeat_thread.join(timeout=1)
@@ -365,16 +394,18 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None,
             stderr_thread.join(timeout=2)
 
             elapsed = int(time_module.time() - start_time)
-            log.log_message(format_completion(elapsed, process.returncode == 0), "INFO")
+            log.log_message(format_completion(elapsed, returncode == 0), "INFO")
 
-            if process.returncode != 0:
+            if returncode != 0:
                 log.log_message(f"{phase_label} failed. See log for raw output." if phase_label else "Phase failed. See log for raw output.", "ERROR")
 
-            return process.returncode, "\n".join(stdout_chunks), "\n".join(stderr_chunks)
+            return returncode, "\n".join(stdout_chunks), "\n".join(stderr_chunks)
 
         except subprocess.TimeoutExpired:
             process.kill()
             stop_heartbeat.set()
+            stdout_thread.join(timeout=2)
+            stderr_thread.join(timeout=2)
             elapsed = int(time_module.time() - start_time)
             log.log_message(format_completion(elapsed, False) + " (timeout)", "ERROR")
             return -1, "", f"Timeout after {config.OPENCODE_TIMEOUT_SECONDS}s"
@@ -424,6 +455,10 @@ def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = T
 
     log.write_log(cycle_log_path, f"Working directory: {config.REPO_ROOT}")
     log.write_log(cycle_log_path, f"Research lab: {config.RESEARCH_LAB}")
+    state.update_state(
+        active_cycle_started_at=datetime.now().isoformat(),
+        active_cycle_log_path=cycle_log_path,
+    )
 
     current_state = state.load_state()
     log.write_log(cycle_log_path, log.format_state_summary(current_state))
@@ -760,10 +795,9 @@ def check_interrupted() -> int:
     print(f"  active_cycle_started_at: {st.get('active_cycle_started_at')}")
     print(f"  active_command: {st.get('active_command')}")
 
-    is_running_phase = last_phase in ["running_evergreen", "running"]
-    is_running_exit = last_exit == "running"
+    is_running = is_running_state(last_phase, last_exit)
 
-    if is_running_phase or is_running_exit:
+    if is_running:
         if active_pid is not None:
             try:
                 os.kill(active_pid, 0)
@@ -801,7 +835,7 @@ def recover_interrupted() -> int:
 
     print("=== Recovery Check ===")
 
-    is_running_phase = last_phase in ["running_evergreen", "running", "running_ideate", "running_memory", "running_experiment"]
+    is_running_phase = is_running_state(last_phase, last_exit)
     is_running_exit = last_exit == "running"
 
     if last_phase == "running_ideate" and is_running_exit:

@@ -7,6 +7,8 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 125](session_125_log.md): Ran H478 `zero_liquidity_anomaly` (AR queue). MIXED: Zero volume states have 0 rows (no order data exists when volume = 0, hypothesis untestable). BUT low_volume_high_c16 PASSES: IC 0.176 (+0.056 lift, 8/8 pos years) — independent confirmation of H474 tight_capacity mechanism. Finding F404: sparse order flow = hidden demand. Source: [session_125_log.md](./session_125_log.md).
+
 - [Session 124](session_124_log.md): Ran H477 `ap_residual_signal_discovery` (AP queue). MIXED: S1 residual after removing vol_expansion correlation = IC +0.0013 (7/11 positive years, 63.6%). Marginal but real — residual IC is positive, confirming S1 is not purely vol_expansion-driven. But IC is only 0.0013, not strong enough for promotion. All-rows residual = -0.001 (4/11), noise on average. Finding F403: S1 has a tiny independent component beyond vol_expansion, but the effect is fragile. Do not promote as signal; raw S1 remains primary. Source: [session_124_log.md](./session_124_log.md).
 
 - [Session 123](session_123_log.md): Ran H474 `capacity_as_signal_not_veto` (AN queue). PASSED: tight_capacity (Q1: lowest order count) = IC 0.184 (+0.065 lift, 8/8 pos years). loose_capacity = IC 0.074 (-0.046, anti-predictive). Mechanism: sparse order flow = hidden demand / under-followed alpha, not tradability. tight_expansion sparse (2/8 years). NEW capacity signal — fundamentally different from H391 binary release. Use as positive filter for low-activity names, not as veto. Source: [session_123_log.md](./session_123_log.md).
