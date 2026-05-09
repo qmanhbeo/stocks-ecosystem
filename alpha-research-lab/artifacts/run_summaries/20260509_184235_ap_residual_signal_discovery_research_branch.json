@@ -1,0 +1,135 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260509_184235_ap_residual_signal_discovery_results.parquet",
+    "yearly": "artifacts/research_branch/20260509_184235_ap_residual_signal_discovery_yearly.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "S1 residual after removing vol_expansion correlation still contains independent signal. If IC > 0.01 with >= 60% positive years, the lab has genuine independent edge beyond vol_expansion. If residual is zero or negative, all current signals are vol_expansion proxies.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "ap_residual_signal_discovery",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_residual_rank": "S1 residual after removing vol_expansion correlation",
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "scores_evaluated": [
+      "s1_xs_proba",
+      "s1_residual_rank"
+    ],
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": "all_rows",
+        "family": "vol_expansion",
+        "label": "vol_expansion_rank >= 0.80",
+        "name": "high_vol_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "vol_expansion",
+        "label": "vol_expansion_rank <= 0.20",
+        "name": "low_vol_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "residual",
+        "label": "S1 residual rank top 20% (highest orthogonal S1)",
+        "name": "s1_residual_top20",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": "all_rows",
+        "family": "residual",
+        "label": "S1 residual rank bottom 20% (lowest orthogonal S1)",
+        "name": "s1_residual_bot20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "high_vol_expansion",
+        "family": "combo",
+        "label": "High vol expansion AND top 20% S1 residual",
+        "name": "high_vol_exp_top20_s1",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "high_vol_expansion",
+        "family": "combo",
+        "label": "High vol expansion AND bottom 20% S1 residual",
+        "name": "high_vol_exp_bot20_s1",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "ap_residual_signal_discovery",
+  "summary": {
+    "baseline_s1_ic": 0.12979153336002336,
+    "decision": "MIXED",
+    "hypothesis": "S1 residual after removing vol_expansion correlation",
+    "panel_rows": 809019,
+    "residual_top20_pct": "63.6%",
+    "residual_top20_pos_years": "7/11",
+    "residual_top20_rows": 163452,
+    "residual_top20_s1_residual_score_ic": 0.0013300141922578607,
+    "s1_top20_lift_vs_raw_baseline": -0.005086984408428044,
+    "s1_top20_s1_score_ic": 0.12470454895159531,
+    "vol_expansion_rows": 162883
+  },
+  "ts": "20260509_184235"
+}

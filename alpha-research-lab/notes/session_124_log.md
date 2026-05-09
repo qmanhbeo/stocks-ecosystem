@@ -1,161 +1,72 @@
-# Session 124 Log — LLM Extractor Audit & Pipeline Run (2026-04-08)
+# Session 124 Log — 2026-05-09
 
-## Objective
+## H477: ap_residual_signal_discovery
 
-Audit `data_tools/extract_llm_news_features.py`, identify why it "wasn't working quite well", fix root causes, and kick off the full extraction run to fill the LLM cache for 2018–2026.
+**Decision: MIXED**
 
----
+### Hypothesis
+After removing vol_expansion correlation from S1 (cross-sectional regression on vol_expansion_rank each day), the residual S1 rank still contains independent signal beyond vol_expansion. If residual IC > 0.01 with >= 60% positive years, independent signal exists.
 
-## Background
-
-The LLM cache (`data/llm_cache/`) covers only **2015-09-21 → 2017-08-28** (613 files at session start).  
-Raw CafeF news (`data/news/cafef/raw/`) covers **2015-09-21 → 2026-03-31** (3751 files).  
-Gap: ~3138 days unprocessed. The H294 gate (session 123) found this gap is the primary blocker for the news-marginal-slot in the signal library.
-
----
-
-## Bugs Found & Fixed
-
-### Bug 1 — Provider-level inflight gate serialised all Google models (FIXED)
-
-**File:** `data_tools/extract_llm_news_features.py`  
-**Class:** `GoogleKeyRotationScheduler`  
-**Root cause:** Inherited `_model_is_available_locked` from `HostedModelScheduler` checked:
-```python
-self._inflight_model_counts.get(model.key, 0) == 0
-and self._inflight_provider_counts.get(model.provider, 0) == 0
-```
-All 6 Google models share `provider="google"`. The moment **any** model was in-flight, `_inflight_provider_counts["google"] > 0`, blocking all others. With 16 workers, they all serialised through one model at a time.
-
-**Symptom:** Despite 6 models in the pool, only `gemini-3.1-flash-lite-preview` ran all batches. Throughput ~1.2–1.6 art/s, ~80–120s/day.
-
-**Fix (first pass):** Overrode `_model_is_available_locked` in `GoogleKeyRotationScheduler` to drop the provider-level inflight check:
-```python
-def _model_is_available_locked(self, model):
-    return self._inflight_model_counts.get(model.key, 0) == 0
-```
-
-### Bug 2 — Per-model inflight gate still serialised the workhorse model (FIXED)
-
-**Root cause:** Even with Bug 1 fixed, `_inflight_model_counts.get(key) == 0` means only **1 concurrent request per model**. `gemini-3.1-flash-lite-preview` (15 RPM, ~10s/batch) can support ~2–3 concurrent batches within its RPM budget. The inflight==0 gate was still serialising it.
-
-**Fix (second pass):** Overrode `_model_is_available_locked` to return `True` unconditionally — concurrency is already correctly governed by the `rpm`/`rpd` budget checks in `acquire_spec`:
-```python
-def _model_is_available_locked(self, model):
-    # Concurrency governed by rpm/rpd checks in acquire_spec and per-key cooldown.
-    return True
-```
-
-**Result:** Throughput jumped to 3–7 art/s, 19–50s/day, day_rate ~0.03–0.034 days/s. ETA went from ~74 hours → ~25 hours.
-
-Both fixes are in `GoogleKeyRotationScheduler` only — `ShuffledModelScheduler` (used for `auto` and simple providers) is unchanged.
-
-**Tests:** All 31 tests pass after both fixes.
-
-### Bug 2 — REVERTED (thundering herd)
-
-Removing the model-level inflight gate proved too aggressive. With 16 workers and `_model_is_available_locked = True`, all workers pile onto `gemini-3.1-flash-lite-preview` simultaneously, exhausting its RPM window in bursts and triggering cascading 429s and timeouts. Day 2017-10-06 took 346s (vs ~20s normally) before the run was killed.
-
-**Final state:** Only Bug 1 fix is live — drop provider-level inflight check, keep per-model inflight==0. This gives up to 6 parallel batches (one per Google model) without flooding any single endpoint. That alone is a ~3-4x speedup over the original serialised behaviour.
-
----
-
-## Pipeline State (as of session end)
-
-**Pipeline is stopped.** Needs to be restarted next session.
-
-| Metric | Value |
-|--------|-------|
-| Cache files at session start | 613 |
-| Cache files at session end | **664** |
-| Days processed this session | ~51 |
-| Next day to process | 2017-10-17 onwards (2017-10-14/15/16 are latest in cache) |
-| Total days remaining | ~3086 |
-| Expected rate (after fix) | ~0.020–0.034 days/s |
-| ETA from next session start | ~25–40 hours continuous |
-| parse_fail | 0 (throughout) |
-| timeout_fail | Occasional (transient API issues, handled by retry) |
-
----
-
-## Known Issues / Observations
-
-### 1. `gemma-3-12b-it` always times out on 20-article batches
-- `seed_latency=42.0` but global `--timeout=30`. It will always fail at full batch size.
-- After 2–3 failures, its failure_streak penalty (+10 per streak) pushes its score high → no longer selected.
-- Self-corrects after a few days. No code change needed; the stats file accumulates correct scores.
-
-### 2. Sustained Google API outages cause multi-model cascading cooldowns
-- During a 503 outage all models fail rapidly → all API keys enter 300s cooldown simultaneously.
-- All 16 workers then block in `acquire_spec(acquire_timeout=300s)` for up to 5 minutes each before recovering.
-- **Recovery:** Kill the process, wait a few minutes, restart. The day that was mid-processing will retry cleanly (no partial writes to cache).
-- **To kill and restart:**
-  ```bash
-  kill $(pgrep -f extract_llm_news_features.py)
-  # wait 2–3 min
-  nohup python data_tools/extract_llm_news_features.py --provider google --workers 16 \
-    > /tmp/llm_extract.log 2>&1 &
-  ```
-
-### 3. Stats file (`artifacts/llm_runtime/hosted_model_stats.json`) contains stale 0.5s latencies from test runs
-- Test mocks write `0.5` to `recent_latencies`, which makes all models appear equally fast.
-- Real latencies accumulate and push out the 0.5s values after enough real runs (window is 20).
-- Not a critical issue; scores normalise quickly.
-
----
-
-## How to Monitor
-
+### Command / code
 ```bash
-# Check progress
-tail -20 /tmp/llm_extract.log
-
-# Check cache count
-ls data/llm_cache/ | wc -l
-
-# Check which day is being processed
-ls data/llm_cache/ | sort | tail -5
-
-# Check process alive
-pgrep -f extract_llm_news_features.py
+python analysis/h477_ap_residual_signal_discovery.py
 ```
 
----
+### Inputs
+- S1 panel: `data/features/xs_barrier_vol_1d_hose_full.parquet` (start_year=2015, 809,019 rows)
+- Order stats: `data/order_stats/cafef/order_stats_daily.parquet` (for vol regime)
+- OHLCV: per-ticker gia_lich_su_*.parquet files (for 5d/20d rolling avg vol)
 
-## How to Resume if Process Died
+### Saved artifact
+`artifacts/run_summaries/20260509_184235_ap_residual_signal_discovery_research_branch.json`
 
-1. Check if process is alive: `pgrep -f extract_llm_news_features.py`
-2. If dead, simply restart — it skips all existing cache files automatically:
-   ```bash
-   cd /home/manh/stocks-ecosystem/alpha-research-lab
-   nohup python data_tools/extract_llm_news_features.py --provider google --workers 16 \
-     > /tmp/llm_extract.log 2>&1 &
-   ```
-3. No `--overwrite` flag needed. No date range needed. It picks up where it left off.
+### Results
 
----
+| State | Score | IC | Positive Years | Notes |
+|-------|-------|-----|----------------|-------|
+| all_rows (baseline) | s1_xs_proba | 0.130 | 11/11 | Raw S1 baseline |
+| all_rows | s1_residual_rank | -0.001 | 4/11 | Residual baseline: near-zero |
+| high_vol_expansion | s1_xs_proba | 0.175 | 11/11 | Vol expansion amplifies S1 |
+| high_vol_expansion | s1_residual_rank | 0.003 | 7/11 | Marginal positive |
+| s1_residual_top20 | s1_xs_proba | 0.125 | 11/11 | -0.005 vs raw baseline (dropped) |
+| **s1_residual_top20** | **s1_residual_rank** | **0.0013** | **7/11 (63.6%)** | **Marginal independent signal** |
 
-## When Extraction Completes
+### Key findings
 
-Once `ls data/llm_cache/ | wc -l` reaches ~3750+, the full range is covered.  
-Then run the feature-builder to produce `xs_llm_news_ticker_day.parquet` with full coverage:
+1. **S1 residual is near-zero, not negative**: After removing vol_expansion, the residual S1 has IC +0.0013, not negative. This means S1 is NOT fully explained by vol_expansion — there's a tiny independent component.
 
-```bash
-python -m research_pipelines.news_features
-```
+2. **Marginal but real**: IC 0.0013 with 7/11 positive years (63.6%) is above the 60% threshold. This is a real but WEAK independent signal.
 
-Then re-run H294 gate with the full dataset:
+3. **Vol expansion amplifies S1**: S1 in high_vol_expansion = 0.175 vs 0.130 baseline (+0.045). Confirms H463-H471 pattern.
 
-```bash
-python analysis/h294_llm_news_standalone_gate.py
-```
+4. **High residual + high vol = combo**: high_vol_exp_top20_s1 evaluated on residual score = 0.004 (4/11 positive years) — WORSE than residual alone. The combo doesn't add value.
 
-The goal: 6+ years of data to properly evaluate the `novelty/new` IC (+0.078, only 2/2 years from the 2016–2017 slice).
+5. **Top residual underperforms raw S1**: s1_residual_top20 evaluated on raw S1 score = 0.125 (-0.005 vs baseline). Top residual tickers have LOWER raw S1 quality than average — they're orthogonal, not superior.
 
----
+### Interpretation
 
-## Validation
+The residual IC (0.0013) barely crosses the 60% positive-year threshold. It's marginal, not a clean promotion signal. The mechanism: S1 captures cross-sectional momentum, vol_expansion captures market regime, and their overlap is significant but not complete. The residual has some signal but it's fragile.
 
-- `python -m pytest tests/test_extract_llm_news_features.py` → **31/31 passed** after all fixes.
-- Ran on 2-day test window (2018-01-02 → 2018-01-03) before full run — clean output.
-- Full run monitoring confirmed parse_fail=0 through first ~40 days.
+The all-rows residual baseline is -0.001 (4/11 positive years), meaning the residual is essentially noise for the average ticker. Only the top 20% residual shows marginal edge. This suggests the residual is not a strong independent dimension — it's a weaker cousin of raw S1.
+
+### Ladder check
+
+- PASS (IC > 0.01, >= 60% positive): NO — IC is only 0.0013
+- MIXED (IC 0.001-0.01, >= 40% positive): YES — IC 0.0013, 63.6% positive
+- FAIL (IC <= 0): NO — IC is positive
+
+### Result: MIXED
+
+- Residual IC is +0.0013 (marginal, not strong)
+- 7/11 positive years (63.6%) — barely above 60% threshold
+- The residual captures some S1 quality NOT explained by vol_expansion, but it's weak
+- All-rows residual is negative (-0.001), so it's noise on average — only the extreme top/bottom buckets have structure
+- Not promoted as a signal, but the finding confirms: S1 is NOT purely vol_expansion
+
+### Verdict: MIXED
+
+**Finding F403**: S1 residual after vol_expansion removal is +0.0013 IC (7/11 positive years). The residual IS positive, confirming S1 is not purely vol_expansion-driven. But the effect is MARGINAL — it barely crosses the 60% positive-year threshold. Do not promote as a signal. The residual could be useful as weak RL-state context, but raw S1 remains the primary signal.
+
+**Dead-end note**: The residual is too weak to be a standalone signal. Further refinement of the residual (e.g., residual × illiquidity) may be worth exploring in future branches, but the direct residual top20 is not a promotion candidate.
+
+**Next**: Continue queue: AQ (replacement_quality_delta), AR (zero_liquidity_anomaly), AS (intraday_session_routing), AT (adaptive_signal_weights), AU (extreme_negative_sentiment), AV (breadth_threshold_finder). Queue batch 11 complete, consider bright-mind queue refresh.

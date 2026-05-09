@@ -1,0 +1,5 @@
+=== Research Loop Started at 2026-05-09T18:37:47.058296 (max_cycles=30) ===
+Starting bounded loop with max_cycles=30, session_batch_size=3
+Working directory: /home/manh/stocks-ecosystem
+=== Cycle 1 === batch=1, cycle_in_batch=1, is_first_in_batch=True, verbose=False
+=== Loop Completed: 0 cycles, stop_reason=exception_OSError, total_time=469.8s ===

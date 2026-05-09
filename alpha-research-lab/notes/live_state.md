@@ -5,12 +5,11 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead ends chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_123_log.md](./session_123_log.md)
-Last verified: [Session 123](./session_123_log.md), 2026-05-08
-**QUEUE STATUS: batch 11 COMPLETE** — AK=H437 dead-end, AL=H472 dead-end, AM=H473 dead-end, AN=H474 PASSED (C27 candidate: tight_capacity)
+Latest full session detail: [session_124_log.md](./session_124_log.md)
+Last verified: [Session 124](./session_124_log.md), 2026-05-09
+**QUEUE STATUS: batch 11 COMPLETE** — AK=H437 dead-end, AL=H472 dead-end, AM=H473 dead-end, AN=H474 PASSED (C27 candidate: tight_capacity), AP=H477 MIXED (F403: residual marginal +0.0013 IC, not promoted)
 
 **Remaining EUREKA queue (unactivated):**
-- AP: residual_signal_discovery — S1 residual after C23-C26 removal
 - AQ: replacement_quality_delta — delta_S1 of entering vs exiting tickers
 - AR: zero_liquidity_anomaly — zero volume days × C16 pressure
 - AS: intraday_session_routing — session-specific IC by time-of-day (needs 1H data)

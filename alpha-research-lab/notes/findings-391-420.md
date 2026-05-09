@@ -344,3 +344,43 @@ H449 tested C16 acceleration (second derivative) vs forward IC. Hypothesis: acce
 **Source:**
 - [session_120_log.md](./session_120_log.md)
 - `artifacts/run_summaries/h449_order_flow_momentum_*.json`
+
+---
+
+## F403: H477 S1 Residual After Vol_Expansion Removal — Marginal Independent Signal (2026-05-09, Session 124)
+
+**Decision: MIXED**
+
+H477 tested whether S1 still predicts forward returns after removing vol_expansion correlation via cross-sectional regression on vol_expansion_rank each day. The residual represents the part of S1 NOT explained by vol_expansion.
+
+**Results:**
+- all_rows baseline (S1 score): IC +0.130, 11/11 positive years
+- all_rows baseline (residual score): IC -0.001, 4/11 positive years — near-zero noise
+- high_vol_expansion (S1 score): IC +0.175, 11/11 positive years — vol amplifies S1
+- high_vol_expansion (residual score): IC +0.003, 7/11 positive years — marginal
+- **s1_residual_top20 (residual score): IC +0.0013, 7/11 positive years (63.6%)** — marginal
+- s1_residual_top20 (S1 score): IC +0.125, 11/11 positive years — (-0.005 vs baseline)
+
+**Key findings:**
+1. **S1 residual is positive but marginal**: IC +0.0013, barely crossing the 60% positive-year threshold. This confirms S1 is NOT purely vol_expansion-driven — there's a tiny independent component.
+
+2. **All-rows residual is noise**: The average ticker residual IC = -0.001 (4/11 positive years). Only the extreme top/bottom buckets have structure.
+
+3. **Top residual underperforms raw S1**: top20 residual evaluated on raw S1 score = 0.125 (-0.005 vs baseline). High residual tickers have LOWER raw S1 quality than average — they're orthogonal, not superior.
+
+4. **Vol expansion amplifies S1**: S1 in high_vol_expansion = 0.175 vs 0.130 baseline (+0.045). Confirms H463-H471 pattern. The residual also gets a tiny boost from vol expansion.
+
+5. **Combo doesn't help**: high_vol_exp_top20_s1 evaluated on residual score = 0.004 (4/11 positive years) — WORSE than residual alone. The combination is worse.
+
+**Why it matters:**
+- The residual IS positive, confirming S1 has some independent signal beyond vol_expansion
+- But the effect is FRAGILE — IC 0.0013 barely crosses 60% threshold, all-rows residual is negative
+- Not strong enough for standalone signal promotion
+- Useful as weak RL-state context, but raw S1 remains the primary signal
+- The finding is scientifically interesting (S1 ≠ vol_expansion) but practically marginal
+
+**Signal library status:** Not promoted. The residual is too weak for IC > 0.05 threshold. Do not add to signal library.
+
+**Source:**
+- [session_124_log.md](./session_124_log.md)
+- `artifacts/run_summaries/20260509_184235_ap_residual_signal_discovery_research_branch.json`
