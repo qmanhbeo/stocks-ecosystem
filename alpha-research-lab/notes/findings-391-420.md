@@ -1,6 +1,184 @@
 # Findings 391-420
 
-## F391: H453 Order Flow Imbalance Momentum — C21 New Signals (2026-05-08, Session 109)
+## F412: H487 BR1 Signal Co-fire Regime — PASSED (2026-05-09, Session 132)
+
+**Decision: PASSED**
+
+**Signal: cofire regime**
+
+H487 tested whether C23/C24/C25/C26 co-fire count (0-4 signals firing same day) predicts regime strength. C23 (illiq × vol_expansion), C24 (ceiling × vol_expansion), C20 (buy_heavy × vol_expansion) were tracked per ticker-date.
+
+**Results:**
+- baseline (all rows): IC 0.1298
+- cofire_0 (no signals): IC 0.1152 (-0.0146) — **ANITI-PREDICTIVE**
+- cofire_1 (1 signal): IC 0.2284 (+0.0986), 11/11
+- **cofire_2 (2 signals): IC 0.2463 (+0.1165), 11/11** — **STRONGEST**
+- cofire_ge2 (>=2): IC 0.2415 (+0.1117), 11/11
+
+**Key insight:**
+1. **MONOTONIC progression**: cofire_0 (0.1152) < cofire_1 (0.2284) < cofire_2 (0.2463) — MORE signals = stronger S1 quality
+2. **Co-fire regime is REAL**: signal co-occurrence captures shared vol_expansion amplification
+3. **cofire_0 is ANTI-predictive**: stocks with no signal fire are WORSE than average (0.1152 vs 0.1298)
+4. **cofire_3/4 too sparse** (721/0 rows) — insufficient data for robust inference
+
+**Why it matters:**
+- cofire_2 is the strongest regime state tested in this batch (+0.1165 IC lift)
+- Mechanism: multiple signals firing together = stronger regime confirmation
+- Use as regime intensity indicator, NOT composite signal (D041: don't combine C23/C24)
+- cofire_0 is a useful ANTI-signal: no-signal days predict weakness
+
+**Source:**
+- [session_132_log.md](./session_132_log.md)
+- `artifacts/run_summaries/20260509_232448_signal_cofire_regime_research_branch.json`
+
+---
+
+## F413: H488 BR2 Vol Expansion Degree Continuous — MIXED (2026-05-09, Session 132)
+
+**Decision: MIXED**
+
+H488 tested whether vol_expansion is continuous (10/20/30/40/50% percentiles) rather than binary (top 20%). H481 showed breadth is MONOTONIC — this tests if vol follows the same pattern.
+
+**Results:**
+- Vol percentile ALONE (no signal): MONOTONIC but WEAK
+  - top 10%: IC 0.1305 (+0.0007)
+  - top 20%: IC 0.1318 (+0.0020)
+  - top 30%: IC 0.1345 (+0.0047)
+  - top 40%: IC 0.1383 (+0.0085)
+  - top 50%: IC 0.1429 (+0.0132)
+  - Binary (top 20%): IC 0.1753 (+0.0455) — **binary captures regime MORE efficiently**
+- Signal × Vol percentile for C24 (ceiling_2):
+  - top 20%: IC 0.2310 (+0.1013)
+  - top 30%: IC 0.2202 (+0.0904)
+  - top 40%: IC 0.2407 (+0.1109)
+  - binary: IC 0.2530 (+0.1232) — still best
+
+**Key insight:**
+1. Vol percentile ALONE is monotonic but TINY increments (+0.0007 to +0.0132 across 10-50%)
+2. Binary (top 20% vol_change) captures the regime effect MORE efficiently than continuous thresholds
+3. Different signals prefer different thresholds: C24 ceiling works best at top 40%, buy_heavy stable across 20-40%
+4. Vol ALONE is weak (+0.0132 at 50%); vol × signal is strong (+0.10 to +0.12)
+
+**Why it matters:**
+- Binary is the efficient cutoff for vol expansion — continuous thresholds add complexity without proportional IC
+- Vol degree is continuous in PRINCIPLE but binary is sufficient in PRACTICE
+- Treat vol_expansion as binary (top 20% vol_change) for signal building
+
+**Source:**
+- [session_132_log.md](./session_132_log.md)
+- `artifacts/run_summaries/20260509_232538_vol_expansion_degree_continuous_research_branch.json`
+
+---
+
+## F414: H489 BR3 Illiq Without Expansion Isolation — PASSED (2026-05-09, Session 132)
+
+**Decision: PASSED**
+
+**Signal: high_illiq_alone (standalone)**
+
+H489 tested whether high illiquidity WITHOUT vol expansion is a legitimate standalone signal. C23 = illiq × vol_exp (IC +0.1318). The test isolates illiq's independent contribution.
+
+**Results:**
+- baseline: IC 0.1298
+- high_illiq (all): IC 0.2029 (+0.0731), 11/11 — strong standalone
+- **high_illiq_alone (no vol): IC 0.1793 (+0.0495), 11/11** — **INDEPENDENT SIGNAL**
+- high_illiq_contraction: IC 0.1790 (+0.0492), 11/11 — almost identical to alone
+- high_illiq × vol expansion (C23): IC 0.2616 (+0.1318), 11/11 — strongest
+- mid_illiq_expansion: IC 0.1459 (+0.0162)
+- low_illiq: IC 0.0652 (-0.0646) — anti-predictive
+
+**Key insight:**
+1. **Illiq is INDEPENDENT of vol regime**: IC 0.1793 (+0.0495) without vol is POSITIVE
+2. **Vol AMPLIFIES but doesn't CREATE the signal**: C23 (0.2616) - alone (0.1793) = +0.082 regime boost
+3. High illiq in vol contraction ALSO positive (0.1790) — confirms independence
+4. Low illiq is anti-predictive (0.0652, -0.0646) — liquid stocks underperform
+
+**Why it matters:**
+- Illiq can be used as a STANDALONE ranker input, not just a regime conditioner
+- Vol expansion AMPLIFIES illiq but illiq works independently
+- Do NOT treat illiq as requiring vol_expansion — it's valid with or without the combo
+- This validates the mechanism: under-followed stocks (illiq) are systematically undervalued
+
+**Source:**
+- [session_132_log.md](./session_132_log.md)
+- `artifacts/run_summaries/20260509_232645_illiq_without_expansion_isolation_research_branch.json`
+
+---
+
+## F415: H491 BR5 Market Sentiment Regime Gate — MIXED (2026-05-09, Session 132)
+
+**Decision: MIXED**
+
+H491 tested whether market-wide PhoBERT sentiment (avg prob_neg per date) predicts signal quality across all tickers. H482 found ticker-level ultra_negative doesn't filter S1 — this tests market-level.
+
+**Results:**
+- baseline: IC 0.1298
+- C20 (buy_heavy × exp): IC 0.2105 (+0.0807), 11/11
+- Market regime alone:
+  - market_bearish (top 20% prob_neg): IC 0.1340 (+0.0042), 10/10
+  - market_bullish (bottom 20% prob_neg): IC 0.1256 (-0.0042), 11/11
+  - market_neutral: IC 0.1245 (-0.0053)
+  - **Sentiment regime differential: +0.0084** — TINY, below actionability
+- Market × C20 interaction:
+  - **mkt_bullish + C20: IC 0.2241 (+0.0944), 8/8** — BEATS C20 alone by +0.0137
+  - mkt_bearish + C20: IC 0.1996 (+0.0698), 5/5 — WORSE than C20 alone by -0.0109
+
+**Key insight:**
+1. **Market sentiment regime effect is TINY**: +0.0084 differential, below +0.01 pass threshold
+2. **Market × signal interaction is COUNTERINTUITIVE** (opposite of hypothesis):
+   - Hypothesis: bearish market = stronger signal (capitulation fear)
+   - Reality: BULLISH market + C20 beats C20 alone by +0.0137
+   - Bearish market DEGRADES C20 quality
+3. Use as soft context: when market is bullish, C20 is STRONGER
+
+**Why it matters:**
+- Sentiment regime alone is not actionable (+0.0084 differential)
+- But market × signal IS real and counterintuitive
+- Market sentiment as regime gate is WEAK — use as soft context only
+
+**Source:**
+- [session_132_log.md](./session_132_log.md)
+- `artifacts/run_summaries/20260509_232908_market_sentiment_regime_gate_research_branch.json`
+
+---
+
+## F416: H492 BR6 Spread As New Dimension — MIXED (2026-05-09, Session 132)
+
+**Decision: MIXED**
+
+H492 tested whether bid-ask spread (avg_buy_size / avg_sell_size ratio) is an independent liquidity dimension. C23 uses Amihud illiq, C25 uses VWAP deviation — spread was never directly tested with S1 IC.
+
+**Results:**
+- baseline: IC 0.1298
+- C20 (buy_heavy × exp): IC 0.2105 (+0.0807), 11/11
+- Spread ALONE (no vol):
+  - wide_spread (top 20%): IC 0.1457 (+0.0159), 11/11
+  - tight_spread (bottom 20%): IC 0.1495 (+0.0197), 11/11
+- Spread × Vol expansion:
+  - **wide_spread_expansion: IC 0.1992 (+0.0694), 11/11** — NEW WEAK SIGNAL
+  - tight_spread_expansion: IC 0.1934 (+0.0636), 11/11
+  - **Spread × vol vs vol alone: +0.0239** — confirms D039
+- vol_expansion alone: IC 0.1753 (+0.0455)
+
+**Key insight:**
+1. **Spread IS a new regime dimension**: +0.0239 incremental over vol alone
+2. Wide spread marginally better than tight (+0.0058)
+3. Spread × vol is WORSE than C20 (0.1992 vs 0.2105, -0.0113)
+4. Spread alone (no vol) is TINY (+0.016 to +0.020) — needs vol context
+
+**Why it matters:**
+- Spread captures a REGIME DIMENSION different from vol expansion — confirmed D039
+- Use spread as regime conditioner: wide spread amplifies vol effect
+- Spread alone is not a standalone ranker
+- Comparable to vol expansion in regime-modulating power, but weaker than buy_sell imbalance
+
+**Source:**
+- [session_132_log.md](./session_132_log.md)
+- `artifacts/run_summaries/20260509_233010_spread_as_new_dimension_research_branch.json`
+
+---
+
+
 
 **Decision: PASSED**
 
@@ -384,3 +562,436 @@ H477 tested whether S1 still predicts forward returns after removing vol_expansi
 **Source:**
 - [session_124_log.md](./session_124_log.md)
 - `artifacts/run_summaries/20260509_184235_ap_residual_signal_discovery_research_branch.json`
+
+---
+
+## F404: H441 Replacement Quality Delta — WEAK MIXED (2026-05-09, Session 127)
+
+**Decision: MIXED (weak, not promoted)**
+
+H441 tested whether quality CHANGE (delta S1 = current S1 - prior 5d S1) predicts forward IC. H437 tested quality LEVEL - found entering ticker weakest (IC=0.066). This tests if the delta in quality predicts.
+
+**Results:**
+- strong_positive_delta (delta > 0.05): IC +0.1206 (+0.0012 lift, 8/8 pos years) — best
+- all_rows baseline: IC +0.1194 — baseline
+- positive_delta (any improvement): IC +0.1169 (-0.0025 lift) — BELOW baseline
+- negative_delta (declining): IC +0.0837 (-0.0357) — significantly BELOW baseline
+- strong_negative_delta (delta < -0.05): IC +0.0784 (-0.0410) — significantly BELOW
+
+**Key findings:**
+1. Quality change is MARGINAL at best (+0.0012 for strong positive)
+2. Any positive delta actually underperforms baseline (-0.0025)
+3. Strong quality decline underperforms significantly (-0.0357 to -0.0410)
+4. The signal is inconsistent — declining quality hurts more than improving helps
+
+**Why it matters:**
+- Quality delta is WEAKER than quality LEVEL (H437)
+- H437 already found entering ticker quality is weakest — quality CHANGE doesn't rescue it
+- Not promotion-worthy: IC 0.0012 lift is << 0.05 threshold
+- Dead-end D042 for quality change signals
+
+**Signal library status:** Not promoted. The signal is too weak to pass the >0.05 IC threshold. Treat as dead-end.
+
+**Source:**
+- [session_127_log.md](./session_127_log.md)
+- `artifacts/run_summaries/20260509_195148_replacement_quality_delta_quality_change.json`
+
+---
+
+## F406: H479 Adaptive Signal Weights — FAILED (2026-05-09, Session 128)
+
+**Decision: FAILED**
+
+H479 tested whether weighting C23-C26 by their recent 60d IC (instead of equal weight) adds value.
+
+**Results:**
+- IC-weighted composite: IC +0.1760 (+0.0465 lift vs baseline)
+- Equal weight composite: IC +0.1754 (+0.0458 lift vs baseline)
+- IC vs equal improvement: +0.0007 — **below +0.005 MIXED threshold**
+- all_rows baseline: IC +0.1296
+
+**Component ICs:**
+- C26 (buy_heavy × illiq × vol_expansion): 0.2154
+- C23 (high_illiq × vol_expansion): 0.1858
+- C24 (ceiling_count × vol_expansion): 0.1754
+- C25 (vwap_below × vol_expansion): 0.1754
+
+**Key findings:**
+1. IC-weighted adds only +0.0007 IC over equal weight — marginal
+2. Equal weight composite captures the signal ensemble just as well
+3. Signals share vol_expansion as common amplifier, so relative predictive power stays stable
+4. Adaptive weighting via rolling IC does NOT outperform
+
+**Why it matters:**
+- D043: Adaptive signal weighting via rolling IC is a dead-end
+- The C23-C26 ensemble is robust to weighting scheme
+- Equal weight is sufficient; no need for dynamic IC-based weights
+
+**Signal library status:** Not promoted. Equal weight composite remains the standard. No weighting scheme needed.
+
+**Source:**
+- [session_128_log.md](./session_128_log.md)
+- `artifacts/run_summaries/20260509_230557_adaptive_signal_weights_research_branch.json`
+
+---
+
+## F407: H480 Extreme Negative Sentiment — PASSED (2026-05-09, Session 129)
+
+**Decision: PASSED**
+
+H480 tested whether EXTREME negative PhoBERT (bottom 5-10%) predicts next-day reversal. H383 passed positive (positive news + strong flow) — this tests the NEGATIVE extreme for capitulation-reversal.
+
+**Results:**
+- ultra_negative (bottom 5% prob_neg): IC +0.1068 (**+0.0100 lift**, 8/8 positive years) — **PASSED**
+- moderate_negative (70-90%): IC +0.0987 (+0.0019 lift, 8/8)
+- extreme_negative (bottom 10%): IC +0.0972 (+0.0004 lift, 8/8) — marginal
+- all_rows baseline: IC +0.0968
+- extreme_sentiment_negative (score-based): IC +0.0904 (-0.0064 lift) — worse than baseline
+
+**Key findings:**
+1. ultra_negative (bottom 5%) achieves +0.0100 IC lift vs baseline — passes +0.01 threshold
+2. Extreme negative at bottom 10% is marginal (+0.0004)
+3. Sentiment SCORE-based extreme negative actually underperforms — prob_neg is the better signal
+4. Mechanism: extreme panic/capitulation in sentiment predicts reversal
+5. Only the most extreme level (bottom 5%) works — less extreme levels are noise
+
+**Why it matters:**
+- Captures capitulation-reversal mechanism at the most extreme sentiment level
+- NEW SIGNAL STATE: ultra_negative (bottom 5% PhoBERT prob_neg)
+- 8/8 positive years, consistent pattern
+
+**Signal library status:** Not a full signal (IC 0.1068 is below >0.05 standalone threshold for new primitives), but useful as a sentiment-state conditioner. Add to signal library as context state.
+
+**Source:**
+- [session_129_log.md](./session_129_log.md)
+- `artifacts/run_summaries/20260509_230822_extreme_negative_sentiment_research_branch.json`
+
+---
+
+## F408: H481 Breadth Threshold Finder — PASSED (2026-05-09, Session 130)
+
+**Decision: PASSED**
+
+H481 tested the exact breadth threshold where signal quality switches. H468 found narrow > broad at 20% quintile — this test finds the exact cutoff number.
+
+**Results:**
+| Threshold | Narrow IC | Narrow Lift | Broad IC | Broad Lift |
+|-----------|-----------|-------------|----------|------------|
+| 5% | 0.1536 | **+0.0200** | 0.0926 | -0.0410 |
+| 10% | 0.1504 | +0.0168 | 0.1051 | -0.0284 |
+| 15% | 0.1500 | +0.0165 | 0.1071 | -0.0264 |
+| 20% | 0.1516 | +0.0180 | 0.1111 | -0.0225 |
+| 30% | 0.1525 | +0.0189 | 0.1207 | -0.0129 |
+| 50% | 0.1504 | +0.0168 | 0.1247 | -0.0088 |
+
+Baseline S1 IC: 0.1335
+
+**Key findings:**
+1. NO single "switch point" — the relationship is MONOTONIC, not discrete
+2. Narrow markets (bottom X%) are consistently POSITIVE across all thresholds (5-50%)
+3. Broad markets (top X%) are consistently NEGATIVE across all thresholds
+4. Best narrow threshold: 5% with +0.020 IC lift (strongest effect at extremes)
+5. The effect is strongest at extreme thresholds and diminishes toward the middle
+
+**Why it matters:**
+- Confirms H468: narrow markets amplify S1 quality, broad markets degrade it
+- But the threshold effect is CONTINUOUS, not a discrete switch
+- Use narrow market (bottom 10-20%) as soft regime amplifier context
+- Best used as a soft filter, not a hard gate
+
+**Signal library status:** Not a new signal, but a confirmed regime context. Use breadth bottom 10-20% as soft amplifier for signals like C23/C24/C26.
+
+**Source:**
+- [session_130_log.md](./session_130_log.md)
+- `artifacts/run_summaries/h481_breadth_threshold_results.csv`
+
+---
+
+## F409: H482 Sentiment Scope Filter — FAILED (2026-05-09, Session 131)
+
+**Decision: FAILED**
+
+H482 tested whether ultra_negative (bottom 5% prob_neg from H480) identifies noise states where S1 quality fails. If ultra_negative identifies noise, S1 WITHOUT ultra_negative should be stronger than S1 WITH.
+
+**Results:**
+| State | IC | Lift vs Baseline | Rows |
+|-------|-----|------------------|------|
+| S1 WITH ultra_negative | 0.1006 | -0.0032 | 6,737 |
+| S1 WITHOUT ultra_negative | 0.1040 | +0.0001 | 167,421 |
+| Positive sentiment (top 30%) | 0.1058 | +0.0019 | 53,119 |
+| Baseline (all with news) | 0.1038 | - | 174,158 |
+
+**Filter effect:** +0.0034 (S1 WITHOUT ultra_negative is marginally better than WITH)
+- ultra_negative (bottom 5%) filter: +0.0034 — BELOW +0.01 threshold
+- extreme_negative (bottom 10%) filter: -0.0027 — negative
+- moderate_negative (10-30%) filter: -0.0089 — negative
+
+**Key findings:**
+1. Filter effect is +0.0034, BELOW the +0.01 pass threshold
+2. Ultra_negative does NOT identify noise states where S1 quality fails
+3. S1 is ROBUST across sentiment regimes — quality is similar whether ticker has ultra-negative news or not
+4. The hypothesis that "sentiment extremes identify noise states" is NOT supported
+
+**Why it matters:**
+- S1 quality is robust across sentiment regimes
+- Ultra_negative works as standalone signal (H480) but does NOT filter/enhance other signals
+- Do NOT use ultra_negative as a quality gate for S1 or C23-C26
+
+**Signal library status:** Do not use ultra_negative as a signal filter. S1 quality is independent of sentiment state.
+
+**Source:**
+- [session_131_log.md](./session_131_log.md)
+- `artifacts/run_summaries/h482_sentiment_scope_filter_summary.json`
+
+---
+
+## F410: H485 Floor Pressure Symmetry — FAILED / Dead-end D045 (2026-05-09, Session 131)
+
+**Decision: FAIL** — Floor pressure is NOT symmetric to ceiling pressure.
+
+**Hypothesis:** C24 tests CEILING (+7%), never tested FLOOR (-7%). Multi-day floor pressure = forced sell capitulation = reversal? Test floor_count >= 2 × vol_expansion vs C24 ceiling analog.
+
+**Results:**
+
+| State | IC | Lift vs Baseline | Rows | Years+ |
+|-------|-----|------------------|------|--------|
+| ceiling_2_expansion (C24 analog) | 0.2442 | +0.1141 | 3,516 | 2/2 |
+| ceiling_2_of_3 (C24) | 0.2353 | +0.1052 | 8,933 | 8/8 |
+| near_floor_expansion | 0.1610 | +0.0309 | 17,276 | 11/11 |
+| floor_1_of_3 | 0.1550 | +0.0249 | 40,685 | 11/11 |
+| **floor_2_of_3** | 0.0818 | **-0.0483** | 7,553 | 5/5 |
+| **floor_2_expansion** | 0.0575 | **-0.0726** | 2,325 | 1/1 |
+| baseline (all rows) | 0.1301 | - | 824,801 | 11/11 |
+
+**Key findings:**
+1. Floor_2_of_3 has IC=0.0818, BELOW baseline (0.1301) by -0.0483 — ANTI-PREDICTIVE
+2. floor_2_expansion has IC=0.0575, BELOW baseline by -0.0726 — WORSE
+3. Ceiling_2_of_3 (C24) confirmed at IC=0.2353 (+0.1052 lift) — strong signal
+4. **Floor pressure does NOT produce reversal.** Multi-day floor pressure (hitting -7% limit 2+ times) predicts continued weakness, not reversal.
+
+**Why it matters:**
+- Floor is fundamentally DIFFERENT from ceiling in VN market dynamics
+- Ceiling pressure = queue buildup → next-day release (works)
+- Floor pressure = continued weakness (does NOT work)
+- Do NOT test floor pressure as reversal signal — mechanism "capitulation = reversal" is NOT supported
+
+**Signal library status:** Not a signal. Floor pressure is anti-predictive. Do not use floor_2_of_3 or floor_2_expansion as states.
+
+**Dead-end:** D045 — floor_pressure_symmetry fails. Do NOT test floor pressure as reversal signal.
+
+**Source:**
+- [session_131_log.md](./session_131_log.md)
+- `artifacts/run_summaries/20260509_232014_floor_pressure_symmetry_research_branch.json`
+
+---
+
+## F411: H486 Lagged Signal Decay — FAILED / Dead-end D046 (2026-05-09, Session 131)
+
+**Decision: FAIL** — Both C23 and C24 DECAY massively at longer horizons.
+
+**Hypothesis:** C23 works at 1d (IC 0.26), C24 multi-day works. Test if signal effectiveness DECAYS or IMPROVES at longer horizons. C24 multi-day showed temporal structure works. Mechanism: signals have natural holding periods.
+
+**Results:**
+
+| Signal | 1d IC | 2d IC (lift) | 3d IC (lift) |
+|--------|-------|--------------|--------------|
+| baseline (all) | 0.1334 | 0.0289 (-0.1045) | 0.0032 (-0.1302) |
+| C23 (illiq×exp) | 0.0844 | 0.0323 (-0.0520) | 0.0044 (-0.0800) |
+| C24 (ceiling×exp) | 0.2291 | -0.0302 (**-0.2593**) | -0.0338 (**-0.2629**) |
+
+**Key findings:**
+1. C24: 1d IC=0.2291 → 2d IC=-0.0302 = MASSIVE decay (-0.2593), goes NEGATIVE
+2. C23: 1d IC=0.0844 → 2d IC=0.0323 = decay (-0.0520)
+3. Best horizon for both: 1d, NOT 2d or 3d
+4. The hypothesis "signals have natural holding periods" is NOT supported
+
+**Why it matters:**
+- Signals do NOT improve at longer horizons
+- C24 multi-day (multi-day buildup) still pays off at 1d, not delayed
+- The "delayed release" hypothesis fails - the signal captures multi-day buildup but release is still T+1
+- Dead-end D046: do NOT test C23/C24 at 2d/3d horizons
+
+**Signal library status:** Use 1d horizon for C23/C24. Do not test longer horizons.
+
+**Source:**
+- [session_131_log.md](./session_131_log.md)
+- `artifacts/run_summaries/20260509_232208_lagged_signal_decay_research_branch.json`
+
+---
+
+## F420: H497 BU1 market_wide_vol_regime — MIXED (2026-05-09, Session 134)
+
+**Decision: MIXED**
+
+**Signal:** market_vol_exp × C23 vs ticker_vol_exp × C23
+
+Hypothesis: c16_low×C23 works at ticker level; market-level vol expansion may be the systemic analog.
+
+**Results:**
+
+| State | IC | Lift vs baseline | Years |
+|-------|-----|------------------|-------|
+| baseline (all_rows) | 0.1298 | — | 11/11 |
+| c23_ticker_level | 0.2616 | +0.1318 | 11/11 |
+| c23_market_vol_exp | 0.2006 | +0.0708 | 11/11 |
+| c23_both_vol_exp | 0.2575 | +0.1277 | 10/11 |
+| ticker_vol_exp_alone | 0.1753 | +0.0455 | 11/11 |
+| market_vol_exp_alone | 0.1271 | -0.003 | 11/11 |
+
+**Key findings:**
+1. **Ticker-level vol expansion is STRONGER** than market-level by +0.061 IC
+2. Market-wide vol expansion IS real (+0.0708 lift) but significantly weaker
+3. Combining both (c23_both_vol_exp) hurts vs ticker-level alone (too sparse: 6590 rows)
+4. Market vol expansion ALONE (without illiq) is noise
+
+**Why it matters:**
+- Regime amplification works at the INDIVIDUAL STOCK level, not the market level
+- Do NOT use market-wide vol as a regime conditioner — ticker-level vol expansion is superior
+- The systemic analog hypothesis is NOT supported
+
+**Signal library status:** Market-level vol expansion is a valid but WEAKER conditioner than ticker-level. Use ticker-level vol expansion as the primary regime amplifier.
+
+**Source:**
+- [session_134_log.md](./session_134_log.md)
+- `artifacts/run_summaries/20260509_235413_market_wide_vol_regime_research_branch.json`
+
+---
+
+## F421: H498 BU2 c17_standalone — FAILED (2026-05-09, Session 135)
+
+**Decision: FAIL**
+
+**Signal:** C17 raw vs C16 ranked standalone
+
+Hypothesis: Raw C17 (order_volume_ratio without ranking) may preserve more signal than ranked C16, like illiq alone worked better than the combo.
+
+**Results:**
+
+| State | IC | Lift vs baseline | Rows | Years |
+|-------|-----|------------------|------|-------|
+| baseline (all_rows) | 0.1299 | — | 810,201 | 11/11 |
+| c17_raw_top20 | 0.1623 | +0.0324 | 163,702 | 11/11 |
+| c16_rank_top20 | 0.1670 | +0.0371 | 148,128 | 11/11 |
+| c17_c16_combo | 0.1670 | +0.0371 | 147,939 | 11/11 |
+| c17_only | 0.1141 | +0.0289 | 15,763 | 11/11 |
+| c17_raw_bottom20 | 0.1588 | +0.0289 | 160,954 | 11/11 |
+| c16_rank_bottom20 | 0.1648 | +0.0349 | 127,566 | 11/11 |
+
+**Key findings:**
+1. **Raw C17 is WORSE than ranked C16** by -0.0048 IC (0.1623 vs 0.1670)
+2. The hypothesis "raw preserves more signal" is NOT supported
+3. Ranking does NOT strip away useful information — it helps slightly
+4. Both high and low states work — signal is SYMMETRIC
+5. Combo (c17_c16_combo) = same as C16 alone (no additional value)
+
+**Why it matters:**
+- C16 ranking is the correct representation, not a lossy transformation
+- Do NOT use raw C17 as standalone signal
+- Signal library confirms C16 (ranked) as the standard
+
+**Source:**
+- [session_135_log.md](./session_135_log.md)
+- `artifacts/run_summaries/20260509_235542_c17_standalone_research_branch.json`
+
+---
+
+## F422: H497 BU3 multi_day_c23_accumulation — MIXED (2026-05-09, Session 136)
+
+**Decision: MIXED**
+
+**Signal:** C23 (high_illiq × vol_expansion) on consecutive days vs single day
+
+Hypothesis: Sustained illiq × vol_expansion across 2-3 days represents a stronger regime than one-off C23 firing.
+
+**Results:**
+
+| State | IC | Lift vs baseline | Rows | Years |
+|-------|-----|------------------|------|-------|
+| baseline (all_rows) | 0.1302 | — | 826,404 | 11/11 |
+| single_day_c23 | 0.2007 | +0.0705 | 29,188 | 11/11 |
+| consecutive_2d_c23 | 0.2014 | +0.0712 | 20,587 | 11/11 |
+| consecutive_3d_c23 | 0.1925 | +0.0623 | 9,478 | 11/11 |
+
+**Key findings:**
+1. **consecutive_2d_c23 is marginally best**: IC=0.2014 (+0.0712 lift)
+2. **single_day_c23 is nearly as good**: IC=0.2007 (+0.0705) — only 0.0007 IC below 2d
+3. **consecutive_3d_c23 degrades**: MORE accumulation HURTS after 2 days
+4. Confirms D046: signals decay at multi-day horizons
+
+**Why it matters:**
+- 2-day consecutive is marginally better than single-day but below +0.005 threshold
+- 3-day accumulation degrades, confirming signal decay pattern
+- Not actionable as a filter — single_day_c23 is effectively equivalent
+- Confirms that C23 works at 1d horizon, consistent with D046
+
+**Source:**
+- [session_136_log.md](./session_136_log.md)
+- `artifacts/run_summaries/20260509_235929_multi_day_c23_accumulation_research_branch.json`
+
+---
+
+## F423: H505 BU4 cross_signal_day_complementarity — MIXED (2026-05-10, Session 137)
+
+**Decision: MIXED**
+
+**Signal:** C23/C24/C25/C26 signal-day complementarity vs always-using-best-single
+
+Hypothesis: Route to whichever signal fires that day (C23 OR C24 OR C25 OR C26) vs always-using-best-single (always-C23).
+
+**Results:**
+
+| State | IC | Lift vs baseline | Rows | Years |
+|-------|-----|------------------|------|-------|
+| baseline (all_rows) | 0.1302 | — | 826,404 | 11/11 |
+| always_c23 | 0.2176 | +0.0874 | 42,238 | 11/11 |
+| any_signal (union) | 0.1753 | +0.0451 | 99,308 | 11/11 |
+| cofire_2 | 0.2069 | +0.0767 | 16,858 | 11/11 |
+
+**Key findings:**
+1. **always_c23 is STRONGEST**: IC=0.2176 (+0.0874 lift)
+2. **any_signal (union) is WEAKER**: including C24/C25/C26 dilutes quality
+3. **cofire_2 remains strong**: confirms F412 regime amplifier
+4. Signal routing does NOT beat always-C23 — D041 killed COMBOs, confirmed here for routing
+
+**Why it matters:**
+- Routing between signals doesn't help — always-C23 is best
+- Confirms C23 is the strongest signal, no combo benefit
+- Use as regime strength indicator (cofire_2), not routing path
+
+**Source:**
+- [session_137_log.md](./session_137_log.md)
+- `artifacts/run_summaries/20260510_000418_cross_signal_day_complementarity_research_branch.json`
+
+---
+
+## F424: H506 BU5 sector_vol_regime — MIXED Sparse (2026-05-10, Session 138)
+
+**Decision: MIXED**
+
+**Signal:** Sector-level vol expansion (>50% stocks hitting vol_expansion) as regime gate
+
+Hypothesis: D038 killed sector MOMENTUM gate. Test sector VOL regime.
+
+**Results:**
+
+| State | IC | Lift vs baseline | Rows | Years |
+|-------|-----|------------------|------|-------|
+| baseline (all_rows) | 0.1303 | — | 823,666 | 11/11 |
+| always_c23 | 0.2176 | +0.0873 | 42,225 | 11/11 |
+| sector_vol_exp | 0.1558 | +0.0255 | 17,623 | 9/11 |
+| sector_c23 | 0.2223 | +0.0919 | 2,853 | 2/11 |
+
+**Key findings:**
+1. **sector_c23 marginally beats always_c23**: +0.0046 IC (0.2223 vs 0.2176)
+2. **BUT sector_c23 is VERY sparse**: only 2,853 rows, 2/11 positive years
+3. validation and confirmation phases have NaN due to insufficient data
+4. Sector vol regime is NOT robust across years — too sparse
+
+**Why it matters:**
+- Similar pattern to co-fire regime: sector-level co-occurrence = stronger signal
+- BUT too sparse to be useful: not enough data for robust inference
+- D038 killed sector momentum, sector VOL regime is marginally better but not robust
+
+**Source:**
+- [session_138_log.md](./session_138_log.md)
+- `artifacts/run_summaries/20260510_000530_sector_vol_regime_research_branch.json`

@@ -1,0 +1,184 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260509_233802_c16_level_router_results.parquet",
+    "yearly": "artifacts/research_branches/20260509_233802_c16_level_router_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "H120 found C16 works at IC 0.077. C23 works at IC 0.26. Test: use C16 LEVEL (high vs low) as ROUTER — when C16 HIGH use C23, when C16 LOW use C16 alone. Different regimes need different signals.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "H120 found C16 works at IC 0.077. C23 works at IC 0.26. Test: use C16 LEVEL (high vs low) as ROUTER — when C16 HIGH use C23, when C16 LOW use C16 alone. Different regimes need different signals.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "c16_level_router",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "C23: illiq × vol expansion",
+        "name": "high_illiq_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "C24: ceiling 2/3 × vol expansion",
+        "name": "ceiling_2_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c16_regime",
+        "label": "C16 level HIGH (top 20%)",
+        "name": "c16_high",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c16_regime",
+        "label": "C16 level LOW (bottom 20%)",
+        "name": "c16_low",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c16_regime",
+        "label": "C16 level MID (40-60%)",
+        "name": "c16_mid",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "router",
+        "label": "C16 HIGH × C23",
+        "name": "c16_high_illiq_exp",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "router",
+        "label": "C16 LOW × C23",
+        "name": "c16_low_illiq_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c16_regime",
+        "label": "C16 HIGH alone",
+        "name": "c16_high_alone",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c16_regime",
+        "label": "C16 LOW alone",
+        "name": "c16_low_alone",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "router",
+        "label": "C16 HIGH × C24",
+        "name": "c16_high_ceiling_2",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "router",
+        "label": "C16 LOW × C24",
+        "name": "c16_low_ceiling_2",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "c16_level_router",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_ic": 0.28383280131649896,
+    "best_state": "c16_low_illiq_exp",
+    "c16_high_alone_ic": 0.1622571626366622,
+    "c16_high_c23_ic": 0.23960203215605602,
+    "c16_high_c23_lift": 0.10981049879603266,
+    "c16_high_ceiling_2_ic": 0.12059614719474773,
+    "c16_high_ic": 0.1622571626366622,
+    "c16_high_lift": 0.03246562927663885,
+    "c16_low_alone_ic": 0.15889280540662234,
+    "c16_low_c23_ic": 0.28383280131649896,
+    "c16_low_c23_lift": 0.1540412679564756,
+    "c16_low_ceiling_2_ic": null,
+    "c16_low_ic": 0.15889280540662234,
+    "c16_low_lift": 0.029101272046598986,
+    "c23_ic": 0.2615583747889963,
+    "c23_lift": 0.13176684142897294,
+    "c24_ic": 0.25302686253399176,
+    "c24_lift": 0.1232353291739684,
+    "decision": "PASSED",
+    "high_vs_low_benefit": -0.04423076916044294,
+    "panel_rows": 809019,
+    "routing_benefit": 0.022274426527502666,
+    "states_evaluated": 12
+  },
+  "ts": "20260509_233802"
+}

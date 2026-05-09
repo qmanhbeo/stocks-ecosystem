@@ -1,0 +1,176 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260509_233232_price_limit_friction_amplifier_results.parquet",
+    "yearly": "artifacts/research_branches/20260509_233232_price_limit_friction_amplifier_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "C24 (multi-day ceiling) works at IC 0.2353. But FRICTION of hitting the limit might matter. Stable queue (low vol variance before limit hit) = stronger accumulation, volatile queue = weak. Test ceiling × vol_stability vs vol_volatility.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "C24 (multi-day ceiling) works at IC 0.2353. But FRICTION of hitting the limit might matter. Stable queue (low vol variance before limit hit) = stronger accumulation, volatile queue = weak. Test ceiling × vol_stability vs vol_volatility.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "price_limit_friction_amplifier",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "ceiling",
+        "label": "C24: ceiling hit 2+ times in 3 days",
+        "name": "limit_2_of_3",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "ceiling",
+        "label": "Near ceiling (5-7% change)",
+        "name": "near_ceiling",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "C24 × Vol expansion",
+        "name": "ceiling_2_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "friction",
+        "label": "Ceiling 2/3 + stable queue (low vol std)",
+        "name": "ceiling_2_stable",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "friction",
+        "label": "Ceiling 2/3 + volatile queue (high vol std)",
+        "name": "ceiling_2_volatile",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "friction",
+        "label": "Ceiling 2/3 + exp + stable queue",
+        "name": "ceiling_2_expansion_stable",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "friction",
+        "label": "Ceiling 2/3 + exp + volatile queue",
+        "name": "ceiling_2_expansion_volatile",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "C20: buy_heavy × vol expansion",
+        "name": "buy_heavy_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "volatility",
+        "label": "Stable queue alone (low vol std)",
+        "name": "stable_queue",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "volatility",
+        "label": "Volatile queue alone (high vol std)",
+        "name": "volatile_queue",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "price_limit_friction_amplifier",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_ic": 0.28928032345673527,
+    "best_state": "ceiling_2_expansion_volatile",
+    "c20_ic": 0.21051950626933127,
+    "c20_lift": 0.08072797290930792,
+    "c24_exp_ic": 0.25302686253399176,
+    "c24_exp_lift": 0.1232353291739684,
+    "c24_ic": 0.23776640595799547,
+    "c24_lift": 0.10797487259797212,
+    "ceiling_2_expansion_stable_ic": null,
+    "ceiling_2_expansion_stable_lift": null,
+    "ceiling_2_expansion_volatile_ic": 0.28928032345673527,
+    "ceiling_2_expansion_volatile_lift": 0.1594887900967119,
+    "ceiling_2_stable_ic": null,
+    "ceiling_2_stable_lift": null,
+    "ceiling_2_volatile_ic": 0.22417450824128565,
+    "ceiling_2_volatile_lift": 0.0943829748812623,
+    "decision": "FAILED",
+    "friction_lift": null,
+    "panel_rows": 809019,
+    "stable_alone_ic": 0.09670680614711467,
+    "states_evaluated": 11,
+    "triple_stable_lift": null,
+    "volatile_alone_ic": 0.176977276826313
+  },
+  "ts": "20260509_233232"
+}

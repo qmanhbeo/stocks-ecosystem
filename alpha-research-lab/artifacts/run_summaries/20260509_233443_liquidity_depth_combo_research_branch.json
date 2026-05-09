@@ -1,0 +1,175 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260509_233443_liquidity_depth_combo_results.parquet",
+    "yearly": "artifacts/research_branches/20260509_233443_liquidity_depth_combo_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "C23 uses Amihud illiq, C25 uses VWAP deviation. H470 showed vwap_below × exp IC=0.1733. Test if illiq + vwap deviation + vol expansion triple beats C23 (IC=0.2616). D041 killed C21/C22 combos but multi-dimensional liquidity combo was never tested.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "C23 uses Amihud illiq, C25 uses VWAP deviation. H470 showed vwap_below × exp IC=0.1733. Test if illiq + vwap deviation + vol expansion triple beats C23 (IC=0.2616). D041 killed C21/C22 combos but multi-dimensional liquidity combo was never tested.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "liquidity_depth_combo",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "component",
+        "label": "C23: illiq × vol expansion",
+        "name": "high_illiq_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "component",
+        "label": "C25: vwap below 20% × exp",
+        "name": "vwap_below_20_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "component",
+        "label": "C25 tight: vwap below 10% × exp",
+        "name": "vwap_below_10_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Double: illiq + vwap_20 + exp",
+        "name": "high_illiq_vwap_20_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Double tight: illiq + vwap_10 + exp",
+        "name": "high_illiq_vwap_10_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Triple-like: illiq_exp + vwap_10",
+        "name": "high_illiq_expansion_vwap_10",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "illiq",
+        "label": "High illiquidity alone",
+        "name": "high_illiq",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap",
+        "label": "VWAP below alone",
+        "name": "vwap_below_20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vwap",
+        "label": "VWAP extreme below alone",
+        "name": "vwap_below_10",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "C20: buy_heavy × vol expansion",
+        "name": "buy_heavy_expansion",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "liquidity_depth_combo",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_ic": 0.27954925950338916,
+    "best_state": "high_illiq_expansion_vwap_10",
+    "c20_ic": 0.21051950626933127,
+    "c20_lift": 0.08072797290930792,
+    "c23_ic": 0.2615583747889963,
+    "c23_lift": 0.13176684142897294,
+    "c25_ic": 0.20237592428572115,
+    "c25_tight_ic": 0.20359624878974947,
+    "decision": "MIXED",
+    "double_10_ic": 0.27954925950338916,
+    "double_10_incr_vs_c23": 0.017990884714392863,
+    "double_10_lift": 0.1497577261433658,
+    "double_20_ic": 0.26591263438695356,
+    "double_20_incr_vs_c23": 0.004354259597957266,
+    "double_20_lift": 0.1361211010269302,
+    "illiq_alone_ic": 0.20293358950988225,
+    "illiq_alone_lift": 0.07314205614985889,
+    "panel_rows": 809019,
+    "states_evaluated": 11,
+    "triple_ic": 0.27954925950338916,
+    "triple_incr_vs_c23": 0.017990884714392863,
+    "triple_lift": 0.1497577261433658
+  },
+  "ts": "20260509_233443"
+}

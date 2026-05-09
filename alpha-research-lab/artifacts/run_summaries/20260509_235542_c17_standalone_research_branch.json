@@ -1,0 +1,74 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260509_235542_c17_standalone_results.parquet",
+    "yearly": "artifacts/research_branches/20260509_235542_c17_standalone_yearly.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "C17 (raw order_volume_ratio without ranking) as standalone signal vs C16 (ranked). Raw may preserve more signal than blend, like illiq alone worked better than the combo. Test raw vs ranked vs random baseline.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "c17_standalone",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    }
+  },
+  "mode": "research_branch",
+  "name": "c17_standalone",
+  "summary": {
+    "baseline_ic": 0.1298983158752346,
+    "best_avg_ic": 0.1670430327139686,
+    "best_positive_years": 11,
+    "best_state": "c16_rank_top20",
+    "best_years": 11,
+    "c16_rank_ic": 0.1670430327139686,
+    "c17_raw_ic": 0.16226010456932521,
+    "c17_vs_c16": -0.0047829281446433725,
+    "decision": "PASSED",
+    "hypothesis": "C17 raw vs C16 ranked standalone",
+    "lift_vs_baseline": 0.03714471683873399,
+    "panel_rows": 810201,
+    "states_evaluated": 8
+  },
+  "ts": "20260509_235542"
+}

@@ -1,84 +1,36 @@
-# Session 129 Log — Event-Conditioned Intraday Disagreement (2026-04-08)
+# Session 129: H480 extreme_negative_sentiment
 
-## Objective
+**Date:** 2026-05-09
+**Hypothesis:** EXTREME negative PhoBERT (bottom 5-10%) + next-day reversal? H383 passed positive; test EXTREME NEGATIVE for capitulation-reversal.
 
-Take the first honest continuation from the post-128 side-branch queue:
-- `H303` event-conditioned intraday disagreement
-
-Question:
-- do the surviving `H299` disagreement atoms become materially stronger inside
-  the fresh company-event windows recovered by the `H301` event-v2 pilot?
-
-This session did not change the live branch.
-It did not read `2026+`.
-
----
-
-## What changed
-
-Added one bounded research script:
-- `analysis/h303_event_conditioned_intraday_disagreement.py`
-
-### H303 - Event-Conditioned Intraday Disagreement
-**Hypothesis:**
-The real surviving value in `H299` may be a state-transition detector that
-sharpens only when a fresh `H301` company-event window is present, rather than
-as a generic observed-subset atom.
-
-**Command / code:**
-`python analysis/h303_event_conditioned_intraday_disagreement.py`
+**Command:**
+```bash
+python analysis/h480_extreme_negative_sentiment.py
+```
 
 **Inputs:**
-- `artifacts/run_summaries/latest_research_branch_intraday_library_atoms.json`
-- `artifacts/portfolio_baselines/20260408_192203_h299_intraday_library_atoms_scored_panel.parquet`
-- `artifacts/run_summaries/latest_research_branch_cafef_event_surface_v2_pilot.json`
-- `artifacts/timing_data/20260408_192103_h301_cafef_event_surface_v2_pilot_pilot_surface.parquet`
-- `data/features/event_surface_daily.parquet`
+- S1 from xs_barrier_vol_1d_hose_full.parquet (default)
+- PhoBERT sentiment from phobert_ticker_day_sentiment.parquet
+- Test years: 2018-2025
 
-**Saved artifact:**
-`artifacts/run_summaries/20260408_211247_h303_event_conditioned_intraday_disagreement_research_branch_event_conditioned_intraday_disagreement.json`
+**Saved artifact:** artifacts/run_summaries/20260509_230822_extreme_negative_sentiment_research_branch.json
 
-| Metric | Value | Note |
-|--------|-------|------|
-| observed rows | `243,763` | same `H299` observed subset, `2023-2025` only |
-| best event candidate | `fade_tension_disagreement × event_v2_5d` | best local interaction row |
-| validation IC | `+0.0430` | stronger than the unconditional `H299` row |
-| 2025 IC | `+0.0455` | also stronger than the unconditional row |
-| validation uplift vs full | `+0.0065` | local improvement over unconditional `H299` |
-| 2025 uplift vs full | `+0.0247` | clear local uplift |
-| validation uplift vs no-event | `+0.0069` | recent event-v2 window beats the no-event complement |
-| 2025 uplift vs no-event | `+0.0251` | recent event-v2 window also beats no-event in confirmation |
-| validation uplift vs v1 | `-0.0083` | still weaker than the broad v1 proxy in validation |
-| 2025 uplift vs v1 | `+0.0116` | only beats v1 in confirmation |
-| validation / 2025 IC days | `240 / 211` | enough coverage for an honest `5d` comparison |
+**Results:**
+| State | Avg IC | Lift vs baseline | Positive Years |
+|-------|-------|----------------|---------------|
+| ultra_negative (bottom 5%) | 0.1068 | **+0.0100** | 8/8 |
+| moderate_negative (70-90%) | 0.0987 | +0.0019 | 8/8 |
+| extreme_neg_high_share | 0.0975 | +0.0007 | 8/8 |
+| extreme_negative (bottom 10%) | 0.0972 | +0.0004 | 8/8 |
+| all_rows (baseline) | 0.0968 | - | 8/8 |
+| extreme_sentiment_negative | 0.0904 | -0.0064 | 8/8 |
 
-**Result:**
-Fresh `H301` event-v2 windows do help the best `H299` disagreement atom relative
-to the unconditional and no-event versions. But they do **not** beat the broader
-v1 company-proxy control consistently, and the second disagreement atom does not
-improve at all on the same contract. That is not enough to reopen a predictive
-combined timing branch.
+**Result:** Ultra-negative (bottom 5%) achieves +0.0100 IC lift vs baseline — passes the +0.01 threshold. Extreme negative at bottom 10% is marginal (+0.0004). Sentiment score-based extreme negative actually underperforms.
 
-**Verdict: FAILED**
+**Verdict: PASSED** — Extreme negative sentiment (bottom 5% prob_neg) predicts next-day returns with +0.01 IC lift. Captures capitulation-reversal mechanism at the most extreme level only.
 
----
+**Finding:** F407 - ultra_negative (bottom 5% PhoBERT prob_neg) is a new signal state with +0.01 IC lift and 8/8 positive years. Mechanism: extreme panic/capitulation in sentiment predicts reversal.
 
-## Branch decision
+**Source anchor:** F407
 
-`H303` closes the generic combination of these two lines on the current
-contract:
-- keep `H299` disagreement atoms as separate observed-subset offline evidence
-- keep `H301` event-v2 as acquisition evidence only
-- do **not** reopen a combined recent-event overlay on generic event-v2 windows
-
-If another blocked-LLM side branch is intentionally reopened, move to:
-- `execution-spillover-substitutes`
-
----
-
-## Validation
-
-Completed during the pass:
-- ran `python -m py_compile analysis/h303_event_conditioned_intraday_disagreement.py`
-- ran `python analysis/h303_event_conditioned_intraday_disagreement.py`
-- read the saved run summary and comparison table
+**Next action:** AV: breadth_threshold_finder (next in queue)

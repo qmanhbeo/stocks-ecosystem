@@ -1,0 +1,139 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260509_233549_time_since_last_signal_results.parquet",
+    "yearly": "artifacts/research_branches/20260509_233549_time_since_last_signal_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "C23/C24/C26 fire on different days. Time since last signal fire might matter. Test: C23 fires TODAY vs YESTERDAY vs 3d ago. Mechanism: signal persistence vs mean-reversion after signal fires.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "C23/C24/C26 fire on different days. Time since last signal fire might matter. Test: C23 fires TODAY vs YESTERDAY vs 3d ago. Mechanism: signal persistence vs mean-reversion after signal fires.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "time_since_last_signal",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "C23: illiq × vol expansion (fresh)",
+        "name": "high_illiq_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "temporal",
+        "label": "C23 fires today",
+        "name": "c23_fresh",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "temporal",
+        "label": "C23 fired yesterday (signal carry)",
+        "name": "c23_yesterday",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "temporal",
+        "label": "C23 fired 2d ago",
+        "name": "c23_2days",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "temporal",
+        "label": "C23 has NOT fired recently (stale)",
+        "name": "c23_stale",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "temporal",
+        "label": "C23 fires today AND not yesterday",
+        "name": "c23_fresh_not_yesterday",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "time_since_last_signal",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_ic": 0.2624098856927326,
+    "best_state": "c23_fresh_not_yesterday",
+    "c23_2days_ic": 0.20488364899341302,
+    "c23_fresh_ic": 0.2615583747889963,
+    "c23_fresh_lift": 0.13176684142897294,
+    "c23_fresh_not_yesterday_ic": 0.2624098856927326,
+    "c23_fresh_not_yesterday_lift": 0.13261835233270924,
+    "c23_ic": 0.2615583747889963,
+    "c23_lift": 0.13176684142897294,
+    "c23_stale_ic": 0.12061888299421021,
+    "c23_stale_lift": -0.009172650365813148,
+    "c23_yesterday_ic": 0.21318481971242711,
+    "c23_yesterday_lift": 0.08339328635240376,
+    "carry_ic": -0.04837355507656918,
+    "decision": "MIXED",
+    "panel_rows": 809019,
+    "persistence": true,
+    "states_evaluated": 7
+  },
+  "ts": "20260509_233549"
+}

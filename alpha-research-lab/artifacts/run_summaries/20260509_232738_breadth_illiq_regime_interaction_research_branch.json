@@ -1,0 +1,152 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260509_232738_breadth_illiq_regime_interaction_results.parquet",
+    "yearly": "artifacts/research_branches/20260509_232738_breadth_illiq_regime_interaction_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "H481 found narrow > broad. C23 is strongest signal. Test illiq × vol_exp × narrow_breadth combo. H481 tested breadth ALONE, not COMBO. Mechanism: regime interaction boost - narrow amplifies illiq effect.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "H481 found narrow > broad. C23 is strongest signal. Test illiq × vol_exp × narrow_breadth combo. H481 tested breadth ALONE, not COMBO. Mechanism: regime interaction boost - narrow amplifies illiq effect.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "breadth_illiq_regime_interaction",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "component",
+        "label": "C23: illiq × vol expansion",
+        "name": "high_illiq_expansion",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Narrow market (breadth <= 20%)",
+        "name": "narrow_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vol",
+        "label": "Vol expansion (top 20%)",
+        "name": "vol_expansion",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "illiq",
+        "label": "High illiquidity alone",
+        "name": "high_illiq",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "illiq × narrow breadth",
+        "name": "illiq_narrow",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "illiq × broad breadth",
+        "name": "illiq_broad",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "vol expansion × narrow breadth",
+        "name": "vol_narrow",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Triple: illiq × vol × narrow breadth",
+        "name": "high_illiq_expansion_narrow",
+        "peer": null,
+        "primary": true
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "breadth_illiq_regime_interaction",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_ic": 0.2615583747889963,
+    "best_positive_years": 11,
+    "best_state": "high_illiq_expansion",
+    "c23_ic": 0.2615583747889963,
+    "c23_lift": 0.13176684142897294,
+    "decision": "MIXED",
+    "illiq_broad_lift": null,
+    "illiq_narrow_lift": 0.05758947695566011,
+    "incremental_vs_c23": -0.017952685380525663,
+    "narrow_lift": -0.003055795066017386,
+    "panel_rows": 809019,
+    "states_evaluated": 9,
+    "triple_ic": 0.24360568940847063,
+    "triple_lift": 0.11381415604844727,
+    "vol_narrow_lift": -0.033076570185652535
+  },
+  "ts": "20260509_232738"
+}

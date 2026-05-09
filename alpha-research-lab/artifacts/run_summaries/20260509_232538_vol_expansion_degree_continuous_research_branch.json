@@ -1,0 +1,209 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260509_232538_vol_expansion_degree_continuous_results.parquet",
+    "yearly": "artifacts/research_branches/20260509_232538_vol_expansion_degree_continuous_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "vol_expansion is binary (top 20%), never tested CONTINUOUS. H481 showed breadth is MONOTONIC not discrete. Vol expansion degree likely similar. Test vol percentile (10/20/30/40/50%) for C23/C24/C26. Different signals may prefer different vol thresholds. Mechanism: regime strength is continuous.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "vol_expansion is binary (top 20%), never tested CONTINUOUS. H481 showed breadth is MONOTONIC not discrete. Vol expansion degree likely similar. Test vol percentile (10/20/30/40/50%) for C23/C24/C26. Different signals may prefer different vol thresholds. Mechanism: regime strength is continuous.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "vol_expansion_degree_continuous",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "vol_regime",
+        "label": "Vol expansion binary (top 20%)",
+        "name": "vol_expansion_binary",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vol_degree",
+        "label": "Vol expansion top 10%",
+        "name": "vol_percentile_10",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vol_degree",
+        "label": "Vol expansion top 20%",
+        "name": "vol_percentile_20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vol_degree",
+        "label": "Vol expansion top 30%",
+        "name": "vol_percentile_30",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vol_degree",
+        "label": "Vol expansion top 40%",
+        "name": "vol_percentile_40",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "vol_degree",
+        "label": "Vol expansion top 50%",
+        "name": "vol_percentile_50",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal_regime",
+        "label": "H451: Buy-heavy + binary expansion",
+        "name": "buy_heavy_expansion_binary",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal_regime",
+        "label": "Buy-heavy + top 20% vol",
+        "name": "buy_heavy_expansion_20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal_regime",
+        "label": "Buy-heavy + top 30% vol",
+        "name": "buy_heavy_expansion_30",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal_regime",
+        "label": "Buy-heavy + top 40% vol",
+        "name": "buy_heavy_expansion_40",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal_regime",
+        "label": "C24: Ceiling 2/3 + binary expansion",
+        "name": "ceiling_2_expansion_binary",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal_regime",
+        "label": "C24: Ceiling 2/3 + top 20% vol",
+        "name": "ceiling_2_expansion_20",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal_regime",
+        "label": "C24: Ceiling 2/3 + top 30% vol",
+        "name": "ceiling_2_expansion_30",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal_regime",
+        "label": "C24: Ceiling 2/3 + top 40% vol",
+        "name": "ceiling_2_expansion_40",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "vol_expansion_degree_continuous",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_ic": 0.25302686253399176,
+    "best_signal_lift": 0.11090723886813064,
+    "best_state": "ceiling_2_expansion_binary",
+    "best_vol_lift": 0.013156959736196155,
+    "best_vol_pct": 50,
+    "binary_lift": 0.045548144290976394,
+    "decision": "PASSED",
+    "monotonic": true,
+    "panel_rows": 809019,
+    "states_evaluated": 15,
+    "vol_pct_ics": {
+      "10": 0.13046563023838129,
+      "20": 0.13184042461568066,
+      "30": 0.13449802693884236,
+      "40": 0.138296526011185,
+      "50": 0.14294849309621951
+    },
+    "vol_pct_lifts": {
+      "10": 0.0006740968783579271,
+      "20": 0.002048891255657298,
+      "30": 0.004706493578818999,
+      "40": 0.008504992651161641,
+      "50": 0.013156959736196155
+    }
+  },
+  "ts": "20260509_232538"
+}

@@ -1,14 +1,10 @@
-# Session 134 Log — Stock-Local Predictability Atlas (2026-04-09)
+# Session 134 Log — Batch 17 BU1 market_wide_vol_regime (2026-05-09)
 
 ## Objective
 
-Take the next honest current-data branch after `H307`:
-- `H308` stock-local predictability atlas
-
-Question:
-- does a full HOSE atlas reveal any non-random stable tail of recipient stocks
-  worth deeper interrogation, or does the apparent ticker-level structure stay
-  too weak to justify reopening stock-local alpha hunting?
+Run batch 17 experiments, starting with BU1: market_wide_vol_regime.
+The hypothesis: c16_low×C23 works at ticker level; market-level vol expansion
+may be the systemic analog.
 
 This session did not change the live branch.
 It did not read `2026+`.
@@ -17,44 +13,42 @@ It did not read `2026+`.
 
 ## What changed
 
-Added one bounded research script:
-- `analysis/h308_stock_local_predictability_atlas.py`
+Added one research script:
+- `analysis/h497_market_wide_vol_regime.py`
 
-### H308 - Stock-Local Predictability Atlas
+### BU1 - market_wide_vol_regime (H497)
+
 **Hypothesis:**
-The lab may still have a tiny recurrent-recipient tail even though broad
-single-stock OHLCV mining is dead. If so, a full-HOSE atlas should show a
-stable dev->validation tail after null control and multiple-testing discipline,
-with coherent local-structure diagnostics rather than random positive noise.
+c16_low×C23 (IC 0.2838 from batch 16) works at ticker level. Test market-level
+vol expansion as systemic analog. When market-wide vol is in top 20%, C23 should
+amplify. Compare market_vol_exp×C23 vs C23 alone vs random.
 
 **Command / code:**
-`python analysis/h308_stock_local_predictability_atlas.py`
+`python analysis/h497_market_wide_vol_regime.py`
 
 **Inputs:**
-- `data/features/xs_barrier_vol_1d_hose_full.parquet`
-- `data/stock/gia_lich_su_*_1D.parquet`
+- S1 panel: `data/features/xs_barrier_vol_1d_hose_full.parquet`
+- Order stats: `data/order_stats/cafef/order_stats_daily.parquet`
+- OHLCV for Amihud illiquidity
 
 **Saved artifact:**
-`artifacts/run_summaries/20260409_110645_h308_stock_local_predictability_atlas_research_branch_stock_local_predictability_atlas.json`
+`artifacts/run_summaries/20260509_235413_market_wide_vol_regime_research_branch.json`
 
 | Metric | Value | Note |
 |--------|-------|------|
-| qualified tickers | `45` | predeclared minimum selected-day coverage in all three phases |
-| observed dev->validation rank rho | `+0.1018` | ticker ordering stability on recipient edge |
-| null `p95` rank rho | `+0.2588` | within-day permutation control |
-| empirical rank-stability p | `0.3134` | no global stable ordering |
-| FDR survivors (`q <= 0.10`) | `0` | no null-controlled recurrent tail |
-| nominal tail (`p <= 0.10`, conf > 0) | `7` | `AAM, VTB, SRF, SHA, VID, TMT, DTA` |
-| diagnostic corr: overnight share | `-0.5361` | stronger tail sits in less gap-dominant names |
-| diagnostic corr: zero-range rate | `-0.5706` | stronger tail sits in smoother names |
-| diagnostic corr: median traded value | `+0.4491` | stronger tail sits in more liquid names |
+| panel_rows | 809,019 | |
+| baseline (all_rows) IC | 0.1298 | |
+| c23_ticker_level IC | 0.2616 | +0.1318 lift, 11/11 years |
+| c23_market_vol_exp IC | 0.2006 | +0.0708 lift, 11/11 years |
+| c23_both_vol_exp IC | 0.2575 | +0.1277 lift, 10/11 years |
+| ticker_vol_exp_alone IC | 0.1753 | +0.0455 lift |
+| market_vol_exp_alone IC | 0.1271 | +0.003 (noise) |
 
 **Result:**
-The broad stock-local branch does **not** survive null control. There are no
-FDR survivors and the dev->validation ticker-edge ranking is not stronger than
-the permutation null. But the atlas does leave a small nominal tail of
-recurrent recipients, and that tail clusters in smoother, less gap-dominant,
-more liquid names rather than in obviously noisy random-walk candidates.
+Ticker-level vol expansion (IC 0.2616) beats market-level vol expansion (IC 0.2006)
+by +0.061. Market-wide vol expansion DOES work as a signal conditioner (+0.07 lift)
+but is significantly weaker than ticker-level. The hypothesis that market-level vol
+would be analogous to ticker-level is NOT supported.
 
 **Verdict: MIXED**
 
@@ -62,20 +56,20 @@ more liquid names rather than in obviously noisy random-walk candidates.
 
 ## Branch decision
 
-`H308` closes the broad stock-local branch again:
-- do **not** reopen generic per-stock OHLCV alpha hunting
-- do keep the atlas only as a bounded diagnostic line around the nominal tail:
-  - `AAM, VTB, SRF, SHA, VID, TMT, DTA`
-- interpret that tail as recipient-state evidence, not as standalone stock-local
-  alpha
-- if the queue continues, move to:
-  - `issuer-lexicon-event-surface`
+BU1 is MIXED:
+- Market-wide vol expansion provides +0.07 IC lift vs baseline — real but weaker
+- Ticker-level vol expansion is STRONGER (+0.132 vs +0.07)
+- Combining both (c23_both_vol_exp) hurts vs ticker-level alone (too sparse: 6590 rows)
+- Market vol expansion alone (without illiq) is noise
 
----
+Key finding: the regime amplification mechanism works at the INDIVIDUAL STOCK level,
+not at the market level. Do not use market-wide vol as a regime conditioner.
 
-## Validation
-
-Completed during the pass:
-- ran `python -m py_compile analysis/h308_stock_local_predictability_atlas.py`
-- ran `python analysis/h308_stock_local_predictability_atlas.py`
-- read the saved run summary and details artifact
+Next in batch 17:
+- BU2: c17_standalone (C17 raw vs C16 blended)
+- BU3: multi_day_c23_accumulation
+- BU4: cross_signal_day_complementarity
+- BU5: sector_vol_regime
+- BU6: c26_without_vol_expansion_isolation
+- BU7: foreign_flow_regime_as_conditioner
+- BU8: earnings_quality_regime_interaction

@@ -1,0 +1,143 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260509_232448_signal_cofire_regime_results.parquet",
+    "yearly": "artifacts/research_branches/20260509_232448_signal_cofire_regime_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "C23/C24/C25/C26 fire on different days but share vol_expansion. Test if co-fire COUNT (0-4 signals firing same day) predicts regime STRENGTH. Mechanism: when multiple independent signals fire together, market regime is stronger.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "C23/C24/C25/C26 fire on different days but share vol_expansion. Test if co-fire COUNT (0-4 signals firing same day) predicts regime STRENGTH. Mechanism: when multiple independent signals fire together, market regime is stronger.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "signal_cofire_regime",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "cofire",
+        "label": "Co-fire count = 0 (no signals)",
+        "name": "cofire_0",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cofire",
+        "label": "Co-fire count = 1",
+        "name": "cofire_1",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cofire",
+        "label": "Co-fire count = 2",
+        "name": "cofire_2",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cofire",
+        "label": "Co-fire count = 3",
+        "name": "cofire_3",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cofire",
+        "label": "Co-fire count = 4",
+        "name": "cofire_4",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cofire",
+        "label": "Co-fire count >= 2",
+        "name": "cofire_ge2",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cofire",
+        "label": "Co-fire count >= 3",
+        "name": "cofire_ge3",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "signal_cofire_regime",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_ic": 0.24626948443878963,
+    "best_state": "cofire_2",
+    "cofire_0_ic": 0.1151956944756707,
+    "cofire_1_ic": 0.22839392559706972,
+    "cofire_2_ic": 0.24626948443878963,
+    "cofire_3_ic": null,
+    "cofire_4_ic": null,
+    "cofire_ge2_ic": 0.24151568740557156,
+    "cofire_ge2_lift": 0.1117241540455482,
+    "cofire_ge3_ic": null,
+    "cofire_ge3_lift": null,
+    "decision": "MIXED",
+    "panel_rows": 809019,
+    "states_evaluated": 8
+  },
+  "ts": "20260509_232448"
+}

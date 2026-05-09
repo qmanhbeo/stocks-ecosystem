@@ -1,0 +1,116 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260510_000418_cross_signal_day_complementarity_results.parquet",
+    "yearly": "artifacts/research_branches/20260510_000418_cross_signal_day_complementarity_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "C23/C24/C25/C26 fire on different days. Route to whichever fires that day (C23 OR C24 OR C25 OR C26) vs always-using-best-single. Different from D041 (COMBO kill) - this is SELECTIVE ROUTING.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "C23/C24/C25/C26 fire on different days. Route to whichever fires that day (C23 OR C24 OR C25 OR C26) vs always-using-best-single. Different from D041 (COMBO kill) - this is SELECTIVE ROUTING.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "cross_signal_day_complementarity",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "Always use C23 signal (illiq × vol_exp)",
+        "name": "always_c23",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "Always use C24 signal (ceiling × vol_exp)",
+        "name": "always_c24",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "routing",
+        "label": "Use any signal that fires that day (union)",
+        "name": "any_signal",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "regime",
+        "label": "2+ signals fire same day (regime strength)",
+        "name": "cofire_2",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "cross_signal_day_complementarity",
+  "summary": {
+    "any_signal_ic": 0.17534937305478657,
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_ic": 0.217617113797107,
+    "best_state": "always_c23",
+    "c23_ic": 0.217617113797107,
+    "c23_lift": 0.08739782317021094,
+    "cofire_2_ic": 0.20692042862415558,
+    "cofire_2_lift": 0.07670113799725953,
+    "decision": "PASSED",
+    "panel_rows": 826404,
+    "states_evaluated": 5,
+    "union_lift": 0.04513008242789052
+  },
+  "ts": "20260510_000418"
+}

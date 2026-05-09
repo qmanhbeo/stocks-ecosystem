@@ -5,16 +5,239 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead ends chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_126_log.md](./session_126_log.md)
-Last verified: [Session 126](./session_126_log.md), 2026-05-09
-**QUEUE STATUS: batch 12 COMPLETE** — AQ=pending, AR=H478 MIXED (zero volume no data, low_vol_high_c16 PASSES: +0.056 IC, 8/8), AS=data-gated, AT=pending, AU=pending, AV=pending
+Latest full session detail: [Session 136](./session_136_log.md), 2026-05-09
+Last verified: [Session 136](./session_136_log.md), 2026-05-09
+**QUEUE STATUS: batch 17 in progress** — BU1=MIXED (market-level weaker), BU2=FAILED (raw C17 worse than ranked C16, D049), BU3=MIXED (2d marginally best, 3d degrades), BU4=PASSED (confirms C23 alone beats routing), BU5=MIXED (sector vol regime marginal, not robust), BU6-BU8 pending.
+**Batch 16 complete:** BR1=PASSED (cofire_2 IC=0.2463 +0.1165), BR2=MIXED, BR3=PASSED (illiq alone IC=0.1793), BR4=FAILED (D047), BR5=MIXED, BR6=MIXED, BR7=FAILED (D048), BR8=MIXED, BR9=MIXED (D046), BR10=PASSED (c16_low×C23 IC=0.2838 BEST).
 
-**Remaining EUREKA queue (unactivated):**
-- AQ: replacement_quality_delta — delta_S1 of entering vs exiting tickers
-- AS: intraday_session_routing — session-specific IC by time-of-day (needs 1H data)
-- AT: adaptive_signal_weights — IC-weighted C23-C26
-- AU: extreme_negative_sentiment — capitulation-reversal (extreme bottom PhoBERT)
-- AV: breadth_threshold_finder — threshold where narrow vs broad switches signal efficacy
+**Next action:**
+- Batch 17: continue with BU4 (cross_signal_day_complementarity).
+- AS (intraday session routing) remains gated on 1H data.
+
+---
+
+## BRIGHT-MIND EUREKA (2026-05-09 post batch 16)
+
+Based on F419 (c16_low×C23=0.2838), F412 (cofire_2=0.2463), F414 (illiq alone=0.1793), F417 (signal decay), and the full signal library (C16-C26 confirmed).
+
+**Key structural insights:**
+- c16_low amplifies C23 MORE than c16_high (F419) — regime amplification works
+- All C23-C26 share vol_expansion as universal amplifier (D041 confirmed)
+- Vol regime at ticker level works; market-level untested
+- C17 (raw) vs C16 (blended) unexplored
+- Foreign flow, earnings, sector features built but NOT tested as signal conditioners
+- Multi-day C23 untested (different from D046 lagged barrier)
+- Cross-signal day routing is different from D043 adaptive weighting
+
+**Batch 17 Hypothesis Queue:**
+
+- ~~BU1: market_wide_vol_regime_router~~ — DONE: MIXED (ticker-level stronger)
+- ~~BU2: c17_standalone_independent_of_c16~~ — DONE: FAILED (D049)
+- ~~BU3: multi_day_c23_accumulation~~ — DONE: MIXED (2d marginally best)
+- ~~BU4: cross_signal_day_complementarity~~ — DONE: PASSED (C23 alone beats routing)
+- ~~BU5: sector_vol_regime~~ — DONE: MIXED (sector vol regime marginal, not robust)
+
+6. **BU6: c26_without_vol_expansion_isolation** — C26 = buy_heavy × illiq × vol_exp. Buy_heavy × illiq WITHOUT vol may be legitimate standalone — F414 showed illiq is independent of vol. Test: buy_heavy × illiq (no vol) vs C26 controls. Data: order_stats + OHLCV. [MED upside, MED novelty, HIGH feasibility]
+
+7. **BU7: foreign_flow_regime_as_conditioner** — Foreign net buy × C23. H443 killed raw foreign direction; this tests foreign AS REGIME CONDITIONER on confirmed signal, not as standalone. Test: foreign_net_buy × C23 vs C23 alone. Data: foreign_flow data. [MED upside, MED novelty, MED feasibility]
+
+8. **BU8: earnings_quality_regime_interaction** — Earnings beat/miss × C23. Earnings features built but never tested as signal conditioners. Earnings create information asymmetry that amplifies illiq dynamics. Test: earnings_beat × C23 vs C23 alone. Data: earnings quality features. [MED upside, HIGH novelty, MED feasibility]
+
+---
+
+## NEW EUREKA (2026-05-10 post BU1/BU2)
+
+Based on batch 16/17 results:
+- c16_low amplifies C23 MORE than c16_high (F419: 0.2838)
+- cofire_2 is strongest regime state (0.2463)
+- ticker-level vol > market-level vol (BU1: 0.2616 vs 0.2006)
+- raw C17 worse than ranked C16 (BU2: D049)
+- D046: signals decay at 2d/3d, best at 1d
+- D047: breadth degrades signals
+
+**Key insight:** Low pressure + high illiq + ticker-level vol expansion = strongest alpha. Market-level effects weaker than stock-level. Raw data worse than ranked.
+
+**New creative hypotheses (post batch 17):**
+
+1. **BV: vol_expansion_persistence** — Not just IF vol is expanding, but HOW LONG it has been expanding. A stock with 5d sustained vol expansion vs 1d may represent different regime (entrenched vs transient). Test: C23 × vol_exp_3d vs C23 × vol_exp_1d. Data: order_stats vol_change rolling sum. [HIGH upside, HIGH novelty, HIGH feasibility]
+
+2. **BW: c23_intensity_buckets** — C23 is binary (on/off). Test if INTENSITY matters: very high illiq (top 5%) vs moderate (top 20%). Test: illiq_top5 × vol_exp vs illiq_top20 × vol_exp. Data: Amihud percentile buckets. [MED upside, HIGH novelty, HIGH feasibility]
+
+3. **BX: c23_breadth_regime** — When MANY stocks fire C23 same day, market is in strong regime. cofire_2 tested per-stock; this tests market-wide C23 density. Test: date-level C23 count as regime gate. Data: computed C23 count per date. [HIGH upside, HIGH novelty, MED feasibility]
+
+4. **BY: sector_relative_vol** — D038 killed sector MOMENTUM. Test sector-RELATIVE vol: stock vol_change vs sector median. Not absolute, but RELATIVE to peers. Test: C23 × (stock_vol > sector_vol). Data: sector classification + order_stats. [MED upside, HIGH novelty, HIGH feasibility]
+
+5. **BZ: signal_regime_contrast** — Today's vol expansion vs yesterday's. Trend-following vs mean-reversion. Test: vol_exp_today × vol_exp_lag1 vs vol_exp_today × vol_contraction_lag1. Data: vol_change lag. [MED upside, MED novelty, HIGH feasibility]
+
+6. **CA: alternative_illiq_kyle_lambda** — C23 uses Amihud. Kyle's lambda is different illiquidity measure. Test: lambda × vol_exp vs Amihud × vol_exp. Data: OHLCV + trade count. [MED upside, MED novelty, MED feasibility]
+
+7. **CB: c16_negative_filter** — c16_low × C23 works. What about AVOIDING high C16? High C16 may indicate crowded trade. Test: C23 × (NOT c16_high). Data: C16 rank. [HIGH upside, MED novelty, HIGH feasibility]
+
+8. **CC: c23_intensity_top5** — C23 uses top 20% illiq. Test TOP 5% ultra-illiquid × vol_exp. Ultra-illiquid = even more under-followed. Test: illiq_top5 × vol_exp vs illiq_top20 × vol_exp. Data: Amihud percentile. [MED upside, HIGH novelty, HIGH feasibility]
+
+9. **CD: cofire_3_ultra_regime** — cofire_2 (IC 0.2463) works. Test cofire_3 (3+ signals) × c16_low × vol_exp. Maximum co-occurrence = strongest regime. Test: cofire_3 × c16_low × C23 vs cofire_2 controls. Data: computed C23-C26. [HIGH upside, HIGH novelty, HIGH feasibility]
+
+10. **CE: market_c23_density_regime** — When >30% stocks fire C23 same day, market in strong regime. Date-level C23 density as regime gate. Test: date_c23_pct > 30% × C23 vs C23 alone. Data: computed C23 count per date. [HIGH upside, HIGH novelty, MED feasibility]
+
+11. **CF: c16_extreme_low** — c16_low × C23 works at IC 0.2838. Test c16 EXTREME LOW (bottom 5%) × C23. Very low pressure = maximum hidden demand. Test: c16_bottom5 × C23 vs c16_bottom20 controls. Data: C16 rank. [MED upside, MED novelty, HIGH feasibility]
+
+12. **CG: c23_post_cooldown** — C23 fires day 1, cooldown day 2, C23 again day 3. Signal exhaustion after firing, recovery after cooldown. Test: C23 on day T, NOT on T-1, with C23 on T-3. Data: C23 computed inline. [MED upside, MED novelty, HIGH feasibility]
+
+13. **CH: cross_signal_union** — C23 OR C24 OR C25 OR C26 fires (union, not routing). Any illiq × vol_exp captures multiple angles. Test: C23_or_C24_or_C25_or_C26 vs always-C23. Data: computed C23-C26. [MED upside, MED novelty, HIGH feasibility]
+
+14. **CI: vol_regime_stability** — D041 showed acceleration doesn't help. Test vol STABILITY (low variance over 5d) × C23. Stable regime = consistent alpha. Test: vol_std_bottom20 × C23 vs vol_exp × C23. Data: order_stats vol std. [MED upside, MED novelty, HIGH feasibility]
+
+15. **CJ: ceiling_exhaustion_reversal** — C24 is ceiling count. Test ceiling ≥ 3 AND vol_declining. Queue exhaustion = reversal. Test: ceiling_count >= 3 AND vol_change < 0 vs C24 controls. Data: order_stats price limit + vol. [MED upside, MED novelty, HIGH feasibility]
+
+---
+
+## NEW EUREKA (2026-05-10 post Batch 17 - BRIGHT-MIND REFRESHER)
+
+Based on Batch 17 complete results (BU1-BU5):
+- c16_low × C23 = IC 0.2838 remains BEST (F419)
+- Always-C23 = IC 0.2176 is cleanest standalone
+- Ticker-level vol expansion beats market-level
+- Sector vol regime marginally better but TOO SPARSE
+- Signal routing doesn't help — C23 alone wins
+
+**Key structural insights from Batch 17:**
+1. **Ticker-level effects beat market/sector-level** — vol expansion, sector gating all weaker than ticker
+2. **C23 is the strongest signal** — no combo or routing helps
+3. **cofire_2 = IC 0.2463** regime amplifier confirmed across tests
+4. **Sparse states fail** — sector_c23 only 2/11 positive years
+5. **Raw vs ranked**: Raw ALWAYS worse (D049, D041)
+6. **Multi-day hurts** — 2d marginally better, 3d degrades
+
+**Curiosity heuristics applied:**
+- What if c16 LOW is AMPLITUDE not just level? (bottom 5% vs 20%)
+- What if illiq TOP 5% (ultra-illiquid) beats top 20%? (CC tested)
+- What if DENSITY at market-level (date) works when sector-level is sparse? (CE tested)
+- What if c16 BOTTOM 5% has MORE signal than bottom 20%? (CF tested)
+- What if illiq WITHOUT vol_exp is standalone? (BU6: C26 without vol)
+- What if vol PERSISTENCE (how LONG expanding) matters more than IF?
+
+**Post-Batch 17 Creative Hypotheses:**
+
+1. **CK: c16_extreme_low_isolation** — c16_bottom5 × C23 vs c16_bottom20 controls. Bottom 5% = maximum hidden demand. Data: C16 rank bottom buckets. [HIGH upside if c16_bottom5 > c16_bottom20]
+
+2. **CL: illiq_ultra_concentration** — illiq_top1% (extreme ultra-illiquid × vol_exp). Even more under-followed = stronger signal. Data: Amihud percentile top 1%. [HIGH upside if extreme improves vs moderate]
+
+3. **CM: date_level_c23_density** — Market-wide C23 density (>30% stocks firing) × C23. Sector too sparse (BU5), date-level could work where sector fails. Data: computed C23 count per date. [HIGH upside if date-level > sector-level]
+
+4. **CN: vol_expansion_trend** — Vol expansion PERSISTENCE: 3d rolling sum of vol_expansion days × C23. Entrenched vs transient vol = different regime. Data: vol_exp rolling sum. [HIGH novelty if persistence captures edge]
+
+5. **CO: c23_minus_vwap_overlay** — C25 uses VWAP deviation. Test if C23 + C25 is better than either alone. Different from D041: this is SAME-DAY combo, not cross-signal routing. Data: C23 + C25 as composite. [MED upside if same-day combo helps]
+
+6. **CP: execution_readiness_regime** — Tradability is NOT just binary. Test if partial tradability × C23 is signal: fill_rate (orders filled / orders placed). Data: order_stats partial fill data (if available). [HIGH novelty if exists]
+
+7. **CQ: overnight_gap_regime** — Open price vs prior close. Large gap = regime change. Test: gap >5% × C23 vs C23 alone. Data: OHLCV gap. [MED upside, HIGH novelty]
+
+8. **CR: price_level_bucket** — Test C23 × price_bucket (penny stocks vs liquid stocks). Penny stocks = more illiq. Data: price level buckets. [MED novelty]
+
+9. **CS: return_reversal_regime** — Test C23 × negative_return (contrarian within illiq regime). C23 captures illiq, adding reversal within illiq = double alpha. Data: return buckets. [MED upside]
+
+---
+
+## Prior Bright-Mind Queue (carry forward)
+
+**Still pending from prior batches:**
+- AS: intraday_session_routing (1H data gated)
+
+**Cross-reference:** All BR1-BR10 from batch 16 are now tested. AW (signal_rotation_by_flavour) ≈ BU4. AX (floor_pressure_symmetry) = D045. AY (lagged_c23_horizons) ≈ BU3 (different mechanism). AZ/BF/BO = F414/F416/F413. BH/BM = F412. BI/BN = F415. BJ = F417. BQ = D047.
+
+---
+
+Based on Session 131 failures:
+- BG: floor pressure is anti-predictive (NOT symmetric to ceiling)
+- BJ: signals decay at 2d/3d, best at 1d
+- C23-C26 confirmed as strongest signals, all share vol_expansion
+- S1 robust across all tested regimes
+
+**Key structural insight:** All C23-C26 signals fire on DIFFERENT days but share vol_expansion. They capture DIFFERENT behavioral angles on the SAME regime. The lab has tested individual signals but NOT tested their co-occurrence or interaction with new dimensions.
+
+### New Creative Hypotheses (BR- prefix):
+
+1. **BR1: signal_cofire_regime** — C23/C24/C25/C26 fire on different days. Test if co-fire COUNT (0-4 signals firing same day) predicts regime STRENGTH. D041 killed COMBOs but co-occurrence as REGIME not tested. Mechanism: when multiple independent signals fire together, market regime is stronger. First test: cofire buckets (0, 1, 2, 3, 4) vs forward S1 IC.
+
+2. **BR2: vol_expansion_degree_continuous** — vol_expansion is binary (top 20%), never tested CONTINUOUS. H481 showed breadth is MONOTONIC not discrete. Vol expansion degree likely similar. Test vol percentile (10/20/30/40/50%) for C23/C24/C26. Different signals may prefer different vol thresholds. Mechanism: regime strength is continuous.
+
+3. **BR3: illiq_without_expansion_isolation** — C23 = illiq × vol_exp together (IC 0.26). But illiq ALONE (high_illiq without vol_exp) = IC 0.20 (strong!). Test high_illiq WITHOUT vol_exp as standalone. If positive, illiq alone is independent signal, not dependent on vol regime.
+
+4. **BR4: breadth_illiq_regime_interaction** — H481 found narrow > broad. C23 is strongest signal. Test illiq × vol_exp × narrow_breadth combo. H481 tested breadth ALONE, not COMBO. Mechanism: regime interaction boost - narrow amplifies illiq effect.
+
+5. **BR5: market_sentiment_regime_gate** — H482 found ticker-level ultra_negative doesn't filter S1. But MARKET-WIDE sentiment might be REGIME indicator. Compute market avg sentiment per day, test S1/C23 IC in market-sentiment bottom vs top 20%. Mechanism: market sentiment predicts signal quality across all tickers.
+
+6. **BR6: spread_as_new_dimension** — C23 uses Amihud illiq, C25 uses VWAP deviation. Bid-ask spread × vol_expansion never tested. Spread = independent liquidity dimension from volume/Amihud/VWAP. First test: spread × vol_expansion vs C23/C25 controls.
+
+7. **BR7: price_limit_friction_amplifier** — C24 (multi-day ceiling) works at IC 0.23. But FRICTION of hitting limit (not just count) might matter. Test: ceiling_count × vol_stability (low vol variance = stable queue) vs ceiling_count × vol_volatility. Mechanism: stable queue = stronger release, volatile queue = weak.
+
+8. **BR8: liquidity_depth_combo** — C23 uses illiq (Amihud), C25 uses VWAP deviation. BOTH measure "under-followed" but from different angles. Test: high_illiq AND vwap_below_10 AND vol_expansion = triple filter. If combo beats each individually, multiple dimensions reinforce.
+
+9. **BR9: time_since_last_signal** — C23/C24/C26 fire on different days. Time since last signal fire might matter. Test: C23 fires TODAY vs C23 fired YESTERDAY vs C23 fired 3d ago. Mechanism: signal persistence vs mean-reversion after signal fires.
+
+10. **BR10: c16_level_router** — H120 found C16 works at IC 0.077. C23 works at IC 0.26. Test: use C16 LEVEL (high vs low) as ROUTER - when C16 is HIGH, use C23; when C16 is LOW, use C16 alone. Different regimes need different signals.
+
+---
+
+## NEW EUREKA SPARKS (2026-05-09 batch - from bright-mind analysis)
+
+Based on H441 quality delta failure: quality CHANGE is weak. But C23 (IC 0.26) uses illiquidity, not quality. KEY INSIGHT: All C23-C26 share vol_expansion mechanism. Different BEHAVIORAL angles on same regime.
+
+**Ranked by upside + novelty + testability:**
+
+1. **AW: signal_rotation_by_flavour** — C23/24/25/26 fire on DIFFERENT days but share vol_expansion. Test if rotating between signals (using whichever fires that day) beats always-using best single. Mechanism: each captures different flavor of regime; portfolio rotation may reduce drawdown.
+
+2. **AX: floor_pressure_symmetry** — C24 tests CEILING (+7%), never tested FLOOR (-7%). Multi-day FLOOR pressure = forced sell exhaustion OR capitulation = reversal? Test floor_2_of_3 + vol_expansion vs C24 ceiling analog.
+
+3. **AY: lagged_c23_horizons** — C23 works at 1d (IC 0.26). Test if 2d/3d barrier has HIGHER IC = delayed release signal. C24 multi-day showed temporal structure works.
+
+4. **AZ: spread_as_new_dimension** — C23 uses Amihud illiq, C25 uses VWAP. Bid-ask spread × vol_expansion never tested. Spread = independent liquidity dimension from volume.
+
+5. **BA: liquidity_decoupling** — H441 shows QUALITY delta weak. Test illiq DECOUPLED from vol_expansion: high_illiq × NO_vol_expansion vs C23 (illiq × exp). If positive, illiq alone is signal.
+
+6. **BB: cumulative_illiq_momentum** — C23 single-day (IC 0.26). Test 3-day cumulative illiq × vol_expansion vs C23 controls. C24 multi-day shows temporal works.
+
+7. **BC: order_flow_acceleration** — D040 killed RANK accel. But SIZE accel (buy_count delta) not tested. C26 is buy_heavy LEVEL. Test buy_count_delta × illiq × vol_expansion.
+
+8. **BD: hot_cold_market_regime** — H468 found narrow>broad. C23 individual tested in different breadth. Test C23/C26 IC in breadth_top20 vs breadth_bottom20.
+
+9. **BE: sentiment_scope_filter** — H480 shows ultra_negative (bottom 5%) works standalone. Test if ultra_negative FILTERS C23-C26: C23 IC WITH ultra_negative vs WITHOUT. Mechanism: sentiment extremes may identify noise states where quality signals fail.
+
+10. **BF: vol_expansion_degree** — vol_expansion is binary (top 20%), never tested CONTINUOUS. Test vol_expansion percentile (10/20/30/40/50%) vs binary buckets. Different degrees might optimize different signals. Mechanism: regime strength is continuous.
+
+11. **BG: floor_pressure_symmetry** — C24 tests CEILING (+7%), never tested FLOOR (-7%). Multi-day floor pressure = forced sell exhaustion = reversal? Test floor_count >= 2 × vol_expansion vs C24 analog. Mechanism: capitulation at daily floor.
+
+12. **BH: signal_cooccurrence_boost** — C23/C24/C25/C26 fire on different days, share vol_expansion. Test if MULTIPLE FIRE TOGETHER > sum of parts. Mechanism: co-occurrence might reinforce. First test: cofire buckets (0-4 signals) vs forward IC.
+
+13. **BI: market_sentiment_regime** — H480 found ticker-level ultra_negative works. Test if MARKET-WIDE sentiment is REGIME indicator. Mechanism: market sentiment may predict signal quality across all tickers.
+
+14. **BJ: lagged_signal_decay** — C23 works at 1d. Test if signal effectiveness DECAYS over days — C23/C24 IC at 1d/2d/3d. C24 multi-day showed temporal structure. Mechanism: signals have natural holding periods.
+
+---
+
+## NEW BRIGHT-MIND EUREKA (2026-05-09 post-H481/H482 analysis)
+
+Based on H481 (breadth MONOTONIC), H482 (sentiment filter FAILS), and C23-C26 champions:
+- C23/C24/C26 share vol_expansion but are DIFFERENT behavioral angles
+- S1 is ROBUST across sentiment, breadth, momentum regimes
+- Multi-day patterns work (C24), single-day (C23) strongest
+- Floor pressure never tested, continuous vol_exp never tested
+
+**Ranked by upside + novelty + testability:**
+
+1. **BK: floor_pressure_contrarian** — C24 tests CEILING (+7%), never tested FLOOR (-7%). Multi-day floor pressure = forced sell capitulation = reversal? Test floor_count >= 2 × vol_expansion vs C24 ceiling analog. Mechanism: capitulation at daily floor.
+
+2. **BL: signal_decay_horizon_router** — C23 works at 1d (IC 0.26), C24 multi-day works. Test C23 at 1d/2d/3d barrier to find optimal horizon. C24 proves temporal structure matters. Mechanism: signals have natural holding periods.
+
+3. **BM: signal_cofire_regime** — C23/C24/C25/C26 fire on different days. Test if co-fire COUNT (0-4 signals) predicts regime STRENGTH. D041 killed combo, but co-occurrence as regime filter not tested. Mechanism: co-occurrence = reinforcement.
+
+4. **BN: market_sentiment_regime_gate** — H482 found ticker-level ultra_negative doesn't filter S1. But MARKET-WIDE sentiment might be regime indicator. Compute market avg sentiment per day, test S1 IC in market-sentiment bottom vs top 20%. Mechanism: market sentiment predicts signal quality across all tickers.
+
+5. **BO: vol_expansion_degree_continuous** — vol_expansion is binary (top 20%), never tested CONTINUOUS. Test vol_exp percentile (10/20/30/40/50%) for C23/C24/C26. Regime strength is continuous. Mechanism: different signals may prefer different vol thresholds.
+
+6. **BP: illiq_without_expansion_isolation** — C23 = illiq × vol_exp together (IC 0.26). But illiq ALONE = IC 0.20 (strong!). Test high_illiq WITHOUT vol_exp as standalone. Mechanism: illiq alone may be independent signal.
+
+7. **BQ: breadth_illiq_regime_interaction** — H481 found narrow > broad. C23 is strongest. Test illiq × vol_exp × narrow_breadth combo. H481 tested breadth ALONE, not combo. Mechanism: regime interaction boost.
 
 ---
 
@@ -36,7 +259,7 @@ Based on lab's full memory: all C23-C26 share vol_expansion×illiquidity — the
 
 6. **AT: adaptive_signal_weights** — Weight C23-C26 by their RECENT 60d IC, not equal weight. If IC-weighted outperforms, adaptive weighting adds value.
 
-7. **AU: extreme_negative_sentiment** — EXTREME negative PhoBERT (bottom 10%) + next-day reversal? H383 passed positive; test EXTREME negative for capitulation-reversal.
+7. **AU: extreme_negative_sentiment** — [TESTED: Session 129 PASSED] ultra_negative (bottom 5%) +0.0100 IC lift
 
 8. **AV: breadth_threshold_finder** — H468 found narrow>broad. Find the THRESHOLD number (not quintile) where signal switches. Is it 20% breadth? 30%?
 

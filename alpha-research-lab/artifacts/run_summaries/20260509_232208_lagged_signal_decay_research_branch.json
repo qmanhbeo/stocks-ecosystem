@@ -1,0 +1,82 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260509_232208_lagged_signal_decay_results.parquet"
+  },
+  "metadata": {
+    "hypothesis": "C23 works at 1d (IC 0.26), C24 multi-day works. Test if signal effectiveness DECAYS or IMPROVES at longer horizons. C24 multi-day showed temporal structure works. Mechanism: signals have natural holding periods.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d",
+        "s1_barrier_hit_2d",
+        "s1_barrier_hit_3d"
+      ],
+      "hypothesis": "C23 works at 1d (IC 0.26), C24 multi-day works. Test if signal effectiveness DECAYS or IMPROVES at longer horizons. C24 multi-day showed temporal structure works. Mechanism: signals have natural holding periods.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "lagged_signal_decay",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "1d barrier",
+        "s1_barrier_hit_2d": "2d barrier",
+        "s1_barrier_hit_3d": "3d barrier"
+      }
+    }
+  },
+  "mode": "research_branch",
+  "name": "lagged_signal_decay",
+  "summary": {
+    "baseline_1d": 0.13342157646841651,
+    "baseline_2d": 0.02887100347725462,
+    "baseline_3d": 0.0032014992947137144,
+    "best_horizon_c23": 1,
+    "best_horizon_c24": 1,
+    "c23_exp_1d": 0.08435307629949426,
+    "c23_exp_2d": 0.032346553440442745,
+    "c23_exp_3d": 0.004387348207651462,
+    "c23_lift_2d": -0.05200652285905152,
+    "c23_lift_3d": -0.0799657280918428,
+    "c24_exp_1d": 0.2290973149462095,
+    "c24_exp_2d": -0.0301539945086547,
+    "c24_exp_3d": -0.033784585243749776,
+    "c24_lift_2d": -0.2592513094548642,
+    "c24_lift_3d": -0.26288190018995927,
+    "decision": "FAILED",
+    "panel_rows": 824801
+  },
+  "ts": "20260509_232208"
+}

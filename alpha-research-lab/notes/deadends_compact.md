@@ -38,6 +38,14 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
 
 - H445 semantic_novelty_saturation is killed (NEGATIVE result). News article counts (PhoBERT) are NOT predictive - they DEGRADE S1 signal quality. All news states have NEGATIVE IC lift vs baseline. "no_news" (IC=0.1409) actually beats "has_news" (IC=0.1038) by +0.037. Exhaustion state (repeat coverage + high attention) is worst at -0.0474 lift. Raw article counts are not useful as standalone signals. Continue using source-type and sentiment features which H440/H383 found useful. Do not reopen with raw count features. Source: [session_101_log.md](./session_101_log.md), D035.
 
+## Resolution: Sector Vol Regime Marginal
+
+- H506 sector_vol_regime (BU5) is parked as MIXED. sector_c23 (sector >50% stocks in vol_expansion × C23) marginally beats always_c23 (IC 0.2223 vs 0.2176, +0.0046) BUT the state is extremely sparse (2,853 rows, only 2/11 positive years). Validation and confirmation phases have NaN due to insufficient data. The pattern is similar to cofire_2 (sector-level co-occurrence = stronger signal) but too sparse to be useful. D038 killed sector MOMENTUM; sector VOL regime is marginally better but not robust enough to act on. Park and do not reopen without different sampling or data. Source: [session_138_log.md](./session_138_log.md), F424.
+
+## Resolution: Sentiment Filter Skepticism
+
+- H482 sentiment_scope_filter is D044. Ultra_negative (bottom 5% prob_neg from H480) does NOT filter S1 quality. Filter effect is +0.0034 IC (below +0.01 pass threshold). S1 WITH ultra_negative: IC 0.1006, S1 WITHOUT ultra_negative: IC 0.1040. S1 is ROBUST across sentiment regimes - quality is similar whether ticker has ultra-negative news or not. The hypothesis that "sentiment extremes identify noise states" is NOT supported. Do NOT use ultra_negative as a signal quality gate. Source: [session_131_log.md](./session_131_log.md), D044.
+
 - H443 prop_foreign_predator_prey is killed. Predator-prey interaction between foreign and proprietary flows does NOT add predictive value. All states (ff_sell_pt_buy_absorption IC=0.0621, ff_buy_pt_sell_distribution IC=0.0959, prop_follow_ff IC=0.0842) are BELOW baseline IC=0.1335. Raw foreign flow (ff_buy IC=0.1188, ff_sell IC=0.1004) also underperforms baseline. Flow direction alone is not predictive - S1 already captures any useful information from these flows. Do not reopen unless materially different data or representation. Source anchor: [session_323_log.md](./session_323_log.md), D034.
 
 - S253 methodology resolution is superseded by S272. S272 found the S244/S246/S247/S253

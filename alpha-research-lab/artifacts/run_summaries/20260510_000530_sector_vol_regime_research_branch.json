@@ -1,0 +1,107 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260510_000530_sector_vol_regime_results.parquet",
+    "yearly": "artifacts/research_branches/20260510_000530_sector_vol_regime_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Sector-level vol expansion as regime gate. D038 killed sector MOMENTUM, test sector VOL regime (sector >50% stocks hitting vol_expansion) × C23 vs C23 alone.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Sector-level vol expansion as regime gate. D038 killed sector MOMENTUM, test sector VOL regime (sector >50% stocks hitting vol_expansion) × C23 vs C23 alone.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "sector_vol_regime",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "Always use C23 signal (illiq × vol_exp)",
+        "name": "always_c23",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "sector_regime",
+        "label": "Sector in vol expansion regime (>50% stocks)",
+        "name": "sector_vol_exp",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "sector_regime",
+        "label": "C23 within sector in vol expansion regime",
+        "name": "sector_c23",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "sector_vol_regime",
+  "summary": {
+    "baseline_ic": 0.1303124322724273,
+    "best_avg_ic": 0.22226078954875494,
+    "best_state": "sector_c23",
+    "c23_ic": 0.21763733122893464,
+    "c23_lift": 0.08732489895650733,
+    "decision": "PASSED",
+    "panel_rows": 823666,
+    "sector_c23_ic": 0.22226078954875494,
+    "sector_c23_lift": 0.09194835727632764,
+    "sector_vol_exp_ic": 0.15575528493637977,
+    "states_evaluated": 4
+  },
+  "ts": "20260510_000530"
+}

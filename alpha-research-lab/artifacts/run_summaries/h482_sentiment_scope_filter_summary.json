@@ -1,0 +1,8 @@
+{
+  "branch": "sentiment_scope_filter",
+  "verdict": "FAIL",
+  "baseline_ic": 0.10383674605330709,
+  "no_ultra_negative_ic": 0.10398273936178527,
+  "with_ultra_negative_ic": 0.10063673186669744,
+  "filter_lift": 0.00334600749508783
+}

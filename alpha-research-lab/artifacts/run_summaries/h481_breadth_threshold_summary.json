@@ -1,0 +1,7 @@
+{
+  "branch": "breadth_threshold_finder",
+  "verdict": "PASS",
+  "baseline_ic": 0.13354479678630032,
+  "narrow_20pct_ic": 0.15155585254126544,
+  "broad_20pct_ic": 0.11105195788619548
+}

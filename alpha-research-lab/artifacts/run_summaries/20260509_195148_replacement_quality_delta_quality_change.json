@@ -1,0 +1,73 @@
+{
+  "artifacts": {
+    "results": "artifacts/h441_quality_delta/20260509_195148_replacement_quality_delta_results.parquet",
+    "yearly": "artifacts/h441_quality_delta/20260509_195148_replacement_quality_delta_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "quality change predicts forward IC",
+    "lookback_days": 5,
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Quality CHANGE (delta S1) predicts forward IC, not quality LEVEL. H437 tested entering vs exiting quality LEVEL and found entering weakest. This tests if the DELTA in quality predicts.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "quality_change",
+      "name": "replacement_quality_delta",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2018,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    }
+  },
+  "mode": "quality_change",
+  "name": "replacement_quality_delta",
+  "summary": {
+    "baseline_avg_ic": 0.11942621680316695,
+    "best_avg_ic": 0.1205965604825922,
+    "best_positive_years": 8,
+    "best_state": "strong_positive_delta",
+    "decision": "MIXED",
+    "delta_lift": -0.0025391388883670707,
+    "negative_delta_ic": 0.08373976668057383,
+    "panel_rows": 650557,
+    "positive_delta_ic": 0.11688707791479988,
+    "states_evaluated": 5
+  },
+  "ts": "20260509_195148"
+}

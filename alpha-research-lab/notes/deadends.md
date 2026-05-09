@@ -5,7 +5,7 @@ blocks per file. For fast recovery, use [deadends_compact.md](./deadends_compact
 
 Current chunks:
 - [deadends-001-030.md](./deadends-001-030.md) (D001-D034, D026-D034)
-- [deadends-031-060.md](./deadends-031-060.md) (D035-D041)
+- [deadends-031-060.md](./deadends-031-060.md) (D035-D047)
 
 ## Convention
 
