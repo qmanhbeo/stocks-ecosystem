@@ -76,6 +76,7 @@ def update_state(
     active_command: str = None,
     active_pid: int = None,
     clear_active: bool = False,
+    clear_cycle_active: bool = False,
     last_completed_at: str = None,
     active_phase: str = None,
     active_agent: str = None,
@@ -102,7 +103,8 @@ def update_state(
         active_loop_log_path: Set active loop log path.
         active_command: Set active command string.
         active_pid: Set active process ID.
-        clear_active: Clear all active_* fields.
+        clear_active: Clear all active_* fields, including loop-level runtime fields.
+        clear_cycle_active: Clear cycle/phase/session runtime fields but preserve active_loop_log_path.
         last_completed_at: Set last completed timestamp.
     """
     state = load_state()
@@ -142,10 +144,9 @@ def update_state(
         state["active_command"] = active_command
     if active_pid is not None:
         state["active_pid"] = active_pid
-    if clear_active:
+    if clear_cycle_active or clear_active:
         state["active_cycle_started_at"] = None
         state["active_cycle_log_path"] = None
-        state["active_loop_log_path"] = None
         state["active_command"] = None
         state["active_pid"] = None
         state["active_phase"] = None
@@ -153,6 +154,8 @@ def update_state(
         state["active_phase_started_at"] = None
         state["active_phase_log_path"] = None
         state["active_session_id"] = None
+    if clear_active:
+        state["active_loop_log_path"] = None
     if last_completed_at is not None:
         state["last_completed_at"] = last_completed_at
     if active_phase is not None:

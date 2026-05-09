@@ -633,7 +633,7 @@ def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = T
             phase="completed",
             exit_status="success",
             real_cycle=True,
-            clear_active=True,
+            clear_cycle_active=True,
             last_completed_at=datetime.now().isoformat(),
             session_hint=session_title,
             last_session_id=session_id,
@@ -644,7 +644,7 @@ def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = T
         state.update_state(
             phase="completed_partial",
             exit_status="partial",
-            clear_active=True,
+            clear_cycle_active=True,
             last_completed_at=datetime.now().isoformat(),
             session_hint=session_title,
             last_session_id=session_id,
@@ -655,7 +655,7 @@ def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = T
         state.update_state(
             phase="failed",
             exit_status="incomplete",
-            clear_active=True,
+            clear_cycle_active=True,
             session_hint=session_title,
             last_session_id=session_id,
         )
@@ -705,21 +705,9 @@ def run_single_cycle(dry_run: bool = False,
         result = run_three_phase_cycle(dry_run=False, verbose=verbose, heartbeat_seconds=heartbeat_seconds)
 
         if result.get("cycle_complete"):
-            log.write_log(cycle_log_path, "Three-phase cycle completed, cycle_count incremented")
-            state.update_state(
-                phase="completed",
-                exit_status="success",
-                real_cycle=True,
-                clear_active=True,
-                last_completed_at=datetime.now().isoformat(),
-            )
+            log.write_log(cycle_log_path, "Three-phase cycle completed")
         else:
             exit_code = 1
-            state.update_state(
-                phase="failed",
-                exit_status="incomplete",
-                clear_active=True,
-            )
             log.write_log(cycle_log_path, "Three-phase cycle incomplete")
 
     elif decision == "dry_run":
@@ -761,7 +749,7 @@ def run_loop(max_cycles: int = DEFAULT_MAX_CYCLES, sleep_seconds: int = DEFAULT_
         loop_start=True,
         loop_max_cycles=max_cycles,
         loop_completed_cycles=0,
-        stop_reason=None,
+        stop_reason="running",
         active_loop_log_path=loop_log_path,
     )
 
@@ -786,6 +774,7 @@ def run_loop(max_cycles: int = DEFAULT_MAX_CYCLES, sleep_seconds: int = DEFAULT_
             cycle_elapsed = time.time() - cycle_start
 
             completed += 1
+            state.update_state(loop_completed_cycles=completed)
 
             log.log_message(f"Cycle {cycle_num} decision: {decision}, exit_code: {exit_code}")
             log.log_cycle_to_loop(loop_log_path, cycle_num, decision,
