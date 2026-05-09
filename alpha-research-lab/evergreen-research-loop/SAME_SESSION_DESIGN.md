@@ -1,70 +1,44 @@
-# Same-Session Three-Phase Orchestration Design
+# OpenCode Session Design
 
-## Feasibility: CONFIRMED ✅
+## Verified Local Behavior
 
-Prototype v3 verified:
-- Three-phase sequential messages in ONE session: **PASSED**
-- Slash skill syntax (`/bright-mind`) inside session: **PASSED**
-- Context recall (Phase 1 → Phase 2 → Phase 3): **PASSED**
+- Slash skill prompts such as `/bright-mind`, `/experimentor`, and `/manh-memory-system` work in `opencode run`.
+- They work when passed as positional CLI text and when sent through stdin.
+- They also work in continued sessions, but only because the build agent interprets the text and loads the skill.
+- `/compact` is different. It is not a skill, and `opencode run` does not handle it reliably as a true compaction command.
 
-## Session Transport Methods
+## Why The Old Design Was Wrong
 
-| Method | Works | Notes |
-|--------|-------|-------|
-| `--continue` | ✅ YES | Resumes last session reliably |
-| `--session <id>` | ✅ YES (manual test) | Requires session ID capture |
-| `session list` from subprocess | ❌ NO | Returns empty in subprocess context |
+The previous multi-cycle batching design assumed:
 
-**Recommendation**: Use `--continue` for production. It's simpler and reliable.
+1. `/bright-mind` style inputs and `/compact` were the same class of slash feature.
+2. `opencode run --continue` plus `/compact` could safely compact a session between cycles.
 
-## Session ID Capture
+Local probes disproved that:
 
-The `opencode session list` command behaves differently:
-- Works from CLI (interactive)
-- Returns empty/incomplete from subprocess.run()
+- Skill slashes are plain user text that the build agent can interpret.
+- True compaction in interactive OpenCode is represented as a dedicated `compaction` message part, not a literal `/compact` text message.
+- Sending `/compact` through `opencode run` stdin appends literal slash text and does not produce a compaction part.
+- Positional `/compact` also does not give a reliable production compaction path.
 
-**Solution**: Don't capture session ID. Use `--continue` which implicitly resumes last session.
+## Current Production Design
 
-## Explicit `--session` for Future
+Use **one fresh OpenCode session per cycle**.
 
-If we need explicit session targeting later, we can:
-1. Parse `opencode session list` output from stdout directly in a wrapper script
-2. Use a small shell script that captures and returns the session ID
-3. Accept the risk of `--continue` for now
+Within a cycle:
 
-For now, `--continue` is production-safe.
+1. Phase 1 starts a fresh session with a unique title.
+2. The orchestrator resolves the exact session id from OpenCode's local SQLite state.
+3. Phases 2-5 reuse that session via `--session <id>`, not global `--continue`.
 
-## Command Pattern for Production
+Across cycles:
 
-```bash
-# Phase 1: bright-mind
-opencode run "Phase 1 prompt..." --dir alpha-research-lab --title "cycle-N"
+1. Do not rely on `/compact`.
+2. Write `evergreen-research-loop/state/cycle_handoff.md` at the end of each successful cycle.
+3. Start the next cycle fresh and read that handoff plus the canonical repo notes.
 
-# Phase 2: experimentor
-opencode run --continue "Phase 2 prompt..." --dir alpha-research-lab
+## Safety Rationale
 
-# Phase 3: manh-memory-system
-opencode run --continue "Phase 3 prompt..." --dir alpha-research-lab
-```
-
-## Slash Skills
-
-- `/bright-mind`, `/experimentor`, `/manh-memory-system` all work inside a session
-- Tested and confirmed: skill loads correctly within continued session
-- Can be mixed with regular prompts in same message
-
-## Risks
-
-1. **Session collision**: If multiple processes use `--continue` simultaneously, they may share session
-2. **Session expiry**: Long-running loops might hit session limits
-3. **State persistence**: Disk memory (session_*.md, live_state.md) is still source of truth
-
-## Recommendation
-
-**Safe to refactor orchestrator** to use `--continue` for same-session three-phase flow.
-
-Architecture for refactor:
-1. One `opencode run` call per phase
-2. Use `--continue` flag for phases 2 and 3
-3. Keep disk memory as source of truth
-4. Track `active_session_id` in state for debugging (optional)
+- Avoids global `--continue` collisions with unrelated OpenCode sessions.
+- Avoids fake `/compact` prompts that silently become plain text.
+- Keeps recovery explicit through a durable handoff file and the canonical note stack.

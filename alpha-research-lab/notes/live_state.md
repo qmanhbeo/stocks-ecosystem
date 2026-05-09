@@ -5,8 +5,8 @@ and immediate next actions. Keep it operational and short. Put session detail
 in session logs, durable conclusions in findings chunks, failed or parked paths
 in dead ends chunks, and cheap recovery context in the compact files.
 
-Latest full session detail: [session_125_log.md](./session_125_log.md)
-Last verified: [Session 125](./session_125_log.md), 2026-05-09
+Latest full session detail: [session_126_log.md](./session_126_log.md)
+Last verified: [Session 126](./session_126_log.md), 2026-05-09
 **QUEUE STATUS: batch 12 COMPLETE** — AQ=pending, AR=H478 MIXED (zero volume no data, low_vol_high_c16 PASSES: +0.056 IC, 8/8), AS=data-gated, AT=pending, AU=pending, AV=pending
 
 **Remaining EUREKA queue (unactivated):**
@@ -56,6 +56,9 @@ Compact recovery:
 ---
 
 ## Current State
+
+- The evergreen research loop transport has been verified locally: slash skills work under `opencode run`, but `/compact` does not. Production loop design is now one fresh OpenCode session per cycle with explicit in-cycle `--session <id>` reuse plus durable `evergreen-research-loop/state/cycle_handoff.md` handoff state.
+- Safe loop operator defaults are now `MAX_CYCLES=1` and `SESSION_BATCH_SIZE=1` so no-arg runs stay bounded unless widened deliberately.
 
 - The active live branch remains frozen:
   `full_library + k5_r5_eq + h175__rel2_gt0 + sticky_bonus_0p015`.

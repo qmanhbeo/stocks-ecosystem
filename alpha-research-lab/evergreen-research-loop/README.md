@@ -1,4 +1,4 @@
-# Research Loop Orchestrator - MVP
+# Research Loop Orchestrator
 
 A bounded orchestrator that wraps around the `evergreen-research-loop` skill.
 
@@ -66,7 +66,7 @@ tmux new -s research_loop
 cd ~/stocks-ecosystem/alpha-research-lab
 
 # Run the loop (watch live output)
-make loop MAX_CYCLES=3 SESSION_BATCH_SIZE=3
+make loop MAX_CYCLES=1 SESSION_BATCH_SIZE=1
 
 # In another terminal, tail the logs
 make tail
@@ -85,7 +85,7 @@ make recover-interrupted
 
 **Concise mode (default):**
 ```bash
-make loop MAX_CYCLES=3 SESSION_BATCH_SIZE=3
+make loop MAX_CYCLES=1 SESSION_BATCH_SIZE=1
 ```
 - Suppresses noisy OpenCode stdout/stderr from terminal
 - Shows heartbeat progress every 30 seconds: `Phase 1/4: experiment running... elapsed=30s`
@@ -94,19 +94,37 @@ make loop MAX_CYCLES=3 SESSION_BATCH_SIZE=3
 
 **Verbose mode:**
 ```bash
-make loop MAX_CYCLES=3 SESSION_BATCH_SIZE=3 VERBOSE=1
+make loop MAX_CYCLES=1 SESSION_BATCH_SIZE=1 VERBOSE=1
 ```
 - Streams full OpenCode output live to terminal
 - Same as original behavior
 
 **Custom heartbeat interval:**
 ```bash
-make loop MAX_CYCLES=3 SESSION_BATCH_SIZE=3 HEARTBEAT_SECONDS=60
+make loop MAX_CYCLES=1 SESSION_BATCH_SIZE=1 HEARTBEAT_SECONDS=60
 ```
 
 Variables:
 - `VERBOSE` - Set to 1 for verbose output (default: 0)
 - `HEARTBEAT_SECONDS` - Heartbeat interval in seconds (default: 30)
+- `SESSION_BATCH_SIZE` - compatibility flag only; values `>1` are ignored because each cycle now starts a fresh OpenCode session
+
+## Session Model
+
+The loop now uses **one fresh OpenCode session per cycle**.
+
+Within a cycle:
+
+1. Phase 1 creates a fresh session with a unique title.
+2. The orchestrator resolves the exact session id from OpenCode's local SQLite state.
+3. Later phases reuse that session via `--session <id>`.
+4. The final handoff phase updates `evergreen-research-loop/state/cycle_handoff.md`.
+
+Across cycles:
+
+- The next cycle starts fresh.
+- The agent reads `cycle_handoff.md` plus canonical repo notes as recovery context.
+- The loop does **not** rely on `/compact`, because local `opencode run` does not provide a reliable CLI compaction path.
 
 ## What `make cycle` Does
 
@@ -153,17 +171,8 @@ Same as cycle but:
 - No touching 2026 data
 - One pass only, then exit
 
-## Not Implemented (MVP)
+## Notes
 
-- `make loop` (bounded iterations)
-- `make resume` (continue from crash)
-- `make stop` (clean interrupt)
-- Parallel jobs
-- Heavy job auto-detection beyond tmux
-
-## Next Steps (Future)
-
-- Add bounded loop (`make loop`)
-- Add resume capability
-- Add heavy job watchdog integration
-- Add automatic session log parsing
+- Slash skills such as `/experimentor` are handled by the build agent from normal message text.
+- `/compact` is not treated the same way; interactive OpenCode can emit a dedicated compaction event, but `opencode run` cannot be trusted to reproduce that from stdin.
+- See `SAME_SESSION_DESIGN.md` for the verified transport behavior.

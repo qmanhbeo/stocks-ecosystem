@@ -1,79 +1,149 @@
-# Session 126 Log — Big-Name Cohort Audit (2026-04-08)
+# Session 126 Log — 2026-05-09
 
-## Objective
+## Evergreen OpenCode Slash / Compaction Investigation
 
-Formalize the user-proposed "go through the big HOSE names" idea as the smallest honest pre-LLM-cache audit and test whether a frozen big-name cohort preserves enough of the canonical cross-sectional signal to justify reopening stock-local work.
+**Decision: INFRA CONFIRMED**
 
-This session did not change the live branch.
-It did not read `2026+`.
+### Goal
+Determine exactly how OpenCode handles slash skills and `/compact` across:
 
----
+- interactive OpenCode chat
+- `opencode run`
+- `opencode run --interactive`
+- `opencode run --continue`
+- stdin-provided prompts
+- positional CLI prompts
 
-## What changed
+Then patch the evergreen loop if `/compact` is not a reliable `opencode run` feature.
 
-Added one bounded audit script:
-- `analysis/h295_big_name_cohort_audit.py`
+### Local OpenCode facts
 
-Saved outputs:
-- `artifacts/portfolio_baselines/20260408_175426_h295_big_name_cohort_metrics.parquet`
-- `artifacts/portfolio_baselines/20260408_175426_h295_big_name_stock_edges.parquet`
-- `artifacts/run_summaries/20260408_175426_h295_big_name_cohort_audit_details.json`
+- `opencode --version` = `1.14.42`
+- `which opencode` = `/home/manh/.nvm/versions/node/v24.15.0/bin/opencode`
+- `opencode run --help` exposes `--interactive` and `--demo`
+- `opencode run --help` does **not** expose `/compact` as a normal CLI feature
+- `opencode run --help` says `--demo` only enables demo slash commands in direct interactive mode
+- `opencode debug skill` confirms `bright-mind`, `experimentor`, `manh-memory-system`, and `evergreen-research-loop` are real installed OpenCode skills under `~/.config/opencode/skills/`
+- `opencode debug agent compaction` confirms OpenCode has a hidden native `compaction` agent
 
-### H295 - Big-Name Cohort Audit
-**Hypothesis:**
-If stock-local work is still alive anywhere, a frozen big-name HOSE proxy should retain most of the S1/H93 signal and show stable stock-level response ordering across dev and validation.
+### Probe Summary
 
-**Command / code:**
-`python analysis/h295_big_name_cohort_audit.py`
+| Probe | Command shape | Session id | Result |
+|-------|---------------|------------|--------|
+| positional plain | `opencode run --dir /tmp/opencode_cli_probe_suite/plain --title probe-positional-plain "Reply with exactly POS_OK."` | `ses_1f202d740ffe7Y6MEUJQ7X6hwO` | Normal text message, normal 2-message history |
+| stdin plain | `opencode run --dir /tmp/opencode_cli_probe_suite/stdin --title probe-stdin-plain` with stdin `Reply with exactly STDIN_OK.` | `ses_1f202cceeffeYyy9N2uAaMcHHF` | Normal text message, normal 2-message history |
+| `--continue` plain | fresh seed + `opencode run --continue --dir /tmp/opencode_cli_probe_suite/continue` with stdin `Reply with exactly CONT_OK.` | `ses_1f202c0b5ffeg6SZUrxqkr9xH2` | Same session reused correctly; message count grew from 2 to 4 |
+| `/compact` via stdin continue | fresh seed + `opencode run --continue --dir /tmp/opencode_cli_probe_suite/compact` with stdin `/compact` | `ses_1f202accaffepyA98WiCun2q3X` | `/compact` stored as literal user text; assistant reasoned about it and replied `READY.`; no compaction event |
+| `/experimentor` positional | `opencode run --dir /tmp/opencode_cli_probe_suite/skills --title probe-slash-experimentor /experimentor` | `ses_1f2022745ffeqQZ28ub6CwW6Fx` | Skill loaded; assistant explicitly said experimentor skill loaded |
+| `/manh-memory-system` positional | `opencode run --dir /tmp/opencode_cli_probe_suite/skills --title probe-slash-memory /manh-memory-system` | `ses_1f2020386ffeDy09a6k0swO53B` | Skill loaded; assistant summarized memory-system contract |
+| `/bright-mind` positional | `opencode run --dir /tmp/opencode_cli_probe_suite/skills --title probe-slash-bright-mind /bright-mind` | `ses_1f2028aa9ffe9qU8JF77xk6v43` | Skill loaded; then failed only because the temp workspace lacked alpha-research-lab files |
+| `/experimentor` via stdin | `opencode run --dir /tmp/opencode_cli_probe_suite_b/skills --title probe-stdin-slash-experimentor` with stdin `/experimentor` | `ses_1f2010523ffeDNzl1tvHnuYh8m` | Skill loaded from stdin message too |
+| `/bright-mind` via stdin | `opencode run --dir /tmp/opencode_cli_probe_suite_b/skills --title probe-stdin-slash-bright` with stdin `/bright-mind` | `ses_1f200acfbffe0FarvFziE9CQuh` | Skill loaded from stdin message too |
+| `/experimentor` in continued session | fresh seed + positional `/experimentor`, then stdin `/experimentor` in same session | `ses_1f2008be5ffegHIimEgL4aG0Lp` | Skill loaded in continued session too; slash skill text works under `--continue` |
+| `/compact` positional | `opencode run --dir /tmp/opencode_cli_probe_suite_b/compact --title probe-positional-compact /compact` | `ses_1f2004e63ffe0xHm8uIFZj8Yel` | Entered an unreliable custom-slash/task path; did **not** become a clean compaction event |
+| `/compact` in interactive demo mode | `opencode run --interactive --demo --dir /tmp/opencode_demo_interactive --title probe-demo-interactive /compact` | `ses_1f1fc76a0ffempaX835Dxux1Jg` | `--demo` only exposes `/permission`, `/question`, `/fmt`; `/compact` still treated as ordinary text |
 
-**Inputs:**
-- `data/features/xs_barrier_vol_1d_hose_full.parquet`
-- frozen big-name proxy: current `VN30` constituents
+### Critical Session Evidence
 
-**Saved artifact:**
-`artifacts/run_summaries/20260408_175426_h295_big_name_cohort_audit_details.json`
+1. **Slash skills are not UI-only slash commands**
 
-| Metric | Value | Note |
-|--------|-------|------|
-| signal surface | `S1 / H93` | canonical frozen cross-sectional prior |
-| years | `2015-2025` | no `2026+` used |
-| big-name proxy size | `30` | frozen `VN30` constituent set |
-| full-universe IC | `+0.1491` | benchmark |
-| big-name cohort IC | `+0.0823` | only `55.2%` of full IC |
-| big-name q5-q1 spread | `+10.84%` | only `51.9%` of full spread |
-| big-name top-5 edge | `+5.72%` | only `23.7%` of full top-5 edge |
-| rest-of-universe IC | `+0.1553` | slightly above full benchmark |
-| rest-of-universe top-5 edge | `+24.00%` | effectively all of the full-universe edge |
-| dev->val stock-edge rank rho | `+0.0701` | stock ranking inside big names is not stable |
-| stable positive dev+val names | `26 / 30` | positive response exists, but ordering is weak |
-| strongest recurring names | `VJC`, `PDR`, `CTG`, `MBB`, `HDB`, `STB` | bounded recipient list, not a broad branch |
+The actual stored OpenCode sessions for `/experimentor`, `/bright-mind`, and `/manh-memory-system` kept the user text literally as `/skill-name`, then the assistant reasoning explicitly said it was loading the requested skill. This happened for:
 
-**Result:**
-The big-name cohort keeps some real signal, but it loses too much of the canonical cross-sectional edge to justify a generic "revert to big names" branch. The remaining universe retains essentially all of the edge. Inside the big-name proxy there is stock-level response heterogeneity, but the dev-to-validation rank ordering is almost flat (`rho +0.0701`), so the broad stock-local ranking is not stable enough to support a new recipient-by-recipient search.
+- positional `opencode run`
+- stdin `opencode run`
+- continued sessions
 
-**Verdict: MIXED**
+So slash skill invocation in `run` is real, but it is mediated by the build agent interpreting text, not by a client-only slash-command router.
 
----
+2. **`/compact` is different**
 
-## Branch decision
+When `/compact` was sent through the same stdin path the loop uses, the stored session looked like:
 
-Do **not** reopen a generic big-name / single-stock HOSE branch while the LLM cache is blocked.
+- user text part: `/compact`
+- assistant reasoning about the string `/compact`
+- assistant reply `READY.`
 
-Narrowed follow-through only:
-- keep `llm-cache-fill` first
-- if an interim branch is intentionally opened anyway, restrict it to:
-  - execution / liquidity routing on top of the frozen XS prior, or
-  - a very small recurrent-recipient audit around the strongest big-name responders
+That is plain-text handling, not real compaction.
 
-Do not treat H295 as permission to restart broad OHLCV stock-local mining.
+3. **Real interactive compaction is represented differently**
 
----
+Existing local session `ses_1f2198556ffeML2acu0PukYppR` (`cycle-18`) contains a user message whose part is:
 
-## Validation
+```json
+{"type":"compaction","auto":false,"tail_start_id":"msg_e0de7a927001DPy0a9qNU2GQl7"}
+```
 
-Completed during the pass:
-- ran `python analysis/h295_big_name_cohort_audit.py`
-- read the saved run summary at `artifacts/run_summaries/20260408_175426_h295_big_name_cohort_audit_details.json`
+That is the important distinction:
 
-Verdict:
-- `H295 big-name cohort audit`: **MIXED**
+- real interactive compaction = dedicated `compaction` message part
+- fake CLI `/compact` = literal text `/compact`
+
+So the interactive chat layer can emit a real compaction event that `opencode run` stdin does not reproduce.
+
+4. **Current evergreen loop skill phases were actually working**
+
+The recent real evergreen session `ses_1f2198556ffeML2acu0PukYppR` stored the experiment prompt as literal user text beginning with:
+
+`/experimentor please proceed with the next best/most relevant item in queue ...`
+
+The assistant then explicitly reasoned that it needed to load the `experimentor` skill, and proceeded correctly. This means the loop's skill invocation path was not the primary bug. The unreliable part was the attempted between-cycle compaction path and the broader reliance on global `--continue`.
+
+### Diagnosis
+
+1. `/bright-mind`, `/experimentor`, and `/manh-memory-system` are real OpenCode skills, not project-local fake commands.
+
+2. In `opencode run`, skill-like slash text works because the build agent interprets the message and loads the skill. This works from positional args, stdin, and continued sessions.
+
+3. `/compact` is **not** a slash skill. It behaves like an interactive client command / compaction event, not like plain user text.
+
+4. `opencode run` does not provide a reliable production path for emitting that compaction event from stdin. Sending `/compact` through bash is therefore a fake compaction request.
+
+5. `--continue` still resumes the last session globally, so even when it works it is collision-prone for automation.
+
+### Patch Applied
+
+Patched the evergreen loop away from fake `/compact` and global `--continue` assumptions:
+
+- removed cross-cycle `/compact` behavior from the orchestrator design
+- changed prompts to explicit natural-language skill requests instead of slash dependency
+- added `evergreen-research-loop/prompts/handoff.md`
+- added durable handoff file `evergreen-research-loop/state/cycle_handoff.md`
+- changed the cycle flow to:
+  - experiment (fresh session)
+  - experiment (`--session <resolved id>`)
+  - memory (`--session <resolved id>`)
+  - ideate (`--session <resolved id>`)
+  - handoff (`--session <resolved id>`)
+- resolved the exact session id from OpenCode's local SQLite state after phase 1
+- stored `active_session_id` / `last_session_id` in loop state
+- changed loop behavior to one fresh OpenCode session per cycle; `SESSION_BATCH_SIZE > 1` is now compatibility-only and ignored
+- required the handoff file to be updated before the cycle is considered healthy
+- updated loop README / design docs / Makefiles to reflect the new model
+
+### Verification
+
+```bash
+python3 -m py_compile alpha-research-lab/evergreen-research-loop/orchestrator.py \
+  alpha-research-lab/evergreen-research-loop/config.py \
+  alpha-research-lab/evergreen-research-loop/state.py \
+  alpha-research-lab/evergreen-research-loop/log.py
+
+cd alpha-research-lab/evergreen-research-loop
+python3 -u orchestrator.py dry-run --max-cycles 2 --session-batch-size 3
+```
+
+Both passed. The dry-run now shows one fresh session per cycle plus a final handoff phase, with `SESSION_BATCH_SIZE=3` explicitly ignored.
+
+### Verdict
+
+Use **fresh session per cycle + explicit handoff file** as the production architecture. Same-session reuse is still fine **inside** a single cycle once the exact session id is resolved, but cross-cycle batching via fake `/compact` is not trustworthy.
+
+### Default Operator Settings
+
+After verification, changed the evergreen loop defaults to the safest operator baseline:
+
+- `DEFAULT_MAX_CYCLES = 1`
+- `DEFAULT_SESSION_BATCH_SIZE = 1`
+- top-level and repo-local Makefiles now default to `MAX_CYCLES ?= 1` and `SESSION_BATCH_SIZE ?= 1`
+
+This keeps a no-arg `make loop` bounded to one fresh-session cycle unless the operator explicitly widens it.

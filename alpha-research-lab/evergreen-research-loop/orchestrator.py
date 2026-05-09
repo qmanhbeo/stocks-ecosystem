@@ -19,6 +19,7 @@ import time
 import glob
 import re
 import argparse
+import sqlite3
 from datetime import datetime
 from typing import Tuple, Optional, Dict, Any
 
@@ -27,9 +28,9 @@ import state
 import log
 
 
-DEFAULT_MAX_CYCLES = 2
+DEFAULT_MAX_CYCLES = 1
 DEFAULT_SLEEP_SECONDS = 5
-DEFAULT_SESSION_BATCH_SIZE = 3
+DEFAULT_SESSION_BATCH_SIZE = 1
 DEFAULT_VERBOSE = False
 DEFAULT_HEARTBEAT_SECONDS = 30
 
@@ -232,7 +233,7 @@ def invoke_evergreen(prompt: str) -> Tuple[int, str, str]:
         return -3, "", str(e)
 
 
-def invoke_phase(prompt: str, use_continue: bool = False, title: str = None,
+def invoke_phase(prompt: str, use_continue: bool = False, session_id: str = None, title: str = None,
                  verbose: bool = DEFAULT_VERBOSE,
                  heartbeat_seconds: int = DEFAULT_HEARTBEAT_SECONDS,
                  phase_index: int = None,
@@ -244,6 +245,7 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None,
     Args:
         prompt: The prompt to send
         use_continue: If True, use --continue to resume last session
+        session_id: If set, resume the specific session via --session
         title: Session title for first phase
         verbose: If True, stream OpenCode output live; else show heartbeat only
         heartbeat_seconds: Interval for heartbeat progress in non-verbose mode
@@ -258,7 +260,9 @@ def invoke_phase(prompt: str, use_continue: bool = False, title: str = None,
 
     cmd = [config.OPENCODE_BINARY, "run"]
 
-    if use_continue:
+    if session_id:
+        cmd.extend(["--session", session_id])
+    elif use_continue:
         cmd.append("--continue")
 
     if title:
@@ -429,22 +433,65 @@ def load_phase_prompt(phase_name: str) -> str:
     return f"Run {phase_name} phase."
 
 
+def build_cycle_title(cycle_number: int) -> str:
+    """Build a unique OpenCode session title for a cycle."""
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    return f"cycle-{cycle_number}-{timestamp}"
+
+
+def resolve_session_id(title: str, directory: str, created_after_ms: int, wait_seconds: float = 10.0) -> Optional[str]:
+    """Resolve the OpenCode session id for a freshly-created title/directory pair."""
+    deadline = time.time() + wait_seconds
+    normalized_dir = os.path.abspath(directory)
+
+    while time.time() < deadline:
+        try:
+            con = sqlite3.connect(config.OPENCODE_DB_PATH)
+            cur = con.cursor()
+            row = cur.execute(
+                """
+                SELECT id, time_created
+                FROM session
+                WHERE title = ? AND directory = ?
+                ORDER BY time_created DESC
+                LIMIT 1
+                """,
+                (title, normalized_dir),
+            ).fetchone()
+            con.close()
+        except Exception:
+            row = None
+
+        if row and row[1] >= created_after_ms - 1000:
+            return row[0]
+
+        time.sleep(0.25)
+
+    return None
+
+
+def verify_handoff_updated(cycle_started_at: float) -> bool:
+    """Return True when the handoff file exists and was updated during this cycle."""
+    if not os.path.exists(config.HANDOFF_PATH):
+        return False
+    return os.path.getmtime(config.HANDOFF_PATH) >= cycle_started_at - 1
+
+
 def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = True,
-                           is_first_in_batch: bool = True,
                            verbose: bool = DEFAULT_VERBOSE,
                            heartbeat_seconds: int = DEFAULT_HEARTBEAT_SECONDS) -> Dict[str, Any]:
     """
-    Execute one complete cycle with four phases in same session.
+    Execute one complete cycle with one fresh session plus explicit in-cycle session reuse.
 
-    Phase 1: Experiment (experimentor) - fresh session if first in batch, else /compact then --continue
-    Phase 2: Experiment (experimentor) - --continue
-    Phase 3: Memory (manh-memory-system) - --continue
-    Phase 4: Ideate (bright-mind) - --continue
+    Phase 1: Experiment (experimentor) - fresh session
+    Phase 2: Experiment (experimentor) - explicit --session
+    Phase 3: Memory (manh-memory-system) - explicit --session
+    Phase 4: Ideate (bright-mind) - explicit --session
+    Phase 5: Handoff (manh-memory-system) - explicit --session
 
     Args:
         dry_run: If True, skip execution
         stop_on_phase_failure: If True, stop on phase failure
-        is_first_in_batch: If False, send /compact before phase 1
         verbose: If True, stream OpenCode output live; else show heartbeat only
         heartbeat_seconds: Interval for heartbeat progress in non-verbose mode
 
@@ -481,24 +528,22 @@ def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = T
         ("experiment", "experimentor", "experiment"),
         ("memory", "manh-memory-system", "memory"),
         ("ideate", "bright-mind", "ideation"),
+        ("handoff", "manh-memory-system", "handoff"),
     ]
 
     results = {}
     success_count = 0
+    current_cycle = current_state.get("cycle_count", 0) + 1
+    session_title = build_cycle_title(current_cycle)
+    session_id = None
+    session_created_after_ms = int(time.time() * 1000)
+    log.write_log(cycle_log_path, f"Cycle session title: {session_title}")
 
     for idx, (phase_name, skill_name, phase_display_name) in enumerate(phases):
         is_first = idx == 0
-        use_continue = not is_first
+        use_continue = False
 
         log.log_message(f"=== Phase {idx + 1}/{len(phases)}: {phase_display_name} {'(2nd attempt)' if idx == 1 else ''} ===")
-
-        if is_first and not is_first_in_batch:
-            log.write_log(cycle_log_path, "Not first in batch: sending /compact before phase 1")
-            compact_code, compact_out, compact_err = invoke_phase(
-                "/compact", use_continue=True, verbose=verbose, heartbeat_seconds=heartbeat_seconds,
-                phase_index=idx + 1, phase_total=len(phases), phase_name="compact"
-            )
-            log.write_log(cycle_log_path, f"/compact return code: {compact_code}")
 
         state.update_state(
             phase=f"running_{phase_name}",
@@ -507,16 +552,21 @@ def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = T
             active_agent=skill_name,
             active_phase_started_at=datetime.now().isoformat(),
             active_phase_log_path=cycle_log_path,
+            active_session_id=session_id,
         )
 
         prompt = load_phase_prompt(phase_name)
         wrapped_prompt = prompt
 
-        log.write_log(cycle_log_path, f"Phase {idx + 1} ({phase_name}): using /{skill_name}, use_continue={use_continue}")
+        log.write_log(
+            cycle_log_path,
+            f"Phase {idx + 1} ({phase_name}): skill={skill_name}, session_title={session_title}, session_id={session_id}",
+        )
 
         returncode, stdout, stderr = invoke_phase(
             wrapped_prompt, use_continue=use_continue,
-            title=f"cycle-{current_state.get('cycle_count', 0) + 1}" if is_first and is_first_in_batch else None,
+            session_id=session_id if not is_first else None,
+            title=session_title if is_first else None,
             verbose=verbose, heartbeat_seconds=heartbeat_seconds,
             phase_index=idx + 1, phase_total=len(phases), phase_name=phase_display_name
         )
@@ -532,50 +582,82 @@ def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = T
         }
 
         if phase_success:
+            if is_first:
+                session_id = resolve_session_id(session_title, config.RESEARCH_LAB, session_created_after_ms)
+                log.write_log(cycle_log_path, f"Resolved session_id: {session_id}")
+                if not session_id:
+                    phase_success = False
+                    results[phase_name]["success"] = False
+                    results[phase_name]["error"] = "session_id_resolution_failed"
+                    log.write_log(cycle_log_path, "Phase 1 completed but session id could not be resolved")
+                else:
+                    state.update_state(
+                        session_hint=session_title,
+                        active_session_id=session_id,
+                        last_session_id=session_id,
+                    )
+
+            if phase_name == "handoff" and not verify_handoff_updated(start_time):
+                phase_success = False
+                results[phase_name]["success"] = False
+                results[phase_name]["error"] = "handoff_not_updated"
+                log.write_log(cycle_log_path, f"Handoff phase returned success but {config.HANDOFF_PATH} was not updated")
+
+        if phase_success:
             success_count += 1
             state.update_state(
                 phase=f"completed_{phase_name}",
                 exit_status="success",
                 last_completed_phase=phase_name,
+                active_session_id=session_id,
+                last_session_id=session_id,
             )
         else:
-            log.write_log(cycle_log_path, f"Phase {phase_name} failed: {stderr[:200]}")
+            failure_detail = results[phase_name]["error"] or stderr[:200]
+            log.write_log(cycle_log_path, f"Phase {phase_name} failed: {failure_detail}")
             state.update_state(
                 phase=f"failed_{phase_name}",
                 exit_status=f"error_{returncode}",
+                active_session_id=session_id,
             )
 
-            if stop_on_phase_failure and phase_name == "ideate":
-                log.log_message(f"Phase 1 (ideate) failed, stopping cycle", "ERROR")
+            if stop_on_phase_failure:
+                log.log_message(f"Phase {idx + 1} ({phase_display_name}) failed, stopping cycle", "ERROR")
                 break
 
     elapsed = time.time() - start_time
 
-    if success_count == 4:
-        log.log_message("All 4 phases completed successfully", "INFO")
+    if success_count == len(phases):
+        log.log_message(f"All {len(phases)} phases completed successfully", "INFO")
         state.update_state(
             phase="completed",
             exit_status="success",
             real_cycle=True,
             clear_active=True,
             last_completed_at=datetime.now().isoformat(),
+            session_hint=session_title,
+            last_session_id=session_id,
         )
         results["cycle_complete"] = True
     elif success_count >= 3:
-        log.log_message(f"3/4 phases completed", "WARN")
+        log.log_message(f"{success_count}/{len(phases)} phases completed", "WARN")
         state.update_state(
             phase="completed_partial",
             exit_status="partial",
             clear_active=True,
             last_completed_at=datetime.now().isoformat(),
+            session_hint=session_title,
+            last_session_id=session_id,
         )
-        results["cycle_complete"] = True
+        results["cycle_complete"] = False
     else:
-        log.log_message(f"Cycle incomplete: {success_count}/4 phases", "ERROR")
+        log.log_message(f"Cycle incomplete: {success_count}/{len(phases)} phases", "ERROR")
         state.update_state(
             phase="failed",
             exit_status="incomplete",
             clear_active=True,
+            session_hint=session_title,
+            last_session_id=session_id,
         )
         results["cycle_complete"] = False
 
@@ -585,15 +667,14 @@ def run_three_phase_cycle(dry_run: bool = False, stop_on_phase_failure: bool = T
     return results
 
 
-def run_single_cycle(dry_run: bool = False, is_first_in_batch: bool = True,
-                      verbose: bool = DEFAULT_VERBOSE,
-                      heartbeat_seconds: int = DEFAULT_HEARTBEAT_SECONDS) -> Tuple[int, str]:
+def run_single_cycle(dry_run: bool = False,
+                     verbose: bool = DEFAULT_VERBOSE,
+                     heartbeat_seconds: int = DEFAULT_HEARTBEAT_SECONDS) -> Tuple[int, str]:
     """
     Execute one complete cycle.
 
     Args:
         dry_run: If True, skip execution
-        is_first_in_batch: If True, first phase starts fresh; else send /compact first
         verbose: If True, stream OpenCode output live; else show heartbeat only
         heartbeat_seconds: Interval for heartbeat progress in non-verbose mode
 
@@ -619,10 +700,9 @@ def run_single_cycle(dry_run: bool = False, is_first_in_batch: bool = True,
     exit_code = 0
 
     if decision == "run_evergreen":
-        log.write_log(cycle_log_path, f"Invoking three-phase cycle (is_first_in_batch={is_first_in_batch}, verbose={verbose})...")
+        log.write_log(cycle_log_path, f"Invoking per-cycle fresh-session flow (verbose={verbose})...")
 
-        result = run_three_phase_cycle(dry_run=False, is_first_in_batch=is_first_in_batch,
-                                        verbose=verbose, heartbeat_seconds=heartbeat_seconds)
+        result = run_three_phase_cycle(dry_run=False, verbose=verbose, heartbeat_seconds=heartbeat_seconds)
 
         if result.get("cycle_complete"):
             log.write_log(cycle_log_path, "Three-phase cycle completed, cycle_count incremented")
@@ -665,7 +745,7 @@ def run_loop(max_cycles: int = DEFAULT_MAX_CYCLES, sleep_seconds: int = DEFAULT_
              verbose: bool = DEFAULT_VERBOSE,
              heartbeat_seconds: int = DEFAULT_HEARTBEAT_SECONDS) -> int:
     """
-    Execute up to max_cycles bounded passes with session batching.
+    Execute up to max_cycles bounded passes with one fresh OpenCode session per cycle.
 
     Returns: exit code
     """
@@ -673,6 +753,8 @@ def run_loop(max_cycles: int = DEFAULT_MAX_CYCLES, sleep_seconds: int = DEFAULT_
 
     loop_log_path = log.start_loop_log(max_cycles)
     log.write_log(loop_log_path, f"Starting bounded loop with max_cycles={max_cycles}, session_batch_size={session_batch_size}")
+    if session_batch_size != 1:
+        log.write_log(loop_log_path, "SESSION_BATCH_SIZE > 1 requested but ignored: /compact is not reliable under opencode run; using one fresh session per cycle.")
     log.write_log(loop_log_path, f"Working directory: {config.REPO_ROOT}")
 
     state.update_state(
@@ -688,11 +770,7 @@ def run_loop(max_cycles: int = DEFAULT_MAX_CYCLES, sleep_seconds: int = DEFAULT_
 
     try:
         for cycle_num in range(1, max_cycles + 1):
-            batch_index = (cycle_num - 1) // session_batch_size + 1
-            cycle_in_batch = (cycle_num - 1) % session_batch_size + 1
-            is_first_in_batch = cycle_in_batch == 1
-
-            log.log_message(f"Loop cycle {cycle_num}/{max_cycles} (batch {batch_index}, cycle {cycle_in_batch} in batch, fresh={is_first_in_batch})")
+            log.log_message(f"Loop cycle {cycle_num}/{max_cycles} (fresh_session=True)")
 
             inspect_info = inspect_current_state()
 
@@ -701,11 +779,10 @@ def run_loop(max_cycles: int = DEFAULT_MAX_CYCLES, sleep_seconds: int = DEFAULT_
                 log.log_message(f"Stopping loop: heavy job detected", "WARN")
                 break
 
-            log.write_log(loop_log_path, f"=== Cycle {cycle_num} === batch={batch_index}, cycle_in_batch={cycle_in_batch}, is_first_in_batch={is_first_in_batch}, verbose={verbose}")
+            log.write_log(loop_log_path, f"=== Cycle {cycle_num} === fresh_session=True, verbose={verbose}")
 
             cycle_start = time.time()
-            exit_code, decision = run_single_cycle(dry_run=False, is_first_in_batch=is_first_in_batch,
-                                                   verbose=verbose, heartbeat_seconds=heartbeat_seconds)
+            exit_code, decision = run_single_cycle(dry_run=False, verbose=verbose, heartbeat_seconds=heartbeat_seconds)
             cycle_elapsed = time.time() - cycle_start
 
             completed += 1
@@ -792,6 +869,7 @@ def check_interrupted() -> int:
     print(f"  last_phase: {last_phase}")
     print(f"  last_exit_status: {last_exit}")
     print(f"  active_pid: {active_pid}")
+    print(f"  active_session_id: {st.get('active_session_id')}")
     print(f"  active_cycle_started_at: {st.get('active_cycle_started_at')}")
     print(f"  active_command: {st.get('active_command')}")
 
@@ -1007,11 +1085,19 @@ def run_ideate_phase(dry_run: bool = False) -> int:
     wrapped_prompt = prompt
 
     state.update_state(phase="running_ideate", exit_status="running", active_phase="ideate", active_agent="bright-mind")
-
-    returncode, stdout, stderr = invoke_phase(wrapped_prompt, use_continue=False, title="ideate")
+    cycle_title = build_cycle_title(current_state.get("cycle_count", 0) + 1)
+    created_after_ms = int(time.time() * 1000)
+    returncode, stdout, stderr = invoke_phase(wrapped_prompt, use_continue=False, title=cycle_title)
 
     if returncode == 0:
-        state.update_state(phase="completed_ideate", exit_status="success")
+        session_id = resolve_session_id(cycle_title, config.RESEARCH_LAB, created_after_ms)
+        state.update_state(
+            phase="completed_ideate",
+            exit_status="success",
+            session_hint=cycle_title,
+            active_session_id=session_id,
+            last_session_id=session_id,
+        )
         log.write_log(cycle_log_path, "Ideate phase completed")
     else:
         state.update_state(phase="failed_ideate", exit_status=f"error_{returncode}")
@@ -1034,8 +1120,13 @@ def run_experiment_phase(dry_run: bool = False) -> int:
     wrapped_prompt = prompt
 
     state.update_state(phase="running_experiment", exit_status="running", active_phase="experiment", active_agent="experimentor")
+    session_id = current_state.get("active_session_id") or current_state.get("last_session_id")
+    if not session_id:
+        log.write_log(cycle_log_path, "Experiment phase aborted: no active session id in state")
+        state.update_state(phase="failed_experiment", exit_status="error_no_session_id")
+        return 1
 
-    returncode, stdout, stderr = invoke_phase(wrapped_prompt, use_continue=True)
+    returncode, stdout, stderr = invoke_phase(wrapped_prompt, session_id=session_id)
 
     if returncode == 0:
         state.update_state(phase="completed_experiment", exit_status="success")
@@ -1061,8 +1152,13 @@ def run_memory_phase(dry_run: bool = False) -> int:
     wrapped_prompt = prompt
 
     state.update_state(phase="running_memory", exit_status="running", active_phase="memory", active_agent="manh-memory-system")
+    session_id = current_state.get("active_session_id") or current_state.get("last_session_id")
+    if not session_id:
+        log.write_log(cycle_log_path, "Memory phase aborted: no active session id in state")
+        state.update_state(phase="failed_memory", exit_status="error_no_session_id")
+        return 1
 
-    returncode, stdout, stderr = invoke_phase(wrapped_prompt, use_continue=True)
+    returncode, stdout, stderr = invoke_phase(wrapped_prompt, session_id=session_id)
 
     if returncode == 0:
         state.update_state(phase="completed_memory", exit_status="success")
@@ -1074,41 +1170,34 @@ def run_memory_phase(dry_run: bool = False) -> int:
     return returncode
 
 
-def run_three_phase(dry_run: bool = False, max_cycles: int = 1, session_batch_size: int = 3,
+def run_three_phase(dry_run: bool = False, max_cycles: int = 1, session_batch_size: int = DEFAULT_SESSION_BATCH_SIZE,
                      verbose: bool = DEFAULT_VERBOSE,
                      heartbeat_seconds: int = DEFAULT_HEARTBEAT_SECONDS) -> int:
-    """Run complete 4-phase cycle."""
+    """Run the complete per-cycle fresh-session flow."""
     if dry_run:
         experiment_prompt = load_phase_prompt("experiment").split("\n")[0]
         memory_prompt = load_phase_prompt("memory").split("\n")[0]
         ideate_prompt = load_phase_prompt("ideate").split("\n")[0]
+        handoff_prompt = load_phase_prompt("handoff").split("\n")[0]
 
         verbose_str = "verbose" if verbose else "concise"
-        print(f"Dry-run: would run up to {max_cycles} cycles with session batching (batch_size={session_batch_size}, mode={verbose_str})")
-        print(f"Phase order: experiment → experiment → memory → ideate")
+        print(f"Dry-run: would run up to {max_cycles} cycles with one fresh session per cycle (requested batch_size={session_batch_size}, mode={verbose_str})")
+        print("Phase order: experiment → experiment → memory → ideate → handoff")
         print("")
 
         for cycle_num in range(1, max_cycles + 1):
-            batch_index = (cycle_num - 1) // session_batch_size + 1
-            cycle_in_batch = (cycle_num - 1) % session_batch_size + 1
-            is_first_in_batch = cycle_in_batch == 1
-
-            if is_first_in_batch:
-                print(f"Cycle {cycle_num}: [Batch {batch_index}, cycle 1] FRESH session (no --continue)")
-            else:
-                print(f"Cycle {cycle_num}: [Batch {batch_index}, cycle {cycle_in_batch}] CONTINUED session (first send /compact)")
-
-            if cycle_num == 1 or not is_first_in_batch:
-                prefix = "  → " if not is_first_in_batch else ""
-                print(f"{prefix}Phase 1: experiment (fresh={is_first_in_batch})")
-                print(f"{prefix}  Prompt: {experiment_prompt[:60]}...")
-                print(f"{prefix}Phase 2: experiment (--continue)")
-                print(f"{prefix}  Prompt: {experiment_prompt[:60]}...")
-                print(f"{prefix}Phase 3: memory (--continue)")
-                print(f"{prefix}  Prompt: {memory_prompt[:60]}...")
-                print(f"{prefix}Phase 4: ideate (--continue)")
-                print(f"{prefix}  Prompt: {ideate_prompt[:60]}...")
-                print("")
+            print(f"Cycle {cycle_num}: fresh session")
+            print(f"  Phase 1: experiment (fresh)")
+            print(f"    Prompt: {experiment_prompt[:60]}...")
+            print(f"  Phase 2: experiment (--session <resolved>)")
+            print(f"    Prompt: {experiment_prompt[:60]}...")
+            print(f"  Phase 3: memory (--session <resolved>)")
+            print(f"    Prompt: {memory_prompt[:60]}...")
+            print(f"  Phase 4: ideate (--session <resolved>)")
+            print(f"    Prompt: {ideate_prompt[:60]}...")
+            print(f"  Phase 5: handoff (--session <resolved>)")
+            print(f"    Prompt: {handoff_prompt[:60]}...")
+            print("")
 
         return 0
 
@@ -1133,7 +1222,7 @@ def main() -> int:
     parser.add_argument("--sleep", type=int, default=DEFAULT_SLEEP_SECONDS,
                         help=f"Sleep seconds between cycles (default: {DEFAULT_SLEEP_SECONDS})")
     parser.add_argument("--session-batch-size", type=int, default=DEFAULT_SESSION_BATCH_SIZE,
-                        help=f"Cycles per session batch (default: {DEFAULT_SESSION_BATCH_SIZE})")
+                        help=f"Compatibility flag only; values >1 are ignored because each cycle now starts a fresh OpenCode session (default: {DEFAULT_SESSION_BATCH_SIZE})")
     parser.add_argument("--verbose", action="store_true", default=DEFAULT_VERBOSE,
                         help=f"Enable verbose mode with live OpenCode output (default: {DEFAULT_VERBOSE})")
     parser.add_argument("--heartbeat-seconds", type=int, default=DEFAULT_HEARTBEAT_SECONDS,

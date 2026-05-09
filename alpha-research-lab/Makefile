@@ -1,7 +1,7 @@
 .PHONY: loop dry-run status reset check-interrupted recover-interrupted tail help
 
-MAX_CYCLES ?= 2
-SESSION_BATCH_SIZE ?= 3
+MAX_CYCLES ?= 1
+SESSION_BATCH_SIZE ?= 1
 VERBOSE ?= 0
 HEARTBEAT_SECONDS ?= 30
 
@@ -18,13 +18,13 @@ help:
 	@echo "  make tail              - Tail latest log file"
 	@echo ""
 	@echo "Variables:"
-	@echo "  MAX_CYCLES         - Number of cycles (default: 2)"
-	@echo "  SESSION_BATCH_SIZE - Cycles per session batch (default: 3)"
+	@echo "  MAX_CYCLES         - Number of cycles (default: 1)"
+	@echo "  SESSION_BATCH_SIZE - Compatibility flag only; values >1 are ignored because each cycle uses a fresh OpenCode session (default: 1)"
 	@echo "  VERBOSE            - Enable verbose output (default: 0)"
 	@echo "  HEARTBEAT_SECONDS  - Heartbeat interval in seconds (default: 30)"
 
 loop:
-	@echo "Running bounded loop (max_cycles=$(MAX_CYCLES), session_batch_size=$(SESSION_BATCH_SIZE), verbose=$(VERBOSE))..."
+	@echo "Running bounded loop (max_cycles=$(MAX_CYCLES), requested_session_batch_size=$(SESSION_BATCH_SIZE), verbose=$(VERBOSE))..."
 	@if [ "$(VERBOSE)" = "1" ]; then \
 		python3 -u evergreen-research-loop/orchestrator.py loop --max-cycles $(MAX_CYCLES) --session-batch-size $(SESSION_BATCH_SIZE) --verbose --heartbeat-seconds $(HEARTBEAT_SECONDS); \
 	else \

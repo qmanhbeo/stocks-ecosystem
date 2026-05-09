@@ -1,15 +1,15 @@
 .PHONY: cycle dry-run status reset loop check-interrupted recover-interrupted ideate experiment memory evergreen-cycle help tail
 
-MAX_CYCLES ?= 2
-SESSION_BATCH_SIZE ?= 3
+MAX_CYCLES ?= 1
+SESSION_BATCH_SIZE ?= 1
 VERBOSE ?= 0
 HEARTBEAT_SECONDS ?= 30
 
 help:
 	@echo "Research Loop Orchestrator"
 	@echo ""
-	@echo "3-Phase Cycle (NEW):"
-	@echo "  make cycle              - Run complete 3-phase cycle (ideate→experiment→memory)"
+	@echo "Cycle Flow:"
+	@echo "  make cycle              - Run one fresh-session cycle (experiment→experiment→memory→ideate→handoff)"
 	@echo "  make ideate             - Run only Phase 1 (bright-mind)"
 	@echo "  make experiment        - Run only Phase 2 (experimentor)"
 	@echo "  make memory            - Run only Phase 3 (manh-memory-system)"
@@ -21,14 +21,14 @@ help:
 	@echo "  make dry-run            - Run decision logic WITHOUT invoking opencode"
 	@echo "  make status             - Display current saved state"
 	@echo "  make reset              - Reset/delete loop state safely"
-	@echo "  make loop               - Run bounded loop (MAX_CYCLES=$(MAX_CYCLES), default 2)"
+	@echo "  make loop               - Run bounded loop (MAX_CYCLES=$(MAX_CYCLES), default 1)"
 	@echo "  make check-interrupted  - Check for stale interrupted runs"
 	@echo "  make recover-interrupted - Recover from an interrupted run"
 	@echo "  make tail               - Tail -f latest cycle/loop log"
 	@echo ""
 	@echo "Variables:"
-	@echo "  MAX_CYCLES       - Number of cycles for loop (default: 2)"
-	@echo "  SESSION_BATCH_SIZE - Cycles per session batch (default: 3)"
+	@echo "  MAX_CYCLES       - Number of cycles for loop (default: 1)"
+	@echo "  SESSION_BATCH_SIZE - Compatibility flag only; values >1 are ignored because each cycle uses a fresh OpenCode session (default: 1)"
 	@echo "  VERBOSE          - Enable verbose output (default: 0)"
 	@echo "  HEARTBEAT_SECONDS - Heartbeat interval in seconds (default: 30)"
 	@echo ""
@@ -39,24 +39,24 @@ help:
 	@echo "  prompts/              - Phase prompt templates"
 
 cycle:
-	@echo "Running 3-phase cycle (ideate→experiment→memory)..."
+	@echo "Running fresh-session cycle (experiment→experiment→memory→ideate→handoff)..."
 	python3 -u orchestrator.py cycle
 
 ideate:
 	@echo "Running Phase 1: Ideate (bright-mind)..."
-	@echo "WARNING: Standalone phase uses fresh session, not same-session as cycle"
+	@echo "WARNING: Standalone ideate starts a fresh session and records its session id in state"
 	python3 -u orchestrator.py ideate
 
 experiment:
 	@echo "Running Phase 2: Experiment (experimentor)..."
-	@echo "WARNING: Standalone phase uses --continue which may resume wrong session!"
-	@echo "Only use after make ideate in same session, or use make cycle instead"
+	@echo "WARNING: Standalone experiment reuses active_session_id from loop state"
+	@echo "Only use after a fresh phase created that session, or use make cycle instead"
 	python3 -u orchestrator.py experiment
 
 memory:
 	@echo "Running Phase 3: Memory (manh-memory-system)..."
-	@echo "WARNING: Standalone phase uses --continue which may resume wrong session!"
-	@echo "Only use after make experiment in same session, or use make cycle instead"
+	@echo "WARNING: Standalone memory reuses active_session_id from loop state"
+	@echo "Only use after a fresh phase created that session, or use make cycle instead"
 	python3 -u orchestrator.py memory
 
 dry-run:
@@ -77,7 +77,7 @@ reset:
 	@echo "State reset complete"
 
 loop:
-	@echo "Running bounded loop (max_cycles=$(MAX_CYCLES), session_batch_size=$(SESSION_BATCH_SIZE), verbose=$(VERBOSE))..."
+	@echo "Running bounded loop (max_cycles=$(MAX_CYCLES), requested_session_batch_size=$(SESSION_BATCH_SIZE), verbose=$(VERBOSE))..."
 	@if [ "$(VERBOSE)" = "1" ]; then \
 		python3 -u orchestrator.py loop --max-cycles $(MAX_CYCLES) --session-batch-size $(SESSION_BATCH_SIZE) --verbose --heartbeat-seconds $(HEARTBEAT_SECONDS); \
 	else \

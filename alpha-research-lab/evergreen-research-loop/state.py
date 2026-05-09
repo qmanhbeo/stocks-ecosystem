@@ -38,6 +38,8 @@ def create_initial_state() -> Dict[str, Any]:
         "active_phase_started_at": None,
         "active_phase_log_path": None,
         "last_completed_phase": None,
+        "active_session_id": None,
+        "last_session_id": None,
     }
 
 
@@ -80,6 +82,8 @@ def update_state(
     active_phase_started_at: str = None,
     active_phase_log_path: str = None,
     last_completed_phase: str = None,
+    active_session_id: str = None,
+    last_session_id: str = None,
 ) -> Dict[str, Any]:
     """
     Update specific fields in state.
@@ -148,6 +152,7 @@ def update_state(
         state["active_agent"] = None
         state["active_phase_started_at"] = None
         state["active_phase_log_path"] = None
+        state["active_session_id"] = None
     if last_completed_at is not None:
         state["last_completed_at"] = last_completed_at
     if active_phase is not None:
@@ -160,6 +165,10 @@ def update_state(
         state["active_phase_log_path"] = active_phase_log_path
     if last_completed_phase is not None:
         state["last_completed_phase"] = last_completed_phase
+    if active_session_id is not None:
+        state["active_session_id"] = active_session_id
+    if last_session_id is not None:
+        state["last_session_id"] = last_session_id
 
     save_state(state)
     return state
