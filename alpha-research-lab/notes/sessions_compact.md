@@ -7,6 +7,14 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 139](session_139_log.md): Ran skeptical interpretation audit on H509 artifacts only (no new experiments). Clarified that H509 robustly recovers quiet-vs-active structure and a convincing C24-like queue-friction channel, while onset/amplification/carry remain entangled; also flagged that `k=6` selection is informative but not uniquely proven because k-choice used full-period IC diagnostics. Source: [session_139_log.md](./session_139_log.md).
+
+- [Session 139](session_139_log.md): Ran H509 latent-state discovery (unsupervised emission clustering, dev-fit/frozen assign, `k=4/5/6`). SUPPORTS latent ontology with caveat: strong quiet-vs-active separation, stable phase centroids, and clear beat vs random partition (`k=6` lift gap `+0.0746`), plus meaningful C24-like rediscovery; onset/amplification/carry remain diffuse rather than clean one-to-one latent matches. Source: [session_139_log.md](./session_139_log.md).
+
+- [Session 139](session_139_log.md): Ran H508 router-equivalence / residual-ablation. STRUCTURE_PASS: freshness/cofire/low-C16 are nested C23 projections (all three have zero residual rows outside C23 by construction), while C24 remains distinctly strong outside C23 (`C24 | not C23`: IC=0.2559 on 8,329 rows). Compression result: one dominant C23-family primitive + router/timing layers + distinct C24 emission. Source: [session_139_log.md](./session_139_log.md).
+
+- [Session 139](session_139_log.md): Ran H507 latent-state switching structural audit (2015-2025 only). SUPPORTS latent-state view: non-quiet emissions (onset/amplified/router/carry) all show materially higher IC than baseline with 11/11 positive years; transitions are coherent (`onset/amplified/router -> carry -> quiet`) and global self-transition probability is high (`0.8692`). Caveat: strongest states remain sparse (router coverage 1.57%, amplified 2.08%). Next best action: H508 router-equivalence ablation. Source: [session_139_log.md](./session_139_log.md).
+
 - [Session 138](session_138_log.md): Batch 17 BU5 sector_vol_regime. MIXED: sector×C23 IC=0.2223 (+0.0919) marginally beats C23 alone (+0.0873) by +0.0046, but sector_c23 is VERY sparse (2853 rows, only 2/11 positive years), validation NaN. Sector vol regime not robust. Source: [session_138_log.md](./session_138_log.md).
 
 - [Session 137](session_137_log.md): Batch 17 BU4 cross_signal_day_complementarity. PASSED but MIXED insight: always_C23 IC=0.2176 (+0.0874 lift) is STRONGEST; any_signal (union) IC=0.1753 (+0.0451) is weaker; cofire_2 IC=0.2069 (+0.0767) confirms F412 regime strength. Signal routing does NOT beat always-C23. Source: [session_137_log.md](./session_137_log.md).

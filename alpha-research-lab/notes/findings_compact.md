@@ -17,6 +17,48 @@ entry must include source anchors: stable finding IDs or source session links.
   side-channel driven rather than live-branch retuning. Source anchors: `F117-F143`,
   `F155-F156`, `F271-F283`, `F296-F303`.
 
+- C23-family structural compression: recent branches around C23/C24/C25/C26
+  increasingly behave like regime slicing rather than new primitives. Strong
+  states (C23, C24, cofire_2, c16_low×C23, freshness subsets) stay positive,
+  while many additional micro-conditioners are weak/sparse/dead (D042-D049).
+  Working interpretation: the lab is mapping one latent liquidity-stress /
+  participation regime with multiple emissions, not discovering many separate
+  orthogonal alphas. Treat current priority as ontology and latent-state
+  mapping, not threshold mining. Source anchors: `F393`, `F394`, `F412`,
+  `F414`, `F419`, `F423`, `F424`, `D042-D049`.
+
+- Latent-state machine evidence: H507 produced the first explicit transition
+  map for the C23 family and supports a compact state organization: quiet
+  dominates coverage, while onset/amplified/router/carry states all show
+  materially higher IC than all-rows with `11 / 11` positive years, and the
+  dominant flow pattern is `onset/amplified/router -> carry -> quiet`.
+  Interpretation remains structural (not deployability): this supports running
+  router-equivalence ablation next before opening new hypothesis mining.
+  Source anchor: Session 139 (`H507`).
+
+- Router-equivalence compression evidence: H508 confirms that freshness,
+  cofire, and low-C16 router states are nested C23 projections rather than
+  independent primitives (all three have no support outside C23 under residual
+  tests). C23 keeps strong residual IC after removing freshness, while C24
+  remains a distinct emission channel with strong `C24 | not C23` residual IC.
+  Working ontology after compression: dominant C23-family primitive +
+  router/timing/amplification layers + distinct C24 primitive. Source anchor:
+  Session 139 (`H508`).
+
+- Unsupervised latent rediscovery evidence: H509 removed symbolic C23/freshness/
+  cofire/carry/low-C16 labels from state construction and fit emission-space
+  clustering on dev years only (`k=4/5/6`, frozen assignment out of sample).
+  Structure did not collapse: best `k=6` cluster achieved avg IC `0.2084`
+  versus all-rows `0.1302`, with random-lift gap `+0.0746`, strong quiet
+  separation, and a distinct C24-like channel recovered post-hoc. The strongest
+  high-IC latent pocket is primarily illiquidity plus low-pressure/negative-
+  imbalance structure rather than ceiling states, while C24 appears as a
+  separate queue-friction channel. Caveat: onset/amplification/carry are only
+  partially disentangled (low direct one-to-one Jaccard), and selected `k=6`
+  should not be treated as uniquely proven because k-choice used full-period IC
+  diagnostics. This remains structural support with unresolved active-manifold
+  decomposition. Source anchor: Session 139 (`H509` + interpretation audit).
+
 - S24x/S25x methodology correction: S272 supersedes the old S253
   "skepticism resolved" note. `actual` in the S1 parquet is a future binary
   barrier label, so S244/S246/S247/S253 market-down and consecutive-down

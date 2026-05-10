@@ -1,0 +1,121 @@
+{
+  "artifacts": {
+    "centroids": "artifacts/research_branches/20260510_144827_latent_state_discovery_centroids.parquet",
+    "clustered_panel": "artifacts/research_branches/20260510_144827_latent_state_discovery_clustered_panel.parquet",
+    "k_summary": "artifacts/research_branches/20260510_144827_latent_state_discovery_k_summary.parquet",
+    "ontology_mapping": "artifacts/research_branches/20260510_144827_latent_state_discovery_ontology_mapping.parquet",
+    "overlap": "artifacts/research_branches/20260510_144827_latent_state_discovery_overlap.parquet",
+    "phase_stability": "artifacts/research_branches/20260510_144827_latent_state_discovery_phase_stability.parquet",
+    "random_baseline": "artifacts/research_branches/20260510_144827_latent_state_discovery_random_baseline.parquet",
+    "results": "artifacts/research_branches/20260510_144827_latent_state_discovery_results.parquet",
+    "transitions": "artifacts/research_branches/20260510_144827_latent_state_discovery_transitions.parquet",
+    "yearly": "artifacts/research_branches/20260510_144827_latent_state_discovery_yearly.parquet"
+  },
+  "metadata": {
+    "feature_columns": [
+      "amihud_log",
+      "vol_change",
+      "vol_expansion_flag",
+      "order_volume_ratio_log",
+      "order_volume_ratio_rank",
+      "buy_sell_imbalance_norm",
+      "buy_count_share",
+      "sell_count_share",
+      "at_ceiling",
+      "ceiling_3d_count",
+      "lag_vol_expansion",
+      "lag_order_volume_ratio_rank",
+      "lag_at_ceiling",
+      "lag_buy_sell_imbalance_norm"
+    ],
+    "k_sweep": [
+      4,
+      5,
+      6
+    ],
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Observable microstructure emissions contain enough information to rediscover the C23-family latent-state ecology without symbolic state labels in construction.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "latent_state_discovery",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_construction_note": "Clustering inputs are observable emissions only; symbolic C23/freshness/cofire/carry/low-C16 states are computed post-hoc for overlap interpretation.",
+    "symbolic_overlap_columns": [
+      "state_quiet",
+      "c23_fresh_not_yesterday",
+      "cofire_2",
+      "c23_yesterday_carry",
+      "c24",
+      "c16_low_c23",
+      "c23"
+    ]
+  },
+  "mode": "research_branch",
+  "name": "latent_state_discovery",
+  "summary": {
+    "best_k": 6,
+    "best_k_active_lift_vs_all_rows": 0.07822677665323127,
+    "best_k_mean_self_transition_prob": 0.31944394865427644,
+    "best_k_median_phase_distance_to_dev": 0.5547942885358819,
+    "best_k_quiet_overlap_max": 0.9642174358974359,
+    "best_k_random_lift_gap": 0.07459135295107969,
+    "best_k_strong_non_sparse_clusters": 4,
+    "decision": "SUPPORTS latent ontology",
+    "feature_count": 14,
+    "k_sweep": [
+      4,
+      5,
+      6
+    ],
+    "panel_rows": 826404,
+    "satisfies_beats_random_partition": true,
+    "satisfies_non_sparse_strength": true,
+    "satisfies_non_trivial_active_lift": true,
+    "satisfies_persistent_states": false,
+    "satisfies_phase_stable": true,
+    "satisfies_quiet_separation": true
+  },
+  "ts": "20260510_144827"
+}

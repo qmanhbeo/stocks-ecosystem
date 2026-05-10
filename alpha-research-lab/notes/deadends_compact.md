@@ -30,6 +30,14 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
 
 ## Resolution: Signal Combination Skepticism
 
+- H508 router_equivalence_ablation closes standalone-primitive claims for
+  freshness, cofire, and low-C16 router outside the C23 core regime. Residual
+  tests found zero support rows for `fresh_not_c23`, `cofire_not_c23`, and
+  `lowc16_not_c23` (nested by construction), while C23 retained positive
+  residual IC after removing freshness. Treat these as router/timing layers on
+  C23, not independent primitives. Reopen only if a materially different state
+  definition yields non-nested support. Source: [session_139_log.md](./session_139_log.md).
+
 - H465 cross_signal_orthogonality_audit is D041. Signals C20/C21/C22 are NOT orthogonal — all combos are WORSE than best individual. C21a×C22 IC=0.2119 (-0.0115 vs max), C20×C22 IC=0.1997 (-0.0169 vs max). vol_expansion is the common regime driver making signals redundant when combined. Do NOT create composite signals from C20/C21/C22. They are additive in portfolio sense (different days fire) not combinatorial. Source: [session_117_log.md](./session_117_log.md), D041.
 
 - H449 vol_contraction_mean_reversion is dead-end for direct long-only use. Pattern confirmed real (vol_contraction + high_return = mean reversion with IC=-0.0255), but the direction is wrong for long-only: vol_expansion_momentum IC=+0.0373 is positive while vol_contraction_exhaustion is negative. Use vol_expansion_momentum side (positive), do not use exhaustion pattern as buy signal. Source: [session_105_log.md](./session_105_log.md), D037.
