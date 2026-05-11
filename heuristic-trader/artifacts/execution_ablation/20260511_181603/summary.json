@@ -1,0 +1,212 @@
+{
+  "timestamp": "20260511_181603",
+  "strategies": [
+    "blend_70_30_top5",
+    "s1_top5_rebal10"
+  ],
+  "variants": [
+    "baseline",
+    "depth_only",
+    "sizing_only",
+    "depth_plus_sizing"
+  ],
+  "focus_years": [
+    2017,
+    2021,
+    2022,
+    2025,
+    2019,
+    2024
+  ],
+  "decision_criteria": {
+    "depth_only_improves_2017_2025": {
+      "blend_70_30_top5": true,
+      "s1_top5_rebal10": true
+    },
+    "sizing_only_improves_2017_2025": {
+      "blend_70_30_top5": true,
+      "s1_top5_rebal10": true
+    },
+    "depth_plus_sizing_improves_2017_2025": {
+      "blend_70_30_top5": false,
+      "s1_top5_rebal10": true
+    },
+    "reduces_cash_pct": {
+      "depth_only": true,
+      "sizing_only": true,
+      "depth_plus_sizing": true
+    },
+    "preserves_2022_downside_protection": {
+      "depth_only": false,
+      "sizing_only": true,
+      "depth_plus_sizing": false
+    },
+    "improves_mean_annualized": {
+      "depth_only": true,
+      "sizing_only": true,
+      "depth_plus_sizing": false
+    }
+  },
+  "variant_summary": [
+    {
+      "strategy": "blend_70_30_top5",
+      "variant": "baseline",
+      "mean_annualized_return": -0.1162924232252167,
+      "mean_excess_return": -0.2481382077904841,
+      "mean_cash_pct": 65.32522295151325,
+      "mean_invested_pct": 34.674777048486746,
+      "mean_n_holdings": 1.0219250285962962,
+      "positive_years": 1,
+      "beats_benchmark_count": 0,
+      "total_trades": 6182,
+      "total_filtered": 38269,
+      "2017_excess_return": -0.4980034537106902,
+      "2025_excess_return": -0.4062618207035682,
+      "2021_excess_return": -0.10797896671696994,
+      "2022_excess_return": -0.2534706904646079,
+      "2017_cash_pct": 48.97451119440308,
+      "2025_cash_pct": 100.0,
+      "2022_cash_pct": 36.309686427047325
+    },
+    {
+      "strategy": "blend_70_30_top5",
+      "variant": "depth_only",
+      "mean_annualized_return": -0.07144009661931859,
+      "mean_excess_return": -0.2041387274985361,
+      "mean_cash_pct": 19.140569549673756,
+      "mean_invested_pct": 80.85943045032624,
+      "mean_n_holdings": 2.849328653836034,
+      "positive_years": 4,
+      "beats_benchmark_count": 2,
+      "total_trades": 17226,
+      "total_filtered": 73832,
+      "2017_excess_return": -0.4831994770722968,
+      "2025_excess_return": -0.7664491623091726,
+      "2021_excess_return": 0.5788804203120372,
+      "2022_excess_return": -0.26411549070090334,
+      "2017_cash_pct": 6.626082218603921,
+      "2025_cash_pct": 27.386013171031244,
+      "2022_cash_pct": 21.908082567241486
+    },
+    {
+      "strategy": "blend_70_30_top5",
+      "variant": "sizing_only",
+      "mean_annualized_return": -0.049846807924904944,
+      "mean_excess_return": -0.1821083535485647,
+      "mean_cash_pct": 58.974520150145025,
+      "mean_invested_pct": 41.025479849854975,
+      "mean_n_holdings": 2.0580835018974044,
+      "positive_years": 3,
+      "beats_benchmark_count": 2,
+      "total_trades": 12419,
+      "total_filtered": 38269,
+      "2017_excess_return": -0.48411026510549726,
+      "2025_excess_return": -0.3850673834523388,
+      "2021_excess_return": 0.10978986979491823,
+      "2022_excess_return": 0.017713505042116995,
+      "2017_cash_pct": 54.18805303371168,
+      "2025_cash_pct": 48.83852407058735,
+      "2022_cash_pct": 45.486759271727834
+    },
+    {
+      "strategy": "blend_70_30_top5",
+      "variant": "depth_plus_sizing",
+      "mean_annualized_return": 0.00505935251185342,
+      "mean_excess_return": -0.12826780882652092,
+      "mean_cash_pct": 10.592895852228478,
+      "mean_invested_pct": 89.40710414777153,
+      "mean_n_holdings": 4.46922725682868,
+      "positive_years": 4,
+      "beats_benchmark_count": 1,
+      "total_trades": 26994,
+      "total_filtered": 73832,
+      "2017_excess_return": -0.5504579087334249,
+      "2025_excess_return": -0.5159475274597453,
+      "2021_excess_return": 1.1166898092870754,
+      "2022_excess_return": -0.23345216240817068,
+      "2017_cash_pct": 14.126194936394757,
+      "2025_cash_pct": 11.085874242830851,
+      "2022_cash_pct": 6.891910710650293
+    },
+    {
+      "strategy": "s1_top5_rebal10",
+      "variant": "baseline",
+      "mean_annualized_return": -0.10611908946314058,
+      "mean_excess_return": -0.23764640412444168,
+      "mean_cash_pct": 60.190348005503935,
+      "mean_invested_pct": 39.809651994496065,
+      "mean_n_holdings": 1.3316114174162494,
+      "positive_years": 5,
+      "beats_benchmark_count": 1,
+      "total_trades": 8041,
+      "total_filtered": 39006,
+      "2017_excess_return": -0.6252468781469672,
+      "2025_excess_return": -0.9249358180263842,
+      "2021_excess_return": -0.24598357184877084,
+      "2022_excess_return": -0.21284733796309585,
+      "2017_cash_pct": 66.6327551189746,
+      "2025_cash_pct": 61.61412989914808,
+      "2022_cash_pct": 44.90371639785494
+    },
+    {
+      "strategy": "s1_top5_rebal10",
+      "variant": "depth_only",
+      "mean_annualized_return": -0.07298519937916387,
+      "mean_excess_return": -0.20526772334811952,
+      "mean_cash_pct": 21.967047255178695,
+      "mean_invested_pct": 78.0329527448213,
+      "mean_n_holdings": 2.543797075860601,
+      "positive_years": 5,
+      "beats_benchmark_count": 3,
+      "total_trades": 15367,
+      "total_filtered": 83413,
+      "2017_excess_return": -0.40057588067192396,
+      "2025_excess_return": -0.9347498771435532,
+      "2021_excess_return": 0.3634262507721717,
+      "2022_excess_return": -0.3370954744614556,
+      "2017_cash_pct": 16.26404609328472,
+      "2025_cash_pct": 49.168694661539035,
+      "2022_cash_pct": 12.847919218656285
+    },
+    {
+      "strategy": "s1_top5_rebal10",
+      "variant": "sizing_only",
+      "mean_annualized_return": -0.08366621550622137,
+      "mean_excess_return": -0.21540142789191857,
+      "mean_cash_pct": 64.98419205370331,
+      "mean_invested_pct": 35.015807946296675,
+      "mean_n_holdings": 1.7545984878933596,
+      "positive_years": 5,
+      "beats_benchmark_count": 1,
+      "total_trades": 10593,
+      "total_filtered": 39006,
+      "2017_excess_return": -0.5917279669232542,
+      "2025_excess_return": -0.6258077452474712,
+      "2021_excess_return": -0.2829996678155895,
+      "2022_excess_return": -0.144346677635247,
+      "2017_cash_pct": 72.04232041304189,
+      "2025_cash_pct": 47.43299565279507,
+      "2022_cash_pct": 46.289363385263634
+    },
+    {
+      "strategy": "s1_top5_rebal10",
+      "variant": "depth_plus_sizing",
+      "mean_annualized_return": -0.12120256103535501,
+      "mean_excess_return": -0.2534297646325418,
+      "mean_cash_pct": 10.306589346908185,
+      "mean_invested_pct": 89.69341065309182,
+      "mean_n_holdings": 4.483975336694621,
+      "positive_years": 4,
+      "beats_benchmark_count": 2,
+      "total_trades": 27071,
+      "total_filtered": 83413,
+      "2017_excess_return": -0.43299673997373156,
+      "2025_excess_return": -0.7348538704223622,
+      "2021_excess_return": 0.1521955299275637,
+      "2022_excess_return": -0.37743951566056566,
+      "2017_cash_pct": 13.355164488619964,
+      "2025_cash_pct": 10.301290917041547,
+      "2022_cash_pct": 7.820045145699762
+    }
+  ]
+}

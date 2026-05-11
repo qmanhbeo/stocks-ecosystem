@@ -1,0 +1,72 @@
+{
+  "strategy": "blend_70_30_top5",
+  "signal_col": "blend",
+  "top_k": 5,
+  "rebalance_days": 10,
+  "initial_capital": 1000000000.0,
+  "focus_years": [
+    2017,
+    2021,
+    2022,
+    2025
+  ],
+  "main_mechanism": "2017.0: FILTER BOTTLENECK (avg 2.2 candidates passed); 2021.0: FILTER BOTTLENECK (avg 3.2 candidates passed); 2022.0: FILTER BOTTLENECK (avg 2.5 candidates passed); 2025.0: FILTER BOTTLENECK (avg 2.8 candidates passed)",
+  "year_summary": [
+    {
+      "year": 2017,
+      "n_rebalance_dates": 25,
+      "avg_cash_pct": 56.47413963870717,
+      "avg_invested_pct": 43.525860361292814,
+      "avg_n_holdings": 2.16,
+      "avg_candidates_passed": 2.16,
+      "avg_buys_successful": 2.16,
+      "avg_target_position_value": 200000000.0,
+      "rebalance_dates_with_fewer_than_topk": 25,
+      "pct_rebalances_underinvested": 100.0,
+      "failed_price_pct_of_passed": 0.0,
+      "failed_cash_pct_of_passed": 0.0
+    },
+    {
+      "year": 2021,
+      "n_rebalance_dates": 25,
+      "avg_cash_pct": 55.408381215867,
+      "avg_invested_pct": 44.591618784133,
+      "avg_n_holdings": 3.2,
+      "avg_candidates_passed": 3.2,
+      "avg_buys_successful": 3.2,
+      "avg_target_position_value": 200000000.0,
+      "rebalance_dates_with_fewer_than_topk": 18,
+      "pct_rebalances_underinvested": 72.0,
+      "failed_price_pct_of_passed": 0.0,
+      "failed_cash_pct_of_passed": 0.0
+    },
+    {
+      "year": 2022,
+      "n_rebalance_dates": 24,
+      "avg_cash_pct": 74.40465043447337,
+      "avg_invested_pct": 25.59534956552662,
+      "avg_n_holdings": 2.4583333333333335,
+      "avg_candidates_passed": 2.4583333333333335,
+      "avg_buys_successful": 2.4583333333333335,
+      "avg_target_position_value": 200000000.0,
+      "rebalance_dates_with_fewer_than_topk": 20,
+      "pct_rebalances_underinvested": 83.33333333333334,
+      "failed_price_pct_of_passed": 0.0,
+      "failed_cash_pct_of_passed": 0.0
+    },
+    {
+      "year": 2025,
+      "n_rebalance_dates": 25,
+      "avg_cash_pct": 70.42087813599294,
+      "avg_invested_pct": 29.579121864007064,
+      "avg_n_holdings": 2.8,
+      "avg_candidates_passed": 2.8,
+      "avg_buys_successful": 2.8,
+      "avg_target_position_value": 200000000.0,
+      "rebalance_dates_with_fewer_than_topk": 20,
+      "pct_rebalances_underinvested": 80.0,
+      "failed_price_pct_of_passed": 0.0,
+      "failed_cash_pct_of_passed": 0.0
+    }
+  ]
+}

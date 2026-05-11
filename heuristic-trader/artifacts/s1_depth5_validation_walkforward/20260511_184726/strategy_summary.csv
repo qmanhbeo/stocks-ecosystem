@@ -1,0 +1,3 @@
+strategy,mean_annualized_return,median_annualized_return,mean_total_return,positive_folds,total_folds,beats_benchmark,mean_excess_return,max_drawdown_mean,total_trades,total_filtered
+s1_top5_rebal10,-0.04683963636363637,-0.07087,-0.04651463636363637,4,11,0,0.0,-0.22069381818181819,985,3373
+s1_top5_rebal10_depth5,0.009813545454545457,0.03249,0.00968,6,11,0,0.0,-0.2547194545454545,1568,5049

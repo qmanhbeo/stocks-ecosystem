@@ -70,5 +70,159 @@
     "top_k": 5,
     "rebalance_days": 10,
     "min_hold_days": 3
+  },
+  "blend_70_30_top5_baseline_explicit": {
+    "name": "blend_70_30_top5_baseline_explicit",
+    "description": "Ablation baseline: 70% S1 + 30% C16, scan 3, fixed sizing",
+    "signal_type": "blend_70_30",
+    "signal_col": "blend",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 3,
+    "sizing_mode": "fixed_initial"
+  },
+  "blend_70_30_top5_depth20": {
+    "name": "blend_70_30_top5_depth20",
+    "description": "Ablation depth20: 70% S1 + 30% C16, scan 20, fixed sizing",
+    "signal_type": "blend_70_30",
+    "signal_col": "blend",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 20,
+    "sizing_mode": "fixed_initial"
+  },
+  "blend_70_30_top5_depth5": {
+    "name": "blend_70_30_top5_depth5",
+    "description": "Depth frontier depth5: 70% S1 + 30% C16, scan 5, fixed sizing",
+    "signal_type": "blend_70_30",
+    "signal_col": "blend",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 5,
+    "sizing_mode": "fixed_initial"
+  },
+  "blend_70_30_top5_depth10": {
+    "name": "blend_70_30_top5_depth10",
+    "description": "Depth frontier depth10: 70% S1 + 30% C16, scan 10, fixed sizing",
+    "signal_type": "blend_70_30",
+    "signal_col": "blend",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 10,
+    "sizing_mode": "fixed_initial"
+  },
+  "blend_70_30_top5_depth15": {
+    "name": "blend_70_30_top5_depth15",
+    "description": "Depth frontier depth15: 70% S1 + 30% C16, scan 15, fixed sizing",
+    "signal_type": "blend_70_30",
+    "signal_col": "blend",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 15,
+    "sizing_mode": "fixed_initial"
+  },
+  "blend_70_30_top5_dynamic": {
+    "name": "blend_70_30_top5_dynamic",
+    "description": "Ablation dynamic: 70% S1 + 30% C16, scan 3, dynamic sizing",
+    "signal_type": "blend_70_30",
+    "signal_col": "blend",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 3,
+    "sizing_mode": "dynamic_portfolio"
+  },
+  "blend_70_30_top5_depth20_dynamic": {
+    "name": "blend_70_30_top5_depth20_dynamic",
+    "description": "Ablation depth20+dynamic: 70% S1 + 30% C16, scan 20, dynamic sizing",
+    "signal_type": "blend_70_30",
+    "signal_col": "blend",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 20,
+    "sizing_mode": "dynamic_portfolio"
+  },
+  "s1_top5_rebal10_baseline_explicit": {
+    "name": "s1_top5_rebal10_baseline_explicit",
+    "description": "Ablation baseline: S1 signal only, scan 3, fixed sizing",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 3,
+    "sizing_mode": "fixed_initial"
+  },
+  "s1_top5_rebal10_depth20": {
+    "name": "s1_top5_rebal10_depth20",
+    "description": "Ablation depth20: S1 signal only, scan 20, fixed sizing",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 20,
+    "sizing_mode": "fixed_initial"
+  },
+  "s1_top5_rebal10_depth5": {
+    "name": "s1_top5_rebal10_depth5",
+    "description": "Depth frontier depth5: S1 signal only, scan 5, fixed sizing",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 5,
+    "sizing_mode": "fixed_initial"
+  },
+  "s1_top5_rebal10_depth10": {
+    "name": "s1_top5_rebal10_depth10",
+    "description": "Depth frontier depth10: S1 signal only, scan 10, fixed sizing",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 10,
+    "sizing_mode": "fixed_initial"
+  },
+  "s1_top5_rebal10_depth15": {
+    "name": "s1_top5_rebal10_depth15",
+    "description": "Depth frontier depth15: S1 signal only, scan 15, fixed sizing",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 15,
+    "sizing_mode": "fixed_initial"
+  },
+  "s1_top5_rebal10_dynamic": {
+    "name": "s1_top5_rebal10_dynamic",
+    "description": "Ablation dynamic: S1 signal only, scan 3, dynamic sizing",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 3,
+    "sizing_mode": "dynamic_portfolio"
+  },
+  "s1_top5_rebal10_depth20_dynamic": {
+    "name": "s1_top5_rebal10_depth20_dynamic",
+    "description": "Ablation depth20+dynamic: S1 signal only, scan 20, dynamic sizing",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 20,
+    "sizing_mode": "dynamic_portfolio"
   }
 }

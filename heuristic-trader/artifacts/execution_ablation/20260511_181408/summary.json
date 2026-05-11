@@ -1,0 +1,35 @@
+{
+  "timestamp": "20260511_181408",
+  "strategies": [
+    "blend_70_30_top5",
+    "s1_top5_rebal10"
+  ],
+  "variants": [
+    "baseline",
+    "depth_only",
+    "sizing_only",
+    "depth_plus_sizing"
+  ],
+  "focus_years": [
+    2017,
+    2021,
+    2022,
+    2025,
+    2019,
+    2024
+  ],
+  "decision_criteria": {
+    "depth_only_improves_2017_2025": {
+      "blend_70_30_top5": true,
+      "s1_top5_rebal10": true
+    },
+    "sizing_only_improves_2017_2025": {
+      "blend_70_30_top5": true,
+      "s1_top5_rebal10": true
+    },
+    "depth_plus_sizing_improves_2017_2025": {
+      "blend_70_30_top5": false,
+      "s1_top5_rebal10": true
+    },
+    "reduces_cash_pct": {
+      "depth_only": 

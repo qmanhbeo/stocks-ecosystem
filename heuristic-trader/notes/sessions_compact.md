@@ -6,6 +6,15 @@
 
 ## Sessions Index
 
+- `session_00020.md` — Session 20: Closing Memory Hygiene + Handoff (today)
+- `session_00019.md` — Session 19: S1 Depth5 Full 11-Fold Validation (VALIDATED_CANDIDATE with risk caveat)
+- `session_00015.md` — Session 15: Depth Frontier Walk-Forward VALID (s1_depth5 sweet spot found)
+- `session_00014.md` — Session 14: Walk-Forward Execution Ablation VALID (canonical, parity passed)
+- `session_00013.md` — Session 13: Execution Ablation CORRECTED (superseded by S00014)
+- `session_00012.md` — Session 12: Execution Ablation INVALID (baseline mismatch, superseded)
+- `session_00011.md` — Session 11: Cash Mechanics V2 Accounting (multi-factor confirmed)
+- `session_00010.md` — Session 10: Cash Mechanics CORRECTED (superseded by V2)
+- `session_00009.md` — Session 9: Cash Mechanics Autopsy (superseded)
 - `session_00008.md` — Session 8: Signal wiring - C17/C18 integration
 - `session_00007.md` — Session 7: Diagnostics + Ticker-Level PnL Attribution
 - `session_00006.md` — Session 6: Lockbox + CLI + Artifact output (Phase 1)

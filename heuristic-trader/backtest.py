@@ -163,6 +163,8 @@ def simulate_topk_constraint_compliant(
     liquid_lookup: dict | None = None,
     trad_lookup: dict | None = None,
     collect_diagnostics: bool = False,
+    candidate_scan_multiplier: int = 3,
+    sizing_mode: str = "fixed_initial",
 ) -> BacktestResult:
     """Constraint-compliant top-K by signal backtest."""
 
@@ -225,7 +227,9 @@ def simulate_topk_constraint_compliant(
             n_filtered_liq = 0
             n_filtered_trad = 0
             
-            for rank, (_, row) in enumerate(signal_day_df.nlargest(top_k * 3, signal_col).iterrows()):
+            n_candidates_to_scan = top_k * candidate_scan_multiplier
+            
+            for rank, (_, row) in enumerate(signal_day_df.nlargest(n_candidates_to_scan, signal_col).iterrows()):
                 ticker = row["ticker"]
                 signal_val = row.get(signal_col, None)
                 
@@ -325,11 +329,23 @@ def simulate_topk_constraint_compliant(
             if collect_diagnostics:
                 diagnostics_filtered.append({
                     "rebalance_date": prev_date,
-                    "n_candidates": top_k * 3,
+                    "n_candidates": top_k * candidate_scan_multiplier,
                     "n_filtered_liquidity": n_filtered_liq,
                     "n_filtered_tradability": n_filtered_trad,
                     "n_selected": len(candidates),
                 })
+            
+            # Compute target position value based on sizing mode
+            if sizing_mode == "fixed_initial":
+                target_position_value = initial_capital / top_k
+            else:  # dynamic_portfolio
+                current_holdings_value = 0
+                for t, (shares, _) in holdings.items():
+                    prev_close_price = get_price(cache, t, prev_date, "close")
+                    if prev_close_price:
+                        current_holdings_value += shares * prev_close_price
+                current_portfolio_value = cash + current_holdings_value
+                target_position_value = current_portfolio_value / top_k
             
             # Execute buys
             for ticker in candidates:
@@ -338,7 +354,7 @@ def simulate_topk_constraint_compliant(
                 
                 open_price = get_price(cache, ticker, date, "open")
                 if open_price and open_price > 0 and cash > 0:
-                    shares = int((initial_capital / top_k) / open_price)
+                    shares = int(target_position_value / open_price)
                     if shares > 0:
                         cost = shares * open_price * (1 + buy_fee)
                         if cash >= cost:

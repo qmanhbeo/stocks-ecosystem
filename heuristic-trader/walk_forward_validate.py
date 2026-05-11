@@ -159,6 +159,8 @@ def run_strategy_on_fold(
         use_filters=True,
         liquid_lookup=liquid_lookup,
         trad_lookup=trad_lookup,
+        candidate_scan_multiplier=config.get("candidate_scan_multiplier", 3),
+        sizing_mode=config.get("sizing_mode", "fixed_initial"),
     )
     elapsed = time.time() - start_time
 
