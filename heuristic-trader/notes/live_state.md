@@ -2,25 +2,30 @@
 
 ## Current
 
-**S00007: Cache path fixed + parity test reveals precomputed bug (2026-05-11)**
+**S00008: Parity fixed + cache promoted (2026-05-11)**
 
-- **Cache path fixed**: backtest.py, build_cache.py, build_trad_cache.py all pointed to
-  `dumb-trading-agent/cache` (wrong directory). All now resolve relative to
-  `Path(__file__).parent / "cache"`. Pre-computed caches were silently missing and
-  falling back to legacy on-the-fly filtering.
-- **Pre-computed cache is UNSAFE** for production: parity test (test_parity.py) reveals
-  a ~4% absolute return gap between pre-computed (+0.21%) and legacy (+4.11%) over
-  2024-2025. Root cause: `build_liquid_cache` was built using the *wrong* price cache
-  from `dumb-trading-agent/cache` (which never existed, so legacy fallback was used
-  during the backtest, not the pre-computed cache). When run_backtest.py overrides
-  `bt.CACHE_DIR` to the correct path, the pre-computed liquid cache was built from a
-  different (earlier) price cache that has fewer tickers/dates. This causes 2 additional
-  tickers to pass the liquidity filter in pre-computed mode, diverging from legacy.
-  **Use legacy mode as truth path until the liquid cache is rebuilt from the correct
-  price cache.**
-- **test_parity.py added**: pre-computed vs legacy parity test. Run with
-  `python test_parity.py`. Quick test (Q1 2025) passes; full test (2024-2025) fails.
-  Quick test is short enough that the ticker coverage gap is masked.
+- **Parity PASSED**: Pre-computed cached lookup now matches legacy exactly
+  - Quick test (Q1 2025): PASS
+  - Full test (2024-2025): PASS
+  - Both modes: -4.1123% return, 130 trades, 568 filtered
+
+- **Root cause fixed**:
+  1. `build_liquid_cache()` window logic: changed from `i-4` to `max(0, idx-5)` to match check_liquid()
+  2. `check_liquid()` fallback behavior: changed to fail-closed (no fallback to last date)
+  3. Rebuilt `liquid_lookup.joblib`: 4781 dates (was 4764)
+
+- **Cache promoted**: Pre-computed cached lookup is now the primary path. Safe for production use.
+
+- **New scripts**:
+  - `validate_liquid_cache.py`: Validates cache matches check_liquid() exactly
+  - `debug_parity_diagnostics.py`: Finds exact divergent ticker-date pairs
+  - `debug_liquidity_semantics.py`: Diagnoses liquidity filter differences
+
+- **Lesson learned from F00006**: Missing-date semantics are part of the trading rule.
+  - "No exact ticker-date row, no claim."
+  - Fallback to last date creates stale/lookahead-like liquidity claims
+  - Cache parity bug fixed by enforcing fail-closed behavior
+  - Cached lookup is research logic, not mere optimization
 
 ## Status History
 
@@ -40,7 +45,7 @@
 
 | ID | Issue | Status | Fix |
 |----|-------|--------|-----|
-| F00006 | Pre-computed cache gives +99.86% vs legacy +82.39% | **CONFIRMED BUG** | Use legacy for truth; rebuild liquid cache after verifying price_cache.parquet coverage |
+| F00006 | Pre-computed cache vs legacy parity gap | **RESOLVED** | Fixed build_cache.py window logic + check_liquid() fail-closed; rebuilt cache; parity passes |
 
 ## Pointers
 

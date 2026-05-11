@@ -92,13 +92,22 @@ def get_price(cache: dict, ticker: str, date, price_type: str = "close") -> floa
 # === Legacy filter functions (for when pre-computed not available) ===
 
 def check_liquid(cache: dict, ticker: str, date, min_volume: int = 500_000) -> bool:
-    """Check liquidity (legacy - compute on the fly)."""
+    """Check liquidity (legacy - compute on the fly).
+    
+    HARD RULE: "No exact ticker-date row, no claim."
+    - Missing ticker: returns False (fail closed)
+    - Missing date: returns False (no fallback to previous/nearest/last date)
+    - Fallback can create stale/lookahead-like liquidity claims
+    - Cache promotion requires parity with this behavior
+    """
     if ticker not in cache:
         return False
     try:
         df = cache[ticker]
         dates_sorted = sorted(df.index)
-        idx = dates_sorted.index(date) if date in dates_sorted else len(dates_sorted) - 1
+        if date not in dates_sorted:
+            return False  # Fail closed - no fallback
+        idx = dates_sorted.index(date)
         start_idx = max(0, idx - 5)
         recent = df.iloc[start_idx:idx+1]
         if len(recent) < 3:

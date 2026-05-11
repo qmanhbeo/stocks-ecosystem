@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-05-11T16:03:30.565910",
+  "strategy": "s1_top5_rebal10",
+  "start": "2024-01-01",
+  "end": "2025-12-31",
+  "rebalance_days": 10,
+  "total_candidates_checked": 8498413,
+  "total_divergences": 1016,
+  "divergences_by_type": {
+    "liquidity": 512,
+    "selection": 504
+  },
+  "note": "This diagnostic does NOT change behavior, rebuild caches, or alter research conclusions"
+}

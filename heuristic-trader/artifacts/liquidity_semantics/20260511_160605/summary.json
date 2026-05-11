@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-05-11T16:06:05.735657",
+  "n_samples_analyzed": 30,
+  "legacy_fallback_used_count": 0,
+  "exact_date_missing_count": 0,
+  "proven_mismatch": "legacy uses fallback to last date when exact date missing; precomputed only has dates that exist in price cache index",
+  "note": "This diagnostic does NOT change behavior, rebuild caches, or alter research conclusions"
+}

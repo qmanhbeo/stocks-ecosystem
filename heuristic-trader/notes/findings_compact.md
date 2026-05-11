@@ -4,6 +4,27 @@
 
 ---
 
+## F00007 — Cache parity: missing-date semantics fixed (2026-05-11)
+
+[link: findings_00001_00030.md]
+
+**BUG FIX**: Pre-computed vs legacy parity gap (~4% return gap).
+
+**Root cause**: 
+- `build_liquid_cache()` window logic differed from `check_liquid()`
+- `check_liquid()` used fallback to last date; precomputed couldn't
+
+**Fix**: 
+- Updated `build_cache.py` window to `max(0, idx-5)`
+- Updated `check_liquid()` to fail-closed (no fallback)
+- Rebuilt cache - parity now passes
+
+**HARD RULE**: "No exact ticker-date row, no claim." 
+Missing-date = not liquid. Fallback creates lookahead bias. Cache is research logic.
+
+
+---
+
 ## F00006 — 70/30 blend is optimal (2026-05-04)
 
 [link: findings_00001_00030.md]
