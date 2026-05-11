@@ -6,6 +6,8 @@
 
 ## Sessions Index
 
+- `session_00008.md` — Session 8: Signal wiring - C17/C18 integration
+- `session_00007.md` — Session 7: Diagnostics + Ticker-Level PnL Attribution
 - `session_00006.md` — Session 6: Lockbox + CLI + Artifact output (Phase 1)
 - `session_00005.md` — Session 5: Pre-computed lookup optimization
 - `session_00004.md` / `session_00004_fixed.md` — Session 4: Grid search
@@ -16,15 +18,46 @@
 
 ---
 
+## S00012 - 2026-05-11: Signal wiring pass - C17/C18 integration
+
+[link: notes/session_00008.md]
+
+- Wired C17 raw (`order_volume_ratio`) from `xs_order_pressure_daily.parquet`
+- Wired C18 delta (`order_volume_ratio_rank_delta`) - derived signal with fail-closed
+- Added SIGNAL_REGISTRY to signals.py (4 signals: S1, C16, C17, C18)
+- Added strategies: c17_raw_top5_rebal10, c18_delta_top5_rebal10
+- Walk-forward: C17 (-1.37% ann, 5/11 pos), C18 (+0.16% ann, 6/11 pos) - both FRAGILE
+- C18 shows better bull-market performance than C17 (2017: -3.34% vs -10.76%)
+
+NOT wired: C19-C26 (need derived formulas from alpha-research-lab)
+
+
 ## S00006 - 2026-05-08: Phase 1 - Lockbox + CLI + Artifacts
 
 [link: notes/session_00006.md]
 
-- `run_backtest.py` CLI with `--allow-lockbox` flag
-- `signals.py` loaders enforce MAX_RESEARCH_YEAR=2025
+- Added `MAX_RESEARCH_YEAR = 2025` to signals.py (lockbox protection)
+- Added `allow_2026` param to all loader functions
+- Created `run_backtest.py` CLI with artifact output
 - Artifacts: `artifacts/runs/<ts>/config.json`, `metrics.json`, `daily_equity.parquet`
 
 Verified: s1_only (2019-2025): +41.57% (416tr, 2.2s) ✅
+
+
+---
+
+## S00007 - 2026-05-11: Diagnostics + Ticker-Level PnL Attribution
+
+[link: notes/session_00007.md]
+
+- Added `collect_diagnostics=True` to backtest.py (does NOT alter metrics)
+- Created `test_diagnostics_regression.py` as permanent guardrail
+- Trade-level analysis: cash ~70% in bull markets (failure) vs ~60% in success years
+- Ticker PnL: blend_70_30_top5 generated +0.76B realized PnL, but underperformed due to cash
+- c16_only_top5 is essentially a cash strategy (87-93% cash always)
+- **Finding**: Cash drag (~30%) is the MECHANISM of bull-regime failure, not just correlation
+
+Artifacts: `artifacts/ticker_pnl_regime/20260511_171621/`
 
 
 ---

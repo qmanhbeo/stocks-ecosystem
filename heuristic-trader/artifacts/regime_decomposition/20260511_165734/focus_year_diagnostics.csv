@@ -1,0 +1,5 @@
+strategy,year,regime,strategy_return,benchmark_return,excess_return,n_trades,n_filtered,max_drawdown,sharpe
+blend_70_30_top5,2017,FAILURE_BULL,0.67%,46.59%,-45.92%,47,309,-21.19%,0.12
+blend_70_30_top5,2021,SUCCESS,82.30%,33.10%,49.20%,72,267,-16.68%,2.79
+blend_70_30_top5,2022,SUCCESS,-0.87%,-32.76%,31.89%,54,292,-26.82%,0.11
+blend_70_30_top5,2025,FAILURE_BULL,-23.39%,38.44%,-61.83%,46,305,-36.05%,-0.75

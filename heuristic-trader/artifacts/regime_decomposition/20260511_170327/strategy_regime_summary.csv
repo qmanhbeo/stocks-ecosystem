@@ -1,0 +1,7 @@
+strategy,avg_excess_failure_years,avg_excess_success_years,positive_folds,behavior
+s1_top5_rebal10,-53.8,10.49,2/11,REGIME-SENSITIVE
+s1_top5_rebal5,-59.78,5.28,4/11,MIXED
+s1_top3_rebal10,-58.74,33.98,3/11,REGIME-SENSITIVE
+blend_70_30_top5,-53.87,40.54,5/11,REGIME-SENSITIVE
+blend_50_50_top5,-63.04,28.31,4/11,REGIME-SENSITIVE
+c16_only_top5,-62.14,0.53,3/11,MIXED

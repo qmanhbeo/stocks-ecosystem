@@ -11,6 +11,34 @@ ORDER_PRESSURE = f"{DATA_ROOT}/features/xs_order_pressure_daily.parquet"
 INSIDER_FEATURES = f"{DATA_ROOT}/features/xs_insider_quality_features.parquet"
 EVENT_SURFACE = f"{DATA_ROOT}/features/event_surface_daily.parquet"
 
+SIGNAL_REGISTRY = {
+    "s1_proba": {
+        "source": "xs_rl_signal_matrix",
+        "column": "s1_proba",
+        "description": "Cross-sectional relative momentum (primary signal)",
+        "status": "READY",
+    },
+    "c16_rank": {
+        "source": "xs_order_pressure_daily",
+        "column": "order_volume_ratio_rank",
+        "description": "C16 order volume ratio rank",
+        "status": "READY",
+    },
+    "c17_raw": {
+        "source": "xs_order_pressure_daily",
+        "column": "order_volume_ratio",
+        "description": "C17 raw order volume ratio (not ranked)",
+        "status": "READY",
+    },
+    "c18_delta": {
+        "source": "xs_order_pressure_daily",
+        "column": "order_volume_ratio_rank_delta",
+        "description": "C18 order pressure rank delta (today - yesterday)",
+        "status": "READY",
+        "derivation": "rank(t) - rank(t-1) per ticker, fail-closed on missing prior",
+    },
+}
+
 
 def _apply_lockbox_filter(
     df: pd.DataFrame,
@@ -101,6 +129,54 @@ def load_order_pressure(
     return df
 
 
+def load_order_pressure_raw(
+    start: str | None = None,
+    end: str | None = None,
+    tickers: list[str] | None = None,
+    allow_2026: bool = False,
+) -> pd.DataFrame:
+    """Load C17 raw order volume ratio (not ranked)."""
+    cols = ['time', 'ticker', 'order_volume_ratio', 'order_pressure_available']
+    df = pd.read_parquet(ORDER_PRESSURE, columns=cols)
+    df = _apply_lockbox_filter(df, start, end, allow_2026)
+    if tickers:
+        df = df[df['ticker'].isin(tickers)]
+    return df
+
+
+def load_order_pressure_delta(
+    start: str | None = None,
+    end: str | None = None,
+    tickers: list[str] | None = None,
+    allow_2026: bool = False,
+) -> pd.DataFrame:
+    """
+    Load C18 order pressure rank delta.
+
+    Formula: c18_delta = order_volume_ratio_rank(t) - order_volume_ratio_rank(t-1)
+
+    Derivation rules:
+    - Uses only current and prior date data (no future leakage)
+    - Per-ticker computation: for each ticker, compute delta from prior trading day
+    - Fail-closed: if prior day missing (first observation), set delta to 0.0
+    - Column: order_volume_ratio_rank_delta
+
+    Source: H431 (Session 310)
+    """
+    cols = ['time', 'ticker', 'order_volume_ratio_rank']
+    df = pd.read_parquet(ORDER_PRESSURE, columns=cols)
+    df = _apply_lockbox_filter(df, start, end, allow_2026)
+    if tickers:
+        df = df[df['ticker'].isin(tickers)]
+
+    df = df.sort_values(['ticker', 'time'])
+    df['prior_rank'] = df.groupby('ticker')['order_volume_ratio_rank'].shift(1)
+    df['order_volume_ratio_rank_delta'] = df['order_volume_ratio_rank'] - df['prior_rank']
+    df['order_volume_ratio_rank_delta'] = df['order_volume_ratio_rank_delta'].fillna(0.0)
+
+    return df[['time', 'ticker', 'order_volume_ratio_rank_delta']]
+
+
 def load_insider_features(
     start: str | None = None,
     end: str | None = None,
@@ -115,6 +191,9 @@ def load_insider_features(
 
 SIGNAL_CATALOG = {
     "s1_proba": "Cross-sectional relative momentum (primary signal)",
+    "c16_rank": "C16 order volume ratio rank",
+    "c17_raw": "C17 raw order volume ratio (not ranked)",
+    "c18_delta": "C18 order pressure rank delta (acceleration)",
     "c4_oc_asym_5d": "Open/close asymmetry 5d",
     "c5_ins_relative_size_5d": "Insider relative size (normalized conviction)",
     "c5_signal_present": "Insider signal present flag",
@@ -126,7 +205,7 @@ SIGNAL_CATALOG = {
     "c11_ret_60d_lag_rank": "60-day return lag rank",
     "c12_gap_absorb_3": "Gap absorb 3d",
     "c13_compress_blowoff_2": "Compression blowoff 2d",
-"c14_clv_volconf_resid_rank": "CLV volume confirmed residual rank",
+    "c14_clv_volconf_resid_rank": "CLV volume confirmed residual rank",
 }
 
 

@@ -1,0 +1,111 @@
+{
+  "total_entries": 963447,
+  "total_unique_dates": 2749,
+  "total_unique_tickers": 402,
+  "date_range": {
+    "min": "2015-01-05",
+    "max": "2025-12-31"
+  },
+  "no_2026_dates": true,
+  "by_year": [
+    {
+      "year": 2015,
+      "entries": 65300,
+      "unique_tickers": 275,
+      "true_count": 60073,
+      "false_count": 5227,
+      "min_date": "2015-01-05",
+      "max_date": "2015-12-31"
+    },
+    {
+      "year": 2016,
+      "entries": 70280,
+      "unique_tickers": 292,
+      "true_count": 65094,
+      "false_count": 5186,
+      "min_date": "2016-01-04",
+      "max_date": "2016-12-30"
+    },
+    {
+      "year": 2017,
+      "entries": 77438,
+      "unique_tickers": 327,
+      "true_count": 71563,
+      "false_count": 5875,
+      "min_date": "2017-01-03",
+      "max_date": "2017-12-29"
+    },
+    {
+      "year": 2018,
+      "entries": 84454,
+      "unique_tickers": 358,
+      "true_count": 77409,
+      "false_count": 7045,
+      "min_date": "2018-01-02",
+      "max_date": "2018-12-28"
+    },
+    {
+      "year": 2019,
+      "entries": 90370,
+      "unique_tickers": 364,
+      "true_count": 81829,
+      "false_count": 8541,
+      "min_date": "2019-01-02",
+      "max_date": "2019-12-31"
+    },
+    {
+      "year": 2020,
+      "entries": 92352,
+      "unique_tickers": 375,
+      "true_count": 85087,
+      "false_count": 7265,
+      "min_date": "2020-01-02",
+      "max_date": "2020-12-31"
+    },
+    {
+      "year": 2021,
+      "entries": 94429,
+      "unique_tickers": 385,
+      "true_count": 88882,
+      "false_count": 5547,
+      "min_date": "2021-01-04",
+      "max_date": "2021-12-31"
+    },
+    {
+      "year": 2022,
+      "entries": 96085,
+      "unique_tickers": 390,
+      "true_count": 90788,
+      "false_count": 5297,
+      "min_date": "2022-01-04",
+      "max_date": "2022-12-30"
+    },
+    {
+      "year": 2023,
+      "entries": 96693,
+      "unique_tickers": 391,
+      "true_count": 91305,
+      "false_count": 5388,
+      "min_date": "2023-01-03",
+      "max_date": "2023-12-29"
+    },
+    {
+      "year": 2024,
+      "entries": 97371,
+      "unique_tickers": 397,
+      "true_count": 92435,
+      "false_count": 4936,
+      "min_date": "2024-01-02",
+      "max_date": "2024-12-31"
+    },
+    {
+      "year": 2025,
+      "entries": 98675,
+      "unique_tickers": 402,
+      "true_count": 92943,
+      "false_count": 5732,
+      "min_date": "2025-01-02",
+      "max_date": "2025-12-31"
+    }
+  ]
+}

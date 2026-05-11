@@ -1,0 +1,18 @@
+{
+  "avg_cash_failure_years": 71.3,
+  "avg_cash_success_years": 61.4,
+  "avg_cash_drag_failure_years_pct": 30.5,
+  "avg_cash_drag_success_years_pct": -0.9,
+  "has_realized_pnl_data": true,
+  "focus_strategies": [
+    "blend_70_30_top5",
+    "s1_top5_rebal10",
+    "c16_only_top5"
+  ],
+  "focus_years": [
+    2017,
+    2021,
+    2022,
+    2025
+  ]
+}

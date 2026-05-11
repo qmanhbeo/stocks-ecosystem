@@ -1,0 +1,44 @@
+{
+  "focus_strategies": [
+    "blend_70_30_top5",
+    "s1_top5_rebal10",
+    "c16_only_top5"
+  ],
+  "failure_years": [
+    2017,
+    2025
+  ],
+  "success_years": [
+    2021,
+    2022
+  ],
+  "strategies_analyzed": 4,
+  "2017_vs_2025_comparison": {
+    "2017": {
+      "strategy_return": 0.006687,
+      "benchmark_return": 0.465879,
+      "excess_return": -0.459192,
+      "n_trades": 47
+    },
+    "2025": {
+      "strategy_return": -0.233904,
+      "benchmark_return": 0.384377,
+      "excess_return": -0.618281,
+      "n_trades": 46
+    }
+  },
+  "2021_vs_2022_comparison": {
+    "2021": {
+      "strategy_return": 0.823012,
+      "benchmark_return": 0.331045,
+      "excess_return": 0.491967,
+      "n_trades": 72
+    },
+    "2022": {
+      "strategy_return": -0.008745,
+      "benchmark_return": -0.327619,
+      "excess_return": 0.318874,
+      "n_trades": 54
+    }
+  }
+}

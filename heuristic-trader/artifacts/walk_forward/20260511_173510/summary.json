@@ -1,0 +1,17 @@
+[
+  {
+    "strategy_name": "c18_delta_top5_rebal10",
+    "n_folds": 11,
+    "mean_total_return": 0.001689,
+    "median_total_return": 0.008791,
+    "mean_annualized_return": 0.001637,
+    "median_annualized_return": 0.008826,
+    "mean_max_drawdown": 0.164907,
+    "positive_folds": 6,
+    "beating_benchmark_folds": 2,
+    "total_trades": 537,
+    "mean_benchmark_return": 0.128347,
+    "mean_excess_return": -0.126658,
+    "robustness_notes": "FRAGILE: Inconsistent performance across folds"
+  }
+]

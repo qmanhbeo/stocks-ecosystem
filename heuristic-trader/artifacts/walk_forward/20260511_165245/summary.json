@@ -1,0 +1,17 @@
+[
+  {
+    "strategy_name": "blend_70_30_top5",
+    "n_folds": 11,
+    "mean_total_return": 0.082288,
+    "median_total_return": 0.019825,
+    "mean_annualized_return": 0.082862,
+    "median_annualized_return": 0.019825,
+    "mean_max_drawdown": 0.183355,
+    "positive_folds": 7,
+    "beating_benchmark_folds": 5,
+    "total_trades": 514,
+    "mean_benchmark_return": 0.128347,
+    "mean_excess_return": -0.046059,
+    "robustness_notes": "FRAGILE: Inconsistent performance across folds"
+  }
+]

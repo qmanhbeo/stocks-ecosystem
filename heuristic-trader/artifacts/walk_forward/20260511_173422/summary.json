@@ -1,0 +1,17 @@
+[
+  {
+    "strategy_name": "c17_raw_top5_rebal10",
+    "n_folds": 11,
+    "mean_total_return": -0.013313,
+    "median_total_return": -0.001135,
+    "mean_annualized_return": -0.013701,
+    "median_annualized_return": -0.001144,
+    "mean_max_drawdown": 0.156983,
+    "positive_folds": 5,
+    "beating_benchmark_folds": 3,
+    "total_trades": 197,
+    "mean_benchmark_return": 0.128347,
+    "mean_excess_return": -0.141661,
+    "robustness_notes": "FRAGILE: Inconsistent performance across folds"
+  }
+]

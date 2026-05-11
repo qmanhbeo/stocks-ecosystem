@@ -1,0 +1,47 @@
+{
+  "walk_forward_artifact": "20260511_164519",
+  "n_rows_in_artifact": 66,
+  "n_strategies_analyzed": 6,
+  "n_folds": 11,
+  "all_strategies_analyzed": true,
+  "focus_years": [
+    2017,
+    2021,
+    2022,
+    2025
+  ],
+  "strategies": [
+    "s1_top5_rebal10",
+    "s1_top5_rebal5",
+    "s1_top3_rebal10",
+    "blend_70_30_top5",
+    "blend_50_50_top5",
+    "c16_only_top5"
+  ],
+  "focus_year_comparisons": {
+    "2017": {
+      "best_strategy": "blend_70_30_top5",
+      "best_excess": -0.459192,
+      "worst_strategy": "c16_only_top5",
+      "worst_excess": -0.57343
+    },
+    "2025": {
+      "best_strategy": "s1_top5_rebal10",
+      "best_excess": -0.597982,
+      "worst_strategy": "blend_50_50_top5",
+      "worst_excess": -0.796755
+    },
+    "2021": {
+      "best_strategy": "blend_70_30_top5",
+      "best_excess": 0.491967,
+      "worst_strategy": "c16_only_top5",
+      "worst_excess": -0.315824
+    },
+    "2022": {
+      "best_strategy": "blend_50_50_top5",
+      "best_excess": 0.423399,
+      "worst_strategy": "s1_top5_rebal10",
+      "worst_excess": 0.252645
+    }
+  }
+}

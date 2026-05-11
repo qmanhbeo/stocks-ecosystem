@@ -4,6 +4,81 @@
 
 ---
 
+## F00010 — Cash drag is the MECHANISM of bull-regime failure (2026-05-11)
+
+[link: artifacts/ticker_pnl_regime/20260511_171621/]
+
+**Evidence**:
+- Failure years (2017, 2025): avg 71.3% cash -> ~30.5% cash drag vs benchmark
+- Success years (2021, 2022): avg 61.4% cash -> ~-0.9% (slight benefit)
+
+**Realized PnL**:
+- blend_70_30_top5: +0.76B realized (wins > losses)
+- s1_top5_rebal10: -0.06B realized
+- c16_only_top5: -0.18B realized (essentially a cash strategy - 90% cash always)
+
+**Finding**: In bull markets, strategies hold ~70% cash vs ~60% in other years. For blend_70_30_top5, realized PnL was positive (+0.76B), so cash/exposure is the primary identified mechanism. For s1_top5_rebal10, realized PnL was slightly negative (-0.06B), indicating mixed signal+exposure failure. For c16_only_top5, the strategy is structurally cash-heavy (87-93% cash in all years) and had negative realized PnL - not viable standalone.
+
+[Hypothesis]: "signals select for low-momentum/defensive stocks" may explain the cash tilt, but this is not yet proven.
+
+### Failure Mode Taxonomy
+
+| Strategy | Realized PnL | Cash % (bull) | Classification |
+|----------|--------------|---------------|----------------|
+| blend_70_30_top5 | +0.76B | 62-64% | Portfolio/exposure failure (positive picks, too much cash) |
+| s1_top5_rebal10 | -0.06B | 50-75% | Mixed signal + exposure failure |
+| c16_only_top5 | -0.18B | 87-93% | Structurally cash-heavy, not viable as standalone |
+
+---
+
+## F00009 — trad_lookup extended: 2019 was accidental, 2015 is clean start (2026-05-11)
+
+[link: docs/cache_contract.md]
+
+**Investigation**:
+- `build_trad_cache.py` hardcoded `start='2019-01-01'` - no rationale
+- Source data `can_buy_next_open` has full coverage from 2007 onward
+- 2019 was arbitrary boundary, not data-quality constraint
+
+**Action**:
+- Extended to 2015-01-01 (matches S1 signal start)
+- Rebuilt: 963,447 entries (2,749 dates), was 665,975 (1,750 dates)
+- Parity still PASSED
+
+**Finding**: Earliest clean tradable research surface is now 2015-01-05.
+
+
+---
+
+## F00008 — Walk-forward validation: execution robustness test (2026-05-11)
+
+[link: artifacts/walk_forward/20260511_163046/]
+
+**VALIDATION PASS**: Walk-forward validation harness added.
+
+**Folds**: 2019-2022→2023, 2019-2023→2024, 2019-2024→2025
+
+**Results**:
+| Strategy | Mean Ann. Return | Positive Folds | Beats Benchmark | Robustness |
+|----------|------------------|----------------|------------------|------------|
+| blend_70_30_top5 | +1.29% | 2/3 | 1/3 | FRAGILE |
+| s1_top5_rebal10 | -0.89% | 2/3 | 1/3 | FRAGILE |
+| s1_top5_rebal5 | -4.54% | 1/3 | 1/3 | FRAGILE |
+| s1_top3_rebal10 | -4.63% | 2/3 | 1/3 | FRAGILE |
+| c16_only_top5 | -8.16% | 2/3 | 0/3 | FRAGILE |
+| blend_50_50_top5 | -8.94% | 2/3 | 0/3 | FRAGILE |
+
+**Key observation**: 2025 was catastrophic for ALL strategies (VNINDEX +38.4%, strategies -21% to -41%).
+All strategies beat benchmark in 2024 but underperformed dramatically in 2025.
+
+**Finding**: 70/30 blend is best among tested strategies but still FRAGILE.
+2025 regime failure blocks paper-trading readiness.
+
+**RULE**: Do not promote single-period strategy without fold robustness.
+Walk-forward validation must show consistency before live deployment.
+
+---
+
 ## F00007 — Cache parity: missing-date semantics fixed (2026-05-11)
 
 [link: findings_00001_00030.md]

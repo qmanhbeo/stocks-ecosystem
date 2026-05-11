@@ -52,5 +52,23 @@
     "top_k": 5,
     "rebalance_days": 10,
     "min_hold_days": 3
+  },
+  "c17_raw_top5_rebal10": {
+    "name": "c17_raw_top5_rebal10",
+    "description": "C17 raw order volume ratio, top 5 holdings, 10-day rebalance",
+    "signal_type": "c17_only",
+    "signal_col": "order_volume_ratio",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3
+  },
+  "c18_delta_top5_rebal10": {
+    "name": "c18_delta_top5_rebal10",
+    "description": "C18 order pressure rank delta, top 5 holdings, 10-day rebalance",
+    "signal_type": "c18_only",
+    "signal_col": "order_volume_ratio_rank_delta",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3
   }
 }

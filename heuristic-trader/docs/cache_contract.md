@@ -6,6 +6,32 @@
 
 ---
 
+## 2026-05-11 Update: trad_lookup Extended to 2015
+
+**Investigation findings**:
+- `trad_lookup.joblib` was hardcoded to start at 2019-01-01 in `build_trad_cache.py:17`
+- Source data `xs_order_pressure_daily.parquet` has full `can_buy_next_open` coverage from 2007 onward
+- 2019 was an **accidental** boundary, not a documented data-quality boundary
+- 2015 matches S1 signal matrix start, enabling clean execution validation
+
+**Action taken**:
+- Changed `build_trad_cache.py` start from `'2019-01-01'` to `'2015-01-01'`
+- Rebuilt `trad_lookup.joblib`: 963,447 entries (was 665,975), 2,749 dates (was 1,750)
+
+**Coverage now**:
+| Year | Entries | Tickers | True | False |
+|------|---------|---------|------|-------|
+| 2015 | 65,300 | 275 | 60,073 | 5,227 |
+| 2016 | 70,280 | 292 | 65,094 | 5,186 |
+| ... | ... | ... | ... | ... |
+| 2025 | 98,675 | 402 | 92,943 | 5,732 |
+
+**Parity verification**: PASSED - precomputed mode matches legacy exactly.
+
+**Implication**: Clean execution-validation surface now starts at 2015-01-05.
+
+---
+
 ## Hard Rule Learned
 
 **"No exact ticker-date row, no claim."**

@@ -27,6 +27,14 @@ class BacktestResult:
     curve: pd.DataFrame
     constraints_followed: str = "N/A"
     n_filtered: int = 0
+    diagnostics: Optional[dict] = None
+
+
+@dataclass
+class Diagnostics:
+    trade_log: pd.DataFrame
+    selection_log: pd.DataFrame
+    filtered_breakdown: pd.DataFrame
 
 
 # === Pre-computed lookup helpers ===
@@ -152,8 +160,9 @@ def simulate_topk_constraint_compliant(
     tradability_df: pd.DataFrame | None = None,
     min_volume: int = 500_000,
     use_filters: bool = True,
-    liquid_lookup: dict | None = None,  # NEW: pre-computed
-    trad_lookup: dict | None = None,     # NEW: pre-computed
+    liquid_lookup: dict | None = None,
+    trad_lookup: dict | None = None,
+    collect_diagnostics: bool = False,
 ) -> BacktestResult:
     """Constraint-compliant top-K by signal backtest."""
 
@@ -169,6 +178,10 @@ def simulate_topk_constraint_compliant(
     n_trades = 0
     n_skips = 0
     n_filtered = 0
+
+    diagnostics_trades = []
+    diagnostics_selections = []
+    diagnostics_filtered = []
 
     for i, date in enumerate(dates):
         day_df = signal_df[signal_df["time"] == date]
@@ -190,6 +203,18 @@ def simulate_topk_constraint_compliant(
                         sell_value = shares * open_price * (1 - sell_fee)
                         cash += sell_value
                         n_trades += 1
+                        if collect_diagnostics:
+                            fee = shares * open_price * sell_fee
+                            diagnostics_trades.append({
+                                "date": prev_date,
+                                "action": "SELL",
+                                "ticker": ticker,
+                                "price": open_price,
+                                "shares": shares,
+                                "value": shares * open_price,
+                                "fee": fee,
+                                "reason": "hold_days_exceeded",
+                            })
                     else:
                         n_skips += 1
                     del holdings[ticker]
@@ -197,16 +222,51 @@ def simulate_topk_constraint_compliant(
             # BUY new positions
             signal_day_df = signal_df[signal_df["time"] == prev_date]
             candidates = []
-            for ticker in signal_day_df.nlargest(top_k * 3, signal_col)["ticker"]:
+            n_filtered_liq = 0
+            n_filtered_trad = 0
+            
+            for rank, (_, row) in enumerate(signal_day_df.nlargest(top_k * 3, signal_col).iterrows()):
+                ticker = row["ticker"]
+                signal_val = row.get(signal_col, None)
+                
+                passed_liq = True
+                passed_trad = True
+                
                 # Check tradability
                 if use_filters:
                     if trad_lookup is not None:
                         if not can_buy_fast(ticker, prev_date, trad_lookup):
                             n_filtered += 1
+                            n_filtered_trad += 1
+                            passed_trad = False
+                            if collect_diagnostics:
+                                diagnostics_selections.append({
+                                    "rebalance_date": prev_date,
+                                    "ticker": ticker,
+                                    "signal": signal_val,
+                                    "rank": rank + 1,
+                                    "passed_liquidity": True,
+                                    "passed_tradability": False,
+                                    "selected": False,
+                                    "filter_reason": "tradability",
+                                })
                             continue
                     elif tradability_df is not None:
                         if not check_can_buy(tradability_df, ticker, prev_date):
                             n_filtered += 1
+                            n_filtered_trad += 1
+                            passed_trad = False
+                            if collect_diagnostics:
+                                diagnostics_selections.append({
+                                    "rebalance_date": prev_date,
+                                    "ticker": ticker,
+                                    "signal": signal_val,
+                                    "rank": rank + 1,
+                                    "passed_liquidity": True,
+                                    "passed_tradability": False,
+                                    "selected": False,
+                                    "filter_reason": "tradability",
+                                })
                             continue
                 
                 # Check liquidity
@@ -214,14 +274,62 @@ def simulate_topk_constraint_compliant(
                     if liquid_lookup is not None:
                         if not is_liquid(ticker, prev_date, liquid_lookup):
                             n_filtered += 1
+                            n_filtered_liq += 1
+                            passed_liq = False
+                            if collect_diagnostics:
+                                diagnostics_selections.append({
+                                    "rebalance_date": prev_date,
+                                    "ticker": ticker,
+                                    "signal": signal_val,
+                                    "rank": rank + 1,
+                                    "passed_liquidity": False,
+                                    "passed_tradability": True,
+                                    "selected": False,
+                                    "filter_reason": "liquidity",
+                                })
                             continue
                     elif not check_liquid(cache, ticker, prev_date, min_volume):
                         n_filtered += 1
+                        n_filtered_liq += 1
+                        passed_liq = False
+                        if collect_diagnostics:
+                            diagnostics_selections.append({
+                                "rebalance_date": prev_date,
+                                "ticker": ticker,
+                                "signal": signal_val,
+                                "rank": rank + 1,
+                                "passed_liquidity": False,
+                                "passed_tradability": True,
+                                "selected": False,
+                                "filter_reason": "liquidity",
+                            })
                         continue
                 
                 candidates.append(ticker)
+                
+                if collect_diagnostics:
+                    diagnostics_selections.append({
+                        "rebalance_date": prev_date,
+                        "ticker": ticker,
+                        "signal": signal_val,
+                        "rank": rank + 1,
+                        "passed_liquidity": True,
+                        "passed_tradability": True,
+                        "selected": True,
+                        "filter_reason": None,
+                    })
+                
                 if len(candidates) >= top_k:
                     break
+            
+            if collect_diagnostics:
+                diagnostics_filtered.append({
+                    "rebalance_date": prev_date,
+                    "n_candidates": top_k * 3,
+                    "n_filtered_liquidity": n_filtered_liq,
+                    "n_filtered_tradability": n_filtered_trad,
+                    "n_selected": len(candidates),
+                })
             
             # Execute buys
             for ticker in candidates:
@@ -236,6 +344,19 @@ def simulate_topk_constraint_compliant(
                         if cash >= cost:
                             cash -= cost
                             holdings[ticker] = (shares, i)
+                            n_trades += 1
+                            if collect_diagnostics:
+                                fee = shares * open_price * buy_fee
+                                diagnostics_trades.append({
+                                    "date": date,
+                                    "action": "BUY",
+                                    "ticker": ticker,
+                                    "price": open_price,
+                                    "shares": shares,
+                                    "value": shares * open_price,
+                                    "fee": fee,
+                                    "reason": "rebalance",
+                                })
 
         # Calculate portfolio value
         holdings_value = 0
@@ -265,6 +386,14 @@ def simulate_topk_constraint_compliant(
     sharpe = returns.mean() / returns.std() * np.sqrt(252) if returns.std() > 0 else 0
     max_dd = (curve["portfolio_value"] / curve["portfolio_value"].cummax() - 1.0).min()
 
+    diagnostics_dict = None
+    if collect_diagnostics:
+        diagnostics_dict = {
+            "trade_log": pd.DataFrame(diagnostics_trades) if diagnostics_trades else pd.DataFrame(),
+            "selection_log": pd.DataFrame(diagnostics_selections) if diagnostics_selections else pd.DataFrame(),
+            "filtered_breakdown": pd.DataFrame(diagnostics_filtered) if diagnostics_filtered else pd.DataFrame(),
+        }
+
     return BacktestResult(
         f"TopK_{signal_col}_K{top_k}_R{rebalance_days}_H{min_hold_days}",
         ret,
@@ -274,6 +403,7 @@ def simulate_topk_constraint_compliant(
         n_trades,
         curve,
         n_filtered=n_filtered,
+        diagnostics=diagnostics_dict,
     )
 
 
