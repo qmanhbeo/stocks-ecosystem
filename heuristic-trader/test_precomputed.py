@@ -3,10 +3,12 @@ import pandas as pd
 import joblib
 from backtest import simulate_topk_constraint_compliant, load_liquid_lookup, load_trad_lookup
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent))
+import backtest as bt
 
-CACHE_DIR = Path("/home/manh/stocks-ecosystem/dumb-trading-agent/cache")
+CACHE_DIR = Path(__file__).parent / "cache"
 
-# Load pre-computed
+# Load pre-computed using backtest module (uses correct cache path)
 liquid_lookup = load_liquid_lookup()
 trad_lookup = load_trad_lookup()
 print(f"Liquid: {len(liquid_lookup)} dates")

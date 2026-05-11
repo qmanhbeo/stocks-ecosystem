@@ -335,14 +335,24 @@ def invoke_phase(prompt: str, use_continue: bool = False, session_id: str = None
 
             return returncode, "\n".join(stdout_chunks), "\n".join(stderr_chunks)
 
-        except subprocess.TimeoutExpired:
+        except OSError as e:
+            process.kill()
+            stdout_thread.join(timeout=2)
+            stderr_thread.join(timeout=2)
+            elapsed = int(time_module.time() - start_time)
+            log.log_message(format_completion(elapsed, False) + f" (OSError: {e})", "ERROR")
+            return -3, "", f"OSError: {e}"
             process.kill()
             stdout_thread.join(timeout=2)
             stderr_thread.join(timeout=2)
             return -1, "", f"Timeout after {config.OPENCODE_TIMEOUT_SECONDS}s"
         except FileNotFoundError:
             return -2, "", f"opencode binary not found: {config.OPENCODE_BINARY}"
+        except OSError as e:
+            log.log_message(f"OSError in invoke_phase (verbose): {e}", "ERROR")
+            return -3, "", f"OSError: {e}"
         except Exception as e:
+            log.log_message(f"Unexpected error in invoke_phase (verbose): {type(e).__name__}: {e}", "ERROR")
             return -3, "", str(e)
 
     else:
@@ -416,8 +426,13 @@ def invoke_phase(prompt: str, use_continue: bool = False, session_id: str = None
         except FileNotFoundError:
             stop_heartbeat.set()
             return -2, "", f"opencode binary not found: {config.OPENCODE_BINARY}"
+        except OSError as e:
+            stop_heartbeat.set()
+            log.log_message(f"OSError in invoke_phase: {e}", "ERROR")
+            return -3, "", f"OSError: {e}"
         except Exception as e:
             stop_heartbeat.set()
+            log.log_message(f"Unexpected error in invoke_phase: {type(e).__name__}: {e}", "ERROR")
             return -3, "", str(e)
 
 

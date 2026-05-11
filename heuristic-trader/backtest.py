@@ -9,7 +9,8 @@ from pathlib import Path
 from typing import Optional
 import constraints as c
 
-CACHE_DIR = Path("/home/manh/stocks-ecosystem/dumb-trading-agent/cache")
+_DEFAULT_CACHE_DIR = Path(__file__).parent / "cache"
+CACHE_DIR = _DEFAULT_CACHE_DIR
 PRICE_CACHE_FILE = CACHE_DIR / "price_cache.parquet"
 LIQUID_CACHE_FILE = CACHE_DIR / "liquid_lookup.joblib"
 TRAD_CACHE_FILE = CACHE_DIR / "trad_lookup.joblib"

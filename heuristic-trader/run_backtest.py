@@ -24,8 +24,8 @@ import signals as s
 from strategies import loader as strategy_loader
 
 
-ARTIFACT_DIR = Path("/home/manh/stocks-ecosystem/heuristic-trader/artifacts")
-CACHE_DIR = Path("/home/manh/stocks-ecosystem/heuristic-trader/cache")
+ARTIFACT_DIR = Path(__file__).parent / "artifacts"
+CACHE_DIR = Path(__file__).parent / "cache"
 
 import backtest as bt
 bt.CACHE_DIR = CACHE_DIR

@@ -7,7 +7,8 @@ import numpy as np
 from pathlib import Path
 from tqdm import tqdm
 
-CACHE_DIR = Path("/home/manh/stocks-ecosystem/dumb-trading-agent/cache")
+_DEFAULT_CACHE_DIR = Path(__file__).parent / "cache"
+CACHE_DIR = _DEFAULT_CACHE_DIR
 PRICE_CACHE_FILE = CACHE_DIR / "price_cache.parquet"
 LIQUID_CACHE_FILE = CACHE_DIR / "liquid_lookup.joblib"
 

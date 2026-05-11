@@ -7,7 +7,8 @@ import pandas as pd
 import joblib
 from pathlib import Path
 
-CACHE_DIR = Path("/home/manh/stocks-ecosystem/dumb-trading-agent/cache")
+_DEFAULT_CACHE_DIR = Path(__file__).parent / "cache"
+CACHE_DIR = _DEFAULT_CACHE_DIR
 TRAD_CACHE_FILE = CACHE_DIR / "trad_lookup.joblib"
 
 print("Building tradability cache...")
