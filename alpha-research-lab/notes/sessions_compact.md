@@ -7,6 +7,8 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 324](session_324_log.md): H510 Bull Participation State Audit. NEGATIVE FINDING: Used H509 clustered panel (k=6) to compare failure bull years (2017, 2025) vs success contrast (2021, 2022). C23 active state is HIGHER in failure years (4.55%) than success years (3.97%). 2017 IC (0.149) is STRONGER than 2021 (0.123) or 2022 (0.082). Latent state ecology does NOT explain heuristic-trader cash drag; problem is execution/portfolio construction in heuristic-trader. Source: [session_324_log.md](./session_324_log.md).
+
 - [Session 139](session_139_log.md): Ran skeptical interpretation audit on H509 artifacts only (no new experiments). Clarified that H509 robustly recovers quiet-vs-active structure and a convincing C24-like queue-friction channel, while onset/amplification/carry remain entangled; also flagged that `k=6` selection is informative but not uniquely proven because k-choice used full-period IC diagnostics. Source: [session_139_log.md](./session_139_log.md).
 
 - [Session 139](session_139_log.md): Ran H509 latent-state discovery (unsupervised emission clustering, dev-fit/frozen assign, `k=4/5/6`). SUPPORTS latent ontology with caveat: strong quiet-vs-active separation, stable phase centroids, and clear beat vs random partition (`k=6` lift gap `+0.0746`), plus meaningful C24-like rediscovery; onset/amplification/carry remain diffuse rather than clean one-to-one latent matches. Source: [session_139_log.md](./session_139_log.md).

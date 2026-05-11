@@ -1,0 +1,40 @@
+{
+  "total_panel_rows": 826404,
+  "k_used": 6,
+  "focus_years": [
+    2017,
+    2019,
+    2021,
+    2022,
+    2024,
+    2025
+  ],
+  "failure_bull_years": [
+    2017,
+    2025
+  ],
+  "success_contrast_years": [
+    2021,
+    2022
+  ],
+  "secondary_years": [
+    2019,
+    2024
+  ],
+  "failure_bull_avg_quiet_share": 0.9435670529850914,
+  "success_contrast_avg_quiet_share": 0.944708323233887,
+  "failure_bull_avg_c23_share": 0.04549829078401426,
+  "success_contrast_avg_c23_share": 0.03970639868519639,
+  "failure_bull_c23_share_avg": 0.04549829078401426,
+  "success_contrast_c23_share_avg": 0.03970639868519639,
+  "c23_share_diff": 0.00579189209881787,
+  "failure_bull_c24_share_avg": 0.011948995138783697,
+  "success_contrast_c24_share_avg": 0.016533650860032355,
+  "c24_share_diff": -0.004584655721248658,
+  "failure_bull_c23_fresh_not_yesterday_share_avg": 0.03817322234252218,
+  "success_contrast_c23_fresh_not_yesterday_share_avg": 0.03259102660526821,
+  "c23_fresh_not_yesterday_share_diff": 0.005582195737253964,
+  "failure_bull_c16_low_c23_share_avg": 0.014797799007204411,
+  "success_contrast_c16_low_c23_share_avg": 0.012365331078820586,
+  "c16_low_c23_share_diff": 0.0024324679283838253
+}
