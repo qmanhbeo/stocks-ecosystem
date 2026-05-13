@@ -6,6 +6,7 @@
 
 ## Sessions Index
 
+- `session_00021.md` — Session 21: Reallocate fallback verdict (NEGATIVE/DEPRIORITIZED) + artifact cleanup
 - `session_00020.md` — Session 20: Closing Memory Hygiene + Handoff (today)
 - `session_00019.md` — Session 19: S1 Depth5 Full 11-Fold Validation (VALIDATED_CANDIDATE with risk caveat)
 - `session_00015.md` — Session 15: Depth Frontier Walk-Forward VALID (s1_depth5 sweet spot found)
@@ -27,9 +28,23 @@
 
 ---
 
+## S00021 - 2026-05-13: Reallocate fallback verdict (negative/deprioritized)
+
+[link: notes/session_00021.md]
+
+- Ran patched-code apples-to-apples 2015-2025 walk-forward comparison across:
+  - `s1_top5_rebal10`
+  - `s1_top5_rebal10_depth5`
+  - `s1_top5_rebal10_reallocate`
+  - `s1_top5_rebal10_depth5_reallocate`
+- Finding: `fallback_mode=reallocate_selected` worsened aggregate mean return/excess and drawdown versus comparators.
+- Decision: keep variants for reproducibility, but mark as NEGATIVE/DEPRIORITIZED and not a candidate path.
+
+---
+
 ## S00012 - 2026-05-11: Signal wiring pass - C17/C18 integration
 
-[link: notes/session_00008.md]
+[link: notes/session_00012.md]
 
 - Wired C17 raw (`order_volume_ratio`) from `xs_order_pressure_daily.parquet`
 - Wired C18 delta (`order_volume_ratio_rank_delta`) - derived signal with fail-closed

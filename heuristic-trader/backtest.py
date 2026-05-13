@@ -165,11 +165,16 @@ def simulate_topk_constraint_compliant(
     collect_diagnostics: bool = False,
     candidate_scan_multiplier: int = 3,
     sizing_mode: str = "fixed_initial",
+    fallback_mode: str = "none",
 ) -> BacktestResult:
     """Constraint-compliant top-K by signal backtest."""
 
     signal_df = signal_df.sort_values("time").reset_index(drop=True)
     dates = sorted(signal_df["time"].unique())
+    valid_fallback_modes = {"none", "reallocate_selected"}
+    if fallback_mode not in valid_fallback_modes:
+        allowed = ", ".join(sorted(valid_fallback_modes))
+        raise ValueError(f"Unknown fallback_mode '{fallback_mode}'. Allowed values: {allowed}")
 
     if len(dates) < 2:
         return BacktestResult("", 0, 0, 0, 0, 0, pd.DataFrame())
@@ -184,6 +189,7 @@ def simulate_topk_constraint_compliant(
     diagnostics_trades = []
     diagnostics_selections = []
     diagnostics_filtered = []
+    diagnostics_fallback = []
 
     for i, date in enumerate(dates):
         day_df = signal_df[signal_df["time"] == date]
@@ -335,17 +341,48 @@ def simulate_topk_constraint_compliant(
                     "n_selected": len(candidates),
                 })
             
-            # Compute target position value based on sizing mode
+            # Compute target position value based on sizing mode and fallback behavior
+            holdings_value_before_buys = 0.0
+            for t, (shares, _) in holdings.items():
+                prev_close_price = get_price(cache, t, prev_date, "close")
+                if prev_close_price:
+                    holdings_value_before_buys += shares * prev_close_price
+            cash_before_buys = cash
+            current_portfolio_value = cash_before_buys + holdings_value_before_buys
+
             if sizing_mode == "fixed_initial":
-                target_position_value = initial_capital / top_k
+                default_target_position_value = initial_capital / top_k
             else:  # dynamic_portfolio
-                current_holdings_value = 0
-                for t, (shares, _) in holdings.items():
-                    prev_close_price = get_price(cache, t, prev_date, "close")
-                    if prev_close_price:
-                        current_holdings_value += shares * prev_close_price
-                current_portfolio_value = cash + current_holdings_value
-                target_position_value = current_portfolio_value / top_k
+                default_target_position_value = current_portfolio_value / top_k
+
+            selected_count = len(candidates)
+            fallback_triggered = (
+                fallback_mode == "reallocate_selected"
+                and selected_count > 0
+                and selected_count < top_k
+            )
+            if fallback_mode == "reallocate_selected" and selected_count > 0:
+                if sizing_mode == "fixed_initial":
+                    target_position_value = initial_capital / selected_count
+                else:  # dynamic_portfolio
+                    target_position_value = current_portfolio_value / selected_count
+            else:
+                target_position_value = default_target_position_value
+
+            if collect_diagnostics:
+                diagnostics_fallback.append({
+                    "rebalance_date": prev_date,
+                    "fallback_mode": fallback_mode,
+                    "fallback_triggered": fallback_triggered,
+                    "selected_count": selected_count,
+                    "top_k": top_k,
+                    "sizing_mode": sizing_mode,
+                    "target_position_value": target_position_value,
+                    "default_target_position_value": default_target_position_value,
+                    "current_portfolio_value": current_portfolio_value,
+                    "cash_before_buys": cash_before_buys,
+                    "holdings_value_before_buys": holdings_value_before_buys,
+                })
             
             # Execute buys
             for ticker in candidates:
@@ -408,6 +445,7 @@ def simulate_topk_constraint_compliant(
             "trade_log": pd.DataFrame(diagnostics_trades) if diagnostics_trades else pd.DataFrame(),
             "selection_log": pd.DataFrame(diagnostics_selections) if diagnostics_selections else pd.DataFrame(),
             "filtered_breakdown": pd.DataFrame(diagnostics_filtered) if diagnostics_filtered else pd.DataFrame(),
+            "fallback_log": pd.DataFrame(diagnostics_fallback) if diagnostics_fallback else pd.DataFrame(),
         }
 
     return BacktestResult(

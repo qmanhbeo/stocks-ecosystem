@@ -105,6 +105,11 @@ def create_argument_parser() -> argparse.ArgumentParser:
         default=None,
         help="Custom output directory (default: artifacts/runs/<timestamp>)",
     )
+    parser.add_argument(
+        "--collect-diagnostics",
+        action="store_true",
+        help="Persist backtest diagnostics (trade/selection/filter CSVs)",
+    )
     return parser
 
 
@@ -122,6 +127,7 @@ def run_strategy_for_test(
     end_date: str,
     output_dir: Path,
     allow_2026: bool = False,
+    collect_diagnostics: bool = False,
 ) -> dict:
     """Run a single strategy for testing (uses real artifact path).
 
@@ -141,11 +147,15 @@ def run_strategy_for_test(
         top_k=config["top_k"],
         rebalance_days=config["rebalance_days"],
         min_hold_days=config["min_hold_days"],
+        candidate_scan_multiplier=config.get("candidate_scan_multiplier", 3),
+        sizing_mode=config.get("sizing_mode", "fixed_initial"),
+        fallback_mode=config.get("fallback_mode", "none"),
         liquid_lookup=liquid_lookup,
         trad_lookup=trad_lookup,
         output_dir=output_dir,
         start_date=start_date,
         end_date=end_date,
+        collect_diagnostics=collect_diagnostics,
     )
     return metrics
 
@@ -188,17 +198,25 @@ def run_backtest_and_save(
     top_k: int,
     rebalance_days: int,
     min_hold_days: int,
+    candidate_scan_multiplier: int,
+    sizing_mode: str,
+    fallback_mode: str,
     liquid_lookup: dict,
     trad_lookup: dict,
     output_dir: Path,
     start_date: str,
     end_date: str,
+    collect_diagnostics: bool = False,
 ) -> dict:
     """Run backtest and save artifacts."""
     output_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"\n  Running: {strategy_name}")
-    print(f"    Signal: {signal_col}, Top-K: {top_k}, Rebal: {rebalance_days}d, Hold: {min_hold_days}d")
+    print(
+        "    Signal: "
+        f"{signal_col}, Top-K: {top_k}, Rebal: {rebalance_days}d, Hold: {min_hold_days}d, "
+        f"Scan: {candidate_scan_multiplier}, Sizing: {sizing_mode}, Fallback: {fallback_mode}"
+    )
 
     start_time = time.time()
     result = bt.simulate_topk_constraint_compliant(
@@ -211,6 +229,10 @@ def run_backtest_and_save(
         use_filters=True,
         liquid_lookup=liquid_lookup,
         trad_lookup=trad_lookup,
+        collect_diagnostics=collect_diagnostics,
+        candidate_scan_multiplier=candidate_scan_multiplier,
+        sizing_mode=sizing_mode,
+        fallback_mode=fallback_mode,
     )
     elapsed = time.time() - start_time
 
@@ -226,6 +248,10 @@ def run_backtest_and_save(
         "top_k": top_k,
         "rebalance_days": rebalance_days,
         "min_hold_days": min_hold_days,
+        "candidate_scan_multiplier": candidate_scan_multiplier,
+        "sizing_mode": sizing_mode,
+        "fallback_mode": fallback_mode,
+        "collect_diagnostics": collect_diagnostics,
         "start_date": start_date,
         "end_date": end_date,
         "timestamp": datetime.now().isoformat(),
@@ -267,6 +293,18 @@ def run_backtest_and_save(
     with open(output_dir / "metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)
 
+    if collect_diagnostics and result.diagnostics:
+        diagnostics_file_map = {
+            "trade_log": "trade_log.csv",
+            "selection_log": "selection_log.csv",
+            "filtered_breakdown": "filtered_breakdown.csv",
+            "fallback_log": "fallback_log.csv",
+        }
+        for key, filename in diagnostics_file_map.items():
+            df = result.diagnostics.get(key)
+            if isinstance(df, pd.DataFrame) and len(df) > 0:
+                df.to_csv(output_dir / filename, index=False)
+
     print(f"    Artifacts: {output_dir.name}")
     return metrics
 
@@ -281,6 +319,7 @@ def run_single_strategy(
     price_cache: dict,
     run_id: str,
     output_dir: Path = None,
+    collect_diagnostics: bool = False,
 ) -> dict:
     """Run a single strategy and return metrics."""
     strategy_name = config["name"]
@@ -297,11 +336,15 @@ def run_single_strategy(
         top_k=config["top_k"],
         rebalance_days=config["rebalance_days"],
         min_hold_days=config["min_hold_days"],
+        candidate_scan_multiplier=config.get("candidate_scan_multiplier", 3),
+        sizing_mode=config.get("sizing_mode", "fixed_initial"),
+        fallback_mode=config.get("fallback_mode", "none"),
         liquid_lookup=liquid_lookup,
         trad_lookup=trad_lookup,
         output_dir=output_dir,
         start_date=start_date,
         end_date=end_date,
+        collect_diagnostics=collect_diagnostics,
     )
 
 
@@ -413,7 +456,8 @@ def main():
             metrics = run_single_strategy(
                 config, start_date, end_date, allow_2026,
                 liquid_lookup, trad_lookup, price_cache, run_id,
-                output_dir=output_dir
+                output_dir=output_dir,
+                collect_diagnostics=args.collect_diagnostics,
             )
             all_metrics.append(metrics)
         except Exception as e:

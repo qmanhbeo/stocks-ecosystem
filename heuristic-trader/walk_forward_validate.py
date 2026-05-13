@@ -129,6 +129,8 @@ def run_strategy_on_fold(
     liquid_lookup: dict,
     trad_lookup: dict,
     price_cache: dict,
+    collect_diagnostics: bool = False,
+    diagnostics_output_dir: Path | None = None,
 ) -> dict:
     """Run a single strategy on a single fold."""
     strategy_name = config["name"]
@@ -159,10 +161,37 @@ def run_strategy_on_fold(
         use_filters=True,
         liquid_lookup=liquid_lookup,
         trad_lookup=trad_lookup,
+        collect_diagnostics=collect_diagnostics,
         candidate_scan_multiplier=config.get("candidate_scan_multiplier", 3),
         sizing_mode=config.get("sizing_mode", "fixed_initial"),
+        fallback_mode=config.get("fallback_mode", "none"),
     )
     elapsed = time.time() - start_time
+
+    if collect_diagnostics and diagnostics_output_dir is not None and result.diagnostics:
+        diagnostics_output_dir.mkdir(parents=True, exist_ok=True)
+        diagnostics_file_map = {
+            "trade_log": "trade_log.csv",
+            "selection_log": "selection_log.csv",
+            "filtered_breakdown": "filtered_breakdown.csv",
+            "fallback_log": "fallback_log.csv",
+        }
+        for key, filename in diagnostics_file_map.items():
+            df = result.diagnostics.get(key)
+            if isinstance(df, pd.DataFrame) and len(df) > 0:
+                df.to_csv(diagnostics_output_dir / filename, index=False)
+
+        metadata = {
+            "strategy_name": strategy_name,
+            "fold_name": fold["name"],
+            "test_start": test_start,
+            "test_end": test_end,
+            "candidate_scan_multiplier": config.get("candidate_scan_multiplier", 3),
+            "sizing_mode": config.get("sizing_mode", "fixed_initial"),
+            "fallback_mode": config.get("fallback_mode", "none"),
+        }
+        with open(diagnostics_output_dir / "metadata.json", "w") as f:
+            json.dump(metadata, f, indent=2)
 
     benchmark = get_benchmark(test_start, test_end)
     benchmark_return = benchmark["total_return"] if benchmark else None
@@ -268,6 +297,11 @@ def create_argument_parser() -> argparse.ArgumentParser:
         default=None,
         help="Custom output directory (default: artifacts/walk_forward/<timestamp>)",
     )
+    parser.add_argument(
+        "--collect-diagnostics",
+        action="store_true",
+        help="Persist fold-level diagnostics (trade/selection/filter CSVs)",
+    )
     return parser
 
 
@@ -320,8 +354,19 @@ def main():
             run_idx += 1
             print(f"\n[{run_idx}/{total_runs}] ", end="")
             try:
+                diagnostics_output_dir = None
+                if args.collect_diagnostics:
+                    diagnostics_output_dir = (
+                        output_dir / "diagnostics" / strategy_name / fold["name"]
+                    )
                 metrics = run_strategy_on_fold(
-                    config, fold, liquid_lookup, trad_lookup, price_cache
+                    config,
+                    fold,
+                    liquid_lookup,
+                    trad_lookup,
+                    price_cache,
+                    collect_diagnostics=args.collect_diagnostics,
+                    diagnostics_output_dir=diagnostics_output_dir,
                 )
                 all_metrics.append(metrics)
                 strategy_metrics_map[strategy_name].append(metrics)

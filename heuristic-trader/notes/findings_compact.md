@@ -4,9 +4,36 @@
 
 ---
 
+## F00011 — Reallocate-selected fallback does not solve S1 execution failure (2026-05-13)
+
+[link: artifacts/walk_forward/20260513_102523/]
+[link: artifacts/walk_forward/20260513_102549/]
+[link: artifacts/walk_forward/20260513_102933/]
+[link: artifacts/walk_forward/20260513_102956/]
+
+**Patched-code 2015-2025 WFV (apples-to-apples):**
+| Strategy | Mean Ann Return | Mean Excess | Positive Folds | Beats Benchmark | Mean Max DD |
+|----------|------------------|-------------|----------------|------------------|-------------|
+| s1_top5_rebal10 | -4.68% | -17.49% | 4/11 | 2/11 | 22.07% |
+| s1_top5_rebal10_depth5 | +0.98% | -11.87% | 6/11 | 5/11 | 25.47% |
+| s1_top5_rebal10_reallocate | -9.02% | -21.77% | 3/11 | 3/11 | 31.54% |
+| s1_top5_rebal10_depth5_reallocate | -1.57% | -14.40% | 5/11 | 4/11 | 28.41% |
+
+**Finding**:
+- Reallocation across already-selected names does **not** fix cash drag as a robust execution solution.
+- Scaling selected names (higher concentration when underfilled) worsened aggregate WFV performance for both S1 baseline and S1 depth5 comparators.
+- Cash drag is not solved by simple concentration increase; selected-name quality and/or exposure timing remains the bottleneck.
+
+**Decision**: mark `reallocate_selected` fallback as **NEGATIVE/DEPRIORITIZED** for current S1 execution path.
+
+---
+
 ## F00010 — Cash drag is the MECHANISM of bull-regime failure (2026-05-11)
 
 [link: artifacts/ticker_pnl_regime/20260511_171621/]
+
+Context note:
+- alpha-research-lab H510 found latent state is NOT the cause of bull-regime failure; the current bottleneck is execution mechanics inside heuristic-trader.
 
 **Evidence**:
 - Failure years (2017, 2025): avg 71.3% cash -> ~30.5% cash drag vs benchmark

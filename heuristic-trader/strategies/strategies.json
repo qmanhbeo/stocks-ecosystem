@@ -159,6 +159,18 @@
     "candidate_scan_multiplier": 3,
     "sizing_mode": "fixed_initial"
   },
+  "s1_top5_rebal10_reallocate": {
+    "name": "s1_top5_rebal10_reallocate",
+    "description": "NEGATIVE/DEPRIORITIZED experimental variant: execution fallback reallocate_selected on S1 baseline (kept for reproducibility)",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 3,
+    "sizing_mode": "fixed_initial",
+    "fallback_mode": "reallocate_selected"
+  },
   "s1_top5_rebal10_depth20": {
     "name": "s1_top5_rebal10_depth20",
     "description": "Ablation depth20: S1 signal only, scan 20, fixed sizing",
@@ -180,6 +192,18 @@
     "min_hold_days": 3,
     "candidate_scan_multiplier": 5,
     "sizing_mode": "fixed_initial"
+  },
+  "s1_top5_rebal10_depth5_reallocate": {
+    "name": "s1_top5_rebal10_depth5_reallocate",
+    "description": "NEGATIVE/DEPRIORITIZED experimental variant: execution fallback reallocate_selected on S1 depth5 (kept for reproducibility)",
+    "signal_type": "s1_only",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "candidate_scan_multiplier": 5,
+    "sizing_mode": "fixed_initial",
+    "fallback_mode": "reallocate_selected"
   },
   "s1_top5_rebal10_depth10": {
     "name": "s1_top5_rebal10_depth10",

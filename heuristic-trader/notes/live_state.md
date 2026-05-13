@@ -1,5 +1,20 @@
 # Live State
 
+## Current Sprint Focus (2026-05): Execution Research
+
+- **Objective**: diagnose and repair execution mechanics, especially cash drag, filter bottlenecks, and portfolio construction.
+- **Immediate task**: risk autopsy on `s1_top5_rebal10_depth5` worsened years: **2016, 2018, 2024**.
+- **Boundary**: H510 in alpha-research-lab confirmed the issue is **not** missing latent signal state; it is execution / portfolio construction in heuristic-trader.
+- **Do NOT**: touch 2026 data, promote to paper trading, monetize, run broad signal discovery, or launch expensive grid searches.
+- **Validation standard**: 2015-2025 walk-forward validation only, benchmark-relative, cost-aware.
+
+### 2026-05-13 Update: Reallocate Fallback Verdict
+- `fallback_mode=reallocate_selected` was tested and is **NEGATIVE/DEPRIORITIZED** for S1 family.
+- Patched-code 2015-2025 WFV shows worse aggregate performance vs both comparators (`s1_top5_rebal10`, `s1_top5_rebal10_depth5`) on mean annualized return, mean excess, and mean drawdown.
+- Current best patched S1 comparator remains `s1_top5_rebal10_depth5`, but it is still weak/fragile and **not monetizable**.
+- Do **NOT** treat reallocation variants as candidates.
+- Next direction: do **not** run more cash fallback variants without a new execution hypothesis.
+
 ## Current (Handoff)
 
 **S00020: Memory Hygiene + Handoff (2026-05-11)**
@@ -7,7 +22,7 @@
 See `notes/session_00020.md` for closing session.
 
 ### Current Valid State
-- **Candidate**: `s1_top5_rebal10_depth5` is a PROVISIONAL validated candidate
+- **Candidate**: `s1_top5_rebal10_depth5` is a PROVISIONAL comparator only — weak/fragile, requires further autopsy before any validity claim.
 - **Evidence**: Full 11-fold validation improved mean annualized return from -4.68% to +0.98% (+5.67%)
 - **Positive folds**: 4/11 → 6/11
 - **Improved 8/11 folds**: 2015, 2017, 2019, 2020, 2021, 2022, 2023, 2025
@@ -29,6 +44,10 @@ See `notes/session_00020.md` for closing session.
 - Do NOT run more depth variants before risk autopsy
 - Do NOT use non-canonical backtest loops
 - Do NOT claim "does not materially worsen downside years" (2018 worsened materially)
+- Do NOT tune on or inspect 2026 performance for strategy selection
+- Do NOT run full parameter grid searches without a walk-forward validation plan
+- Do NOT promote any strategy to paper trading or monetization until benchmark-relative robustness improves
+- Do NOT treat high IC as tradable alpha without execution validation
 
 ### Next Exact Task
 Run risk autopsy for `s1_top5_rebal10_depth5` on worsened years (2016, 2018, 2024):
@@ -39,7 +58,7 @@ Run risk autopsy for `s1_top5_rebal10_depth5` on worsened years (2016, 2018, 202
 
 **S00019: S1 Depth5 Full 11-Fold Validation (2026-05-11)**
 
-VALIDATED_CANDIDATE ⚠️ (with risk caveat)
+PROVISIONAL candidate ⚠️ (requires risk autopsy; not validated)
 
 Full 11-fold walk-forward comparing s1_top5_rebal10 (baseline) vs s1_top5_rebal10_depth5:
 
