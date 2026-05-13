@@ -30,8 +30,5 @@ Record patched-code apples-to-apples walk-forward verdict for `fallback_mode=rea
 - Cash drag is not fixed by concentration alone; selected-name quality/timing remains the key issue.
 - Do not promote reallocation variants as candidates.
 
-## Primary Artifacts
-- `artifacts/walk_forward/20260513_102523/`
-- `artifacts/walk_forward/20260513_102549/`
-- `artifacts/walk_forward/20260513_102933/`
-- `artifacts/walk_forward/20260513_102956/`
+## Artifact Provenance
+- Artifacts were generated during the 2026-05-13 patched-code WFV comparison and removed after metrics were extracted into this session log and compact notes.

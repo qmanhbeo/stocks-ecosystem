@@ -6,10 +6,8 @@
 
 ## F00011 — Reallocate-selected fallback does not solve S1 execution failure (2026-05-13)
 
-[link: artifacts/walk_forward/20260513_102523/]
-[link: artifacts/walk_forward/20260513_102549/]
-[link: artifacts/walk_forward/20260513_102933/]
-[link: artifacts/walk_forward/20260513_102956/]
+Provenance:
+- Artifacts were generated during the 2026-05-13 patched-code WFV comparison and removed after metrics were extracted into this note/session log.
 
 **Patched-code 2015-2025 WFV (apples-to-apples):**
 | Strategy | Mean Ann Return | Mean Excess | Positive Folds | Beats Benchmark | Mean Max DD |
