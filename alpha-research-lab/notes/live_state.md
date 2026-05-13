@@ -7,7 +7,7 @@ scientific conclusions in findings chunks, and closed paths in dead-end chunks.
 ## Current Session Pointer
 
 - **Latest session log**: Session 324 (H510 Bull Participation State Audit)
-- **Latest session log path**: `notes/session_324_log.md`
+- **Latest session log path**: `notes/session_00324_log.md`
 - **Latest compact reference**: `notes/sessions_compact.md`
 - **Current active branch**: structure-mapping mode
 - **Last updated**: 2026-05-11
@@ -214,7 +214,7 @@ The next move is to return the question to heuristic-trader for execution-level 
 - Cash drag is caused by execution/portfolio construction in heuristic-trader, not missing signal states
 - No export to heuristic-trader warranted from latent-state side
 
-**Session**: [Session 324](./notes/session_324_log.md)
+**Session**: [Session 324](./notes/session_00324_log.md)
 
 ---
 

@@ -196,7 +196,7 @@ Follow-up:
 
 Source anchors:
 - `F339`
-- `session_255_log.md`
+- `session_00255_log.md`
 - `artifacts/run_summaries/20260504_124306_h379_dynamic_candidate_thermodynamics_research_branch_dynamic_candidate_thermodynamics.json`
 
 ---
@@ -239,7 +239,7 @@ Read:
 
 Source anchors:
 - `F340`
-- `session_257_log.md`
+- `session_00257_log.md`
 - `artifacts/run_summaries/20260504_125947_h380_candidate_count_policy_router_research_branch_candidate_count_policy_router.json`
 
 ---
@@ -277,7 +277,7 @@ Result:
 Source anchors:
 - `F349`
 - `D006`
-- `session_266_log.md`
+- `session_00266_log.md`
 
 ### PP7 — Tradability Release Pulse
 
@@ -315,7 +315,7 @@ Reopening condition:
 Source anchors:
 - `F352`
 - `D009`
-- `session_269_log.md`
+- `session_00269_log.md`
 
 ### PP8 — Anti-Signal Annihilation Veto
 
@@ -354,7 +354,7 @@ Reopening condition:
 Source anchors:
 - `F365`
 - `D017`
-- `session_282_log.md`
+- `session_00282_log.md`
 
 ### PP9 — Candidate Civil War / Portfolio Uncertainty
 

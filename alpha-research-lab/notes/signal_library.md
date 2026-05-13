@@ -991,7 +991,7 @@ So the disagreement residual is the promotable part, not the raw atom itself.
   (threshold: >10%). No monotone relationship between dispersion level and signal quality.
 - **Day-level Spearman** vs S1 top-5 accuracy: p=0.124 for primary feature (xs_dispersion_z20)
 
-See `notes/findings-061-090.md` (F67) for full analysis.
+See `notes/findings-00061-00090.md` (F67) for full analysis.
 
 ### C1 — Keyword News Sentiment (H89)
 **Status: CANDIDATE — orthogonal but inconsistent**
@@ -1266,7 +1266,7 @@ H400 quorum update:
 | quarter_start | 0.098 | +0.10 | timing / H390 PARKED | raw timing filter; exact-state promotion parked |
 | market_breadth A/D Q1 | 0.093 | +0.09 | breadth filter |
 
-**Source:** [session_244_log.md](./session_244_log.md), [session_243_log.md](./session_243_log.md), [session_242_log.md](./session_242_log.md)
+**Source:** [session_00244_log.md](./session_00244_log.md), [session_00243_log.md](./session_00243_log.md), [session_00242_log.md](./session_00242_log.md)
 
 H123, H124, H125, H126, H127, H128, H130, H131, H132, H133, H134, H283, H284, and H346 are now closed and documented above.
 Track new OHLCV-only search ideas in `notes/live_state.md`.
