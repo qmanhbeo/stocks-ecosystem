@@ -28,6 +28,17 @@
 
 ---
 
+## S00022 - 2026-05-13: Canonical 8-strategy shortlist recorded (compact-only update)
+
+- Decision source switched to canonical patched WFV under `artifacts/canonical_wfv/`.
+- Current clean active candidate: `blend_70_30_top5`.
+- `blend_70_30_top5_depth5` kept as secondary comparator.
+- `s1_top5_rebal10_depth5` demoted to comparator/crash-test path.
+- `reallocate_selected` remains negative/deprioritized.
+- Follow-up opened: investigate why `c16_only_top5` and `c17_raw_top5_rebal10` are identical in canonical metrics/trades.
+
+---
+
 ## S00021 - 2026-05-13: Reallocate fallback verdict (negative/deprioritized)
 
 [link: notes/session_00021.md]

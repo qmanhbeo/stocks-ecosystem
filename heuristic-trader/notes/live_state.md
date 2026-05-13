@@ -8,6 +8,18 @@
 - **Do NOT**: touch 2026 data, promote to paper trading, monetize, run broad signal discovery, or launch expensive grid searches.
 - **Validation standard**: 2015-2025 walk-forward validation only, benchmark-relative, cost-aware.
 
+### Artifact Policy (2026-05-13)
+- Use patched **canonical WFV outputs** under `artifacts/canonical_wfv/` for decisions.
+- Treat old timestamped artifacts as historical clues only, not decision-grade truth.
+
+### 2026-05-13 Canonical Shortlist Verdict (Decision-Grade)
+- Canonical 8-strategy patched WFV is now the active decision surface.
+- **Current clean active candidate**: `blend_70_30_top5` (7/11 positive folds, 5/11 benchmark-beating, lower drawdown than depth5 blend).
+- `blend_70_30_top5_depth5` remains a secondary comparator (slightly better mean return/excess, but worse drawdown and fewer positive folds).
+- `s1_top5_rebal10_depth5` is demoted to comparator/crash-test path, not main execution direction.
+- `fallback_mode=reallocate_selected` remains **NEGATIVE/DEPRIORITIZED**.
+- Follow-up required: `c16_only_top5` and `c17_raw_top5_rebal10` produced identical canonical metrics/trade counts; inspect C16/C17 signal wiring before treating them as distinct.
+
 ### 2026-05-13 Update: Reallocate Fallback Verdict
 - `fallback_mode=reallocate_selected` was tested and is **NEGATIVE/DEPRIORITIZED** for S1 family.
 - Patched-code 2015-2025 WFV shows worse aggregate performance vs both comparators (`s1_top5_rebal10`, `s1_top5_rebal10_depth5`) on mean annualized return, mean excess, and mean drawdown.
@@ -22,11 +34,10 @@
 See `notes/session_00020.md` for closing session.
 
 ### Current Valid State
-- **Candidate**: `s1_top5_rebal10_depth5` is a PROVISIONAL comparator only — weak/fragile, requires further autopsy before any validity claim.
-- **Evidence**: Full 11-fold validation improved mean annualized return from -4.68% to +0.98% (+5.67%)
-- **Positive folds**: 4/11 → 6/11
-- **Improved 8/11 folds**: 2015, 2017, 2019, 2020, 2021, 2022, 2023, 2025
-- **Worsened 3/11 folds**: 2016, 2018, 2024 - **RISK AUTOPSY NEEDED**
+- **Active candidate**: `blend_70_30_top5` (canonical patched WFV baseline candidate).
+- **Secondary comparator**: `blend_70_30_top5_depth5`.
+- **Comparator/crash-test**: `s1_top5_rebal10_depth5` (demoted from main path).
+- **Canonical reference**: `artifacts/canonical_wfv/leaderboard.csv`.
 
 ### Valid Artifacts
 - `artifacts/s1_depth5_validation_walkforward/20260511_184754/` (S00019)

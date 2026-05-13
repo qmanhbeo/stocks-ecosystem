@@ -4,6 +4,32 @@
 
 ---
 
+## F00012 — Canonical patched WFV shortlist: blend_70_30_top5 is current clean active candidate (2026-05-13)
+
+[link: artifacts/canonical_wfv/leaderboard.csv]
+
+**Decision-grade canonical leaderboard (2015-2025, patched):**
+| Strategy | Mean Ann Return | Mean Excess | Positive Folds | Beats Benchmark | Mean Max DD | Total Trades |
+|----------|------------------|-------------|----------------|------------------|-------------|--------------|
+| blend_50_50_top5 | +0.7027% | -12.1349% | 6/11 | 4/11 | 18.7624% | 860 |
+| blend_70_30_top5 | +8.2862% | -4.6059% | 7/11 | 5/11 | 18.3355% | 1057 |
+| blend_70_30_top5_depth5 | +8.3543% | -4.5322% | 6/11 | 5/11 | 24.5693% | 1723 |
+| c16_only_top5 | -1.3701% | -14.1661% | 5/11 | 3/11 | 15.6983% | 197 |
+| c17_raw_top5_rebal10 | -1.3701% | -14.1661% | 5/11 | 3/11 | 15.6983% | 197 |
+| c18_delta_top5_rebal10 | +0.1637% | -12.6658% | 6/11 | 2/11 | 16.4907% | 537 |
+| s1_top5_rebal10 | -4.6840% | -17.4862% | 4/11 | 2/11 | 22.0694% | 985 |
+| s1_top5_rebal10_depth5 | +0.9814% | -11.8667% | 6/11 | 5/11 | 25.4719% | 1568 |
+
+**Finding**:
+- Canonical patched WFV is now the decision-grade source; timestamped artifacts are historical clues only.
+- `blend_70_30_top5` is the current clean active candidate (strong uplift vs S1 depth5 with better drawdown than depth5 blend).
+- `blend_70_30_top5_depth5` is retained as secondary comparator (slightly better mean return/excess, but weaker drawdown and positive-fold count).
+- `s1_top5_rebal10_depth5` is demoted to comparator path; not the main execution direction.
+- `reallocate_selected` remains negative/deprioritized (see F00011).
+- Follow-up flag: `c16_only_top5` and `c17_raw_top5_rebal10` are numerically identical in canonical outputs; inspect C16/C17 signal wiring before interpreting them as distinct strategies.
+
+---
+
 ## F00011 — Reallocate-selected fallback does not solve S1 execution failure (2026-05-13)
 
 Provenance:
