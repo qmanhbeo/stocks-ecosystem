@@ -1,0 +1,9 @@
+{
+  "description": "70% S1 + 30% C16 order pressure, top 5 holdings, 10-day rebalance",
+  "min_hold_days": 3,
+  "name": "blend_70_30_top5",
+  "rebalance_days": 10,
+  "signal_col": "blend",
+  "signal_type": "blend_70_30",
+  "top_k": 5
+}

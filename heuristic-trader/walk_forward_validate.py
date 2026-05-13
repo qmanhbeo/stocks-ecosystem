@@ -53,6 +53,132 @@ FOLDS = [
     {"name": "fold_2025", "train_start": "2015-01-01", "train_end": "2024-12-31", "test_start": "2025-01-01", "test_end": "2025-12-31"},
 ]
 
+CANONICAL_SCHEMA_VERSION = 1
+LOCKBOX_MAX_DATE = "2025-12-31"
+CANONICAL_LEADERBOARD_COLUMNS = [
+    "strategy_name",
+    "n_folds",
+    "mean_annualized_return",
+    "mean_excess_return",
+    "positive_folds",
+    "beating_benchmark_folds",
+    "mean_max_drawdown",
+    "total_trades",
+    "robustness_notes",
+]
+CANONICAL_USED_CONFIG_KEYS = [
+    "name",
+    "signal_type",
+    "signal_col",
+    "top_k",
+    "rebalance_days",
+    "min_hold_days",
+    "candidate_scan_multiplier",
+    "sizing_mode",
+    "fallback_mode",
+]
+
+
+def _canonical_fold_list(active_folds: list[dict]) -> list[dict]:
+    """Canonical fold payload (stable subset only)."""
+    return [
+        {
+            "name": fold["name"],
+            "test_start": fold["test_start"],
+            "test_end": fold["test_end"],
+        }
+        for fold in active_folds
+    ]
+
+
+def _write_canonical_strategy_outputs(
+    canonical_root: Path,
+    strategy_name: str,
+    config: dict,
+    strategy_metrics: list[dict],
+    summary_row: dict | None,
+    active_folds: list[dict],
+):
+    """Write deterministic per-strategy canonical artifacts."""
+    strategy_dir = canonical_root / "strategies" / strategy_name
+    strategy_dir.mkdir(parents=True, exist_ok=True)
+
+    # Exact effective config used (stable key ordering, no runtime fields).
+    with open(strategy_dir / "config_effective.json", "w") as f:
+        json.dump(config, f, indent=2, sort_keys=True)
+
+    fold_df = pd.DataFrame(strategy_metrics)
+    if not fold_df.empty:
+        if "elapsed_seconds" in fold_df.columns:
+            fold_df = fold_df.drop(columns=["elapsed_seconds"])
+        sort_cols = [c for c in ["test_start", "fold_name"] if c in fold_df.columns]
+        if sort_cols:
+            fold_df = fold_df.sort_values(sort_cols).reset_index(drop=True)
+        fold_df.to_csv(strategy_dir / "fold_metrics.csv", index=False, float_format="%.6f")
+    else:
+        pd.DataFrame().to_csv(strategy_dir / "fold_metrics.csv", index=False)
+
+    if summary_row:
+        summary_df = pd.DataFrame([summary_row])
+    else:
+        summary_df = pd.DataFrame([{"strategy_name": strategy_name, "n_folds": 0}])
+    summary_df = summary_df.sort_values(["strategy_name"]).reset_index(drop=True)
+    summary_df.to_csv(strategy_dir / "strategy_summary.csv", index=False, float_format="%.6f")
+
+    used_keys = [k for k in CANONICAL_USED_CONFIG_KEYS if k in config]
+    metadata = {
+        "canonical_schema_version": CANONICAL_SCHEMA_VERSION,
+        "strategy_name": strategy_name,
+        "validation_type": "walk_forward",
+        "lockbox_max_date": LOCKBOX_MAX_DATE,
+        "fold_count": len(active_folds),
+        "folds": _canonical_fold_list(active_folds),
+        "source_config_keys": used_keys,
+    }
+    with open(strategy_dir / "metadata.json", "w") as f:
+        json.dump(metadata, f, indent=2, sort_keys=True)
+
+
+def _rebuild_canonical_leaderboard(canonical_root: Path) -> pd.DataFrame:
+    """Rebuild canonical leaderboard from canonical per-strategy summaries."""
+    strategies_dir = canonical_root / "strategies"
+    rows = []
+    if strategies_dir.exists():
+        for strategy_dir in sorted([p for p in strategies_dir.iterdir() if p.is_dir()], key=lambda p: p.name):
+            summary_path = strategy_dir / "strategy_summary.csv"
+            if not summary_path.exists():
+                continue
+            summary_df = pd.read_csv(summary_path)
+            if summary_df.empty:
+                continue
+            row = summary_df.iloc[0].to_dict()
+            rows.append({col: row.get(col, None) for col in CANONICAL_LEADERBOARD_COLUMNS})
+
+    leaderboard_df = pd.DataFrame(rows, columns=CANONICAL_LEADERBOARD_COLUMNS)
+    if not leaderboard_df.empty:
+        leaderboard_df = leaderboard_df.sort_values(["strategy_name"]).reset_index(drop=True)
+    leaderboard_df.to_csv(
+        canonical_root / "leaderboard.csv",
+        index=False,
+        float_format="%.6f",
+    )
+    return leaderboard_df
+
+
+def _write_canonical_manifest(canonical_root: Path, active_folds: list[dict], strategy_count: int):
+    """Write deterministic canonical manifest."""
+    manifest = {
+        "canonical_schema_version": CANONICAL_SCHEMA_VERSION,
+        "validation_type": "walk_forward",
+        "lockbox_max_date": LOCKBOX_MAX_DATE,
+        "fold_count": len(active_folds),
+        "folds": _canonical_fold_list(active_folds),
+        "strategy_count": int(strategy_count),
+        "notes": "Old timestamped artifacts are historical clues; canonical outputs are decision-grade.",
+    }
+    with open(canonical_root / "manifest.json", "w") as f:
+        json.dump(manifest, f, indent=2, sort_keys=True)
+
 
 def load_caches():
     """Load pre-computed caches."""
@@ -302,6 +428,12 @@ def create_argument_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Persist fold-level diagnostics (trade/selection/filter CSVs)",
     )
+    parser.add_argument(
+        "--canonical-output",
+        type=str,
+        default=None,
+        help="Deterministic canonical output root (e.g., artifacts/canonical_wfv)",
+    )
     return parser
 
 
@@ -330,14 +462,34 @@ def main():
     liquid_lookup, trad_lookup, price_cache = load_caches()
     print(f"  Liquid: {len(liquid_lookup)} dates, Trad: {len(trad_lookup)} entries, Price: {len(price_cache)} tickers")
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = Path(args.output_dir) if args.output_dir else ARTIFACT_DIR / "walk_forward" / timestamp
-    output_dir.mkdir(parents=True, exist_ok=True)
+    canonical_output_root = Path(args.canonical_output) if args.canonical_output else None
+    if canonical_output_root is not None:
+        canonical_output_root.mkdir(parents=True, exist_ok=True)
+        print(f"\nCanonical output root: {canonical_output_root}")
 
-    print(f"\nOutput directory: {output_dir}")
+    # Scratch output policy:
+    # - Default behavior: timestamped scratch folder.
+    # - Canonical-only mode: skip timestamped scratch unless explicitly requested
+    #   (or required for diagnostics capture).
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_dir = None
+    if args.output_dir:
+        output_dir = Path(args.output_dir)
+    elif canonical_output_root is None:
+        output_dir = ARTIFACT_DIR / "walk_forward" / timestamp
+    elif args.collect_diagnostics:
+        # Diagnostics are scratch-only by policy.
+        output_dir = ARTIFACT_DIR / "walk_forward" / timestamp
+
+    if output_dir is not None:
+        output_dir.mkdir(parents=True, exist_ok=True)
+        print(f"Scratch output directory: {output_dir}")
+    else:
+        print("Scratch output directory: disabled (canonical-only mode)")
 
     all_metrics = []
     strategy_metrics_map = {name: [] for name in strategy_names}
+    strategy_configs = {}
     failed_runs = []
 
     total_runs = len(strategy_names) * len(active_folds)
@@ -349,13 +501,14 @@ def main():
         print("=" * 60)
 
         config = strategy_loader.load_strategy_config(strategy_name)
+        strategy_configs[strategy_name] = config
 
         for fold in active_folds:
             run_idx += 1
             print(f"\n[{run_idx}/{total_runs}] ", end="")
             try:
                 diagnostics_output_dir = None
-                if args.collect_diagnostics:
+                if args.collect_diagnostics and output_dir is not None:
                     diagnostics_output_dir = (
                         output_dir / "diagnostics" / strategy_name / fold["name"]
                     )
@@ -382,9 +535,6 @@ def main():
                 })
 
     fold_metrics_df = pd.DataFrame(all_metrics)
-    fold_metrics_path = output_dir / "fold_metrics.csv"
-    fold_metrics_df.to_csv(fold_metrics_path, index=False)
-    print(f"\nSaved fold_metrics.csv: {fold_metrics_path}")
 
     strategy_summaries = []
     for strategy_name, metrics_list in strategy_metrics_map.items():
@@ -393,18 +543,24 @@ def main():
             strategy_summaries.append(summary)
 
     summary_df = pd.DataFrame(strategy_summaries)
-    summary_df = summary_df.sort_values("mean_annualized_return", ascending=False)
+    if not summary_df.empty and "mean_annualized_return" in summary_df.columns:
+        summary_df = summary_df.sort_values("mean_annualized_return", ascending=False).reset_index(drop=True)
 
-    csv_path = output_dir / "strategy_summary.csv"
-    summary_df.to_csv(csv_path, index=False)
-    print(f"Saved strategy_summary.csv: {csv_path}")
+    if output_dir is not None:
+        fold_metrics_path = output_dir / "fold_metrics.csv"
+        fold_metrics_df.to_csv(fold_metrics_path, index=False)
+        print(f"\nSaved fold_metrics.csv: {fold_metrics_path}")
 
-    summary_path = output_dir / "summary.json"
-    with open(summary_path, "w") as f:
-        json.dump(strategy_summaries, f, indent=2)
-    print(f"Saved summary.json: {summary_path}")
+        csv_path = output_dir / "strategy_summary.csv"
+        summary_df.to_csv(csv_path, index=False)
+        print(f"Saved strategy_summary.csv: {csv_path}")
 
-    readme_content = f"""# Walk-Forward Validation Results
+        summary_path = output_dir / "summary.json"
+        with open(summary_path, "w") as f:
+            json.dump(strategy_summaries, f, indent=2)
+        print(f"Saved summary.json: {summary_path}")
+
+        readme_content = f"""# Walk-Forward Validation Results
 
 **Generated**: {datetime.now().isoformat()}
 **Timestamp**: {timestamp}
@@ -427,10 +583,10 @@ This walk-forward validation harness adapts patterns from alpha-research-lab pri
 |------|---------------|--------------|
 """
 
-    for fold in active_folds:
-        readme_content += f"| {fold['name']} | {fold['train_start']} to {fold['train_end']} | {fold['test_start']} to {fold['test_end']} |\n"
+        for fold in active_folds:
+            readme_content += f"| {fold['name']} | {fold['train_start']} to {fold['train_end']} | {fold['test_start']} to {fold['test_end']} |\n"
 
-    readme_content += f"""
+        readme_content += f"""
 ## Summary
 
 **Total strategies tested**: {len(strategy_names)}
@@ -443,10 +599,10 @@ This walk-forward validation harness adapts patterns from alpha-research-lab pri
 |------|----------|------------------|--------------------|----------------|------------------|------------|
 """
 
-    for i, row in summary_df.iterrows():
-        readme_content += f"| {i+1} | {row['strategy_name']} | {row.get('mean_annualized_return', 'N/A'):.2%} | {row.get('median_annualized_return', 'N/A'):.2%} | {row['positive_folds']}/{row['n_folds']} | {row['beating_benchmark_folds']}/{row['n_folds']} | {row.get('robustness_notes', 'N/A')} |\n"
+        for i, row in summary_df.iterrows():
+            readme_content += f"| {i+1} | {row['strategy_name']} | {row.get('mean_annualized_return', 'N/A'):.2%} | {row.get('median_annualized_return', 'N/A'):.2%} | {row['positive_folds']}/{row['n_folds']} | {row['beating_benchmark_folds']}/{row['n_folds']} | {row.get('robustness_notes', 'N/A')} |\n"
 
-    readme_content += f"""
+        readme_content += f"""
 ## Notes
 
 - This is a VALIDATION pass, NOT a tuning pass
@@ -461,10 +617,35 @@ This walk-forward validation harness adapts patterns from alpha-research-lab pri
 - `summary.json`: Aggregate summary per strategy (JSON format)
 """
 
-    readme_path = output_dir / "README.md"
-    with open(readme_path, "w") as f:
-        f.write(readme_content)
-    print(f"Saved README.md: {readme_path}")
+        readme_path = output_dir / "README.md"
+        with open(readme_path, "w") as f:
+            f.write(readme_content)
+        print(f"Saved README.md: {readme_path}")
+
+    if canonical_output_root is not None:
+        summary_lookup = {}
+        for row in strategy_summaries:
+            name = row.get("strategy_name")
+            if name:
+                summary_lookup[name] = row
+
+        for strategy_name in strategy_names:
+            _write_canonical_strategy_outputs(
+                canonical_root=canonical_output_root,
+                strategy_name=strategy_name,
+                config=strategy_configs[strategy_name],
+                strategy_metrics=strategy_metrics_map[strategy_name],
+                summary_row=summary_lookup.get(strategy_name),
+                active_folds=active_folds,
+            )
+
+        leaderboard_df = _rebuild_canonical_leaderboard(canonical_output_root)
+        _write_canonical_manifest(
+            canonical_root=canonical_output_root,
+            active_folds=active_folds,
+            strategy_count=len(leaderboard_df),
+        )
+        print(f"\nSaved canonical outputs under: {canonical_output_root}")
 
     print("\n" + "=" * 80)
     print("WALK-FORWARD VALIDATION COMPLETE")
@@ -502,7 +683,10 @@ This walk-forward validation harness adapts patterns from alpha-research-lab pri
         for strat, fold, err in failed_runs:
             print(f"  {strat} / {fold}: {err}")
 
-    print(f"\nArtifacts saved to: {output_dir}")
+    if output_dir is not None:
+        print(f"\nArtifacts saved to: {output_dir}")
+    if canonical_output_root is not None:
+        print(f"Canonical artifacts saved to: {canonical_output_root}")
 
 
 if __name__ == "__main__":

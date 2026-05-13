@@ -1,0 +1,2 @@
+strategy_name,n_folds,mean_total_return,median_total_return,mean_annualized_return,median_annualized_return,mean_max_drawdown,positive_folds,beating_benchmark_folds,total_trades,mean_benchmark_return,mean_excess_return,robustness_notes
+s1_top5_rebal10_depth5,11,0.009680,0.032232,0.009814,0.032490,0.254719,6,5,1568,0.128347,-0.118667,FRAGILE: Inconsistent performance across folds

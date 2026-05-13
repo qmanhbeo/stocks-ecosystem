@@ -1,0 +1,9 @@
+{
+  "description": "S1 signal only, top 5 holdings, 10-day rebalance",
+  "min_hold_days": 3,
+  "name": "s1_top5_rebal10",
+  "rebalance_days": 10,
+  "signal_col": "s1_proba",
+  "signal_type": "s1_only",
+  "top_k": 5
+}

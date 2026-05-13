@@ -1,0 +1,9 @@
+{
+  "description": "C17 raw order volume ratio, top 5 holdings, 10-day rebalance",
+  "min_hold_days": 3,
+  "name": "c17_raw_top5_rebal10",
+  "rebalance_days": 10,
+  "signal_col": "order_volume_ratio",
+  "signal_type": "c17_only",
+  "top_k": 5
+}

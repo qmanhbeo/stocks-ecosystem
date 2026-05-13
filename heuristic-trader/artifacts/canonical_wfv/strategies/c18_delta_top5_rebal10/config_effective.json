@@ -1,0 +1,9 @@
+{
+  "description": "C18 order pressure rank delta, top 5 holdings, 10-day rebalance",
+  "min_hold_days": 3,
+  "name": "c18_delta_top5_rebal10",
+  "rebalance_days": 10,
+  "signal_col": "order_volume_ratio_rank_delta",
+  "signal_type": "c18_only",
+  "top_k": 5
+}

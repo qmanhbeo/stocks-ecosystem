@@ -1,0 +1,11 @@
+{
+  "candidate_scan_multiplier": 5,
+  "description": "Depth frontier depth5: 70% S1 + 30% C16, scan 5, fixed sizing",
+  "min_hold_days": 3,
+  "name": "blend_70_30_top5_depth5",
+  "rebalance_days": 10,
+  "signal_col": "blend",
+  "signal_type": "blend_70_30",
+  "sizing_mode": "fixed_initial",
+  "top_k": 5
+}

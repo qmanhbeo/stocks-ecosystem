@@ -1,0 +1,11 @@
+{
+  "candidate_scan_multiplier": 5,
+  "description": "Depth frontier depth5: S1 signal only, scan 5, fixed sizing",
+  "min_hold_days": 3,
+  "name": "s1_top5_rebal10_depth5",
+  "rebalance_days": 10,
+  "signal_col": "s1_proba",
+  "signal_type": "s1_only",
+  "sizing_mode": "fixed_initial",
+  "top_k": 5
+}

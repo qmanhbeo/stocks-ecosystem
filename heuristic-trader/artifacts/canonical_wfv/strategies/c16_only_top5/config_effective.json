@@ -1,0 +1,9 @@
+{
+  "description": "C16 order pressure only, top 5 holdings, 10-day rebalance",
+  "min_hold_days": 3,
+  "name": "c16_only_top5",
+  "rebalance_days": 10,
+  "signal_col": "order_volume_ratio_rank",
+  "signal_type": "c16_only",
+  "top_k": 5
+}

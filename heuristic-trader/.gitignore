@@ -1,0 +1,20 @@
+# Scratch/debug artifacts
+artifacts/runs/
+artifacts/walk_forward/
+artifacts/summaries/*_summary.csv
+artifacts/summaries/*_summary.parquet
+artifacts/summaries/latest_summary.csv
+artifacts/summaries/latest_summary.parquet
+artifacts/execution_*/
+artifacts/cash_mechanics*/
+artifacts/regime_*/
+artifacts/ticker_pnl_regime/
+artifacts/trade_level_regime/
+artifacts/parity_diagnostics/
+artifacts/cache_coverage/
+artifacts/liquidity_semantics/
+artifacts/s1_depth5_validation_walkforward/
+
+# Keep canonical decision-grade outputs trackable
+!artifacts/canonical_wfv/
+!artifacts/canonical_wfv/**

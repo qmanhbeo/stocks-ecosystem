@@ -110,6 +110,11 @@ def create_argument_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Persist backtest diagnostics (trade/selection/filter CSVs)",
     )
+    parser.add_argument(
+        "--update-latest",
+        action="store_true",
+        help="Update artifacts/summaries/latest_summary.* (default: disabled)",
+    )
     return parser
 
 
@@ -348,7 +353,7 @@ def run_single_strategy(
     )
 
 
-def save_summary_table(all_metrics: list[dict], run_id: str):
+def save_summary_table(all_metrics: list[dict], run_id: str, update_latest: bool = False):
     """Save comparison summary table."""
     summary_dir = ARTIFACT_DIR / "summaries"
     summary_dir.mkdir(parents=True, exist_ok=True)
@@ -364,9 +369,10 @@ def save_summary_table(all_metrics: list[dict], run_id: str):
     csv_path = summary_dir / f"{run_id}_summary.csv"
     df.to_csv(csv_path, index=False)
 
-    # Also save as "latest"
-    df.to_parquet(summary_dir / "latest_summary.parquet", index=False)
-    df.to_csv(summary_dir / "latest_summary.csv", index=False)
+    # Optionally save as "latest" (disabled by default to avoid noisy git diffs)
+    if update_latest:
+        df.to_parquet(summary_dir / "latest_summary.parquet", index=False)
+        df.to_csv(summary_dir / "latest_summary.csv", index=False)
 
     return df
 
@@ -467,14 +473,15 @@ def main():
 
     # Generate summary
     if all_metrics:
-        df = save_summary_table(all_metrics, run_id)
+        df = save_summary_table(all_metrics, run_id, update_latest=args.update_latest)
         print_summary_table(all_metrics, failed_strategies)
 
         summary_dir = ARTIFACT_DIR / "summaries"
         print(f"\nSummary saved to:")
         print(f"  {summary_dir / run_id}_summary.parquet")
         print(f"  {summary_dir / run_id}_summary.csv")
-        print(f"  {summary_dir / 'latest_summary.parquet'}")
+        if args.update_latest:
+            print(f"  {summary_dir / 'latest_summary.parquet'}")
 
         if custom_output_dir and not args.all_strategies:
             print(f"  {custom_output_dir / name}")

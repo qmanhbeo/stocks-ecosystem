@@ -17,11 +17,10 @@ heuristic-trader/
 │   ├── liquid_lookup.joblib
 │   ├── trad_lookup.joblib
 │   └── vnindex_baseline.parquet
-├── artifacts/           # Output artifacts from runs
-│   └── runs/<timestamp>/
-│       ├── config.json
-│       ├── metrics.json
-│       └── daily_equity.parquet
+├── artifacts/           # Outputs (scratch + canonical)
+│   ├── runs/<timestamp>/        # scratch single-run outputs
+│   ├── walk_forward/<timestamp>/ # scratch walk-forward outputs
+│   └── canonical_wfv/           # decision-grade deterministic WFV outputs
 ├── notes/               # Session logs and findings
 └── session_*.py         # Ad-hoc experiment scripts
 ```
@@ -95,7 +94,16 @@ This runs all strategies in `strategies.json` and produces a comparison table.
 
 ## Artifact Outputs
 
-Each backtest run produces:
+### Artifact Policy (Important)
+
+- Timestamped artifacts are **scratch/legacy clues**, not decision-grade truth.
+- Decision-grade truth should come from `artifacts/canonical_wfv/` only.
+- Old timestamped artifacts must not drive new decisions without fresh patched canonical revalidation.
+- 2026 lockbox policy remains unchanged (`max end date = 2025-12-31` by default).
+
+### Scratch Backtest Outputs
+
+Each scratch backtest run produces:
 
 ```
 artifacts/runs/<timestamp>/
@@ -104,18 +112,36 @@ artifacts/runs/<timestamp>/
 └── daily_equity.parquet  # Daily equity curve (optional)
 ```
 
-### Multi-Strategy Summary
+### Scratch Multi-Strategy Summary
 
 When running with `--all-strategies`, comparison summaries are also generated:
 
 ```
 artifacts/summaries/
-├── latest_summary.parquet
-├── latest_summary.csv
-└── <run_id>_summary.parquet
+└── <run_id>_summary.parquet/csv
 ```
 
+`latest_summary.*` is only updated when `run_backtest.py` is called with `--update-latest`.
+
 Columns: `strategy_name`, `total_return`, `annualized_return`, `sharpe`, `max_drawdown`, `total_trades`, `start_date`, `end_date`
+
+### Canonical Walk-Forward Outputs (Decision-Grade)
+
+Use `walk_forward_validate.py --canonical-output artifacts/canonical_wfv` to write stable deterministic outputs:
+
+```
+artifacts/canonical_wfv/
+├── manifest.json
+├── leaderboard.csv
+└── strategies/
+    └── <strategy_name>/
+        ├── config_effective.json
+        ├── strategy_summary.csv
+        ├── fold_metrics.csv
+        └── metadata.json
+```
+
+Canonical files are CSV/JSON only, strategy-separated, overwrite-in-place, and exclude volatile fields like timestamps and `elapsed_seconds`.
 
 ### metrics.json schema:
 ```json
