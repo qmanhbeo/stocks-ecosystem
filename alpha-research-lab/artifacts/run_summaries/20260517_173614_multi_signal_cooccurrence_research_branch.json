@@ -1,0 +1,125 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_173614_multi_signal_cooccurrence_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_173614_multi_signal_cooccurrence_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "C23/C24/C25/C26 fire on different days. When MULTIPLE fire together on same ticker (co-occurrence), does that indicate stronger hidden demand? Test count of signal families per ticker-day (1 vs 2 vs 3+).",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "C23/C24/C25/C26 fire on different days. When MULTIPLE fire together on same ticker (co-occurrence), does that indicate stronger hidden demand? Test count of signal families per ticker-day (1 vs 2 vs 3+).",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "multi_signal_cooccurrence",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "composite",
+        "label": "Any C23/C24/C25/C26 firing (OR)",
+        "name": "composite_any",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cooccurrence",
+        "label": "Exactly 1 signal",
+        "name": "signal_1",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cooccurrence",
+        "label": "Exactly 2 signals",
+        "name": "signal_2",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cooccurrence",
+        "label": "3+ signals",
+        "name": "signal_3plus",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "composite_and",
+        "label": "2+ signals (AND)",
+        "name": "composite_2plus",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "multi_signal_cooccurrence",
+  "summary": {
+    "and_vs_or": 0.04569751325235005,
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_ic": 0.24450086966388176,
+    "best_state": "composite_2plus",
+    "best_vs_single": 0.06887886010689798,
+    "composite_2plus_ic": 0.24450086966388176,
+    "composite_any_ic": 0.1988033564115317,
+    "decision": "PASSED",
+    "panel_rows": 809019,
+    "signal_1_ic": 0.17239206903668297,
+    "signal_2_ic": 0.24127092914358095,
+    "signal_3plus_ic": 0.23295386526842438,
+    "states_evaluated": 6
+  },
+  "ts": "20260517_173614"
+}

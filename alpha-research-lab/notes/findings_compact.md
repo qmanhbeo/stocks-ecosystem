@@ -27,6 +27,15 @@ entry must include source anchors: stable finding IDs or source session links.
   mapping, not threshold mining. Source anchors: `F393`, `F394`, `F412`,
   `F414`, `F419`, `F423`, `F424`, `D042-D049`.
 
+- Multi-signal extension frontier (post-F445/F447): binary low-breadth gating
+  remains the strongest confirmed amplifier on top of `composite_2plus`, while
+  recent extensions failed by sparsity or negative incremental lift
+  (blocked-triple, breadth weighting, blocked single-signal pre-convergence,
+  tight-capacity modulation). Current read: keep `composite_2plus` and
+  `composite_2plus × low_breadth` as the stable contract, and park the four
+  extensions unless data/contract changes materially. Source anchors: `F445`,
+  `F446`, `F447`, `D085-D088`.
+
 - Latent-state machine evidence: H507 produced the first explicit transition
   map for the C23 family and supports a compact state organization: quiet
   dominates coverage, while onset/amplified/router/carry states all show

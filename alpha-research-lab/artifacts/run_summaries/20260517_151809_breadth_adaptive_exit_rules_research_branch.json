@@ -1,0 +1,156 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_151809_breadth_adaptive_exit_rules_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_151809_breadth_adaptive_exit_rules_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "H526 found exit timing makes NO difference overall. But H525 found high-breadth dates have weaker signal than low-breadth. Test if exit timing differs BY breadth regime: exit faster on high-breadth (weak signal decays fast), hold longer on low-breadth.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "H526 found exit timing makes NO difference overall. But H525 found high-breadth dates have weaker signal than low-breadth. Test if exit timing differs BY breadth regime: exit faster on high-breadth (weak signal decays fast), hold longer on low-breadth.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "breadth_adaptive_exit_rules",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "breadth_exit",
+        "label": "Low breadth entry, exit within 1d",
+        "name": "low_breadth_exit_1d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth_exit",
+        "label": "Low breadth entry, exit 2-3d",
+        "name": "low_breadth_exit_2_3d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth_exit",
+        "label": "Low breadth entry, exit 4d+",
+        "name": "low_breadth_exit_4pl",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth_exit",
+        "label": "High breadth entry, exit within 1d",
+        "name": "high_breadth_exit_1d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth_exit",
+        "label": "High breadth entry, exit 2-3d",
+        "name": "high_breadth_exit_2_3d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth_exit",
+        "label": "High breadth entry, exit 4d+",
+        "name": "high_breadth_exit_4pl",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Low breadth any entry",
+        "name": "low_breadth_any",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "High breadth any entry",
+        "name": "high_breadth_any",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "breadth_adaptive_exit_rules",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_year_ic": 0.27124294754716893,
+    "best_high_exit": 0.26251195817917594,
+    "best_low_exit": 0.23932119602913318,
+    "best_positive_years": 5,
+    "best_state_by_avg_year_ic": "low_breadth_any",
+    "best_years": 5,
+    "decision": "FAILED",
+    "high_breadth_any_ic": 0.2525283485741802,
+    "high_breadth_exit_1d_ic": 0.26251195817917594,
+    "high_breadth_exit_2_3d_ic": null,
+    "high_breadth_exit_4pl_ic": null,
+    "high_exit_spread": 0.0,
+    "low_breadth_any_ic": 0.27124294754716893,
+    "low_breadth_exit_1d_ic": 0.23932119602913318,
+    "low_breadth_exit_2_3d_ic": null,
+    "low_breadth_exit_4pl_ic": null,
+    "low_exit_spread": 0.0,
+    "panel_rows": 809019,
+    "states_evaluated": 9
+  },
+  "ts": "20260517_151809"
+}

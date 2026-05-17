@@ -1,0 +1,142 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_162721_c27_capacity_amplifier_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_162721_c27_capacity_amplifier_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "C27 × capacity amplifier",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test C27 (blocked stocks) × tight_capacity intersection. Two different hidden-demand mechanisms combining.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "c27_capacity_amplifier",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "liquid",
+        "label": "Liquid stocks",
+        "name": "liquid",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "capacity",
+        "label": "Tight capacity (Q1 order count)",
+        "name": "tight_capacity",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c27",
+        "label": "Blocked stocks (C27)",
+        "name": "blocked_either",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c27_cap",
+        "label": "C27 × tight capacity",
+        "name": "blocked_tight",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c27_cap",
+        "label": "C27 × loose capacity",
+        "name": "blocked_loose",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "liq_cap",
+        "label": "Liquid × tight capacity",
+        "name": "liquid_tight",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "liq_cap",
+        "label": "Liquid × loose capacity",
+        "name": "liquid_loose",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "c27_capacity_amplifier",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_ic": 0.16882311401309955,
+    "best_state": "blocked_tight",
+    "blocked_either_ic": 0.14771588194427007,
+    "blocked_loose_ic": 0.1327626886876627,
+    "blocked_tight_ic": 0.16882311401309955,
+    "decision": "MIXED (marginal)",
+    "diff_vs_blocked": 0.021107232068829473,
+    "diff_vs_tight": 0.0040345675216109655,
+    "liquid_ic": 0.1265749401228919,
+    "liquid_tight_ic": 0.16486519758218765,
+    "panel_rows": 826404,
+    "states_evaluated": 8,
+    "tight_capacity_ic": 0.16478854649148858
+  },
+  "ts": "20260517_162721"
+}

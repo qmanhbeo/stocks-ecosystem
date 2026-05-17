@@ -1,0 +1,142 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_162326_foreign_flow_regime_c27_conditioner_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_162326_foreign_flow_regime_c27_conditioner_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "foreign flow regime as C27 conditioner",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test if C27 (blocked stocks) works differently in foreign-up vs foreign-down regimes. H443 failed as additive, now test as conditioner.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "foreign_flow_regime_c27_conditioner",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "liquid",
+        "label": "Liquid stocks",
+        "name": "liquid",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c27",
+        "label": "Blocked stocks (C27)",
+        "name": "blocked_either",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "regime",
+        "label": "Foreign-up regime days",
+        "name": "foreign_up_regime",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c27_regime",
+        "label": "C27 × foreign-up",
+        "name": "blocked_foreign_up",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c27_regime",
+        "label": "C27 × foreign-down",
+        "name": "blocked_foreign_down",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "liq_regime",
+        "label": "Liquid × foreign-up",
+        "name": "liquid_foreign_up",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "liq_regime",
+        "label": "Liquid × foreign-down",
+        "name": "liquid_foreign_down",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "foreign_flow_regime_c27_conditioner",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_ic": 0.22427802325177484,
+    "best_state": "blocked_foreign_down",
+    "blocked_diff": -0.10968978516871947,
+    "blocked_either_ic": 0.14771588194427007,
+    "blocked_foreign_down_ic": 0.22427802325177484,
+    "blocked_foreign_up_ic": 0.11458823808305538,
+    "c27_lift_differential": -0.12719172941612927,
+    "c27_lift_foreign_down": 0.10692164140246105,
+    "c27_lift_foreign_up": -0.020270088013668225,
+    "decision": "FAILED",
+    "liquid_ic": 0.1265749401228919,
+    "panel_rows": 826404,
+    "states_evaluated": 8
+  },
+  "ts": "20260517_162326"
+}

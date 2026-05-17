@@ -76,7 +76,7 @@ Strategies are defined in `strategies/strategies.json`:
 1. Edit `strategies/strategies.json`
 2. Add a new entry with required fields: `name`, `signal_type`, `signal_col`, `top_k`, `rebalance_days`, `min_hold_days`
 
-Available signal types: `s1_only`, `c16_only`, `blend_70_30`, `blend_50_50`
+Available signal types: `s1_only`, `c16_only`, `c17_only`, `c17_active_boost`, `c18_only`, `s1_low_breadth`, `s1_active_low_breadth`, `blend_70_30`, `blend_50_50`, `blend_70_30_low_breadth`
 
 ## CLI Entrypoint
 

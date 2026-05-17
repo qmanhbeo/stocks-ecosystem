@@ -1,0 +1,104 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_174457_h604_multi_signal_breadth_amplification_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_174457_h604_multi_signal_breadth_amplification_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Multi-signal × Low-Breadth: F445 (composite_2+ = 0.2445) + H529 (low_breadth = +0.0266) might amplify further. Test composite_2+ × low_breadth vs composite_2+ alone.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Multi-signal × Low-Breadth: F445 (composite_2+ = 0.2445) + H529 (low_breadth = +0.0266) might amplify further. Test composite_2+ × low_breadth vs composite_2+ alone.",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "h604_multi_signal_breadth_amplification",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "composite",
+        "label": "2+ signals firing (AND of C23/C24/C25/C26)",
+        "name": "composite_2plus",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Low market breadth (bottom 20%)",
+        "name": "low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "2+ signals + low market breadth",
+        "name": "composite_2plus_low_breadth",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h604_multi_signal_breadth_amplification",
+  "summary": {
+    "composite_2plus_ic": 0.24450086966388176,
+    "composite_2plus_low_breadth_ic": 0.26507675808240155,
+    "decision": "PASSED",
+    "f445_baseline": 0.2445,
+    "lift_vs_composite": 0.02057588841851979,
+    "low_breadth_ic": 0.12896884917371956,
+    "panel_rows": 809019,
+    "states_evaluated": 4
+  },
+  "ts": "20260517_174457"
+}

@@ -1,0 +1,134 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_163527_c27_signal_composite_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_163527_c27_signal_composite_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "C27 × signal composite",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test C27 (blocked stocks) × composite signal (C23/C24/C25). H573 failed with C23 added to tight+low, but C27 is different mechanism.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "c27_signal_composite",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "C23/C24/C25 composite",
+        "name": "composite_signal",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c27",
+        "label": "Blocked stocks (C27)",
+        "name": "blocked_either",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "c27_signal",
+        "label": "C27 × composite signal",
+        "name": "blocked_composite",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "C23 active",
+        "name": "c23_active",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "C24 ceiling",
+        "name": "c24_signal",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "C25 VWAP",
+        "name": "c25_signal",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "c27_signal_composite",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_ic": 0.1670430327139686,
+    "best_state": "c24_signal",
+    "blocked_composite_ic": 0.14988629358179667,
+    "blocked_either_ic": 0.14771588194427007,
+    "c23_ic": 0.16478854649148858,
+    "c24_ic": 0.1670430327139686,
+    "c25_ic": 0.12014905795113308,
+    "composite_ic": 0.13005979907269044,
+    "decision": "PASSED",
+    "diff_vs_c27": 0.002170411637526598,
+    "diff_vs_composite": 0.01982649450910623,
+    "panel_rows": 826404,
+    "states_evaluated": 7
+  },
+  "ts": "20260517_163527"
+}

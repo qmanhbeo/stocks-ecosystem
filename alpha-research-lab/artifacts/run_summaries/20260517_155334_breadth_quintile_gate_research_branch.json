@@ -1,0 +1,121 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_155334_breadth_quintile_gate_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_155334_breadth_quintile_gate_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "quintiles vs binary",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test breadth quintiles (Q1-Q5) vs binary bottom 20%. Different quintiles may capture different alpha regimes.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "breadth_quintile_gate",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "binary",
+        "label": "Binary low_breadth (bottom 20%)",
+        "name": "low_breadth_binary",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "quintile",
+        "label": "Breadth Q1 (lowest 20%)",
+        "name": "breadth_q1",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "quintile",
+        "label": "Breadth Q2",
+        "name": "breadth_q2",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "quintile",
+        "label": "Breadth Q3",
+        "name": "breadth_q3",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "quintile",
+        "label": "Breadth Q4",
+        "name": "breadth_q4",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "quintile",
+        "label": "Breadth Q5 (highest 20%)",
+        "name": "breadth_q5",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "breadth_quintile_gate",
+  "summary": {
+    "baseline_ic": 0.11563043871668231,
+    "best_avg_ic": 0.143481228988509,
+    "best_state": "breadth_q2",
+    "binary_low_breadth_ic": 0.10727761166914655,
+    "decision": "FAILED",
+    "panel_rows": 821764,
+    "q1_ic": 0.1053233826203077,
+    "q1_vs_binary": -0.0019542290488388514,
+    "states_evaluated": 6
+  },
+  "ts": "20260517_155334"
+}

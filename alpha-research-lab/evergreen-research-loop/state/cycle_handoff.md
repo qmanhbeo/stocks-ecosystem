@@ -1,53 +1,31 @@
 # Evergreen Cycle Handoff
 
-## Cycle 20 — Sessions 342-345 (2026-05-17)
+## Cycle 33 — 2026-05-17
 
-### What Completed
+**Last action:** Session 390 (H107 Signal Order as Hidden State) - FAILED, D084
 
-- **H529** (S342): low_breadth filter → PASSED, IC=0.1542 (+0.0266)
-- **H530** (S343): continuous weighting → FAILED, D058
-- **H531** (S344): tight + low_breadth → PASSED, IC=0.1979 (+0.0702)
-- **H532** (S345): post-spike → MIXED, combo = IC=0.1982 (+0.0706)
-- **Bright-mind**: 5 new eurekas added (#37-41)
+**Outcome:** Signal order does NOT add value. first_any IC=0.2360 vs composite=0.2445 (-0.0085). Dead-end D084.
 
-### Key Verified Outcomes
+**Key findings:**
+- F447: composite_2+×low_breadth = 0.2651 (BEST)
+- F445: composite_2+ = 0.2445
+- F440: cofire Q1 = 0.2064
+- H121 (triple): 0.2702 (MIXED)
+- H107 (signal order): FAILED, D084
 
-| Outcome | Evidence |
-|---------|----------|
-| low_breadth = regime amplifier | H529: +0.0266 |
-| tight + low_breadth = strongest combo | H531: 0.1979 |
-| lowbreadth_post_spike = NEW | H532: 0.1982 |
-| active + low_breadth = STRONGEST | H528: 0.2013 |
+**Updated:**
+- `notes/session_00390_log.md`
+- `notes/sessions_compact.md` - Sessions 387-390
+- `notes/live_state.md` - sessions 387-390, D082-D084, new ideas 126-132
+- `notes/deadends-00031-00060.md` - D084
+- `notes/deadends_compact.md` - D084
 
-### Files Updated
+**Next queue head:** H108 (Multi-Signal × Blocked Triple) or new ideas 127/129/132
 
-- `live_state.md` — queue with ideas #37-41
-- `session_00345_log.md` — H532 results
-- `sessions_compact.md` — S345 added
-- `findings-00391-00420.md` — F425 added
+**Blockers:** Intraday BLOCKED, order arrival BLOCKED, volume D060, ultra_negative UNAVAILABLE
 
-### Current Queue
+**Source of truth:** `notes/live_state.md` + `notes/sessions_compact.md` + `artifacts/run_summaries/YYYYMMDD_*.json`
 
-Tested: #32, #35
+---
 
-Remaining (untested):
-- #33 Breadth-Sector Cross-Filter
-- #34 Active State Duration Sweet Spot
-- #36 Inverse Breadth Signal
-
-New eurekas (untested):
-- #37 Triple-Intersection Alpha
-- #38 Capacity Expansion Regime
-- #39 Breadth-Weighted Composite
-- #40 Sector-Breadth Divergence
-- #41 Capacity-Volume-Breadth Triple
-
-### Blockers / Data Gates
-
-- Intraday/auction data: blocked (data-gated)
-
-### Source of Truth
-
-**`notes/live_state.md` and saved artifacts are authoritative.**
-
-Cycle restart: `cd alpha-research-lab && make loop`
+`cd alpha-research-lab && make loop`

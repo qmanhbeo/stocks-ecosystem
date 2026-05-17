@@ -1,0 +1,101 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_192829_h607_inverse_multi_signal_edge_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_192829_h607_inverse_multi_signal_edge_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Test whether signal_1 stocks in blocked state outperform signal_1 baseline as a pre-convergence hidden-demand edge.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test whether signal_1 stocks in blocked state outperform signal_1 baseline as a pre-convergence hidden-demand edge.",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "h607_inverse_multi_signal_edge",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "signal_count",
+        "label": "Exactly one signal active",
+        "name": "signal_1",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Exactly one signal + blocked",
+        "name": "signal_1_blocked",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Exactly one signal + liquid",
+        "name": "signal_1_liquid",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h607_inverse_multi_signal_edge",
+  "summary": {
+    "decision": "FAILED",
+    "lift_blocked_vs_signal_1": -0.04872124098855482,
+    "panel_rows": 809019,
+    "signal_1_blocked_ic": 0.12367082804812815,
+    "signal_1_ic": 0.17239206903668297
+  },
+  "ts": "20260517_192829"
+}

@@ -1,0 +1,130 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_172553_signal_accumulation_intensity_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_172553_signal_accumulation_intensity_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Signal accumulation intensity: cumulative days in active state (last 30d) predicts stronger alpha. Stocks with sustained presence (20+ days) should have stronger IC than transient activation (1-2 days).",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Signal accumulation intensity: cumulative days in active state (last 30d) predicts stronger alpha. Stocks with sustained presence (20+ days) should have stronger IC than transient activation (1-2 days).",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "signal_accumulation_intensity",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": "all_rows",
+        "family": "active",
+        "label": "Active state (C16 rank <= 0.2)",
+        "name": "active_only",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "active_only",
+        "family": "accumulation",
+        "label": "Low accumulation: 0-25th percentile of active_30d_intensity on active rows",
+        "name": "accumulation_q1",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "active_only",
+        "family": "accumulation",
+        "label": "Mid-low accumulation: 25-50th percentile",
+        "name": "accumulation_q2",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "active_only",
+        "family": "accumulation",
+        "label": "Mid-high accumulation: 50-75th percentile",
+        "name": "accumulation_q3",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "active_only",
+        "family": "accumulation",
+        "label": "High accumulation: 75-100th percentile (20+ days in last 30)",
+        "name": "accumulation_q4",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "active_only",
+        "family": "accumulation",
+        "label": "8+ days in active state in last 30 (mimics H534 duration_8pl)",
+        "name": "accumulation_8pl",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "signal_accumulation_intensity",
+  "summary": {
+    "accumulation_8pl_ic": 0.18187116621938984,
+    "active_only_ic": 0.16478854649148858,
+    "baseline_ic": 0.13021929062689605,
+    "decision": "PASSED",
+    "panel_rows": 826404,
+    "q1_ic": 0.11374364573274383,
+    "q4_ic": 0.20062130431639258,
+    "q4_vs_baseline": 0.07040201368949653,
+    "q4_vs_q1": 0.08687765858364875,
+    "states_evaluated": 7
+  },
+  "ts": "20260517_172553"
+}

@@ -1,0 +1,125 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_165153_blocked_duration_sweet_spot_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_165153_blocked_duration_sweet_spot_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "blocked duration sweet spot",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test if persistence of being blocked modulates C27 quality. H534 found longer in active = stronger. Test if same for blocked.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "blocked_duration_sweet_spot",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "c27",
+        "label": "Blocked stocks (C27)",
+        "name": "blocked_either",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "duration",
+        "label": "Newly blocked (1d)",
+        "name": "duration_1d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "duration",
+        "label": "Blocked 2-3d",
+        "name": "duration_2_3d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "duration",
+        "label": "Blocked 4-7d",
+        "name": "duration_4_7d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "duration",
+        "label": "Persistently blocked (8d+)",
+        "name": "duration_8pl",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "blocked_duration_sweet_spot",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_ic": 0.14771588194427007,
+    "best_state": "blocked_either",
+    "blocked_either_ic": 0.14771588194427007,
+    "decision": "FAILED (no data)",
+    "diff_8pl_1d": null,
+    "diff_8pl_c27": null,
+    "duration_1d_ic": null,
+    "duration_2_3d_ic": 0.14488789611858913,
+    "duration_4_7d_ic": null,
+    "duration_8pl_ic": null,
+    "panel_rows": 826404,
+    "states_evaluated": 6
+  },
+  "ts": "20260517_165153"
+}

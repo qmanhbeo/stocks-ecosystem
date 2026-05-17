@@ -1,0 +1,138 @@
+{
+  "artifacts": {
+    "entropy_summary": "artifacts/research_branch/20260517_154126_signal_mass_entropy_regime_entropy_summary.parquet",
+    "results": "artifacts/research_branch/20260517_154126_signal_mass_entropy_regime_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_154126_signal_mass_entropy_regime_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "entropy as regime detector",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test if Shannon entropy of S1 mass distribution per date is a hidden regime detector. High entropy = dispersed alpha = better IC. Compare with H547's concentration ratio (top-5 share).",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "signal_mass_entropy_regime",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "entropy_regime",
+        "label": "Low entropy dates (Q1, concentrated signal mass)",
+        "name": "low_entropy",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "entropy_regime",
+        "label": "High entropy dates (Q5, dispersed signal mass)",
+        "name": "high_entropy",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "entropy_quintile",
+        "label": "Bottom entropy quintile (most concentrated)",
+        "name": "entropy_q1",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "entropy_quintile",
+        "label": "Top entropy quintile (most dispersed)",
+        "name": "entropy_q5",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Low breadth dates (bottom 20%)",
+        "name": "low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Low entropy + Low breadth (same regime as H547)",
+        "name": "low_entropy_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "High entropy + Low breadth",
+        "name": "high_entropy_low_breadth",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "signal_mass_entropy_regime",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_ic": 0.14771459441137277,
+    "best_state": "low_entropy_low_breadth",
+    "decision": "FAILED",
+    "entropy_lift": -0.0380085112294581,
+    "high_entropy_ic": 0.10671916785233,
+    "low_entropy_ic": 0.1447276790817881,
+    "panel_rows": 826404,
+    "states_evaluated": 8
+  },
+  "ts": "20260517_154126"
+}

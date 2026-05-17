@@ -174,12 +174,64 @@ def prepare_signal_df_from_config(
     """Prepare signal DataFrame from strategy config."""
     signal_type = config["signal_type"]
     s1 = s.load_rl_signal_matrix(start=start_date, end=end_date, allow_2026=allow_2026)
+    active_rank_threshold = float(config.get("active_rank_threshold", 0.2))
+    low_breadth_percentile = float(config.get("low_breadth_percentile", 0.25))
 
     if signal_type == "s1_only":
         return s1[['time', 'ticker', 's1_proba']].copy()
     elif signal_type == "c16_only":
         c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
         return c16[['time', 'ticker', 'order_volume_ratio_rank']].copy()
+    elif signal_type == "c17_only":
+        c17 = s.load_order_pressure_raw(start=start_date, end=end_date, allow_2026=allow_2026)
+        return c17[['time', 'ticker', 'order_volume_ratio']].copy()
+    elif signal_type == "c17_active_boost":
+        c17 = s.load_order_pressure_c17_active_boost(
+            start=start_date,
+            end=end_date,
+            allow_2026=allow_2026,
+            active_rank_threshold=active_rank_threshold,
+            boost_strength=float(config.get("c17_boost_strength", 0.35)),
+            delta_weight=float(config.get("c17_delta_weight", 0.20)),
+        )
+        return c17[['time', 'ticker', 'c17_active_boost']].copy()
+    elif signal_type == "c18_only":
+        c18 = s.load_order_pressure_delta(start=start_date, end=end_date, allow_2026=allow_2026)
+        return c18[['time', 'ticker', 'order_volume_ratio_rank_delta']].copy()
+    elif signal_type == "s1_low_breadth":
+        breadth = s.load_low_breadth_regime(
+            start=start_date,
+            end=end_date,
+            allow_2026=allow_2026,
+            active_rank_threshold=active_rank_threshold,
+            low_breadth_percentile=low_breadth_percentile,
+        )
+        df = s1[['time', 'ticker', 's1_proba']].merge(
+            breadth[['time', 'is_low_breadth']],
+            on='time',
+            how='inner',
+        )
+        return df[df['is_low_breadth'] == 1][['time', 'ticker', 's1_proba']].copy()
+    elif signal_type == "s1_active_low_breadth":
+        c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
+        breadth = s.load_low_breadth_regime(
+            start=start_date,
+            end=end_date,
+            allow_2026=allow_2026,
+            active_rank_threshold=active_rank_threshold,
+            low_breadth_percentile=low_breadth_percentile,
+        )
+        df = s1[['time', 'ticker', 's1_proba']].merge(
+            c16[['time', 'ticker', 'order_volume_ratio_rank']],
+            on=['time', 'ticker'],
+            how='inner',
+        ).merge(
+            breadth[['time', 'is_low_breadth']],
+            on='time',
+            how='inner',
+        )
+        mask = (df['order_volume_ratio_rank'] < active_rank_threshold) & (df['is_low_breadth'] == 1)
+        return df[mask][['time', 'ticker', 's1_proba']].copy()
     elif signal_type in ("blend_70_30", "blend_50_50"):
         c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
         df = s1[['time', 'ticker', 's1_proba']].merge(
@@ -191,6 +243,23 @@ def prepare_signal_df_from_config(
         else:
             df['blend'] = df['s1_proba'] * 0.5 + df['order_volume_ratio_rank'] * 0.5
         return df[['time', 'ticker', 'blend']]
+    elif signal_type == "blend_70_30_low_breadth":
+        c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
+        breadth = s.load_low_breadth_regime(
+            start=start_date,
+            end=end_date,
+            allow_2026=allow_2026,
+            active_rank_threshold=active_rank_threshold,
+            low_breadth_percentile=low_breadth_percentile,
+        )
+        df = s1[['time', 'ticker', 's1_proba']].merge(
+            c16[['time', 'ticker', 'order_volume_ratio_rank']],
+            on=['time', 'ticker'],
+            how='inner',
+        )
+        df['blend'] = df['s1_proba'] * 0.7 + df['order_volume_ratio_rank'] * 0.3
+        df = df.merge(breadth[['time', 'is_low_breadth']], on='time', how='inner')
+        return df[df['is_low_breadth'] == 1][['time', 'ticker', 'blend']].copy()
     else:
         raise ValueError(f"Unknown signal_type: {signal_type}")
 
@@ -443,7 +512,7 @@ def main():
     liquid_lookup, trad_lookup, price_cache = load_caches()
     print(f"  Liquid: {len(liquid_lookup)} dates, Trad: {len(trad_lookup)} entries, Price: {len(price_cache)} tickers")
 
-    run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+    run_id = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
     all_metrics = []
     failed_strategies = []
 

@@ -26,6 +26,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 import backtest as bt
+import run_backtest as rb
 
 
 def load_legacy_data(start, end):
@@ -97,28 +98,13 @@ def run_parity_test(strategy="s1_top5_rebal10", start="2024-01-01", end="2025-12
 
     config = strategy_loader.load_strategy_config(strategy)
 
-    signal_type = config["signal_type"]
-    s1 = s.load_rl_signal_matrix(start=start, end=end)
-    if signal_type == "s1_only":
-        signal_df = s1[['time', 'ticker', 's1_proba']].copy()
-        signal_col = "s1_proba"
-    elif signal_type == "c16_only":
-        c16 = s.load_order_pressure(start=start, end=end)
-        signal_df = c16[['time', 'ticker', 'order_volume_ratio_rank']].copy()
-        signal_col = "order_volume_ratio_rank"
-    elif signal_type in ("blend_70_30", "blend_50_50"):
-        c16 = s.load_order_pressure(start=start, end=end)
-        df = s1[['time', 'ticker', 's1_proba']].merge(
-            c16[['time', 'ticker', 'order_volume_ratio_rank']], on=['time', 'ticker'])
-        if signal_type == "blend_70_30":
-            df['blend'] = df['s1_proba'] * 0.7 + df['order_volume_ratio_rank'] * 0.3
-        else:
-            df['blend'] = df['s1_proba'] * 0.5 + df['order_volume_ratio_rank'] * 0.5
-        signal_df = df[['time', 'ticker', 'blend']]
-        signal_col = "blend"
-    else:
-        print(f"Unknown signal_type: {signal_type}")
-        return None
+    signal_df = rb.prepare_signal_df_from_config(
+        config=config,
+        start_date=start,
+        end_date=end,
+        allow_2026=False,
+    )
+    signal_col = config["signal_col"]
 
     top_k = config["top_k"]
     rebal = config["rebalance_days"]

@@ -71,6 +71,51 @@
     "rebalance_days": 10,
     "min_hold_days": 3
   },
+  "c17_active_boost_top5_rebal10": {
+    "name": "c17_active_boost_top5_rebal10",
+    "description": "C17 raw with active-state boost (rank<0.2), top 5 holdings, 10-day rebalance",
+    "signal_type": "c17_active_boost",
+    "signal_col": "c17_active_boost",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "active_rank_threshold": 0.2,
+    "c17_boost_strength": 0.35,
+    "c17_delta_weight": 0.2
+  },
+  "s1_low_breadth_top5_rebal10": {
+    "name": "s1_low_breadth_top5_rebal10",
+    "description": "S1 only on low-breadth regime dates (bottom 25% active-count), top 5 holdings, 10-day rebalance",
+    "signal_type": "s1_low_breadth",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "active_rank_threshold": 0.2,
+    "low_breadth_percentile": 0.25
+  },
+  "s1_active_low_breadth_top5_rebal10": {
+    "name": "s1_active_low_breadth_top5_rebal10",
+    "description": "S1 on active + low-breadth intersection (rank<0.2 and bottom 25% breadth dates), top 5 holdings, 10-day rebalance",
+    "signal_type": "s1_active_low_breadth",
+    "signal_col": "s1_proba",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "active_rank_threshold": 0.2,
+    "low_breadth_percentile": 0.25
+  },
+  "blend_70_30_low_breadth_top5": {
+    "name": "blend_70_30_low_breadth_top5",
+    "description": "70/30 S1+C16 blend on low-breadth dates (bottom 25% active-count), top 5 holdings, 10-day rebalance",
+    "signal_type": "blend_70_30_low_breadth",
+    "signal_col": "blend",
+    "top_k": 5,
+    "rebalance_days": 10,
+    "min_hold_days": 3,
+    "active_rank_threshold": 0.2,
+    "low_breadth_percentile": 0.25
+  },
   "blend_70_30_top5_baseline_explicit": {
     "name": "blend_70_30_top5_baseline_explicit",
     "description": "Ablation baseline: 70% S1 + 30% C16, scan 3, fixed sizing",

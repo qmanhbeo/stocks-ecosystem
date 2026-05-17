@@ -915,6 +915,35 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 
 ---
 
+### C27 — Implementation Pain as Positive Signal (H574)
+**Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- **Standalone IC:** +0.1477 (vs liquid +0.1266 = **+17% boost**)
+- **Lift vs baseline:** +0.0211
+- **Consistency:** 10/10 positive years
+
+**What it captures:**
+- stocks that are blocked from buying OR selling (cannot execute at next open)
+- implementation difficulty = hidden demand = alpha
+- inverts the traditional tradability veto
+
+**Formula:** `NOT can_buy_next_open OR NOT can_sell_next_open`
+
+**Independent components:**
+- blocked_either: IC +0.1477, +0.0211 lift
+- blocked_sell: IC +0.1293, +0.0027 lift
+- blocked_buy: IC +0.1062 (weak)
+
+**Why it matters:**
+- First finding that IMPLEMENTATION DIFFICULTY is POSITIVE, not a veto
+- Hard-to-trade stocks capture hidden demand that others can't easily access
+- Different mechanism from all existing signals (illiquidity/regime based)
+- Do NOT combine with other filters - pain signal is standalone
+
+**Source:** Session 368, F438.
+
+---
+
 ### C16-Triple — CafeF Order Pressure + Triple Storm Conditions (S229)
 **Status: DISCOVERED — candidate for publication**
 

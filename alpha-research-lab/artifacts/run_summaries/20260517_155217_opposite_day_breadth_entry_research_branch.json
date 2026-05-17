@@ -1,0 +1,97 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_155217_opposite_day_breadth_entry_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_155217_opposite_day_breadth_entry_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "first day of low_breadth > sustained",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test if first day of low_breadth regime is stronger than sustained low_breadth. The transition from high→low breadth might capture regime shift alpha.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "opposite_day_breadth_entry",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Low breadth dates (bottom 20%)",
+        "name": "low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "onset",
+        "label": "First day of low_breadth regime (onset)",
+        "name": "first_day_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "sustained",
+        "label": "Sustained low_breadth (2+ consecutive days)",
+        "name": "sustained_low_breadth",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "opposite_day_breadth_entry",
+  "summary": {
+    "baseline_ic": 0.11640807385098778,
+    "best_avg_ic": 0.1441971398267328,
+    "best_state": "sustained_low_breadth",
+    "decision": "FAILED",
+    "first_day_ic": 0.097749470057084,
+    "onset_vs_sustained": -0.0464476697696488,
+    "panel_rows": 821764,
+    "states_evaluated": 3,
+    "sustained_ic": 0.1441971398267328
+  },
+  "ts": "20260517_155217"
+}

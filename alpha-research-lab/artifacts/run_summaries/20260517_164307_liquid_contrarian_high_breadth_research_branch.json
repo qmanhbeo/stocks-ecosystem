@@ -1,0 +1,154 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_164307_liquid_contrarian_high_breadth_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_164307_liquid_contrarian_high_breadth_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "liquid in bad breadth as contrarian",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test if liquid stocks (easy to trade) are contrarian in high-breadth (crowded) regime. Contrarian: liquid ignored by crowd = strong when crowd disperses.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "liquid_contrarian_high_breadth",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "liquid",
+        "label": "Liquid stocks",
+        "name": "liquid",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "blocked",
+        "label": "Blocked stocks (C27)",
+        "name": "blocked_either",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Low breadth dates",
+        "name": "low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "High breadth dates",
+        "name": "high_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "liq_breadth",
+        "label": "Liquid × low breadth",
+        "name": "liquid_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "liq_breadth",
+        "label": "Liquid × high breadth",
+        "name": "liquid_high_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "blk_breadth",
+        "label": "Blocked × low breadth",
+        "name": "blocked_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "blk_breadth",
+        "label": "Blocked × high breadth",
+        "name": "blocked_high_breadth",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "liquid_contrarian_high_breadth",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_ic": 0.20289835460011213,
+    "best_state": "blocked_high_breadth",
+    "blocked_either_ic": 0.14771588194427007,
+    "blocked_high_breadth_ic": 0.20289835460011213,
+    "blocked_lift_high_breadth": 0.09337410332266313,
+    "blocked_low_breadth_ic": 0.09602008038400923,
+    "decision": "FAILED",
+    "diff_liquid_hb_lb": -0.051086367970695934,
+    "diff_liquid_hb_liq": -0.02363819143500548,
+    "high_breadth_ic": 0.109524251277449,
+    "liquid_high_breadth_ic": 0.10293674868788641,
+    "liquid_ic": 0.1265749401228919,
+    "liquid_lift_high_breadth": -0.006587502589562588,
+    "liquid_low_breadth_ic": 0.15402311665858234,
+    "low_breadth_ic": 0.15496854822814357,
+    "panel_rows": 826404,
+    "states_evaluated": 9
+  },
+  "ts": "20260517_164307"
+}

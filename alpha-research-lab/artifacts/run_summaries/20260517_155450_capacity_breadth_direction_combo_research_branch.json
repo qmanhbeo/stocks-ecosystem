@@ -1,0 +1,99 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_155450_capacity_breadth_direction_combo_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_155450_capacity_breadth_direction_combo_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "capacity × breadth combo",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test capacity × breadth interaction. tight_capacity + low_breadth combo might amplify both signals.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "capacity_breadth_direction_combo",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "capacity",
+        "label": "Tight capacity (low order count)",
+        "name": "tight_capacity",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Low breadth dates",
+        "name": "low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "Tight capacity + Low breadth",
+        "name": "tight_low_breadth",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "capacity_breadth_direction_combo",
+  "summary": {
+    "baseline_ic": 0.15940665218557018,
+    "best_avg_ic": 0.2061537983960754,
+    "best_state": "tight_low_breadth",
+    "combo_ic": 0.2061537983960754,
+    "combo_vs_lowbreadth": 0.09887618672692884,
+    "combo_vs_tight": 0.041365251904586814,
+    "decision": "PASSED",
+    "low_breadth_ic": 0.10727761166914655,
+    "panel_rows": 821764,
+    "states_evaluated": 3,
+    "tight_capacity_ic": 0.16478854649148858
+  },
+  "ts": "20260517_155450"
+}

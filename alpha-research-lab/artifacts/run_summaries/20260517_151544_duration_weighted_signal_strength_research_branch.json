@@ -1,0 +1,123 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_151544_duration_weighted_signal_strength_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_151544_duration_weighted_signal_strength_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "H534 found longer active-state duration predicts STRONGER signal. Now test using duration as continuous weight modifier for S1 instead of binary filter.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "H534 found longer active-state duration predicts STRONGER signal. Now test using duration as continuous weight modifier for S1 instead of binary filter.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "duration_weighted_signal_strength",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "duration_filter",
+        "label": "Any active state (C16 <= 0.2)",
+        "name": "duration_any",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "duration_filter",
+        "label": "Active 2-3 days",
+        "name": "duration_2_3d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "duration_filter",
+        "label": "Active 4-7 days",
+        "name": "duration_4_7d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "duration_filter",
+        "label": "Active 8+ days (H534 best)",
+        "name": "duration_8pl",
+        "peer": null,
+        "primary": true
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "duration_weighted_signal_strength",
+  "summary": {
+    "active_raw_ic": 0.1598137303133698,
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_year_ic": 0.1831941193312031,
+    "best_binary_ic": 0.1831941193312031,
+    "best_positive_years": 4,
+    "best_state_by_avg_year_ic": "duration_8pl",
+    "best_weighted_ic": 0.0972087278237713,
+    "best_years": 4,
+    "capped_ic": 0.09588730504861409,
+    "capped_rank_ic": 0.0972087278237713,
+    "decision": "FAILED",
+    "duration_8pl_ic": 0.1831941193312031,
+    "duration_8pl_lift": 0.05297482870430706,
+    "duration_any_ic": 0.16478854649148858,
+    "duration_any_lift": 0.03456925586459253,
+    "panel_rows": 826404,
+    "states_evaluated": 5,
+    "weighted_ic": 0.09586176825739212,
+    "weighted_rank_ic": 0.0971896983747586
+  },
+  "ts": "20260517_151544"
+}

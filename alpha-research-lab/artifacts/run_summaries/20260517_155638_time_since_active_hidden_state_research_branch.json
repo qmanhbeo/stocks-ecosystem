@@ -1,0 +1,122 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_155638_time_since_active_hidden_state_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_155638_time_since_active_hidden_state_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "time since active as hidden state",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test time since last active state (C16 <= 0.2) as continuous hidden variable. Even if currently quiet, time since last active might capture dormant alpha.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "time_since_active_hidden_state",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "current_state",
+        "label": "Currently active (C16 <= 0.2)",
+        "name": "c16_low",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "tsa",
+        "label": "Currently active (0 days since)",
+        "name": "tsa_0d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "tsa",
+        "label": "1-3 days since active",
+        "name": "tsa_1_3d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "tsa",
+        "label": "4-7 days since active",
+        "name": "tsa_4_7d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "tsa",
+        "label": "8-14 days since active",
+        "name": "tsa_8_14d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "tsa",
+        "label": "15+ days since active",
+        "name": "tsa_15plus",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "time_since_active_hidden_state",
+  "summary": {
+    "baseline_ic": 0.11997454724725015,
+    "best_avg_ic": 0.16478854649148858,
+    "best_state": "c16_low",
+    "best_tsa_ic": 0.0,
+    "best_tsa_name": "N/A",
+    "current_active_ic": 0.16478854649148858,
+    "decision": "FAILED",
+    "panel_rows": 821764,
+    "states_evaluated": 6,
+    "tsa_vs_current": -0.16478854649148858
+  },
+  "ts": "20260517_155638"
+}

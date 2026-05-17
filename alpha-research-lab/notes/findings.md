@@ -19,18 +19,20 @@ Current chunks:
 - [findings-00301-00330.md](./findings-00301-00330.md)
 - [findings-00331-00360.md](./findings-00331-00360.md)
 - [findings-00361-00390.md](./findings-00361-00390.md)
-- [findings-00391-00420.md](./findings-00391-00420.md) (F391-F398)
+- [findings-00391-00420.md](./findings-00391-00420.md)
+- [findings-00421-00450.md](./findings-00421-00450.md) (active chunk; mixed legacy F labels may be non-monotonic)
 
 ## Convention
 
 - Findings are append-only.
 - Add new findings to the current highest chunk file until it reaches 30 finding blocks.
 - Then create the next chunk file using the next block range, padded to a 30-block filename range.
-- Chunk ranges are positional block ranges in document order, not necessarily contiguous `F` labels.
-- If the final chunk has fewer than 30 findings, still name it with the padded end range, e.g. `findings-00061-00090.md`.
+- Chunk ranges are positional block ranges in document order.
+- Finding IDs are normalized as `FXXX`; historical insertion order can make labels non-monotonic.
+- If the final chunk has fewer than 30 findings, still name it with the padded end range.
 - Update this index and any cross-references whenever a new chunk file is created.
 
 ## How To Read
 
 Start here, then open the chunk file that contains the finding you need.
-`findings-00391-00420.md` is now the active findings chunk.
+`findings-00421-00450.md` is now the active findings chunk.

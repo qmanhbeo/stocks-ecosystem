@@ -1,0 +1,151 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_163734_c27_signal_router_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_163734_c27_signal_router_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "C27 as signal router",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test if C27 (blocked) changes how S1 performs. Does blocked = hidden demand make S1 signal stronger? Test C23/C24 signal quality conditional on blocked.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "c27_signal_router",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "c27",
+        "label": "Blocked stocks (C27)",
+        "name": "blocked_either",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "non_c27",
+        "label": "Non-blocked stocks",
+        "name": "non_blocked",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "C23 active",
+        "name": "c23_active",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "C24 ceiling",
+        "name": "c24_signal",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "sig_c27",
+        "label": "C23 × blocked",
+        "name": "blocked_c23",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "sig_c27",
+        "label": "C23 × non-blocked",
+        "name": "non_blocked_c23",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "sig_c27",
+        "label": "C24 × blocked",
+        "name": "blocked_c24",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "sig_c27",
+        "label": "C24 × non-blocked",
+        "name": "non_blocked_c24",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "c27_signal_router",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_avg_ic": 0.16882311401309955,
+    "best_state": "blocked_c23",
+    "blocked_c27_ic": 0.14771588194427007,
+    "c23_blocked_ic": 0.16882311401309955,
+    "c23_non_blocked_ic": 0.16554392112258187,
+    "c23_router_diff": 0.0032791928905176737,
+    "c24_blocked_ic": 0.08911244364256807,
+    "c24_non_blocked_ic": 0.15664639355168639,
+    "c24_router_diff": -0.06753394990911832,
+    "c27_effect": 0.020479497081204834,
+    "decision": "PASSED",
+    "non_blocked_ic": 0.12723638486306524,
+    "panel_rows": 826404,
+    "states_evaluated": 9
+  },
+  "ts": "20260517_163734"
+}

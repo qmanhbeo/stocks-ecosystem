@@ -1,0 +1,143 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_175713_h107_signal_order_hidden_state_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_175713_h107_signal_order_hidden_state_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Signal Order as Hidden State: Does WHICH signal fires FIRST matter? C23→C24 vs C24→C23 might indicate different hidden demand. Test signal_sequence (first signal detected) vs signal_count (just count).",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Signal Order as Hidden State: Does WHICH signal fires FIRST matter? C23→C24 vs C24→C23 might indicate different hidden demand. Test signal_sequence (first signal detected) vs signal_count (just count).",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "h107_signal_order_hidden_state",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "signal",
+        "label": "Any signal firing (1+ signals)",
+        "name": "any_signal",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "composite",
+        "label": "2+ signals firing (F445 baseline)",
+        "name": "composite_2plus",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "sequence",
+        "label": "First signal detected (2+ signals)",
+        "name": "first_any",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "sequence",
+        "label": "C23 fired first (among multi-signal)",
+        "name": "first_c23",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "sequence",
+        "label": "C24 fired first (among multi-signal)",
+        "name": "first_c24",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "sequence",
+        "label": "C25 fired first (among multi-signal)",
+        "name": "first_c25",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "sequence",
+        "label": "C26 fired first (among multi-signal)",
+        "name": "first_c26",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h107_signal_order_hidden_state",
+  "summary": {
+    "any_signal_ic": 0.1988033564115317,
+    "best_lift": -0.008428298318232885,
+    "composite_2plus_ic": 0.24450086966388176,
+    "composite_rows": 29542,
+    "decision": "FAILED",
+    "f445_baseline": 0.2445,
+    "first_any_ic": 0.23599663979045668,
+    "first_any_rows": 21227,
+    "first_c23_ic": 0.23607257134564888,
+    "first_c24_ic": null,
+    "first_c25_ic": null,
+    "first_c26_ic": null,
+    "lift_vs_composite": -0.008504229873425084,
+    "panel_rows": 809019,
+    "states_evaluated": 8
+  },
+  "ts": "20260517_175713"
+}

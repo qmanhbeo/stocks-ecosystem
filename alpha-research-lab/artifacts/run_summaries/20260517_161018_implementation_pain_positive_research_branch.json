@@ -1,0 +1,123 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_161018_implementation_pain_positive_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_161018_implementation_pain_positive_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "implementation pain as positive signal",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test if 'painful to trade' = hidden demand = alpha. Invert the tradability veto - test illiquid/blocked stocks vs liquid.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "implementation_pain_positive",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "liquid",
+        "label": "Liquid stocks (has_volume=True, can_buy=True)",
+        "name": "liquid",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "illiquid",
+        "label": "Illiquid stocks (no volume)",
+        "name": "is_illiquid",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "blocked",
+        "label": "Blocked from buying",
+        "name": "blocked_buy",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "blocked",
+        "label": "Blocked from selling",
+        "name": "blocked_sell",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "blocked",
+        "label": "Blocked from buying OR selling",
+        "name": "blocked_either",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "blocked",
+        "label": "Blocked from buying AND selling",
+        "name": "blocked_both",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "implementation_pain_positive",
+  "summary": {
+    "baseline_ic": 0.12746109550274667,
+    "best_avg_ic": 0.14771588194427007,
+    "best_state": "blocked_either",
+    "blocked_buy_ic": 0.1062487980566314,
+    "blocked_either_ic": 0.14771588194427007,
+    "decision": "FAILED",
+    "illiquid_ic": null,
+    "illiquid_vs_liquid": null,
+    "liquid_ic": 0.1265749401228919,
+    "panel_rows": 826404,
+    "states_evaluated": 6
+  },
+  "ts": "20260517_161018"
+}

@@ -1,0 +1,50 @@
+=== Research Loop Cycle Started at 2026-05-17T18:00:47.990578 ===
+Working directory: /home/manh/stocks-ecosystem
+Research lab: /home/manh/stocks-ecosystem/alpha-research-lab
+--- Current State ---
+  version: 1.0
+  cycle_count: 38
+  last_phase: completed
+  last_run_timestamp: 2026-05-17T18:00:44.105216
+  last_session_hint: cycle-38-20260517-175322
+  last_decision: run_evergreen
+  heavy_job_detected: False
+  last_exit_status: success
+  created_at: 2026-05-08T12:25:02.512120
+  loop_started_at: 2026-05-17T14:22:49.521443
+  loop_completed_at: 2026-05-17T14:15:04.301604
+  last_loop_max_cycles: 30
+  last_loop_completed_cycles: 18
+  last_stop_reason: interrupted_recovered_session_logged
+  last_completed_phase: handoff
+  last_completed_at: 2026-05-17T18:00:44.105095
+  last_session_id: ses_1c924acd6ffe8vpA4mecFdRDNI
+Inspection: {'heavy_job': False, 'hypothesis_queue_exists': True, 'hypothesis_queue_count': 90, 'last_session': 'cycle-38-20260517-175322', 'last_h': None, 'cycle_count': 38}
+Decision: run_evergreen (Ready to run evergreen-research-loop pass)
+Invoking per-cycle fresh-session flow (verbose=False)...
+=== Research Loop Cycle Started at 2026-05-17T18:00:47.995082 ===
+Working directory: /home/manh/stocks-ecosystem
+Research lab: /home/manh/stocks-ecosystem/alpha-research-lab
+--- Current State ---
+  version: 1.0
+  cycle_count: 38
+  last_phase: decision
+  last_run_timestamp: 2026-05-17T18:00:44.105216
+  last_session_hint: cycle-38-20260517-175322
+  last_decision: run_evergreen
+  heavy_job_detected: False
+  last_exit_status: success
+  created_at: 2026-05-08T12:25:02.512120
+  loop_started_at: 2026-05-17T14:22:49.521443
+  loop_completed_at: 2026-05-17T14:15:04.301604
+  last_loop_max_cycles: 30
+  last_loop_completed_cycles: 18
+  last_stop_reason: interrupted_recovered_session_logged
+  last_completed_phase: handoff
+  active_cycle_started_at: 2026-05-17T18:00:47.995109
+  active_cycle_log_path: /home/manh/stocks-ecosystem/alpha-research-lab/evergreen-research-loop/logs/cycle_20260517_180047.log
+  last_completed_at: 2026-05-17T18:00:44.105095
+  last_session_id: ses_1c924acd6ffe8vpA4mecFdRDNI
+Heavy job check: False
+Cycle session title: cycle-39-20260517-180048
+Phase 1 (experiment): skill=experimentor, session_title=cycle-39-20260517-180048, session_id=None

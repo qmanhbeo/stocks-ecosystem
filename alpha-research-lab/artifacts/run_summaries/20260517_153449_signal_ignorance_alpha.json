@@ -1,0 +1,28 @@
+{
+  "hypothesis": "Signal Ignorance as Alpha",
+  "baseline_ic": 0.12768214395354166,
+  "results": {
+    "baseline": {
+      "ic": 0.12768214395354166,
+      "rows": 821764,
+      "lift": 0.0
+    },
+    "with_ignore_regime": {
+      "ic": 0.11494995989658753,
+      "rows": 164924,
+      "lift": -0.01273218405695413
+    },
+    "without_ignore_regime": {
+      "ic": 0.13055924634430638,
+      "rows": 656840,
+      "lift": 0.0028771023907647186
+    },
+    "high_breadth": {
+      "ic": 0.11494995989658753,
+      "rows": 164924,
+      "lift": -0.01273218405695413
+    }
+  },
+  "verdict": "MIXED",
+  "timestamp": "2026-05-17T15:34:49.243430"
+}

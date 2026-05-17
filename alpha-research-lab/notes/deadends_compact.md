@@ -5,23 +5,24 @@ closed, blocked, or explicitly non-promotable paths. The chunked source of
 truth now starts at [deadends.md](./deadends.md); older entries before that
 index are derived from chunked findings and session logs.
 
+
 Do not add a path here just because one test was mixed. Add it when the durable
 record says the current path should stop, stay parked, or reopen only under a
 specified changed condition. Keep links to source `F` IDs so the original
 evidence remains traceable. Every compact dead-end entry must include source
 anchors: stable dead-end IDs, finding IDs, or source session links.
 
-## Resolution: Continuous Breadth Weighting Fails (D058)
+## Resolution: Continuous Breadth Weighting Fails (D046)
 
-- H530 breadth_weighted_position_sizing is D058. Continuous 1/breadth weighting does NOT beat binary filter.
+- H530 breadth_weighted_position_sizing is D046. Continuous 1/breadth weighting does NOT beat binary filter.
 - weighted_score (S1 × inv_breadth) IC=0.1057 is WORSE than baseline (-0.0220). Direct multiplication amplifies low-breadth signals too much, distorting rank.
 - weighted_rank (rank of weighted score within date) IC=0.1407 (+0.0130) beats baseline but still slightly below binary filter (0.1428).
 - Binary low_breadth filter remains the superior implementation. Do not reopen with continuous weighting.
 - Source: [session_00343_log.md](./session_00343_log.md).
 
-## Resolution: Quiet + Low-Breadth Intersection Is NOT Promotion-Worthy (D057)
+## Resolution: Quiet + Low-Breadth Intersection Is NOT Promotion-Worthy (D082)
 
-- H528 quiet_low_breadth_intersection is D057 (partial). Quiet (rank >= 0.75) + low_breadth dates intersection IC=0.1644 beats min component (0.1542) but does NOT exceed max + 0.01 threshold (needs 0.1652). The intersection is NOT promotion-worthy as a signal filter.
+- H528 quiet_low_breadth_intersection is D082 (partial). Quiet (rank >= 0.75) + low_breadth dates intersection IC=0.1644 beats min component (0.1542) but does NOT exceed max + 0.01 threshold (needs 0.1652). The intersection is NOT promotion-worthy as a signal filter.
 - HOWEVER: Active (rank < 0.2) + low_breadth dates intersection shows SIGNIFICANT improvement: IC=0.2013 beats active alone (0.1597) by +0.0416 (+26% boost). This is a regime amplifier finding, not a dead end.
 - Low-breadth dates act as a positive regime amplifier for active-state signals. Use as positive filter (select low-breadth dates), not negative (exclude high-breadth).
 - Source: [session_00341_log.md](./session_00341_log.md).
@@ -39,7 +40,7 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
 
 ## Resolution: Quiet-State Inverse Alpha Has No Contrarian Effect
 
-- H527 quiet_state_inverse_alpha (queue item 9) is killed. Quiet stocks in high-breadth dates (IC=0.1248) vs low-breadth dates (IC=0.1225) lift only +0.0022, below 0.01 threshold. Market activity level does NOT meaningfully modulate quiet-stock quality. Confirms state_quiet alone is still strong (IC=0.1205, 11/11 positive years). Do not reopen as contrarian filter. Source: [session_00340_log.md](./session_00340_log.md), D056.
+- H527 quiet_state_inverse_alpha (queue item 9) is killed. Quiet stocks in high-breadth dates (IC=0.1248) vs low-breadth dates (IC=0.1225) lift only +0.0022, below 0.01 threshold. Market activity level does NOT meaningfully modulate quiet-stock quality. Confirms state_quiet alone is still strong (IC=0.1205, 11/11 positive years). Do not reopen as contrarian filter. Source: [session_00340_log.md](./session_00340_log.md), D081.
 
 ## Resolution: Exit Timing Has No Alpha
 
@@ -49,13 +50,13 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   - Fresh vs sustained lift: -0.002 (essentially NO difference)
   - Exit (first day out of C23): IC=0.1386 - weaker but not enough to matter
   - All timing states beat baseline (0.1277) by +0.042
-  - Interpretation: Signal works equally well at entry and as sustained position. Holding duration is noise, not signal. Do not reopen exit-timing as alpha source. Source: [session_00339_log.md](./session_00339_log.md), D055.
+  - Interpretation: Signal works equally well at entry and as sustained position. Holding duration is noise, not signal. Do not reopen exit-timing as alpha source. Source: [session_00339_log.md](./session_00339_log.md), D080.
 
 ## Resolution: Acceleration/Momentum Signals Are Dead-End
 
-- H449 order_flow_momentum is D041 for acceleration signals. C16 ACCELERATION (second derivative) is NOT predictive — c16_accel_expanding IC=0.1219 (-0.0069 lift), c16_accel_neutral IC=0.1287 (-0.0001), c16_accel_contracting IC=0.1303 (+0.0015) ALL WORSE or equal to baseline. Confirms H443 pattern: foreign flow momentum also NEGATIVE (ff_accel_exp IC=0.1243). Confirms H446/H447: vol LEVEL matters, not vol CHANGE. The edge comes from LEVELS (high pressure, high volume), not MOMENTUM (changes in pressure/volume). Use C16 level as regime conditioner, not its derivative. Dead-end D041 for all acceleration/momentum signals. Source: [session_00120_log.md](./session_00120_log.md), D041.
+- H449 order_flow_momentum is D037 for acceleration signals. C16 ACCELERATION (second derivative) is NOT predictive — c16_accel_expanding IC=0.1219 (-0.0069 lift), c16_accel_neutral IC=0.1287 (-0.0001), c16_accel_contracting IC=0.1303 (+0.0015) ALL WORSE or equal to baseline. Confirms H443 pattern: foreign flow momentum also NEGATIVE (ff_accel_exp IC=0.1243). Confirms H446/H447: vol LEVEL matters, not vol CHANGE. The edge comes from LEVELS (high pressure, high volume), not MOMENTUM (changes in pressure/volume). Use C16 level as regime conditioner, not its derivative. Dead-end D037 for all acceleration/momentum signals. Source: [session_00120_log.md](./session_00120_log.md), D037.
 
-- H428 bid_ask_midbook_imbalance is D027. Higher buy/sell volume imbalance was hypothesized to proxy hidden depth but instead correlates with WEAKER C16 signal (Q5 vs Q1 IC lift -0.0385 dev, -0.0116 val). Direct prediction vs S1 is weakly positive (IC +0.0194 dev, +0.0373 val) but below IC > 0.05 threshold. Interpretation: high imbalance indicates weakness, not hidden depth. Do not reopen as C16 conditioner or standalone signal. Source anchor: Session 307, D027.
+- H428 bid_ask_midbook_imbalance is D022. Higher buy/sell volume imbalance was hypothesized to proxy hidden depth but instead correlates with WEAKER C16 signal (Q5 vs Q1 IC lift -0.0385 dev, -0.0116 val). Direct prediction vs S1 is weakly positive (IC +0.0194 dev, +0.0373 val) but below IC > 0.05 threshold. Interpretation: high imbalance indicates weakness, not hidden depth. Do not reopen as C16 conditioner or standalone signal. Source anchor: Session 307, D022.
 
 ## Resolution: Signal Combination Skepticism
 
@@ -67,23 +68,23 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   C23, not independent primitives. Reopen only if a materially different state
   definition yields non-nested support. Source: [session_00139_log.md](./session_00139_log.md).
 
-- H465 cross_signal_orthogonality_audit is D041. Signals C20/C21/C22 are NOT orthogonal — all combos are WORSE than best individual. C21a×C22 IC=0.2119 (-0.0115 vs max), C20×C22 IC=0.1997 (-0.0169 vs max). vol_expansion is the common regime driver making signals redundant when combined. Do NOT create composite signals from C20/C21/C22. They are additive in portfolio sense (different days fire) not combinatorial. Source: [session_00117_log.md](./session_00117_log.md), D041.
+- H465 cross_signal_orthogonality_audit is D036. Signals C20/C21/C22 are NOT orthogonal — all combos are WORSE than best individual. C21a×C22 IC=0.2119 (-0.0115 vs max), C20×C22 IC=0.1997 (-0.0169 vs max). vol_expansion is the common regime driver making signals redundant when combined. Do NOT create composite signals from C20/C21/C22. They are additive in portfolio sense (different days fire) not combinatorial. Source: [session_00117_log.md](./session_00117_log.md), D036.
 
-- H449 vol_contraction_mean_reversion is dead-end for direct long-only use. Pattern confirmed real (vol_contraction + high_return = mean reversion with IC=-0.0255), but the direction is wrong for long-only: vol_expansion_momentum IC=+0.0373 is positive while vol_contraction_exhaustion is negative. Use vol_expansion_momentum side (positive), do not use exhaustion pattern as buy signal. Source: [session_00105_log.md](./session_00105_log.md), D037.
+- H449 vol_contraction_mean_reversion is dead-end for direct long-only use. Pattern confirmed real (vol_contraction + high_return = mean reversion with IC=-0.0255), but the direction is wrong for long-only: vol_expansion_momentum IC=+0.0373 is positive while vol_contraction_exhaustion is negative. Use vol_expansion_momentum side (positive), do not use exhaustion pattern as buy signal. Source: [session_00105_log.md](./session_00105_log.md), D032.
 
-- H447 volume_adjusted_price_momentum "real force" hypothesis is killed. Original hypothesis: high return + high volume = "real force" (positive), high return + low volume = "fade" (negative). OPPOSITE found: high_return_high_vol (real_force) IC=0.111 (-0.019 lift) UNDERPERFORMS baseline. The volume-adjusted framework works but direction is inverted: low_return_low_vol (cheap moves/contrarian) is the STRONGEST state at IC=0.204 (+0.0746 lift). This is a CONTRARIAN signal, not momentum. Use low_return_low_vol as contrarian conditioner if desired, but do not use high_return_high_vol as "real force" - it's dead. Source: [session_00103_log.md](./session_00103_log.md), D036.
+- H447 volume_adjusted_price_momentum "real force" hypothesis is killed. Original hypothesis: high return + high volume = "real force" (positive), high return + low volume = "fade" (negative). OPPOSITE found: high_return_high_vol (real_force) IC=0.111 (-0.019 lift) UNDERPERFORMS baseline. The volume-adjusted framework works but direction is inverted: low_return_low_vol (cheap moves/contrarian) is the STRONGEST state at IC=0.204 (+0.0746 lift). This is a CONTRARIAN signal, not momentum. Use low_return_low_vol as contrarian conditioner if desired, but do not use high_return_high_vol as "real force" - it's dead. Source: [session_00103_log.md](./session_00103_log.md), D031.
 
-- H445 semantic_novelty_saturation is killed (NEGATIVE result). News article counts (PhoBERT) are NOT predictive - they DEGRADE S1 signal quality. All news states have NEGATIVE IC lift vs baseline. "no_news" (IC=0.1409) actually beats "has_news" (IC=0.1038) by +0.037. Exhaustion state (repeat coverage + high attention) is worst at -0.0474 lift. Raw article counts are not useful as standalone signals. Continue using source-type and sentiment features which H440/H383 found useful. Do not reopen with raw count features. Source: [session_00101_log.md](./session_00101_log.md), D035.
+- H445 semantic_novelty_saturation is killed (NEGATIVE result). News article counts (PhoBERT) are NOT predictive - they DEGRADE S1 signal quality. All news states have NEGATIVE IC lift vs baseline. "no_news" (IC=0.1409) actually beats "has_news" (IC=0.1038) by +0.037. Exhaustion state (repeat coverage + high attention) is worst at -0.0474 lift. Raw article counts are not useful as standalone signals. Continue using source-type and sentiment features which H440/H383 found useful. Do not reopen with raw count features. Source: [session_00101_log.md](./session_00101_log.md), D030.
 
 ## Resolution: Sector Vol Regime Marginal
 
-- H506 sector_vol_regime (BU5) is parked as MIXED. sector_c23 (sector >50% stocks in vol_expansion × C23) marginally beats always_c23 (IC 0.2223 vs 0.2176, +0.0046) BUT the state is extremely sparse (2,853 rows, only 2/11 positive years). Validation and confirmation phases have NaN due to insufficient data. The pattern is similar to cofire_2 (sector-level co-occurrence = stronger signal) but too sparse to be useful. D038 killed sector MOMENTUM; sector VOL regime is marginally better but not robust enough to act on. Park and do not reopen without different sampling or data. Source: [session_00138_log.md](./session_00138_log.md), F424.
+- H506 sector_vol_regime (BU5) is parked as MIXED. sector_c23 (sector >50% stocks in vol_expansion × C23) marginally beats always_c23 (IC 0.2223 vs 0.2176, +0.0046) BUT the state is extremely sparse (2,853 rows, only 2/11 positive years). Validation and confirmation phases have NaN due to insufficient data. The pattern is similar to cofire_2 (sector-level co-occurrence = stronger signal) but too sparse to be useful. D033 killed sector MOMENTUM; sector VOL regime is marginally better but not robust enough to act on. Park and do not reopen without different sampling or data. Source: [session_00138_log.md](./session_00138_log.md), F424.
 
 ## Resolution: Sentiment Filter Skepticism
 
-- H482 sentiment_scope_filter is D044. Ultra_negative (bottom 5% prob_neg from H480) does NOT filter S1 quality. Filter effect is +0.0034 IC (below +0.01 pass threshold). S1 WITH ultra_negative: IC 0.1006, S1 WITHOUT ultra_negative: IC 0.1040. S1 is ROBUST across sentiment regimes - quality is similar whether ticker has ultra-negative news or not. The hypothesis that "sentiment extremes identify noise states" is NOT supported. Do NOT use ultra_negative as a signal quality gate. Source: [session_00131_log.md](./session_00131_log.md), D044.
+- H482 sentiment_scope_filter is D040. Ultra_negative (bottom 5% prob_neg from H480) does NOT filter S1 quality. Filter effect is +0.0034 IC (below +0.01 pass threshold). S1 WITH ultra_negative: IC 0.1006, S1 WITHOUT ultra_negative: IC 0.1040. S1 is ROBUST across sentiment regimes - quality is similar whether ticker has ultra-negative news or not. The hypothesis that "sentiment extremes identify noise states" is NOT supported. Do NOT use ultra_negative as a signal quality gate. Source: [session_00131_log.md](./session_00131_log.md), D040.
 
-- H443 prop_foreign_predator_prey is killed. Predator-prey interaction between foreign and proprietary flows does NOT add predictive value. All states (ff_sell_pt_buy_absorption IC=0.0621, ff_buy_pt_sell_distribution IC=0.0959, prop_follow_ff IC=0.0842) are BELOW baseline IC=0.1335. Raw foreign flow (ff_buy IC=0.1188, ff_sell IC=0.1004) also underperforms baseline. Flow direction alone is not predictive - S1 already captures any useful information from these flows. Do not reopen unless materially different data or representation. Source anchor: [session_00323_log.md](./session_00323_log.md), D034.
+- H443 prop_foreign_predator_prey is killed. Predator-prey interaction between foreign and proprietary flows does NOT add predictive value. All states (ff_sell_pt_buy_absorption IC=0.0621, ff_buy_pt_sell_distribution IC=0.0959, prop_follow_ff IC=0.0842) are BELOW baseline IC=0.1335. Raw foreign flow (ff_buy IC=0.1188, ff_sell IC=0.1004) also underperforms baseline. Flow direction alone is not predictive - S1 already captures any useful information from these flows. Do not reopen unless materially different data or representation. Source anchor: [session_00323_log.md](./session_00323_log.md), D029.
 
 - S253 methodology resolution is superseded by S272. S272 found the S244/S246/S247/S253
   market-down and consecutive-down claims used same-date S1 `actual` to define
@@ -106,7 +107,7 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   by +0.0263 lift. This is the opposite of hypothesized mean-reversion. Q3 (mid)
   is the weakest pocket (-0.0230), not top. Do not use S1 rank as error-state
   indicator. Reopen only with materially different quality/continuation proxy.
-  Source anchor: [session_00307_log.md](./session_00307_log.md), D027.
+  Source anchor: [session_00307_log.md](./session_00307_log.md), D023.
 
 - Signal half-life routing hypothesis is killed under H429. Pre-declared half-life
   classes (S1 momentum vs reversion, vol_high vs vol_low) do NOT show horizon-specific
@@ -132,7 +133,7 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   failed, while literal tradability release had only `7` rows. Reopen only
   with an honest delayed-entry protocol for a post-sell-pressure C16 turn or
   materially different intraday/queue/open-fill absorption data. Source
-  anchors: `D025`, [session_00304_log.md](./session_00304_log.md).
+  anchors: `D021`, [session_00304_log.md](./session_00304_log.md).
 
 - Broad anti-signal veto promotion is blocked under H401. Top-5 cash-veto
   masks based on loose side-channel disagreement reduced cycle relative return
@@ -187,7 +188,7 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
 - Volume Triple Storm (H411): Triple Storm does NOT amplify Volume like it amplifies C16.
   Volume+Triple = +0.038 IC, WORSE than Volume alone (+0.075). Ablation shows
   none of the 3 conditions help. C16-specific, not universal amplifier.
-  Do not reopen as Volume amplifier. Source anchors: `D022`.
+  Do not reopen as Volume amplifier. Source anchors: `D018`.
 
 - Volume+C16 additive (H412): additive fails, C16 is too weak (-0.0008 IC).
   Best additive = +0.073, WORSE than Volume alone (+0.075).
@@ -511,29 +512,83 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   rank delta worked because it correlated with rank level, not as independent signal. Do not
   reopen as a rank acceleration signal. Source anchors: `D033`, [session_00321_log.md](./session_00321_log.md).
 
-- Sector momentum as regime gate is killed under H455. Cross-sectional market excess (sector_up vs sector_down) as regime gate has tiny signal differences (-0.0017 to -0.0127). Signals work SIMILARLY across both regimes - no router benefit. High volume is always negative in both regimes. S248-S252 failed as FILTERS, this fails as REGIME GATES. Do not reopen as a sector-momentum regime router. Source anchor: `D038`, [session_00111_log.md](./session_00111_log.md).
+- Sector momentum as regime gate is killed under H455. Cross-sectional market excess (sector_up vs sector_down) as regime gate has tiny signal differences (-0.0017 to -0.0127). Signals work SIMILARLY across both regimes - no router benefit. High volume is always negative in both regimes. S248-S252 failed as FILTERS, this fails as REGIME GATES. Do not reopen as a sector-momentum regime router. Source anchor: `D033`, [session_00111_log.md](./session_00111_log.md).
 
-- Spread as hard regime gate is killed under H456. Wide spread amplifies buy_heavy_expansion significantly (+0.0948), but tight spread states are TOO SPARSE (356-1703 rows) for robust inference. Hard regime gate fails due to sparse support. Use spread as SOFT FILTER instead of hard gate. Source anchor: `D039`, [session_00112_log.md](./session_00112_log.md).
+- Spread as hard regime gate is killed under H456. Wide spread amplifies buy_heavy_expansion significantly (+0.0948), but tight spread states are TOO SPARSE (356-1703 rows) for robust inference. Hard regime gate fails due to sparse support. Use spread as SOFT FILTER instead of hard gate. Source anchor: `D034`, [session_00112_log.md](./session_00112_log.md).
 
 - News velocity as signal is killed under H473. News VELOCITY (3d delta = 5d-1d article count) is ANTI-predictive: high_velocity Q5 = IC 0.088 (-0.032 lift vs baseline 0.120), burst_has_news = IC 0.082 (-0.037). Fast-arriving news = crowd-following, not breaking alpha. mid_velocity only +0.008 (weak). low_velocity too sparse (most tickers have 0 news). The third dimension beyond novelty (H440) and presence (H445) is noise. Do not reopen with news-count velocity or acceleration derivatives. Only structured features (source-type, forward-looking, official) survive. Source: [session_00122_log.md](./session_00122_log.md).
 
-- Rank acceleration as hidden signal is killed under H462. Rank acceleration (rank_change speed) is ANTI-predictive alone (-0.0166 lift for accelerating, -0.0665 for decelerating). Adding rank acceleration to buy_heavy_expansion makes it MUCH WORSE (-0.0584). The "suddenly appearing = hidden info" hypothesis is NOT supported. Do not reopen with rank_change velocity features. Source anchor: `D040`, [session_00115_log.md](./session_00115_log.md).
+- Rank acceleration as hidden signal is killed under H462. Rank acceleration (rank_change speed) is ANTI-predictive alone (-0.0166 lift for accelerating, -0.0665 for decelerating). Adding rank acceleration to buy_heavy_expansion makes it MUCH WORSE (-0.0584). The "suddenly appearing = hidden info" hypothesis is NOT supported. Do not reopen with rank_change velocity features. Source anchor: `D035`, [session_00115_log.md](./session_00115_log.md).
 
 ## Resolution: Transition Dynamics Are NOT Alpha
 
-- H522 transition_dynamics_alpha is D051. Transition events (time-in-state, transition_to_X flags) do NOT capture info beyond static state labels. Best transition (`transition_to_router` IC=0.2246) is essentially identical to static state (`state_router` IC=0.2258), lift -0.0012. Duration features also don't help: long duration (`days_in_state_q4`) is actually anti-predictive (only 5/11 positive years, IC 0.0864). The coherent flow pattern H507 found is STRUCTURAL, not predictive incremental. Static states ARE the signal, transitions are not. Do not reopen with transition event features. Source: [session_00335_log.md](./session_00335_log.md), D051.
+- H522 transition_dynamics_alpha is D076. Transition events (time-in-state, transition_to_X flags) do NOT capture info beyond static state labels. Best transition (`transition_to_router` IC=0.2246) is essentially identical to static state (`state_router` IC=0.2258), lift -0.0012. Duration features also don't help: long duration (`days_in_state_q4`) is actually anti-predictive (only 5/11 positive years, IC 0.0864). The coherent flow pattern H507 found is STRUCTURAL, not predictive incremental. Static states ARE the signal, transitions are not. Do not reopen with transition event features. Source: [session_00335_log.md](./session_00335_log.md), D076.
 
 ## Resolution: Relative State Encoding Is NOT Alpha
 
-- H523 cross_sectional_relative_state is D052. Relative encoding (percentile rank within market/sector) does NOT beat absolute binary labeling. Best relative (`relative_active_market_top20` IC=0.2176) is -0.0082 below absolute best (`state_router` IC=0.2258). Sector-relative is similar (IC 0.2152, -0.0106 below absolute). Cross states (high relative but low absolute) are too sparse to evaluate. Participation pressure is captured by the specific mechanism (low C16 router), not by relative ranking. Do not reopen with percentile-rank relative features. Source: [session_00336_log.md](./session_00336_log.md), D052.
+- H523 cross_sectional_relative_state is D077. Relative encoding (percentile rank within market/sector) does NOT beat absolute binary labeling. Best relative (`relative_active_market_top20` IC=0.2176) is -0.0082 below absolute best (`state_router` IC=0.2258). Sector-relative is similar (IC 0.2152, -0.0106 below absolute). Cross states (high relative but low absolute) are too sparse to evaluate. Participation pressure is captured by the specific mechanism (low C16 router), not by relative ranking. Do not reopen with percentile-rank relative features. Source: [session_00336_log.md](./session_00336_log.md), D077.
 
 ## Resolution: State Combination Is NOT Alpha
 
-- H524 state_combo_alpha is D053. Union (OR) and intersection (AND) logic combos of latent states do NOT capture information beyond individual states. Best union combo (`union_router_only` IC=0.1795) equals best individual (`state_router` IC=0.1795). Best intersection combo (`intersect_router_buyable` IC=0.1796) is only +0.0002 lift. Union combos actually hurt: adding more states dilutes the signal. The latent state structure from H507-H515 already captured signal organization; combinations add nothing. Key discovery: `state_quiet` is STRONG (IC=0.1552, 11/11 pos yrs), not neutral as previously assumed - this is an unexpected finding worth noting. Do not reopen with state combination features. Source: [session_00337_log.md](./session_00337_log.md), D053.
+- H524 state_combo_alpha is D078. Union (OR) and intersection (AND) logic combos of latent states do NOT capture information beyond individual states. Best union combo (`union_router_only` IC=0.1795) equals best individual (`state_router` IC=0.1795). Best intersection combo (`intersect_router_buyable` IC=0.1796) is only +0.0002 lift. Union combos actually hurt: adding more states dilutes the signal. The latent state structure from H507-H515 already captured signal organization; combinations add nothing. Key discovery: `state_quiet` is STRONG (IC=0.1552, 11/11 pos yrs), not neutral as previously assumed - this is an unexpected finding worth noting. Do not reopen with state combination features. Source: [session_00337_log.md](./session_00337_log.md), D078.
 
 ## Resolution: High Breadth Is Negative Regime Signal
 
-- H525 cross_sectional_breadth is D054. Date-level active-stock density (breadth) has OPPOSITE effect of hypothesis: HIGH breadth dates have WORSE IC (0.1149) vs LOW breadth (0.1454), lift -0.0305. When many stocks activate together, it's a crowded regime with weaker signal quality. Low breadth (sparse activation) dates have BETTER signal (+0.0177 lift vs baseline 0.1277). Quintiles show uniform IC at 0.1454, suggesting binary distinction (high vs low) not gradations. Use as regime FILTER: avoid high-breadth dates. Source: [session_00338_log.md](./session_00338_log.md), D054.
+- H525 cross_sectional_breadth is D079. Date-level active-stock density (breadth) has OPPOSITE effect of hypothesis: HIGH breadth dates have WORSE IC (0.1149) vs LOW breadth (0.1454), lift -0.0305. When many stocks activate together, it's a crowded regime with weaker signal quality. Low breadth (sparse activation) dates have BETTER signal (+0.0177 lift vs baseline 0.1277). Quintiles show uniform IC at 0.1454, suggesting binary distinction (high vs low) not gradations. Use as regime FILTER: avoid high-breadth dates. Source: [session_00338_log.md](./session_00338_log.md), D079.
+
+## Resolution: Multi-Signal × Persistence Stacking Is Marginal (D069)
+
+- H105 multi_signal_persistence_stacking is D069. F445 (composite_2+ = 0.2445) + F441/F442 (persistence/accumulation) does NOT amplify beyond threshold.
+- Evidence: composite_2+ × accumulation_q4 IC = 0.2506 (+0.0061 vs composite_2+), below +0.01 threshold. composite_2+ × persist_q4 actually HURTS (-0.0021).
+- The two persistence mechanisms (accumulation vs persistence ratio) have OPPOSITE effects when combined with multi-signal.
+- Not promotion-worthy. Do not reopen with persistence filters on multi-signal.
+- Source: [session_00387_log.md](./session_00387_log.md), `D069`.
+
+## Resolution: Signal Pair Specificity Does NOT Matter (D070)
+
+- H106 signal_pair_synergy_matrix is D070. No specific signal pair (C23+C24 vs C23+C25 etc) beats the generic "any 2+ signals" composite.
+- Evidence: composite_2+ IC = 0.2445, best pair c23_c26 = 0.2396 (-0.0049), all pairs WORSE than generic composite.
+- The synergy is in having multiple signals, NOT which specific signals combine.
+- The specific pair composition doesn't matter - any 2+ signals together creates the alpha.
+- Do not reopen with specific pair combinations; generic multi-signal logic is the mechanism.
+- Source: [session_00388_log.md](./session_00388_log.md), `D070`.
+
+## Resolution: Signal Order/Sequence Does NOT Matter (D071)
+
+- H107 signal_order_hidden_state is D071. Which signal fires FIRST (C23→C24 vs C24→C23) does NOT indicate different hidden demand.
+- Evidence: composite_2+ IC = 0.2445, first_any IC = 0.2360 (-0.0085), first_c23 IC = 0.2361 (-0.0084). All WORSE than generic composite.
+- The synergy is in having 2+ signals together, NOT in which signal came first.
+- Signal sequence/order is NOT a hidden state - the "count" logic works, not "sequence" logic.
+- Do not reopen with signal order/sequence; multi-signal count is the mechanism.
+- Source: [session_00390_log.md](./session_00390_log.md), `D071`.
+
+## Resolution: Multi-Signal × Blocked Triple Is Data-Gated (D072)
+
+- H605 multi_signal_blocked_triple is D072. Intersection `composite_2plus × blocked_day_2_3` is too sparse under protocol (`207` rows, yearly IC invalid/NaN).
+- Components remain individually strong (`composite_2plus=0.2445`, `blocked_day_2_3=0.1743`), but triple is not promotable.
+- Do not reopen this exact intersection without materially broader support.
+- Source: [session_00391_log.md](./session_00391_log.md), `D072`.
+
+## Resolution: Continuous Breadth Weighting Fails On Multi-Signal Too (D073)
+
+- H606 breadth_adjusted_multi_signal is D073. Binary low-breadth gate dominates (`0.2823`) while inverse-breadth weighted score collapses (`0.1615`) on the same family.
+- Confirms H530 pattern: breadth works as discrete filter, not continuous multiplier.
+- Do not reopen inverse-breadth weighting on this family under current contract.
+- Source: [session_00392_log.md](./session_00392_log.md), `D073`.
+
+## Resolution: Blocked Single-Signal Pre-Convergence Thesis Fails (D074)
+
+- H607 inverse_multi_signal_edge is D074. `signal_1_blocked` underperforms `signal_1` by `-0.0487` IC.
+- Blocked state weakens the single-signal pocket, not front-runs convergence.
+- Do not reopen this blocked-single pre-convergence thesis under current data.
+- Source: [session_00393_log.md](./session_00393_log.md), `D074`.
+
+## Resolution: Tight Capacity Does Not Amplify Multi-Signal Pocket (D075)
+
+- H608 capacity_modulated_multi_signal is D075. `composite_2plus_tight` is below `composite_2plus` (`-0.0041` lift).
+- Tight capacity stays strong standalone, but not additive with multi-signal co-occurrence.
+- Keep these as separate conditioners; do not reopen this exact combo.
+- Source: [session_00394_log.md](./session_00394_log.md), `D075`.
 
 ## Maintenance Rule
 

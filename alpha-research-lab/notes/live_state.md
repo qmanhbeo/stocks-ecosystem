@@ -6,11 +6,10 @@ scientific conclusions in findings chunks, and closed paths in dead-end chunks.
 
 ## Current Session Pointer
 
-- **Latest session log**: Session 350 (H542 Breadth Transition Momentum)
-- **Latest session log path**: `notes/session_00350_log.md`
-- **Latest session log path**: `notes/session_00345_log.md`
+- **Latest session log**: Session 394 (H608 Capacity-Modulated Multi-Signal - FAILED)
+- **Latest session log path**: `notes/session_00394_log.md`
 - **Latest compact reference**: `notes/sessions_compact.md`
-- **Current active branch**: breadth exploration
+- **Current active branch**: H608 completed, next queue item 109 (run id will use fresh `H60x+` to avoid legacy id collisions)
 - **Last updated**: 2026-05-17
 
 **WARNING**: Do not infer next session number from old live_state prose;
@@ -367,7 +366,7 @@ Carry-axis exploration branch: COMPLETE (Sessions 332-334, H518-H521).
 
 38. **Capacity Expansion Regime** - ~~Test if contracting capacity (fewer orders over time) + S1 beats static tight_capacity. Hidden demand growing = stronger signal.~~ **MIXED/F427 (Session 348, H538)**: OPPOSITE FINDING! tight_expanding (IC=0.1697) beats tight_contracting (IC=0.1553) by +0.0144. More orders arriving = stronger, not fewer.
 
-39. **Breadth-Weighted Composite** - H530 FAILED weighting raw S1 by 1/breadth. Try weighting the C23/C24/C25/C26 COMPOSITE instead, not S1 directly.
+39. ~~**Breadth-Weighted Composite**~~ - **PASSED (Session 351, H543)**: composite × low_breadth IC=0.2364 (+0.1066 vs baseline) beats composite alone (+0.0376) and raw S1 weighting. C23/C24/C25/C26 composite works with breadth filter.
 
 40. **Breadth Transition Momentum** - ~~Direction of breadth change (contracting vs expanding) may matter more than absolute level.~~ **MIXED/F428 (Session 350, H542)**: contracting_to_low IC=0.1467 is essentially TIED with steady_low (0.1463, +0.0004). Transition adds nothing over static low breadth.
 
@@ -377,21 +376,288 @@ Carry-axis exploration branch: COMPLETE (Sessions 332-334, H518-H521).
 
 ### New Bright-Mind Ideas (Post-H542)
 
-43. **Duration-Weighted Signal Strength** - Use log(1+consecutive_days_in_active) as continuous weight modifier instead of binary filter. H534 showed duration predicts STRONGER signal - now use it as strength modifier, not just filter.
+43. ~~**Duration-Weighted Signal Strength**~~ - **FAILED (Session 352, H544)**: weighting S1 × log(1+days) IC=0.0972 is MUCH WORSE than binary filter duration_8pl IC=0.1832 (-0.086). Duration works as FILTER (selecting stocks), not as continuous WEIGHT (multiplying signal). Confirms H534 finding applies to selection only.
 
-44. **Breadth-Adaptive Exit Rules** - Exit faster on high-breadth dates (signal already weak per H525), hold longer on low-breadth dates. H526 tested regime-agnostic exit with no difference - now test regime-dependent exit.
+44. ~~**Breadth-Adaptive Exit Rules**~~ - **FAILED (Session 353, H545)**: data-gated. Sustained exit states (2d+ hold) + breadth filtering too sparse (0 positive years). Low breadth (0.2712) > high breadth (0.2525) confirms H525, but exit timing comparison impossible due to data limits.
 
-45. **Capacity Direction as Signal Weight** - Use capacity_expanding (more orders arriving) as continuous weight, not filter. H538 showed expanding beats contracting by +0.0144 - now use as strength modifier.
+45. ~~**Capacity Direction as Signal Weight**~~ - **MIXED (Session 354, H546)**: weighting fails (0.1833 vs binary 0.1853), same pattern as H544. OPPOSITE finding: tight_contracting (0.1853) > tight_expanding (0.1828), opposite of H538. Need further investigation. Binary tight capacity remains strong (+0.055 lift).
 
-46. **Breadth-Concentration Interaction** - Combine market-level breadth (crowding) with signal concentration (top-N share of signal mass). H399 partially explored volume concentration, but breadth×concentration untested.
+46. ~~**Breadth-Concentration Interaction**~~ - **MIXED (Session 355, H547)**: distributed (0.2604) > concentrated (0.1955) by +0.0648. Concentration effect OPPOSITE - spread-out signal stronger.
 
 47. **Sector-Breadth Divergence** - Sector moving opposite to market breadth contains alpha (strong sector in weak market = isolation). H525 showed breadth at market level - now sector×breadth interaction.
 
-48. **Quiet-State Duration Sweet Spot** - H534 found strong duration effect for active state (longer = stronger). Test if quiet state has OPPOSITE pattern (longer = decay?).
+48. ~~**Quiet-State Duration Sweet Spot**~~ - **FAILED (Session 356, H548)**: decay pattern EXISTS (1d > 8d +0.0444) but quiet_state is ANTI-PREDICTIVE (-0.0443).
 
 49. **Regime-Adaptive Position Multiplier** - From H510 appeal: cash drag in bull regimes. Use VNI direction + breadth as exposure multiplier to reduce cash drag.
 
 50. **Multi-Signal Low-Breadth Filter** - Apply low_breadth filter to C23/C24/C25/C26 COMPOSITE (not just S1). H524 failed for same-breadth combos, but low_breadth amplified all signals in H532.
+
+### New Bright-Mind Ideas (Post-S354)
+
+51. **Signal Ignorance as Alpha** - Test if composite of weak-signal regimes (high_breadth, ultra_negative, floor_pressure) forms an "ignore" signal that avoids degraded IC periods. Compare IC on ignore-active dates vs no-ignore dates.
+
+52. **Capacity as Continuous Input** - H474 tight_capacity strong (+0.055) but tested as binary. Test using capacity percentile to MODULATE entry threshold (adjust threshold higher when capacity tight) instead of filtering.
+
+53. **Sector-Breadth Divergence Router** - When market breadth is high but sector stays low, that sector may capture isolated alpha. Test C23 in sectors where sector_breadth < market_breadth_20th.
+
+54. **Entry-Day Breadth as Duration Condition** - H534 found longer duration = stronger, but high entry-day breadth might cause faster decay. Test: sustained holding IC differs by entry-day active_count quintile.
+
+55. **Illiquidity Concentration Edge** - H525: low breadth = stronger. Test if illiquidity CONCENTRATION among top-5 matters: top-5 holding 80%+ of illiq mass vs distributed.
+
+56. **Latent Transition as Entry Condition** - H509 clustering recovers quiet/active. Test using quiet->active transition probability as entry condition on top of C23/C24/C25/C26.
+
+57. **Price Limit Proximity Condition** - H485 floor pressure failed. Test if proximity TO ceiling (pct_change >= 5%) is signal condition, not just limit hit.
+
+58. **Replacement Pressure Regime** - Active-set turnover rate as regime indicator: high turnover = fresh alpha, low turnover = stale. Test IC by active_set_turnover quintile.
+
+### New Bright-Mind Ideas (Post-S356)
+
+51. ~~**Signal Ignorance as Alpha**~~ - **MIXED (Session 357, H549)**: High-breadth dates have worse IC (0.1149 vs baseline 0.1277), but effect is weak (+0.0029 < +0.01). Confirms H525 but not actionable as ignore signal. Ultra_negative/floor_pressure data unavailable.
+
+59. ~~**Cross-Signal Low-Breadth Amplification**~~ - **PASSED (Session 358, H550)**: C24×own_breadth (0.2080) beats C24×composite_breadth (0.1952) by +0.0127. Each signal has different optimal breadth window! C25 alone is strongest (0.2115), C24 benefits most from own-breadth filtering.
+
+60. ~~**Signal Mass Entropy as Regime Detector**~~ - **FAILED (Session 359, H560)**: High entropy IC=0.1067 vs low entropy IC=0.1447, lift -0.0380 (OPPOSITE of hypothesis). Entropy adds nothing on low_breadth (0.1477 vs 0.1475). Dead-end D066.
+
+61. ~~**Opposite-Day Breadth Entry**~~ - **FAILED (Session 362, H563)**: first_day (0.0977) vs sustained (0.1442) = -0.0464. Onset is WORSE than steady state. Dead-end D069.
+
+62. ~~**Breadth Quintile Gate**~~ - **FAILED (Session 363, H564)**: Q1 (0.1053) vs binary (0.1073) = -0.002. Q2 is strongest (0.1435), not Q1. Quintiles don't beat binary. Dead-end D070.
+
+63. ~~**Capacity-Breadth Direction Combo**~~ - **PASSED (Session 364, H565)**: tight+low_breadth (0.2062) vs tight (0.1648) = +0.0414, vs low_breadth (0.1073) = +0.0989. Strong amplification! Finding F437.
+
+64. ~~**Time-Since-Active as Hidden State**~~ - **FAILED (Session 365, H566)**: best TSA (0d) = 0.1574 vs current active = 0.1648 = -0.0074. Current state wins over history. Dead-end D071.
+
+65. ~~**Quiet-to-Active Transition Probability**~~ - **FAILED (Session 366, H567)**: transition (0.1465) vs steady quiet (0.1625) = -0.0160. Transition is WORSE. Dead-end D072.
+
+### Untried Bright-Mind Ideas
+
+66. ~~**Breadth Regime Hierarchy (Cascade)**~~ - **FAILED (Session 360, H561)**: Cascade (0.1907) < composite (0.1977) by -0.0070. Cascade logic flawed - C24×own_breadth weaker than C23. C25 alone confirmed strongest. Dead-end D067.
+
+67. ~~**Breadth Velocity (Change Rate)**~~ - **FAILED (Session 361, H562)**: Velocity lift +0.0013 only (far below +0.01). Contracting (0.1310) vs expanding (0.1297) essentially identical. Breadth change rate is not a hidden regime. Dead-end D068.
+
+68. **Signal Replacement Pressure** - Active-set turnover rate as regime: high turnover = fresh alpha, low = stale. Test IC by turnover quintile.
+
+69. **Active State Persistence as Market Structure** - Duration_8pl strong = persistent hidden demand, not decay. Use as market structure proxy.
+
+70. **Composite Breadth Sweet Spot** - Non-linear breadth effect? Test specific ranges: 0-5%, 5-10%, 10-20%, 20-30% vs >30%.
+
+71. **Sector-Level Breadth Divergence** - Market high + sector low = sector-specific alpha. Test C23 where sector < market breadth.
+
+72. **Exit Timing by Breadth Regime** - Optimal holding differs by entry breadth. High-breadth entry = exit sooner, low-breadth = hold longer.
+
+### New Eureka Ideas (Post-S366)
+
+73. ~~**Capacity-Breadth-Signal Triple Amplifier**~~ - **FAILED (Session 367, H573)**: Triple (tight+low+C23 = 0.1394) is WORSE than tight+low_breadth (0.1966) by -0.0571. Adding signal to the pair hurts - too sparse and degrades quality. Dead-end D073.
+
+74. ~~**Implementation Pain as Positive Signal**~~ - **PASSED (Session 368, H574)**: blocked_either (can't buy OR sell) IC = 0.1477 vs liquid 0.1266 = +0.0211 lift. Implementation difficulty = hidden demand = alpha. Finding F438.
+
+75. **Foreign Flow Regime as Signal Conditioner** - Test C23/C24/C25/C26 in foreign-up vs foreign-down years. Failed as additive (H443), not as conditioner.
+
+76. **Breadth × Volatility Direction Interaction** - Test low_breadth × vol_expansion vs low_breadth × vol_contracting. Both tested, their INTERACTION untested.
+
+77. **Calendar Breadth Sweet Spot** - H400 failed for calendar alone. Test if breadth dynamics differ by month-day (1-5 vs 26-31).
+
+78. **Inverse Capacity Entry** - H538 tested tight expanding. Now test LOOSE capacity + expansion = new names getting attention.
+
+79. **Replacement Pressure × Signal Interaction** - Combine pending H68 (turnover) with signal × breadth interaction.
+
+### New Eureka Ideas (Post-S376, Post-C27 Queue)
+
+**Fresh Discovery-Inspired Ideas (source: C27 structural findings F438/F439, H531/H565 breadth-capacity axis, H534 duration, H550 cross-signal findings):**
+
+**80. ~~Capacity × Breadth Regime Interaction~~** — ~~FAILED (Session 377, D080)~~: OR provides no additional value. Active is 99.98% subset of tight - they're the same mechanism, not independent amplifiers.
+
+**81. ~~Market Breadth Trend as Forward Signal~~** — ~~FAILED (Session 378, D081)~~: Expanding (more active) marginally stronger than contracting (+0.0084), but both below +0.01. Direction adds no actionable value beyond raw breadth level.
+
+**82. ~~Co-fire Degree as Hidden Demand Signal~~** — ~~PASSED (Session 379, F440)~~: Isolated (Q1) IC=0.2064 (+0.0500 vs signal), crowded (Q4) IC=0.1259 (-0.0305). +0.0805 lift Q1 vs Q4, 11/11 positive years. New regime signal - cofire isolation captures competitive crowding at signal-detection level.
+
+**83. ~~Tight Capacity × Sector Breadth Divergence~~** — ~~DATA-GATED (H533 already tested, 37 rows - too sparse)~~. Sector data not available for meaningful test.
+
+**84. ~~Active-Set Persistence as Signal Quality Predictor~~** — ~~PASSED (Session 380, F441)~~: Q4 (sustained) IC=0.1825 (+0.0227 vs active), Q1 (transient) IC=0.1346 (-0.0252). +0.0386 lift Q4 vs Q1, 11/11 positive years. Consistent with H534 - longer time in active state predicts stronger signal.
+
+**85. State_quiet × C27 as Negative Router** — F438: C27 positive (0.1477). F439: C27 destroys C24 (-0.0675). D074-D078: C27 works in quiet/foreign-down/high-breadth/low-activity. state_quiet IC=0.1552 (11/11) = unexpectedly strong. C27 in quiet stock = pre-crowd accumulation before blockage = vacuum amplifies hidden demand. Source: F438, F439, H524, D074-D078. First test: quiet_blocked vs quiet_liquid vs active_blocked vs active_liquid IC comparison.
+
+**86. Breadth × Volatility Regime Quadruple** — H525: breadth (high=bad, low=good). H446: vol_expansion (good). Neither tested INTERACTION. 4 states: low_breadth×vol_expansion, low_breadth×vol_contraction, high_breadth×vol_expansion, high_breadth×vol_contraction. Vol may amplify or degrade breadth effect. Source: H525, H446, H543, H565. First test: IC across all 4 breadth×vol states vs all_rows baseline.
+
+**87. First-Time-Active as Onset Signal Quality Marker** — H534: duration_8pl = strong (+0.053). H522: long duration anti-predictive for symbolic states (5/11). H566: current active best = 0d. Neither isolated FIRST-TIME-ENTRY after sustained quiet. First activation = onset of hidden demand = strongest alpha trigger on that stock. Source: H534, H522, H566, H507 (onset state). First test: first_active (first in 10d after 5+ quiet days) vs sustained_active (2d+ no trigger) vs raw active IC.
+
+**88. C27 × Tight Capacity as New Composite Channel** — F439: C27 destroys C24. D075: low_breadth HURTS C27. H580: blocked×tight IC=0.1688 (+0.021 vs C27, +0.004 vs tight) — capacity AMPLIFIES C27. Two hidden-demand mechanisms (blocked + tight) may amplify when combined. H580 sparse (2,356 rows) because filtered to tight first. Test reverse: on raw S1 panel, test tight AND blocked (OR). Source: F438, H474, H580, H565. First test: tight_blocked vs tight_liquid vs loose_blocked vs loose_liquid vs all_rows on raw S1 panel.
+
+**89. Spread Concentration in Top-N as Signal Quality Predictor** — H456: wide spread amplifies (+0.0948). H547: distributed signal strength > concentrated (+0.0648). Neither tested spread CONCENTRATION within top-N set. "Top-5 all high spread = broad illiquidity stress = strong S1." "Top-5 only 1 high spread = isolated illiquidity." Source: H456, H547, H471. First test: per-date top-5 avg_spread / all_rows avg_spread. Q4 (concentrated spread) vs Q1 vs all_rows IC.
+
+**90. Capacity-Constrained Exit Quality** — H538: tight_expanding (more orders) > tight_contracting (+0.0144). More orders into tight = stronger, not weaker. But tested at single moment. If you enter in tight and capacity EXPANDS during holding, do you get better exit IC? H526: exit timing no difference. H534: longer=stronger. Source: H538, H534, H526. First test: enter_tight_exit_expanding vs enter_tight_exit_tight vs enter_tight_exit_loose for 2d+ sustained positions IC.
+
+**91. Volatility Expansion Depth as Conditioner** — H446: vol_expansion binary (>0) IC=0.175 (+0.045). H538: tight_expanding beats tight_contracting. But DEPTH of expansion (how far vol expanded from baseline) is untested. Mild expansion vs deep expansion may show different IC. Mechanism: depth captures regime INTENSITY beyond binary on/off. Source: H446, H538, H431 (C16 level > delta). First test: vol_expansion with vol_pct_change Q4 (deep, e.g. >30% 5d) vs Q1 (mild, e.g. 0-5%) vs raw vol_expansion.
+
+---
+
+### Untried Bright-Mind Ideas (Remaining from Previous Queues)
+
+- H68: Replacement Pressure Signal (turnover rate as regime)
+- H69: Active State Persistence as Market Structure (H534-type duration for active state)
+- H70: Composite Breadth Sweet Spot (non-linear breadth ranges)
+- H71: Sector-Breadth Divergence (market high + sector low)
+- H72: Exit Timing by Breadth Regime
+
+---
+
+### Fresh Eureka Ideas (Post-H84, Post-F441)
+
+**92. ~~Signal Accumulation Intensity~~ — PASSED (Session 381, F442)**: cumulative days in active state (last 30d) predicts stronger alpha. Q4 (20+ days) IC=0.2006 vs Q1 (0-7 days) IC=0.1137 = +0.0869 lift. Confirms both consecutive (F441) and non-consecutive persistence work.
+
+**93. ~~Cofire-Persistence Interaction~~ — PASSED (Session 382, F443)**: Cofire Q1 + Persist Q4 IC=0.1794 (+0.0110 lift), 11/11 positive. Isolated+sustained combo adds value over either amplifier alone.
+
+**94. ~~Blocked-State Transition Timing~~ — PASSED (Session 383, F444)**: blocked_day_2_3 IC=0.1734 (+0.0208 vs blocked_either). OPPOSITE direction: continuing blocked 2-3 days is stronger than first-day blocked. Same mechanism as H534: duration works as filter.
+
+**95. ~~Multi-Signal Co-occurrence Superposition~~ — PASSED (Session 384, F445)**: composite_2+ (AND) IC=0.2445 (+0.0457 vs OR), signal_2+ vs signal_1 = +0.0689 lift. Multiple signals together are stronger than single - confirmed!
+
+**96. Zero-Cofire Edge** — Next queue head. F440: Q1 cofire (few competitors) = strong. But Q1 is "few" - maybe "ZERO" (completely isolated) is even stronger. Q1 includes "1-2 other signals", but maybe the real edge is being the ONLY signal. Mechanism: zero competition = pure hidden demand. Source: F440. First test: cofire_count = 0 (only signal) vs Q1 vs Q2-Q4 on signal rows.
+
+**97. Order Arrival Micro-Structure** — We use order_volume_ratio (level), not arrival rate. "100 orders in 1 minute" vs "100 orders in 1 hour" = different hidden demand. Tight capacity + HIGH arrival rate = intense hidden demand = strong signal. Source: H474 (tight capacity), H538 (tight_expanding). First test: order_arrival_rate (orders per minute) × tight_capacity vs raw tight_capacity.
+
+**98. Cross-Signal Breadth Optimal** — H550: each signal has different optimal breadth. What if we test: which signal fires at the LOWEST breadth level = strongest hidden demand? "C25 when market is narrowest" might be stronger than "C25 when market is average". Mechanism: signal at extreme breadth = more isolated = stronger. Source: H550, F440. First test: per-signal IC at lowest breadth quintile vs highest breadth quintile.
+
+### Fresh Eureka (Post-F442 Insights)
+
+Based on F437 (tight+low_breadth), F440 (cofire isolation), F441 (persistence), F442 (accumulation) — all orthogonal amplifiers:
+
+**99. Triple Amplification** — Can 3 confirmed amplifiers combine? tight_capacity + low_breadth + cofire_isolation. Each adds orthogonal value (F437, F440). First test: triple AND vs each pair vs single.
+
+**100. Accumulation × Breadth Composite** — F442 (accumulation) + F437 (low_breadth). Both tested separately, combo untested. First test: high_accumulation × low_breadth vs each alone.
+
+**101. Signal Exit Timing** — H526 tested exit (first day out) vs hold. But what if signal just LEFT active after being sustained? "Exiting active" might be different from never-active. Source: F441 (sustained=strong). First test: was_active_1d_ago × now_inactive vs never_active.
+
+**102. Breadth Persistence** — H525: low breadth = strong. But is it persistent low breadth (always narrow) vs transient low (just became narrow)? Market "regime" vs "moment". Source: H525, H542. First test: 5d avg breadth < 10% vs today breadth < 10%.
+
+**103. Capacity × Accumulation Interaction** — F437: tight capacity is strong. F442: accumulation is strong. Is tight capacity MORE valuable for high-accumulation stocks? Source: F437, F442. First test: tight × high_accumulation vs tight × low_accumulation.
+
+### Open Multi-Signal Queue
+
+Resolved in sessions 386-394: queue items 104-108 and 110-112 (see
+`notes/sessions_compact.md` and dead ends `D082-D088`).
+
+**109. Triple-Factor Alpha Portfolio** — Combine three strongest: F440 (cofire Q1) + F441 (persistence Q4) + F445 (multi-signal AND). Source: F440, F441, F445. First test: (cofire_isolation AND persistence AND signal_2plus) intersection vs each alone.
+
+### New Eureka (Post-F447 Multi-Signal×Breadth Discovery)
+
+**113. Regime Transition Timing Alpha** — H525 found low_breadth = strong, H542 found transition adds nothing. But maybe the TRANSITION MOMENT (when crowd disperses) is the signal, not the state. Test: enter on day breadth CROSSES below 20th percentile vs already-low (sustained).
+
+**114. Implementation Pain as Position Sizing** — F438 showed blocked stocks +0.0211 IC. Test blocked as SIZE modifier: liquid=1.0, blocked=1.5 position. Source: F438. First test: IC with size_multiplier = 1.5 for blocked vs 1.0 baseline.
+
+**115. Market Regime Position Multiplier** — Use breadth as exposure multiplier: low_breadth=150%, high_breadth=50%. H530 failed weighting S1 directly, but breadth as SIZE MODIFIER separate from signal selection is untested. First test: portfolio returns with position_size=f(breadth).
+
+**116. Cross-Sectional Dispersion as Regime** — H560 found high entropy = worse IC. Test IC dispersion (stddev across tickers per date): low_dispersion dates = stronger signal agreement = higher IC? Source: H560, H547. First test: per-date IC stddev vs mean IC.
+
+**117. Persistence Decay Boundary** — F442 tested accumulation up to 30d (Q4=20+ days). Test if 30+ days decays (crowd catches on): 20-30d vs 30+d vs fresh (0d). Source: F442. First test: IC by accumulation bucket beyond 30d.
+
+**118. Signal Concentration × Breadth Interaction** — H547 found distributed > concentrated (+0.0648), H529 found low_breadth strong. Test 4-way: distributed+low vs distributed+high vs concentrated+low vs concentrated+high. Two orthogonal effects may amplify.
+
+### New Eureka (Post-F447/Bright-Mind)
+
+**119. Multi-Signal Temporal Coherence** — F445 tested signal COUNT, not alignment. Do C23+C24 both pointing buy-heavy (coherent) beat mixed signals (some buy, some sell)? Mechanism: concentrated hidden demand vs noise. First test: composite_2+ where all signals align direction vs mixed. Source: F445, F451.
+
+**120. Breadth-Scale Signal Strength Regression** — Binary low_breadth filter works (F447), but is relationship continuous? Linear regression of IC vs breadth percentile might capture non-linear scaling vs binary. First test: IC(breadth_q1) vs regression IC across all quintiles. Source: F447, H481.
+
+**121. ~~Tight Capacity × Multi-Signal Amplifier~~** — **TESTED (Session 389, MIXED)**: triple (tight+composite_2++low_breadth) IC=0.2702 vs F447 baseline=0.2651, lift +0.0051 (below +0.01). Adding tight_capacity provides marginal value but not promotion-worthy.
+
+**122. Signal-Day Distribution as Hidden Regime** — Multi-signal on ONE day vs spread across multiple days. Same ticker: C23+C24 same day vs C23 day1 + C24 day3. One-day concentration = stronger hidden demand. First test: composite_2+ with signal_days_spread=1 vs spread>1 IC. Source: F445, F443.
+
+**123. Post-Breadth-Spike Recovery Timing** — F532 found low_breadth_post_spike strong (0.1982). Does multi-signal in recovery window exceed baseline multi-signal? Breadth spike clears crowd, fresh alpha window. First test: composite_2+ × low_breadth × post_spike vs F447 baseline. Source: F532, F447.
+
+**124. Implementation Pain × Multi-Signal Triple** — F438 blocked = +0.0211, F444 duration 2-3d best. Does blocked × multi-signal combine two hidden-demand mechanisms? First test: composite_2+ × blocked_2_3d vs F445 baseline (0.2445). Source: F438, F444, F445.
+
+**125. Cross-Signal Breadth Threshold Discovery** — H550 found each signal has different optimal breadth. C23 best at <5%, C24 at <10%? Market-wide threshold misses nuances. First test: per-signal IC at breadth <10% vs <20% vs <30%. Find signal-specific optimal. Source: H550, F447.
+
+### New Eureka (Bright-Mind Generated)
+
+**126. Signal Magnitude As Hidden State** — F445 tested BINARY signals (fired vs not). What if it's not COUNT but MAGNITUDE? Two weak signals might differ from one strong + one weak. Test weighted signal count (sum of percentile ranks) vs binary count. Source: D082/D083 (count/composition/sequence all tested). First test: composite_2plus_weighted = sum of (amihud_rank + vol_change_rank + pct_change_rank) >= threshold.
+
+**127. Anti-Coherence / Signal Conflict Edge** — F445 tested COHERENT multi-signal (all signals point same). What if CONFLICTING signals (some buy, some sell) capture tug-of-war dynamics? Conflict might predict resolution direction. Source: F445 never tested conflict direction. First test: composite_2plus_conflict vs composite_2plus_coherent IC comparison.
+
+**128. Breadth-Time Interaction (Calendar-Breadth)** — H400 found calendar alone fails, H525 found breadth works. But maybe calendar × breadth interaction matters - Monday low-breadth different from Friday. Source: H400 (calendar), H525 (breadth). First test: low_breadth × Monday vs low_breadth × Friday vs other days.
+
+**129. Ticker-Specific Breadth (Self-Reference)** — Market-wide breadth is wrong frame. What matters is TICKER-SPECIFIC: how active is THIS stock relative to its OWN history? Stock's signal_count / 30d_avg vs market-wide. Source: H525 (market breadth), H550 (per-signal). First test: ticker_self_breadth_percentile vs market_breadth_percentile.
+
+**130. Signal Decay Acceleration / Exit Zone** — F442 found persistence up to 30d = strong. But what's AFTER 30d? Maybe there's an exhaustion zone where signal flips. Source: F442 (accumulation up to 30d). First test: composite_2+ by days_since_first: 1-7d, 8-20d, 21-30d, 31+d. Find decay boundary.
+
+**131. Breadth-Expansion Exit Rule** — Focus is on ENTRY (low_breadth). But EXIT should maybe use BREADTH TRAJECTORY - exit when breadth STARTS expanding (crowd returning). Source: H545 (exit timing data-gated). First test: hold composite_2+ until breadth > 1.5× entry_breadth vs fixed hold.
+
+**132. Signal Concentration During Low Breadth** — H547 found distributed > concentrated overall. But in LOW BREADTH, does CONCENTRATION flip? When crowd is sparse, concentrated signal among them might = stronger hidden demand. Source: H547 (distributed > concentrated). First test: 4-way concentrated+low vs distributed+low vs concentrated+high vs distributed+high.
+
+### Bright-Mind Queue (Wake/Sleep Lens, Nested Cycles)
+
+Subordinate to active priorities. Do not assign `H` ids until a branch is activated.
+
+- **Nested-Phase Stack**
+  - Claim: alpha is strongest when fast/medium/slow cycles are aligned, not from any single state alone.
+  - First honest test: define fast (`3d` low-breadth), medium (signal persistence `Q4`), slow (market vol-expansion regime) and compare triple-aligned IC vs each pair and `composite_2plus`.
+
+- **Arousal-Fatigue Spread**
+  - Claim: the useful hidden state is spread between activation pressure and crowd fatigue, not raw activation level.
+  - First honest test: build `arousal = composite_2plus + cofire_q1 + tight_capacity`, `fatigue = high_breadth + cofire_q4 + long_accumulation`; test IC by `arousal_minus_fatigue` quintiles.
+
+- **Wake Pulse vs Chronic Wake**
+  - Claim: abrupt activation pulses are different from already-hot chronic activation; one should dominate.
+  - First honest test: split identical current activation level by recent acceleration (`5d` change in isolated `2+` signal count) and compare pulse vs chronic buckets.
+
+- **Local-Global Desynchronization**
+  - Claim: edge appears when ticker-local wake state is strong while market-level state is sleepy (or vice versa), not when both are synchronized.
+  - First honest test: cross ticker self-breadth percentile (`30d` self-reference) with market breadth regime into 2x2 states; compare IC grid vs market-only breadth baseline.
+
+- **Saturation Cooldown Half-Life**
+  - Claim: after crowd saturation spikes, there is a finite cooldown window where signal quality recovers before decaying again.
+  - First honest test: for post high-breadth spike dates, bucket by days-since-spike (`1-2`, `3-5`, `6-10`, `>10`) and test `composite_2plus` IC per bucket.
+
+- **Cycle-Stability Gate**
+  - Claim: stable regimes (low variance of breadth/cofire over recent days) are more learnable than turbulent regimes with same level stats.
+  - First honest test: within same low-breadth level, split by rolling `10d` variance of breadth+cofire and compare stable vs unstable IC for `composite_2plus`.
+
+- **Hierarchical Context Gating**
+  - Claim: slow macro context should gate micro C23/C24 state quality; same micro-state has different IC across discrete macro blocks.
+  - First honest test: infer discrete macro blocks from slow observables (state-space/HMM or robust clustering), then compare `state_router` / `state_amplified` IC by macro block vs pooled baseline.
+
+- **Fatigue Recovery Threshold**
+  - Claim: breadth fatigue is nonlinear; once cumulative crowding crosses a threshold, micro-signal quality enters a refractory regime.
+  - First honest test: build cumulative breadth load (`sum(active_fraction, 10d/20d)`), bucket by threshold states (low/mid/high fatigue), and test `composite_2plus` IC plus low-breadth recovery windows after high-fatigue episodes.
+
+- **Phase-Lag Environment Gate**
+  - Claim: phase-lag (H407 family) is useful as an environment switch, not a standalone ranker.
+  - First honest test: use phase-lag quantiles as allow/neutral/suppress gate for `state_router` and `composite_2plus`; compare gated IC vs ungated baseline and check year consistency.
+
+- **Regime-Conditional Router Selection**
+  - Claim: router choice should be conditional (`C23` vs `C24`) by macro block instead of globally fixed.
+  - First honest test: for each macro block, compare residual IC of `C23|not C24` vs `C24|not C23`; test whether block-specific router wins are stable out-of-sample.
+
+- **Macro-State Persistence Gate**
+  - Claim: micro alpha is stronger when macro block persistence is high (state stability), weaker near macro boundary churn.
+  - First honest test: within each macro block, split by block persistence age (`new` vs `established`) without using transition direction; compare IC of `state_router` and `composite_2plus`.
+
+### Bright-Mind Queue (Traffic-Flow Inspired)
+
+Use as ideation backlog. Keep static-level conditioning first; avoid reopening killed transition-velocity/Fourier-style paths.
+
+- **Fundamental Diagram for Alpha Capacity**
+  - Claim: there is a concave capacity curve between participation density and signal quality (too sparse and too crowded both worse).
+  - First honest test: fit monotonic + quadratic shape of IC vs participation density (active fraction / cofire density) and test out-of-sample whether middle-band dominates extremes.
+
+- **Shockwave Block Regime**
+  - Claim: large cross-sectional reconfiguration days ("market shockwaves") form discrete environments that alter micro-state quality.
+  - First honest test: define shock blocks from top-decile daily change in market signal composition (not ticker transition velocity), then compare `composite_2plus` and `state_router` IC inside vs outside shock blocks.
+
+- **Relaxation Gap State (Desired vs Realized Participation)**
+  - Claim: alpha weakens when desired activation (signal pressure) and realized executable participation diverge too much.
+  - First honest test: build daily `relaxation_gap = signal_pressure - executable_participation` using tradability/cash proxies; test micro-state IC by gap quintiles.
+
+- **Headway-Safety Analogue for Entry Crowding**
+  - Claim: a ticker-level "crowding headway" (distance to local crowd threshold) predicts whether active signals are still safe to enter.
+  - First honest test: construct self-referenced crowding headway from ticker activity vs its own recent distribution; compare IC for active names in wide-headway vs tight-headway buckets.
+
+- **Mesoscopic Distribution Regime**
+  - Claim: distribution shape of active pressure matters more than mean level; same breadth can have different alpha if concentration profile differs.
+  - First honest test: within matched breadth bins, split by distribution-shape metrics (tail mass / Gini / top-decile share) and compare IC stability.
+
+- **Wardrop-Style Sector Pressure Equilibrium**
+  - Claim: when sector-level pressure is near equilibrium (no easy rerouting), edge decays; disequilibrium sectors preserve isolated alpha.
+  - First honest test: compute sector pressure dispersion index per day; compare `C23/C24` IC on high-dispersion (disequilibrium) vs low-dispersion days.
 
 ---
 

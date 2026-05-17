@@ -1,0 +1,119 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_152634_breadth_concentration_interaction_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_152634_breadth_concentration_interaction_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "H543 found composite×low_breadth is strongest (IC=0.2364). Now test if signal CONCENTRATION (top-5 share of S1 mass) adds value on top of breadth filter. Low breadth + concentrated signal should be stronger than low breadth alone.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "H543 found composite×low_breadth is strongest (IC=0.2364). Now test if signal CONCENTRATION (top-5 share of S1 mass) adds value on top of breadth filter. Low breadth + concentrated signal should be stronger than low breadth alone.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "breadth_concentration_interaction",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "breadth_filter",
+        "label": "Binary low breadth filter (bottom 20%)",
+        "name": "low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth_composite",
+        "label": "Composite on low breadth dates (H543 winner)",
+        "name": "composite_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth_concentration",
+        "label": "Composite on low breadth + high concentration",
+        "name": "concentrated_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth_concentration",
+        "label": "Composite on low breadth + low concentration",
+        "name": "distributed_low_breadth",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "breadth_concentration_interaction",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "composite_low_breadth_ic": 0.23642263890991613,
+    "composite_low_breadth_lift": 0.10663110554989277,
+    "concentrated_lift": 0.06575687080682965,
+    "concentrated_low_breadth_ic": 0.195548404166853,
+    "concentration_lift": -0.06483684912497892,
+    "decision": "MIXED",
+    "distributed_lift": 0.13059371993180857,
+    "distributed_low_breadth_ic": 0.26038525329183193,
+    "h543_composite_low_breadth_ic": 0.2364,
+    "h543_lift": 0.1066,
+    "low_breadth_ic": 0.12991581678330644,
+    "low_breadth_lift": 0.00012428342328307806,
+    "panel_rows": 809019,
+    "states_evaluated": 5
+  },
+  "ts": "20260517_152634"
+}

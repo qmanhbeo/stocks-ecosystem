@@ -37,6 +37,20 @@ SIGNAL_REGISTRY = {
         "status": "READY",
         "derivation": "rank(t) - rank(t-1) per ticker, fail-closed on missing prior",
     },
+    "c17_active_boost": {
+        "source": "xs_order_pressure_daily",
+        "column": "c17_active_boost",
+        "description": "C17 raw order volume ratio with active-state boost plus rank-delta adjustment",
+        "status": "READY",
+        "derivation": "order_volume_ratio + boost_strength * 1[rank < active_rank_threshold] + delta_weight * (rank(t)-rank(t-1))",
+    },
+    "low_breadth_flag": {
+        "source": "xs_order_pressure_daily",
+        "column": "is_low_breadth",
+        "description": "Date-level low breadth regime flag from active-count percentile",
+        "status": "READY",
+        "derivation": "active_count(rank<0.2) ranked by date percentile; low_breadth when percentile <= 0.25",
+    },
 }
 
 
@@ -177,6 +191,75 @@ def load_order_pressure_delta(
     return df[['time', 'ticker', 'order_volume_ratio_rank_delta']]
 
 
+def load_order_pressure_c17_active_boost(
+    start: str | None = None,
+    end: str | None = None,
+    tickers: list[str] | None = None,
+    allow_2026: bool = False,
+    active_rank_threshold: float = 0.2,
+    boost_strength: float = 0.35,
+    delta_weight: float = 0.20,
+) -> pd.DataFrame:
+    """
+    Load C17 active-boost transformed signal.
+
+    Formula:
+      c17_active_boost =
+        order_volume_ratio
+        + boost_strength * 1[order_volume_ratio_rank < active_rank_threshold]
+        + delta_weight * (order_volume_ratio_rank(t) - order_volume_ratio_rank(t-1))
+
+    This is intentionally non-monotonic relative to raw/rank-only C17-C16 and can
+    alter per-date Top-K ordering by boosting active-state names.
+    """
+    cols = ["time", "ticker", "order_volume_ratio", "order_volume_ratio_rank"]
+    df = pd.read_parquet(ORDER_PRESSURE, columns=cols)
+    df = _apply_lockbox_filter(df, start, end, allow_2026)
+    if tickers:
+        df = df[df["ticker"].isin(tickers)]
+
+    df = df.sort_values(["ticker", "time"]).copy()
+    df["prior_rank"] = df.groupby("ticker")["order_volume_ratio_rank"].shift(1)
+    df["rank_delta"] = (df["order_volume_ratio_rank"] - df["prior_rank"]).fillna(0.0)
+    active_flag = (df["order_volume_ratio_rank"] < float(active_rank_threshold)).astype(float)
+    df["c17_active_boost"] = (
+        df["order_volume_ratio"]
+        + float(boost_strength) * active_flag
+        + float(delta_weight) * df["rank_delta"]
+    )
+    return df[["time", "ticker", "c17_active_boost"]]
+
+
+def load_low_breadth_regime(
+    start: str | None = None,
+    end: str | None = None,
+    allow_2026: bool = False,
+    active_rank_threshold: float = 0.2,
+    low_breadth_percentile: float = 0.25,
+) -> pd.DataFrame:
+    """
+    Build date-level low-breadth regime flag from order-pressure active counts.
+
+    Definition mirrors the H528/H529 branch:
+    - active state per row: order_volume_ratio_rank < active_rank_threshold
+    - active_count per date: sum(active state)
+    - breadth_percentile per date: percentile rank of active_count across dates
+    - is_low_breadth: breadth_percentile <= low_breadth_percentile
+    """
+    cols = ["time", "ticker", "order_volume_ratio_rank"]
+    df = pd.read_parquet(ORDER_PRESSURE, columns=cols)
+    df = _apply_lockbox_filter(df, start, end, allow_2026)
+
+    df["is_active"] = (df["order_volume_ratio_rank"] < float(active_rank_threshold)).astype(int)
+    date_breadth = df.groupby("time", as_index=False)["is_active"].sum().rename(columns={"is_active": "active_count"})
+    date_breadth["breadth_percentile"] = date_breadth["active_count"].rank(pct=True)
+    date_breadth["is_low_breadth"] = (
+        date_breadth["breadth_percentile"] <= float(low_breadth_percentile)
+    ).astype(int)
+
+    return date_breadth[["time", "active_count", "breadth_percentile", "is_low_breadth"]]
+
+
 def load_insider_features(
     start: str | None = None,
     end: str | None = None,
@@ -194,6 +277,8 @@ SIGNAL_CATALOG = {
     "c16_rank": "C16 order volume ratio rank",
     "c17_raw": "C17 raw order volume ratio (not ranked)",
     "c18_delta": "C18 order pressure rank delta (acceleration)",
+    "c17_active_boost": "C17 raw + active-state boost (non-monotonic transform)",
+    "low_breadth_flag": "Date-level low breadth regime flag (active-count percentile)",
     "c4_oc_asym_5d": "Open/close asymmetry 5d",
     "c5_ins_relative_size_5d": "Insider relative size (normalized conviction)",
     "c5_signal_present": "Insider signal present flag",

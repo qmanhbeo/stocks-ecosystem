@@ -1,0 +1,218 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_175026_signal_pair_synergy_matrix_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_175026_signal_pair_synergy_matrix_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "F445 found '2+ signals' works (IC 0.2445), but which SPECIFIC pairs have strongest synergy? C23+C24 vs C23+C25 vs C24+C25 etc. Some pairs redundant, others complementary.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "F445 found '2+ signals' works (IC 0.2445), but which SPECIFIC pairs have strongest synergy? C23+C24 vs C23+C25 vs C24+C25 etc. Some pairs redundant, others complementary.",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "signal_pair_synergy_matrix",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "multi_signal",
+        "label": "Any signal (1+)",
+        "name": "any_signal",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "multi_signal",
+        "label": "2+ signals (AND) - F445 baseline",
+        "name": "composite_2plus",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "single_signal",
+        "label": "C23 only",
+        "name": "signal_1_only",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "single_signal",
+        "label": "C24 only",
+        "name": "signal_2_only",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "single_signal",
+        "label": "C25 only",
+        "name": "signal_3_only",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "single_signal",
+        "label": "C26 only",
+        "name": "signal_4_only",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "pair",
+        "label": "C23 + C24 pair",
+        "name": "c23_c24",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "pair",
+        "label": "C23 + C25 pair",
+        "name": "c23_c25",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "pair",
+        "label": "C23 + C26 pair",
+        "name": "c23_c26",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "pair",
+        "label": "C24 + C25 pair",
+        "name": "c24_c25",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "pair",
+        "label": "C24 + C26 pair",
+        "name": "c24_c26",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "pair",
+        "label": "C25 + C26 pair",
+        "name": "c25_c26",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "triple",
+        "label": "C23 + C24 + C25 triple",
+        "name": "c23_c24_c25",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "triple",
+        "label": "C23 + C24 + C26 triple",
+        "name": "c23_c24_c26",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "triple",
+        "label": "C23 + C25 + C26 triple",
+        "name": "c23_c25_c26",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "triple",
+        "label": "C24 + C25 + C26 triple",
+        "name": "c24_c25_c26",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "quad",
+        "label": "All 4 signals",
+        "name": "c23_c24_c25_c26",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "signal_pair_synergy_matrix",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "best_avg_ic": 0.24450086966388176,
+    "best_pair_ic": 0.23960203215605602,
+    "best_pair_name": "c23_c26",
+    "best_state": "composite_2plus",
+    "composite_2plus_ic": 0.24450086966388176,
+    "decision": "FAILED",
+    "lift_vs_composite": -0.004898837507825743,
+    "panel_rows": 809019,
+    "states_evaluated": 18
+  },
+  "ts": "20260517_175026"
+}

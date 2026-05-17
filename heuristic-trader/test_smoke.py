@@ -116,6 +116,10 @@ def test_loader_has_lockbox_filter():
     loaders = [
         "load_rl_signal_matrix",
         "load_order_pressure",
+        "load_order_pressure_raw",
+        "load_order_pressure_delta",
+        "load_order_pressure_c17_active_boost",
+        "load_low_breadth_regime",
         "load_activation_state",
         "load_activation_meta",
         "load_insider_features",
