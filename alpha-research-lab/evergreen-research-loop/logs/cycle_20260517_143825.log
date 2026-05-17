@@ -1,0 +1,63 @@
+=== Research Loop Cycle Started at 2026-05-17T14:38:25.011387 ===
+Working directory: /home/manh/stocks-ecosystem
+Research lab: /home/manh/stocks-ecosystem/alpha-research-lab
+--- Current State ---
+  version: 1.0
+  cycle_count: 22
+  last_phase: completed
+  last_run_timestamp: 2026-05-17T14:38:19.982338
+  last_session_hint: cycle-22-20260517-143010
+  last_decision: run_evergreen
+  heavy_job_detected: False
+  last_exit_status: success
+  created_at: 2026-05-08T12:25:02.512120
+  loop_started_at: 2026-05-17T14:22:49.521443
+  loop_completed_at: 2026-05-17T14:15:04.301604
+  last_loop_max_cycles: 30
+  last_loop_completed_cycles: 2
+  last_stop_reason: interrupted_recovered_session_logged
+  last_completed_phase: handoff
+  last_completed_at: 2026-05-17T14:38:19.982302
+  last_session_id: ses_1c9deb5ffffeobxUGTqglMZMXl
+Inspection: {'heavy_job': False, 'hypothesis_queue_exists': True, 'hypothesis_queue_count': 35, 'last_session': 'cycle-22-20260517-143010', 'last_h': None, 'cycle_count': 22}
+Decision: run_evergreen (Ready to run evergreen-research-loop pass)
+Invoking per-cycle fresh-session flow (verbose=False)...
+=== Research Loop Cycle Started at 2026-05-17T14:38:25.013921 ===
+Working directory: /home/manh/stocks-ecosystem
+Research lab: /home/manh/stocks-ecosystem/alpha-research-lab
+--- Current State ---
+  version: 1.0
+  cycle_count: 22
+  last_phase: decision
+  last_run_timestamp: 2026-05-17T14:38:19.982338
+  last_session_hint: cycle-22-20260517-143010
+  last_decision: run_evergreen
+  heavy_job_detected: False
+  last_exit_status: success
+  created_at: 2026-05-08T12:25:02.512120
+  loop_started_at: 2026-05-17T14:22:49.521443
+  loop_completed_at: 2026-05-17T14:15:04.301604
+  last_loop_max_cycles: 30
+  last_loop_completed_cycles: 2
+  last_stop_reason: interrupted_recovered_session_logged
+  last_completed_phase: handoff
+  active_cycle_started_at: 2026-05-17T14:38:25.013947
+  active_cycle_log_path: /home/manh/stocks-ecosystem/alpha-research-lab/evergreen-research-loop/logs/cycle_20260517_143825.log
+  last_completed_at: 2026-05-17T14:38:19.982302
+  last_session_id: ses_1c9deb5ffffeobxUGTqglMZMXl
+Heavy job check: False
+Cycle session title: cycle-23-20260517-143825
+Phase 1 (experiment): skill=experimentor, session_title=cycle-23-20260517-143825, session_id=None
+Phase 1 return code: 0
+Resolved session_id: ses_1c9d72b61ffe6XSyev965eV1lg
+Phase 2 (experiment): skill=experimentor, session_title=cycle-23-20260517-143825, session_id=ses_1c9d72b61ffe6XSyev965eV1lg
+Phase 2 return code: 0
+Phase 3 (memory): skill=manh-memory-system, session_title=cycle-23-20260517-143825, session_id=ses_1c9d72b61ffe6XSyev965eV1lg
+Phase 3 return code: 0
+Phase 4 (ideate): skill=bright-mind, session_title=cycle-23-20260517-143825, session_id=ses_1c9d72b61ffe6XSyev965eV1lg
+Phase 4 return code: 0
+Phase 5 (handoff): skill=manh-memory-system, session_title=cycle-23-20260517-143825, session_id=ses_1c9d72b61ffe6XSyev965eV1lg
+Phase 5 return code: 0
+=== Cycle Completed: completed (elapsed: 463.4s) ===
+Three-phase cycle completed
+=== Cycle Completed: completed (elapsed: 463.4s) ===

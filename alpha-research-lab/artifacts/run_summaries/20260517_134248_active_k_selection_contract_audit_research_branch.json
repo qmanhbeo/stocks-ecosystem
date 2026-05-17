@@ -1,0 +1,75 @@
+{
+  "artifacts": {
+    "comparison": "artifacts/research_branches/20260517_134248_active_k_selection_contract_audit_comparison.parquet",
+    "source_h512_summary": "artifacts/run_summaries/20260517_132235_active_manifold_disentangling_research_branch.json",
+    "source_h514_summary": "artifacts/run_summaries/20260517_133731_amplified_axis_refinement_research_branch.json"
+  },
+  "metadata": {
+    "guardrails": {
+      "min_amplified_jaccard": 0.06,
+      "min_lift_gap": 0.01,
+      "min_mean_disentangle": 0.1,
+      "min_strong_clusters": 2
+    },
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "A constrained axis-aware active-k selection rule should avoid silhouette-only drift while preserving strict dev-only model-selection discipline.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "active_k_selection_contract_audit",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {},
+      "start_year": 2015,
+      "target_columns": {}
+    }
+  },
+  "mode": "research_branch",
+  "name": "active_k_selection_contract_audit",
+  "summary": {
+    "decision": "SUPPORTS guarded selection contract",
+    "flag_guarded_exists": true,
+    "flag_h514_guarded_improves_amplified": true,
+    "flag_h514_guarded_preserves_lift_gap": true,
+    "h512_guarded_k": 4,
+    "h512_silhouette_k": 4,
+    "h514_guarded_amplified": 0.15114678899082568,
+    "h514_guarded_k": 5,
+    "h514_guarded_lift_gap": 0.047898543200747434,
+    "h514_silhouette_amplified": 0.03246454419947287,
+    "h514_silhouette_k": 3
+  },
+  "ts": "20260517_134248"
+}

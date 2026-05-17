@@ -1,0 +1,193 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_140052_transition_dynamics_alpha_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_140052_transition_dynamics_alpha_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Transition events capture info static states lose",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Transition events (time-in-state, transition_to_X flags) capture info that static state labels lose. H507 found coherent flow; test if transitions themselves are the alpha.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "transition_dynamics_alpha",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "static",
+        "label": "Static: no C23-family signal active",
+        "name": "state_quiet",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "static",
+        "label": "Static: fresh C23 onset state",
+        "name": "state_onset",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "static",
+        "label": "Static: C23-family cofire amplification",
+        "name": "state_amplified",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "static",
+        "label": "Static: low-C16 router sub-state",
+        "name": "state_router",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "static",
+        "label": "Static: post-C23 carry state",
+        "name": "state_carry",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "transition",
+        "label": "Transition: any state change",
+        "name": "just_transitioned",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "transition",
+        "label": "Transition: entered onset from another state",
+        "name": "transition_to_onset",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "transition",
+        "label": "Transition: entered amplified from another state",
+        "name": "transition_to_amplified",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "transition",
+        "label": "Transition: entered carry from another state",
+        "name": "transition_to_carry",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "transition",
+        "label": "Transition: entered router from another state",
+        "name": "transition_to_router",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "transition",
+        "label": "Transition: quiet -> active (any)",
+        "name": "enter_active",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "transition",
+        "label": "Transition: active -> quiet",
+        "name": "return_to_quiet",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "duration",
+        "label": "Duration: long duration in current state (top 20%)",
+        "name": "days_in_state_q4",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "duration",
+        "label": "Duration: short duration in current state (bottom 20%)",
+        "name": "days_in_state_q1",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "transition_dynamics_alpha",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_transition_state": "transition_to_router",
+    "decision": "FAILED",
+    "duration_best_ic": 0.19614583784726103,
+    "panel_rows": 826404,
+    "states_evaluated": 15,
+    "static_best_ic": 0.2258122245221794,
+    "transition_best_ic": 0.22461583459283932,
+    "transition_vs_static_lift": -0.0011963899293400693
+  },
+  "ts": "20260517_140052"
+}

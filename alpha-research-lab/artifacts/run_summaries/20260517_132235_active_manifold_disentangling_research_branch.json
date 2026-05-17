@@ -1,0 +1,120 @@
+{
+  "artifacts": {
+    "active_k_discipline": "artifacts/research_branches/20260517_132235_active_manifold_disentangling_active_k_discipline.parquet",
+    "active_overlap": "artifacts/research_branches/20260517_132235_active_manifold_disentangling_active_overlap.parquet",
+    "active_random_baseline": "artifacts/research_branches/20260517_132235_active_manifold_disentangling_active_random_baseline.parquet",
+    "active_results": "artifacts/research_branches/20260517_132235_active_manifold_disentangling_active_results.parquet",
+    "active_yearly": "artifacts/research_branches/20260517_132235_active_manifold_disentangling_active_yearly.parquet",
+    "chosen_active_panel": "artifacts/research_branches/20260517_132235_active_manifold_disentangling_chosen_active_panel.parquet",
+    "chosen_active_transitions": "artifacts/research_branches/20260517_132235_active_manifold_disentangling_chosen_active_transitions.parquet",
+    "global_k_discipline": "artifacts/research_branches/20260517_132235_active_manifold_disentangling_global_k_discipline.parquet",
+    "global_overlap": "artifacts/research_branches/20260517_132235_active_manifold_disentangling_global_overlap.parquet"
+  },
+  "metadata": {
+    "feature_columns": [
+      "amihud_log",
+      "vol_change",
+      "vol_expansion_flag",
+      "order_volume_ratio_log",
+      "order_volume_ratio_rank",
+      "buy_sell_imbalance_norm",
+      "buy_count_share",
+      "sell_count_share",
+      "at_ceiling",
+      "ceiling_3d_count",
+      "lag_vol_expansion",
+      "lag_order_volume_ratio_rank",
+      "lag_at_ceiling",
+      "lag_buy_sell_imbalance_norm",
+      "delta_order_volume_ratio_rank",
+      "delta_buy_sell_imbalance_norm"
+    ],
+    "k_choice_discipline": "Both global and active k are selected by dev-only silhouette; IC is diagnostics-only and not used for model selection.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "With dev-only k selection and active-only unsupervised subclustering, the H509 active manifold can be partially disentangled while preserving quiet/C24 structural recovery and beating random active partitions.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "active_manifold_disentangling",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "symbolic_overlap_columns": [
+      "state_quiet",
+      "c24",
+      "c23_fresh_not_yesterday",
+      "cofire_2",
+      "c23_yesterday_carry"
+    ]
+  },
+  "mode": "research_branch",
+  "name": "active_manifold_disentangling",
+  "summary": {
+    "active_k_sweep": [
+      3,
+      4,
+      5
+    ],
+    "active_lift_minus_random_lift": 0.06043111418443395,
+    "active_rows": 436076,
+    "c24_symbolic_in_cluster": 0.9659827213822895,
+    "decision": "SUPPORTS active-manifold disentangling",
+    "flag_active_beats_random": true,
+    "flag_active_disentangling_nontrivial": true,
+    "flag_active_non_sparse_strength": true,
+    "flag_c24_recovery_preserved": true,
+    "flag_quiet_recovery_preserved": true,
+    "global_k_sweep": [
+      4,
+      5,
+      6
+    ],
+    "mean_disentangle_jaccard": 0.10480890249508851,
+    "panel_rows": 826404,
+    "quiet_cluster_id": 1,
+    "quiet_cluster_in_quiet": 0.9634384415158533,
+    "selected_active_k_dev_silhouette": 4,
+    "selected_global_k_dev_silhouette": 4,
+    "strong_non_sparse_clusters": 2
+  },
+  "ts": "20260517_132235"
+}

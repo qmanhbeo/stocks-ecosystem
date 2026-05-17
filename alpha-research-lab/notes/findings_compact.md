@@ -56,8 +56,38 @@ entry must include source anchors: stable finding IDs or source session links.
   separate queue-friction channel. Caveat: onset/amplification/carry are only
   partially disentangled (low direct one-to-one Jaccard), and selected `k=6`
   should not be treated as uniquely proven because k-choice used full-period IC
-  diagnostics. This remains structural support with unresolved active-manifold
-  decomposition. Source anchor: Session 139 (`H509` + interpretation audit).
+  diagnostics. H511 then enforced strict dev-only `k` selection and active-only
+  subclustering: quiet structure stayed strong and active clusters still beat
+  random, but C24 recovery degraded (`0.591`) and onset/amplification/carry
+  separation remained weak (`mean max-Jaccard 0.059`). H512 immediately showed
+  this was largely a representation-selection issue: with C24-preserving global
+  `k=4`, C24 recovery returned (`0.966`), active-vs-random gap improved
+  (`+0.060`), and mean onset/amplified/carry separation rose to `0.105` with
+  two strong non-sparse active clusters. H513 then passed the explicit
+  robustness audit: both strong clusters remain phase-positive in validation and
+  confirmation and concentration stays below one-pocket risk (`0.576 < 0.80`).
+  H514-H516 then resolved the amplified-axis branch: naive silhouette-selected
+  refinement was mixed, but constrained active-k selection on the same refined
+  representation recovered strong amplified overlap and passed robustness gates.
+  H517 then formalized that into a guarded active-k contract, which keeps H512
+  stable and corrects H514 drift. H518 further narrows the remaining weakness:
+  carry-axis underlap looks representation-limited (low overlap despite
+  phase-stable carry IC), not a latent-state collapse. Current read:
+  active-manifold decomposition is robust; next gains should come from targeted
+  carry-representation refinements under the guarded contract. Source
+  anchors: Session 139 (`H509` + interpretation audit), `F417`, `F418`,
+  `F419`, `F420`.
+
+- Carry-amplified structural conflict: H519-H521 tested whether carry-state
+  overlap could be improved without degrading amplified-state overlap. Both
+  strong carry features (flow_persist, imbalance_persist) and weak features
+  (simple lags: lag2_order_volume_ratio_rank, order_pressure_sustain) improve
+  carry separation (+25-62%) but damage amplified overlap (-38-80%). This is
+  not a feature engineering issue but a structural property of the observable
+  manifold: carry and amplified are in inherent tension. The latent space can
+  cleanly separate 2-3 states (quiet + 1-2 active) but not all three of
+  onset/amplified/carry simultaneously. Source anchors: Session 333 (`H519`),
+  Session 334 (`H521`).
 
 - S24x/S25x methodology correction: S272 supersedes the old S253
   "skepticism resolved" note. `actual` in the S1 parquet is a future binary

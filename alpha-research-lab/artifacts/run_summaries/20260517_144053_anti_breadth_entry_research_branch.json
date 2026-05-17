@@ -1,0 +1,68 @@
+{
+  "experiment": "h529_anti_breadth_entry_signal",
+  "timestamp": "20260517_144053",
+  "verdict": "PASSED",
+  "baseline_ic": 0.12768214395354166,
+  "results": {
+    "all_rows": {
+      "description": "All S1 rows (baseline)",
+      "ic": 0.12768214395354166,
+      "n": 821764,
+      "positive_years": 11,
+      "total_years": 11,
+      "dev_ic": 0.13067971738763898,
+      "val_ic": 0.1253746803566651,
+      "conf_ic": 0.10895565258081218,
+      "lift_vs_baseline": 0.0
+    },
+    "low_breadth_dates": {
+      "description": "S1 on low-breadth dates only",
+      "ic": 0.15423525160716076,
+      "n": 166230,
+      "positive_years": 11,
+      "total_years": 11,
+      "dev_ic": 0.15485107695039835,
+      "val_ic": 0.1139337011977779,
+      "conf_ic": 0.14298042500309144,
+      "lift_vs_baseline": 0.026553107653619096
+    },
+    "high_breadth_dates": {
+      "description": "S1 on high-breadth dates only",
+      "ic": 0.10853624197187797,
+      "n": 255229,
+      "positive_years": 6,
+      "total_years": 6,
+      "dev_ic": 0.10504925167985515,
+      "val_ic": 0.12730746051353967,
+      "conf_ic": 0.09001082642236433,
+      "lift_vs_baseline": -0.019145901981663688
+    },
+    "state_active": {
+      "description": "S1 where C16 active (rank < 0.2)",
+      "ic": 0.1596958520772368,
+      "n": 127045,
+      "positive_years": 11,
+      "total_years": 11,
+      "dev_ic": 0.16735931499335382,
+      "val_ic": 0.15615522737645526,
+      "conf_ic": 0.116032924101116,
+      "lift_vs_baseline": 0.03201370812369514
+    },
+    "active_low_breadth": {
+      "description": "S1: active + low_breadth",
+      "ic": 0.20125714388771843,
+      "n": 20030,
+      "positive_years": 6,
+      "total_years": 6,
+      "dev_ic": 0.2021006516203023,
+      "val_ic": null,
+      "conf_ic": -0.06436668082815689,
+      "lift_vs_baseline": 0.07357499993417677
+    }
+  },
+  "analysis": {
+    "lift_lowbreadth_vs_all": 0.026553107653619096,
+    "lift_activelow_vs_active": 0.041561291810481626,
+    "lift_activelow_vs_all": 0.07357499993417677
+  }
+}

@@ -1,90 +1,53 @@
 # Evergreen Cycle Handoff
 
-## Cycle 17 — OSError Root Cause Analysis (2026-05-11)
+## Cycle 20 — Sessions 342-345 (2026-05-17)
 
-### What happened
+### What Completed
 
-Cycle 17 (2026-05-08, `loop_20260509_190107.log`) crashed with `OSError: Input/output error`
-at Phase 1 (experiment). Exit code -3.
+- **H529** (S342): low_breadth filter → PASSED, IC=0.1542 (+0.0266)
+- **H530** (S343): continuous weighting → FAILED, D058
+- **H531** (S344): tight + low_breadth → PASSED, IC=0.1979 (+0.0702)
+- **H532** (S345): post-spike → MIXED, combo = IC=0.1982 (+0.0706)
+- **Bright-mind**: 5 new eurekas added (#37-41)
 
-### Root cause
+### Key Verified Outcomes
 
-The OSError was not from a missing binary or bad path — `opencode` binary is at
-`/home/manh/.nvm/versions/node/v24.15.0/bin/opencode` and resolves correctly.
+| Outcome | Evidence |
+|---------|----------|
+| low_breadth = regime amplifier | H529: +0.0266 |
+| tight + low_breadth = strongest combo | H531: 0.1979 |
+| lowbreadth_post_spike = NEW | H532: 0.1982 |
+| active + low_breadth = STRONGEST | H528: 0.2013 |
 
-The crash likely occurred during the `subprocess.Popen` pipe setup or the
-`process.stdin.write()` call inside `invoke_phase`. This is a transient I/O
-environment issue (possibly WSL filesystem pipe saturation under OpenCode's
-subprocess forking), not a code bug.
+### Files Updated
 
-### What was patched
+- `live_state.md` — queue with ideas #37-41
+- `session_00345_log.md` — H532 results
+- `sessions_compact.md` — S345 added
+- `findings-00391-00420.md` — F425 added
 
-Two hardening changes to `orchestrator.py` to distinguish OSError from other
-exceptions and log the actual error string:
+### Current Queue
 
-1. **Non-verbose path** (lines ~416-421): Added explicit `OSError` catch before the
-   generic `Exception` catch, with logging.
-2. **Verbose path** (after `send_prompt_and_wait`): Added `OSError` catch with
-   `process.kill()`, thread join, and logging before returning -3.
+Tested: #32, #35
 
-These changes make future OSError crashes self-documenting in the log rather than
-silent -3 returns.
+Remaining (untested):
+- #33 Breadth-Sector Cross-Filter
+- #34 Active State Duration Sweet Spot
+- #36 Inverse Breadth Signal
 
-### State recovery
+New eurekas (untested):
+- #37 Triple-Intersection Alpha
+- #38 Capacity Expansion Regime
+- #39 Breadth-Weighted Composite
+- #40 Sector-Breadth Divergence
+- #41 Capacity-Volume-Breadth Triple
 
-The state file (`loop_state.json`) correctly reflects the failure:
-- `last_phase: "failed_experiment"`
-- `last_exit_status: "error_-3"`
-- `last_completed_phase: "ideate"`
-- `cycle_count: 17`
+### Blockers / Data Gates
 
-No state corruption. The loop can be restarted.
+- Intraday/auction data: blocked (data-gated)
 
-### To verify recovery
+### Source of Truth
 
-```bash
-cd alpha-research-lab/evergreen-research-loop
-python orchestrator.py check-interrupted
-```
+**`notes/live_state.md` and saved artifacts are authoritative.**
 
-Expected output: `Status: CLEAR`
-
-To restart:
-
-```bash
-cd alpha-research-lab
-make loop  # one bounded cycle
-```
-
-### What was NOT changed
-
-- No changes to research conclusions, signal library, or note files.
-- No changes to experiment contract or experiment protocol.
-- No changes to prompt templates or skill invocations.
-- No changes to the dev/val/confirm split enforcement.
-
----
-
-## Handoff fields
-
-| Field | Value |
-|-------|-------|
-| Last completed cycle | 17 |
-| Last completed phase | ideate (in the previous successful cycle) |
-| Last failure phase | experiment (Phase 1 of cycle 17) |
-| Failure type | OSError (I/O environment, not code bug) |
-| OSError patch | applied (hardened in invoke_phase) |
-| State corruption | none |
-| Ready to restart | YES |
-| Cycle handoff ever written before | NO — this is the first |
-
----
-
-## Current lab state (from live_state.md)
-
-- Session 139 (2026-05-10) is the latest complete session.
-- Active queue: structure-mapping pass for C23/C24/C25/C26 family.
-- Next experiment: H510+ — disentangle active-manifold substructure
-  (onset/amplification/carry) without reintroducing symbolic labels.
-- Parking list: entry-alpha, exit-ladder, RL (waiting on new data acquisition).
-- Blocked highest-value branch: intraday/auction data acquisition for timing research.
+Cycle restart: `cd alpha-research-lab && make loop`

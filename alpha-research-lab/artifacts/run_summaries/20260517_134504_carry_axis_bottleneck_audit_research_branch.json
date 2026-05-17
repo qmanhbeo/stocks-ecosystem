@@ -1,0 +1,70 @@
+{
+  "artifacts": {
+    "axis_table": "artifacts/research_branches/20260517_134504_carry_axis_bottleneck_audit_axis_table.parquet",
+    "carry_yearly": "artifacts/research_branches/20260517_134504_carry_axis_bottleneck_audit_carry_yearly.parquet",
+    "source_summary": "artifacts/run_summaries/20260517_133818_amplified_axis_refinement_research_branch.json"
+  },
+  "metadata": {
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Under the H515 guarded contract, carry-axis weakness should be traceable to coverage/sparsity and overlap imbalance rather than global latent collapse.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "carry_axis_bottleneck_audit",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {},
+      "start_year": 2015,
+      "target_columns": {}
+    }
+  },
+  "mode": "research_branch",
+  "name": "carry_axis_bottleneck_audit",
+  "summary": {
+    "amplified_jaccard": 0.15114678899082568,
+    "bottleneck_class": "representation_overlap_bottleneck",
+    "carry_best_cluster": "h514_active_k5_cluster_4",
+    "carry_gap_vs_amplified": -0.061136098589811325,
+    "carry_gap_vs_onset": -0.11805076487233683,
+    "carry_jaccard": 0.09001069040101435,
+    "carry_positive_years": 11,
+    "carry_year_ic_spread": 0.07299258192543842,
+    "carry_years_with_ic": 11,
+    "decision": "SUPPORTS carry-overlap bottleneck",
+    "onset_jaccard": 0.20806145527335118,
+    "selected_active_k": 5
+  },
+  "ts": "20260517_134504"
+}

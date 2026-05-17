@@ -1,0 +1,15 @@
+{
+  "hypothesis": "Cross-Sectional Breadth as Regime Signal - date-level active-stock density predicts forward IC",
+  "baseline_ic": 0.12768214395354166,
+  "high_breadth_ic": 0.11494995989658753,
+  "low_breadth_ic": 0.14540894362286577,
+  "lift_high_vs_low": -0.03045898372627824,
+  "lift_high_vs_baseline": -0.01273218405695413,
+  "best_quintile": "breadth_quintile",
+  "best_quintile_ic": 0.14540894362286577,
+  "phase_ic": {
+    "dev": 0.1098880060925757,
+    "validation": 0.13701220685533283,
+    "confirmation": 0.1026917510190916
+  }
+}

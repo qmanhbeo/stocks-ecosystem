@@ -1,0 +1,57 @@
+{
+  "experiment": "h528_quiet_low_breadth_intersection",
+  "timestamp": "20260517_143438",
+  "verdict": "FAILED",
+  "baseline_ic": 0.12768214395354166,
+  "signals": {
+    "state_quiet": {
+      "description": "Quiet state (rank >= 0.75) on ALL dates",
+      "ic": null,
+      "n": 192612,
+      "pos_years": 0,
+      "total_years": 0,
+      "yearly": {}
+    },
+    "is_low_breadth": {
+      "description": "Low breadth dates (bottom 25%) - all stocks",
+      "ic": null,
+      "n": 166230,
+      "pos_years": 0,
+      "total_years": 0,
+      "yearly": {}
+    },
+    "state_active": {
+      "description": "Active state (rank < 0.2) on ALL dates",
+      "ic": null,
+      "n": 127045,
+      "pos_years": 0,
+      "total_years": 0,
+      "yearly": {}
+    },
+    "quiet_low_breadth": {
+      "description": "Quiet + low breadth intersection",
+      "ic": null,
+      "n": 37649,
+      "pos_years": 0,
+      "total_years": 0,
+      "yearly": {}
+    },
+    "active_low_breadth": {
+      "description": "Active + low breadth intersection",
+      "ic": null,
+      "n": 20030,
+      "pos_years": 0,
+      "total_years": 0,
+      "yearly": {}
+    }
+  },
+  "analysis": {
+    "quiet_ic": 0.0,
+    "low_breadth_ic": 0.0,
+    "intersection_ic": 0.0,
+    "active_int_ic": 0.0,
+    "max_single": 0.0,
+    "min_single": 0.0,
+    "intersection_lift_vs_max": 0.0
+  }
+}

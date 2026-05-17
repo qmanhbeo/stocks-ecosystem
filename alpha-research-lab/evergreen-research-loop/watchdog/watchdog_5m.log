@@ -1,0 +1,11 @@
+=== watchdog start 2026-05-17T14:31:08+01:00 ===
+[2026-05-17T14:31:08+01:00] phase=null exit=null cycle=-1 active_pid=null pid_state=na started=
+[2026-05-17T14:35:56+01:00] phase=null exit=null cycle=-1 active_pid=null pid_state=na started=
+[2026-05-17T14:40:44+01:00] phase=null exit=null cycle=-1 active_pid=null pid_state=na started=
+[2026-05-17T14:45:30+01:00] phase=null exit=null cycle=-1 active_pid=null pid_state=na started=
+[2026-05-17T14:50:18+01:00] phase=null exit=null cycle=-1 active_pid=null pid_state=na started=
+[2026-05-17T14:55:07+01:00] phase=null exit=null cycle=-1 active_pid=null pid_state=na started=
+[2026-05-17T14:59:55+01:00] phase=null exit=null cycle=-1 active_pid=null pid_state=na started=
+[2026-05-17T15:04:42+01:00] phase=null exit=null cycle=-1 active_pid=null pid_state=na started=
+=== watchdog start 2026-05-17T15:06:24+01:00 ===
+[2026-05-17T15:06:24+01:00] phase=running_experiment exit=running cycle=24 active_pid=90641 pid_state=alive started=2026-05-17T15:03:28.817159

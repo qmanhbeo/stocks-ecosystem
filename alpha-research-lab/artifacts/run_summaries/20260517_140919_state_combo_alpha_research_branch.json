@@ -1,0 +1,10 @@
+{
+  "hypothesis": "State Combination Alpha - test if simultaneous multiple states capture info individual states miss",
+  "best_individual": "state_router",
+  "best_individual_ic": 0.1794801212569935,
+  "best_combo": "combo_router_only",
+  "best_combo_ic": 0.1794801212569935,
+  "lift_combo_vs_individual": 0.0,
+  "baseline_ic": 0.12768214395354166,
+  "total_states_tested": 13
+}

@@ -1,0 +1,140 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_142504_exit_timing_discovery_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_142504_exit_timing_discovery_yearly.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test if holding-duration (time-since-entry into active state C23) or exit conditions (C24 trigger) predict different realized returns. Entry states are well-tested; exit/timing is the unexplored half.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "exit_timing_discovery",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": "all_rows",
+        "family": "timing",
+        "label": "First day in C23 (vol_expansion) - day 1 entry",
+        "name": "fresh_entry",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "timing",
+        "label": "Day 2+ in C23 (sustained active state)",
+        "name": "sustained_c23",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "timing",
+        "label": "First day exiting C23 (exiting active state)",
+        "name": "first_c23_exit",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "timing",
+        "label": "Entering C24 (ceiling trigger) - exit signal",
+        "name": "c24_entry",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "duration",
+        "label": "Exactly day 1 in C23",
+        "name": "day1_only",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "duration",
+        "label": "Day 2-3 in C23",
+        "name": "day2_3",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "duration",
+        "label": "Day 4+ in C23",
+        "name": "day4_plus",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "exit_timing_discovery",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_duration_bucket": "day1_only",
+    "best_duration_ic": null,
+    "day1_ic": null,
+    "day2_3_ic": 0.14240932373741658,
+    "day4_plus_ic": 0.1697112365274508,
+    "decision": "FAILED",
+    "exit_timing_effect": false,
+    "fresh_entry_ic": 0.1692709687222058,
+    "fresh_vs_sustained_lift": -0.0019708231753257643,
+    "panel_rows": 826404,
+    "states_evaluated": 8,
+    "sustained_ic": 0.17124179189753155
+  },
+  "ts": "20260517_142504"
+}

@@ -1,0 +1,121 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_150617_breadth_transition_momentum_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_150617_breadth_transition_momentum_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Direction of breadth change (contracting vs expanding) may matter more than absolute level. Test if breadth_contracting (high->low) has stronger IC than steady_low. Mechanism: as crowd disperses, signal quality improves.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Direction of breadth change (contracting vs expanding) may matter more than absolute level. Test if breadth_contracting (high->low) has stronger IC than steady_low. Mechanism: as crowd disperses, signal quality improves.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "breadth_transition_momentum",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": "all_rows",
+        "family": "candidate",
+        "label": "Breadth contracting from high to low",
+        "name": "contracting_to_low",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "Stable low breadth (steady)",
+        "name": "steady_low",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "Low breadth (any direction)",
+        "name": "low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "Breadth expanding from low to high",
+        "name": "expanding_to_high",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "High breadth (any direction)",
+        "name": "high_breadth",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "breadth_transition_momentum",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "contracting_ic": 0.14669480549726086,
+    "contracting_lift": 0.016475514870364805,
+    "decision": "MIXED",
+    "low_breadth_ic": 0.1422869925151515,
+    "panel_rows": 826404,
+    "states_evaluated": 6,
+    "steady_low_ic": 0.14630585074775895,
+    "vs_steady_lift": 0.0003889547495019019
+  },
+  "ts": "20260517_150617"
+}

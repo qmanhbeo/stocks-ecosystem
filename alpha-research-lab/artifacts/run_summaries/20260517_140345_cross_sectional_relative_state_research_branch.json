@@ -1,0 +1,170 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_140345_cross_sectional_relative_state_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_140345_cross_sectional_relative_state_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Relative state encoding captures info absolute loses",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Relative state encoding (vs market, vs sector) captures info that absolute encoding loses. H510 showed C23 higher in failure years; relative may capture participation pressure better.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "cross_sectional_relative_state",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "absolute",
+        "label": "Absolute: any active state (onset/amp/router/carry)",
+        "name": "absolute_active",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "absolute",
+        "label": "Absolute: onset state",
+        "name": "state_onset",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "absolute",
+        "label": "Absolute: amplified state",
+        "name": "state_amplified",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "absolute",
+        "label": "Absolute: router state",
+        "name": "state_router",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "absolute",
+        "label": "Absolute: carry state",
+        "name": "state_carry",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "relative_market",
+        "label": "Relative: top 20% market activity",
+        "name": "relative_active_market_top20",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "relative_market",
+        "label": "Relative: top 10% market activity",
+        "name": "relative_active_market_top10",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "relative_sector",
+        "label": "Relative: top 20% sector activity",
+        "name": "relative_active_sector_top20",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "relative_sector",
+        "label": "Relative: top 10% sector activity",
+        "name": "relative_active_sector_top10",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cross",
+        "label": "Relative high + Absolute low: market only",
+        "name": "high_market_relative_low_absolute",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "cross",
+        "label": "Relative high + Absolute low: sector only",
+        "name": "high_sector_relative_low_absolute",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "cross_sectional_relative_state",
+  "summary": {
+    "absolute_best_ic": 0.2258122245221794,
+    "baseline_ic": 0.13021929062689605,
+    "best_relative_state": "relative_active_market_top20",
+    "cross_best_ic": null,
+    "decision": "FAILED",
+    "panel_rows": 826404,
+    "relative_market_best_ic": 0.217617113797107,
+    "relative_sector_best_ic": 0.21518125056308451,
+    "relative_vs_absolute_lift": -0.008195110725072396,
+    "states_evaluated": 12
+  },
+  "ts": "20260517_140345"
+}

@@ -1,0 +1,7 @@
+=== Research Loop Started at 2026-05-17T13:48:12.696489 (max_cycles=3) ===
+Starting bounded loop with max_cycles=3, session_batch_size=3
+SESSION_BATCH_SIZE > 1 requested but ignored: /compact is not reliable under opencode run; using one fresh session per cycle.
+Working directory: /home/manh/stocks-ecosystem
+=== Cycle 1 === fresh_session=True, verbose=False
+Cycle 1: decision=skip_empty_queue, status=success, elapsed=0.0s
+=== Loop Completed: 1 cycles, stop_reason=cycle_1_skip_empty_queue, total_time=0.0s ===

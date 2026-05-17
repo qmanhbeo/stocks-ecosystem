@@ -1,0 +1,137 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_150242_triple_intersection_alpha_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_150242_triple_intersection_alpha_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Test tight_capacity + low_breadth + active (C16<0.2) three-way intersection. H531 (tight+low, 0.1979) + H528 (active+low, 0.2013) suggest triple could exceed 0.21.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test tight_capacity + low_breadth + active (C16<0.2) three-way intersection. H531 (tight+low, 0.1979) + H528 (active+low, 0.2013) suggest triple could exceed 0.21.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "triple_intersection_alpha",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": "all_rows",
+        "family": "candidate",
+        "label": "tight_capacity + low_breadth + active (C16<=0.2)",
+        "name": "triple_intersection",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "tight_capacity + low_breadth (two-way)",
+        "name": "tight_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "active + low_breadth (two-way)",
+        "name": "active_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "tight_capacity + active (two-way)",
+        "name": "tight_active",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "Low breadth dates only",
+        "name": "low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "Tight capacity only",
+        "name": "tight_capacity",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "Active state (C16<=0.2) only",
+        "name": "is_active",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "triple_intersection_alpha",
+  "summary": {
+    "baseline_ic": 0.13021929062689605,
+    "best_two_way": "active_low_breadth",
+    "best_two_way_ic": 0.19556648402286458,
+    "decision": "MIXED",
+    "panel_rows": 826404,
+    "states_evaluated": 8,
+    "triple_ic": 0.19556648402286458,
+    "triple_lift": 0.06534719339596853,
+    "vs_best_two_way_lift": 0.0
+  },
+  "ts": "20260517_150242"
+}

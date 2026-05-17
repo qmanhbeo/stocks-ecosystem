@@ -1,0 +1,69 @@
+{
+  "artifacts": {
+    "cluster_share": "artifacts/research_branches/20260517_133945_h512_phase_stability_audit_cluster_share.parquet",
+    "source_h512_summary": "alpha-research-lab/artifacts/run_summaries/20260517_133818_amplified_axis_refinement_research_branch.json",
+    "strong_cluster_stability": "artifacts/research_branches/20260517_133945_h512_phase_stability_audit_strong_cluster_stability.parquet"
+  },
+  "metadata": {
+    "gate_min_cluster_rows": 5000,
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "H512 recovered active-manifold separation should remain phase/year stable across multiple strong non-sparse clusters, not one sparse pocket.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "h512_phase_stability_audit",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {},
+      "start_year": 2015,
+      "target_columns": {}
+    },
+    "selected_h512_ts": "20260517_133818"
+  },
+  "mode": "research_branch",
+  "name": "h512_phase_stability_audit",
+  "summary": {
+    "active_base_ic": 0.14390773187161213,
+    "decision": "SUPPORTS H512 robustness",
+    "dominant_cluster_share": 0.6553513607719755,
+    "flag_multi_cluster_strength": true,
+    "flag_not_single_pocket": true,
+    "flag_phase_positive": true,
+    "max_single_cluster_share_gate": 0.8,
+    "selected_active_k": 5,
+    "strong_cluster_count": 2
+  },
+  "ts": "20260517_133945"
+}

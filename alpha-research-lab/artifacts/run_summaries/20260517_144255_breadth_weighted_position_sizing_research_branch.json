@@ -1,0 +1,57 @@
+{
+  "experiment": "h530_breadth_weighted_position_sizing",
+  "timestamp": "20260517_144255",
+  "verdict": "FAILED",
+  "baseline_ic": 0.12768214395354166,
+  "results": {
+    "baseline": {
+      "description": "All S1 rows",
+      "ic": 0.12768214395354166,
+      "n": 821764,
+      "positive_years": 11,
+      "total_years": 11,
+      "lift_vs_baseline": 0.0
+    },
+    "low_breadth_dates": {
+      "description": "S1 on low-breadth dates (binary)",
+      "ic": 0.1427736902570674,
+      "n": 178627,
+      "positive_years": 11,
+      "total_years": 11,
+      "lift_vs_baseline": 0.015091546303525744
+    },
+    "high_breadth_dates": {
+      "description": "S1 on high-breadth dates (binary)",
+      "ic": 0.11786949221492042,
+      "n": 233635,
+      "positive_years": 11,
+      "total_years": 11,
+      "lift_vs_baseline": -0.00981265173862124
+    },
+    "weighted_score": {
+      "description": "S1 * inv_breadth_weight (continuous)",
+      "ic": 0.10569098963006121,
+      "n": 821764,
+      "positive_years": 11,
+      "total_years": 11,
+      "dev_ic": 0.10379786378491931,
+      "val_ic": 0.11276166050916982,
+      "conf_ic": 0.10772448838805977,
+      "lift_vs_baseline": -0.02199115432348045
+    },
+    "weighted_rank": {
+      "description": "Rank(S1 * inv_breadth) within date",
+      "ic": 0.14068922317974783,
+      "n": 821764,
+      "positive_years": 11,
+      "total_years": 11,
+      "lift_vs_baseline": 0.01300707922620617
+    }
+  },
+  "analysis": {
+    "binary_low_breadth_ic": 0.1427736902570674,
+    "weighted_score_ic": 0.10569098963006121,
+    "weighted_rank_ic": 0.14068922317974783,
+    "lift_weighted_vs_binary": -0.03708270062700619
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "artifacts": {
+    "active_k_discipline": "artifacts/research_branches/20260517_135318_carry_axis_refinement_active_k_discipline.parquet",
+    "active_overlap": "artifacts/research_branches/20260517_135318_carry_axis_refinement_active_overlap.parquet",
+    "active_random_baseline": "artifacts/research_branches/20260517_135318_carry_axis_refinement_active_random_baseline.parquet",
+    "active_results": "artifacts/research_branches/20260517_135318_carry_axis_refinement_active_results.parquet",
+    "active_yearly": "artifacts/research_branches/20260517_135318_carry_axis_refinement_active_yearly.parquet",
+    "global_overlap": "artifacts/research_branches/20260517_135318_carry_axis_refinement_global_overlap.parquet",
+    "source_baseline_summary": "artifacts/run_summaries/20260517_134504_carry_axis_bottleneck_audit_research_branch.json"
+  },
+  "metadata": {
+    "base_feature_columns": [
+      "amihud_log",
+      "vol_change",
+      "vol_expansion_flag",
+      "order_volume_ratio_log",
+      "order_volume_ratio_rank",
+      "buy_sell_imbalance_norm",
+      "buy_count_share",
+      "sell_count_share",
+      "at_ceiling",
+      "ceiling_3d_count",
+      "lag_vol_expansion",
+      "lag_order_volume_ratio_rank",
+      "lag_at_ceiling",
+      "lag_buy_sell_imbalance_norm",
+      "delta_order_volume_ratio_rank",
+      "delta_buy_sell_imbalance_norm"
+    ],
+    "carry_feature_columns": [
+      "flow_persist_2d",
+      "flow_persist_3d",
+      "imbalance_persist_2d",
+      "imbalance_persist_3d",
+      "order_pressure_sustain",
+      "vol_flow_ratio",
+      "carry_candidate_flag",
+      "lag2_order_volume_ratio_rank",
+      "lag2_buy_sell_imbalance_norm",
+      "flow_accel_2d"
+    ],
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Adding carry-focused temporal/flow continuity features to the active-manifold emissions should improve carry-state separation while preserving H512/H515 quiet/C24/amplified gates and active-vs-random lift gap.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "carry_axis_refinement",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "selection_note": "Global k fixed at 4 (C24-preserving), active k forced to 5 (guarded contract), carry features added for k=5 only."
+  },
+  "mode": "research_branch",
+  "name": "carry_axis_refinement",
+  "summary": {
+    "active_lift_minus_random_lift": 0.04745185203435165,
+    "active_rows": 436076,
+    "c24_symbolic_in_cluster": 0.9659827213822895,
+    "decision": "MIXED",
+    "flag_active_beats_random": true,
+    "flag_active_non_sparse_strength": true,
+    "flag_amplified_axis_preserved": false,
+    "flag_c24_recovery_preserved": true,
+    "flag_carry_axis_improved_vs_h518": true,
+    "flag_nontrivial_disentangling": false,
+    "flag_quiet_recovery_preserved": true,
+    "h518_baseline_amplified_jaccard": 0.15114678899082568,
+    "h518_baseline_carry_jaccard": 0.09001069040101435,
+    "max_jaccard_amplified": 0.030838850247213608,
+    "max_jaccard_carry": 0.14578278983385481,
+    "max_jaccard_onset": 0.11263899362996005,
+    "mean_disentangle_jaccard": 0.09642021123700949,
+    "quiet_cluster_in_quiet": 0.9634384415158533,
+    "selected_active_k": 5,
+    "selected_global_k": 4,
+    "strong_non_sparse_clusters": 3
+  },
+  "ts": "20260517_135318"
+}

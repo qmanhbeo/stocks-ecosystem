@@ -1,0 +1,92 @@
+{
+  "experiment": "h531_breadth_capacity_intersection",
+  "timestamp": "20260517_144733",
+  "verdict": "PASSED",
+  "baseline_ic": 0.12768214395354166,
+  "results": {
+    "all_rows": {
+      "description": "All S1 rows (baseline)",
+      "ic": 0.12768214395354166,
+      "n": 821764,
+      "positive_years": 11,
+      "total_years": 11,
+      "dev_ic": 0.13067971738763898,
+      "val_ic": 0.1253746803566651,
+      "conf_ic": 0.10895565258081218,
+      "lift_vs_baseline": 0.0
+    },
+    "tight_capacity": {
+      "description": "H474: tight capacity Q1",
+      "ic": 0.18784160110285678,
+      "n": 160628,
+      "positive_years": 11,
+      "total_years": 11,
+      "dev_ic": 0.18726175574114867,
+      "val_ic": 0.19914543897760031,
+      "conf_ic": 0.16721307556318382,
+      "lift_vs_baseline": 0.060159457149315115
+    },
+    "low_breadth": {
+      "description": "H529: low-breadth dates",
+      "ic": 0.15423525160716076,
+      "n": 166230,
+      "positive_years": 11,
+      "total_years": 11,
+      "dev_ic": 0.15485107695039835,
+      "val_ic": 0.1139337011977779,
+      "conf_ic": 0.14298042500309144,
+      "lift_vs_baseline": 0.026553107653619096
+    },
+    "tight_lowbreadth": {
+      "description": "INTERSECTION: tight + low_breadth",
+      "ic": 0.1978635856721646,
+      "n": 30409,
+      "positive_years": 7,
+      "total_years": 7,
+      "dev_ic": 0.19785047444489104,
+      "val_ic": null,
+      "conf_ic": 0.16149069271851113,
+      "lift_vs_baseline": 0.07018144171862295
+    },
+    "tight_highbreadth": {
+      "description": "tight + high_breadth (control)",
+      "ic": 0.17631940354090264,
+      "n": 50725,
+      "positive_years": 6,
+      "total_years": 6,
+      "dev_ic": 0.17382863669375573,
+      "val_ic": 0.20277480386049643,
+      "conf_ic": 0.1402180586393732,
+      "lift_vs_baseline": 0.04863725958736098
+    },
+    "loose_lowbreadth": {
+      "description": "loose + low_breadth (control)",
+      "ic": 0.0885180431238347,
+      "n": 32096,
+      "positive_years": 8,
+      "total_years": 9,
+      "dev_ic": 0.0881676275688176,
+      "val_ic": 0.11537564027560342,
+      "conf_ic": 0.20098918584032566,
+      "lift_vs_baseline": -0.03916410082970696
+    },
+    "loose_highbreadth": {
+      "description": "loose + high_breadth (control)",
+      "ic": 0.06676221774617107,
+      "n": 51493,
+      "positive_years": 6,
+      "total_years": 6,
+      "dev_ic": 0.04979537301038659,
+      "val_ic": 0.07953892414430519,
+      "conf_ic": 0.08918510670720914,
+      "lift_vs_baseline": -0.06091992620737059
+    }
+  },
+  "analysis": {
+    "tight_capacity_ic": 0.18784160110285678,
+    "low_breadth_ic": 0.15423525160716076,
+    "intersection_ic": 0.1978635856721646,
+    "lift_vs_best_single": 0.010021984569307835,
+    "lift_vs_baseline": 0.07018144171862295
+  }
+}

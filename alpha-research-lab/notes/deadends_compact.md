@@ -11,6 +11,21 @@ specified changed condition. Keep links to source `F` IDs so the original
 evidence remains traceable. Every compact dead-end entry must include source
 anchors: stable dead-end IDs, finding IDs, or source session links.
 
+## Resolution: Continuous Breadth Weighting Fails (D058)
+
+- H530 breadth_weighted_position_sizing is D058. Continuous 1/breadth weighting does NOT beat binary filter.
+- weighted_score (S1 × inv_breadth) IC=0.1057 is WORSE than baseline (-0.0220). Direct multiplication amplifies low-breadth signals too much, distorting rank.
+- weighted_rank (rank of weighted score within date) IC=0.1407 (+0.0130) beats baseline but still slightly below binary filter (0.1428).
+- Binary low_breadth filter remains the superior implementation. Do not reopen with continuous weighting.
+- Source: [session_00343_log.md](./session_00343_log.md).
+
+## Resolution: Quiet + Low-Breadth Intersection Is NOT Promotion-Worthy (D057)
+
+- H528 quiet_low_breadth_intersection is D057 (partial). Quiet (rank >= 0.75) + low_breadth dates intersection IC=0.1644 beats min component (0.1542) but does NOT exceed max + 0.01 threshold (needs 0.1652). The intersection is NOT promotion-worthy as a signal filter.
+- HOWEVER: Active (rank < 0.2) + low_breadth dates intersection shows SIGNIFICANT improvement: IC=0.2013 beats active alone (0.1597) by +0.0416 (+26% boost). This is a regime amplifier finding, not a dead end.
+- Low-breadth dates act as a positive regime amplifier for active-state signals. Use as positive filter (select low-breadth dates), not negative (exclude high-breadth).
+- Source: [session_00341_log.md](./session_00341_log.md).
+
 ## Resolution: LAR Ratio Is Anti-Predictive
 
 - H472 liquidity_adjusted_return (AL queue) is killed. Return / Amihud illiquidity ratio
@@ -21,6 +36,20 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
   collapses two correlated effects into one confusing metric that loses to raw components.
   Do not reopen LAR ratio as standalone ranker. Use Amihud LEVEL (C23) as the signal, not
   the return/Amihud ratio. Source: [session_00121_log.md](./session_00121_log.md).
+
+## Resolution: Quiet-State Inverse Alpha Has No Contrarian Effect
+
+- H527 quiet_state_inverse_alpha (queue item 9) is killed. Quiet stocks in high-breadth dates (IC=0.1248) vs low-breadth dates (IC=0.1225) lift only +0.0022, below 0.01 threshold. Market activity level does NOT meaningfully modulate quiet-stock quality. Confirms state_quiet alone is still strong (IC=0.1205, 11/11 positive years). Do not reopen as contrarian filter. Source: [session_00340_log.md](./session_00340_log.md), D056.
+
+## Resolution: Exit Timing Has No Alpha
+
+- H526 exit_timing_discovery (queue item 8) is killed. Holding duration does NOT predict different IC:
+  - Fresh entry (first day in C23): IC=0.1693 (11/11 positive years)
+  - Sustained (day 2+ in C23): IC=0.1712 (11/11 positive years)
+  - Fresh vs sustained lift: -0.002 (essentially NO difference)
+  - Exit (first day out of C23): IC=0.1386 - weaker but not enough to matter
+  - All timing states beat baseline (0.1277) by +0.042
+  - Interpretation: Signal works equally well at entry and as sustained position. Holding duration is noise, not signal. Do not reopen exit-timing as alpha source. Source: [session_00339_log.md](./session_00339_log.md), D055.
 
 ## Resolution: Acceleration/Momentum Signals Are Dead-End
 
@@ -489,6 +518,22 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
 - News velocity as signal is killed under H473. News VELOCITY (3d delta = 5d-1d article count) is ANTI-predictive: high_velocity Q5 = IC 0.088 (-0.032 lift vs baseline 0.120), burst_has_news = IC 0.082 (-0.037). Fast-arriving news = crowd-following, not breaking alpha. mid_velocity only +0.008 (weak). low_velocity too sparse (most tickers have 0 news). The third dimension beyond novelty (H440) and presence (H445) is noise. Do not reopen with news-count velocity or acceleration derivatives. Only structured features (source-type, forward-looking, official) survive. Source: [session_00122_log.md](./session_00122_log.md).
 
 - Rank acceleration as hidden signal is killed under H462. Rank acceleration (rank_change speed) is ANTI-predictive alone (-0.0166 lift for accelerating, -0.0665 for decelerating). Adding rank acceleration to buy_heavy_expansion makes it MUCH WORSE (-0.0584). The "suddenly appearing = hidden info" hypothesis is NOT supported. Do not reopen with rank_change velocity features. Source anchor: `D040`, [session_00115_log.md](./session_00115_log.md).
+
+## Resolution: Transition Dynamics Are NOT Alpha
+
+- H522 transition_dynamics_alpha is D051. Transition events (time-in-state, transition_to_X flags) do NOT capture info beyond static state labels. Best transition (`transition_to_router` IC=0.2246) is essentially identical to static state (`state_router` IC=0.2258), lift -0.0012. Duration features also don't help: long duration (`days_in_state_q4`) is actually anti-predictive (only 5/11 positive years, IC 0.0864). The coherent flow pattern H507 found is STRUCTURAL, not predictive incremental. Static states ARE the signal, transitions are not. Do not reopen with transition event features. Source: [session_00335_log.md](./session_00335_log.md), D051.
+
+## Resolution: Relative State Encoding Is NOT Alpha
+
+- H523 cross_sectional_relative_state is D052. Relative encoding (percentile rank within market/sector) does NOT beat absolute binary labeling. Best relative (`relative_active_market_top20` IC=0.2176) is -0.0082 below absolute best (`state_router` IC=0.2258). Sector-relative is similar (IC 0.2152, -0.0106 below absolute). Cross states (high relative but low absolute) are too sparse to evaluate. Participation pressure is captured by the specific mechanism (low C16 router), not by relative ranking. Do not reopen with percentile-rank relative features. Source: [session_00336_log.md](./session_00336_log.md), D052.
+
+## Resolution: State Combination Is NOT Alpha
+
+- H524 state_combo_alpha is D053. Union (OR) and intersection (AND) logic combos of latent states do NOT capture information beyond individual states. Best union combo (`union_router_only` IC=0.1795) equals best individual (`state_router` IC=0.1795). Best intersection combo (`intersect_router_buyable` IC=0.1796) is only +0.0002 lift. Union combos actually hurt: adding more states dilutes the signal. The latent state structure from H507-H515 already captured signal organization; combinations add nothing. Key discovery: `state_quiet` is STRONG (IC=0.1552, 11/11 pos yrs), not neutral as previously assumed - this is an unexpected finding worth noting. Do not reopen with state combination features. Source: [session_00337_log.md](./session_00337_log.md), D053.
+
+## Resolution: High Breadth Is Negative Regime Signal
+
+- H525 cross_sectional_breadth is D054. Date-level active-stock density (breadth) has OPPOSITE effect of hypothesis: HIGH breadth dates have WORSE IC (0.1149) vs LOW breadth (0.1454), lift -0.0305. When many stocks activate together, it's a crowded regime with weaker signal quality. Low breadth (sparse activation) dates have BETTER signal (+0.0177 lift vs baseline 0.1277). Quintiles show uniform IC at 0.1454, suggesting binary distinction (high vs low) not gradations. Use as regime FILTER: avoid high-breadth dates. Source: [session_00338_log.md](./session_00338_log.md), D054.
 
 ## Maintenance Rule
 

@@ -1,0 +1,137 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260517_150058_active_state_duration_sweet_spot_results.parquet",
+    "yearly": "artifacts/research_branches/20260517_150058_active_state_duration_sweet_spot_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Test if time-since-entry into active state (duration bucket) predicts IC decay differently. H526 tested fresh vs sustained, not duration buckets.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test if time-since-entry into active state (duration bucket) predicts IC decay differently. H526 tested fresh vs sustained, not duration buckets.",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "active_state_duration_sweet_spot",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": "all_rows",
+        "family": "candidate",
+        "label": "Active state duration 1 day (fresh entry)",
+        "name": "duration_1d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "candidate",
+        "label": "Active state duration 2-3 days",
+        "name": "duration_2_3d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "candidate",
+        "label": "Active state duration 4-7 days",
+        "name": "duration_4_7d",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "candidate",
+        "label": "Active state duration 8+ days",
+        "name": "duration_8pl",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "Fresh entry (duration 1d) - explicit",
+        "name": "fresh_entry",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "Sustained position (duration 2d+)",
+        "name": "sustained",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "control",
+        "label": "Any active state (C16 <= 0.2)",
+        "name": "active_any",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "active_state_duration_sweet_spot",
+  "summary": {
+    "active_any_ic": 0.16478854649148858,
+    "baseline_ic": 0.13021929062689605,
+    "best_duration": "duration_8pl",
+    "best_duration_ic": 0.1831941193312031,
+    "best_duration_lift": 0.05297482870430706,
+    "decision": "PASSED",
+    "fresh_entry_ic": 0.15691983802675347,
+    "panel_rows": 826404,
+    "states_evaluated": 8
+  },
+  "ts": "20260517_150058"
+}

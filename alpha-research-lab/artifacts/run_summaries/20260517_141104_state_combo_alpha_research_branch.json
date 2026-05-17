@@ -1,0 +1,22 @@
+{
+  "hypothesis": "State Combination Alpha - test if simultaneous multiple states capture info individual states miss",
+  "best_individual": "state_router",
+  "best_individual_ic": 0.1794801212569935,
+  "best_individual_pos_years": 11,
+  "best_individual_total_years": 11,
+  "best_union_combo": "union_router_only",
+  "best_union_combo_ic": 0.1794801212569935,
+  "best_intersect_combo": "intersect_router_buyable",
+  "best_intersect_combo_ic": 0.17963345171822293,
+  "best_combo": "intersect_router_buyable",
+  "best_combo_ic": 0.17963345171822293,
+  "best_combo_pos_years": 11,
+  "lift_combo_vs_individual": 0.00015333046122942284,
+  "baseline_ic": 0.12768214395354166,
+  "total_states_tested": 17,
+  "phase_ic": {
+    "dev": 0.18379500623692904,
+    "validation": 0.1814270986539736,
+    "confirmation": 0.14874758193685447
+  }
+}

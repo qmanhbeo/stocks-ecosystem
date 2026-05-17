@@ -1,0 +1,129 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branch/20260517_142721_quiet_state_inverse_alpha_results.parquet",
+    "yearly": "artifacts/research_branch/20260517_142721_quiet_state_inverse_alpha_yearly.parquet"
+  },
+  "metadata": {
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test if QUIET stocks (not in C23) in active markets (high date-level C23 coverage) are contrarian opportunities. From H524, state_quiet alone is STRONG (IC=0.1552). Does market activity level modulate quiet-stock quality?",
+      "min_phase_rows": 500,
+      "min_train_years": 2,
+      "min_year_rows": 500,
+      "mode": "research_branch",
+      "name": "quiet_state_inverse_alpha",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": "all_rows",
+        "family": "quiet",
+        "label": "All quiet stocks (not in C23)",
+        "name": "quiet_only",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "quiet_only",
+        "family": "quiet_regime",
+        "label": "Quiet stocks on high-breadth dates (top 20% active)",
+        "name": "quiet_in_high_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "quiet_only",
+        "family": "quiet_regime",
+        "label": "Quiet stocks on low-breadth dates (bottom 20% active)",
+        "name": "quiet_in_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "all_rows",
+        "family": "active",
+        "label": "Active stocks (in C23)",
+        "name": "active_only",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "active_only",
+        "family": "active_regime",
+        "label": "Active stocks on high-breadth dates",
+        "name": "active_in_high_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": "active_only",
+        "family": "active_regime",
+        "label": "Active stocks on low-breadth dates",
+        "name": "active_in_low_breadth",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "quiet_state_inverse_alpha",
+  "summary": {
+    "active_only_ic": 0.16978313626673833,
+    "contrarian_effect": true,
+    "decision": "FAILED",
+    "panel_rows": 826404,
+    "quiet_high_breadth_ic": 0.12475148698858783,
+    "quiet_high_vs_baseline_lift": 0.004215373999677766,
+    "quiet_high_vs_low_lift": 0.0022035424354705374,
+    "quiet_low_breadth_ic": 0.1225479445531173,
+    "quiet_only_ic": 0.12053611298891007,
+    "states_evaluated": 7
+  },
+  "ts": "20260517_142721"
+}
