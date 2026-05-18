@@ -1,0 +1,117 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260518_163916_h614_persistence_decay_boundary_results.parquet",
+    "yearly": "artifacts/research_branches/20260518_163916_h614_persistence_decay_boundary_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Test whether very long accumulation (31+ active days in rolling 60d context) weakens composite_2plus versus 20-30d bucket.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test whether very long accumulation (31+ active days in rolling 60d context) weakens composite_2plus versus 20-30d bucket.",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "h614_persistence_decay_boundary",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "single",
+        "label": "2+ signals (F445)",
+        "name": "composite_2plus",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "bucket",
+        "label": "2+ signals AND accum 0-7",
+        "name": "composite_2plus_accum_0_7",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "bucket",
+        "label": "2+ signals AND accum 8-19",
+        "name": "composite_2plus_accum_8_19",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "bucket",
+        "label": "2+ signals AND accum 20-30",
+        "name": "composite_2plus_accum_20_30",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "bucket",
+        "label": "2+ signals AND accum 31+",
+        "name": "composite_2plus_accum_31plus",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h614_persistence_decay_boundary",
+  "summary": {
+    "composite_2plus_accum_20_30_ic": 0.25416178189207994,
+    "composite_2plus_accum_31plus_ic": 0.24071155400730157,
+    "decision": "PASSED",
+    "lift_20_30_vs_31plus": 0.01345022788477837,
+    "panel_rows": 809019
+  },
+  "ts": "20260518_163916"
+}

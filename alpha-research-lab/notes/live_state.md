@@ -6,11 +6,12 @@ scientific conclusions in findings chunks, and closed paths in dead-end chunks.
 
 ## Current Session Pointer
 
-- **Latest session log**: Session 394 (H608 Capacity-Modulated Multi-Signal - FAILED)
-- **Latest session log path**: `notes/session_00394_log.md`
+- **Latest session log**: Session 414 (H628 Signal Concentration During Low Breadth - PASSED)
+- **Latest session log path**: `notes/session_00414_log.md`
 - **Latest compact reference**: `notes/sessions_compact.md`
-- **Current active branch**: H608 completed, next queue item 109 (run id will use fresh `H60x+` to avoid legacy id collisions)
-- **Last updated**: 2026-05-17
+- **Current active branch**: Queue items 125-132 completed (latest run id `H628`)
+- **Remaining queue items (active numbered queue)**: `0`
+- **Last updated**: 2026-05-18
 
 **WARNING**: Do not infer next session number from old live_state prose;
 always inspect `notes/session_*_log.md` and choose the next available number.
@@ -532,56 +533,56 @@ Based on F437 (tight+low_breadth), F440 (cofire isolation), F441 (persistence), 
 
 ### Open Multi-Signal Queue
 
-Resolved in sessions 386-394: queue items 104-108 and 110-112 (see
+Resolved in sessions 386-395: queue items 104-112 (see
 `notes/sessions_compact.md` and dead ends `D082-D088`).
 
-**109. Triple-Factor Alpha Portfolio** — Combine three strongest: F440 (cofire Q1) + F441 (persistence Q4) + F445 (multi-signal AND). Source: F440, F441, F445. First test: (cofire_isolation AND persistence AND signal_2plus) intersection vs each alone.
+**109. ~~Triple-Factor Alpha Portfolio~~** — **FAILED (Session 395, D083)**: triple intersection underperforms base multi-signal. `triple_factor_109 IC=0.2172` vs `composite_2plus IC=0.2445` (lift `-0.0273`). Pair terms also fail to beat composite baseline.
 
 ### New Eureka (Post-F447 Multi-Signal×Breadth Discovery)
 
-**113. Regime Transition Timing Alpha** — H525 found low_breadth = strong, H542 found transition adds nothing. But maybe the TRANSITION MOMENT (when crowd disperses) is the signal, not the state. Test: enter on day breadth CROSSES below 20th percentile vs already-low (sustained).
+**113. ~~Regime Transition Timing Alpha~~** — **FAILED (Session 396, D084)**: transition and sustained low-breadth are effectively tied under `composite_2plus`. `transition IC=0.2793` vs `sustained IC=0.2797` (lift `-0.0004`).
 
-**114. Implementation Pain as Position Sizing** — F438 showed blocked stocks +0.0211 IC. Test blocked as SIZE modifier: liquid=1.0, blocked=1.5 position. Source: F438. First test: IC with size_multiplier = 1.5 for blocked vs 1.0 baseline.
+**114. ~~Implementation Pain as Position Sizing~~** — **FAILED (Session 397, D085)**: blocked `1.5x` score sizing degrades performance. `blocked_multiplier_150 IC=0.1292` vs baseline `0.1302` (lift `-0.0010`).
 
-**115. Market Regime Position Multiplier** — Use breadth as exposure multiplier: low_breadth=150%, high_breadth=50%. H530 failed weighting S1 directly, but breadth as SIZE MODIFIER separate from signal selection is untested. First test: portfolio returns with position_size=f(breadth).
+**115. ~~Market Regime Position Multiplier~~** — **FAILED (Session 398, D086)**: global breadth scaling is strongly harmful. `breadth_scaled IC=0.0769` vs baseline `0.1298` (lift `-0.0529`).
 
-**116. Cross-Sectional Dispersion as Regime** — H560 found high entropy = worse IC. Test IC dispersion (stddev across tickers per date): low_dispersion dates = stronger signal agreement = higher IC? Source: H560, H547. First test: per-date IC stddev vs mean IC.
+**116. ~~Cross-Sectional Dispersion as Regime~~** — **MIXED (Session 399, D087)**: low-dispersion combo beats high-dispersion (`+0.0167`) but lacks robust support (sparse yearly/out-of-sample coverage), so not promotable.
 
-**117. Persistence Decay Boundary** — F442 tested accumulation up to 30d (Q4=20+ days). Test if 30+ days decays (crowd catches on): 20-30d vs 30+d vs fresh (0d). Source: F442. First test: IC by accumulation bucket beyond 30d.
+**117. ~~Persistence Decay Boundary~~** — **PASSED (Session 400, F459)**: bounded persistence confirmed. `accum_20_30 IC=0.2542` vs `accum_31plus IC=0.2407` (lift `+0.0135`).
 
-**118. Signal Concentration × Breadth Interaction** — H547 found distributed > concentrated (+0.0648), H529 found low_breadth strong. Test 4-way: distributed+low vs distributed+high vs concentrated+low vs concentrated+high. Two orthogonal effects may amplify.
+**118. ~~Signal Concentration × Breadth Interaction~~** — **MIXED (Session 401, D088)**: best low-breadth concentration pocket beats best high-breadth pocket (`+0.0260`), but state support is too sparse for promotion.
 
 ### New Eureka (Post-F447/Bright-Mind)
 
-**119. Multi-Signal Temporal Coherence** — F445 tested signal COUNT, not alignment. Do C23+C24 both pointing buy-heavy (coherent) beat mixed signals (some buy, some sell)? Mechanism: concentrated hidden demand vs noise. First test: composite_2+ where all signals align direction vs mixed. Source: F445, F451.
+**119. ~~Multi-Signal Temporal Coherence~~** — **MIXED (Session 402, D089)**: coherence and mixed-direction states are effectively tied (`+0.0002`), no actionable lift.
 
-**120. Breadth-Scale Signal Strength Regression** — Binary low_breadth filter works (F447), but is relationship continuous? Linear regression of IC vs breadth percentile might capture non-linear scaling vs binary. First test: IC(breadth_q1) vs regression IC across all quintiles. Source: F447, H481.
+**120. ~~Breadth-Scale Signal Strength Regression~~** — **MIXED (Session 403, D090)**: quintile profile shows directional breadth gradient, but continuous scaling is strongly harmful (`0.0878` vs binary gate `0.2694`).
 
 **121. ~~Tight Capacity × Multi-Signal Amplifier~~** — **TESTED (Session 389, MIXED)**: triple (tight+composite_2++low_breadth) IC=0.2702 vs F447 baseline=0.2651, lift +0.0051 (below +0.01). Adding tight_capacity provides marginal value but not promotion-worthy.
 
-**122. Signal-Day Distribution as Hidden Regime** — Multi-signal on ONE day vs spread across multiple days. Same ticker: C23+C24 same day vs C23 day1 + C24 day3. One-day concentration = stronger hidden demand. First test: composite_2+ with signal_days_spread=1 vs spread>1 IC. Source: F445, F443.
+**122. ~~Signal-Day Distribution as Hidden Regime~~** — **PASSED (Session 404, F460)**: same-day multi-signal concentration dominates spread-across-days (`0.2445` vs `0.1821`, lift `+0.0624`).
 
-**123. Post-Breadth-Spike Recovery Timing** — F532 found low_breadth_post_spike strong (0.1982). Does multi-signal in recovery window exceed baseline multi-signal? Breadth spike clears crowd, fresh alpha window. First test: composite_2+ × low_breadth × post_spike vs F447 baseline. Source: F532, F447.
+**123. ~~Post-Breadth-Spike Recovery Timing~~** — **FAILED (Session 405, D091)**: post-spike recovery weakens the low-breadth multi-signal baseline (`0.2581` vs `0.2694`, lift `-0.0113`).
 
-**124. Implementation Pain × Multi-Signal Triple** — F438 blocked = +0.0211, F444 duration 2-3d best. Does blocked × multi-signal combine two hidden-demand mechanisms? First test: composite_2+ × blocked_2_3d vs F445 baseline (0.2445). Source: F438, F444, F445.
+**124. ~~Implementation Pain × Multi-Signal Triple~~** — **FAILED (Session 406, D092)**: blocked-based multi-signal combos underperform baseline; day-2-3 intersection remains sparse.
 
-**125. Cross-Signal Breadth Threshold Discovery** — H550 found each signal has different optimal breadth. C23 best at <5%, C24 at <10%? Market-wide threshold misses nuances. First test: per-signal IC at breadth <10% vs <20% vs <30%. Find signal-specific optimal. Source: H550, F447.
+**125. ~~Cross-Signal Breadth Threshold Discovery~~** — **MIXED (Session 407, D093)**: signal-specific threshold differences exist (C25 prefers `<30%`, others `<20%`), but mean lift over common `<20%` gate is only `+0.0061`.
 
 ### New Eureka (Bright-Mind Generated)
 
-**126. Signal Magnitude As Hidden State** — F445 tested BINARY signals (fired vs not). What if it's not COUNT but MAGNITUDE? Two weak signals might differ from one strong + one weak. Test weighted signal count (sum of percentile ranks) vs binary count. Source: D082/D083 (count/composition/sequence all tested). First test: composite_2plus_weighted = sum of (amihud_rank + vol_change_rank + pct_change_rank) >= threshold.
+**126. ~~Signal Magnitude As Hidden State~~** — **FAILED (Session 408, D094)**: magnitude conditioning does not beat binary `composite_2plus`; best state ties baseline (`0.2456`) and tighter cuts degrade.
 
-**127. Anti-Coherence / Signal Conflict Edge** — F445 tested COHERENT multi-signal (all signals point same). What if CONFLICTING signals (some buy, some sell) capture tug-of-war dynamics? Conflict might predict resolution direction. Source: F445 never tested conflict direction. First test: composite_2plus_conflict vs composite_2plus_coherent IC comparison.
+**127. ~~Anti-Coherence / Signal Conflict Edge~~** — **MIXED (Session 409, D095)**: conflict is only marginally higher than coherent (`0.2019` vs `0.2000`, lift `+0.0020`), below actionable threshold.
 
-**128. Breadth-Time Interaction (Calendar-Breadth)** — H400 found calendar alone fails, H525 found breadth works. But maybe calendar × breadth interaction matters - Monday low-breadth different from Friday. Source: H400 (calendar), H525 (breadth). First test: low_breadth × Monday vs low_breadth × Friday vs other days.
+**128. ~~Breadth-Time Interaction (Calendar-Breadth)~~** — **MIXED (Session 410, D096)**: weekday-conditioned low-breadth pockets are directionally better, but best lift vs generic low-breadth is only `+0.0077`.
 
-**129. Ticker-Specific Breadth (Self-Reference)** — Market-wide breadth is wrong frame. What matters is TICKER-SPECIFIC: how active is THIS stock relative to its OWN history? Stock's signal_count / 30d_avg vs market-wide. Source: H525 (market breadth), H550 (per-signal). First test: ticker_self_breadth_percentile vs market_breadth_percentile.
+**129. ~~Ticker-Specific Breadth (Self-Reference)~~** — **MIXED (Session 411, D097)**: self-history-hot names outperform market-low breadth (`0.2475` vs `0.2406`) but lift is sub-threshold (`+0.0069`).
 
-**130. Signal Decay Acceleration / Exit Zone** — F442 found persistence up to 30d = strong. But what's AFTER 30d? Maybe there's an exhaustion zone where signal flips. Source: F442 (accumulation up to 30d). First test: composite_2+ by days_since_first: 1-7d, 8-20d, 21-30d, 31+d. Find decay boundary.
+**130. ~~Signal Decay Acceleration / Exit Zone~~** — **FAILED (Session 412, D098)**: tested decay buckets are front-loaded (`1-7` strongest), while `31+` support is absent (`0` rows), so no valid exhaustion-zone promotion.
 
-**131. Breadth-Expansion Exit Rule** — Focus is on ENTRY (low_breadth). But EXIT should maybe use BREADTH TRAJECTORY - exit when breadth STARTS expanding (crowd returning). Source: H545 (exit timing data-gated). First test: hold composite_2+ until breadth > 1.5× entry_breadth vs fixed hold.
+**131. ~~Breadth-Expansion Exit Rule~~** — **FAILED (Session 413, D099)**: adaptive breadth-expansion exits underperform fixed 5-day hold (`0.0084` vs `0.0119`, lift `-0.0035`) with lower win rate.
 
-**132. Signal Concentration During Low Breadth** — H547 found distributed > concentrated overall. But in LOW BREADTH, does CONCENTRATION flip? When crowd is sparse, concentrated signal among them might = stronger hidden demand. Source: H547 (distributed > concentrated). First test: 4-way concentrated+low vs distributed+low vs concentrated+high vs distributed+high.
+**132. ~~Signal Concentration During Low Breadth~~** — **PASSED (Session 414, F461)**: concentration flip confirmed in low breadth; `conc_low IC=0.2523` vs `dist_low IC=0.2315` (lift `+0.0209`).
 
 ### Bright-Mind Queue (Wake/Sleep Lens, Nested Cycles)
 

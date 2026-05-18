@@ -1,0 +1,138 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260518_162111_h609_triple_factor_alpha_portfolio_results.parquet",
+    "yearly": "artifacts/research_branches/20260518_162111_h609_triple_factor_alpha_portfolio_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Queue 109 triple-factor: composite_2plus × cofire_q1_c23 × persist_q4 vs singles/pairs with composite_2plus as primary benchmark.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Queue 109 triple-factor: composite_2plus × cofire_q1_c23 × persist_q4 vs singles/pairs with composite_2plus as primary benchmark.",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "h609_triple_factor_alpha_portfolio",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "single",
+        "label": "2+ signals (F445)",
+        "name": "composite_2plus",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "single",
+        "label": "C23 cofire Q1 isolation (F440)",
+        "name": "cofire_q1_c23",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "single",
+        "label": "Active persistence Q4 (F441)",
+        "name": "persist_q4",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "pair",
+        "label": "Composite 2+ AND cofire Q1",
+        "name": "composite_2plus_cofire_q1",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "pair",
+        "label": "Composite 2+ AND persist Q4",
+        "name": "composite_2plus_persist_q4",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "pair",
+        "label": "Cofire Q1 AND persist Q4",
+        "name": "cofire_q1_persist_q4",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "triple",
+        "label": "Composite 2+ AND cofire Q1 AND persist Q4",
+        "name": "triple_factor_109",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h609_triple_factor_alpha_portfolio",
+  "summary": {
+    "cofire_q1_c23_ic": 0.24229406657638108,
+    "cofire_q1_persist_q4_ic": 0.24128111554637463,
+    "composite_2plus_cofire_q1_ic": 0.22240908851382055,
+    "composite_2plus_ic": 0.24450086966388176,
+    "composite_2plus_persist_q4_ic": 0.24239331920614396,
+    "decision": "FAILED",
+    "lift_vs_composite_2plus": -0.02731840725057416,
+    "panel_rows": 809019,
+    "persist_q4_ic": 0.17595595138440848,
+    "triple_factor_109_ic": 0.2171824624133076
+  },
+  "ts": "20260518_162111"
+}

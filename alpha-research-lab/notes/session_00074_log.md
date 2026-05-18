@@ -61,7 +61,7 @@ Updated:
 - `README_for_AGENTS.md`
 - `notes/live_state.md`
 - `notes/data_sources.md`
-- `notes/findings-00151-00180.md`
+- `notes/findings.md`
 
 Main effect:
 - future sessions should start from the acquisition plan, not from old timing scripts

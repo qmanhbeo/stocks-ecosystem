@@ -73,6 +73,6 @@ What was not executed:
 - live state:
   - `notes/live_state.md`
 - durable findings touched:
-  - `notes/findings-00271-00300.md#f272`
+  - `notes/findings-00241-00270.md#f272`
 - durable dead ends touched:
   - none

@@ -1,0 +1,73 @@
+{
+  "artifacts": {
+    "aggregate": "artifacts/research_branches/20260518_182548_h627_breadth_expansion_exit_rule_aggregate.parquet",
+    "events": "artifacts/research_branches/20260518_182548_h627_breadth_expansion_exit_rule_events.parquet",
+    "yearly": "artifacts/research_branches/20260518_182548_h627_breadth_expansion_exit_rule_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Adaptive exit on breadth expansion (>1.5x entry breadth) may beat fixed 5-day hold for low-breadth composite entries.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d",
+        "event_return"
+      ],
+      "hypothesis": "Adaptive exit on breadth expansion (>1.5x entry breadth) may beat fixed 5-day hold for low-breadth composite entries.",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "h627_breadth_expansion_exit_rule",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "na": "not IC-based"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "event_return": "event-study return"
+      }
+    }
+  },
+  "mode": "research_branch",
+  "name": "h627_breadth_expansion_exit_rule",
+  "summary": {
+    "adaptive_mean_return": 0.008425422579759834,
+    "adaptive_win_rate": 0.514637904468413,
+    "decision": "FAILED",
+    "event_rows": 3245,
+    "fixed_mean_return": 0.011880978770356541,
+    "fixed_win_rate": 0.5195685670261941,
+    "lift_adaptive_minus_fixed": -0.003455556190596707,
+    "mean_adaptive_hold_days": 2.3189522342064715,
+    "mean_fixed_hold_days": 4.985516178736518
+  },
+  "ts": "20260518_182548"
+}

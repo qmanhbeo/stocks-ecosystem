@@ -1,4 +1,4 @@
-.PHONY: loop dry-run status reset check-interrupted recover-interrupted tail help
+.PHONY: loop dry-run status reset check-interrupted recover-interrupted tail notes-audit help
 
 MAX_CYCLES ?= 1
 SESSION_BATCH_SIZE ?= 1
@@ -16,6 +16,7 @@ help:
 	@echo "  make check-interrupted - Check for stale interrupted runs"
 	@echo "  make recover-interrupted - Recover from interrupted run"
 	@echo "  make tail              - Tail latest log file"
+	@echo "  make notes-audit       - Validate notes chunking/index/anchor consistency"
 	@echo ""
 	@echo "Variables:"
 	@echo "  MAX_CYCLES         - Number of cycles (default: 1)"
@@ -58,3 +59,7 @@ recover-interrupted:
 tail:
 	@echo "Tailing latest log file..."
 	@ls -t evergreen-research-loop/logs/cycle_*.log evergreen-research-loop/logs/loop_*.log 2>/dev/null | head -1 | xargs tail -f
+
+notes-audit:
+	@echo "Running notes consistency audit..."
+	python3 -u tools/validate_notes_consistency.py --notes-dir notes

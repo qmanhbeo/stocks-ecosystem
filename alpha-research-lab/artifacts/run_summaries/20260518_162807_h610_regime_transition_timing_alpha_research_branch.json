@@ -1,0 +1,135 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260518_162807_h610_regime_transition_timing_alpha_results.parquet",
+    "yearly": "artifacts/research_branches/20260518_162807_h610_regime_transition_timing_alpha_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Transition moment into low breadth may outperform sustained low breadth for composite_2plus entries.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Transition moment into low breadth may outperform sustained low breadth for composite_2plus entries.",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "h610_regime_transition_timing_alpha",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "single",
+        "label": "2+ signals (F445)",
+        "name": "composite_2plus",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Low breadth regime",
+        "name": "low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Crossed into low breadth today",
+        "name": "transition_to_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "breadth",
+        "label": "Already in low breadth (prev day low)",
+        "name": "sustained_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "2+ signals AND low breadth",
+        "name": "composite_2plus_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "2+ signals AND transition-to-low",
+        "name": "composite_2plus_transition_low",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "2+ signals AND sustained-low",
+        "name": "composite_2plus_sustained_low",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h610_regime_transition_timing_alpha",
+  "summary": {
+    "composite_2plus_ic": 0.24450086966388176,
+    "composite_2plus_low_breadth_ic": 0.2698636504471421,
+    "composite_2plus_sustained_low_ic": 0.2797030152513884,
+    "composite_2plus_transition_low_ic": 0.27928028105806524,
+    "decision": "FAILED",
+    "lift_transition_vs_sustained": -0.00042273419332317097,
+    "panel_rows": 809019
+  },
+  "ts": "20260518_162807"
+}

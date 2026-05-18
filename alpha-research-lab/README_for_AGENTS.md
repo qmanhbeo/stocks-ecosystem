@@ -578,6 +578,7 @@ one compact summary JSON under `artifacts/run_summaries/`.
 - `notes/findings_compact.md` or `notes/deadends_compact.md` is updated only when
   durable memory changed, with source anchors included.
 - `notes/signal_library.md` is updated if a signal was confirmed, promoted, or newly rejected.
+- `make notes-audit` returns `NOTES_AUDIT_OK` before closing the pass.
 
 ---
 

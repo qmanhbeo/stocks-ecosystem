@@ -31,10 +31,17 @@ entry must include source anchors: stable finding IDs or source session links.
   remains the strongest confirmed amplifier on top of `composite_2plus`, while
   recent extensions failed by sparsity or negative incremental lift
   (blocked-triple, breadth weighting, blocked single-signal pre-convergence,
-  tight-capacity modulation). Current read: keep `composite_2plus` and
-  `composite_2plus × low_breadth` as the stable contract, and park the four
-  extensions unless data/contract changes materially. Source anchors: `F445`,
-  `F446`, `F447`, `D085-D088`.
+  tight-capacity modulation). New update: persistence shows a bounded sweet
+  spot (`20-30` accumulated active days in a 60d window) that beats very-long
+  accumulation (`31+`) by `+0.0135` while both remain positive. Current read:
+  keep `composite_2plus` and `composite_2plus × low_breadth` as the stable
+  base contract, with bounded accumulation as a secondary conditioner. New
+  timing-distribution result: same-day multi-signal concentration strongly beats
+  spread-across-days accumulation (`+0.0624`), reinforcing same-day co-occurrence
+  as the core mechanism. New concentration result: within low-breadth states,
+  concentrated signal mass beats distributed mass (`+0.0209`), adding a
+  promotable concentration conditioner for this branch. Source anchors: `F445`,
+  `F446`, `F447`, `F459`, `F460`, `F461`, `D072-D075`, `D093-D099`.
 
 - Latent-state machine evidence: H507 produced the first explicit transition
   map for the C23 family and supports a compact state organization: quiet
@@ -487,7 +494,7 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
   included position-size-normalized insider behavior, intra-sector mean
   reversion, ceiling momentum, volume z-score, Amihud illiquidity, gap
   acceptance, compression blow-off, and residualized H127. Many adjacent raw
-  feature families were too weak or redundant. Source anchors: `F59-F90`.
+  feature families were too weak or redundant. Source anchors: `F59-F89`.
 
 ## Portfolio, Execution, And Live Branch
 
@@ -742,7 +749,7 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
   (H447) COMBO is STRONGEST: IC=0.2069 (+0.0771 lift, 11/11 pos years), beats vol_expansion 
   alone by +0.0316, beats low_return_low_vol alone by +0.0025. Captures the oversold-in-
   expanding-vol regime better than either component alone. Use as conditioner/ranker - adds
-  +0.0316 IC vs vol_expansion alone. NEW SIGNAL. Source anchor: Session 104, F392.
+  +0.0316 IC vs vol_expansion alone. NEW SIGNAL. Source anchor: Session 104, F393.
 
 - Vol contraction mean reversion (H449): MIXED. vol_contraction × high_return shows 
   vol_contraction_exhaustion IC=0.1043 (-0.0255 lift) = mean reversion (negative IC), 
@@ -759,7 +766,7 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
 - Buy-sell imbalance in stress (H451): PASSED. buy_heavy_expansion IC=0.1809 (+0.0508 lift,
   11/11 pos years) is STRONGEST! Buy-heavy imbalance works ONLY in vol expansion periods
   (+0.0699 lift vs contraction), sell-heavy is always negative. NEW SIGNAL - use as
-  regime-dependent conditioner. Source anchor: Session 107, F393.
+  regime-dependent conditioner. Source anchor: Session 107, F394.
 
 - Volume level vs direction divergence (H452): MIXED. vol_expanding_high_return IC=0.1671
   (+0.0373 lift) beats high_vol_level_high_return (+0.1112, -0.0186 lift) by +0.0559 for
@@ -772,20 +779,20 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
   11/11 pos years). Imbalance delta is independently informative: imbalance_accelerating
   alone IC=0.1601 (+0.0300 lift). Both acceleration AND deceleration in vol expansion are
   positive (different mechanisms). Stable imbalance underperforms - change IS the signal.
-  Source anchor: Session 109, F391.
+  Source anchor: Session 109, F449.
 
 - Implied limit proximity (H454): PASSED. C22 NEW SIGNAL! approaching_ceiling IC=0.2170
    (+0.0872 lift, 11/11 pos years). Limit proximity is regime-independent - vol expansion adds
    only +0.0004 IC. High volume WITH near-limit is WEAKER (0.1375 vs 0.2166) - queue pressure
    thesis fails. Approaching floor weaker than ceiling (+0.0313 lift). Use as standalone ranker,
-   not volume-augmented. Source anchor: Session 110, F392.
+   not volume-augmented. Source anchor: Session 110, F450.
 
 ## Batch 8 Findings (H463-H468, Sessions 116-118)
 
 - Amihud illiquidity × vol expansion (H463): PASSED. C23 NEW SIGNAL! high_illiq_expansion IC=0.2616
   (+0.1318 vs baseline, +101% boost). STRONGEST signal in library. Illiquid stocks amplify regime
   effects dramatically. OHLCV inline from 1227 per-ticker parquet files (ticker from filename).
-  C23 beats C21b (0.2369), C21a (0.2320), C22 (0.2170), C20 (0.2105). Source: F393, Session 116.
+  C23 beats C21b (0.2369), C21a (0.2320), C22 (0.2170), C20 (0.2105). Source: F451, Session 116.
 
 - Time-of-day calendar pattern (H464): PASSED (weak). Monday IC=0.1434 (+0.0132 lift, 11/11 pos years).
   STRONGEST calendar pattern. Friday negative (-0.0183). Month-end modest (+0.0065). Not standalone
@@ -804,7 +811,7 @@ Source anchors: Sessions 220, 226, 228, 229, 230, 231, 232, 234, 235, 236, 237, 
 - Multi-day ceiling pressure (H467): PASSED. C24 NEW SIGNAL! limit_2_of_3 IC=0.2353 (+0.1052 vs
   baseline, 8/8 pos years). Hit +7% limit 2+ times in last 3 days = sustained queue pressure.
   Beats C22 single-day (0.2162) by +0.0191 IC. Multi-day accumulation beats single-day.
-  Source: F394, Session 118.
+  Source: F452, Session 118.
 
 - Market breadth regime (H468): MIXED. vol_expansion_in_breadth_bottom20 IC=0.1936 (+0.0635) — vol
   expansion works best in NARROW markets. vol_expansion_in_breadth_top20 IC=0.1588 (+0.0287) —
@@ -822,19 +829,19 @@ Signals NOT combinable — D041.
   Mid LAR (Q3) = IC 0.145 (+0.025). return_5d_pos_illiq = IC 0.163 (+0.044) = illiquid
   momentum (C23-style). return_5d_pos_liq = IC 0.052 (-0.067) = liquid crowd blowoff.
   Ratio collapses two correlated effects into one confusing metric. Dead-end for LAR.
-  Source: F400, Session 121.
+  Source: Session 121.
 
 - News velocity anti-predictive (H473): high_velocity Q5 = IC 0.088 (-0.032 lift).
   Fast-arriving news = crowd-following, not breaking alpha. mid_velocity only +0.008.
   Low_velocity too sparse (most tickers have 0 news). Third dimension beyond novelty
-  (H440) and presence (H445) is noise. Dead-end for news velocity. Source: F401, Session 122.
+  (H440) and presence (H445) is noise. Dead-end for news velocity. Source: Session 122.
 
 - Capacity as positive signal (H474): PASSED. tight_capacity (Q1: lowest order count)
   = IC 0.184 (+0.065 lift, 8/8 pos years). loose_capacity = IC 0.074 (-0.046).
   Mechanism: sparse order flow = hidden demand / under-followed alpha. Different from
   H391 binary release — this is CONTINUOUS signal. tight_expansion sparse (2/8 years).
   C27 candidate: use tight_capacity as positive filter for low-activity names, not veto.
-  Source: F402, Session 123.
+  Source: Session 123.
 
 ## Batch 9 Findings (H469-H471, Session 119)
 

@@ -65,7 +65,7 @@ not execution or downside tails, but lack of portfolio benefit.
 
 Updated:
 - `notes/live_state.md`
-- `notes/findings-00301-00330.md`
+- `notes/findings-00271-00300.md`
 - `notes/signal_library.md`
 
 Added:
@@ -91,4 +91,4 @@ GPU work until the Ollama residual backfill completes; prefer small CPU-only
 checks that are not parked by the current notes.
 
 Live state: [live_state.md](./live_state.md)
-Durable finding: [findings-00301-00330.md](./findings-00301-00330.md)
+Durable finding: [findings-00271-00300.md](./findings-00271-00300.md)

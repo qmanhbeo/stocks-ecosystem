@@ -62,7 +62,7 @@ but it did not improve validation.
 
 Updated:
 - `notes/live_state.md`
-- `notes/findings-00301-00330.md`
+- `notes/findings-00271-00300.md`
 - `notes/signal_library.md`
 
 Added:
@@ -88,4 +88,4 @@ GPU work; prefer only small CPU-only checks that are explicitly allowed by the
 current notes.
 
 Live state: [live_state.md](./live_state.md)
-Durable finding: [findings-00301-00330.md](./findings-00301-00330.md)
+Durable finding: [findings-00271-00300.md](./findings-00271-00300.md)

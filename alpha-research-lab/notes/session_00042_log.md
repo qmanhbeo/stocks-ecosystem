@@ -13,7 +13,7 @@ illiquidity, so it was rejected for RL promotion.
 - H121 and H122 remain documented in `notes/session_00040_log.md` and `notes/session_00041_log.md`
 - H123 and H124 were created and run in this session; they are no longer pending
 - H124 was checked against C10 and failed the orthogonality rule, so it is not part of the RL matrix
-- `notes/findings.md` is now an index; new findings continue in the padded chunk file `notes/findings-00061-00090.md`
+- `notes/findings.md` is now an index; new findings continue in the padded chunk file `notes/findings.md`
 
 ## Experiments
 

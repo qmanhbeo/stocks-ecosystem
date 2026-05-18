@@ -12,6 +12,150 @@ specified changed condition. Keep links to source `F` IDs so the original
 evidence remains traceable. Every compact dead-end entry must include source
 anchors: stable dead-end IDs, finding IDs, or source session links.
 
+## Resolution: Triple-Factor Stack Fails To Beat Composite Baseline (D083)
+
+- H609 triple_factor_alpha_portfolio is D083. The queue-109 triple
+  (`composite_2plus × cofire_q1_c23 × persist_q4`) underperforms the base
+  `composite_2plus` contract.
+- `triple_factor_109 IC=0.2172` vs `composite_2plus IC=0.2445` (lift `-0.0273`).
+- Pairwise stacks are also weaker than base (`composite_2plus_cofire_q1=0.2224`,
+  `composite_2plus_persist_q4=0.2424`).
+- Keep `composite_2plus` as local champion; do not reopen this exact triple
+  unless state definitions change materially.
+- Source: [session_00395_log.md](./session_00395_log.md).
+
+## Resolution: Transition Timing Adds No Edge Over Sustained Low-Breadth (D084)
+
+- H610 regime_transition_timing_alpha is D084. Transition day into low breadth
+  does not beat sustained low-breadth days for `composite_2plus`.
+- `composite_2plus_transition_low IC=0.2793` vs
+  `composite_2plus_sustained_low IC=0.2797` (lift `-0.0004`).
+- Keep breadth as a level/filter regime; do not treat transition timing itself
+  as additive alpha under this contract.
+- Source: [session_00396_log.md](./session_00396_log.md).
+
+## Resolution: Blocked Score Multiplier Degrades Baseline Signal (D085)
+
+- H611 implementation_pain_position_sizing is D085. Scaling blocked names by
+  `1.5x` on score hurts rather than helps.
+- Baseline IC `0.1302` vs blocked-sized IC `0.1292` (lift `-0.0010`).
+- Keep blocked-state logic as filter/context features, not naive multiplicative
+  score sizing.
+- Source: [session_00397_log.md](./session_00397_log.md).
+
+## Resolution: Breadth Score-Scaling Collapses Baseline Signal (D086)
+
+- H612 market_regime_position_multiplier is D086. Breadth exposure multipliers
+  (`low=1.5x`, `high=0.5x`) severely degrade IC.
+- Baseline IC `0.1298` vs breadth-scaled IC `0.0769` (lift `-0.0529`).
+- Keep breadth as a discrete regime filter, not a global score multiplier.
+- Source: [session_00398_log.md](./session_00398_log.md).
+
+## Resolution: Dispersion Regime Lift Is Directional But Not Robust (D087)
+
+- H613 cross_sectional_dispersion_regime is D087. Low-dispersion composite
+  outperforms high-dispersion composite (`+0.0167`) but fails robustness gates.
+- Sparse support (`low years=5`, `high confirmation rows=29`) makes it
+  non-promotable under current contract.
+- Treat as directional hint only; reopen only with stronger out-of-sample
+  support or denser state support.
+- Source: [session_00399_log.md](./session_00399_log.md).
+
+## Resolution: Concentration × Breadth Interaction Is Directional But Too Sparse (D088)
+
+- H615 signal_concentration_breadth_interaction is D088. Best low-breadth
+  interaction state beats best high-breadth state (`+0.0260` IC), but support
+  is too sparse for promotion.
+- Best-high regime has only `2` yearly points and `3` confirmation rows.
+- Keep as directional evidence only; reopen with denser state support.
+- Source: [session_00401_log.md](./session_00401_log.md).
+
+## Resolution: Multi-Signal Coherence Tie Is Non-Actionable (D089)
+
+- H616 multi_signal_temporal_coherence is D089. Coherent and mixed-direction
+  `composite_2plus` states are effectively tied.
+- Coherent IC `0.1957` vs mixed IC `0.1955` (lift `+0.0002`).
+- No incremental edge under current direction semantics; keep parked.
+- Source: [session_00402_log.md](./session_00402_log.md).
+
+## Resolution: Continuous Breadth Scaling Fails Despite Quintile Gradient (D090)
+
+- H617 breadth_scale_signal_strength is D090. Quintile map shows directional
+  degradation from low to high breadth, but continuous score scaling fails
+  catastrophically.
+- Binary gate IC `0.2694` vs continuous-scaled IC `0.0878`
+  (lift `-0.1816`).
+- Keep breadth as a discrete gating axis; do not use naive continuous scaling.
+- Source: [session_00403_log.md](./session_00403_log.md).
+
+## Resolution: Post-Spike Recovery Timing Degrades Low-Breadth Baseline (D091)
+
+- H619 post_breadth_spike_recovery_timing is D091. Adding post-spike recovery
+  timing to `composite_2plus × low_breadth` hurts the baseline.
+- Baseline IC `0.2694` vs post-spike combo IC `0.2581` (lift `-0.0113`).
+- Keep low-breadth baseline without post-spike recovery gating.
+- Source: [session_00405_log.md](./session_00405_log.md).
+
+## Resolution: Implementation-Pain Multi-Signal Triple Underperforms Baseline (D092)
+
+- H620 implementation_pain_multi_signal_triple is D092. Blocked-state overlays
+  on `composite_2plus` underperform or remain sparse.
+- `composite_2plus_blocked_either IC=0.1660` vs `composite_2plus IC=0.2445`
+  (lift `-0.0785`), while `blocked_day_2_3` intersection stays data-gated.
+- Keep blocked-state logic separate from multi-signal concentration contract.
+- Source: [session_00406_log.md](./session_00406_log.md).
+
+## Resolution: Per-Signal Breadth Threshold Drift Is Too Small To Promote (D093)
+
+- H621 finds threshold heterogeneity (C25 prefers `30%`, others `20%`) but the
+  mean lift over the common `20%` gate is only `+0.0061`.
+- Keep the current common low-breadth gate; do not add per-signal threshold
+  branching under this contract.
+- Source: [session_00407_log.md](./session_00407_log.md).
+
+## Resolution: Magnitude Overlay Is Redundant On Composite Count (D094)
+
+- H622 shows magnitude-weighted states do not improve `composite_2plus`.
+- Best magnitude state ties baseline (`0.2456`), tighter cuts degrade.
+- Keep binary multi-signal count; park magnitude weighting.
+- Source: [session_00408_log.md](./session_00408_log.md).
+
+## Resolution: Conflict-vs-Coherent Split Is Non-Actionable (D095)
+
+- H623 shows conflict is only marginally higher than coherent
+  (`+0.0020` IC lift).
+- No actionable routing edge from this split under current semantics.
+- Source: [session_00409_log.md](./session_00409_log.md).
+
+## Resolution: Calendar×Breadth Interaction Is Sub-Threshold (D096)
+
+- H624 weekday-conditioned low-breadth states add only `+0.0077` over generic
+  low-breadth baseline.
+- Do not add calendar branching to the low-breadth multi-signal path.
+- Source: [session_00410_log.md](./session_00410_log.md).
+
+## Resolution: Ticker Self-Reference Lift Is Weak (D097)
+
+- H625 self-history-hot context beats market-low breadth by `+0.0069`, below
+  promotion threshold.
+- Keep as weak context evidence only; not a promoted state rule.
+- Source: [session_00411_log.md](./session_00411_log.md).
+
+## Resolution: 31+ Decay Zone Unsupported (D098)
+
+- H626 cannot validate a `31+` persistence bucket (`0` rows), so decay/flip
+  beyond 30 cannot be promoted.
+- Current structure is front-loaded (`1-7` strongest), not an actionable
+  post-30 exit zone.
+- Source: [session_00412_log.md](./session_00412_log.md).
+
+## Resolution: Breadth-Expansion Adaptive Exit Harms Returns (D099)
+
+- H627 adaptive breadth-expansion exit underperforms fixed 5-day hold:
+  `0.0084` vs `0.0119` mean return (lift `-0.0035`).
+- Keep fixed-hold baseline; do not promote breadth-expansion exit.
+- Source: [session_00413_log.md](./session_00413_log.md).
+
 ## Resolution: Continuous Breadth Weighting Fails (D046)
 
 - H530 breadth_weighted_position_sizing is D046. Continuous 1/breadth weighting does NOT beat binary filter.

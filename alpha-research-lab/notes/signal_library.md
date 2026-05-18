@@ -1322,6 +1322,29 @@ Track new OHLCV-only search ideas in `notes/live_state.md`.
 - H105 (H101 + earnings calendar) degrades the best dense branch (Sharpe 11.96 vs H101 15.34).
 - Earnings calendar standalone ICs are weak (~+0.001 to +0.006), below RL standalone threshold.
 
+**Session 399 update (2026-05-18):**
+- H614 persistence-decay boundary passes for the multi-signal branch:
+  `composite_2plus_accum_20_30 IC=0.2542` vs
+  `composite_2plus_accum_31plus IC=0.2407` (lift `+0.0135`, 11/11 positive
+  years for both). Interpretation: accumulation is useful but bounded; the
+  strongest persistence pocket is `20-30` accumulated active days (rolling 60d
+  context), not unbounded accumulation.
+
+**Session 404 update (2026-05-18):**
+- H618 confirms timing-distribution structure inside multi-signal states:
+  same-day multi-signal concentration (`signal_count >= 2`) is materially
+  stronger than spread-across-days accumulation (`signal_count == 1` today with
+  rolling 3d sum >= 2): `0.2445` vs `0.1821` (lift `+0.0624`, both `11/11`
+  positive years). Prefer same-day concentration as the multi-signal regime
+  state.
+
+**Session 414 update (2026-05-18):**
+- H628 confirms a concentration edge inside low-breadth multi-signal states:
+  concentrated low-breadth (`conc_low`) beats distributed low-breadth
+  (`dist_low`) by `+0.0209` IC (`0.2523` vs `0.2315`).
+- Use concentration as a positive conditioner within low-breadth
+  `composite_2plus` states under this contract.
+
 ---
 
 ## Notes on Evaluation

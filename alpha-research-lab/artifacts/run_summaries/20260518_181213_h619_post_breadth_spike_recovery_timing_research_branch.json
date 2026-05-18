@@ -1,0 +1,101 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260518_181213_h619_post_breadth_spike_recovery_timing_results.parquet",
+    "yearly": "artifacts/research_branches/20260518_181213_h619_post_breadth_spike_recovery_timing_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Test composite_2plus × low_breadth × post_spike_recovery vs composite_2plus × low_breadth baseline.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test composite_2plus × low_breadth × post_spike_recovery vs composite_2plus × low_breadth baseline.",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "h619_post_breadth_spike_recovery_timing",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "single",
+        "label": "2+ signals (F445)",
+        "name": "composite_2plus",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "baseline_combo",
+        "label": "2+ signals AND low breadth",
+        "name": "composite_2plus_low_breadth",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "combo",
+        "label": "2+ signals AND low breadth AND post-spike recovery",
+        "name": "composite_2plus_low_breadth_post_spike",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h619_post_breadth_spike_recovery_timing",
+  "summary": {
+    "composite_2plus_low_breadth_ic": 0.26939570960786036,
+    "composite_2plus_low_breadth_post_spike_ic": 0.25812651468447195,
+    "decision": "FAILED",
+    "lift_vs_low_breadth": -0.011269194923388404,
+    "panel_rows": 809019
+  },
+  "ts": "20260518_181213"
+}

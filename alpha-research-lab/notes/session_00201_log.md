@@ -64,7 +64,7 @@ contract and needs a focused integration audit.
 Updated:
 - `notes/live_state.md`
 - `notes/findings.md`
-- `notes/findings-00301-00330.md`
+- `notes/findings-00271-00300.md`
 - `notes/signal_library.md`
 
 Added:
@@ -90,4 +90,4 @@ runs, avoid GPU work and prefer a bounded CPU-only branch that is not parked by
 the current notes.
 
 Live state: [live_state.md](./live_state.md)
-Durable finding: [findings-00301-00330.md](./findings-00301-00330.md)
+Durable finding: [findings-00271-00300.md](./findings-00271-00300.md)

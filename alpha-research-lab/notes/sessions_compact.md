@@ -7,6 +7,84 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 414](session_00414_log.md): Ran H628 signal concentration during
+  low-breadth. PASSED (F461): concentrated low-breadth state
+  (`conc_low IC=0.2523`) beat distributed low-breadth (`dist_low IC=0.2315`)
+  by `+0.0209`, confirming a concentration edge inside sparse-crowd regimes.
+  Source: [session_00414_log.md](./session_00414_log.md),
+  [artifacts/run_summaries/20260518_182550_h628_signal_concentration_low_breadth_research_branch.json](../artifacts/run_summaries/20260518_182550_h628_signal_concentration_low_breadth_research_branch.json).
+
+- [Session 413](session_00413_log.md): Ran H627 breadth-expansion exit rule as
+  an event-study hold comparison (`adaptive >1.5x breadth` vs fixed 5-day
+  hold). FAILED (D099): adaptive mean return `0.0084` vs fixed `0.0119`
+  (lift `-0.0035`) with shorter holds (`2.32` vs `4.99` days). Source:
+  [session_00413_log.md](./session_00413_log.md),
+  [artifacts/run_summaries/20260518_182548_h627_breadth_expansion_exit_rule_research_branch.json](../artifacts/run_summaries/20260518_182548_h627_breadth_expansion_exit_rule_research_branch.json).
+
+- [Session 412](session_00412_log.md): Ran H626 decay/exit-zone buckets on
+  composite multi-signal persistence. FAILED (D098): front-loaded buckets are
+  strong (`age_1_7 IC=0.2800`), but `age_31_plus` has zero support rows, so
+  the intended `31+` decay boundary is not testable under current state
+  construction. Source: [session_00412_log.md](./session_00412_log.md),
+  [artifacts/run_summaries/20260518_182643_h626_signal_decay_exit_zone_research_branch.json](../artifacts/run_summaries/20260518_182643_h626_signal_decay_exit_zone_research_branch.json).
+
+- [Session 411](session_00411_log.md): Ran H625 ticker self-reference breadth
+  conditioning. MIXED (D097): self-history hot state
+  (`composite_self_hist_hot IC=0.2475`) beats market-low state
+  (`0.2406`) by `+0.0069`, but lift stays below +0.01 gate. Source:
+  [session_00411_log.md](./session_00411_log.md),
+  [artifacts/run_summaries/20260518_182642_h625_ticker_self_breadth_reference_research_branch.json](../artifacts/run_summaries/20260518_182642_h625_ticker_self_breadth_reference_research_branch.json).
+
+- [Session 410](session_00410_log.md): Ran H624 calendar × breadth interaction.
+  MIXED (D096): best weekday-conditioned low-breadth pocket
+  (`low_breadth_other IC=0.2484`) only improves generic low-breadth state
+  (`0.2406`) by `+0.0077`, below promotion threshold. Source:
+  [session_00410_log.md](./session_00410_log.md),
+  [artifacts/run_summaries/20260518_182545_h624_calendar_breadth_interaction_research_branch.json](../artifacts/run_summaries/20260518_182545_h624_calendar_breadth_interaction_research_branch.json).
+
+- [Session 409](session_00409_log.md): Ran H623 conflict vs coherent
+  multi-signal comparison. MIXED (D095): conflict (`0.2019`) is only
+  `+0.0020` above coherent (`0.2000`), not actionable. Source:
+  [session_00409_log.md](./session_00409_log.md),
+  [artifacts/run_summaries/20260518_182544_h623_signal_conflict_edge_research_branch.json](../artifacts/run_summaries/20260518_182544_h623_signal_conflict_edge_research_branch.json).
+
+- [Session 408](session_00408_log.md): Ran H622 magnitude-weighted multi-signal
+  states. FAILED (D094): best magnitude state (`composite_mag_q50`) ties
+  baseline (`0.2456`), while stronger magnitude cuts degrade IC. Source:
+  [session_00408_log.md](./session_00408_log.md),
+  [artifacts/run_summaries/20260518_182530_h622_signal_magnitude_hidden_state_research_branch.json](../artifacts/run_summaries/20260518_182530_h622_signal_magnitude_hidden_state_research_branch.json).
+
+- [Session 407](session_00407_log.md): Ran H621 cross-signal breadth-threshold
+  discovery (`10/20/30` percentile gates per C23/C24/C25/C26). MIXED (D093):
+  threshold preferences differ (C25 prefers 30, others 20), but mean lift over
+  common 20% gate is only `+0.0061`. Source:
+  [session_00407_log.md](./session_00407_log.md),
+  [artifacts/run_summaries/20260518_182525_h621_cross_signal_breadth_threshold_discovery_research_branch.json](../artifacts/run_summaries/20260518_182525_h621_cross_signal_breadth_threshold_discovery_research_branch.json).
+
+- [Session 406](session_00406_log.md): Ran H620 implementation pain × multi-signal triple to test blocked-state amplification on `composite_2plus` (`blocked_either` and `blocked_day_2_3`). FAILED (D092): `composite_2plus_blocked_either IC=0.1660` vs `composite_2plus IC=0.2445` (lift -0.0785); `blocked_day_2_3` intersection remains sparse (`239` rows, yearly IC invalid). Source: [session_00406_log.md](./session_00406_log.md), [artifacts/run_summaries/20260518_181432_h620_implementation_pain_multi_signal_triple_research_branch.json](../artifacts/run_summaries/20260518_181432_h620_implementation_pain_multi_signal_triple_research_branch.json).
+
+- [Session 405](session_00405_log.md): Ran H619 post-breadth-spike recovery timing to test `composite_2plus × low_breadth × post_spike` vs `composite_2plus × low_breadth` baseline. FAILED (D091): post-spike IC=0.2581 vs baseline low-breadth IC=0.2694 (lift -0.0113). Recovery-window timing does not improve the existing low-breadth contract. Source: [session_00405_log.md](./session_00405_log.md), [artifacts/run_summaries/20260518_181213_h619_post_breadth_spike_recovery_timing_research_branch.json](../artifacts/run_summaries/20260518_181213_h619_post_breadth_spike_recovery_timing_research_branch.json).
+
+- [Session 404](session_00404_log.md): Ran H618 signal-day distribution regime to test same-day multi-signal concentration (`2+` today) vs spread-across-days accumulation (`1` today with 3d sum>=2). PASSED (F460): same_day IC=0.2445 vs spread IC=0.1821, lift +0.0624, both 11/11 positive years. Confirms simultaneous multi-signal concentration is materially stronger than staggered accumulation. Source: [session_00404_log.md](./session_00404_log.md), [artifacts/run_summaries/20260518_180932_h618_signal_day_distribution_regime_research_branch.json](../artifacts/run_summaries/20260518_180932_h618_signal_day_distribution_regime_research_branch.json).
+
+- [Session 403](session_00403_log.md): Ran H617 breadth-scale signal strength regression to test continuous breadth scaling vs binary low-breadth gate on `composite_2plus`. MIXED (D090): quintile profile is directionally lower from Q1 to Q5, but continuous scaling collapses IC (`0.0878` vs binary gate `0.2694`, lift `-0.1816`). Breadth remains a discrete filter mechanism, not a continuous multiplier. Source: [session_00403_log.md](./session_00403_log.md), [artifacts/run_summaries/20260518_180725_h617_breadth_scale_signal_strength_research_branch.json](../artifacts/run_summaries/20260518_180725_h617_breadth_scale_signal_strength_research_branch.json).
+
+- [Session 402](session_00402_log.md): Ran H616 multi-signal temporal coherence to test directional coherence vs mixed-direction states inside `composite_2plus`. MIXED (D089): coherent IC=0.1957 vs mixed IC=0.1955 (lift +0.0002, non-actionable). Directional coherence does not add incremental value under current state construction. Source: [session_00402_log.md](./session_00402_log.md), [artifacts/run_summaries/20260518_180504_h616_multi_signal_temporal_coherence_research_branch.json](../artifacts/run_summaries/20260518_180504_h616_multi_signal_temporal_coherence_research_branch.json).
+
+- [Session 401](session_00401_log.md): Ran H615 signal concentration × breadth interaction on `composite_2plus` with explicit 4-way states (low/high breadth × low/high concentration). MIXED (D088): best low-breadth state IC=0.2745 vs best high-breadth state IC=0.2485 (+0.0260), but support is too sparse for promotion (best-high years=2, confirmation rows=3). Source: [session_00401_log.md](./session_00401_log.md), [artifacts/run_summaries/20260518_164406_h615_signal_concentration_breadth_interaction_research_branch.json](../artifacts/run_summaries/20260518_164406_h615_signal_concentration_breadth_interaction_research_branch.json).
+
+- [Session 400](session_00400_log.md): Ran H614 persistence decay boundary with rolling-60d accumulation buckets on `composite_2plus`. PASSED (F459): `accum_20_30 IC=0.2542` vs `accum_31plus IC=0.2407`, lift +0.0135 (11/11 positive years both). Confirms bounded persistence sweet spot rather than monotonic “more is better.” Source: [session_00400_log.md](./session_00400_log.md), [artifacts/run_summaries/20260518_163916_h614_persistence_decay_boundary_research_branch.json](../artifacts/run_summaries/20260518_163916_h614_persistence_decay_boundary_research_branch.json).
+
+- [Session 399](session_00399_log.md): Ran H613 cross-sectional dispersion regime to test `composite_2plus` on low- vs high-dispersion dates. MIXED (D087): low-disp combo IC=0.2539 vs high-disp combo IC=0.2372 (+0.0167), but support is sparse/non-robust (low years=5, high confirmation rows=29). Directional hint only; not promotion-worthy. Source: [session_00399_log.md](./session_00399_log.md), [artifacts/run_summaries/20260518_163631_h613_cross_sectional_dispersion_regime_research_branch.json](../artifacts/run_summaries/20260518_163631_h613_cross_sectional_dispersion_regime_research_branch.json).
+
+- [Session 398](session_00398_log.md): Ran H612 market regime position multiplier to test breadth-based score scaling (`low=1.5x`, `high=0.5x`, mid=1.0x) vs baseline S1 score. FAILED (D086): scaled IC=0.0769 vs baseline IC=0.1298 (lift -0.0529). Confirms breadth works as discrete gating/filtering, not global multiplicative sizing. Source: [session_00398_log.md](./session_00398_log.md), [artifacts/run_summaries/20260518_163315_h612_market_regime_position_multiplier_research_branch.json](../artifacts/run_summaries/20260518_163315_h612_market_regime_position_multiplier_research_branch.json).
+
+- [Session 397](session_00397_log.md): Ran H611 implementation pain as position sizing to test blocked-name score multiplier (`1.5x`) vs baseline S1 score. FAILED (D085): sized IC=0.1292 vs baseline IC=0.1302 (lift -0.0010). Blocked state helps as a filter/signal context (F438), not as direct score-size multiplier. Source: [session_00397_log.md](./session_00397_log.md), [artifacts/run_summaries/20260518_163041_h611_implementation_pain_position_sizing_research_branch.json](../artifacts/run_summaries/20260518_163041_h611_implementation_pain_position_sizing_research_branch.json).
+
+- [Session 396](session_00396_log.md): Ran H610 regime transition timing alpha to test `composite_2plus × transition_to_low_breadth` vs `composite_2plus × sustained_low_breadth`. FAILED (D084): transition IC=0.2793 vs sustained IC=0.2797 (lift -0.0004, effectively tied). Transition timing adds no incremental value over static/sustained low-breadth regime. Source: [session_00396_log.md](./session_00396_log.md), [artifacts/run_summaries/20260518_162807_h610_regime_transition_timing_alpha_research_branch.json](../artifacts/run_summaries/20260518_162807_h610_regime_transition_timing_alpha_research_branch.json).
+
+- [Session 395](session_00395_log.md): Ran H609 triple-factor alpha portfolio to test `composite_2plus × cofire_q1_c23 × persist_q4` vs `composite_2plus` baseline. FAILED (D083): triple IC=0.2172 vs composite IC=0.2445 (lift -0.0273). Pairwise stacks also failed to beat composite. Source: [session_00395_log.md](./session_00395_log.md), [artifacts/run_summaries/20260518_162111_h609_triple_factor_alpha_portfolio_research_branch.json](../artifacts/run_summaries/20260518_162111_h609_triple_factor_alpha_portfolio_research_branch.json).
+
 - [Session 394](session_00394_log.md): Ran H608 capacity-modulated multi-signal to test `composite_2plus × tight_capacity` vs `composite_2plus` baseline. FAILED: combo IC=0.2404 vs composite IC=0.2445 (lift -0.0041). Tight capacity remains strong standalone (0.1900) but does not amplify the multi-signal pocket. Source: [session_00394_log.md](./session_00394_log.md), [artifacts/run_summaries/20260517_193032_h608_capacity_modulated_multi_signal_research_branch.json](../artifacts/run_summaries/20260517_193032_h608_capacity_modulated_multi_signal_research_branch.json).
 
 - [Session 393](session_00393_log.md): Ran H607 inverse multi-signal edge to test whether blocked single-signal names (`signal_1 AND blocked`) front-run multi-signal convergence. FAILED: `signal_1_blocked IC=0.1237` vs `signal_1 IC=0.1724` (lift `-0.0487`). Blocked state weakens, not strengthens, the single-signal pocket. Source: [session_00393_log.md](./session_00393_log.md), [artifacts/run_summaries/20260517_192829_h607_inverse_multi_signal_edge_research_branch.json](../artifacts/run_summaries/20260517_192829_h607_inverse_multi_signal_edge_research_branch.json).

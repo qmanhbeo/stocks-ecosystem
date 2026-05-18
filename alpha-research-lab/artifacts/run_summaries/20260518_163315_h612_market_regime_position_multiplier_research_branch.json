@@ -1,0 +1,78 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260518_163315_h612_market_regime_position_multiplier_results.parquet",
+    "yearly": "artifacts/research_branches/20260518_163315_h612_market_regime_position_multiplier_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Breadth regime exposure multiplier (low=1.5x, high=0.5x, mid=1.0x) improves baseline S1 IC.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Breadth regime exposure multiplier (low=1.5x, high=0.5x, mid=1.0x) improves baseline S1 IC.",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "h612_market_regime_position_multiplier",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score",
+        "s1_xs_proba_breadth_scaled": "S1 score scaled by breadth regime multipliers"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h612_market_regime_position_multiplier",
+  "summary": {
+    "baseline_ic": 0.12979153336002336,
+    "breadth_scaled_ic": 0.076917597280332,
+    "decision": "FAILED",
+    "lift_vs_baseline": -0.05287393607969136,
+    "panel_rows": 809019
+  },
+  "ts": "20260518_163315"
+}

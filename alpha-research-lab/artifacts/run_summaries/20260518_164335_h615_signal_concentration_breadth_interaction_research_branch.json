@@ -1,0 +1,121 @@
+{
+  "artifacts": {
+    "results": "artifacts/research_branches/20260518_164335_h615_signal_concentration_breadth_interaction_results.parquet",
+    "yearly": "artifacts/research_branches/20260518_164335_h615_signal_concentration_breadth_interaction_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Test 4-way interaction on composite_2plus: breadth (low/high) × signal concentration (high/low).",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Test 4-way interaction on composite_2plus: breadth (low/high) × signal concentration (high/low).",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "h615_signal_concentration_breadth_interaction",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    },
+    "state_specs": [
+      {
+        "baseline": null,
+        "family": "baseline",
+        "label": "All S1 panel rows",
+        "name": "all_rows",
+        "peer": null,
+        "primary": true
+      },
+      {
+        "baseline": null,
+        "family": "single",
+        "label": "2+ signals (F445)",
+        "name": "composite_2plus",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "interaction",
+        "label": "2+ × low breadth × high concentration",
+        "name": "c2_low_breadth_high_conc",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "interaction",
+        "label": "2+ × low breadth × low concentration",
+        "name": "c2_low_breadth_low_conc",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "interaction",
+        "label": "2+ × high breadth × high concentration",
+        "name": "c2_high_breadth_high_conc",
+        "peer": null,
+        "primary": false
+      },
+      {
+        "baseline": null,
+        "family": "interaction",
+        "label": "2+ × high breadth × low concentration",
+        "name": "c2_high_breadth_low_conc",
+        "peer": null,
+        "primary": false
+      }
+    ]
+  },
+  "mode": "research_branch",
+  "name": "h615_signal_concentration_breadth_interaction",
+  "summary": {
+    "best_high_ic": 0.24851033065338385,
+    "best_low_ic": 0.27447387177852034,
+    "c2_high_breadth_high_conc_ic": 0.24851033065338385,
+    "c2_high_breadth_low_conc_ic": 0.24010365574528203,
+    "c2_low_breadth_high_conc_ic": 0.2614323447693102,
+    "c2_low_breadth_low_conc_ic": 0.27447387177852034,
+    "decision": "PASSED",
+    "lift_best_low_vs_best_high": 0.02596354112513649,
+    "panel_rows": 809019
+  },
+  "ts": "20260518_164335"
+}
