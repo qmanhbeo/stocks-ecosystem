@@ -156,6 +156,29 @@ anchors: stable dead-end IDs, finding IDs, or source session links.
 - Keep fixed-hold baseline; do not promote breadth-expansion exit.
 - Source: [session_00413_log.md](./session_00413_log.md).
 
+## Resolution: Remaining Queue Backlog Produced New Negative/Data-Gated Paths (D100-D110)
+
+- Session 415 closed numbered backlog items and rejected several branches:
+  first-activation onset (D100), tight+blocked channel (D101), spread
+  concentration proxy (D102), zero-cofire edge (D104), low-breadth per-signal
+  extreme rule (D105), and persistent-low breadth superiority (D107).
+- Session 415 also marked three items data-gated under first-pass support:
+  vol-depth split (D103), accumulation×low-breadth (D106), and
+  tight×high-accumulation interaction (D108).
+- Session 416 backlog tests parked multiple wake/sleep and traffic ideas as
+  failed (D109) or data-gated due macro/sector contract gaps (D110).
+- Source: [session_00415_log.md](./session_00415_log.md),
+  [session_00416_log.md](./session_00416_log.md).
+
+## Resolution: Formalized Retests Closed Remaining High-Priority Ambiguities (D111-D112)
+
+- Session 417 (`H644`) converted prior data-gated high-priority items into
+  formal outcomes: queue `100` is now explicit FAIL (`D111`) and `BM17` is now
+  explicit FAIL (`D112`).
+- Historical data-gates `D103` and `D108` are superseded by Session 417 pass
+  outcomes on queue `91` and queue `103`.
+- Source: [session_00417_log.md](./session_00417_log.md).
+
 ## Resolution: Continuous Breadth Weighting Fails (D046)
 
 - H530 breadth_weighted_position_sizing is D046. Continuous 1/breadth weighting does NOT beat binary filter.

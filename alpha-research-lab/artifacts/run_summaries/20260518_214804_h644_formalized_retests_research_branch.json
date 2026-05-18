@@ -1,0 +1,69 @@
+{
+  "artifacts": {
+    "decisions": "artifacts/research_branches/20260518_214804_h644_formalized_retests_decisions.parquet",
+    "results": "artifacts/research_branches/20260518_214804_h644_formalized_retests_results.parquet",
+    "yearly": "artifacts/research_branches/20260518_214804_h644_formalized_retests_yearly.parquet"
+  },
+  "metadata": {
+    "hypothesis": "Strict retests for top-value unresolved hypotheses after backlog closure.",
+    "protocol": {
+      "end_year": 2025,
+      "forbidden_state_columns": [
+        "actual",
+        "s1_barrier_hit_1d"
+      ],
+      "hypothesis": "Strict retests for top-value unresolved hypotheses after backlog closure.",
+      "min_phase_rows": 100,
+      "min_train_years": 2,
+      "min_year_rows": 100,
+      "mode": "research_branch",
+      "name": "h644_formalized_retests",
+      "phases": [
+        {
+          "name": "dev",
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022
+          ]
+        },
+        {
+          "name": "validation",
+          "years": [
+            2023,
+            2024
+          ]
+        },
+        {
+          "name": "confirmation",
+          "years": [
+            2025
+          ]
+        }
+      ],
+      "score_columns": {
+        "s1_xs_proba": "decision-time S1 probability score"
+      },
+      "start_year": 2015,
+      "target_columns": {
+        "s1_barrier_hit_1d": "future 1d barrier-hit label; target only"
+      }
+    }
+  },
+  "mode": "research_branch",
+  "name": "h644_formalized_retests",
+  "summary": {
+    "data_gated": 0,
+    "decision": "BATCH_COMPLETED",
+    "failed": 2,
+    "items": 6,
+    "mixed": 1,
+    "passed": 3
+  },
+  "ts": "20260518_214804"
+}

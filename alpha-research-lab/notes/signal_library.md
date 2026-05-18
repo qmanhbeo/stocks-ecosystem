@@ -1345,6 +1345,25 @@ Track new OHLCV-only search ideas in `notes/live_state.md`.
 - Use concentration as a positive conditioner within low-breadth
   `composite_2plus` states under this contract.
 
+**Session 415-416 update (2026-05-18):**
+- First-pass backlog closure finds a strong triple-amplifier proxy pocket:
+  `tight_capacity × low_breadth × cofire_isolated` (`IC=0.2735`) with
+  `+0.0833` lift over the best tested pair baseline in that batch.
+- Additional supportive proxy passes include quiet-blocked edge, low-breadth ×
+  vol-expansion interaction, and just-exited-active state.
+- Treat these as proxy-first branch evidence pending specialized follow-up
+  scripts before full signal-library promotion.
+
+**Session 417 formalization update (2026-05-18):**
+- H644 confirms three priority passes under stricter retest definitions:
+  - triple amplifier (`tight_capacity × low_breadth × cofire_isolated`)
+  - vol-depth conditioner (`vol_deep` > `vol_mild`)
+  - tight × high-accumulation interaction
+- H644 also resolves prior ambiguous gates:
+  - accumulation × low-breadth fails to add lift
+  - Wardrop-style sector-pressure equilibrium fails
+  - hierarchical macro-context gating remains mixed (sub-threshold)
+
 ---
 
 ## Notes on Evaluation

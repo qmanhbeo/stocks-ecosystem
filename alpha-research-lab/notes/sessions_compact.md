@@ -7,6 +7,28 @@ to its source session or state an explicit source anchor.
 
 ## Recent Sessions
 
+- [Session 417](session_00417_log.md): Ran H644 formalized retests for six
+  priority unresolved hypotheses. Outcome: `#99 PASSED` (confirmed),
+  `#91 PASSED` (upgraded from data-gated), `#103 PASSED` (upgraded from
+  data-gated), `#100 FAILED` (was data-gated), `BM17 FAILED` (was data-gated),
+  and `BM07 MIXED` (marginal, sub-threshold). Source:
+  [session_00417_log.md](./session_00417_log.md),
+  [artifacts/run_summaries/20260518_214804_h644_formalized_retests_research_branch.json](../artifacts/run_summaries/20260518_214804_h644_formalized_retests_research_branch.json).
+
+- [Session 416](session_00416_log.md): Ran H643 to first-pass close the
+  remaining Bright-Mind wake/sleep and traffic backlog items in one proxy-audit
+  batch. Outcome: `7 PASSED`, `1 MIXED`, `6 FAILED`, `3 DATA_GATED`. Strongest
+  survivors were arousal-fatigue spread, wake pulse, cycle stability, router
+  c23-only split, macro persistence, relaxation-gap, and headway-wide states.
+  Source: [session_00416_log.md](./session_00416_log.md),
+  [artifacts/run_summaries/20260518_212901_h643_brightmind_remaining_batch_research_branch.json](../artifacts/run_summaries/20260518_212901_h643_brightmind_remaining_batch_research_branch.json).
+
+- [Session 415](session_00415_log.md): Ran H629 to close all remaining open
+  numbered queue items (`85-91`, `96-103`) in one structured batch. Outcome:
+  `6 PASSED`, `6 FAILED`, `3 DATA_GATED`; notable passes include 85, 86, 90,
+  97, 99, and 101. Source: [session_00415_log.md](./session_00415_log.md),
+  [artifacts/run_summaries/20260518_212651_h629_remaining_queue_85_103_batch_research_branch.json](../artifacts/run_summaries/20260518_212651_h629_remaining_queue_85_103_batch_research_branch.json).
+
 - [Session 414](session_00414_log.md): Ran H628 signal concentration during
   low-breadth. PASSED (F461): concentrated low-breadth state
   (`conc_low IC=0.2523`) beat distributed low-breadth (`dist_low IC=0.2315`)

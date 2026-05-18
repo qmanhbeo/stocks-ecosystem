@@ -1,22 +1,23 @@
 {
   "artifacts": {
+    "all_ticker_probas": "data/features/xs_barrier_vol_1d_hose_full.parquet",
     "xs_wf_log": "xs_wf_results.jsonl"
   },
   "metadata": {
     "barrier_pct": 0.01,
-    "model": "extra_trees_classifier",
-    "n_features": 35,
-    "target": "future_rel_barrier_5d",
+    "model": "xgboost_classifier",
+    "n_features": 39,
+    "target": "future_rel_barrier_1d",
     "threshold": 0.0
   },
   "mode": "cross_sectional",
   "name": "X10_xs_barrier0.01",
   "summary": {
-    "avg_overall_acc": 0.5416,
-    "fpt_avg_edge": -0.0218,
-    "fpt_n_sig_years": 4,
-    "fpt_std_edge": 0.1267,
-    "total_years": 8
+    "avg_overall_acc": 0.5604,
+    "fpt_avg_edge": 0.078,
+    "fpt_n_sig_years": 7,
+    "fpt_std_edge": 0.0765,
+    "total_years": 19
   },
-  "ts": "20260405_224257"
+  "ts": "20260518_231657"
 }

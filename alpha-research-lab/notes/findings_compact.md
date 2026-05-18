@@ -40,8 +40,12 @@ entry must include source anchors: stable finding IDs or source session links.
   spread-across-days accumulation (`+0.0624`), reinforcing same-day co-occurrence
   as the core mechanism. New concentration result: within low-breadth states,
   concentrated signal mass beats distributed mass (`+0.0209`), adding a
-  promotable concentration conditioner for this branch. Source anchors: `F445`,
-  `F446`, `F447`, `F459`, `F460`, `F461`, `D072-D075`, `D093-D099`.
+  promotable concentration conditioner for this branch. New backlog-closure
+  update: first-pass proxy batches find a strong triple amplifier pocket
+  (`tight_capacity × low_breadth × cofire_isolated`) with substantial lift,
+  alongside mixed/failing filters that narrow follow-up scope. Source anchors:
+  `F445`, `F446`, `F447`, `F459`, `F460`, `F461`, `F462`, `F463`,
+  `D072-D075`, `D093-D112`.
 
 - Latent-state machine evidence: H507 produced the first explicit transition
   map for the C23 family and supports a compact state organization: quiet
