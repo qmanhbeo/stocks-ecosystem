@@ -24,6 +24,7 @@ Usage:
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 from path_utils import data_path
 import sys
@@ -94,7 +95,14 @@ def melt_panel(piv: pd.DataFrame, col_name: str) -> pd.DataFrame:
     return m
 
 
-def build_features() -> pd.DataFrame:
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--start-year", type=int, default=2015)
+    parser.add_argument("--min-rows", type=int, default=300)
+    return parser.parse_args()
+
+
+def build_features(*, start_year: int = 2015, min_rows: int = 300) -> pd.DataFrame:
     raw = pd.read_parquet(RAW_PATH)
     raw["published_date"] = pd.to_datetime(raw["published_date"])
 
@@ -129,7 +137,8 @@ def build_features() -> pd.DataFrame:
     grid_df = build_stock_day_grid(
         stock_dir=STOCK_DIR,
         exclude=EXCLUDE,
-        start_year=2015,
+        start_year=int(start_year),
+        min_rows=int(min_rows),
     ).rename(columns={"time": "trading_day"})
     grid = grid_df.drop_duplicates()
     trading_days = sorted(grid["trading_day"].unique())
@@ -178,8 +187,9 @@ def build_features() -> pd.DataFrame:
 
 
 def main():
+    args = parse_args()
     print("Building insider quality features (H108)...")
-    feat = build_features()
+    feat = build_features(start_year=int(args.start_year), min_rows=int(args.min_rows))
 
     feat_cols = [c for c in feat.columns if c not in ("trading_day", "ticker")]
     nonzero = feat[feat_cols].abs().sum(axis=1) > 0

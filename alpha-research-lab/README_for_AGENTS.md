@@ -260,7 +260,7 @@ Operationally important summary:
   - current live holdings from `2026-03-26` signal / `2026-03-27` execution:
     - `ANV`, `PGV`, `PTB`, `PTL`, `VSI`
 - Session 66 reopened `H151/H152` under a locked anti-leakage protocol:
-  - dev `2015-2022`
+  - legacy branch dev window `2015-2022`
   - validation `2023-2024`
   - one-shot confirmation `2025`
   - forward lockbox `2026+`
@@ -396,6 +396,14 @@ Use this file for:
 - `notes/session_NN_log.md`: full per-session record
 
 `README.md` is overview only.
+
+---
+
+## Data Horizon Rule
+
+- For feature builds/exports, default to the earliest available date supported by required inputs.
+- Treat fixed `2015+` starts as legacy branch windows, not default infra behavior.
+- When you intentionally use a narrower window, declare it explicitly in command args and in the saved summary.
 
 ---
 

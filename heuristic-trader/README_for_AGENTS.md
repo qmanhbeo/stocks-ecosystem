@@ -54,6 +54,12 @@ Caches are stored in `cache/` directory and loaded automatically by `run_backtes
 
 This matches the workspace-wide lockbox policy in `alpha-research-lab/src/experiment_contract.py` (`MAX_RESEARCH_YEAR = 2025`).
 
+## Data Horizon Rule
+
+- Default start rule: use the earliest available date supported by the loaded signal surfaces and execution tradability contract.
+- Do not hard-code `2015` starts in loaders/backtests.
+- Use narrower windows only when an experiment explicitly requires them (for example, a holdout comparability run).
+
 ## Strategy Configuration
 
 Strategies are defined in `strategies/strategies.json`:
@@ -82,12 +88,12 @@ Available signal types: `s1_only`, `c16_only`, `c17_only`, `c17_active_boost`, `
 
 ### Single strategy:
 ```bash
-python run_backtest.py --strategy s1_top5_rebal10 --start-date 2019-01-01 --end-date 2025-12-31
+python run_backtest.py --strategy s1_top5_rebal10 --start-date 2007-01-02 --end-date 2025-12-31
 ```
 
 ### All strategies:
 ```bash
-python run_backtest.py --all-strategies --start-date 2019-01-01 --end-date 2025-12-31
+python run_backtest.py --all-strategies --start-date 2007-01-02 --end-date 2025-12-31
 ```
 
 This runs all strategies in `strategies.json` and produces a comparison table.

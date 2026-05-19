@@ -181,11 +181,22 @@ selectively attend to signals.
 - Recommendation contracts are shared with RL-adjacent consumers via `../shared-recommendation/`
 - Execution reality is shared with RL via `../docs/execution_reality.md` and `../shared-market-rules/`
 
+## Data Horizon Policy
+
+- Default start rule for feature builds/exports: use the earliest available date supported by required upstream surfaces
+- `2015+` starts are legacy experiment windows, not the default data-build contract
+- If a branch requires a narrower window, pass it explicitly via CLI/config and record it in the run summary
+- Current reference ranges after rebuild:
+  - `data/features/xs_rl_signal_matrix.parquet`: `2007-01-02` to `2026-03-31`
+  - `data/features/activation_state_daily.parquet`: `2007-01-02` to `2026-03-31`
+  - `data/features/activation_meta_daily.parquet`: `2007-01-02` to `2026-03-31`
+  - `data/features/event_surface_daily.parquet`: `2007-01-02` to `2026-03-31`
+
 ## Current Best RL Signal
 
 **H93 — Volume + 1-day label cross-sectional model**
 
-- IC +0.1491, edge std 1.60%, Sharpe 15.08, 11/11 positive years (2015–2025)
+- IC +0.1491, edge std 1.60%, Sharpe 15.08, 11/11 positive years (legacy evaluation window: 2015–2025)
 - Lowest year-to-year variance of any system tested
 - Artifact: `data/features/xs_barrier_vol_1d_hose_full.parquet`
 
@@ -241,7 +252,7 @@ It is no longer the active live branch after Session 65's pseudo-live rollback t
   - exit alpha = decide when to stop holding a bought name after entry
 - Run the repo in two tracks:
   - live track: freeze the sticky branch and monitor it forward only
-  - research track: reopen alpha discovery under the locked protocol
+  - research track: reopen alpha discovery under the locked protocol (legacy branch window shown here)
     - dev `2015-2022`
     - validation `2023-2024`
 

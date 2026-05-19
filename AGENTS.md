@@ -44,6 +44,7 @@ Current responsibilities:
 
 - Prefer root `data/` over repo-local `data/` paths
 - Inside `alpha-research-lab/`, scripts should resolve the canonical shared root `data/` directly
+- For dataset builds/exports, default to the earliest available date supported by the required inputs; do not hard-code `2015` starts unless a specific experiment protocol explicitly requires that legacy window
 - Do not reintroduce duplicate data stores inside child repos unless explicitly requested
 - Treat cross-project path contracts as ecosystem-level contracts
 - Treat `data/features/recommendations/` as a shared published surface, not an alpha-only private output

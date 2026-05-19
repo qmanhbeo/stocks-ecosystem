@@ -100,6 +100,12 @@ re-fetching HNX.
 8. The lab can publish canonical model-agnostic recommendation candidates at `data/features/recommendations/<profile>/latest_candidates.parquet`
 9. RL training/evaluation in `RL-trading-agent/` reads from root `data/`, either directly from existing per-ticker exports or via the adapter command `python -m vn_stock_rl.data_tools.export_lab_signal_matrix`
 
+## Data Horizon Policy
+
+- Default start rule: use the earliest available date each contract can support
+- Do not enforce a global `2015` start for builds/exports
+- If a workflow requires a narrower legacy window (for comparability or lockbox discipline), document that window explicitly in the run config/output instead of changing the default data horizon
+
 For new lightweight signal/state/context experiments, start from
 `alpha-research-lab/analysis/_template_research_branch.py` and
 `alpha-research-lab/src/experiment_contract.py` instead of hand-rolling the

@@ -17,6 +17,7 @@ Columns:
 - gap_abs_5d
 """
 
+import argparse
 from pathlib import Path
 from path_utils import data_path
 import sys
@@ -86,7 +87,15 @@ def _build_for_ticker(path: Path) -> pd.DataFrame:
     return out
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--start-year", type=int, default=2015)
+    parser.add_argument("--min-rows", type=int, default=300)
+    return parser.parse_args()
+
+
 def main():
+    args = parse_args()
     files = sorted(STOCK_DIR.glob("gia_lich_su_*_1D.parquet"))
     parts = []
     for i, f in enumerate(files, start=1):
@@ -105,8 +114,8 @@ def main():
     grid = build_stock_day_grid(
         stock_dir=STOCK_DIR,
         exclude=EXCLUDE,
-        min_rows=300,
-        start_year=2015,
+        min_rows=int(args.min_rows),
+        start_year=int(args.start_year),
     )
     out = grid.merge(all_feat, on=["time", "ticker"], how="left")
     for c in out.columns:

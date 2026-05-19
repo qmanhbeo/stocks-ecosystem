@@ -490,7 +490,7 @@ that volume alone does not explain.
 - **Standalone IC vs 1d barrier:** `+0.0738`
 - **Consistency:** `11 / 11` years positive
 - **Correlation with S1:** `+0.0342`
-- **Coverage:** `98.04%` active rows on the 2015-2025 S1 panel
+- **Coverage:** `98.04%` active rows on the legacy 2015-2025 S1 panel
 - **Split IC:** dev `+0.0799`, validation `+0.0593`, confirmation `+0.0713`
 - **5d diagnostic IC:** `+0.0797`, also `11 / 11` positive years
 - **Full-library residual IC (H357):** `+0.0687`, `11 / 11` positive years

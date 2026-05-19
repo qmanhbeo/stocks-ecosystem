@@ -85,8 +85,8 @@ This is no longer primarily an infrastructure issue in heuristic-trader.
 
 - Cache path bug fixed.
 - `liquid_lookup.joblib` parity fixed and promoted.
-- `trad_lookup.joblib` extended from accidental 2019 start to 2015 start.
-- Clean execution-validation surface now starts at 2015-01-05.
+- `trad_lookup.joblib` was first extended from accidental 2019 start to the legacy 2015 baseline; the shared tradability surface now supports earliest-available history (`2000-07-28+`).
+- Clean execution-validation surfaces are no longer hard-started at 2015; use earliest available data by contract unless a branch explicitly narrows the window.
 - `test_parity.py`: PASS.
 - `test_diagnostics_regression.py`: PASS.
 - `collect_diagnostics=True` does not alter metrics.
@@ -94,12 +94,12 @@ This is no longer primarily an infrastructure issue in heuristic-trader.
 Relevant heuristic-trader findings:
 - F00007: Cache parity / missing-date semantics fixed.
 - F00008: Walk-forward validation added.
-- F00009: trad_lookup extended to 2015.
+- F00009: trad_lookup extended beyond accidental late-start truncation (legacy milestone was 2015; current contract is earliest-available history).
 - F00010: Cash drag identified as bull-regime failure mechanism.
 
 ### 2. Walk-forward validation shows regime-sensitive failure
 
-Default walk-forward now uses 11 annual folds from 2015-2025.
+Legacy walk-forward reference used 11 annual folds from 2015-2025; current default horizon policy is earliest-available history unless a run explicitly pins a narrower window.
 
 Key behavior:
 - Strong bull years 2017 and 2025 destroyed all tested strategies.
