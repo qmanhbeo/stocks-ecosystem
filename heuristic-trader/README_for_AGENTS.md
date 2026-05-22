@@ -4,6 +4,30 @@
 
 Heuristic-trader is a baseline trading system that tests executable trading rules and models based on profit/PnL, not just IC (Information Coefficient). It serves as the bridge between alpha-research-lab (signal discovery) and RL-trading-agent (RL policy learning).
 
+## Canonical CLI
+
+Use one unified entrypoint for all operations:
+
+```bash
+cd /home/manh/stocks-ecosystem/heuristic-trader
+python cli.py <subcommand> [args...]
+```
+
+Primary subcommands:
+- `backtest`
+- `walk-forward`
+- `profit`
+- `sweep`
+- `challenge`
+- `shadow`
+- `disambiguate`
+- `gate-sweep`
+- `cache build-price|build-trad|validate|report`
+- `parity`
+- `analyze cash-mechanics|execution-ablation|regime-failures|ticker-pnl|trade-level`
+- `debug liquidity-semantics|parity-diagnostics`
+- `utility depth-frontier-wfv|execution-ablation-wfv|s1-depth5-wfv`
+
 ## Promotion Contract (Lab -> Heuristic)
 
 Shared status vocabulary across lab and heuristic-trader:
@@ -26,7 +50,8 @@ Contract:
 
 ```
 heuristic-trader/
-├── run_backtest.py      # CLI entrypoint with lockbox protection
+├── cli.py               # Unified CLI entrypoint (canonical operator surface)
+├── run_backtest.py      # Backtest command implementation
 ├── backtest.py          # Core backtest engine (constraint-compliant)
 ├── signals.py           # Data loaders with lockbox filtering
 ├── constraints.py       # Vietnam market execution rules
@@ -49,12 +74,8 @@ Before running backtests, build caches for fast execution:
 
 ```bash
 cd /home/manh/stocks-ecosystem/heuristic-trader
-
-# Build price cache (takes ~5 min)
-python build_cache.py
-
-# Build tradability lookup (takes ~2 min)
-python build_trad_cache.py
+python cli.py cache build-price
+python cli.py cache build-trad
 ```
 
 Caches are stored in `cache/` directory and loaded automatically by `run_backtest.py`.
@@ -67,7 +88,7 @@ Caches are stored in `cache/` directory and loaded automatically by `run_backtes
 - If loaded data contains dates after max_date, the system raises a clear error
 - Use `--allow-lockbox` flag to override (only for testing):
   ```bash
-  python run_backtest.py --strategy s1_only --end-date 2026-03-31 --allow-lockbox
+  python cli.py backtest -- --strategy s1_only --end-date 2026-03-31 --allow-lockbox
   ```
 
 This matches the workspace-wide lockbox policy in `alpha-research-lab/src/experiment_contract.py` (`MAX_RESEARCH_YEAR = 2025`).
@@ -114,12 +135,12 @@ Optional risk-gate fields (tail-first exposure scaling):
 
 ### Single strategy:
 ```bash
-python run_backtest.py --strategy s1_top5_rebal10 --start-date 2007-01-02 --end-date 2025-12-31
+python cli.py backtest -- --strategy s1_top5_rebal10 --start-date 2007-01-02 --end-date 2025-12-31
 ```
 
 ### All strategies:
 ```bash
-python run_backtest.py --all-strategies --start-date 2007-01-02 --end-date 2025-12-31
+python cli.py backtest -- --all-strategies --start-date 2007-01-02 --end-date 2025-12-31
 ```
 
 This runs all strategies in `strategies.json` and produces a comparison table.
@@ -180,7 +201,7 @@ Canonical files are CSV/JSON only, strategy-separated, overwrite-in-place, and e
 Use a single canonical command to decide whether a strategy is profit-ready and to diagnose execution conversion failures:
 
 ```bash
-python profit_pipeline.py
+python cli.py profit
 ```
 
 This writes `artifacts/profit_pipeline/<timestamp>/` with:
@@ -205,12 +226,12 @@ Defaults follow current live-state priority:
 For fixed-scope new-signal testing with decision labels:
 
 ```bash
-python signal_sweep.py
+python cli.py sweep
 ```
 
 Strict upstream alignment (recommended):
 ```bash
-python signal_sweep.py --require-promotion-contract
+python cli.py sweep -- --require-promotion-contract
 ```
 This reads `data/features/recommendations/signal_promotion_contract_latest.csv` and blocks promotion when upstream `lab_promotion_status` is below `LAB_PROMOTED_PENDING_EXECUTION`.
 
@@ -228,7 +249,7 @@ This writes `artifacts/signal_sweeps/<timestamp>/` with:
 
 Manual override (hybrid enforcement):
 ```bash
-python signal_sweep.py --promotion-override-strategies strategy_a,strategy_b
+python cli.py sweep -- --promotion-override-strategies strategy_a,strategy_b
 ```
 This marks those rows as `OVERRIDE_PROMOTED`; a note justification is mandatory.
 
@@ -239,7 +260,7 @@ The sweep set is predeclared: controls + standalone matrix signals (`c4..c14`) +
 After a sweep run, freeze one baseline + one challenger:
 
 ```bash
-python select_challenge_set.py
+python cli.py challenge
 ```
 
 Default behavior is strict:
@@ -248,8 +269,8 @@ Default behavior is strict:
 
 Relaxed fallback modes (for diagnostics only):
 ```bash
-python select_challenge_set.py --selection-mode research
-python select_challenge_set.py --selection-mode any
+python cli.py challenge -- --selection-mode research
+python cli.py challenge -- --selection-mode any
 ```
 
 Outputs:
@@ -261,7 +282,7 @@ Outputs:
 Run the frozen baseline/challenger over a fixed window:
 
 ```bash
-python run_shadow_phase.py --start-date 2025-01-01 --end-date 2025-12-31
+python cli.py shadow -- --start-date 2025-01-01 --end-date 2025-12-31
 ```
 
 `run_shadow_phase.py` fails fast when challenge metadata has `ready_for_shadow=false`.
@@ -278,7 +299,7 @@ Use this when you need to separate:
 - simplistic regime-gating benefit/harm
 
 ```bash
-python run_signal_vs_translation_disambiguation.py --top-n 3
+python cli.py disambiguate -- --top-n 3
 ```
 
 Outputs:
@@ -292,13 +313,13 @@ Outputs:
 For tail-first gate parameter search on candidate strategies:
 
 ```bash
-python run_gate_sweep.py
+python cli.py gate-sweep
 ```
 
 Optional: override with translation-best configs from disambiguation:
 
 ```bash
-python run_gate_sweep.py \
+python cli.py gate-sweep -- \
   --strategies s1b_c11_ret_60d_lag_rank_70_30_depth5,m_c11_ret_60d_lag_rank_depth5,m_c8_vol_zscore_5d_depth5 \
   --translation-best-csv artifacts/signal_translation_disambiguation/<run>/exp2_translation_best_per_strategy.csv
 ```

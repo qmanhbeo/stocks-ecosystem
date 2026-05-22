@@ -22,33 +22,33 @@ Promote only strategies that pass canonical walk-forward and execution-health ga
 
 ```bash
 cd /home/manh/stocks-ecosystem/heuristic-trader
-python profit_pipeline.py
+python cli.py profit
 ```
 
 For fixed-scope new signal testing with automatic decision labels:
 
 ```bash
-python signal_sweep.py --require-promotion-contract
+python cli.py sweep -- --require-promotion-contract
 ```
 This enforces upstream lab contract alignment from `data/features/recommendations/signal_promotion_contract_latest.csv`.
 
 Freeze a baseline/challenger pair from the latest sweep:
 
 ```bash
-python select_challenge_set.py
+python cli.py challenge
 ```
 
 Default is strict challenger selection (`PROMOTE_CANDIDATE` only). If none exist, the command fails and records `ready_for_shadow=false` in `challenge_set.json`.
 Use relaxed fallback modes only for diagnostic comparison:
 ```bash
-python select_challenge_set.py --selection-mode research
-python select_challenge_set.py --selection-mode any
+python cli.py challenge -- --selection-mode research
+python cli.py challenge -- --selection-mode any
 ```
 
 Run frozen shadow comparison (no retuning):
 
 ```bash
-python run_shadow_phase.py --start-date 2025-01-01 --end-date 2025-12-31
+python cli.py shadow -- --start-date 2025-01-01 --end-date 2025-12-31
 ```
 
 Shadow phase now fails fast when the challenge set is not strict-ready.
@@ -56,7 +56,7 @@ Shadow phase now fails fast when the challenge set is not strict-ready.
 When failure diagnosis is ambiguous (signal vs execution translation), run:
 
 ```bash
-python run_signal_vs_translation_disambiguation.py --top-n 3
+python cli.py disambiguate -- --top-n 3
 ```
 
 For tail-first downside control, enable strategy-level exposure gate fields
