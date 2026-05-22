@@ -1,0 +1,3 @@
+signal_id,as_of_date,n_strategies,promote_count,kill_count,research_count,mean_excess_return,worst_fold_return,mean_failure_cash_pct,mean_failure_underfill_pct,mean_failure_selection_fill_rate
+blend_s1_c16,2026-05-22,1,0,1,0,-0.066658,-0.385754,,,
+s1,2026-05-22,1,0,1,0,-0.141674,-0.31837,,,

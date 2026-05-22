@@ -1,0 +1,12 @@
+{
+  "candidate_scan_multiplier": 5,
+  "min_hold_days": 3,
+  "name": "m_c8_vol_zscore_5d_depth5",
+  "rebalance_days": 10,
+  "signal_col": "c8_vol_zscore_5d",
+  "signal_type": "surface_col",
+  "sizing_mode": "fixed_initial",
+  "source_col": "c8_vol_zscore_5d",
+  "source_surface": "rl_signal_matrix",
+  "top_k": 5
+}

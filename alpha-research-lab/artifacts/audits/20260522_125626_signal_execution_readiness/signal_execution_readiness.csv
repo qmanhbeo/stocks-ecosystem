@@ -1,0 +1,16 @@
+signal_id,source_path,source_col,derived,start_year,end_year,panel_rows,active_rows,coverage_pct,sparsity_profile,turnover_proxy_churn,turnover_proxy_profile,topk_fill_rate,tradability_overlap_pct,tradability_buyable_pct
+c10,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c10_illiq_level_rank,,2015,2025,833942,830591,99.5982,dense,0.571605,high,1.0,100.0,98.9734
+c11,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c11_ret_60d_lag_rank,,2015,2025,833942,831548,99.7129,dense,0.193375,low,1.0,100.0,98.9586
+c12,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c12_gap_absorb_3,,2015,2025,833942,833015,99.8888,dense,0.936367,high,1.0,100.0,98.9592
+c13,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c13_compress_blowoff_2,,2015,2025,833942,832219,99.7934,dense,0.640481,high,1.0,100.0,98.9607
+c14,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c14_clv_volconf_resid_rank,,2015,2025,833942,833379,99.9325,dense,0.594831,high,1.0,100.0,98.9593
+c16,/home/manh/stocks-ecosystem/data/features/xs_order_pressure_daily.parquet,order_volume_ratio_rank,,2015,2025,833942,817623,98.0431,dense,0.815799,high,1.0,100.0,98.9668
+c17,/home/manh/stocks-ecosystem/data/features/xs_order_pressure_daily.parquet,order_volume_ratio,,2015,2025,833942,817623,98.0431,dense,0.815799,high,1.0,100.0,98.9668
+c18,/home/manh/stocks-ecosystem/data/features/xs_order_pressure_daily.parquet,order_volume_ratio_rank,rank_delta_1d,2015,2025,833942,807096,96.7808,dense,0.998689,high,1.0,100.0,98.9794
+c4,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c4_oc_asym_5d,,2015,2025,833942,833942,100.0,dense,0.513214,high,1.0,100.0,98.9589
+c5,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c5_ins_relative_size_5d,,2015,2025,833942,833942,100.0,dense,0.268948,medium,1.0,100.0,98.9589
+c6,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c6_contrarian_intra_5d,,2015,2025,833942,831204,99.6717,dense,0.684529,high,1.0,100.0,98.9556
+c7,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c7_ceiling_count_5d,,2015,2025,833942,833942,100.0,dense,0.377284,medium,1.0,100.0,98.9589
+c8,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c8_vol_zscore_5d,,2015,2025,833942,833942,100.0,dense,0.380415,medium,1.0,100.0,98.9589
+c9,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c9_reversal_1d,,2015,2025,833942,833015,99.8888,dense,0.91387,high,1.0,100.0,98.9592
+s1,/home/manh/stocks-ecosystem/data/features/xs_barrier_vol_1d_hose_full.parquet,xs_proba,,2015,2025,833942,833942,100.0,dense,0.915544,high,1.0,100.0,98.9589

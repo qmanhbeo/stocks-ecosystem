@@ -1,0 +1,2 @@
+strategy_name,n_folds,mean_total_return,median_total_return,mean_annualized_return,median_annualized_return,mean_max_drawdown,positive_folds,beating_benchmark_folds,total_trades,mean_benchmark_return,mean_excess_return,robustness_notes
+m_c12_gap_absorb_3_depth5,11,-0.098012,-0.029714,-0.098675,-0.029951,0.296065,2,2,2066,0.128347,-0.226359,WEAK: Negative in most or all folds

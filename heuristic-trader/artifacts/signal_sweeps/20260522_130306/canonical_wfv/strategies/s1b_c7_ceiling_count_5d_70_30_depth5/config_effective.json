@@ -1,0 +1,14 @@
+{
+  "candidate_scan_multiplier": 5,
+  "min_hold_days": 3,
+  "name": "s1b_c7_ceiling_count_5d_70_30_depth5",
+  "rebalance_days": 10,
+  "signal_col": "blend",
+  "signal_type": "s1_surface_blend",
+  "sizing_mode": "fixed_initial",
+  "source_col": "c7_ceiling_count_5d",
+  "source_surface": "rl_signal_matrix",
+  "top_k": 5,
+  "w_s1": 0.7,
+  "w_surface": 0.3
+}

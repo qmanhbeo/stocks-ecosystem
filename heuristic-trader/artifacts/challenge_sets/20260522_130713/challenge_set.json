@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-05-22T13:07:13",
+  "source_sweep_dir": "/home/manh/stocks-ecosystem/heuristic-trader/artifacts/signal_sweeps/20260522_130306",
+  "baseline_strategy": "ctrl_blend_70_30_depth5",
+  "challenger_strategy": "s1b_c11_ret_60d_lag_rank_70_30_depth5",
+  "challenger_selection_reason": "fallback top non-baseline by mean_excess_return",
+  "risk_policy": {
+    "min_positive_folds": 7,
+    "min_beating_benchmark_folds": 5,
+    "min_mean_excess_return": 0.0,
+    "max_mean_drawdown": 0.35,
+    "max_worst_fold_return": -0.3,
+    "max_failure_cash_pct": 65.0,
+    "max_failure_underfill_pct": 65.0,
+    "min_failure_selection_fill_rate": 0.35
+  },
+  "baseline_gates": {
+    "gate_positive_folds": false,
+    "gate_beating_benchmark": true,
+    "gate_mean_excess": false,
+    "gate_mean_drawdown": true,
+    "gate_worst_fold": false,
+    "gate_failure_cash": true,
+    "gate_failure_underfill": true,
+    "gate_failure_selection_fill": true,
+    "all_pass": false
+  },
+  "challenger_gates": {
+    "gate_positive_folds": true,
+    "gate_beating_benchmark": false,
+    "gate_mean_excess": false,
+    "gate_mean_drawdown": true,
+    "gate_worst_fold": false,
+    "gate_failure_cash": true,
+    "gate_failure_underfill": true,
+    "gate_failure_selection_fill": true,
+    "all_pass": false
+  }
+}

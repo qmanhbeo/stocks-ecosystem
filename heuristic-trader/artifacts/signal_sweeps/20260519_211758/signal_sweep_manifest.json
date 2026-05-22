@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-05-19T21:21:46",
+  "n_strategies": 28,
+  "n_autopsy": 28,
+  "failure_years": [
+    2016,
+    2018,
+    2024
+  ],
+  "success_years": [
+    2017,
+    2020,
+    2021,
+    2022,
+    2025
+  ],
+  "thresholds": {
+    "min_positive_folds": 7,
+    "min_beating_benchmark_folds": 5,
+    "min_mean_excess_return": 0.0,
+    "max_mean_drawdown": 0.35,
+    "max_worst_fold_return": -0.3
+  },
+  "readiness_summary": {
+    "thresholds": {
+      "min_positive_folds": 7,
+      "min_beating_benchmark_folds": 5,
+      "min_mean_excess_return": 0.0,
+      "max_mean_drawdown": 0.35,
+      "max_worst_fold_return": -0.3
+    },
+    "n_strategies": 28,
+    "n_profit_ready": 0,
+    "top_profit_ready": null,
+    "top_candidate": "s1b_c11_ret_60d_lag_rank_70_30_depth5"
+  },
+  "baseline_strategy": "ctrl_blend_70_30_depth5",
+  "baseline_failure_excess": -0.05690760022013267,
+  "baseline_failure_cash": 39.54752157839288,
+  "baseline_failure_underfill": 39.01832669322709
+}

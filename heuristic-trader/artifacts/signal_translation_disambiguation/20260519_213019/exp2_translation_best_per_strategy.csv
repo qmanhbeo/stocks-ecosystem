@@ -1,0 +1,2 @@
+strategy_name,variant,n_folds,mean_total_return,mean_annualized_return,mean_excess_return,positive_folds,beating_benchmark_folds,worst_fold_return,mean_max_drawdown,mean_trades,mean_filtered,top_k,rebalance_days,min_hold_days,candidate_scan_multiplier,sizing_mode
+s1b_c11_ret_60d_lag_rank_70_30_depth5,k3_rb5_h2_scan20_dynamic_portfolio,11,0.05072018437666748,0.051302393145109274,-0.07762709122032173,6,6,-0.43535021981933675,0.27665142127910786,194.0,537.8181818181819,3,5,2,20,dynamic_portfolio

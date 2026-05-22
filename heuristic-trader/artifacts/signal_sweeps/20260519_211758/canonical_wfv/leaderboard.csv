@@ -1,0 +1,29 @@
+strategy_name,n_folds,mean_annualized_return,mean_excess_return,positive_folds,beating_benchmark_folds,mean_max_drawdown,total_trades,robustness_notes
+ctrl_blend_70_30_depth5,11,0.062146,-0.066658,6,5,0.239950,1690,FRAGILE: Inconsistent performance across folds
+ctrl_c16_depth5,11,0.007833,-0.120410,7,4,0.181710,552,FRAGILE: Inconsistent performance across folds
+ctrl_c18_depth5,11,0.018734,-0.109669,5,3,0.216867,1228,FRAGILE: Inconsistent performance across folds
+ctrl_s1_depth5,11,-0.013457,-0.141674,5,2,0.241514,1614,FRAGILE: Inconsistent performance across folds
+m_c10_illiq_level_rank_depth5,2,0.018786,-0.286334,2,0,0.025976,8,MODERATE: Positive in most folds; underperforms benchmark consistently
+m_c11_ret_60d_lag_rank_depth5,11,0.081248,-0.047904,5,4,0.280126,2064,FRAGILE: Inconsistent performance across folds
+m_c12_gap_absorb_3_depth5,11,-0.098675,-0.226359,2,2,0.296065,2066,WEAK: Negative in most or all folds
+m_c13_compress_blowoff_2_depth5,11,-0.006866,-0.134706,5,4,0.332836,1879,FRAGILE: Inconsistent performance across folds
+m_c14_clv_volconf_resid_rank_depth5,11,0.026058,-0.102670,5,4,0.276203,2129,FRAGILE: Inconsistent performance across folds
+m_c4_oc_asym_5d_depth5,11,0.039960,-0.088362,5,5,0.282126,1765,FRAGILE: Inconsistent performance across folds
+m_c5_ins_relative_size_5d_depth5,11,0.058323,-0.070733,8,4,0.249356,2289,MODERATE: Positive in most folds
+m_c5_signal_present_depth5,11,0.006671,-0.121813,6,2,0.243002,2275,FRAGILE: Inconsistent performance across folds
+m_c6_contrarian_intra_5d_depth5,11,0.039963,-0.088429,7,3,0.259450,2052,FRAGILE: Inconsistent performance across folds
+m_c7_ceiling_count_5d_depth5,11,0.060354,-0.068675,5,5,0.293470,2236,FRAGILE: Inconsistent performance across folds
+m_c8_vol_zscore_5d_depth5,11,0.074068,-0.054612,5,4,0.252295,2251,FRAGILE: Inconsistent performance across folds
+m_c9_reversal_1d_depth5,11,-0.022542,-0.150369,4,2,0.299139,1890,FRAGILE: Inconsistent performance across folds
+s1b_c10_illiq_level_rank_70_30_depth5,10,-0.001536,-0.151407,6,1,0.039590,71,FRAGILE: Inconsistent performance across folds
+s1b_c11_ret_60d_lag_rank_70_30_depth5,11,0.081628,-0.047166,8,4,0.286892,2080,MODERATE: Positive in most folds
+s1b_c12_gap_absorb_3_70_30_depth5,11,-0.061164,-0.189135,3,2,0.261109,1921,WEAK: Negative in most or all folds
+s1b_c13_compress_blowoff_2_70_30_depth5,11,-0.055572,-0.183075,4,4,0.316426,1639,FRAGILE: Inconsistent performance across folds
+s1b_c14_clv_volconf_resid_rank_70_30_depth5,11,0.032419,-0.096377,5,3,0.248397,1972,FRAGILE: Inconsistent performance across folds
+s1b_c4_oc_asym_5d_70_30_depth5,11,-0.008039,-0.136360,4,4,0.250560,1611,FRAGILE: Inconsistent performance across folds
+s1b_c5_ins_relative_size_5d_70_30_depth5,11,0.005646,-0.122796,5,2,0.232196,1673,FRAGILE: Inconsistent performance across folds
+s1b_c5_signal_present_70_30_depth5,11,-0.011448,-0.139570,5,3,0.236148,1972,FRAGILE: Inconsistent performance across folds
+s1b_c6_contrarian_intra_5d_70_30_depth5,11,0.055544,-0.072830,8,3,0.236467,1991,MODERATE: Positive in most folds
+s1b_c7_ceiling_count_5d_70_30_depth5,11,0.004010,-0.124101,6,2,0.308444,1758,FRAGILE: Inconsistent performance across folds
+s1b_c8_vol_zscore_5d_70_30_depth5,11,-0.008048,-0.136012,7,4,0.297595,2100,FRAGILE: Inconsistent performance across folds
+s1b_c9_reversal_1d_70_30_depth5,11,-0.017587,-0.145292,4,3,0.267247,1920,FRAGILE: Inconsistent performance across folds

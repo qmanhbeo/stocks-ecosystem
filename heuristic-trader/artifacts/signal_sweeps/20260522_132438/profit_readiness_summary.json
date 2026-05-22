@@ -1,0 +1,13 @@
+{
+  "thresholds": {
+    "min_positive_folds": 7,
+    "min_beating_benchmark_folds": 5,
+    "min_mean_excess_return": 0.0,
+    "max_mean_drawdown": 0.35,
+    "max_worst_fold_return": -0.3
+  },
+  "n_strategies": 8,
+  "n_profit_ready": 0,
+  "top_profit_ready": null,
+  "top_candidate": "ctrl_blend_70_30_depth5"
+}

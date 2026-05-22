@@ -1,0 +1,9 @@
+strategy_name,n_folds,mean_annualized_return,mean_excess_return,positive_folds,beating_benchmark_folds,mean_max_drawdown,total_trades,robustness_notes
+ctrl_blend_70_30_depth5,11,0.062146,-0.066658,6,5,0.239950,1690,FRAGILE: Inconsistent performance across folds
+ctrl_c16_depth5,11,0.007833,-0.120410,7,4,0.181710,552,FRAGILE: Inconsistent performance across folds
+ctrl_c18_depth5,11,0.018734,-0.109669,5,3,0.216867,1228,FRAGILE: Inconsistent performance across folds
+ctrl_s1_depth5,11,-0.013457,-0.141674,5,2,0.241514,1614,FRAGILE: Inconsistent performance across folds
+m_c4_oc_asym_5d_depth5,11,0.039960,-0.088362,5,5,0.282126,1765,FRAGILE: Inconsistent performance across folds
+m_c5_ins_relative_size_5d_depth5,11,0.058323,-0.070733,8,4,0.249356,2289,MODERATE: Positive in most folds
+s1b_c4_oc_asym_5d_70_30_depth5,11,-0.008039,-0.136360,4,4,0.250560,1611,FRAGILE: Inconsistent performance across folds
+s1b_c5_ins_relative_size_5d_70_30_depth5,11,0.005646,-0.122796,5,2,0.232196,1673,FRAGILE: Inconsistent performance across folds

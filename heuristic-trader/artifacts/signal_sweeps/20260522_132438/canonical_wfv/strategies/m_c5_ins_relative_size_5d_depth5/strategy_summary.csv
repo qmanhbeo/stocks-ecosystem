@@ -1,0 +1,2 @@
+strategy_name,n_folds,mean_total_return,median_total_return,mean_annualized_return,median_annualized_return,mean_max_drawdown,positive_folds,beating_benchmark_folds,total_trades,mean_benchmark_return,mean_excess_return,robustness_notes
+m_c5_ins_relative_size_5d_depth5,11,0.057615,0.097950,0.058323,0.097950,0.249356,8,4,2289,0.128347,-0.070733,MODERATE: Positive in most folds

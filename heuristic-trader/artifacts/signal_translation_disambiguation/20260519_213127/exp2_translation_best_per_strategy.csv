@@ -1,0 +1,4 @@
+strategy_name,variant,n_folds,mean_total_return,mean_annualized_return,mean_excess_return,positive_folds,beating_benchmark_folds,worst_fold_return,mean_max_drawdown,mean_trades,mean_filtered,top_k,rebalance_days,min_hold_days,candidate_scan_multiplier,sizing_mode
+m_c11_ret_60d_lag_rank_depth5,k5_rb10_h2_scan20_dynamic_portfolio,11,0.11820850260926843,0.11924137671658946,-0.010138772987720762,5,5,-0.369701767328097,0.2838629109645141,188.1818181818182,304.90909090909093,5,10,2,20,dynamic_portfolio
+m_c8_vol_zscore_5d_depth5,k3_rb10_h2_scan3_fixed_initial,11,0.12430356692340268,0.12515142894918296,-0.0040437086735865295,8,6,-0.5209680074083525,0.23462468677457338,98.36363636363636,123.54545454545455,3,10,2,3,fixed_initial
+s1b_c11_ret_60d_lag_rank_70_30_depth5,k3_rb10_h2_scan20_dynamic_portfolio,11,0.2640584485953821,0.26594821246778816,0.13571117299839283,7,6,-0.4095459294094975,0.28712059219058983,93.9090909090909,271.90909090909093,3,10,2,20,dynamic_portfolio

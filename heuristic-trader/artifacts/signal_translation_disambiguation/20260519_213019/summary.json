@@ -1,0 +1,65 @@
+{
+  "generated_at": "2026-05-19T21:31:21",
+  "source_sweep_dir": "/home/manh/stocks-ecosystem/heuristic-trader/artifacts/signal_sweeps/20260519_211758",
+  "strategies_tested": [
+    "s1b_c11_ret_60d_lag_rank_70_30_depth5"
+  ],
+  "experiment_1": {
+    "oracle_summary_file": "exp1_oracle_summary.csv",
+    "best_variant_per_strategy": [
+      {
+        "strategy_name": "s1b_c11_ret_60d_lag_rank_70_30_depth5",
+        "variant": "oracle_no_filters_fixed",
+        "n_folds": 11,
+        "mean_total_return": 0.1839609269788709,
+        "mean_annualized_return": 0.18512677492925692,
+        "mean_excess_return": 0.05561365138188172,
+        "positive_folds": 8,
+        "beating_benchmark_folds": 5,
+        "worst_fold_return": -0.7424839908308769,
+        "mean_max_drawdown": 0.2750527051049364,
+        "mean_trades": 212.0,
+        "mean_filtered": 0.0
+      }
+    ]
+  },
+  "experiment_2": {
+    "translation_summary_file": "exp2_translation_summary.csv",
+    "best_translation_per_strategy": [
+      {
+        "strategy_name": "s1b_c11_ret_60d_lag_rank_70_30_depth5",
+        "variant": "k3_rb5_h2_scan20_dynamic_portfolio",
+        "n_folds": 11,
+        "mean_total_return": 0.05072018437666748,
+        "mean_annualized_return": 0.051302393145109274,
+        "mean_excess_return": -0.07762709122032173,
+        "positive_folds": 6,
+        "beating_benchmark_folds": 6,
+        "worst_fold_return": -0.43535021981933675,
+        "mean_max_drawdown": 0.27665142127910786,
+        "mean_trades": 194.0,
+        "mean_filtered": 537.8181818181819,
+        "top_k": 3,
+        "rebalance_days": 5,
+        "min_hold_days": 2,
+        "candidate_scan_multiplier": 20,
+        "sizing_mode": "dynamic_portfolio"
+      }
+    ]
+  },
+  "experiment_3": {
+    "router_summary_file": "exp3_router_summary.csv",
+    "router_summary": [
+      {
+        "strategy_name": "s1b_c11_ret_60d_lag_rank_70_30_depth5",
+        "n_folds": 11,
+        "router_on_folds": 2,
+        "canonical_mean_excess": -0.047166624064475624,
+        "router_mean_excess": -0.18169632009143324,
+        "router_minus_canonical_mean_excess": -0.13452969602695763,
+        "canonical_positive_excess_folds": 4,
+        "router_positive_excess_folds": 1
+      }
+    ]
+  }
+}

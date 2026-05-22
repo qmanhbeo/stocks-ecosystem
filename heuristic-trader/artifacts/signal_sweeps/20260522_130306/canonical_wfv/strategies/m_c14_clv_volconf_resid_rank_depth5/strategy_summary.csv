@@ -1,0 +1,2 @@
+strategy_name,n_folds,mean_total_return,median_total_return,mean_annualized_return,median_annualized_return,mean_max_drawdown,positive_folds,beating_benchmark_folds,total_trades,mean_benchmark_return,mean_excess_return,robustness_notes
+m_c14_clv_volconf_resid_rank_depth5,11,0.025677,-0.035793,0.026058,-0.035793,0.276203,5,4,2129,0.128347,-0.102670,FRAGILE: Inconsistent performance across folds

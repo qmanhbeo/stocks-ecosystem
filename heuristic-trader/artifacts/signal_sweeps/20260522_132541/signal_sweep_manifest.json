@@ -1,0 +1,46 @@
+{
+  "generated_at": "2026-05-22T13:25:59",
+  "n_strategies": 2,
+  "n_autopsy": 0,
+  "failure_years": [
+    2016,
+    2018,
+    2024
+  ],
+  "success_years": [
+    2017,
+    2020,
+    2021,
+    2022,
+    2025
+  ],
+  "thresholds": {
+    "min_positive_folds": 7,
+    "min_beating_benchmark_folds": 5,
+    "min_mean_excess_return": 0.0,
+    "max_mean_drawdown": 0.35,
+    "max_worst_fold_return": -0.3
+  },
+  "readiness_summary": {
+    "thresholds": {
+      "min_positive_folds": 7,
+      "min_beating_benchmark_folds": 5,
+      "min_mean_excess_return": 0.0,
+      "max_mean_drawdown": 0.35,
+      "max_worst_fold_return": -0.3
+    },
+    "n_strategies": 2,
+    "n_profit_ready": 0,
+    "top_profit_ready": null,
+    "top_candidate": "ctrl_blend_70_30_depth5"
+  },
+  "baseline_strategy": "ctrl_blend_70_30_depth5",
+  "baseline_failure_excess": null,
+  "baseline_failure_cash": null,
+  "baseline_failure_underfill": null,
+  "promotion_override_strategies": [],
+  "promotion_contract_csv": "/home/manh/stocks-ecosystem/data/features/recommendations/signal_promotion_contract_latest.csv",
+  "promotion_contract_enabled": true,
+  "promotion_contract_missing": false,
+  "promotion_feedback_csv": "/home/manh/stocks-ecosystem/data/features/recommendations/signal_promotion_feedback_latest.csv"
+}

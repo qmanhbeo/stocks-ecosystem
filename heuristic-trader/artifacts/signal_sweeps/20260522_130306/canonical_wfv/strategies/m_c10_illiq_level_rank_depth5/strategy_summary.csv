@@ -1,0 +1,2 @@
+strategy_name,n_folds,mean_total_return,median_total_return,mean_annualized_return,median_annualized_return,mean_max_drawdown,positive_folds,beating_benchmark_folds,total_trades,mean_benchmark_return,mean_excess_return,robustness_notes
+m_c10_illiq_level_rank_depth5,2,0.018706,0.018706,0.018786,0.018786,0.025976,2,0,8,0.305041,-0.286334,MODERATE: Positive in most folds; underperforms benchmark consistently

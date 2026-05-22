@@ -1,0 +1,4 @@
+strategy_name,n_folds,router_on_folds,canonical_mean_excess,router_mean_excess,router_minus_canonical_mean_excess,canonical_positive_excess_folds,router_positive_excess_folds
+m_c8_vol_zscore_5d_depth5,11,0,-0.054612198712292975,-0.1283472755969892,-0.07373507688469622,4,2
+m_c11_ret_60d_lag_rank_depth5,11,1,-0.04790399596321344,-0.1391807676871153,-0.09127677172390186,4,2
+s1b_c11_ret_60d_lag_rank_70_30_depth5,11,2,-0.047166624064475624,-0.18169632009143324,-0.13452969602695763,4,1

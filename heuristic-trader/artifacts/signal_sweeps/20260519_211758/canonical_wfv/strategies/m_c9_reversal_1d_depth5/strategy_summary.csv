@@ -1,0 +1,2 @@
+strategy_name,n_folds,mean_total_return,median_total_return,mean_annualized_return,median_annualized_return,mean_max_drawdown,positive_folds,beating_benchmark_folds,total_trades,mean_benchmark_return,mean_excess_return,robustness_notes
+m_c9_reversal_1d_depth5,11,-0.022021,-0.027266,-0.022542,-0.027595,0.299139,4,2,1890,0.128347,-0.150369,FRAGILE: Inconsistent performance across folds

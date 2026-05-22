@@ -1,0 +1,9 @@
+{
+  "generated_at": "2026-05-19T21:22:58",
+  "challenge_dir": "artifacts/challenge_sets/20260519_212157_fix",
+  "window": {
+    "start_date": "2025-01-01",
+    "end_date": "2025-12-31"
+  },
+  "winner_by_excess_return": "s1b_c11_ret_60d_lag_rank_70_30_depth5"
+}

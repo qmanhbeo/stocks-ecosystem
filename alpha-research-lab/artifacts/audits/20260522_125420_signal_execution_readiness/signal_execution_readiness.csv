@@ -1,0 +1,6 @@
+signal_id,source_path,source_col,derived,start_year,end_year,panel_rows,active_rows,coverage_pct,sparsity_profile,turnover_proxy_churn,turnover_proxy_profile,topk_fill_rate,tradability_overlap_pct,tradability_buyable_pct
+c16,/home/manh/stocks-ecosystem/data/features/xs_order_pressure_daily.parquet,order_volume_ratio_rank,,2015,2025,833942,817623,98.0431,dense,0.815799,high,1.0,100.0,98.9668
+c17,/home/manh/stocks-ecosystem/data/features/xs_order_pressure_daily.parquet,order_volume_ratio,,2015,2025,833942,817623,98.0431,dense,0.815799,high,1.0,100.0,98.9668
+c18,/home/manh/stocks-ecosystem/data/features/xs_order_pressure_daily.parquet,order_volume_ratio_rank,rank_delta_1d,2015,2025,833942,807096,96.7808,dense,0.998689,high,1.0,100.0,98.9794
+c8,/home/manh/stocks-ecosystem/data/features/xs_rl_signal_matrix.parquet,c8_vol_zscore_5d,,2015,2025,833942,833942,100.0,dense,0.380415,medium,1.0,100.0,98.9589
+s1,/home/manh/stocks-ecosystem/data/features/xs_barrier_vol_1d_hose_full.parquet,xs_proba,,2015,2025,833942,833942,100.0,dense,0.915544,high,1.0,100.0,98.9589

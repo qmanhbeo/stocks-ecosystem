@@ -1,0 +1,2 @@
+strategy_name,n_folds,router_on_folds,canonical_mean_excess,router_mean_excess,router_minus_canonical_mean_excess,canonical_positive_excess_folds,router_positive_excess_folds
+s1b_c11_ret_60d_lag_rank_70_30_depth5,11,2,-0.047166624064475624,-0.18169632009143324,-0.13452969602695763,4,1

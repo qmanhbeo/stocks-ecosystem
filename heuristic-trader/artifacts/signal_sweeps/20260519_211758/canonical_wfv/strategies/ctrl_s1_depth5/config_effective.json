@@ -1,0 +1,10 @@
+{
+  "candidate_scan_multiplier": 5,
+  "min_hold_days": 3,
+  "name": "ctrl_s1_depth5",
+  "rebalance_days": 10,
+  "signal_col": "s1_proba",
+  "signal_type": "s1_only",
+  "sizing_mode": "fixed_initial",
+  "top_k": 5
+}
