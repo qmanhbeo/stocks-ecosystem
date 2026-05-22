@@ -20,6 +20,7 @@ from pathlib import Path
 import pandas as pd
 
 import backtest as bt
+from runtime_helpers import benchmark_payload, load_backtest_caches
 from signal_factory import prepare_signal_df_from_config as _shared_prepare_signal_df_from_config
 from strategies import loader as strategy_loader
 
@@ -27,7 +28,6 @@ from strategies import loader as strategy_loader
 ARTIFACT_DIR = Path(__file__).parent / "artifacts"
 CACHE_DIR = Path(__file__).parent / "cache"
 
-import backtest as bt
 bt.CACHE_DIR = CACHE_DIR
 bt.PRICE_CACHE_FILE = CACHE_DIR / "price_cache.parquet"
 bt.LIQUID_CACHE_FILE = CACHE_DIR / "liquid_lookup.joblib"
@@ -42,28 +42,11 @@ def get_benchmark(start_date: str, end_date: str) -> dict | None:
     if BENCHMARK_CACHE is not None:
         return BENCHMARK_CACHE
 
-    import constraints as cn
-    try:
-        vn = cn.load_vnindex(start=start_date, end=end_date)
-        if len(vn) == 0:
-            return None
-
-        start_price = vn["open"].iloc[0]
-        end_price = vn["open"].iloc[-1]
-        shares = int(100_000_000 / start_price)
-        cost = shares * start_price * 1.001
-        initial_cash = 100_000_000 - cost
-        proceeds = shares * end_price * 0.9984
-        final_value = initial_cash + proceeds
-        total_return = (final_value / 100_000_000) - 1.0
-
-        BENCHMARK_CACHE = {
-            "total_return": total_return,
-            "name": "VNINDEX",
-        }
-        return BENCHMARK_CACHE
-    except Exception:
+    payload = benchmark_payload(start_date, end_date)
+    if payload is None:
         return None
+    BENCHMARK_CACHE = payload
+    return BENCHMARK_CACHE
 
 
 def create_argument_parser() -> argparse.ArgumentParser:
@@ -120,10 +103,7 @@ def create_argument_parser() -> argparse.ArgumentParser:
 
 def load_caches():
     """Load pre-computed caches."""
-    liquid_lookup = bt.load_liquid_lookup()
-    trad_lookup = bt.load_trad_lookup()
-    price_cache = bt.load_price_cache()
-    return liquid_lookup, trad_lookup, price_cache
+    return load_backtest_caches(bt)
 
 
 def run_strategy_for_test(

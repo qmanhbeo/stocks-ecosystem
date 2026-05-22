@@ -20,6 +20,7 @@ import numpy as np
 import pandas as pd
 
 import backtest as bt
+from runtime_helpers import compute_vnindex_total_return
 from risk_policy import RiskPolicy, derive_execution_status, evaluate_strategy_row
 from run_backtest import load_caches
 from signal_factory import prepare_signal_df_from_config
@@ -53,24 +54,7 @@ def _parse_years(value: str) -> list[int]:
 
 
 def _benchmark_total_return(start_date: str, end_date: str) -> float | None:
-    import constraints as cn
-
-    try:
-        vn = cn.load_vnindex(start=start_date, end=end_date)
-    except Exception:
-        return None
-
-    if vn is None or len(vn) == 0:
-        return None
-
-    start_open = float(vn["open"].iloc[0])
-    end_open = float(vn["open"].iloc[-1])
-    shares = int(100_000_000 / start_open)
-    cost = shares * start_open * 1.001
-    initial_cash = 100_000_000 - cost
-    proceeds = shares * end_open * 0.9984
-    final_value = initial_cash + proceeds
-    return float((final_value / 100_000_000) - 1.0)
+    return compute_vnindex_total_return(start_date, end_date)
 
 
 def _compute_curve_metrics(curve: pd.DataFrame, *, top_k: int) -> dict[str, float]:
