@@ -1,23 +1,55 @@
-"""Trading constraints for dumb trading agent - mirrors RL-trading-agent rules."""
+"""Trading constraints for heuristic-trader, wired to shared execution rules."""
+
+from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
+import sys
 from typing import TYPE_CHECKING
 
-import numpy as np
 import pandas as pd
 
 if TYPE_CHECKING:
     from datetime import datetime
 
 
+THIS_DIR = Path(__file__).resolve().parent
+WORKSPACE_ROOT = THIS_DIR.parent
+SHARED_MARKET_RULES_ROOT = WORKSPACE_ROOT / "shared-market-rules"
+SHARED_RECOMMENDATION_ROOT = WORKSPACE_ROOT / "shared-recommendation"
+if str(SHARED_MARKET_RULES_ROOT) not in sys.path:
+    sys.path.insert(0, str(SHARED_MARKET_RULES_ROOT))
+if str(SHARED_RECOMMENDATION_ROOT) not in sys.path:
+    sys.path.insert(0, str(SHARED_RECOMMENDATION_ROOT))
+
+from shared_market_rules.execution import (  # noqa: E402
+    DEFAULT_EXECUTION_POLICY,
+    DEFAULT_TRADABILITY_COLUMNS,
+    ExecutionPolicy,
+    TradabilityColumns,
+    can_execute_buy as _shared_can_execute_buy,
+    can_execute_sell as _shared_can_execute_sell,
+    can_schedule_sell as _shared_can_schedule_sell,
+    compute_price_limit_flags as _shared_compute_price_limit_flags,
+    compute_tradability_flags as _shared_compute_tradability_flags,
+    earliest_sell_step_after_entry as _shared_earliest_sell_step_after_entry,
+    required_holding_age_for_sell as _shared_required_holding_age_for_sell,
+)
+from shared_recommendation.artifacts import (  # noqa: E402
+    default_market_data_dir,
+    default_tradability_path,
+    shared_data_root,
+)
+
+
 DEFAULT_BUY_FEE_RATE = 0.001
 DEFAULT_SELL_FEE_RATE = 0.0015
 DEFAULT_CAPITAL_GAINS_TAX_RATE = 0.0001
 
-DATA_ROOT = "/home/manh/stocks-ecosystem/data"
-VNINDEX_DAILY = f"{DATA_ROOT}/stock/gia_lich_su_VNINDEX_1D.parquet"
-TRADABILITY_DAILY = f"{DATA_ROOT}/features/execution/tradability_daily.parquet"
+DATA_ROOT = str(shared_data_root())
+VNINDEX_DAILY = default_market_data_dir() / "gia_lich_su_VNINDEX_1D.parquet"
+TRADABILITY_DAILY = default_tradability_path()
 
 
 class DecisionTiming(str, Enum):
@@ -28,37 +60,21 @@ class EntryTiming(str, Enum):
     OPEN_T_PLUS_1 = "open_t_plus_1"
 
 
-@dataclass(frozen=True)
-class ExecutionPolicy:
-    decision_timing: str = "close_t"
-    entry_timing: str = "open_t_plus_1"
-    settlement_lag_days: int = 2
-    earliest_sell_fill_offset_from_entry_open: int = 3
-    price_limit_pct: float = 0.07
-    price_limit_tolerance: float = 0.001
-    buy_block_on_zero_volume: bool = True
-    sell_block_on_zero_volume: bool = True
-    buy_block_on_ceiling: bool = True
-    sell_block_on_floor: bool = True
-
-
-DEFAULT_EXECUTION_POLICY = ExecutionPolicy()
-
-
 def required_holding_age_for_sell(
     policy: ExecutionPolicy = DEFAULT_EXECUTION_POLICY,
     min_hold_days_override: int | None = None,
 ) -> int:
-    if min_hold_days_override is not None:
-        return max(min_hold_days_override, policy.earliest_sell_fill_offset_from_entry_open)
-    return policy.earliest_sell_fill_offset_from_entry_open
+    return _shared_required_holding_age_for_sell(
+        policy,
+        min_hold_days_override=min_hold_days_override,
+    )
 
 
 def earliest_sell_step_after_entry(
     entry_execution_step: int,
     policy: ExecutionPolicy = DEFAULT_EXECUTION_POLICY,
 ) -> int:
-    return entry_execution_step + policy.earliest_sell_fill_offset_from_entry_open
+    return _shared_earliest_sell_step_after_entry(entry_execution_step, policy)
 
 
 def can_schedule_sell(
@@ -66,14 +82,18 @@ def can_schedule_sell(
     policy: ExecutionPolicy = DEFAULT_EXECUTION_POLICY,
     min_hold_days_override: int | None = None,
 ) -> bool:
-    return holding_age >= required_holding_age_for_sell(policy, min_hold_days_override)
+    return _shared_can_schedule_sell(
+        holding_age,
+        policy,
+        min_hold_days_override=min_hold_days_override,
+    )
 
 
 def can_execute_buy(
     can_buy_next_open: bool,
     policy: ExecutionPolicy = DEFAULT_EXECUTION_POLICY,
 ) -> bool:
-    return bool(can_buy_next_open)
+    return _shared_can_execute_buy(can_buy_next_open, policy)
 
 
 def can_execute_sell(
@@ -82,8 +102,11 @@ def can_execute_sell(
     policy: ExecutionPolicy = DEFAULT_EXECUTION_POLICY,
     min_hold_days_override: int | None = None,
 ) -> bool:
-    return can_sell_next_open and can_schedule_sell(
-        holding_age, policy, min_hold_days_override
+    return _shared_can_execute_sell(
+        can_sell_next_open,
+        holding_age,
+        policy,
+        min_hold_days_override=min_hold_days_override,
     )
 
 
@@ -93,29 +116,12 @@ def compute_price_limit_flags(
     prev_close_col: str | None = None,
     policy: ExecutionPolicy = DEFAULT_EXECUTION_POLICY,
 ) -> pd.DataFrame:
-    close = pd.to_numeric(frame[close_col], errors="coerce")
-    if prev_close_col is not None:
-        prev_close = pd.to_numeric(frame[prev_close_col], errors="coerce")
-    else:
-        prev_close = close.shift(1)
-
-    safe_prev_close = prev_close.where(prev_close != 0.0)
-    ret = (close / safe_prev_close) - 1.0
-    limit_pct = policy.price_limit_pct
-    tolerance = policy.price_limit_tolerance
-    is_ceiling = ret.between(
-        limit_pct - tolerance, limit_pct + tolerance, inclusive="both"
-    ).fillna(False)
-    is_floor = ret.between(
-        -(limit_pct + tolerance), -(limit_pct - tolerance), inclusive="both"
-    ).fillna(False)
-
-    return pd.DataFrame({
-        "prev_close": prev_close,
-        "return_from_prev_close": ret,
-        "is_ceiling": is_ceiling.astype(bool),
-        "is_floor": is_floor.astype(bool),
-    }, index=frame.index)
+    return _shared_compute_price_limit_flags(
+        frame,
+        close_col=close_col,
+        prev_close_col=prev_close_col,
+        policy=policy,
+    )
 
 
 def compute_tradability_flags(
@@ -124,49 +130,18 @@ def compute_tradability_flags(
     volume_col: str = "volume",
     policy: ExecutionPolicy = DEFAULT_EXECUTION_POLICY,
 ) -> pd.DataFrame:
-    price_flags = compute_price_limit_flags(frame, close_col=close_col, policy=policy)
-    volume = pd.to_numeric(frame[volume_col], errors="coerce").fillna(0.0)
-    has_volume = volume > 0.0
-
-    can_buy = pd.Series(True, index=frame.index, dtype=bool)
-    can_sell = pd.Series(True, index=frame.index, dtype=bool)
-
-    if policy.buy_block_on_zero_volume:
-        can_buy &= has_volume
-    if policy.sell_block_on_zero_volume:
-        can_sell &= has_volume
-    if policy.buy_block_on_ceiling:
-        can_buy &= ~price_flags["is_ceiling"]
-    if policy.sell_block_on_floor:
-        can_sell &= ~price_flags["is_floor"]
-
-    can_buy_next_open = can_buy.shift(1).fillna(False)
-    can_sell_next_open = can_sell.shift(1).fillna(False)
-
-    return pd.DataFrame({
-        "has_volume": has_volume.astype(bool),
-        "is_ceiling": price_flags["is_ceiling"],
-        "is_floor": price_flags["is_floor"],
-        "can_buy_next_open": can_buy_next_open.astype(bool),
-        "can_sell_next_open": can_sell_next_open.astype(bool),
-    }, index=frame.index)
+    return _shared_compute_tradability_flags(
+        frame,
+        close_col=close_col,
+        volume_col=volume_col,
+        policy=policy,
+        columns=DEFAULT_TRADABILITY_COLUMNS,
+    )
 
 
 class PositionSide(str, Enum):
     LONG = "long"
     CASH = "cash"
-
-
-@dataclass(frozen=True)
-class TradabilityColumns:
-    has_volume: str = "has_volume"
-    is_ceiling: str = "is_ceiling"
-    is_floor: str = "is_floor"
-    can_buy_next_open: str = "can_buy_next_open"
-    can_sell_next_open: str = "can_sell_next_open"
-
-
-DEFAULT_TRADABILITY_COLUMNS = TradabilityColumns()
 
 
 @dataclass
@@ -184,7 +159,7 @@ class Holding:
 @dataclass
 class Portfolio:
     cash: float = 1_000_000_000.0
-    holdings: dict[str, Holding] = None
+    holdings: dict[str, Holding] | None = None
 
     def __post_init__(self):
         if self.holdings is None:
@@ -195,23 +170,12 @@ class Portfolio:
             return False
         return tradability.get("can_buy_next_open", True)
 
-    def can_sell(
-        self, ticker: str, holding_age: int, tradability: dict
-    ) -> bool:
+    def can_sell(self, ticker: str, holding_age: int, tradability: dict) -> bool:
         if ticker not in self.holdings:
             return False
-        return can_execute_sell(
-            tradability.get("can_sell_next_open", True),
-            holding_age,
-        )
+        return can_execute_sell(tradability.get("can_sell_next_open", True), holding_age)
 
-    def buy(
-        self,
-        ticker: str,
-        time: pd.Timestamp,
-        shares: int,
-        price: float,
-    ) -> None:
+    def buy(self, ticker: str, time: pd.Timestamp, shares: int, price: float) -> None:
         cost = shares * price
         if self.cash >= cost:
             self.cash -= cost
@@ -272,9 +236,9 @@ def compute_portfolio_return(
     capital_gains_tax_rate: float = DEFAULT_CAPITAL_GAINS_TAX_RATE,
 ) -> float:
     fees = (
-        portfolio_value_before * buy_turnover * buy_fee_rate +
-        portfolio_value_before * sell_turnover * sell_fee_rate +
-        max(0, portfolio_value_after - portfolio_value_before) * capital_gains_tax_rate
+        portfolio_value_before * buy_turnover * buy_fee_rate
+        + portfolio_value_before * sell_turnover * sell_fee_rate
+        + max(0, portfolio_value_after - portfolio_value_before) * capital_gains_tax_rate
     )
     return (portfolio_value_after - portfolio_value_before - fees) / portfolio_value_before
 

@@ -1,15 +1,32 @@
 import argparse
+from pathlib import Path
+import sys
+
 import pandas as pd
 
-DATA_ROOT = "/home/manh/stocks-ecosystem/data"
+THIS_DIR = Path(__file__).resolve().parent
+WORKSPACE_ROOT = THIS_DIR.parent
+SHARED_RECOMMENDATION_ROOT = WORKSPACE_ROOT / "shared-recommendation"
+if str(SHARED_RECOMMENDATION_ROOT) not in sys.path:
+    sys.path.insert(0, str(SHARED_RECOMMENDATION_ROOT))
+
+from shared_recommendation.artifacts import (  # noqa: E402
+    default_activation_meta_path,
+    default_activation_state_path,
+    default_lab_signal_matrix_path,
+    default_order_pressure_path,
+    shared_data_root,
+)
+
+DATA_ROOT = str(shared_data_root())
 MAX_RESEARCH_YEAR = 2025
 
-RL_SIGNAL_MATRIX = f"{DATA_ROOT}/features/xs_rl_signal_matrix.parquet"
-ACTIVATION_STATE = f"{DATA_ROOT}/features/activation_state_daily.parquet"
-ACTIVATION_META = f"{DATA_ROOT}/features/activation_meta_daily.parquet"
-ORDER_PRESSURE = f"{DATA_ROOT}/features/xs_order_pressure_daily.parquet"
-INSIDER_FEATURES = f"{DATA_ROOT}/features/xs_insider_quality_features.parquet"
-EVENT_SURFACE = f"{DATA_ROOT}/features/event_surface_daily.parquet"
+RL_SIGNAL_MATRIX = default_lab_signal_matrix_path()
+ACTIVATION_STATE = default_activation_state_path()
+ACTIVATION_META = default_activation_meta_path()
+ORDER_PRESSURE = default_order_pressure_path()
+INSIDER_FEATURES = shared_data_root() / "features/xs_insider_quality_features.parquet"
+EVENT_SURFACE = shared_data_root() / "features/event_surface_daily.parquet"
 
 SIGNAL_REGISTRY = {
     "s1_proba": {
@@ -386,12 +403,10 @@ def load_stock_daily(
     end: str | None = None,
     allow_2026: bool = False,
 ) -> pd.DataFrame:
-    import glob
-    pattern = f"{DATA_ROOT}/stock/gia_lich_su_{ticker}_1D.parquet"
-    matches = glob.glob(pattern)
-    if not matches:
+    stock_path = shared_data_root() / "stock" / f"gia_lich_su_{ticker}_1D.parquet"
+    if not stock_path.exists():
         raise FileNotFoundError(f"No data for {ticker}")
-    df = pd.read_parquet(matches[0])
+    df = pd.read_parquet(stock_path)
     df = df.sort_values("time").reset_index(drop=True)
     df = _apply_lockbox_filter(df, start, end, allow_2026)
     return df
