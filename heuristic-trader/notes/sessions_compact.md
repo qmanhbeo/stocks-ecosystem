@@ -6,20 +6,25 @@
 
 ## Sessions Index
 
+- `session_00026.md` — Session 26: Lab-to-trader promotion contract bridge (MVP)
+- `session_00025.md` — Session 25: Strict gate fail-fast enforcement (no eligible challenger)
+- `session_00024.md` — Session 24: Profit-ready gated candidate emerged (C8 gate family)
+- `session_00023.md` — Session 23: Tail-first risk gate v1 implementation + tests
+- `session_00022.md` — Session 22: Signal vs Translation disambiguation (oracle, translation sweep, router)
 - `session_00021.md` — Session 21: Reallocate fallback verdict (NEGATIVE/DEPRIORITIZED) + artifact cleanup
 - `session_00020.md` — Session 20: Closing Memory Hygiene + Handoff (today)
 - `session_00019.md` — Session 19: S1 Depth5 Full 11-Fold Validation (VALIDATED_CANDIDATE with risk caveat)
 - `session_00015.md` — Session 15: Depth Frontier Walk-Forward VALID (s1_depth5 sweet spot found)
 - `session_00014.md` — Session 14: Walk-Forward Execution Ablation VALID (canonical, parity passed)
 - `session_00013.md` — Session 13: Execution Ablation CORRECTED (superseded by S00014)
-- `session_00012.md` — Session 12: Execution Ablation INVALID (baseline mismatch, superseded)
+- `session_00013.md` — Session 12: Execution Ablation INVALID (baseline mismatch, superseded; documented in corrected follow-up log)
 - `session_00011.md` — Session 11: Cash Mechanics V2 Accounting (multi-factor confirmed)
 - `session_00010.md` — Session 10: Cash Mechanics CORRECTED (superseded by V2)
 - `session_00009.md` — Session 9: Cash Mechanics Autopsy (superseded)
 - `session_00008.md` — Session 8: Signal wiring - C17/C18 integration
 - `session_00007.md` — Session 7: Diagnostics + Ticker-Level PnL Attribution
 - `session_00006.md` — Session 6: Lockbox + CLI + Artifact output (Phase 1)
-- `session_00005.md` — Session 5: Pre-computed lookup optimization
+- `session_00005.py` — Session 5: Pre-computed lookup optimization
 - `session_00004.md` / `session_00004_fixed.md` — Session 4: Grid search
 - `session_00003.md` — Session 3: Backtest engine + constraint-compliant baselines
 - `session_00002.md` — Session 2: Trading constraints setup
@@ -28,14 +33,67 @@
 
 ---
 
-## S00022 - 2026-05-13: Canonical 8-strategy shortlist recorded (compact-only update)
+## S00026 - 2026-05-22: Lab-to-trader promotion contract bridge (MVP)
 
-- Decision source switched to canonical patched WFV under `artifacts/canonical_wfv/`.
-- Current clean active candidate: `blend_70_30_top5`.
-- `blend_70_30_top5_depth5` kept as secondary comparator.
-- `s1_top5_rebal10_depth5` demoted to comparator/crash-test path.
-- `reallocate_selected` remains negative/deprioritized.
-- Follow-up opened: investigate why `c16_only_top5` and `c17_raw_top5_rebal10` are identical in canonical metrics/trades.
+[link: notes/session_00026.md]
+
+- Added lab-side promotion contract publish in `audit_signal_execution_readiness.py`.
+- Added heuristic strict contract consumption in `signal_sweep.py` with optional required-mode.
+- Added feedback writeback (`signal_promotion_feedback.csv`) to shared recommendations path.
+- Verified via unit tests, py_compile, contract publish run, and strict sweep run.
+
+---
+
+## S00025 - 2026-05-22: Strict gate fail-fast enforcement
+
+[link: notes/session_00025.md]
+
+- Ran canonical signal sweep + challenge selection under strict policy.
+- Sweep outcome: `KILL=28/28`, strict-ready candidates `0`.
+- Found a workflow flaw: previous selector could still pick fallback challenger even when no strict candidate existed.
+- Fixed selector/shadow controls:
+  - strict mode default (`PROMOTE_CANDIDATE` only),
+  - emitted challenge metadata with `ready_for_shadow=false` when no strict candidate,
+  - shadow phase now hard-stops on non-ready challenge sets.
+
+---
+
+## S00022 - 2026-05-19: Signal vs Translation disambiguation
+
+[link: notes/session_00022.md]
+
+- Ran 3-part disambiguation pack:
+  - oracle-execution ablation (`exp1_*`)
+  - translation parameter sweep (`exp2_*`)
+  - train-only regime router (`exp3_*`)
+- Source artifact pack:
+  - `artifacts/signal_translation_disambiguation/20260519_213127/`
+- Result:
+  - Translation/execution is a real bottleneck (oracle and tuned variants improved strongly).
+  - Risk/regime fragility remains (severe bad-year tails still present).
+  - Simple yearly-state router was negative (deprioritized).
+
+---
+
+## S00023 - 2026-05-19: Tail-first risk gate v1 implementation
+
+[link: notes/session_00023.md]
+
+- Implemented strategy-level multi-regime exposure gate in core backtest path.
+- Added extreme-only kill-switch with cooldown and state diagnostics.
+- Propagated gate config across run/backtest, WFV, profit pipeline, and signal sweep paths.
+- Added new tests for gate logic + integration; targeted suite passed.
+
+---
+
+## S00024 - 2026-05-19: Profit-ready gated candidate emerged
+
+[link: notes/session_00024.md]
+
+- Ran gate sweep on translation-best configs and found first profit-ready rows under explicit risk policy.
+- Winning family: `m_c8_vol_zscore_5d` with tail-first gate.
+- Refined best variant improved mean excess to about `+4.27%` with `8/11` positive folds and `6/11` benchmark-beating folds.
+- Promoted strategy entries added for `f30` and refined `f35` floors.
 
 ---
 
@@ -55,7 +113,7 @@
 
 ## S00012 - 2026-05-11: Signal wiring pass - C17/C18 integration
 
-[link: notes/session_00012.md]
+[link: notes/session_00008.md]
 
 - Wired C17 raw (`order_volume_ratio`) from `xs_order_pressure_daily.parquet`
 - Wired C18 delta (`order_volume_ratio_rank_delta`) - derived signal with fail-closed

@@ -26,7 +26,7 @@ import pandas as pd
 import numpy as np
 
 import backtest as bt
-import signals as s
+from signal_factory import prepare_signal_df_from_config as _shared_prepare_signal_df_from_config
 from strategies import loader as strategy_loader
 
 
@@ -76,6 +76,12 @@ CANONICAL_USED_CONFIG_KEYS = [
     "candidate_scan_multiplier",
     "sizing_mode",
     "fallback_mode",
+    "gate_enabled",
+    "gate_profile",
+    "exposure_floor",
+    "exposure_ceiling",
+    "kill_switch_thresholds",
+    "cooldown_rebalances",
     "active_rank_threshold",
     "low_breadth_percentile",
     "c17_boost_strength",
@@ -224,96 +230,12 @@ def prepare_signal_df_from_config(
     allow_2026: bool = False,
 ) -> pd.DataFrame:
     """Prepare signal DataFrame from strategy config."""
-    signal_type = config["signal_type"]
-    s1 = s.load_rl_signal_matrix(start=start_date, end=end_date, allow_2026=allow_2026)
-    active_rank_threshold = float(config.get("active_rank_threshold", 0.2))
-    low_breadth_percentile = float(config.get("low_breadth_percentile", 0.25))
-
-    if signal_type == "s1_only":
-        return s1[['time', 'ticker', 's1_proba']].copy()
-    elif signal_type == "c16_only":
-        c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
-        return c16[['time', 'ticker', 'order_volume_ratio_rank']].copy()
-    elif signal_type == "c17_only":
-        c17 = s.load_order_pressure_raw(start=start_date, end=end_date, allow_2026=allow_2026)
-        return c17[['time', 'ticker', 'order_volume_ratio']].copy()
-    elif signal_type == "c17_active_boost":
-        c17 = s.load_order_pressure_c17_active_boost(
-            start=start_date,
-            end=end_date,
-            allow_2026=allow_2026,
-            active_rank_threshold=active_rank_threshold,
-            boost_strength=float(config.get("c17_boost_strength", 0.35)),
-            delta_weight=float(config.get("c17_delta_weight", 0.20)),
-        )
-        return c17[['time', 'ticker', 'c17_active_boost']].copy()
-    elif signal_type == "c18_only":
-        c18 = s.load_order_pressure_delta(start=start_date, end=end_date, allow_2026=allow_2026)
-        return c18[['time', 'ticker', 'order_volume_ratio_rank_delta']].copy()
-    elif signal_type == "s1_low_breadth":
-        breadth = s.load_low_breadth_regime(
-            start=start_date,
-            end=end_date,
-            allow_2026=allow_2026,
-            active_rank_threshold=active_rank_threshold,
-            low_breadth_percentile=low_breadth_percentile,
-        )
-        df = s1[['time', 'ticker', 's1_proba']].merge(
-            breadth[['time', 'is_low_breadth']],
-            on='time',
-            how='inner',
-        )
-        return df[df['is_low_breadth'] == 1][['time', 'ticker', 's1_proba']].copy()
-    elif signal_type == "s1_active_low_breadth":
-        c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
-        breadth = s.load_low_breadth_regime(
-            start=start_date,
-            end=end_date,
-            allow_2026=allow_2026,
-            active_rank_threshold=active_rank_threshold,
-            low_breadth_percentile=low_breadth_percentile,
-        )
-        df = s1[['time', 'ticker', 's1_proba']].merge(
-            c16[['time', 'ticker', 'order_volume_ratio_rank']],
-            on=['time', 'ticker'],
-            how='inner',
-        ).merge(
-            breadth[['time', 'is_low_breadth']],
-            on='time',
-            how='inner',
-        )
-        mask = (df['order_volume_ratio_rank'] < active_rank_threshold) & (df['is_low_breadth'] == 1)
-        return df[mask][['time', 'ticker', 's1_proba']].copy()
-    elif signal_type in ("blend_70_30", "blend_50_50"):
-        c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
-        df = s1[['time', 'ticker', 's1_proba']].merge(
-            c16[['time', 'ticker', 'order_volume_ratio_rank']],
-            on=['time', 'ticker']
-        )
-        if signal_type == "blend_70_30":
-            df['blend'] = df['s1_proba'] * 0.7 + df['order_volume_ratio_rank'] * 0.3
-        else:
-            df['blend'] = df['s1_proba'] * 0.5 + df['order_volume_ratio_rank'] * 0.5
-        return df[['time', 'ticker', 'blend']]
-    elif signal_type == "blend_70_30_low_breadth":
-        c16 = s.load_order_pressure(start=start_date, end=end_date, allow_2026=allow_2026)
-        breadth = s.load_low_breadth_regime(
-            start=start_date,
-            end=end_date,
-            allow_2026=allow_2026,
-            active_rank_threshold=active_rank_threshold,
-            low_breadth_percentile=low_breadth_percentile,
-        )
-        df = s1[['time', 'ticker', 's1_proba']].merge(
-            c16[['time', 'ticker', 'order_volume_ratio_rank']],
-            on=['time', 'ticker'],
-            how='inner',
-        )
-        df['blend'] = df['s1_proba'] * 0.7 + df['order_volume_ratio_rank'] * 0.3
-        df = df.merge(breadth[['time', 'is_low_breadth']], on='time', how='inner')
-        return df[df['is_low_breadth'] == 1][['time', 'ticker', 'blend']].copy()
-    else:
-        raise ValueError(f"Unknown signal_type: {signal_type}")
+    return _shared_prepare_signal_df_from_config(
+        config=config,
+        start_date=start_date,
+        end_date=end_date,
+        allow_2026=allow_2026,
+    )
 
 
 def run_strategy_on_fold(
@@ -358,6 +280,12 @@ def run_strategy_on_fold(
         candidate_scan_multiplier=config.get("candidate_scan_multiplier", 3),
         sizing_mode=config.get("sizing_mode", "fixed_initial"),
         fallback_mode=config.get("fallback_mode", "none"),
+        gate_enabled=bool(config.get("gate_enabled", False)),
+        gate_profile=str(config.get("gate_profile", "off")),
+        exposure_floor=float(config.get("exposure_floor", 0.20)),
+        exposure_ceiling=float(config.get("exposure_ceiling", 1.00)),
+        kill_switch_thresholds=config.get("kill_switch_thresholds"),
+        cooldown_rebalances=int(config.get("cooldown_rebalances", 2)),
     )
     elapsed = time.time() - start_time
 
@@ -368,6 +296,7 @@ def run_strategy_on_fold(
             "selection_log": "selection_log.csv",
             "filtered_breakdown": "filtered_breakdown.csv",
             "fallback_log": "fallback_log.csv",
+            "gate_log": "gate_log.csv",
         }
         for key, filename in diagnostics_file_map.items():
             df = result.diagnostics.get(key)
@@ -382,6 +311,11 @@ def run_strategy_on_fold(
             "candidate_scan_multiplier": config.get("candidate_scan_multiplier", 3),
             "sizing_mode": config.get("sizing_mode", "fixed_initial"),
             "fallback_mode": config.get("fallback_mode", "none"),
+            "gate_enabled": bool(config.get("gate_enabled", False)),
+            "gate_profile": str(config.get("gate_profile", "off")),
+            "exposure_floor": float(config.get("exposure_floor", 0.20)),
+            "exposure_ceiling": float(config.get("exposure_ceiling", 1.00)),
+            "cooldown_rebalances": int(config.get("cooldown_rebalances", 2)),
         }
         with open(diagnostics_output_dir / "metadata.json", "w") as f:
             json.dump(metadata, f, indent=2)

@@ -4,6 +4,24 @@
 
 Heuristic-trader is a baseline trading system that tests executable trading rules and models based on profit/PnL, not just IC (Information Coefficient). It serves as the bridge between alpha-research-lab (signal discovery) and RL-trading-agent (RL policy learning).
 
+## Promotion Contract (Lab -> Heuristic)
+
+Shared status vocabulary across lab and heuristic-trader:
+- `RESEARCH_CANDIDATE`
+- `LAB_PROMOTED_PENDING_EXECUTION`
+- `EXECUTION_VALIDATED`
+- `FINAL_PROMOTED`
+- `OVERRIDE_PROMOTED`
+
+Contract:
+- alpha-research-lab can promote up to `LAB_PROMOTED_PENDING_EXECUTION` using
+  signal-quality + light execution-readiness evidence.
+- heuristic-trader owns execution validation (`risk_policy.py` and canonical
+  WFV/profit artifacts).
+- `FINAL_PROMOTED` requires explicit post-validation decision logging.
+- `OVERRIDE_PROMOTED` is allowed only with an explicit note justification
+  (reason, owner, date, rollback trigger, review date).
+
 ## Current Architecture
 
 ```
@@ -84,6 +102,14 @@ Strategies are defined in `strategies/strategies.json`:
 
 Available signal types: `s1_only`, `c16_only`, `c17_only`, `c17_active_boost`, `c18_only`, `s1_low_breadth`, `s1_active_low_breadth`, `blend_70_30`, `blend_50_50`, `blend_70_30_low_breadth`
 
+Optional risk-gate fields (tail-first exposure scaling):
+- `gate_enabled` (bool)
+- `gate_profile` (string, e.g. `tail_first_v1`)
+- `exposure_floor` (float, e.g. `0.20`)
+- `exposure_ceiling` (float, e.g. `1.00`)
+- `kill_switch_thresholds` (object with optional keys: `drawdown`, `volatility`, `underfill_ratio`, `reject_ratio`)
+- `cooldown_rebalances` (int)
+
 ## CLI Entrypoint
 
 ### Single strategy:
@@ -148,6 +174,134 @@ artifacts/canonical_wfv/
 ```
 
 Canonical files are CSV/JSON only, strategy-separated, overwrite-in-place, and exclude volatile fields like timestamps and `elapsed_seconds`.
+
+## Profit Decision Pipeline
+
+Use a single canonical command to decide whether a strategy is profit-ready and to diagnose execution conversion failures:
+
+```bash
+python profit_pipeline.py
+```
+
+This writes `artifacts/profit_pipeline/<timestamp>/` with:
+- `profit_readiness.csv`: strategy gate results from canonical WFV
+- `profit_readiness_summary.json`: top candidate + profit-ready count
+- `autopsy_yearly.csv`: year-level execution/PnL diagnostics for the selected strategy
+- `autopsy_cohort_summary.csv`: failure-vs-success cohort means
+- `autopsy_failure_minus_success.csv`: failure minus success delta table
+- `report.md`: compact operator summary
+
+`profit_readiness.csv` now includes machine-checkable execution status fields:
+- `execution_validation_status`
+- `execution_status_warning`
+
+Defaults follow current live-state priority:
+- failure years: `2016,2018,2024`
+- success years: `2017,2020,2021,2022,2025`
+- strategy: `blend_70_30_top5`
+
+## Canonical Signal Sweep
+
+For fixed-scope new-signal testing with decision labels:
+
+```bash
+python signal_sweep.py
+```
+
+Strict upstream alignment (recommended):
+```bash
+python signal_sweep.py --require-promotion-contract
+```
+This reads `data/features/recommendations/signal_promotion_contract_latest.csv` and blocks promotion when upstream `lab_promotion_status` is below `LAB_PROMOTED_PENDING_EXECUTION`.
+
+This writes `artifacts/signal_sweeps/<timestamp>/` with:
+- `canonical_wfv/` (strategy-separated fold outputs)
+- `profit_readiness.csv`
+- `autopsy_summary_by_strategy.csv` (unless skipped)
+- `signal_sweep_decisions.csv` (`PROMOTE_CANDIDATE` / `RESEARCH_ONLY` / `KILL`)
+- `signal_sweep_manifest.json`
+- `signal_promotion_feedback.csv`
+
+`signal_sweep_decisions.csv` also carries:
+- `promotion_status`
+- `promotion_status_warning`
+
+Manual override (hybrid enforcement):
+```bash
+python signal_sweep.py --promotion-override-strategies strategy_a,strategy_b
+```
+This marks those rows as `OVERRIDE_PROMOTED`; a note justification is mandatory.
+
+The sweep set is predeclared: controls + standalone matrix signals (`c4..c14`) + fixed S1 blends.
+
+## Challenge Set Freeze
+
+After a sweep run, freeze one baseline + one challenger:
+
+```bash
+python select_challenge_set.py
+```
+
+Default behavior is strict:
+- only `PROMOTE_CANDIDATE` rows are eligible as challenger
+- if none exist, command fails after writing an auditable challenge-set record with `ready_for_shadow=false`
+
+Relaxed fallback modes (for diagnostics only):
+```bash
+python select_challenge_set.py --selection-mode research
+python select_challenge_set.py --selection-mode any
+```
+
+Outputs:
+- `artifacts/challenge_sets/<timestamp>/challenge_set.json`
+- `artifacts/challenge_sets/<timestamp>/challenge_strategies.csv`
+
+## Shadow Phase (No Retuning)
+
+Run the frozen baseline/challenger over a fixed window:
+
+```bash
+python run_shadow_phase.py --start-date 2025-01-01 --end-date 2025-12-31
+```
+
+`run_shadow_phase.py` fails fast when challenge metadata has `ready_for_shadow=false`.
+
+Outputs:
+- `artifacts/shadow_phase/<timestamp>/shadow_results.csv`
+- `artifacts/shadow_phase/<timestamp>/shadow_summary.json`
+
+## Signal vs Translation Disambiguation
+
+Use this when you need to separate:
+- weak signal edge vs weak execution translation
+- parameterization effects within the same signal family
+- simplistic regime-gating benefit/harm
+
+```bash
+python run_signal_vs_translation_disambiguation.py --top-n 3
+```
+
+Outputs:
+- `artifacts/signal_translation_disambiguation/<timestamp>/exp1_oracle_summary.csv`
+- `artifacts/signal_translation_disambiguation/<timestamp>/exp2_translation_summary.csv`
+- `artifacts/signal_translation_disambiguation/<timestamp>/exp3_router_summary.csv`
+- `artifacts/signal_translation_disambiguation/<timestamp>/summary.json`
+
+## Gate Sweep
+
+For tail-first gate parameter search on candidate strategies:
+
+```bash
+python run_gate_sweep.py
+```
+
+Optional: override with translation-best configs from disambiguation:
+
+```bash
+python run_gate_sweep.py \
+  --strategies s1b_c11_ret_60d_lag_rank_70_30_depth5,m_c11_ret_60d_lag_rank_depth5,m_c8_vol_zscore_5d_depth5 \
+  --translation-best-csv artifacts/signal_translation_disambiguation/<run>/exp2_translation_best_per_strategy.csv
+```
 
 ### metrics.json schema:
 ```json

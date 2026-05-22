@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 import constraints as c
+from risk_gate import GateContext, build_gate_config, evaluate_gate
 
 _DEFAULT_CACHE_DIR = Path(__file__).parent / "cache"
 CACHE_DIR = _DEFAULT_CACHE_DIR
@@ -145,6 +146,30 @@ def check_can_buy(tradability_df: pd.DataFrame | None, ticker: str, date) -> boo
         return True
 
 
+def _build_benchmark_context(start_date, end_date) -> dict[pd.Timestamp, dict[str, float]]:
+    """Build VNINDEX rolling-momentum context keyed by normalized date."""
+    try:
+        vn = c.load_vnindex(start=str(pd.Timestamp(start_date).date()), end=str(pd.Timestamp(end_date).date()))
+    except Exception:
+        return {}
+    if vn is None or len(vn) == 0:
+        return {}
+    df = vn.copy()
+    df["time"] = pd.to_datetime(df["time"], errors="coerce").dt.normalize()
+    df = df.dropna(subset=["time"]).sort_values("time")
+    if len(df) == 0:
+        return {}
+    df["mom_20"] = df["open"].pct_change(20)
+    df["mom_60"] = df["open"].pct_change(60)
+    out: dict[pd.Timestamp, dict[str, float]] = {}
+    for _, row in df.iterrows():
+        out[pd.Timestamp(row["time"]).normalize()] = {
+            "mom_20": float(row["mom_20"]) if pd.notna(row["mom_20"]) else float("nan"),
+            "mom_60": float(row["mom_60"]) if pd.notna(row["mom_60"]) else float("nan"),
+        }
+    return out
+
+
 # === Main backtest function ===
 
 def simulate_topk_constraint_compliant(
@@ -166,6 +191,12 @@ def simulate_topk_constraint_compliant(
     candidate_scan_multiplier: int = 3,
     sizing_mode: str = "fixed_initial",
     fallback_mode: str = "none",
+    gate_enabled: bool = False,
+    gate_profile: str = "off",
+    exposure_floor: float = 0.20,
+    exposure_ceiling: float = 1.00,
+    kill_switch_thresholds: dict | None = None,
+    cooldown_rebalances: int = 2,
 ) -> BacktestResult:
     """Constraint-compliant top-K by signal backtest."""
 
@@ -190,6 +221,27 @@ def simulate_topk_constraint_compliant(
     diagnostics_selections = []
     diagnostics_filtered = []
     diagnostics_fallback = []
+    diagnostics_gate = []
+
+    gate_cfg = build_gate_config(
+        gate_enabled=gate_enabled,
+        gate_profile=gate_profile,
+        exposure_floor=exposure_floor,
+        exposure_ceiling=exposure_ceiling,
+        cooldown_rebalances=cooldown_rebalances,
+        kill_switch_thresholds=kill_switch_thresholds,
+    )
+    cooldown_remaining = 0
+    current_gate_state = "disabled" if not gate_cfg.enabled else "normal"
+    current_exposure_scale = 1.0
+    current_kill_switch_active = False
+    current_gate_reason = "gate_disabled" if not gate_cfg.enabled else "init"
+    current_benchmark_state = "unknown"
+    benchmark_context = (
+        _build_benchmark_context(dates[0], dates[-1])
+        if gate_cfg.enabled and len(dates) > 0
+        else {}
+    )
 
     for i, date in enumerate(dates):
         day_df = signal_df[signal_df["time"] == date]
@@ -369,6 +421,73 @@ def simulate_topk_constraint_compliant(
             else:
                 target_position_value = default_target_position_value
 
+            n_candidates_scan = top_k * candidate_scan_multiplier
+            reject_ratio = (
+                float(n_filtered_liq + n_filtered_trad) / float(n_candidates_scan)
+                if n_candidates_scan > 0
+                else 0.0
+            )
+            underfill_ratio = (
+                float(top_k - selected_count) / float(top_k)
+                if top_k > 0
+                else 0.0
+            )
+            if len(equity_curve) >= 21:
+                hist = pd.DataFrame(equity_curve)
+                recent = hist["portfolio_value"].pct_change().dropna().tail(20)
+                rolling_vol_20 = (
+                    float(recent.std() * np.sqrt(252))
+                    if len(recent) > 1 and recent.std() > 0
+                    else None
+                )
+                current_dd = float(hist["portfolio_value"].iloc[-1] / hist["portfolio_value"].cummax().iloc[-1] - 1.0)
+                drawdown_abs = abs(min(0.0, current_dd))
+            else:
+                rolling_vol_20 = None
+                drawdown_abs = 0.0
+
+            bench = benchmark_context.get(pd.Timestamp(prev_date).normalize(), {})
+            mom_20 = None if pd.isna(bench.get("mom_20", np.nan)) else float(bench.get("mom_20"))
+            mom_60 = None if pd.isna(bench.get("mom_60", np.nan)) else float(bench.get("mom_60"))
+
+            gate_decision = evaluate_gate(
+                context=GateContext(
+                    rolling_vol_20=rolling_vol_20,
+                    drawdown_abs=drawdown_abs,
+                    underfill_ratio=underfill_ratio,
+                    reject_ratio=reject_ratio,
+                    benchmark_mom_20=mom_20,
+                    benchmark_mom_60=mom_60,
+                ),
+                config=gate_cfg,
+                cooldown_remaining=cooldown_remaining,
+            )
+            cooldown_remaining = gate_decision.cooldown_remaining_next
+            current_gate_state = gate_decision.gate_state
+            current_exposure_scale = gate_decision.exposure_scale
+            current_kill_switch_active = gate_decision.kill_switch_active
+            current_gate_reason = gate_decision.reason
+            current_benchmark_state = gate_decision.benchmark_state
+            target_position_value *= current_exposure_scale
+
+            if collect_diagnostics:
+                diagnostics_gate.append(
+                    {
+                        "rebalance_date": prev_date,
+                        "gate_state": current_gate_state,
+                        "exposure_scale": current_exposure_scale,
+                        "kill_switch_active": current_kill_switch_active,
+                        "gate_reason": current_gate_reason,
+                        "cooldown_remaining": cooldown_remaining,
+                        "benchmark_state": current_benchmark_state,
+                        "rolling_vol_20": rolling_vol_20,
+                        "drawdown_abs": drawdown_abs,
+                        "underfill_ratio": underfill_ratio,
+                        "reject_ratio": reject_ratio,
+                        "selected_count": selected_count,
+                    }
+                )
+
             if collect_diagnostics:
                 diagnostics_fallback.append({
                     "rebalance_date": prev_date,
@@ -425,6 +544,12 @@ def simulate_topk_constraint_compliant(
             "cash": cash,
             "holdings_value": holdings_value,
             "n_holdings": len(holdings),
+            "gate_state": current_gate_state,
+            "exposure_scale": current_exposure_scale,
+            "kill_switch_active": current_kill_switch_active,
+            "gate_reason": current_gate_reason,
+            "cooldown_remaining": cooldown_remaining,
+            "benchmark_state": current_benchmark_state,
         })
 
     curve = pd.DataFrame(equity_curve)
@@ -446,6 +571,7 @@ def simulate_topk_constraint_compliant(
             "selection_log": pd.DataFrame(diagnostics_selections) if diagnostics_selections else pd.DataFrame(),
             "filtered_breakdown": pd.DataFrame(diagnostics_filtered) if diagnostics_filtered else pd.DataFrame(),
             "fallback_log": pd.DataFrame(diagnostics_fallback) if diagnostics_fallback else pd.DataFrame(),
+            "gate_log": pd.DataFrame(diagnostics_gate) if diagnostics_gate else pd.DataFrame(),
         }
 
     return BacktestResult(

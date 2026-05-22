@@ -294,6 +294,79 @@ SIGNAL_CATALOG = {
 }
 
 
+SUPPORTED_SURFACES = {
+    "rl_signal_matrix",
+    "order_pressure",
+    "order_pressure_raw",
+    "order_pressure_delta",
+}
+
+
+def load_surface_signal(
+    *,
+    source_surface: str,
+    source_col: str,
+    start: str | None = None,
+    end: str | None = None,
+    tickers: list[str] | None = None,
+    allow_2026: bool = False,
+    output_col: str | None = None,
+) -> pd.DataFrame:
+    """Generic ticker-day surface loader for strategy wiring.
+
+    Supported source surfaces:
+    - rl_signal_matrix
+    - order_pressure
+    - order_pressure_raw
+    - order_pressure_delta
+    """
+
+    if source_surface not in SUPPORTED_SURFACES:
+        allowed = ", ".join(sorted(SUPPORTED_SURFACES))
+        raise ValueError(f"Unsupported source_surface '{source_surface}'. Allowed: {allowed}")
+
+    if source_surface == "rl_signal_matrix":
+        frame = load_rl_signal_matrix(
+            start=start,
+            end=end,
+            tickers=tickers,
+            allow_2026=allow_2026,
+        )
+    elif source_surface == "order_pressure":
+        frame = load_order_pressure(
+            start=start,
+            end=end,
+            tickers=tickers,
+            allow_2026=allow_2026,
+        )
+    elif source_surface == "order_pressure_raw":
+        frame = load_order_pressure_raw(
+            start=start,
+            end=end,
+            tickers=tickers,
+            allow_2026=allow_2026,
+        )
+    else:  # order_pressure_delta
+        frame = load_order_pressure_delta(
+            start=start,
+            end=end,
+            tickers=tickers,
+            allow_2026=allow_2026,
+        )
+
+    if source_col not in frame.columns:
+        raise ValueError(
+            f"Column '{source_col}' not found on source_surface '{source_surface}'. "
+            f"Available columns: {list(frame.columns)}"
+        )
+
+    col_name = output_col or source_col
+    out = frame[["time", "ticker", source_col]].copy()
+    if col_name != source_col:
+        out = out.rename(columns={source_col: col_name})
+    return out
+
+
 def load_event_surface(
     start: str | None = None,
     end: str | None = None,

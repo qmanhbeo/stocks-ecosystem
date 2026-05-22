@@ -4,6 +4,67 @@
 
 ---
 
+## F00016 — Lab and trader now share an explicit promotion contract (2026-05-22)
+
+[link: notes/session_00026.md]
+
+- Lab readiness audit now publishes `signal_promotion_contract_latest.csv` with proxy execution gate fields and upstream handoff status.
+- Heuristic `signal_sweep.py` now consumes that contract and blocks non-control promotion paths below `LAB_PROMOTED_PENDING_EXECUTION`.
+- Sweep also writes signal-family feedback to `signal_promotion_feedback_latest.csv`, closing the loop for next lab iterations.
+- Outcome: IC/readiness and execution validation are now connected by machine-checkable status artifacts instead of implicit assumptions.
+
+---
+
+## F00015 — Strict sweep produced zero promotable candidates; shadow must hard-stop (2026-05-22)
+
+[link: notes/session_00025.md]
+
+- Canonical sweep `20260522_130306` evaluated 28 strategies; all were labeled `KILL`.
+- Strict-ready candidate count was `0` (`EXECUTION_VALIDATED` and `is_profit_ready=true`).
+- The previous fallback challenger flow could proceed despite all-`KILL`; workflow now records `ready_for_shadow=false` and blocks shadow-phase progression.
+- Practical implication: no paper/shadow advancement is valid until a fresh sweep yields at least one strict `PROMOTE_CANDIDATE`.
+
+---
+
+## F00014 — First profit-ready gated candidate family: C8 + tail-first exposure gate (2026-05-19)
+
+[link: notes/session_00024.md]
+
+- Gate sweeps over base configs were negative, but gate sweeps over translation-optimized configs produced profit-ready rows.
+- Winning family: `m_c8_vol_zscore_5d` with tail-first gate.
+- Refined best variant (`floor=0.35`, `cooldown=2`) reached approximately:
+  - mean excess `+4.27%`
+  - mean annualized `+17.23%`
+  - positive folds `8/11`
+  - beating benchmark `6/11`
+  - worst fold about `-24.5%`
+- Added promoted strategy configs for `f30` and refined `f35` variants in `strategies.json`.
+- Profit pipeline readiness check for refined variant returned `profit_ready=1`.
+
+---
+
+## F00013 — Disambiguation verdict: translation can recover edge, but current tails/regime risk still block promotion (2026-05-19)
+
+[link: notes/session_00022.md]
+
+From `artifacts/signal_translation_disambiguation/20260519_213127/`:
+- **Oracle execution ablation** (`exp1_*`):
+  - C11 families moved from negative to positive mean excess when execution filters were removed.
+  - Interpretation: signal edge is materially suppressed by current translation/execution.
+- **Translation sweep** (`exp2_*`):
+  - Parameterization can strongly improve outcomes, including a positive-best configuration for `s1b_c11...`.
+  - But bad-year tails remain large, and robustness is still regime-fragile.
+- **Train-only yearly router** (`exp3_*`):
+  - Simple prior-year-sign gate degraded mean excess for all tested strategies.
+  - Current coarse regime gate is a dead end.
+
+Decision implication:
+- Do not classify this as “signal is dead.”
+- Do not classify this as “plumbing solved.”
+- Current truth: mixed diagnosis; translation matters, but risk/regime controls are still insufficient for promotion.
+
+---
+
 ## F00012 — Canonical patched WFV shortlist: blend_70_30_top5 is current clean active candidate (2026-05-13)
 
 [link: artifacts/canonical_wfv/leaderboard.csv]

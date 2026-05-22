@@ -17,6 +17,42 @@ dynamically. A signal does not need to be a complete trading strategy — it nee
    another existing parent must clear incremental lift and mechanism-matched
    controls versus that parent; absolute IC versus random is not enough.
 
+### Promotion Status + Handoff Contract
+
+Every newly added or materially updated signal entry should include:
+- `lab_promotion_status`: one of `RESEARCH_CANDIDATE`,
+  `LAB_PROMOTED_PENDING_EXECUTION`, `EXECUTION_VALIDATED`,
+  `FINAL_PROMOTED`, `OVERRIDE_PROMOTED`
+- `execution_readiness` summary with:
+  - `coverage_pct`
+  - `sparsity_profile`
+  - `turnover_proxy`
+  - `tradability_overlap_pct`
+- `execution_readiness_verdict`: `pass`, `warn`, or `fail`
+- `heuristic_validation_ref`: canonical heuristic-trader artifact path when
+  available
+
+Rule:
+- Signal-library evidence can promote at most to
+  `LAB_PROMOTED_PENDING_EXECUTION`.
+- `FINAL_PROMOTED` requires explicit heuristic-trader execution validation
+  (net PnL + cash/underfill/fill gates) or a documented manual override.
+
+Reusable audit script for these fields:
+```bash
+python analysis/audit_signal_execution_readiness.py \
+  --signals s1,c8,c16,c17,c18 \
+  --start-year 2015 \
+  --end-year 2025 \
+  --publish-contract
+```
+Outputs:
+- `artifacts/audits/<timestamp>_signal_execution_readiness/signal_execution_readiness.csv`
+- `artifacts/audits/<timestamp>_signal_execution_readiness/signal_execution_readiness.md`
+- `artifacts/audits/<timestamp>_signal_execution_readiness/signal_execution_readiness.json`
+- `artifacts/audits/<timestamp>_signal_execution_readiness/signal_promotion_contract.csv`
+- `data/features/recommendations/signal_promotion_contract_latest.csv` (when `--publish-contract` is enabled)
+
 A signal that "fails" to improve a combined XGBoost model may still be RL-valuable if it is
 independent and directionally consistent — the supervised model can't use sparse signals,
 but an RL agent that selectively attends to them can.
@@ -27,6 +63,15 @@ but an RL agent that selectively attends to them can.
 
 ### S1 — Cross-Sectional Relative Momentum (H93)
 **Status: CONFIRMED — primary signal**
+
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `100.0000%` (audit window 2015-2025)
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.915544` (`high`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9589%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
 
 - **Standalone IC:** +0.149 (p < 0.001, all years positive)
 - **Correlation with other signals:** N/A (primary reference)
@@ -57,6 +102,15 @@ PYTHONIOENCODING=utf-8 /c/Users/manhn/miniconda3/envs/stocks/python.exe cross_se
 ### C4 — Open/Close Asymmetry (H107)
 **Status: CANDIDATE — passes standalone gate, confirmed orthogonal**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `100.0000%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.513214` (`high`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9589%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
+
 - **Standalone IC:** +0.0225 (vs 1-day barrier label, 11/11 years positive)
 - **Correlation with S1:** +0.147 (< 0.30 threshold — qualifies)
 - **Consistency:** 11/11 years IC positive (highly consistent)
@@ -82,6 +136,15 @@ opening. The gap-minus-intraday contrast isolates the informed signal from mean-
 
 ### C5 — Insider Relative Size Signal (H108)
 **Status: CANDIDATE — UPGRADES C2, highest IC of all insider features**
+
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `100.0000%` on RL matrix surface (event-origin value signal is still sparse by mechanism)
+  - `sparsity_profile`: `dense` (value density), event-mechanism sparse
+  - `turnover_proxy`: `churn=0.268948` (`medium`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9589%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
 
 - **Standalone IC:** +0.0374 (10/11 years positive) — +46% improvement over raw C2
 - **Correlation with S1:** −0.008 (near-zero → genuinely independent)
@@ -188,6 +251,15 @@ preferred robustness variant when the branch wants a more selective daily-state 
 ### C6 — Contrarian Intra-Sector Signal (H112)
 **Status: CANDIDATE — passes standalone gate, 11/11 years positive**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `99.6717%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.684529` (`high`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9556%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
+
 - **Standalone IC:** +0.0299 (11/11 years positive) — highest consistency of all candidates
 - **Correlation with S1:** +0.142 (< 0.30 threshold — qualifies)
 - **Consistency:** 11/11 years IC positive (perfectly consistent)
@@ -217,6 +289,15 @@ either C6 or breadth but not both. C6 is strictly preferred (IC +0.030 vs +0.014
 
 ### C7 — Price Limit Momentum Signal (H115)
 **Status: CANDIDATE — ceiling count passes, floor reversal borderline**
+
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `100.0000%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.377284` (`medium`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9589%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
 
 - **Standalone IC:** xs_ceiling_count_5d = +0.0121 (8/11 years positive)
 - **Correlation with S1:** +0.064 (very low — highly independent)
@@ -249,6 +330,15 @@ of buyers waiting for next day's open; (2) Floor: oversold bounce after forced s
 
 ### C8 — Volume Activity Signal (H116)
 **Status: CANDIDATE — multiple features pass, highly independent from S1**
+
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `100.0000%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.380415` (`medium`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9589%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
 
 - **Standalone IC:** xs_vol_zscore_5d = +0.0110 (10/11 years positive)
 - **Correlation with S1:** +0.068 (very low — the S1 model's internal volume features are different)
@@ -292,6 +382,15 @@ primitive. In the same audit, `buy_count_rank` was anti-predictive
 ### C9 — Short-Term 1-Day Return Reversal (H117)
 **Status: CANDIDATE — strong reversal effect, 0/11 years of 1d momentum**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `99.8888%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.913870` (`high`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9592%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
+
 - **Standalone IC (negated):** +0.0284 (11/11 years IC positive after negation)
 - **Correlation with S1:** −0.161 (negative — independent and complementary to 5d momentum)
 - **Consistency:** 0/11 years for raw 1d lag rank → 11/11 after negation → perfectly consistent
@@ -322,6 +421,15 @@ sector-conditioned (only fires in hot sectors) while C9 is unconditional. Use bo
 ### C10 — Amihud Illiquidity Level (H121)
 **Status: CANDIDATE — passes standalone gate, near-zero S1 correlation**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `99.5982%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.571605` (`high`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9734%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
+
 - **Standalone IC:** +0.0206 (10/11 years positive)
 - **Correlation with S1:** +0.008 (near-zero → highly independent)
 - **Consistency:** 10/11 years IC positive
@@ -349,6 +457,15 @@ No persistent file — build inline from `data/stock/gia_lich_su_*_1D.parquet`.
 ### C11 — 3-Month Continuation / Medium-Term Trend (H123)
 **Status: CANDIDATE — passes standalone gate, orthogonal to S1**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `99.7129%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.193375` (`low`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9586%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
+
 - **Standalone IC:** +0.0101 (9/11 years positive)
 - **Correlation with S1:** +0.008 (near-zero → highly independent)
 - **Consistency:** 9/11 years IC positive
@@ -371,6 +488,15 @@ existing candidate set.
 
 ### C12 — Gap Absorption with Intraday Confirmation (H130)
 **Status: CANDIDATE — strong microstructure state signal, orthogonal to current library**
+
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `99.8888%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.936367` (`high`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9592%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
 
 - **Standalone IC:** +0.0284 (11/11 years positive)
 - **Correlation with S1:** +0.131 (independent enough to qualify)
@@ -406,6 +532,15 @@ while staying comfortably below the redundancy threshold.
 ### C13 — Compression Blow-Off Reversal (H133)
 **Status: CANDIDATE — strong reversal state, distinct from current library**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `99.7934%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.640481` (`high`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9607%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
+
 - **Standalone IC:** +0.0351 (10/11 years positive)
 - **Correlation with S1:** +0.191 (passes independence gate)
 - **Consistency:** 10/11 years IC positive
@@ -432,6 +567,15 @@ state that mean-reverts the next day.
 
 ### C14 — Residual Close-Location Strength After Removing C8 (H134)
 **Status: CANDIDATE — H127 survives after explicit de-duplication vs volume**
+
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `99.9325%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.594831` (`high`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9593%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
 
 - **Standalone IC:** +0.0131 (11/11 years positive)
 - **Correlation with S1:** +0.102
@@ -486,6 +630,15 @@ that volume alone does not explain.
 
 ### C16 — CafeF Posted Order-Volume Pressure (H356)
 **Status: PUBLISHED FEATURE — scoped H359 contract, downstream opt-in only**
+
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `98.0431%` (audit window 2015-2025)
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.815799` (`high`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9668%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
 
 - **Standalone IC vs 1d barrier:** `+0.0738`
 - **Consistency:** `11 / 11` years positive
@@ -617,6 +770,15 @@ H396 saved the residual audit under
 ### C17 — CafeF Order-Volume Ratio (H409)
 **Status: DISCOVERED — candidate, orthogonality verified vs C16 and S1**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `98.0431%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.815799` (`high`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9668%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
+
 - **Standalone IC vs 1d barrier:** `+0.077`
 - **Consistency:** `8 / 8` years positive
 - **Correlation with S1:** `0.012` (very low - orthogonal!)
@@ -669,6 +831,15 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 ### C18 — C16 Rank Delta (H431)
 **Status: NEW SIGNAL — PASSED walk-forward validation**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `96.7808%`
+  - `sparsity_profile`: `dense`
+  - `turnover_proxy`: `churn=0.998689` (`high`)
+  - `tradability_overlap_pct`: `100.0000%` (`tradability_buyable_pct=98.9794%`)
+- `execution_readiness_verdict`: `pass`
+- `heuristic_validation_ref`: `artifacts/audits/20260522_125626_signal_execution_readiness/signal_execution_readiness.csv`
+
 - **Standalone IC:** +0.1290 (vs C16 level +0.0752 = **+72% boost**)
 - **Lift vs baseline:** +0.0114 (8/8 positive years)
 - **Validation (2023-2025):** Q5_incr +0.1310 vs level +0.0633
@@ -692,6 +863,15 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 ### C19 — Vol Expansion + Low Return Low Volume Combo (H448)
 **Status: NEW SIGNAL — PASSED walk-forward validation**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `state-gated / not yet normalized in this registry`
+  - `sparsity_profile`: `state-sparse`
+  - `turnover_proxy`: `likely high regime-switch churn; pending normalized audit`
+  - `tradability_overlap_pct`: `pending normalized audit in this registry`
+- `execution_readiness_verdict`: `warn`
+- `heuristic_validation_ref`: `not yet execution-validated as final promotion`
+
 - **Standalone IC:** +0.2069 (vs baseline +0.1298 = **+59% boost**)
 - **Lift vs vol_expansion alone:** +0.0316 (11/11 positive years)
 - **Lift vs low_return_low_vol alone:** +0.0025
@@ -713,6 +893,15 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 
 ### C20 — Buy-Heavy Imbalance In Vol Expansion (H451)
 **Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `state-gated / not yet normalized in this registry`
+  - `sparsity_profile`: `state-sparse`
+  - `turnover_proxy`: `likely high regime-switch churn; pending normalized audit`
+  - `tradability_overlap_pct`: `pending normalized audit in this registry`
+- `execution_readiness_verdict`: `warn`
+- `heuristic_validation_ref`: `not yet execution-validated as final promotion`
 
 - **Standalone IC:** +0.1809 (vs baseline +0.1301 = **+39% boost**)
 - **Lift vs vol_expansion alone:** +0.0053
@@ -736,6 +925,15 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 
 ### C21 — Level + Momentum + Vol Expansion Combos (H453)
 **Status: NEW SIGNALS — PASSED walk-forward validation**
+
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `state-gated / not yet normalized in this registry`
+  - `sparsity_profile`: `state-sparse`
+  - `turnover_proxy`: `high expected churn from acceleration/deceleration state flips`
+  - `tradability_overlap_pct`: `pending normalized audit in this registry`
+- `execution_readiness_verdict`: `warn`
+- `heuristic_validation_ref`: `not yet execution-validated as final promotion`
 
 - **buy_heavy_accel_expansion IC:** +0.2320 (vs baseline +0.1301 = **+78% boost**)
 - **sell_heavy_decel_expansion IC:** +0.2369 (vs baseline +0.1301 = **+82% boost**)
@@ -771,6 +969,15 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 ### C22 — Limit Proximity Momentum (H454)
 **Status: NEW SIGNAL — PASSED walk-forward validation**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `state-gated / not yet normalized in this registry`
+  - `sparsity_profile`: `state-sparse`
+  - `turnover_proxy`: `high expected churn due to near-limit event behavior`
+  - `tradability_overlap_pct`: `pending normalized audit in this registry`
+- `execution_readiness_verdict`: `warn`
+- `heuristic_validation_ref`: `not yet execution-validated as final promotion`
+
 - **Standalone IC:** +0.2166 (vs baseline +0.1298 = **+67% boost**)
 - **Lift vs vol_expansion alone:** +0.0415
 - **Consistency:** 11/11 positive years
@@ -794,6 +1001,15 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 
 ### C23 — Amihud Illiquidity × Vol Expansion Combo (H463)
 **Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `state-gated / not yet normalized in this registry`
+  - `sparsity_profile`: `state-sparse`
+  - `turnover_proxy`: `high expected churn; strong state intensity but narrow active windows`
+  - `tradability_overlap_pct`: `pending normalized audit in this registry`
+- `execution_readiness_verdict`: `warn`
+- `heuristic_validation_ref`: `pending canonical execution validation in heuristic-trader`
 
 - **Standalone IC:** +0.2029 (vs baseline +0.1298 = **+56% boost**)
 - **Combo IC:** +0.2616 (vs baseline = **+101% boost**)
@@ -831,6 +1047,15 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 ### C24 — Multi-Day Price Limit Ceiling Pressure (H467)
 **Status: NEW SIGNAL — PASSED walk-forward validation**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `state-gated / not yet normalized in this registry`
+  - `sparsity_profile`: `state-sparse`
+  - `turnover_proxy`: `event-driven churn expected; pending normalized audit`
+  - `tradability_overlap_pct`: `pending normalized audit in this registry`
+- `execution_readiness_verdict`: `warn`
+- `heuristic_validation_ref`: `pending canonical execution validation in heuristic-trader`
+
 - **Standalone IC:** +0.2353 (vs baseline +0.1302 = **+81% boost**)
 - **Lift vs baseline:** +0.1052
 - **Consistency:** 8/8 positive years
@@ -860,6 +1085,15 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 ### C25 — VWAP Deviation Below Average + Vol Expansion (H470)
 **Status: NEW SIGNAL — PASSED walk-forward validation**
 
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `state-gated / not yet normalized in this registry`
+  - `sparsity_profile`: `state-sparse`
+  - `turnover_proxy`: `regime/event-driven churn expected; pending normalized audit`
+  - `tradability_overlap_pct`: `pending normalized audit in this registry`
+- `execution_readiness_verdict`: `warn`
+- `heuristic_validation_ref`: `pending canonical execution validation in heuristic-trader`
+
 - **Standalone IC:** +0.1733 (vs baseline +0.1302 = **+33% boost**)
 - **Lift vs baseline:** +0.0431
 - **Consistency:** 11/11 positive years
@@ -888,6 +1122,15 @@ Same formula as C16 but from the raw order-statistics surface, not the H356 blen
 
 ### C26 — Buy-Heavy Order Flow + Illiquidity + Vol Expansion (H471)
 **Status: NEW SIGNAL — PASSED walk-forward validation**
+
+- `lab_promotion_status`: `LAB_PROMOTED_PENDING_EXECUTION`
+- `execution_readiness`:
+  - `coverage_pct`: `state-gated / not yet normalized in this registry`
+  - `sparsity_profile`: `state-sparse`
+  - `turnover_proxy`: `regime/state switch churn expected; pending normalized audit`
+  - `tradability_overlap_pct`: `pending normalized audit in this registry`
+- `execution_readiness_verdict`: `warn`
+- `heuristic_validation_ref`: `pending canonical execution validation in heuristic-trader`
 
 - **Standalone IC:** +0.1889 (vs baseline +0.1302 = **+45% boost**)
 - **Lift vs baseline:** +0.0587

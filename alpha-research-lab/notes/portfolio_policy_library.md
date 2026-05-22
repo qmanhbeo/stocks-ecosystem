@@ -25,6 +25,9 @@ attention, and execution surfaces.
 - H379/H380 provide offline evidence that candidate-panel state, especially raw
   `candidate_count`, can route K/cash decisions better than random policies.
   This is not a live-policy promotion.
+- Policy/signal promotions that require realized execution economics must be
+  handed off to heuristic-trader and cannot be marked `FINAL_PROMOTED` from lab
+  evidence alone.
 
 ## Evaluation Rules
 

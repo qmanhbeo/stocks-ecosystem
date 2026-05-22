@@ -1,31 +1,57 @@
 # Live State
 
-## Current Sprint Focus (2026-05): Execution Research
+## Current Sprint Focus (2026-05-22): Contract-Aligned Promotion Loop
 
-- **Objective**: diagnose and repair execution mechanics, especially cash drag, filter bottlenecks, and portfolio construction.
-- **Immediate task**: risk autopsy on `s1_top5_rebal10_depth5` worsened years: **2016, 2018, 2024**.
-- **Boundary**: H510 in alpha-research-lab confirmed the issue is **not** missing latent signal state; it is execution / portfolio construction in heuristic-trader.
-- **Do NOT**: touch 2026 data, promote to paper trading, monetize, run broad signal discovery, or launch expensive grid searches.
-- **Validation standard**: 2015-2025 walk-forward validation only, benchmark-relative, cost-aware.
+- **Latest session**: `notes/session_00026.md`
+- **Bridge status**: lab promotion contract publish + heuristic contract gating + shared feedback writeback are implemented.
+- **Shared contract paths**:
+  - `data/features/recommendations/signal_promotion_contract_latest.csv`
+  - `data/features/recommendations/signal_promotion_feedback_latest.csv`
+- **Immediate next task**: rerun full sweep under `--require-promotion-contract` after refreshing contract for the exact signal universe being tested.
 
-### Artifact Policy (2026-05-13)
-- Use patched **canonical WFV outputs** under `artifacts/canonical_wfv/` for decisions.
-- Treat old timestamped artifacts as historical clues only, not decision-grade truth.
+## Current Sprint Focus (2026-05-22): Strict Promotion Enforcement
 
-### 2026-05-13 Canonical Shortlist Verdict (Decision-Grade)
-- Canonical 8-strategy patched WFV is now the active decision surface.
-- **Current clean active candidate**: `blend_70_30_top5` (7/11 positive folds, 5/11 benchmark-beating, lower drawdown than depth5 blend).
-- `blend_70_30_top5_depth5` remains a secondary comparator (slightly better mean return/excess, but worse drawdown and fewer positive folds).
-- `s1_top5_rebal10_depth5` is demoted to comparator/crash-test path, not main execution direction.
-- `fallback_mode=reallocate_selected` remains **NEGATIVE/DEPRIORITIZED**.
-- Follow-up required: `c16_only_top5` and `c17_raw_top5_rebal10` produced identical canonical metrics/trade counts; inspect C16/C17 signal wiring before treating them as distinct.
+- **Latest session**: `notes/session_00025.md`
+- **Current strict truth**: latest canonical sweep (`artifacts/signal_sweeps/20260522_130306/`) produced `0` strict-ready candidates.
+- **Workflow fix landed**: challenge selector now defaults to strict-only and blocks shadow when `ready_for_shadow=false`.
+- **Immediate next task**: generate new hypotheses/signals and rerun canonical sweep; do not enter shadow phase until at least one `PROMOTE_CANDIDATE` exists.
 
-### 2026-05-13 Update: Reallocate Fallback Verdict
-- `fallback_mode=reallocate_selected` was tested and is **NEGATIVE/DEPRIORITIZED** for S1 family.
-- Patched-code 2015-2025 WFV shows worse aggregate performance vs both comparators (`s1_top5_rebal10`, `s1_top5_rebal10_depth5`) on mean annualized return, mean excess, and mean drawdown.
-- Current best patched S1 comparator remains `s1_top5_rebal10_depth5`, but it is still weak/fragile and **not monetizable**.
-- Do **NOT** treat reallocation variants as candidates.
-- Next direction: do **not** run more cash fallback variants without a new execution hypothesis.
+## Current Sprint Focus (2026-05-19): Profit-Ready Gate Branch
+
+- **Latest session**: `notes/session_00024.md`
+- **New profit-ready family found**: `m_c8_vol_zscore` with tail-first gate variants.
+- **Current best refined candidate**: `m_c8_vol_zscore_gate_tail_f35_cd2_k3_h2`.
+- **Immediate next task**: run broader challenger set against this candidate (additional signals + gate-enabled variants) and stress-check tail behavior before paper stage.
+
+## Current Sprint Focus (2026-05-19): Tail-First Gate Validation
+
+- **Latest implementation session**: `notes/session_00023.md`
+- **Implemented**: multi-regime exposure gate v1 with kill-switch + cooldown in backtest core path.
+- **Current state**: gate is wired and tested; not yet promoted by canonical fold evidence.
+- **Immediate next task**: run canonical WFV A/B on shortlist (`gate off` vs `gate on`) and accept only if downside improves without catastrophic tradeoff.
+
+## Current Sprint Focus (2026-05-19): Signal vs Translation Disambiguation
+
+- **Latest material session**: `notes/session_00022.md`
+- **Latest artifact pack**: `artifacts/signal_translation_disambiguation/20260519_213127/`
+- **Question addressed**: are failures from weak signals or weak execution translation?
+
+### Current Truth
+- It is **mixed**, not single-cause.
+- **Translation/execution bottleneck is real**: oracle execution and tuned translation variants materially improved excess returns for top C11 strategies.
+- **Signal robustness is still insufficient**: improved variants still show severe bad-year tails and regime fragility (not promotion-ready).
+- **Coarse yearly regime router is negative**: train-only prior-year-sign gate underperformed canonical for all tested top strategies.
+
+### Active Candidate State
+- Canonical shortlist still applies:
+  - `blend_70_30_top5` = current clean active candidate
+  - `blend_70_30_top5_depth5` = secondary comparator
+- No strategy is cleared for promotion/paper deployment yet.
+
+### Near-Term Next Actions
+- Build risk-aware translation constraints (tail-aware objective, not mean-excess-only ranking).
+- Re-test best translation configs under stricter downside gates (especially 2025-like stress behavior).
+- Design richer regime conditioning (multi-feature/intra-year), not coarse annual bull/bear gating.
 
 ## Current (Handoff)
 

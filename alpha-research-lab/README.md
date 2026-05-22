@@ -121,6 +121,45 @@ Note: a signal that "fails" to improve a combined XGBoost model may still be
 RL-valuable. XGBoost handles sparse signals poorly. An RL agent can
 selectively attend to signals.
 
+## Execution-Readiness Layer (Lab -> Heuristic Handoff)
+
+The lab owns signal truth discovery, but promotion now has a required execution
+handoff stage.
+
+### Stage 1: Lab promotion (light execution-readiness)
+
+Before a signal is tagged as lab-promoted, record these lightweight fields:
+- `coverage_pct`: active row share on the tested panel
+- `sparsity_profile`: dense / sparse plus active row count
+- `turnover_proxy`: selection/rank churn proxy from available panel artifacts
+- `tradability_overlap_pct`: overlap versus `data/features/execution/tradability_daily.parquet`
+
+Lab output status at this stage:
+- `LAB_PROMOTED_PENDING_EXECUTION`
+
+### Stage 2: Heuristic validation (net PnL + execution health)
+
+Final promotion requires passing `heuristic-trader` readiness/risk gates
+(profit, fold robustness, cash-drag, underfill/fill health). Lab-only evidence
+cannot directly produce final promotion.
+
+Heuristic output statuses:
+- `EXECUTION_VALIDATED` when gates pass
+- `LAB_PROMOTED_PENDING_EXECUTION` when lab signal fails execution validation
+- `OVERRIDE_PROMOTED` only with explicit manual override documentation
+
+### Status Vocabulary
+
+Use these exact status labels across repos:
+- `RESEARCH_CANDIDATE`
+- `LAB_PROMOTED_PENDING_EXECUTION`
+- `EXECUTION_VALIDATED`
+- `FINAL_PROMOTED`
+- `OVERRIDE_PROMOTED`
+
+`FINAL_PROMOTED` requires an explicit decision entry after execution
+validation; it is not implied by IC alone.
+
 ## Start Here
 
 - `notes/live_state.md`: live system state and current priorities
@@ -547,6 +586,8 @@ And writes:
 - `data/features/recommendations/<profile>/latest_candidates.parquet`
 - `data/features/recommendations/<profile>/manifest.json`
 - `artifacts/run_summaries/latest_recommendation_candidates_<profile>.json`
+- `data/features/recommendations/signal_promotion_contract_latest.csv` (from `analysis/audit_signal_execution_readiness.py --publish-contract`)
+- `data/features/recommendations/signal_promotion_feedback_latest.csv` (written by heuristic-trader signal sweep)
 
 The shared candidate table is inference-only. Training, selector discovery, and portfolio backtests remain owned by the existing lab scripts.
 

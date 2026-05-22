@@ -293,5 +293,53 @@
     "min_hold_days": 3,
     "candidate_scan_multiplier": 20,
     "sizing_mode": "dynamic_portfolio"
+  },
+  "m_c8_vol_zscore_gate_tail_f30_cd2_k3_h2": {
+    "name": "m_c8_vol_zscore_gate_tail_f30_cd2_k3_h2",
+    "description": "Promoted gate variant from Session 24: C8 vol-zscore with tail-first gate (floor=0.30, cooldown=2)",
+    "signal_type": "surface_col",
+    "source_surface": "rl_signal_matrix",
+    "source_col": "c8_vol_zscore_5d",
+    "signal_col": "c8_vol_zscore_5d",
+    "top_k": 3,
+    "rebalance_days": 10,
+    "min_hold_days": 2,
+    "candidate_scan_multiplier": 3,
+    "sizing_mode": "fixed_initial",
+    "gate_enabled": true,
+    "gate_profile": "tail_first_v1",
+    "exposure_floor": 0.3,
+    "exposure_ceiling": 1.0,
+    "kill_switch_thresholds": {
+      "drawdown": 0.3,
+      "volatility": 0.6,
+      "underfill_ratio": 0.8,
+      "reject_ratio": 0.9
+    },
+    "cooldown_rebalances": 2
+  },
+  "m_c8_vol_zscore_gate_tail_f35_cd2_k3_h2": {
+    "name": "m_c8_vol_zscore_gate_tail_f35_cd2_k3_h2",
+    "description": "Promoted gate variant from Session 24 refinement: C8 vol-zscore with tail-first gate (floor=0.35, cooldown=2)",
+    "signal_type": "surface_col",
+    "source_surface": "rl_signal_matrix",
+    "source_col": "c8_vol_zscore_5d",
+    "signal_col": "c8_vol_zscore_5d",
+    "top_k": 3,
+    "rebalance_days": 10,
+    "min_hold_days": 2,
+    "candidate_scan_multiplier": 3,
+    "sizing_mode": "fixed_initial",
+    "gate_enabled": true,
+    "gate_profile": "tail_first_v1",
+    "exposure_floor": 0.35,
+    "exposure_ceiling": 1.0,
+    "kill_switch_thresholds": {
+      "drawdown": 0.3,
+      "volatility": 0.6,
+      "underfill_ratio": 0.8,
+      "reject_ratio": 0.9
+    },
+    "cooldown_rebalances": 2
   }
 }

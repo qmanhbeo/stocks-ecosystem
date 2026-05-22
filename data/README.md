@@ -210,6 +210,8 @@ These are shared consumer-facing contracts, not raw-source caches:
 - `data/features/activation_meta_daily.parquet`
 - `data/features/event_surface_daily.parquet`
 - `data/features/recommendations/<profile>/latest_candidates.parquet`
+- `data/features/recommendations/signal_promotion_contract_latest.csv`
+- `data/features/recommendations/signal_promotion_feedback_latest.csv`
 
 ## Order Pressure Feature Subcontract
 
