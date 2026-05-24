@@ -341,5 +341,70 @@
       "reject_ratio": 0.9
     },
     "cooldown_rebalances": 2
+  },
+  "m_c8_vol_zscore_translate_t1_t2": {
+    "name": "m_c8_vol_zscore_translate_t1_t2",
+    "description": "C8 translated with incumbent stickiness + replacement threshold + max-new cap + short recovery window",
+    "signal_type": "surface_col",
+    "source_surface": "rl_signal_matrix",
+    "source_col": "c8_vol_zscore_5d",
+    "signal_col": "c8_vol_zscore_5d",
+    "top_k": 3,
+    "rebalance_days": 10,
+    "min_hold_days": 2,
+    "candidate_scan_multiplier": 5,
+    "sizing_mode": "fixed_initial",
+    "gate_enabled": true,
+    "gate_profile": "tail_first_v1",
+    "exposure_floor": 0.35,
+    "exposure_ceiling": 1.0,
+    "cooldown_rebalances": 2,
+    "incumbent_bonus_bps": 10.0,
+    "replace_threshold_bps": 20.0,
+    "max_new_positions_per_rebalance": 1,
+    "underfill_recovery_days": 2,
+    "recovery_target_slots_mode": "fixed_target"
+  },
+  "m_c8_vol_zscore_translate_t1_t4_regime": {
+    "name": "m_c8_vol_zscore_translate_t1_t4_regime",
+    "description": "C8 translated with sticky replacement logic, conviction sizing, and regime-dependent scan/cadence overrides",
+    "signal_type": "surface_col",
+    "source_surface": "rl_signal_matrix",
+    "source_col": "c8_vol_zscore_5d",
+    "signal_col": "c8_vol_zscore_5d",
+    "top_k": 3,
+    "rebalance_days": 10,
+    "min_hold_days": 2,
+    "candidate_scan_multiplier": 4,
+    "sizing_mode": "fixed_initial",
+    "gate_enabled": true,
+    "gate_profile": "tail_first_v1",
+    "exposure_floor": 0.35,
+    "exposure_ceiling": 1.0,
+    "cooldown_rebalances": 2,
+    "incumbent_bonus_bps": 8.0,
+    "replace_threshold_bps": 15.0,
+    "max_new_positions_per_rebalance": 2,
+    "underfill_recovery_days": 2,
+    "recovery_target_slots_mode": "dynamic_by_gate",
+    "conviction_mode": "rank_gap",
+    "conviction_strength": 2.0,
+    "conviction_cap": 2.0,
+    "regime_translation": {
+      "normal": {
+        "candidate_scan_multiplier": 6,
+        "rebalance_interval_days": 8
+      },
+      "fragile": {
+        "candidate_scan_multiplier": 4,
+        "rebalance_interval_days": 10,
+        "max_new_positions_per_rebalance": 1
+      },
+      "stress": {
+        "candidate_scan_multiplier": 3,
+        "rebalance_interval_days": 12,
+        "max_new_positions_per_rebalance": 0
+      }
+    }
   }
 }

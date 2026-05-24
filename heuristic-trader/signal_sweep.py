@@ -267,6 +267,19 @@ def _run_autopsy_for_config(
             exposure_ceiling=float(config.get("exposure_ceiling", 1.00)),
             kill_switch_thresholds=config.get("kill_switch_thresholds"),
             cooldown_rebalances=int(config.get("cooldown_rebalances", 2)),
+            incumbent_bonus_bps=float(config.get("incumbent_bonus_bps", 0.0)),
+            replace_threshold_bps=float(config.get("replace_threshold_bps", 0.0)),
+            max_new_positions_per_rebalance=(
+                None
+                if config.get("max_new_positions_per_rebalance") is None
+                else int(config.get("max_new_positions_per_rebalance"))
+            ),
+            underfill_recovery_days=int(config.get("underfill_recovery_days", 0)),
+            recovery_target_slots_mode=str(config.get("recovery_target_slots_mode", "fixed_target")),
+            regime_translation=config.get("regime_translation"),
+            conviction_mode=str(config.get("conviction_mode", "off")),
+            conviction_strength=float(config.get("conviction_strength", 0.0)),
+            conviction_cap=float(config.get("conviction_cap", 2.0)),
         )
         benchmark_return = _benchmark_total_return(start_date, end_date)
         excess_return = (

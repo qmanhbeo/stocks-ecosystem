@@ -141,6 +141,19 @@ def run_strategy_for_test(
         exposure_ceiling=float(config.get("exposure_ceiling", 1.00)),
         kill_switch_thresholds=config.get("kill_switch_thresholds"),
         cooldown_rebalances=int(config.get("cooldown_rebalances", 2)),
+        incumbent_bonus_bps=float(config.get("incumbent_bonus_bps", 0.0)),
+        replace_threshold_bps=float(config.get("replace_threshold_bps", 0.0)),
+        max_new_positions_per_rebalance=(
+            None
+            if config.get("max_new_positions_per_rebalance") is None
+            else int(config.get("max_new_positions_per_rebalance"))
+        ),
+        underfill_recovery_days=int(config.get("underfill_recovery_days", 0)),
+        recovery_target_slots_mode=str(config.get("recovery_target_slots_mode", "fixed_target")),
+        regime_translation=config.get("regime_translation"),
+        conviction_mode=str(config.get("conviction_mode", "off")),
+        conviction_strength=float(config.get("conviction_strength", 0.0)),
+        conviction_cap=float(config.get("conviction_cap", 2.0)),
         liquid_lookup=liquid_lookup,
         trad_lookup=trad_lookup,
         output_dir=output_dir,
@@ -183,6 +196,15 @@ def run_backtest_and_save(
     exposure_ceiling: float,
     kill_switch_thresholds: dict | None,
     cooldown_rebalances: int,
+    incumbent_bonus_bps: float,
+    replace_threshold_bps: float,
+    max_new_positions_per_rebalance: int | None,
+    underfill_recovery_days: int,
+    recovery_target_slots_mode: str,
+    regime_translation: dict | None,
+    conviction_mode: str,
+    conviction_strength: float,
+    conviction_cap: float,
     liquid_lookup: dict,
     trad_lookup: dict,
     output_dir: Path,
@@ -198,7 +220,7 @@ def run_backtest_and_save(
         "    Signal: "
         f"{signal_col}, Top-K: {top_k}, Rebal: {rebalance_days}d, Hold: {min_hold_days}d, "
         f"Scan: {candidate_scan_multiplier}, Sizing: {sizing_mode}, Fallback: {fallback_mode}, "
-        f"Gate: {gate_profile if gate_enabled else 'off'}"
+        f"Gate: {gate_profile if gate_enabled else 'off'}, Conviction: {conviction_mode}"
     )
 
     start_time = time.time()
@@ -222,6 +244,15 @@ def run_backtest_and_save(
         exposure_ceiling=exposure_ceiling,
         kill_switch_thresholds=kill_switch_thresholds,
         cooldown_rebalances=cooldown_rebalances,
+        incumbent_bonus_bps=incumbent_bonus_bps,
+        replace_threshold_bps=replace_threshold_bps,
+        max_new_positions_per_rebalance=max_new_positions_per_rebalance,
+        underfill_recovery_days=underfill_recovery_days,
+        recovery_target_slots_mode=recovery_target_slots_mode,
+        regime_translation=regime_translation,
+        conviction_mode=conviction_mode,
+        conviction_strength=conviction_strength,
+        conviction_cap=conviction_cap,
     )
     elapsed = time.time() - start_time
 
@@ -246,6 +277,15 @@ def run_backtest_and_save(
         "exposure_ceiling": exposure_ceiling,
         "kill_switch_thresholds": kill_switch_thresholds,
         "cooldown_rebalances": cooldown_rebalances,
+        "incumbent_bonus_bps": incumbent_bonus_bps,
+        "replace_threshold_bps": replace_threshold_bps,
+        "max_new_positions_per_rebalance": max_new_positions_per_rebalance,
+        "underfill_recovery_days": underfill_recovery_days,
+        "recovery_target_slots_mode": recovery_target_slots_mode,
+        "regime_translation": regime_translation,
+        "conviction_mode": conviction_mode,
+        "conviction_strength": conviction_strength,
+        "conviction_cap": conviction_cap,
         "collect_diagnostics": collect_diagnostics,
         "start_date": start_date,
         "end_date": end_date,
@@ -341,6 +381,19 @@ def run_single_strategy(
         exposure_ceiling=float(config.get("exposure_ceiling", 1.00)),
         kill_switch_thresholds=config.get("kill_switch_thresholds"),
         cooldown_rebalances=int(config.get("cooldown_rebalances", 2)),
+        incumbent_bonus_bps=float(config.get("incumbent_bonus_bps", 0.0)),
+        replace_threshold_bps=float(config.get("replace_threshold_bps", 0.0)),
+        max_new_positions_per_rebalance=(
+            None
+            if config.get("max_new_positions_per_rebalance") is None
+            else int(config.get("max_new_positions_per_rebalance"))
+        ),
+        underfill_recovery_days=int(config.get("underfill_recovery_days", 0)),
+        recovery_target_slots_mode=str(config.get("recovery_target_slots_mode", "fixed_target")),
+        regime_translation=config.get("regime_translation"),
+        conviction_mode=str(config.get("conviction_mode", "off")),
+        conviction_strength=float(config.get("conviction_strength", 0.0)),
+        conviction_cap=float(config.get("conviction_cap", 2.0)),
         liquid_lookup=liquid_lookup,
         trad_lookup=trad_lookup,
         output_dir=output_dir,

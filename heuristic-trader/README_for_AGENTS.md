@@ -131,6 +131,17 @@ Optional risk-gate fields (tail-first exposure scaling):
 - `kill_switch_thresholds` (object with optional keys: `drawdown`, `volatility`, `underfill_ratio`, `reject_ratio`)
 - `cooldown_rebalances` (int)
 
+Optional translation controls (T1-T4):
+- `incumbent_bonus_bps` (float, sticky bonus for currently held names)
+- `replace_threshold_bps` (float, minimum challenger edge required to replace an incumbent)
+- `max_new_positions_per_rebalance` (int or `null`, cap on churn per rebalance)
+- `underfill_recovery_days` (int, number of rebalances to keep recovery backlog active)
+- `recovery_target_slots_mode` (`fixed_target` or `dynamic_by_gate`)
+- `regime_translation` (object, optional per-regime overrides; supports `by_gate_state` / `by_benchmark_state` maps or direct regime keys)
+- `conviction_mode` (`off` or `rank_gap`)
+- `conviction_strength` (float, rank-gap sensitivity when `conviction_mode=rank_gap`)
+- `conviction_cap` (float, cap for per-name conviction weight before normalization)
+
 ## CLI Entrypoint
 
 ### Single strategy:
