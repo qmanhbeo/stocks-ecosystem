@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from signal_sweep import _classify_strategy, _strategy_to_signal_id
+from signal_sweep import _classify_strategy, _load_horizon_lens_payload, _strategy_to_signal_id
 
 
 def test_classify_promote_candidate() -> None:
@@ -72,3 +72,46 @@ def test_strategy_to_signal_id_mapping() -> None:
 
 def test_strategy_to_signal_id_unknown() -> None:
     assert _strategy_to_signal_id("some_custom_strategy") is None
+
+
+def test_load_horizon_lens_payload_reads_and_widens(tmp_path) -> None:
+    path = tmp_path / "profit_horizon_metrics.csv"
+    pd.DataFrame(
+        [
+            {
+                "strategy_name": "s1",
+                "horizon": "W",
+                "mean_return": 0.01,
+                "positive_period_rate": 0.6,
+                "worst_period_return": -0.05,
+                "n_periods": 40,
+                "window_start": "2015-01-01",
+                "window_end": "2025-12-31",
+                "selection_lockbox_max_date": "2025-12-31",
+                "informational_lens_only": True,
+            },
+            {
+                "strategy_name": "s1",
+                "horizon": "M",
+                "mean_return": 0.02,
+                "positive_period_rate": 0.7,
+                "worst_period_return": -0.08,
+                "n_periods": 12,
+                "window_start": "2015-01-01",
+                "window_end": "2025-12-31",
+                "selection_lockbox_max_date": "2025-12-31",
+                "informational_lens_only": True,
+            },
+        ]
+    ).to_csv(path, index=False)
+
+    wide_df, summary = _load_horizon_lens_payload(path)
+    assert summary["enabled"] is True
+    assert summary["horizons"] == ["M", "W"]
+    assert summary["window_end"] == "2025-12-31"
+    assert summary["informational_only"] is True
+    assert len(wide_df) == 1
+    row = wide_df.iloc[0]
+    assert row["strategy_name"] == "s1"
+    assert row["h_w_n_periods"] == 40
+    assert row["h_m_n_periods"] == 12

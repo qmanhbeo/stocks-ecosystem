@@ -207,6 +207,12 @@ artifacts/canonical_wfv/
 
 Canonical files are CSV/JSON only, strategy-separated, overwrite-in-place, and exclude volatile fields like timestamps and `elapsed_seconds`.
 
+Development override (explicit):
+```bash
+python cli.py walk-forward -- --canonical-output artifacts/canonical_wfv --allow-lockbox --dev-end-date 2026-03-31
+```
+This appends a `fold_2026` test window ending at the provided date.
+
 ## Profit Decision Pipeline
 
 Use a single canonical command to decide whether a strategy is profit-ready and to diagnose execution conversion failures:
@@ -217,11 +223,20 @@ python cli.py profit
 
 This writes `artifacts/profit_pipeline/<timestamp>/` with:
 - `profit_readiness.csv`: strategy gate results from canonical WFV
+- `profit_horizon_metrics.csv`: informational W/M/Q/6M return diagnostics per strategy (lockbox-safe, no gate impact)
 - `profit_readiness_summary.json`: top candidate + profit-ready count
 - `autopsy_yearly.csv`: year-level execution/PnL diagnostics for the selected strategy
 - `autopsy_cohort_summary.csv`: failure-vs-success cohort means
 - `autopsy_failure_minus_success.csv`: failure minus success delta table
 - `report.md`: compact operator summary
+
+Optional paper-trading handoff bundle:
+```bash
+python cli.py profit -- --emit-paper-handoff
+```
+Additional outputs:
+- `paper_handoff_bundle.json` (primary/fallback strategy package + rollback triggers)
+- `paper_handoff_checklist.md` (operator monitoring contract)
 
 `profit_readiness.csv` now includes machine-checkable execution status fields:
 - `execution_validation_status`
@@ -249,6 +264,7 @@ This reads `data/features/recommendations/signal_promotion_contract_latest.csv` 
 This writes `artifacts/signal_sweeps/<timestamp>/` with:
 - `canonical_wfv/` (strategy-separated fold outputs)
 - `profit_readiness.csv`
+- `profit_horizon_metrics.csv` (informational W/M/Q/6M diagnostics from readiness stage)
 - `autopsy_summary_by_strategy.csv` (unless skipped)
 - `signal_sweep_decisions.csv` (`PROMOTE_CANDIDATE` / `RESEARCH_ONLY` / `KILL`)
 - `signal_sweep_manifest.json`
@@ -257,12 +273,18 @@ This writes `artifacts/signal_sweeps/<timestamp>/` with:
 `signal_sweep_decisions.csv` also carries:
 - `promotion_status`
 - `promotion_status_warning`
+- `h_*` horizon columns such as `h_w_mean_return`, `h_m_positive_rate`, `h_q_worst_return`, `h_6m_n_periods`
 
 Manual override (hybrid enforcement):
 ```bash
 python cli.py sweep -- --promotion-override-strategies strategy_a,strategy_b
 ```
 This marks those rows as `OVERRIDE_PROMOTED`; a note justification is mandatory.
+
+Development override:
+```bash
+python cli.py sweep -- --allow-lockbox --dev-end-date 2026-03-31
+```
 
 The sweep set is predeclared: controls + standalone matrix signals (`c4..c14`) + fixed S1 blends.
 

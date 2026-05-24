@@ -67,6 +67,29 @@ CANONICAL_LEADERBOARD_COLUMNS = [
     "total_trades",
     "robustness_notes",
 ]
+
+
+def build_active_folds(*, allow_2026: bool, dev_end_date: str | None) -> list[dict]:
+    """Build active validation folds with optional 2026 development extension."""
+    folds = list(FOLDS)
+    if not allow_2026:
+        return folds
+
+    fold_2026_end = str(dev_end_date or "2026-12-31")
+    if fold_2026_end < "2026-01-01":
+        raise ValueError(
+            f"dev_end_date must be >= 2026-01-01 when --allow-lockbox is enabled (got {fold_2026_end})"
+        )
+    folds.append(
+        {
+            "name": "fold_2026",
+            "train_start": "2015-01-01",
+            "train_end": "2025-12-31",
+            "test_start": "2026-01-01",
+            "test_end": fold_2026_end,
+        }
+    )
+    return folds
 CANONICAL_USED_CONFIG_KEYS = [
     "name",
     "signal_type",
@@ -118,6 +141,7 @@ def _write_canonical_strategy_outputs(
     strategy_metrics: list[dict],
     summary_row: dict | None,
     active_folds: list[dict],
+    lockbox_max_date: str,
 ):
     """Write deterministic per-strategy canonical artifacts."""
     strategy_dir = canonical_root / "strategies" / strategy_name
@@ -150,7 +174,7 @@ def _write_canonical_strategy_outputs(
         "canonical_schema_version": CANONICAL_SCHEMA_VERSION,
         "strategy_name": strategy_name,
         "validation_type": "walk_forward",
-        "lockbox_max_date": LOCKBOX_MAX_DATE,
+        "lockbox_max_date": lockbox_max_date,
         "fold_count": len(active_folds),
         "folds": _canonical_fold_list(active_folds),
         "source_config_keys": used_keys,
@@ -185,12 +209,17 @@ def _rebuild_canonical_leaderboard(canonical_root: Path) -> pd.DataFrame:
     return leaderboard_df
 
 
-def _write_canonical_manifest(canonical_root: Path, active_folds: list[dict], strategy_count: int):
+def _write_canonical_manifest(
+    canonical_root: Path,
+    active_folds: list[dict],
+    strategy_count: int,
+    lockbox_max_date: str,
+):
     """Write deterministic canonical manifest."""
     manifest = {
         "canonical_schema_version": CANONICAL_SCHEMA_VERSION,
         "validation_type": "walk_forward",
-        "lockbox_max_date": LOCKBOX_MAX_DATE,
+        "lockbox_max_date": lockbox_max_date,
         "fold_count": len(active_folds),
         "folds": _canonical_fold_list(active_folds),
         "strategy_count": int(strategy_count),
@@ -231,6 +260,7 @@ def run_strategy_on_fold(
     liquid_lookup: dict,
     trad_lookup: dict,
     price_cache: dict,
+    allow_2026: bool = False,
     collect_diagnostics: bool = False,
     diagnostics_output_dir: Path | None = None,
 ) -> dict:
@@ -241,7 +271,12 @@ def run_strategy_on_fold(
 
     print(f"\n  Running {strategy_name} on {fold['name']} ({test_start} to {test_end})")
 
-    signal_df = prepare_signal_df_from_config(config, test_start, test_end, allow_2026=False)
+    signal_df = prepare_signal_df_from_config(
+        config,
+        test_start,
+        test_end,
+        allow_2026=allow_2026,
+    )
 
     if len(signal_df) == 0:
         return {
@@ -447,6 +482,17 @@ def create_argument_parser() -> argparse.ArgumentParser:
         default=None,
         help="Deterministic canonical output root (e.g., artifacts/canonical_wfv)",
     )
+    parser.add_argument(
+        "--allow-lockbox",
+        action="store_true",
+        help="Allow adding a 2026 development fold for validation diagnostics.",
+    )
+    parser.add_argument(
+        "--dev-end-date",
+        type=str,
+        default="",
+        help="Optional 2026 fold end date (YYYY-MM-DD) when --allow-lockbox is enabled.",
+    )
     return parser
 
 
@@ -459,7 +505,11 @@ def main():
     else:
         strategy_names = strategy_loader.list_strategies()
 
-    active_folds = FOLDS
+    active_folds = build_active_folds(
+        allow_2026=bool(args.allow_lockbox),
+        dev_end_date=(args.dev_end_date.strip() or None),
+    )
+    lockbox_label = LOCKBOX_MAX_DATE if not args.allow_lockbox else str(active_folds[-1]["test_end"])
 
     print("=" * 80)
     print("WALK-FORWARD VALIDATION")
@@ -531,6 +581,7 @@ def main():
                     liquid_lookup,
                     trad_lookup,
                     price_cache,
+                    allow_2026=bool(args.allow_lockbox),
                     collect_diagnostics=args.collect_diagnostics,
                     diagnostics_output_dir=diagnostics_output_dir,
                 )
@@ -573,6 +624,11 @@ def main():
             json.dump(strategy_summaries, f, indent=2)
         print(f"Saved summary.json: {summary_path}")
 
+        lockbox_note = (
+            f"**Lockbox override enabled**: Includes 2026 development fold through {lockbox_label}"
+            if args.allow_lockbox
+            else "**No 2026 lockbox access**: All test windows end at 2025-12-31"
+        )
         readme_content = f"""# Walk-Forward Validation Results
 
 **Generated**: {datetime.now().isoformat()}
@@ -583,7 +639,7 @@ def main():
 This walk-forward validation harness adapts patterns from alpha-research-lab principles:
 
 - **Explicit temporal folds**: Train/context periods followed by distinct test windows
-- **No 2026 lockbox access**: All test windows end at 2025-12-31
+- {lockbox_note}
 - **No tuning inside validation**: Parameters fixed from strategies.json; this is validation, not optimization
 - **Artifact-first reporting**: CSV + JSON + Markdown for reproducibility
 - **Robustness judged across folds**: Consistency over single-period headline numbers
@@ -650,6 +706,7 @@ This walk-forward validation harness adapts patterns from alpha-research-lab pri
                 strategy_metrics=strategy_metrics_map[strategy_name],
                 summary_row=summary_lookup.get(strategy_name),
                 active_folds=active_folds,
+                lockbox_max_date=lockbox_label,
             )
 
         leaderboard_df = _rebuild_canonical_leaderboard(canonical_output_root)
@@ -657,6 +714,7 @@ This walk-forward validation harness adapts patterns from alpha-research-lab pri
             canonical_root=canonical_output_root,
             active_folds=active_folds,
             strategy_count=len(leaderboard_df),
+            lockbox_max_date=lockbox_label,
         )
         print(f"\nSaved canonical outputs under: {canonical_output_root}")
 

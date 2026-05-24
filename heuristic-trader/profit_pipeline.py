@@ -20,6 +20,7 @@ import numpy as np
 import pandas as pd
 
 import backtest as bt
+from horizon_lens import compute_horizon_metrics_from_curve, horizon_metrics_to_wide, to_records
 from runtime_helpers import compute_vnindex_total_return
 from risk_policy import RiskPolicy, derive_execution_status, evaluate_strategy_row
 from run_backtest import load_caches
@@ -40,6 +41,28 @@ class ReadinessThresholds:
     min_mean_excess_return: float = 0.0
     max_mean_drawdown: float = 0.35
     max_worst_fold_return: float = -0.30
+
+
+def _load_canonical_strategy_config(canonical_dir: Path, strategy_name: str) -> tuple[dict | None, Path]:
+    config_path = canonical_dir / "strategies" / strategy_name / "config_effective.json"
+    if not config_path.exists():
+        return None, config_path
+    with open(config_path, "r", encoding="utf-8") as f:
+        return json.load(f), config_path
+
+
+def _load_canonical_window(canonical_dir: Path) -> tuple[str, str]:
+    manifest_path = canonical_dir / "manifest.json"
+    if manifest_path.exists():
+        with open(manifest_path, "r", encoding="utf-8") as f:
+            payload = json.load(f)
+        folds = payload.get("folds", [])
+        if isinstance(folds, list) and len(folds) > 0:
+            starts = [str(x.get("test_start")) for x in folds if x.get("test_start")]
+            ends = [str(x.get("test_end")) for x in folds if x.get("test_end")]
+            if starts and ends:
+                return min(starts), max(ends)
+    return "2015-01-01", "2025-12-31"
 
 
 def _ensure_dir(path: Path) -> None:
@@ -114,6 +137,61 @@ def _compute_fallback_metrics(fallback_log: pd.DataFrame) -> dict[str, float]:
     return {"fallback_trigger_rate": float(fallback_log["fallback_triggered"].mean())}
 
 
+def _simulate_curve_for_config(
+    *,
+    config: dict,
+    start_date: str,
+    end_date: str,
+    price_cache: dict,
+    liquid_lookup: dict,
+    trad_lookup: dict,
+    allow_2026: bool,
+) -> pd.DataFrame:
+    signal_df = prepare_signal_df_from_config(
+        config=config,
+        start_date=start_date,
+        end_date=end_date,
+        allow_2026=allow_2026,
+    )
+    if signal_df is None or len(signal_df) == 0:
+        return pd.DataFrame()
+    result = bt.simulate_topk_constraint_compliant(
+        signal_df,
+        price_cache,
+        signal_col=str(config["signal_col"]),
+        top_k=int(config["top_k"]),
+        rebalance_days=int(config["rebalance_days"]),
+        min_hold_days=int(config["min_hold_days"]),
+        use_filters=True,
+        liquid_lookup=liquid_lookup,
+        trad_lookup=trad_lookup,
+        collect_diagnostics=False,
+        candidate_scan_multiplier=int(config.get("candidate_scan_multiplier", 3)),
+        sizing_mode=str(config.get("sizing_mode", "fixed_initial")),
+        fallback_mode=str(config.get("fallback_mode", "none")),
+        gate_enabled=bool(config.get("gate_enabled", False)),
+        gate_profile=str(config.get("gate_profile", "off")),
+        exposure_floor=float(config.get("exposure_floor", 0.20)),
+        exposure_ceiling=float(config.get("exposure_ceiling", 1.00)),
+        kill_switch_thresholds=config.get("kill_switch_thresholds"),
+        cooldown_rebalances=int(config.get("cooldown_rebalances", 2)),
+        incumbent_bonus_bps=float(config.get("incumbent_bonus_bps", 0.0)),
+        replace_threshold_bps=float(config.get("replace_threshold_bps", 0.0)),
+        max_new_positions_per_rebalance=(
+            None
+            if config.get("max_new_positions_per_rebalance") is None
+            else int(config.get("max_new_positions_per_rebalance"))
+        ),
+        underfill_recovery_days=int(config.get("underfill_recovery_days", 0)),
+        recovery_target_slots_mode=str(config.get("recovery_target_slots_mode", "fixed_target")),
+        regime_translation=config.get("regime_translation"),
+        conviction_mode=str(config.get("conviction_mode", "off")),
+        conviction_strength=float(config.get("conviction_strength", 0.0)),
+        conviction_cap=float(config.get("conviction_cap", 2.0)),
+    )
+    return result.curve if result.curve is not None else pd.DataFrame()
+
+
 def _run_strategy_year(
     *,
     strategy_name: str,
@@ -121,11 +199,17 @@ def _run_strategy_year(
     price_cache: dict,
     liquid_lookup: dict,
     trad_lookup: dict,
+    allow_2026: bool,
 ) -> dict[str, float | int | str]:
     config = strategy_loader.load_strategy_config(strategy_name)
     start_date = f"{year}-01-01"
     end_date = f"{year}-12-31"
-    signal_df = prepare_signal_df_from_config(config, start_date, end_date, allow_2026=False)
+    signal_df = prepare_signal_df_from_config(
+        config,
+        start_date,
+        end_date,
+        allow_2026=allow_2026,
+    )
 
     result = bt.simulate_topk_constraint_compliant(
         signal_df,
@@ -231,6 +315,7 @@ def run_autopsy(
     failure_years: Iterable[int],
     success_years: Iterable[int],
     output_dir: Path,
+    allow_2026: bool,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     failure_set = set(int(y) for y in failure_years)
     success_set = set(int(y) for y in success_years)
@@ -245,6 +330,7 @@ def run_autopsy(
             price_cache=price_cache,
             liquid_lookup=liquid_lookup,
             trad_lookup=trad_lookup,
+            allow_2026=allow_2026,
         )
         row["cohort"] = _cohort_label(year, failure_years=failure_set, success_years=success_set)
         rows.append(row)
@@ -295,6 +381,126 @@ def run_autopsy(
     return yearly_df, cohort_df
 
 
+def _write_paper_handoff_bundle(
+    *,
+    readiness_df: pd.DataFrame,
+    canonical_dir: Path,
+    output_dir: Path,
+    thresholds: ReadinessThresholds,
+    fallback_strategy: str = "",
+) -> None:
+    if readiness_df is None or readiness_df.empty:
+        return
+
+    ordered = readiness_df.copy().reset_index(drop=True)
+    profit_ready = ordered[ordered["is_profit_ready"] == True]  # noqa: E712
+    primary_name = (
+        str(profit_ready.iloc[0]["strategy_name"])
+        if len(profit_ready) > 0
+        else str(ordered.iloc[0]["strategy_name"])
+    )
+    if fallback_strategy:
+        fallback_name = fallback_strategy
+    elif len(profit_ready) > 1:
+        fallback_name = str(profit_ready.iloc[1]["strategy_name"])
+    elif len(ordered) > 1:
+        fallback_name = str(ordered.iloc[1]["strategy_name"])
+    else:
+        fallback_name = primary_name
+
+    primary_cfg, primary_cfg_path = _load_canonical_strategy_config(canonical_dir, primary_name)
+    fallback_cfg, fallback_cfg_path = _load_canonical_strategy_config(canonical_dir, fallback_name)
+    primary_row = ordered[ordered["strategy_name"] == primary_name].iloc[0]
+    fallback_rows = ordered[ordered["strategy_name"] == fallback_name]
+    fallback_row = fallback_rows.iloc[0] if len(fallback_rows) > 0 else pd.Series(dtype=object)
+
+    def _row_to_jsonable(row: pd.Series) -> dict:
+        if row.empty:
+            return {}
+        return json.loads(row.to_json())
+
+    def _extract_horizon_block(row: pd.Series) -> dict:
+        if row.empty:
+            return {}
+        out: dict[str, dict] = {}
+        for h in ("w", "m", "q", "6m"):
+            mean_key = f"h_{h}_mean_return"
+            pos_key = f"h_{h}_positive_rate"
+            worst_key = f"h_{h}_worst_return"
+            n_key = f"h_{h}_n_periods"
+            if pd.notna(row.get(mean_key, np.nan)):
+                out[h.upper()] = {
+                    "mean_return": float(row.get(mean_key)),
+                    "positive_period_rate": float(row.get(pos_key)),
+                    "worst_period_return": float(row.get(worst_key)),
+                    "n_periods": int(row.get(n_key)),
+                }
+        return out
+
+    bundle = {
+        "generated_at": datetime.now().isoformat(timespec="seconds"),
+        "horizon_lens": {
+            "horizons": ["W", "M", "Q", "6M"],
+            "informational_only": True,
+        },
+        "primary_strategy": {
+            "name": primary_name,
+            "config_path": str(primary_cfg_path),
+            "config_found": primary_cfg is not None,
+            "readiness": _row_to_jsonable(primary_row),
+            "horizon_metrics": _extract_horizon_block(primary_row),
+        },
+        "fallback_strategy": {
+            "name": fallback_name,
+            "config_path": str(fallback_cfg_path),
+            "config_found": fallback_cfg is not None,
+            "readiness": _row_to_jsonable(fallback_row),
+            "horizon_metrics": _extract_horizon_block(fallback_row),
+        },
+        "rollback_triggers": {
+            "mean_drawdown_gt": float(thresholds.max_mean_drawdown),
+            "worst_fold_return_lt": float(thresholds.max_worst_fold_return),
+            "positive_folds_lt": int(thresholds.min_positive_folds),
+            "beating_benchmark_folds_lt": int(thresholds.min_beating_benchmark_folds),
+            "mean_excess_return_lt": float(thresholds.min_mean_excess_return),
+        },
+        "daily_monitoring_fields": [
+            "portfolio_value",
+            "cash_pct",
+            "n_holdings",
+            "underfill_pct",
+            "selection_fill_rate",
+            "liquidity_rejection_rate",
+            "tradability_rejection_rate",
+            "benchmark_excess_return",
+            "kill_switch_active",
+            "gate_state",
+        ],
+    }
+    with open(output_dir / "paper_handoff_bundle.json", "w", encoding="utf-8") as f:
+        json.dump(bundle, f, indent=2)
+
+    lines = [
+        "# Paper Trading Handoff",
+        "",
+        f"- Primary strategy: `{primary_name}`",
+        f"- Fallback strategy: `{fallback_name}`",
+        f"- Canonical source: `{canonical_dir}`",
+        "",
+        "## Rollback Triggers",
+        f"- mean_drawdown > {thresholds.max_mean_drawdown:.2f}",
+        f"- worst_fold_return < {thresholds.max_worst_fold_return:.2f}",
+        f"- positive_folds < {thresholds.min_positive_folds}",
+        f"- beating_benchmark_folds < {thresholds.min_beating_benchmark_folds}",
+        f"- mean_excess_return < {thresholds.min_mean_excess_return:.4f}",
+        "",
+        "## Operator Monitoring Fields",
+    ]
+    for field in bundle["daily_monitoring_fields"]:
+        lines.append(f"- `{field}`")
+    (output_dir / "paper_handoff_checklist.md").write_text("\n".join(lines), encoding="utf-8")
+
+
 def run_readiness(
     *,
     canonical_dir: Path,
@@ -318,6 +524,10 @@ def run_readiness(
     )
 
     rows = []
+    horizon_rows: list[dict] = []
+    start_date, end_date = _load_canonical_window(canonical_dir)
+    allow_2026 = end_date > "2025-12-31"
+    liquid_lookup, trad_lookup, price_cache = load_caches()
     for _, row in leaderboard.iterrows():
         strategy_name = str(row["strategy_name"])
         fold_path = canonical_dir / "strategies" / strategy_name / "fold_metrics.csv"
@@ -352,6 +562,24 @@ def run_readiness(
             manual_override=False,
         )
 
+        strategy_cfg, _ = _load_canonical_strategy_config(canonical_dir, strategy_name)
+        if strategy_cfg is not None:
+            curve = _simulate_curve_for_config(
+                config=strategy_cfg,
+                start_date=start_date,
+                end_date=end_date,
+                price_cache=price_cache,
+                liquid_lookup=liquid_lookup,
+                trad_lookup=trad_lookup,
+                allow_2026=allow_2026,
+            )
+            horizon_rows.extend(
+                to_records(
+                    strategy_name=strategy_name,
+                    stats=compute_horizon_metrics_from_curve(curve),
+                )
+            )
+
         rows.append(
             {
                 "strategy_name": strategy_name,
@@ -380,6 +608,17 @@ def run_readiness(
         ascending=[False, False, False],
     )
 
+    horizon_df = pd.DataFrame(horizon_rows)
+    if len(horizon_df) > 0:
+        horizon_df["window_start"] = start_date
+        horizon_df["window_end"] = end_date
+        horizon_df["selection_lockbox_max_date"] = "2025-12-31"
+        horizon_df["informational_lens_only"] = True
+        horizon_df.to_csv(output_dir / "profit_horizon_metrics.csv", index=False)
+        horizon_wide = horizon_metrics_to_wide(horizon_df)
+        if len(horizon_wide) > 0:
+            readiness_df = readiness_df.merge(horizon_wide, on="strategy_name", how="left")
+
     readiness_df.to_csv(output_dir / "profit_readiness.csv", index=False)
     ready = readiness_df[readiness_df["is_profit_ready"] == True]
     top_ready = ready.iloc[0]["strategy_name"] if len(ready) > 0 else None
@@ -396,6 +635,9 @@ def run_readiness(
         "n_profit_ready": int(len(ready)),
         "top_profit_ready": top_ready,
         "top_candidate": top_candidate,
+        "window_start": start_date,
+        "window_end": end_date,
+        "informational_horizon_lens_only": True,
     }
     with open(output_dir / "profit_readiness_summary.json", "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
@@ -423,6 +665,21 @@ def _write_markdown_report(
         lines.append(f"- Profit-ready strategies: {readiness_summary['n_profit_ready']}")
         lines.append(f"- Top profit-ready: {readiness_summary['top_profit_ready']}")
         lines.append(f"- Top candidate: {readiness_summary['top_candidate']}")
+        lines.append("- Horizon lens: `W/M/Q/6M` informational diagnostics included")
+        lines.append("")
+
+    if readiness_df is not None and len(readiness_df) > 0:
+        lines.append("## Non-Annual Lens")
+        top = readiness_df.iloc[0]
+        for h in ("w", "m", "q", "6m"):
+            mr = top.get(f"h_{h}_mean_return", np.nan)
+            pr = top.get(f"h_{h}_positive_rate", np.nan)
+            wr = top.get(f"h_{h}_worst_return", np.nan)
+            npers = top.get(f"h_{h}_n_periods", np.nan)
+            if pd.notna(mr):
+                lines.append(
+                    f"- {h.upper()}: mean={mr:.2%}, positive={pr:.1%}, worst={wr:.2%}, n={int(npers)}"
+                )
         lines.append("")
 
     if autopsy_yearly is not None and len(autopsy_yearly) > 0:
@@ -444,6 +701,7 @@ def _write_markdown_report(
     lines.append("- `autopsy_yearly.csv`")
     lines.append("- `autopsy_cohort_summary.csv`")
     lines.append("- `autopsy_failure_minus_success.csv` (if both cohorts present)")
+    lines.append("- `profit_horizon_metrics.csv`")
     lines.append("")
 
     (output_dir / "report.md").write_text("\n".join(lines), encoding="utf-8")
@@ -493,6 +751,22 @@ def create_argument_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Skip autopsy stage.",
     )
+    parser.add_argument(
+        "--allow-lockbox",
+        action="store_true",
+        help="Allow 2026+ data in autopsy signal loading for development runs.",
+    )
+    parser.add_argument(
+        "--emit-paper-handoff",
+        action="store_true",
+        help="Write primary/fallback paper-trading handoff bundle from readiness outputs.",
+    )
+    parser.add_argument(
+        "--fallback-strategy",
+        type=str,
+        default="",
+        help="Optional explicit fallback strategy name for paper handoff bundle.",
+    )
     parser.add_argument("--min-positive-folds", type=int, default=7)
     parser.add_argument("--min-beating-benchmark-folds", type=int, default=5)
     parser.add_argument("--min-mean-excess-return", type=float, default=0.0)
@@ -540,6 +814,7 @@ def main() -> None:
             failure_years=failure_years,
             success_years=success_years,
             output_dir=output_dir,
+            allow_2026=bool(args.allow_lockbox),
         )
         print(
             f"[autopsy] strategy={args.strategy} years={len(autopsy_yearly)} "
@@ -553,6 +828,14 @@ def main() -> None:
         autopsy_yearly=autopsy_yearly,
         autopsy_cohort=autopsy_cohort,
     )
+    if args.emit_paper_handoff and readiness_df is not None:
+        _write_paper_handoff_bundle(
+            readiness_df=readiness_df,
+            canonical_dir=Path(args.canonical_dir),
+            output_dir=output_dir,
+            thresholds=thresholds,
+            fallback_strategy=str(args.fallback_strategy or "").strip(),
+        )
     print(f"[done] artifacts={output_dir}")
 
 

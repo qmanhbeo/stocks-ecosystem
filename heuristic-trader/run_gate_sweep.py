@@ -17,7 +17,7 @@ import pandas as pd
 import backtest as bt
 from risk_policy import DEFAULT_RISK_POLICY, evaluate_strategy_row, policy_dict
 from signal_factory import prepare_signal_df_from_config
-from walk_forward_validate import FOLDS, get_benchmark
+from walk_forward_validate import FOLDS, build_active_folds, get_benchmark
 
 
 ROOT = Path(__file__).resolve().parent
@@ -99,6 +99,17 @@ def create_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--sweep-dir", type=str, default=str(DEFAULT_SWEEP_RUN))
     p.add_argument(
+        "--allow-lockbox",
+        action="store_true",
+        help="Allow adding a 2026 development fold and 2026 signal loading.",
+    )
+    p.add_argument(
+        "--dev-end-date",
+        type=str,
+        default="",
+        help="Optional 2026 fold end date (YYYY-MM-DD) when --allow-lockbox is enabled.",
+    )
+    p.add_argument(
         "--translation-best-csv",
         type=str,
         default="",
@@ -118,6 +129,10 @@ def main() -> None:
     print(f"[setup] sweep={sweep_dir}")
     print(f"[setup] out={out_dir}")
     print(f"[setup] strategies={strategies}")
+    active_folds = build_active_folds(
+        allow_2026=bool(args.allow_lockbox),
+        dev_end_date=(args.dev_end_date.strip() or None),
+    )
 
     configs = _load_configs_from_sweep(sweep_dir, strategies)
     if args.translation_best_csv:
@@ -147,18 +162,18 @@ def main() -> None:
     fold_rows: list[dict[str, Any]] = []
     summary_rows: list[dict[str, Any]] = []
 
-    total_runs = len(configs) * len(variants) * len(FOLDS)
+    total_runs = len(configs) * len(variants) * len(active_folds)
     run_idx = 0
     for cfg in configs:
         for variant in variants:
             rows_for_summary: list[dict[str, Any]] = []
-            for fold in FOLDS:
+            for fold in active_folds:
                 run_idx += 1
                 signal_df = prepare_signal_df_from_config(
                     config=cfg,
                     start_date=fold["test_start"],
                     end_date=fold["test_end"],
-                    allow_2026=False,
+                    allow_2026=bool(args.allow_lockbox),
                 )
                 result = bt.simulate_topk_constraint_compliant(
                     signal_df=signal_df,

@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 
 import backtest as bt
+from horizon_lens import horizon_metrics_to_wide
 from runtime_helpers import compute_vnindex_total_return
 from profit_pipeline import (
     ReadinessThresholds,
@@ -34,6 +35,7 @@ from risk_policy import (
 )
 from walk_forward_validate import (
     FOLDS,
+    build_active_folds,
     _rebuild_canonical_leaderboard,
     _write_canonical_manifest,
     _write_canonical_strategy_outputs,
@@ -98,6 +100,48 @@ def _load_promotion_contract(path: Path) -> pd.DataFrame:
         subset=["signal_id"], keep="last"
     )
     return out
+
+
+def _load_horizon_lens_payload(path: Path) -> tuple[pd.DataFrame, dict]:
+    def _to_boolish(value) -> bool:
+        if isinstance(value, bool):
+            return value
+        if pd.isna(value):
+            return False
+        return str(value).strip().lower() in {"1", "true", "t", "yes", "y"}
+
+    summary = {
+        "enabled": False,
+        "artifact_path": str(path),
+        "horizons": [],
+        "n_rows": 0,
+        "n_strategies": 0,
+        "window_start": None,
+        "window_end": None,
+        "selection_lockbox_max_date": "2025-12-31",
+        "informational_only": True,
+    }
+    if not path.exists():
+        return pd.DataFrame(columns=["strategy_name"]), summary
+
+    long_df = pd.read_csv(path)
+    required = {"strategy_name", "horizon"}
+    if long_df.empty or not required.issubset(set(long_df.columns)):
+        return pd.DataFrame(columns=["strategy_name"]), summary
+
+    summary["enabled"] = True
+    summary["horizons"] = sorted({str(x) for x in long_df["horizon"].dropna().unique().tolist()})
+    summary["n_rows"] = int(len(long_df))
+    summary["n_strategies"] = int(long_df["strategy_name"].nunique(dropna=True))
+    if "window_start" in long_df.columns and long_df["window_start"].notna().any():
+        summary["window_start"] = str(long_df["window_start"].dropna().iloc[0])
+    if "window_end" in long_df.columns and long_df["window_end"].notna().any():
+        summary["window_end"] = str(long_df["window_end"].dropna().iloc[0])
+    if "selection_lockbox_max_date" in long_df.columns and long_df["selection_lockbox_max_date"].notna().any():
+        summary["selection_lockbox_max_date"] = str(long_df["selection_lockbox_max_date"].dropna().iloc[0])
+    if "informational_lens_only" in long_df.columns and long_df["informational_lens_only"].notna().any():
+        summary["informational_only"] = _to_boolish(long_df["informational_lens_only"].dropna().iloc[0])
+    return horizon_metrics_to_wide(long_df), summary
 
 
 def build_strategy_configs() -> dict[str, dict]:
@@ -239,6 +283,7 @@ def _run_autopsy_for_config(
     liquid_lookup: dict,
     trad_lookup: dict,
     output_dir: Path,
+    allow_2026: bool,
 ) -> pd.DataFrame:
     years = sorted(set(failure_years) | set(success_years))
     rows: list[dict] = []
@@ -246,7 +291,12 @@ def _run_autopsy_for_config(
     for year in years:
         start_date = f"{year}-01-01"
         end_date = f"{year}-12-31"
-        signal_df = prepare_signal_df_from_config(config, start_date, end_date, allow_2026=False)
+        signal_df = prepare_signal_df_from_config(
+            config,
+            start_date,
+            end_date,
+            allow_2026=allow_2026,
+        )
         result = bt.simulate_topk_constraint_compliant(
             signal_df,
             price_cache,
@@ -344,6 +394,17 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--autopsy-limit", type=int, default=0, help="Limit autopsy to top-N readiness rows (0=all).")
     parser.add_argument("--strategy-limit", type=int, default=0, help="Limit sweep to first N predeclared strategies (0=all).")
     parser.add_argument(
+        "--allow-lockbox",
+        action="store_true",
+        help="Allow adding a 2026 development fold and 2026 signal loading.",
+    )
+    parser.add_argument(
+        "--dev-end-date",
+        type=str,
+        default="",
+        help="Optional 2026 fold end date (YYYY-MM-DD) when --allow-lockbox is enabled.",
+    )
+    parser.add_argument(
         "--promotion-override-strategies",
         type=str,
         default="",
@@ -394,6 +455,11 @@ def main() -> None:
         max_mean_drawdown=float(args.max_mean_drawdown),
         max_worst_fold_return=float(args.max_worst_fold_return),
     )
+    active_folds = build_active_folds(
+        allow_2026=bool(args.allow_lockbox),
+        dev_end_date=(args.dev_end_date.strip() or None),
+    )
+    lockbox_label = "2025-12-31" if not args.allow_lockbox else str(active_folds[-1]["test_end"])
 
     configs = build_strategy_configs()
     if args.strategy_limit and args.strategy_limit > 0:
@@ -405,13 +471,14 @@ def main() -> None:
     all_metrics: list[dict] = []
     for strategy_name, cfg in configs.items():
         print(f"[sweep] strategy={strategy_name}")
-        for fold in FOLDS:
+        for fold in active_folds:
             metrics = run_strategy_on_fold(
                 cfg,
                 fold,
                 liquid_lookup,
                 trad_lookup,
                 price_cache,
+                allow_2026=bool(args.allow_lockbox),
                 collect_diagnostics=False,
                 diagnostics_output_dir=None,
             )
@@ -431,16 +498,23 @@ def main() -> None:
                 config=configs[strategy_name],
                 strategy_metrics=metrics_list,
                 summary_row=summary,
-                active_folds=FOLDS,
+                active_folds=active_folds,
+                lockbox_max_date=lockbox_label,
             )
     leaderboard_df = _rebuild_canonical_leaderboard(canonical_dir)
-    _write_canonical_manifest(canonical_dir, FOLDS, len(leaderboard_df))
+    _write_canonical_manifest(
+        canonical_dir,
+        active_folds,
+        len(leaderboard_df),
+        lockbox_max_date=lockbox_label,
+    )
 
     readiness_df, readiness_summary = run_readiness(
         canonical_dir=canonical_dir,
         thresholds=thresholds,
         output_dir=out_dir,
     )
+    horizon_wide_df, horizon_lens_summary = _load_horizon_lens_payload(out_dir / "profit_horizon_metrics.csv")
 
     autopsy_targets = readiness_df["strategy_name"].tolist()
     if args.autopsy_limit and args.autopsy_limit > 0:
@@ -467,6 +541,7 @@ def main() -> None:
             liquid_lookup=liquid_lookup,
             trad_lookup=trad_lookup,
             output_dir=strat_dir,
+            allow_2026=bool(args.allow_lockbox),
         )
         autopsy_cache[strategy_name] = cohort_df
 
@@ -519,12 +594,22 @@ def main() -> None:
             liquid_lookup=liquid_lookup,
             trad_lookup=trad_lookup,
             output_dir=baseline_dir,
+            allow_2026=bool(args.allow_lockbox),
         )
         baseline_failure_excess = _safe_cohort_metric(baseline_cohort, "failure", "excess_return")
         baseline_failure_cash = _safe_cohort_metric(baseline_cohort, "failure", "avg_cash_pct")
         baseline_failure_underfill = _safe_cohort_metric(baseline_cohort, "failure", "avg_underfill_pct")
 
     merged = readiness_df.copy()
+    if len(horizon_wide_df) > 0:
+        merged = merged.merge(horizon_wide_df, on="strategy_name", how="left", suffixes=("", "__hz"))
+        for col in horizon_wide_df.columns:
+            if col == "strategy_name":
+                continue
+            hz_col = f"{col}__hz"
+            if hz_col in merged.columns:
+                merged[col] = merged[col].where(merged[col].notna(), merged[hz_col])
+                merged = merged.drop(columns=[hz_col])
     if len(autopsy_df) > 0:
         merged = merged.merge(autopsy_df, on="strategy_name", how="left")
     else:
@@ -663,6 +748,8 @@ def main() -> None:
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "n_strategies": int(len(configs)),
         "n_autopsy": int(len(autopsy_targets)),
+        "allow_lockbox": bool(args.allow_lockbox),
+        "lockbox_max_date": lockbox_label,
         "failure_years": failure_years,
         "success_years": success_years,
         "thresholds": thresholds.__dict__,
@@ -676,6 +763,7 @@ def main() -> None:
         "promotion_contract_enabled": bool(contract_enabled),
         "promotion_contract_missing": bool(contract_missing),
         "promotion_feedback_csv": str(publish_feedback_path),
+        "horizon_lens": horizon_lens_summary,
     }
     with open(out_dir / "signal_sweep_manifest.json", "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)

@@ -1,4 +1,5 @@
 import math
+import json
 
 import pandas as pd
 
@@ -6,6 +7,8 @@ from profit_pipeline import (
     _compute_curve_metrics,
     _compute_filter_metrics,
     _compute_fallback_metrics,
+    ReadinessThresholds,
+    _write_paper_handoff_bundle,
 )
 
 
@@ -47,3 +50,56 @@ def test_compute_fallback_metrics() -> None:
     fallback = pd.DataFrame({"fallback_triggered": [True, False, True, False]})
     m = _compute_fallback_metrics(fallback)
     assert math.isclose(m["fallback_trigger_rate"], 0.5, rel_tol=1e-9)
+
+
+def test_write_paper_handoff_bundle_outputs_files(tmp_path) -> None:
+    canonical_dir = tmp_path / "canonical_wfv"
+    strategy_dir = canonical_dir / "strategies" / "s_primary"
+    strategy_dir.mkdir(parents=True)
+    (strategy_dir / "config_effective.json").write_text('{"name":"s_primary"}', encoding="utf-8")
+
+    readiness_df = pd.DataFrame(
+        [
+            {
+                "strategy_name": "s_primary",
+                "is_profit_ready": True,
+                "mean_excess_return": 0.05,
+                "h_w_mean_return": 0.01,
+                "h_w_positive_rate": 0.62,
+                "h_w_worst_return": -0.08,
+                "h_w_n_periods": 50,
+                "h_6m_mean_return": 0.07,
+                "h_6m_positive_rate": 0.71,
+                "h_6m_worst_return": -0.14,
+                "h_6m_n_periods": 18,
+            },
+            {
+                "strategy_name": "s_fallback",
+                "is_profit_ready": False,
+                "mean_excess_return": 0.01,
+            },
+        ]
+    )
+    out_dir = tmp_path / "out"
+    out_dir.mkdir(parents=True)
+
+    _write_paper_handoff_bundle(
+        readiness_df=readiness_df,
+        canonical_dir=canonical_dir,
+        output_dir=out_dir,
+        thresholds=ReadinessThresholds(),
+        fallback_strategy="s_fallback",
+    )
+
+    bundle_path = out_dir / "paper_handoff_bundle.json"
+    checklist_path = out_dir / "paper_handoff_checklist.md"
+    assert bundle_path.exists()
+    assert checklist_path.exists()
+
+    payload = json.loads(bundle_path.read_text(encoding="utf-8"))
+    assert payload["primary_strategy"]["name"] == "s_primary"
+    assert payload["fallback_strategy"]["name"] == "s_fallback"
+    assert payload["horizon_lens"]["horizons"] == ["W", "M", "Q", "6M"]
+    assert payload["horizon_lens"]["informational_only"] is True
+    assert payload["primary_strategy"]["horizon_metrics"]["W"]["n_periods"] == 50
+    assert payload["primary_strategy"]["horizon_metrics"]["6M"]["n_periods"] == 18
