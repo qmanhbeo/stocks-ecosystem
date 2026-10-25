@@ -159,6 +159,7 @@ vn_stock_rl/config/types.py: trading environment configs.
 
 ## Docs
 
+- [Isolated stock RL trade-episode research (parked)](research/trade_episode/README.md)
 - [docs/data.md](docs/data.md)
 - [docs/training.md](docs/training.md)
 - [docs/evaluation.md](docs/evaluation.md)
