@@ -1,0 +1,224 @@
+{
+  "data_root_env": "STOCKS_DATA_ROOT",
+  "date_cutoff": "2025-12-31",
+  "experiment_id": "rl-trade-episode-phase4d-supervised-exit-20261025",
+  "feature_contract": {
+    "agent_state": [
+      "position_in",
+      "holding_intervals_normalized",
+      "entry_relative_unrealized_log_return_scaled",
+      "waiting_steps_normalized",
+      "episode_steps_normalized"
+    ],
+    "alpha_feature_names": [
+      "alpha_s1_xs_proba",
+      "alpha_s1_available",
+      "alpha_c16_order_volume_ratio_rank",
+      "alpha_c16_available"
+    ],
+    "entry_time_feature": "log(daily_volatility_scale at entry decision)",
+    "episode_step_normalizer": 756,
+    "holding_age_normalizer": 756,
+    "market_feature_names_source": "CAUSAL_MARKET_FEATURE_NAMES from Phase 4A",
+    "missing_alpha_policy": "Phase 4A 0.5 sentinel plus explicit availability bit",
+    "scaler_fit_partition": "train only",
+    "synthetic_trade_state": "immediate entry; waiting=0; episode_steps=holding_age+1",
+    "ticker_identity_in_features": false
+  },
+  "isolated_model_dir": "RL-trading-agent/artifacts/trade_episode/phase4d-20261025-run2",
+  "market_regimes": {
+    "available_through_decision_close": true,
+    "falling_threshold": -0.1,
+    "index": "VNINDEX",
+    "lookback_sessions": 126,
+    "rising_threshold": 0.1
+  },
+  "models": {
+    "age_only_ridge": {
+      "alpha": 25.0,
+      "estimator": "StandardScaler + Ridge",
+      "features": "holding age only"
+    },
+    "constant_mean": {
+      "estimator": "training target mean",
+      "features": "constant"
+    },
+    "extra_trees_market": {
+      "estimator": "ExtraTreesRegressor",
+      "features": "market + agent state + entry volatility",
+      "max_depth": 5,
+      "max_features": 0.8,
+      "min_samples_leaf": 50,
+      "n_estimators": 64,
+      "n_jobs": 1,
+      "random_state": 6404
+    },
+    "extra_trees_market_alpha": {
+      "estimator": "ExtraTreesRegressor",
+      "features": "market + S1/C16 + agent state + entry volatility",
+      "max_depth": 5,
+      "max_features": 0.8,
+      "min_samples_leaf": 50,
+      "n_estimators": 64,
+      "n_jobs": 1,
+      "random_state": 6404
+    },
+    "ridge_market": {
+      "alpha": 25.0,
+      "estimator": "StandardScaler + Ridge",
+      "features": "market + agent state + entry volatility"
+    },
+    "ridge_market_alpha": {
+      "alpha": 25.0,
+      "estimator": "StandardScaler + Ridge",
+      "features": "market + S1/C16 + agent state + entry volatility"
+    }
+  },
+  "outputs": [
+    "phase4d_config_snapshot.json",
+    "phase4d_metrics.json",
+    "phase4d_prediction_metrics.csv",
+    "phase4d_policy_metrics.csv",
+    "phase4d_trades.csv",
+    "phase4d_year_regime_metrics.csv",
+    "phase4d_random_controls.csv",
+    "phase4d_ppo_entry_diagnostic.csv",
+    "phase4d_bootstrap_comparisons.csv"
+  ],
+  "partition_bounds": {
+    "exploratory": [
+      "2023-01-01",
+      "2025-12-31"
+    ],
+    "train": [
+      "2015-01-01",
+      "2019-12-31"
+    ],
+    "validation": [
+      "2020-01-01",
+      "2022-12-31"
+    ]
+  },
+  "policy": {
+    "after_model_last_age": "force SELL at first legal next open",
+    "common_entry_coverage_minimum": 0.9,
+    "entry_anchor": "first row in each ticker/split",
+    "entry_execution": "next open if scheduled buy is legal; otherwise skip without shifting schedule",
+    "entry_schedule_stride_trading_rows": 42,
+    "fees": 0.0,
+    "initial_capital_per_ticker": 1.0,
+    "maximum_holding_intervals": 40,
+    "minimum_holding_intervals": 3,
+    "model_last_decision_holding_age": 36,
+    "slippage": 0.0,
+    "threshold_grid_delta_reward": [
+      -0.1,
+      -0.05,
+      0.0
+    ],
+    "threshold_selection_metric": "equal-ticker mean chronological CAGR on validation training tickers"
+  },
+  "ppo_reference": {
+    "checkpoint_manifest": "RL-trading-agent/research/trade_episode/phase4b/checkpoint_manifest.json",
+    "entry_conditioned_diagnostic": {
+      "comparison": "per-entry counterfactual, identical PPO entry fill, no cross-entry compounding",
+      "maximum_holding_intervals": 40,
+      "phase4a_trade_log": "/tmp/stock-rl-trade-episode-phase4a-20261025/phase4a_trades.csv",
+      "policies": [
+        "market_only",
+        "market_plus_s1_c16"
+      ],
+      "seed": 1208,
+      "ticker_scope": "all available training and unseen tickers"
+    },
+    "phase4b_metrics": "RL-trading-agent/research/trade_episode/phase4b/results/phase4b_stock_period_metrics.csv",
+    "phase4b_regime_metrics": "RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv",
+    "retrain": false,
+    "use_existing_phase4b_full_policy_evaluation": true
+  },
+  "price_basis": "user-confirmed dividend-adjusted assumption",
+  "protocol_base_commit": "c548ed5377d7c82cbfd89226baf584247598600b",
+  "protocol_path": "RL-trading-agent/research/trade_episode/phase4d/protocol.md",
+  "randomized_exit_control": {
+    "duration_match_tolerance_sessions": 2,
+    "duration_source": "each supervised policy's validation training-ticker holding-duration distribution",
+    "exposure_match_tolerance_percentage_points": 5.0,
+    "feature_blind": true,
+    "replicates": 100,
+    "seed_start": 54000,
+    "seed_stop_exclusive": 54100
+  },
+  "results_dir": "RL-trading-agent/research/trade_episode/phase4d/results",
+  "run_attempt": 2,
+  "supersedes_attempt": 1,
+  "target": {
+    "decision": "observe close t; submit action; execute at next open",
+    "eligible_current_holding_ages": [
+      2,
+      3,
+      5,
+      10,
+      20,
+      30,
+      36
+    ],
+    "entry_fill_index": "t - current_holding_age",
+    "hold_additional_intervals": 3,
+    "hold_duration_intervals": "current_holding_age + 4",
+    "hold_then_sell_fill_index": "t + 4",
+    "label": "R_hold_3_more - R_sell_now",
+    "label_partition_containment": true,
+    "minimum_sell_duration_intervals": 3,
+    "reward": "(252/T) * ln(P_sell/P_entry) - ln(1.07)",
+    "sell_duration_intervals": "current_holding_age + 1",
+    "sell_now_fill_index": "t + 1"
+  },
+  "threshold_selection_tickers": [
+    "ACB",
+    "BCG",
+    "FPT",
+    "GAS",
+    "HPG",
+    "MWG",
+    "PVD",
+    "REE",
+    "SSI",
+    "VCB",
+    "VIC",
+    "VNM"
+  ],
+  "training_examples": {
+    "equal_weight_strata": [
+      "ticker",
+      "calendar_year",
+      "holding_age"
+    ],
+    "sample_stride_trading_rows": 5,
+    "train_tickers_only": true,
+    "training_partition_only": true
+  },
+  "training_tickers": [
+    "ACB",
+    "BCG",
+    "FPT",
+    "GAS",
+    "HPG",
+    "MWG",
+    "PVD",
+    "REE",
+    "SSI",
+    "VCB",
+    "VIC",
+    "VNM"
+  ],
+  "uncertainty": {
+    "method": "paired hierarchical bootstrap: ticker then ticker-year blocks",
+    "replicates": 2000,
+    "seed": 64045
+  },
+  "unseen_tickers": [
+    "DGC",
+    "MBB",
+    "VHC"
+  ]
+}

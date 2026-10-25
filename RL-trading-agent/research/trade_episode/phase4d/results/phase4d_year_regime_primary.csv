@@ -1,0 +1,1186 @@
+policy,ticker,split,year,regime,trading_intervals,log_wealth_return,compounded_return,exposure_percentage,ticker_group,model_id,variant,source,entry_comparison
+mechanical_3,ACB,exploratory,2023,falling,46,-0.009555295420405,-0.0095097886440247,8.695652173913043,training_universe,,,,
+mechanical_3,ACB,exploratory,2023,rising,64,-0.0312837945097191,-0.0307995197321592,7.8125,training_universe,,,,
+mechanical_3,ACB,exploratory,2023,sideways,138,0.0355553283891069,0.0361949775409861,6.521739130434782,training_universe,,,,
+mechanical_3,ACB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,ACB,exploratory,2024,rising,68,0.0298498501370543,0.0302998229616797,8.823529411764707,training_universe,,,,
+mechanical_3,ACB,exploratory,2024,sideways,182,-0.0010753258403485,-0.0010747478846992,6.593406593406594,training_universe,,,,
+mechanical_3,ACB,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,ACB,exploratory,2025,rising,127,-0.0167510539890199,-0.0166115351993214,4.724409448818897,training_universe,,,,
+mechanical_3,ACB,exploratory,2025,sideways,120,0.0004281190341742,0.0004282106902074,7.5,training_universe,,,,
+mechanical_10,ACB,exploratory,2023,falling,46,0.0352175253610394,0.0358450068538114,32.608695652173914,training_universe,,,,
+mechanical_10,ACB,exploratory,2023,rising,64,-0.0367848676362661,-0.0361165244240781,37.5,training_universe,,,,
+mechanical_10,ACB,exploratory,2023,sideways,138,0.0741540066599538,0.076972653686285,15.217391304347828,training_universe,,,,
+mechanical_10,ACB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,ACB,exploratory,2024,rising,68,0.0611256681288301,0.0630324950981324,19.11764705882353,training_universe,,,,
+mechanical_10,ACB,exploratory,2024,sideways,182,0.122208093690456,0.1299892209432246,25.82417582417583,training_universe,,,,
+mechanical_10,ACB,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,ACB,exploratory,2025,rising,127,-0.0059891402347889,-0.0059712410857448,18.11023622047244,training_universe,,,,
+mechanical_10,ACB,exploratory,2025,sideways,120,0.0071439164180799,0.007169495063263,22.5,training_universe,,,,
+mechanical_20,ACB,exploratory,2023,falling,46,0.0195229009231244,0.0197147190016532,52.17391304347826,training_universe,,,,
+mechanical_20,ACB,exploratory,2023,rising,64,0.0158004342570219,0.0159259211631018,56.25,training_universe,,,,
+mechanical_20,ACB,exploratory,2023,sideways,138,0.0959391835044159,0.1006921217208422,43.47826086956522,training_universe,,,,
+mechanical_20,ACB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,ACB,exploratory,2024,rising,68,0.043519547744348,0.0444804113485295,47.05882352941176,training_universe,,,,
+mechanical_20,ACB,exploratory,2024,sideways,182,0.1247369777572445,0.1328504490118912,48.35164835164835,training_universe,,,,
+mechanical_20,ACB,exploratory,2025,falling,2,0.050563692798702,0.051863857374392,100.0,training_universe,,,,
+mechanical_20,ACB,exploratory,2025,rising,127,0.1845243874737542,0.2026463104325705,33.85826771653544,training_universe,,,,
+mechanical_20,ACB,exploratory,2025,sideways,120,-0.0798651372111839,-0.0767591511733043,45.83333333333333,training_universe,,,,
+supervised:ridge_market,ACB,exploratory,2023,falling,46,-0.0095552954204048,-0.0095097886440245,34.78260869565217,training_universe,ridge_market,,,
+supervised:ridge_market,ACB,exploratory,2023,rising,64,-0.0432476191524067,-0.0423257777745966,32.8125,training_universe,ridge_market,,,
+supervised:ridge_market,ACB,exploratory,2023,sideways,138,0.1416288710189511,0.1521489733060979,19.565217391304348,training_universe,ridge_market,,,
+supervised:ridge_market,ACB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,ACB,exploratory,2024,rising,68,0.029849850137054,0.0302998229616795,8.823529411764707,training_universe,ridge_market,,,
+supervised:ridge_market,ACB,exploratory,2024,sideways,182,0.0435947593251618,0.0445589713256691,13.736263736263735,training_universe,ridge_market,,,
+supervised:ridge_market,ACB,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,ACB,exploratory,2025,rising,127,0.050517336073025,0.0518150975402881,12.598425196850393,training_universe,ridge_market,,,
+supervised:ridge_market,ACB,exploratory,2025,sideways,120,0.0063385704297336,0.0063587016792508,10.0,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,ACB,exploratory,2023,falling,46,-0.0095552954204048,-0.0095097886440245,34.78260869565217,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,ACB,exploratory,2023,rising,64,-0.0257033095014974,-0.0253757915405189,37.5,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,ACB,exploratory,2023,sideways,138,0.1416288710189517,0.1521489733060987,20.28985507246377,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,ACB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,ACB,exploratory,2024,rising,68,0.0298498501370543,0.0302998229616797,8.823529411764707,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,ACB,exploratory,2024,sideways,182,0.1074589048764991,0.1134451026423205,19.78021978021978,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,ACB,exploratory,2025,falling,2,0.0505636927987019,0.0518638573743919,100.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,ACB,exploratory,2025,rising,127,0.0340657311810204,0.0346526134312396,14.960629921259844,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,ACB,exploratory,2025,sideways,120,-0.0577929760234049,-0.0561546741752618,55.00000000000001,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,ACB,exploratory,2023,falling,46,-0.0095552954204048,-0.0095097886440245,34.78260869565217,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,ACB,exploratory,2023,rising,64,-0.0386544618485753,-0.0379169118699607,37.5,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,ACB,exploratory,2023,sideways,138,0.0994476968440003,0.1045606972186397,15.942028985507244,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,ACB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,ACB,exploratory,2024,rising,68,0.0298498501370546,0.03029982296168,8.823529411764707,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,ACB,exploratory,2024,sideways,182,0.0343228085265015,0.0349186333709806,10.43956043956044,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,ACB,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,ACB,exploratory,2025,rising,127,0.0505173360730254,0.0518150975402884,12.598425196850393,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,ACB,exploratory,2025,sideways,120,0.0106644603768563,0.0107215284206349,11.666666666666666,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,ACB,exploratory,2023,falling,46,-0.0095552954204048,-0.0095097886440245,34.78260869565217,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,ACB,exploratory,2023,rising,64,-0.0386544618485753,-0.0379169118699607,37.5,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,ACB,exploratory,2023,sideways,138,0.0653058944327606,0.0674855123214974,28.98550724637681,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,ACB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,ACB,exploratory,2024,rising,68,0.0298498501370545,0.0302998229616799,8.823529411764707,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,ACB,exploratory,2024,sideways,182,0.0343228085265015,0.0349186333709805,10.43956043956044,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,ACB,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,ACB,exploratory,2025,rising,127,0.0505173360730252,0.0518150975402883,12.598425196850393,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,ACB,exploratory,2025,sideways,120,0.0106644603768566,0.0107215284206353,11.666666666666666,training_universe,extra_trees_market_alpha,,,
+mechanical_3,BCG,exploratory,2023,falling,46,-0.0085837436913914,-0.0085470085470084,6.521739130434782,training_universe,,,,
+mechanical_3,BCG,exploratory,2023,rising,64,0.016951265323166,0.0170957532845394,7.8125,training_universe,,,,
+mechanical_3,BCG,exploratory,2023,sideways,138,0.1094816768408658,0.1156996276060326,5.072463768115942,training_universe,,,,
+mechanical_3,BCG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,BCG,exploratory,2024,rising,68,-0.0242195920116811,-0.0239286512482283,8.823529411764707,training_universe,,,,
+mechanical_3,BCG,exploratory,2024,sideways,182,-0.0469282579179364,-0.0458441517378876,6.593406593406594,training_universe,,,,
+mechanical_3,BCG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,BCG,exploratory,2025,rising,67,-0.0927817334509663,-0.0886075949367089,4.477611940298507,training_universe,,,,
+mechanical_3,BCG,exploratory,2025,sideways,120,-0.2286548115823724,-0.2043968809077757,7.5,training_universe,,,,
+mechanical_10,BCG,exploratory,2023,falling,46,-0.0294904285107052,-0.0290598290598291,21.73913043478261,training_universe,,,,
+mechanical_10,BCG,exploratory,2023,rising,64,0.0376577114356739,0.0383757478987675,37.5,training_universe,,,,
+mechanical_10,BCG,exploratory,2023,sideways,138,0.0936550297257575,0.0981808408196083,11.594202898550725,training_universe,,,,
+mechanical_10,BCG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,BCG,exploratory,2024,rising,68,0.0197565965588024,0.0199530497284612,19.11764705882353,training_universe,,,,
+mechanical_10,BCG,exploratory,2024,sideways,182,0.0229791120902482,0.0232451658713138,25.82417582417583,training_universe,,,,
+mechanical_10,BCG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,BCG,exploratory,2025,rising,67,-0.086216846165694,-0.0826047239984343,19.402985074626866,training_universe,,,,
+mechanical_10,BCG,exploratory,2025,sideways,120,-0.1826700098480089,-0.1669569936261164,22.5,training_universe,,,,
+mechanical_20,BCG,exploratory,2023,falling,46,-0.0068610903799452,-0.0068376068376068,32.608695652173914,training_universe,,,,
+mechanical_20,BCG,exploratory,2023,rising,64,0.0418036737250753,0.042689751259961,56.25,training_universe,,,,
+mechanical_20,BCG,exploratory,2023,sideways,138,0.416134955148888,0.5160904592786535,35.507246376811594,training_universe,,,,
+mechanical_20,BCG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,BCG,exploratory,2024,rising,68,0.0181645180607574,0.0183304963678575,47.05882352941176,training_universe,,,,
+mechanical_20,BCG,exploratory,2024,sideways,182,-0.0702143477958501,-0.0678060152363366,48.35164835164835,training_universe,,,,
+mechanical_20,BCG,exploratory,2025,falling,2,-0.0063091691932646,-0.0062893081761005,100.0,training_universe,,,,
+mechanical_20,BCG,exploratory,2025,rising,67,-0.0335731126802718,-0.0330157901605116,34.32835820895522,training_universe,,,,
+mechanical_20,BCG,exploratory,2025,sideways,120,-0.3167605313687245,-0.2714948116204397,45.83333333333333,training_universe,,,,
+supervised:ridge_market,BCG,exploratory,2023,falling,46,-0.013769580723757,-0.0136752136752138,8.695652173913043,training_universe,ridge_market,,,
+supervised:ridge_market,BCG,exploratory,2023,rising,64,-0.1983049211578781,-0.1798802568538241,21.875,training_universe,ridge_market,,,
+supervised:ridge_market,BCG,exploratory,2023,sideways,138,-0.1461711530386382,-0.1359901873757995,23.91304347826087,training_universe,ridge_market,,,
+supervised:ridge_market,BCG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,BCG,exploratory,2024,rising,68,-0.0242195920116808,-0.0239286512482279,8.823529411764707,training_universe,ridge_market,,,
+supervised:ridge_market,BCG,exploratory,2024,sideways,182,-0.1301730915372062,-0.1220565468139812,43.95604395604396,training_universe,ridge_market,,,
+supervised:ridge_market,BCG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,BCG,exploratory,2025,rising,67,-0.0082553046959821,-0.0082213232415505,28.35820895522388,training_universe,ridge_market,,,
+supervised:ridge_market,BCG,exploratory,2025,sideways,120,-0.0492981695217642,-0.0481027393709147,30.0,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,BCG,exploratory,2023,falling,46,-0.013769580723757,-0.0136752136752138,8.695652173913043,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,BCG,exploratory,2023,rising,64,-0.1448570867144641,-0.1348540748771703,28.125,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,BCG,exploratory,2023,sideways,138,-0.1871499980023177,-0.1706806691875619,25.36231884057971,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,BCG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,BCG,exploratory,2024,rising,68,-0.0242195920116808,-0.0239286512482279,8.823529411764707,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,BCG,exploratory,2024,sideways,182,-0.1161690434531903,-0.1096752929869993,44.5054945054945,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,BCG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,BCG,exploratory,2025,rising,67,-0.0259102399347025,-0.0255774500848231,29.850746268656717,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,BCG,exploratory,2025,sideways,120,-0.0898653545107643,-0.0859457497323158,30.833333333333336,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,BCG,exploratory,2023,falling,46,0.0169495583137732,0.017094017094017,26.08695652173913,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,BCG,exploratory,2023,rising,64,0.0169512653231659,0.0170957532845393,7.8125,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,BCG,exploratory,2023,sideways,138,0.1094816768408655,0.1156996276060322,5.072463768115942,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,BCG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,BCG,exploratory,2024,rising,68,-0.0242195920116812,-0.0239286512482284,8.823529411764707,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,BCG,exploratory,2024,sideways,182,-0.0917140752366533,-0.0876340197186723,31.868131868131865,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,BCG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,BCG,exploratory,2025,rising,67,0.1123711422593964,0.118928065080499,17.91044776119403,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,BCG,exploratory,2025,sideways,120,-0.1342604572716463,-0.1256376990760606,44.16666666666666,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,BCG,exploratory,2023,falling,46,0.0169495583137732,0.017094017094017,26.08695652173913,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,BCG,exploratory,2023,rising,64,0.0703990997665793,0.0729363044452596,14.0625,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,BCG,exploratory,2023,sideways,138,0.068502831877186,0.0709036576143217,6.521739130434782,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,BCG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,BCG,exploratory,2024,rising,68,-0.0242195920116808,-0.0239286512482279,8.823529411764707,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,BCG,exploratory,2024,sideways,182,-0.0917140752366542,-0.0876340197186732,31.868131868131865,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,BCG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,BCG,exploratory,2025,rising,67,0.179812423054929,0.1969928138070455,19.402985074626866,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,BCG,exploratory,2025,sideways,120,-0.1193718447778952,-0.1125222645622012,45.0,training_universe,extra_trees_market_alpha,,,
+mechanical_3,FPT,exploratory,2023,falling,46,-0.0063218911173758,-0.006301950007696,8.695652173913043,training_universe,,,,
+mechanical_3,FPT,exploratory,2023,rising,64,0.0073993113454214,0.007426753893177,7.8125,training_universe,,,,
+mechanical_3,FPT,exploratory,2023,sideways,138,0.0653622695107059,0.067545693596806,6.521739130434782,training_universe,,,,
+mechanical_3,FPT,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,FPT,exploratory,2024,rising,68,-0.0238645955161946,-0.0235820878293166,8.823529411764707,training_universe,,,,
+mechanical_3,FPT,exploratory,2024,sideways,182,-0.0206423879372032,-0.0204307922948385,6.593406593406594,training_universe,,,,
+mechanical_3,FPT,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,FPT,exploratory,2025,rising,127,-0.0494292524034185,-0.0482275086291412,4.724409448818897,training_universe,,,,
+mechanical_3,FPT,exploratory,2025,sideways,120,-0.0868970274475262,-0.0832285069264268,7.5,training_universe,,,,
+mechanical_10,FPT,exploratory,2023,falling,46,-0.0201478438480721,-0.0199462323250144,32.608695652173914,training_universe,,,,
+mechanical_10,FPT,exploratory,2023,rising,64,0.0524957676817335,0.0538981016369117,37.5,training_universe,,,,
+mechanical_10,FPT,exploratory,2023,sideways,138,0.1031736724858315,0.1086839402527445,15.217391304347828,training_universe,,,,
+mechanical_10,FPT,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,FPT,exploratory,2024,rising,68,-0.0253952861564074,-0.0250755382914924,19.11764705882353,training_universe,,,,
+mechanical_10,FPT,exploratory,2024,sideways,182,-0.0265058618454194,-0.0261576646944286,25.82417582417583,training_universe,,,,
+mechanical_10,FPT,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,FPT,exploratory,2025,rising,127,-0.2240687919304285,-0.2007398501704809,18.11023622047244,training_universe,,,,
+mechanical_10,FPT,exploratory,2025,sideways,120,-0.0248267217753826,-0.0245210733588061,22.5,training_universe,,,,
+mechanical_20,FPT,exploratory,2023,falling,46,-0.0249524901617559,-0.0246437500547642,52.17391304347826,training_universe,,,,
+mechanical_20,FPT,exploratory,2023,rising,64,0.0194368890580994,0.019627015208716,56.25,training_universe,,,,
+mechanical_20,FPT,exploratory,2023,sideways,138,0.1843250071301307,0.2024065503004619,43.47826086956522,training_universe,,,,
+mechanical_20,FPT,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,FPT,exploratory,2024,rising,68,0.1055558193815604,0.1113281364408311,47.05882352941176,training_universe,,,,
+mechanical_20,FPT,exploratory,2024,sideways,182,0.1665429054830492,0.1812142153496464,48.35164835164835,training_universe,,,,
+mechanical_20,FPT,exploratory,2025,falling,2,0.0689333990078236,0.0713648528099911,100.0,training_universe,,,,
+mechanical_20,FPT,exploratory,2025,rising,127,-0.2569439374065865,-0.2265884279914472,33.85826771653544,training_universe,,,,
+mechanical_20,FPT,exploratory,2025,sideways,120,-0.2097263268303716,-0.1891938885120324,45.83333333333333,training_universe,,,,
+supervised:ridge_market,FPT,exploratory,2023,falling,46,0.001187924332577,0.0011886301941627,19.565217391304348,training_universe,ridge_market,,,
+supervised:ridge_market,FPT,exploratory,2023,rising,64,-0.0395590124271042,-0.0387867712087268,21.875,training_universe,ridge_market,,,
+supervised:ridge_market,FPT,exploratory,2023,sideways,138,0.0099254416035258,0.0099748621706934,27.536231884057973,training_universe,ridge_market,,,
+supervised:ridge_market,FPT,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,FPT,exploratory,2024,rising,68,0.0127761398852338,0.0128581034477787,23.52941176470588,training_universe,ridge_market,,,
+supervised:ridge_market,FPT,exploratory,2024,sideways,182,-0.0131692505536798,-0.0130829153790081,29.120879120879124,training_universe,ridge_market,,,
+supervised:ridge_market,FPT,exploratory,2025,falling,2,0.0689333990078234,0.0713648528099909,100.0,training_universe,ridge_market,,,
+supervised:ridge_market,FPT,exploratory,2025,rising,127,-0.1694893966443928,-0.1559042953201654,55.11811023622048,training_universe,ridge_market,,,
+supervised:ridge_market,FPT,exploratory,2025,sideways,120,-0.0860282797854555,-0.0824317177809253,45.83333333333333,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,FPT,exploratory,2023,falling,46,0.001187924332577,0.0011886301941627,19.565217391304348,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,FPT,exploratory,2023,rising,64,-0.0395590124271042,-0.0387867712087268,21.875,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,FPT,exploratory,2023,sideways,138,0.0099254416035258,0.0099748621706934,27.536231884057973,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,FPT,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,FPT,exploratory,2024,rising,68,0.0127761398852334,0.0128581034477784,23.52941176470588,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,FPT,exploratory,2024,sideways,182,0.030737181396959,0.0312144459284314,29.67032967032967,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,FPT,exploratory,2025,falling,2,0.0689333990078236,0.0713648528099911,100.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,FPT,exploratory,2025,rising,127,-0.1694893966443917,-0.1559042953201645,55.11811023622048,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,FPT,exploratory,2025,sideways,120,-0.0760117628286199,-0.0731946953566988,46.66666666666666,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,FPT,exploratory,2023,falling,46,0.0050005104698361,0.0050130338881088,10.869565217391305,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,FPT,exploratory,2023,rising,64,0.0125450010249766,0.0126240196341207,15.625,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,FPT,exploratory,2023,sideways,138,0.0653622695107059,0.067545693596806,6.521739130434782,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,FPT,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,FPT,exploratory,2024,rising,68,0.0047820188524331,0.0047934709520275,10.294117647058822,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,FPT,exploratory,2024,sideways,182,-0.017992041170675,-0.0178311507585665,19.230769230769237,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,FPT,exploratory,2025,falling,2,0.0689333990078236,0.0713648528099911,100.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,FPT,exploratory,2025,rising,127,-0.0848720477266667,-0.0813701823445058,26.77165354330709,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,FPT,exploratory,2025,sideways,120,-0.0741438399518607,-0.0714618766438329,48.333333333333336,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,FPT,exploratory,2023,falling,46,0.0050005104698361,0.0050130338881088,10.869565217391305,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,FPT,exploratory,2023,rising,64,0.0125450010249766,0.0126240196341207,15.625,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,FPT,exploratory,2023,sideways,138,0.0653622695107059,0.067545693596806,6.521739130434782,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,FPT,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,FPT,exploratory,2024,rising,68,0.0047820188524331,0.0047934709520275,10.294117647058822,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,FPT,exploratory,2024,sideways,182,-0.004093466168222,-0.0040850993559012,34.065934065934066,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,FPT,exploratory,2025,falling,2,0.0689333990078236,0.0713648528099911,100.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,FPT,exploratory,2025,rising,127,-0.0818610999406634,-0.0786000676863575,37.00787401574803,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,FPT,exploratory,2025,sideways,120,-0.0289961240666795,-0.0285797703806557,61.66666666666667,training_universe,extra_trees_market_alpha,,,
+mechanical_3,GAS,exploratory,2023,falling,46,0.028117787730786,0.0285168239496782,8.695652173913043,training_universe,,,,
+mechanical_3,GAS,exploratory,2023,rising,64,0.0086996717561305,0.008737623877628,7.8125,training_universe,,,,
+mechanical_3,GAS,exploratory,2023,sideways,138,0.023320934432962,0.0235949937171633,6.521739130434782,training_universe,,,,
+mechanical_3,GAS,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,GAS,exploratory,2024,rising,68,-0.0101822168741456,-0.0101305536014774,8.823529411764707,training_universe,,,,
+mechanical_3,GAS,exploratory,2024,sideways,182,-0.0257073278088576,-0.0253797078722807,6.593406593406594,training_universe,,,,
+mechanical_3,GAS,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,GAS,exploratory,2025,rising,127,-0.0303943834046873,-0.0299371186042871,4.724409448818897,training_universe,,,,
+mechanical_3,GAS,exploratory,2025,sideways,120,0.0437337252373482,0.0447041395024323,7.5,training_universe,,,,
+mechanical_10,GAS,exploratory,2023,falling,46,-0.0203489350191526,-0.0201432926706662,32.608695652173914,training_universe,,,,
+mechanical_10,GAS,exploratory,2023,rising,64,0.0490484380357487,0.0502712225829774,37.5,training_universe,,,,
+mechanical_10,GAS,exploratory,2023,sideways,138,0.0353520751149182,0.0359843889212413,15.217391304347828,training_universe,,,,
+mechanical_10,GAS,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,GAS,exploratory,2024,rising,68,0.061921077027198,0.0638783769703745,19.11764705882353,training_universe,,,,
+mechanical_10,GAS,exploratory,2024,sideways,182,-0.011845582968043,-0.0117757002561051,25.82417582417583,training_universe,,,,
+mechanical_10,GAS,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,GAS,exploratory,2025,rising,127,-0.028269352772134,-0.0278735134302754,18.11023622047244,training_universe,,,,
+mechanical_10,GAS,exploratory,2025,sideways,120,0.0387583350257811,0.0395192379029043,22.5,training_universe,,,,
+mechanical_20,GAS,exploratory,2023,falling,46,-0.0250590560532831,-0.0247476842250792,52.17391304347826,training_universe,,,,
+mechanical_20,GAS,exploratory,2023,rising,64,0.0207865909477942,0.021004136860717,56.25,training_universe,,,,
+mechanical_20,GAS,exploratory,2023,sideways,138,0.0222469201571592,0.0224962282317987,43.47826086956522,training_universe,,,,
+mechanical_20,GAS,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,GAS,exploratory,2024,rising,68,0.0459283560402041,0.0469993970871127,47.05882352941176,training_universe,,,,
+mechanical_20,GAS,exploratory,2024,sideways,182,-0.003068816594854,-0.003064112590347,48.35164835164835,training_universe,,,,
+mechanical_20,GAS,exploratory,2025,falling,2,-0.0054634282239502,-0.0054485308425765,100.0,training_universe,,,,
+mechanical_20,GAS,exploratory,2025,rising,127,-0.0340877217031917,-0.0335132809423146,33.85826771653544,training_universe,,,,
+mechanical_20,GAS,exploratory,2025,sideways,120,-0.0288612989437271,-0.028448789699214,45.83333333333333,training_universe,,,,
+supervised:ridge_market,GAS,exploratory,2023,falling,46,0.0281177877307858,0.028516823949678,17.391304347826086,training_universe,ridge_market,,,
+supervised:ridge_market,GAS,exploratory,2023,rising,64,0.0086996717561307,0.0087376238776282,7.8125,training_universe,ridge_market,,,
+supervised:ridge_market,GAS,exploratory,2023,sideways,138,0.0578701946899987,0.0595774480041608,10.869565217391305,training_universe,ridge_market,,,
+supervised:ridge_market,GAS,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,GAS,exploratory,2024,rising,68,-0.0101822168741456,-0.0101305536014774,8.823529411764707,training_universe,ridge_market,,,
+supervised:ridge_market,GAS,exploratory,2024,sideways,182,-0.017959587515253,-0.0177992752719318,39.56043956043956,training_universe,ridge_market,,,
+supervised:ridge_market,GAS,exploratory,2025,falling,2,-0.0054634282239501,-0.0054485308425764,100.0,training_universe,ridge_market,,,
+supervised:ridge_market,GAS,exploratory,2025,rising,127,-0.040134720153072,-0.0393399898294474,32.28346456692913,training_universe,ridge_market,,,
+supervised:ridge_market,GAS,exploratory,2025,sideways,120,-0.0402844603056826,-0.0394838284365011,38.333333333333336,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,GAS,exploratory,2023,falling,46,0.0281177877307858,0.028516823949678,17.391304347826086,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,GAS,exploratory,2023,rising,64,0.0086996717561307,0.0087376238776282,7.8125,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,GAS,exploratory,2023,sideways,138,0.0617050076490753,0.0636485302633761,11.594202898550725,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,GAS,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,GAS,exploratory,2024,rising,68,0.0041167794154829,0.0041252649922808,10.294117647058822,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,GAS,exploratory,2024,sideways,182,-0.0529911687953466,-0.0516116121427401,56.59340659340659,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,GAS,exploratory,2025,falling,2,-0.0054634282239501,-0.0054485308425764,100.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,GAS,exploratory,2025,rising,127,-0.0401347201530721,-0.0393399898294476,32.28346456692913,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,GAS,exploratory,2025,sideways,120,-0.0416895030783944,-0.0408324470861217,40.0,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,GAS,exploratory,2023,falling,46,0.0281177877307862,0.0285168239496784,8.695652173913043,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,GAS,exploratory,2023,rising,64,0.0107266468011161,0.0107843835327569,7.8125,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,GAS,exploratory,2023,sideways,138,0.0325022704483581,0.0330362385967417,10.869565217391305,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,GAS,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,GAS,exploratory,2024,rising,68,-0.0101822168741455,-0.0101305536014773,8.823529411764707,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,GAS,exploratory,2024,sideways,182,-0.0236071641531594,-0.0233306948784679,38.46153846153847,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,GAS,exploratory,2025,falling,2,-0.0054634282239499,-0.0054485308425762,100.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,GAS,exploratory,2025,rising,127,0.0065288673678237,0.0065502268815525,30.70866141732284,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,GAS,exploratory,2025,sideways,120,-0.0402844603056821,-0.0394838284365006,38.333333333333336,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,GAS,exploratory,2023,falling,46,0.0281177877307858,0.028516823949678,17.391304347826086,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,GAS,exploratory,2023,rising,64,0.0107266468011162,0.010784383532757,7.8125,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,GAS,exploratory,2023,sideways,138,0.0180024105134486,0.0181654306882993,37.68115942028986,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,GAS,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,GAS,exploratory,2024,rising,68,0.004116779415483,0.0041252649922809,10.294117647058822,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,GAS,exploratory,2024,sideways,182,-0.013947236453359,-0.0138504243607009,39.56043956043956,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,GAS,exploratory,2025,falling,2,-0.0054634282239501,-0.0054485308425764,100.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,GAS,exploratory,2025,rising,127,-0.0255766188401414,-0.0252523079330308,33.07086614173229,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,GAS,exploratory,2025,sideways,120,-0.0402844603056825,-0.039483828436501,38.333333333333336,training_universe,extra_trees_market_alpha,,,
+mechanical_3,HPG,exploratory,2023,falling,46,0.0038398501070395,0.0038472317766059,8.695652173913043,training_universe,,,,
+mechanical_3,HPG,exploratory,2023,rising,64,-0.0466558259198412,-0.0455841737420968,7.8125,training_universe,,,,
+mechanical_3,HPG,exploratory,2023,sideways,138,0.0386391635624179,0.0393953642553777,6.521739130434782,training_universe,,,,
+mechanical_3,HPG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,HPG,exploratory,2024,rising,68,0.0001885579065335,0.0001885756846929,8.823529411764707,training_universe,,,,
+mechanical_3,HPG,exploratory,2024,sideways,182,-0.0693518183083342,-0.0670016235805011,6.593406593406594,training_universe,,,,
+mechanical_3,HPG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,HPG,exploratory,2025,rising,127,-0.0067024005056205,-0.0066799895164461,4.724409448818897,training_universe,,,,
+mechanical_3,HPG,exploratory,2025,sideways,120,-0.0334432411833453,-0.0328901983184517,7.5,training_universe,,,,
+mechanical_10,HPG,exploratory,2023,falling,46,0.0039163311420233,0.0039240099878589,32.608695652173914,training_universe,,,,
+mechanical_10,HPG,exploratory,2023,rising,64,-0.09251025303395,-0.0883601361579305,37.5,training_universe,,,,
+mechanical_10,HPG,exploratory,2023,sideways,138,0.147667886617574,0.1591278705526473,15.217391304347828,training_universe,,,,
+mechanical_10,HPG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,HPG,exploratory,2024,rising,68,-0.0202330728139299,-0.0200297577346758,19.11764705882353,training_universe,,,,
+mechanical_10,HPG,exploratory,2024,sideways,182,-0.0094440791220585,-0.0093996238632232,25.82417582417583,training_universe,,,,
+mechanical_10,HPG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,HPG,exploratory,2025,rising,127,-0.0719510432820242,-0.0694235473350124,18.11023622047244,training_universe,,,,
+mechanical_10,HPG,exploratory,2025,sideways,120,-0.0102904817882546,-0.010237715931006,22.5,training_universe,,,,
+mechanical_20,HPG,exploratory,2023,falling,46,-0.0447612066488185,-0.0437742050657518,52.17391304347826,training_universe,,,,
+mechanical_20,HPG,exploratory,2023,rising,64,-0.1343932029866068,-0.1257537592214174,56.25,training_universe,,,,
+mechanical_20,HPG,exploratory,2023,sideways,138,0.1552883367607361,0.1679946883623682,43.47826086956522,training_universe,,,,
+mechanical_20,HPG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,HPG,exploratory,2024,rising,68,-0.0019731224139169,-0.0019711770875528,47.05882352941176,training_universe,,,,
+mechanical_20,HPG,exploratory,2024,sideways,182,0.0143555110758873,0.0144590462652816,48.35164835164835,training_universe,,,,
+mechanical_20,HPG,exploratory,2025,falling,2,-0.0063091691932644,-0.0062893081761003,100.0,training_universe,,,,
+mechanical_20,HPG,exploratory,2025,rising,127,0.0598057921663672,0.0616303495931627,33.85826771653544,training_universe,,,,
+mechanical_20,HPG,exploratory,2025,sideways,120,-0.02873463887939,-0.0283257251668942,45.83333333333333,training_universe,,,,
+supervised:ridge_market,HPG,exploratory,2023,falling,46,0.0133126080270019,0.0134016153277792,10.869565217391305,training_universe,ridge_market,,,
+supervised:ridge_market,HPG,exploratory,2023,rising,64,-0.0836811960904822,-0.080275578897307,29.6875,training_universe,ridge_market,,,
+supervised:ridge_market,HPG,exploratory,2023,sideways,138,-0.0410257817191677,-0.0401956157782833,25.36231884057971,training_universe,ridge_market,,,
+supervised:ridge_market,HPG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,HPG,exploratory,2024,rising,68,0.0001885579065337,0.0001885756846932,8.823529411764707,training_universe,ridge_market,,,
+supervised:ridge_market,HPG,exploratory,2024,sideways,182,-0.0560297847102974,-0.0544890262994377,42.30769230769231,training_universe,ridge_market,,,
+supervised:ridge_market,HPG,exploratory,2025,falling,2,-0.0063091691932646,-0.0062893081761005,100.0,training_universe,ridge_market,,,
+supervised:ridge_market,HPG,exploratory,2025,rising,127,0.0237626309637605,0.0240472119390885,14.960629921259844,training_universe,ridge_market,,,
+supervised:ridge_market,HPG,exploratory,2025,sideways,120,-0.0592696087631583,-0.0575473585898805,37.5,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,HPG,exploratory,2023,falling,46,0.0133126080270019,0.0134016153277792,10.869565217391305,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,HPG,exploratory,2023,rising,64,-0.1064157792332707,-0.1009492362825756,46.875,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,HPG,exploratory,2023,sideways,138,-0.0265399637680701,-0.0261908740241669,29.71014492753623,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,HPG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,HPG,exploratory,2024,rising,68,0.0001885579065336,0.0001885756846931,8.823529411764707,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,HPG,exploratory,2024,sideways,182,-0.0560297847102974,-0.0544890262994377,42.30769230769231,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,HPG,exploratory,2025,falling,2,-0.0063091691932644,-0.0062893081761003,100.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,HPG,exploratory,2025,rising,127,0.0312673566178286,0.0317613152305322,22.83464566929134,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,HPG,exploratory,2025,sideways,120,-0.0397703837117255,-0.0389899226127484,39.16666666666666,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,HPG,exploratory,2023,falling,46,0.0133126080270019,0.0134016153277792,10.869565217391305,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,HPG,exploratory,2023,rising,64,-0.0643660577753123,-0.062338301654763,23.4375,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,HPG,exploratory,2023,sideways,138,0.0386391635624179,0.0393953642553777,6.521739130434782,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,HPG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,HPG,exploratory,2024,rising,68,0.0001885579065335,0.0001885756846929,8.823529411764707,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,HPG,exploratory,2024,sideways,182,-0.1203958372050595,-0.1134305699142976,39.56043956043956,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,HPG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,HPG,exploratory,2025,rising,127,0.0237626309637607,0.0240472119390888,14.960629921259844,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,HPG,exploratory,2025,sideways,120,0.0096017181730569,0.0096479625590109,15.833333333333332,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,HPG,exploratory,2023,falling,46,0.0133126080270019,0.0134016153277792,10.869565217391305,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,HPG,exploratory,2023,rising,64,-0.1072338627629953,-0.1016844341371279,23.4375,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,HPG,exploratory,2023,sideways,138,-0.041025781719168,-0.0401956157782836,25.36231884057971,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,HPG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,HPG,exploratory,2024,rising,68,0.0001885579065335,0.0001885756846929,8.823529411764707,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,HPG,exploratory,2024,sideways,182,-0.0835333924207518,-0.0801396302061172,40.65934065934066,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,HPG,exploratory,2025,falling,2,-0.0063091691932645,-0.0062893081761004,100.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,HPG,exploratory,2025,rising,127,0.018612404987444,0.0187866954394008,18.11023622047244,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,HPG,exploratory,2025,sideways,120,-0.0397703837117251,-0.0389899226127481,39.16666666666666,training_universe,extra_trees_market_alpha,,,
+mechanical_3,MWG,exploratory,2023,falling,46,-0.0051612939962302,-0.0051479974040819,8.695652173913043,training_universe,,,,
+mechanical_3,MWG,exploratory,2023,rising,64,0.065529627770721,0.0677243711377372,7.8125,training_universe,,,,
+mechanical_3,MWG,exploratory,2023,sideways,138,0.0377782237331261,0.0385008924863449,6.521739130434782,training_universe,,,,
+mechanical_3,MWG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,MWG,exploratory,2024,rising,68,-0.0266861884313808,-0.0263332585254251,8.823529411764707,training_universe,,,,
+mechanical_3,MWG,exploratory,2024,sideways,182,-0.0805633475257115,-0.077403542470245,6.593406593406594,training_universe,,,,
+mechanical_3,MWG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,MWG,exploratory,2025,rising,127,-0.0113402060776512,-0.0112761483121193,4.724409448818897,training_universe,,,,
+mechanical_3,MWG,exploratory,2025,sideways,120,-0.0486385082624341,-0.0474746024692035,7.5,training_universe,,,,
+mechanical_10,MWG,exploratory,2023,falling,46,-0.0560759100652832,-0.0545326373229479,32.608695652173914,training_universe,,,,
+mechanical_10,MWG,exploratory,2023,rising,64,0.0504711945650703,0.0517665663252583,37.5,training_universe,,,,
+mechanical_10,MWG,exploratory,2023,sideways,138,0.0681383633095462,0.0705134180115052,15.217391304347828,training_universe,,,,
+mechanical_10,MWG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,MWG,exploratory,2024,rising,68,-0.0383961228315399,-0.0376683361636475,19.11764705882353,training_universe,,,,
+mechanical_10,MWG,exploratory,2024,sideways,182,0.0067243314894548,0.0067469905670215,25.82417582417583,training_universe,,,,
+mechanical_10,MWG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,MWG,exploratory,2025,rising,127,-0.0982040763916481,-0.0935361030044509,18.11023622047244,training_universe,,,,
+mechanical_10,MWG,exploratory,2025,sideways,120,-0.0284837655897569,-0.028081927465228,22.5,training_universe,,,,
+mechanical_20,MWG,exploratory,2023,falling,46,-0.0600488435709843,-0.058281464435235,52.17391304347826,training_universe,,,,
+mechanical_20,MWG,exploratory,2023,rising,64,0.1165470595675262,0.1236103858418738,56.25,training_universe,,,,
+mechanical_20,MWG,exploratory,2023,sideways,138,0.0781233410030144,0.0812560136470844,43.47826086956522,training_universe,,,,
+mechanical_20,MWG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,MWG,exploratory,2024,rising,68,0.0656139378191211,0.0678143948260432,47.05882352941176,training_universe,,,,
+mechanical_20,MWG,exploratory,2024,sideways,182,0.1214256603775744,0.1291054255341349,48.35164835164835,training_universe,,,,
+mechanical_20,MWG,exploratory,2025,falling,2,0.0061728591070808,0.0061919504643961,100.0,training_universe,,,,
+mechanical_20,MWG,exploratory,2025,rising,127,0.0662469021497058,0.0684904972014236,33.85826771653544,training_universe,,,,
+mechanical_20,MWG,exploratory,2025,sideways,120,-0.1174662027419561,-0.110829437234421,45.83333333333333,training_universe,,,,
+supervised:ridge_market,MWG,exploratory,2023,falling,46,0.0049542117878884,0.0049665041864397,10.869565217391305,training_universe,ridge_market,,,
+supervised:ridge_market,MWG,exploratory,2023,rising,64,0.0797867623382053,0.0830560947005388,10.9375,training_universe,ridge_market,,,
+supervised:ridge_market,MWG,exploratory,2023,sideways,138,0.0286087959494649,0.0290219581656642,7.971014492753622,training_universe,ridge_market,,,
+supervised:ridge_market,MWG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,MWG,exploratory,2024,rising,68,0.0089460507815489,0.0089861862893268,20.588235294117645,training_universe,ridge_market,,,
+supervised:ridge_market,MWG,exploratory,2024,sideways,182,0.017142156215107,0.0172899261323978,28.021978021978025,training_universe,ridge_market,,,
+supervised:ridge_market,MWG,exploratory,2025,falling,2,0.0061728591070808,0.0061919504643961,100.0,training_universe,ridge_market,,,
+supervised:ridge_market,MWG,exploratory,2025,rising,127,0.045450584027377,0.0464992895559417,25.196850393700785,training_universe,ridge_market,,,
+supervised:ridge_market,MWG,exploratory,2025,sideways,120,-0.0242548886484255,-0.0239631026760484,47.5,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,MWG,exploratory,2023,falling,46,0.0049542117878884,0.0049665041864397,10.869565217391305,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MWG,exploratory,2023,rising,64,0.0797867623382053,0.0830560947005388,10.9375,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MWG,exploratory,2023,sideways,138,0.0286087959494649,0.0290219581656642,7.971014492753622,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MWG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MWG,exploratory,2024,rising,68,0.0262170797098628,0.0265637704529473,22.058823529411764,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MWG,exploratory,2024,sideways,182,0.0442834739047532,0.0452786221070109,29.67032967032967,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MWG,exploratory,2025,falling,2,0.0061728591070808,0.0061919504643961,100.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MWG,exploratory,2025,rising,127,0.0454505840273767,0.0464992895559413,25.196850393700785,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MWG,exploratory,2025,sideways,120,-0.0242548886484249,-0.0239631026760479,47.5,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,MWG,exploratory,2023,falling,46,0.0059367714346108,0.0059544289878025,19.565217391304348,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,MWG,exploratory,2023,rising,64,0.0781689977663293,0.0813053814239602,17.1875,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,MWG,exploratory,2023,sideways,138,0.0540319885049653,0.0555183660695426,11.594202898550725,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,MWG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,MWG,exploratory,2024,rising,68,-0.0266861884313802,-0.0263332585254245,8.823529411764707,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,MWG,exploratory,2024,sideways,182,0.0669743520735524,0.0692680533145221,27.472527472527474,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,MWG,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,MWG,exploratory,2025,rising,127,0.0143681506325558,0.0144718686589193,6.299212598425196,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,MWG,exploratory,2025,sideways,120,0.0048831055424483,0.0048950473320784,17.5,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,MWG,exploratory,2023,falling,46,0.0059367714346107,0.0059544289878024,19.565217391304348,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MWG,exploratory,2023,rising,64,0.0781689977663293,0.0813053814239602,17.1875,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MWG,exploratory,2023,sideways,138,0.0867146359353234,0.0905854214206899,12.318840579710146,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MWG,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MWG,exploratory,2024,rising,68,-0.0250004159485432,-0.0246904936503201,11.76470588235294,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MWG,exploratory,2024,sideways,182,0.0484913488280319,0.0496862907644303,30.21978021978022,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MWG,exploratory,2025,falling,2,0.0061728591070809,0.0061919504643962,100.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MWG,exploratory,2025,rising,127,-0.0101028052294038,-0.0100519433194147,11.023622047244094,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MWG,exploratory,2025,sideways,120,0.0776825048641373,0.0807794619692089,66.66666666666666,training_universe,extra_trees_market_alpha,,,
+mechanical_3,PVD,exploratory,2023,falling,46,-0.0588227490886873,-0.0571261203991648,8.695652173913043,training_universe,,,,
+mechanical_3,PVD,exploratory,2023,rising,64,-0.0014440926549344,-0.0014430504548745,7.8125,training_universe,,,,
+mechanical_3,PVD,exploratory,2023,sideways,138,0.0509539667476892,0.0522744525528957,6.521739130434782,training_universe,,,,
+mechanical_3,PVD,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,PVD,exploratory,2024,rising,68,-0.0416456180492734,-0.0407903530664883,8.823529411764707,training_universe,,,,
+mechanical_3,PVD,exploratory,2024,sideways,182,-0.0696291893378662,-0.0672603744140687,6.593406593406594,training_universe,,,,
+mechanical_3,PVD,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,PVD,exploratory,2025,rising,127,-0.0431312716686861,-0.0422143483064732,4.724409448818897,training_universe,,,,
+mechanical_3,PVD,exploratory,2025,sideways,120,-0.0075022844551057,-0.0074742125640541,7.5,training_universe,,,,
+mechanical_10,PVD,exploratory,2023,falling,46,-0.0307332922531339,-0.0302658257943078,32.608695652173914,training_universe,,,,
+mechanical_10,PVD,exploratory,2023,rising,64,0.0484978302934227,0.0496930942918435,37.5,training_universe,,,,
+mechanical_10,PVD,exploratory,2023,sideways,138,0.1735530420257041,0.1895237798472076,15.217391304347828,training_universe,,,,
+mechanical_10,PVD,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,PVD,exploratory,2024,rising,68,-0.0714794264959957,-0.0689845683524608,19.11764705882353,training_universe,,,,
+mechanical_10,PVD,exploratory,2024,sideways,182,0.0222651311924635,0.0225148491162618,25.82417582417583,training_universe,,,,
+mechanical_10,PVD,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,PVD,exploratory,2025,rising,127,-0.0492058529531071,-0.0480148594257744,18.11023622047244,training_universe,,,,
+mechanical_10,PVD,exploratory,2025,sideways,120,0.0813303140939746,0.0847291387199511,22.5,training_universe,,,,
+mechanical_20,PVD,exploratory,2023,falling,46,-0.0478400181339795,-0.0467137166026738,52.17391304347826,training_universe,,,,
+mechanical_20,PVD,exploratory,2023,rising,64,0.0126230078056017,0.012703014254894,56.25,training_universe,,,,
+mechanical_20,PVD,exploratory,2023,sideways,138,0.2325017595365902,0.2617526664570176,43.47826086956522,training_universe,,,,
+mechanical_20,PVD,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,PVD,exploratory,2024,rising,68,-0.0048168543793725,-0.0048052719407524,47.05882352941176,training_universe,,,,
+mechanical_20,PVD,exploratory,2024,sideways,182,-0.0088946079632788,-0.0088551679589499,48.35164835164835,training_universe,,,,
+mechanical_20,PVD,exploratory,2025,falling,2,-0.0051561271493707,-0.0051428571428571,100.0,training_universe,,,,
+mechanical_20,PVD,exploratory,2025,rising,127,-0.0223084021437836,-0.0220614098180622,33.85826771653544,training_universe,,,,
+mechanical_20,PVD,exploratory,2025,sideways,120,-0.0212497095611895,-0.0210255252414993,45.83333333333333,training_universe,,,,
+supervised:ridge_market,PVD,exploratory,2023,falling,46,-0.0949647065887233,-0.090594970092413,34.78260869565217,training_universe,ridge_market,,,
+supervised:ridge_market,PVD,exploratory,2023,rising,64,0.0284317409678237,0.0288397808299311,9.375,training_universe,ridge_market,,,
+supervised:ridge_market,PVD,exploratory,2023,sideways,138,0.1115070994177035,0.1179616808543062,8.695652173913043,training_universe,ridge_market,,,
+supervised:ridge_market,PVD,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,PVD,exploratory,2024,rising,68,-0.0416456180492734,-0.0407903530664883,8.823529411764707,training_universe,ridge_market,,,
+supervised:ridge_market,PVD,exploratory,2024,sideways,182,-0.0665825104891424,-0.0644142829636289,48.35164835164835,training_universe,ridge_market,,,
+supervised:ridge_market,PVD,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,PVD,exploratory,2025,rising,127,-0.017498785812224,-0.0173465712098699,29.133858267716533,training_universe,ridge_market,,,
+supervised:ridge_market,PVD,exploratory,2025,sideways,120,0.0306723782268921,0.0311476221285369,10.0,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,PVD,exploratory,2023,falling,46,-0.0949647065887233,-0.090594970092413,34.78260869565217,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,PVD,exploratory,2023,rising,64,0.0284317409678237,0.0288397808299311,9.375,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,PVD,exploratory,2023,sideways,138,0.1115070994177035,0.1179616808543062,8.695652173913043,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,PVD,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,PVD,exploratory,2024,rising,68,-0.0416456180492734,-0.0407903530664883,8.823529411764707,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,PVD,exploratory,2024,sideways,182,-0.0628705537400027,-0.060934975722884,47.8021978021978,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,PVD,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,PVD,exploratory,2025,rising,127,-0.0174987858122237,-0.0173465712098696,29.133858267716533,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,PVD,exploratory,2025,sideways,120,0.0306723782268924,0.0311476221285371,10.0,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,PVD,exploratory,2023,falling,46,-0.0949647065887233,-0.090594970092413,34.78260869565217,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,PVD,exploratory,2023,rising,64,-0.0014440926549341,-0.0014430504548743,7.8125,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,PVD,exploratory,2023,sideways,138,0.1115070994177036,0.1179616808543063,8.695652173913043,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,PVD,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,PVD,exploratory,2024,rising,68,-0.0416456180492734,-0.0407903530664883,8.823529411764707,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,PVD,exploratory,2024,sideways,182,-0.0628705537400024,-0.0609349757228838,47.8021978021978,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,PVD,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,PVD,exploratory,2025,rising,127,-0.001785780147668,-0.0017841865910219,9.448818897637794,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,PVD,exploratory,2025,sideways,120,0.0223335105070455,0.0225847703713508,10.833333333333334,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,PVD,exploratory,2023,falling,46,-0.0949647065887233,-0.090594970092413,34.78260869565217,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,PVD,exploratory,2023,rising,64,-0.0014440926549344,-0.0014430504548745,7.8125,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,PVD,exploratory,2023,sideways,138,0.0901574287311866,0.0943465517340039,23.91304347826087,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,PVD,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,PVD,exploratory,2024,rising,68,-0.0157511748339721,-0.0156277738327712,10.294117647058822,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,PVD,exploratory,2024,sideways,182,-0.0628705537400022,-0.0609349757228836,47.8021978021978,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,PVD,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,PVD,exploratory,2025,rising,127,0.097767258835005,0.1027061101355302,33.07086614173229,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,PVD,exploratory,2025,sideways,120,0.0359391625628238,0.0365927809243827,11.666666666666666,training_universe,extra_trees_market_alpha,,,
+mechanical_3,REE,exploratory,2023,falling,46,0.0323386817097347,0.0328672593234474,8.695652173913043,training_universe,,,,
+mechanical_3,REE,exploratory,2023,rising,64,-0.0292868662786363,-0.0288621621933555,7.8125,training_universe,,,,
+mechanical_3,REE,exploratory,2023,sideways,138,0.0622525716202214,0.0642311053605216,6.521739130434782,training_universe,,,,
+mechanical_3,REE,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,REE,exploratory,2024,rising,68,0.0353846866237304,0.036018174486166,8.823529411764707,training_universe,,,,
+mechanical_3,REE,exploratory,2024,sideways,182,-0.0277204953460473,-0.0273398081383676,6.593406593406594,training_universe,,,,
+mechanical_3,REE,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,REE,exploratory,2025,rising,127,0.0219652320460252,0.0222082437634311,4.724409448818897,training_universe,,,,
+mechanical_3,REE,exploratory,2025,sideways,120,0.0047447358947423,0.0047560099778943,7.5,training_universe,,,,
+mechanical_10,REE,exploratory,2023,falling,46,-0.013368586685317,-0.0132796240066833,32.608695652173914,training_universe,,,,
+mechanical_10,REE,exploratory,2023,rising,64,0.0013243740324075,0.0013252514029759,37.5,training_universe,,,,
+mechanical_10,REE,exploratory,2023,sideways,138,0.0319501722496647,0.0324660585623956,15.217391304347828,training_universe,,,,
+mechanical_10,REE,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,REE,exploratory,2024,rising,68,0.0633189182299098,0.0653665498727584,19.11764705882353,training_universe,,,,
+mechanical_10,REE,exploratory,2024,sideways,182,0.0521876619769008,0.0535734396371605,25.82417582417583,training_universe,,,,
+mechanical_10,REE,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,REE,exploratory,2025,rising,127,-0.0600024394267873,-0.0582377637785798,18.11023622047244,training_universe,,,,
+mechanical_10,REE,exploratory,2025,sideways,120,0.0531945916389238,0.0546348482768913,22.5,training_universe,,,,
+mechanical_20,REE,exploratory,2023,falling,46,0.0020106276215712,0.0020126502886704,52.17391304347826,training_universe,,,,
+mechanical_20,REE,exploratory,2023,rising,64,-0.0322495652080768,-0.0317350933093441,56.25,training_universe,,,,
+mechanical_20,REE,exploratory,2023,sideways,138,0.151628210324538,0.1637274941251691,43.47826086956522,training_universe,,,,
+mechanical_20,REE,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,REE,exploratory,2024,rising,68,0.1029510920544101,0.1084371963642123,47.05882352941176,training_universe,,,,
+mechanical_20,REE,exploratory,2024,sideways,182,-0.052619074005381,-0.0512586561022751,48.35164835164835,training_universe,,,,
+mechanical_20,REE,exploratory,2025,falling,2,0.0634399610958689,0.0654955126981096,100.0,training_universe,,,,
+mechanical_20,REE,exploratory,2025,rising,127,-0.0472565959670098,-0.0461573859814437,33.85826771653544,training_universe,,,,
+mechanical_20,REE,exploratory,2025,sideways,120,-0.0043407752047985,-0.0043313676570483,45.83333333333333,training_universe,,,,
+supervised:ridge_market,REE,exploratory,2023,falling,46,0.0323386817097347,0.0328672593234474,8.695652173913043,training_universe,ridge_market,,,
+supervised:ridge_market,REE,exploratory,2023,rising,64,-0.025684210982636,-0.025357177483941,28.125,training_universe,ridge_market,,,
+supervised:ridge_market,REE,exploratory,2023,sideways,138,0.1016293865028517,0.1069731365093741,7.971014492753622,training_universe,ridge_market,,,
+supervised:ridge_market,REE,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,REE,exploratory,2024,rising,68,0.0650511869721998,0.0672136504215654,13.23529411764706,training_universe,ridge_market,,,
+supervised:ridge_market,REE,exploratory,2024,sideways,182,0.0027208476442523,0.0027245525095666,34.065934065934066,training_universe,ridge_market,,,
+supervised:ridge_market,REE,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,REE,exploratory,2025,rising,127,0.0215365576665196,0.0217701431867656,7.086614173228346,training_universe,ridge_market,,,
+supervised:ridge_market,REE,exploratory,2025,sideways,120,0.0269804974277464,0.0273477666440635,9.166666666666666,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,REE,exploratory,2023,falling,46,0.0323386817097347,0.0328672593234474,8.695652173913043,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,REE,exploratory,2023,rising,64,-0.025684210982636,-0.025357177483941,28.125,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,REE,exploratory,2023,sideways,138,0.1016293865028517,0.1069731365093741,7.971014492753622,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,REE,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,REE,exploratory,2024,rising,68,0.0650511869721998,0.0672136504215654,13.23529411764706,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,REE,exploratory,2024,sideways,182,0.0027208476442523,0.0027245525095666,34.065934065934066,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,REE,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,REE,exploratory,2025,rising,127,0.0008906630429723,0.0008910598010842,9.448818897637794,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,REE,exploratory,2025,sideways,120,0.0585814908970846,0.0603313895301262,10.0,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,REE,exploratory,2023,falling,46,0.0323386817097347,0.0328672593234474,8.695652173913043,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,REE,exploratory,2023,rising,64,-0.0152158472372533,-0.0151006711409396,15.625,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,REE,exploratory,2023,sideways,138,0.0622525716202214,0.0642311053605216,6.521739130434782,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,REE,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,REE,exploratory,2024,rising,68,0.0353846866237299,0.0360181744861655,8.823529411764707,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,REE,exploratory,2024,sideways,182,0.0373973011894597,0.0381053794194834,16.483516483516482,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,REE,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,REE,exploratory,2025,rising,127,0.0160939317773793,0.016224136662444,7.086614173228346,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,REE,exploratory,2025,sideways,120,0.0215080871830067,0.0217410533108535,8.333333333333332,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,REE,exploratory,2023,falling,46,0.0323386817097347,0.0328672593234474,8.695652173913043,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,REE,exploratory,2023,rising,64,-0.0152158472372533,-0.0151006711409396,15.625,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,REE,exploratory,2023,sideways,138,0.0622525716202214,0.0642311053605216,6.521739130434782,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,REE,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,REE,exploratory,2024,rising,68,0.0236280502637185,0.0239094042217672,10.294117647058822,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,REE,exploratory,2024,sideways,182,0.0507252407410138,0.0520337975425157,17.582417582417584,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,REE,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,REE,exploratory,2025,rising,127,0.0160939317773797,0.0162241366624444,7.086614173228346,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,REE,exploratory,2025,sideways,120,0.0215080871830067,0.0217410533108535,8.333333333333332,training_universe,extra_trees_market_alpha,,,
+mechanical_3,SSI,exploratory,2023,falling,46,0.0210035129442291,0.0212256391399429,8.695652173913043,training_universe,,,,
+mechanical_3,SSI,exploratory,2023,rising,64,0.0744973882828089,0.0773425298045749,7.8125,training_universe,,,,
+mechanical_3,SSI,exploratory,2023,sideways,138,0.1092272672258936,0.115415818996699,6.521739130434782,training_universe,,,,
+mechanical_3,SSI,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,SSI,exploratory,2024,rising,68,-0.0103819116933641,-0.0103282056659224,8.823529411764707,training_universe,,,,
+mechanical_3,SSI,exploratory,2024,sideways,182,-0.000288025985448,-0.0002879845099459,6.593406593406594,training_universe,,,,
+mechanical_3,SSI,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,SSI,exploratory,2025,rising,127,-0.0284964310322378,-0.0280942371597178,4.724409448818897,training_universe,,,,
+mechanical_3,SSI,exploratory,2025,sideways,120,-0.0292661436726958,-0.0288420374781111,7.5,training_universe,,,,
+mechanical_10,SSI,exploratory,2023,falling,46,0.0708350344834998,0.0734041365941405,32.608695652173914,training_universe,,,,
+mechanical_10,SSI,exploratory,2023,rising,64,-0.0378005666003058,-0.0370950428474775,37.5,training_universe,,,,
+mechanical_10,SSI,exploratory,2023,sideways,138,0.2155236039370713,0.2405112635273462,15.217391304347828,training_universe,,,,
+mechanical_10,SSI,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,SSI,exploratory,2024,rising,68,-0.0539196219920461,-0.0524917377322261,19.11764705882353,training_universe,,,,
+mechanical_10,SSI,exploratory,2024,sideways,182,0.0196526827695078,0.0198470680487357,25.82417582417583,training_universe,,,,
+mechanical_10,SSI,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,SSI,exploratory,2025,rising,127,0.0182726301773503,0.0184405961846658,18.11023622047244,training_universe,,,,
+mechanical_10,SSI,exploratory,2025,sideways,120,0.0566672799644486,0.0583036329881173,22.5,training_universe,,,,
+mechanical_20,SSI,exploratory,2023,falling,46,0.0575440728515989,0.059231952998686,52.17391304347826,training_universe,,,,
+mechanical_20,SSI,exploratory,2023,rising,64,-0.0424890340590483,-0.0415990247681751,56.25,training_universe,,,,
+mechanical_20,SSI,exploratory,2023,sideways,138,0.4164001041561916,0.5164925024572332,43.47826086956522,training_universe,,,,
+mechanical_20,SSI,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,SSI,exploratory,2024,rising,68,-0.0271930116017194,-0.0268266103585618,47.05882352941176,training_universe,,,,
+mechanical_20,SSI,exploratory,2024,sideways,182,0.0940345889777101,0.098597744632903,48.35164835164835,training_universe,,,,
+mechanical_20,SSI,exploratory,2025,falling,2,-0.004595361673733,-0.0045848191543555,100.0,training_universe,,,,
+mechanical_20,SSI,exploratory,2025,rising,127,0.1893123821988535,0.208418381919993,33.85826771653544,training_universe,,,,
+mechanical_20,SSI,exploratory,2025,sideways,120,-0.090256356932711,-0.0863030772954374,45.83333333333333,training_universe,,,,
+supervised:ridge_market,SSI,exploratory,2023,falling,46,0.0488353206527817,0.0500474153780649,10.869565217391305,training_universe,ridge_market,,,
+supervised:ridge_market,SSI,exploratory,2023,rising,64,0.074497388282809,0.077342529804575,7.8125,training_universe,ridge_market,,,
+supervised:ridge_market,SSI,exploratory,2023,sideways,138,0.1092272672258934,0.1154158189966988,6.521739130434782,training_universe,ridge_market,,,
+supervised:ridge_market,SSI,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,SSI,exploratory,2024,rising,68,-0.0103819116933642,-0.0103282056659225,8.823529411764707,training_universe,ridge_market,,,
+supervised:ridge_market,SSI,exploratory,2024,sideways,182,0.0701550268710761,0.0726744617303978,20.32967032967033,training_universe,ridge_market,,,
+supervised:ridge_market,SSI,exploratory,2025,falling,2,-0.004595361673733,-0.0045848191543555,100.0,training_universe,ridge_market,,,
+supervised:ridge_market,SSI,exploratory,2025,rising,127,0.111019545207926,0.1174167467836805,14.960629921259844,training_universe,ridge_market,,,
+supervised:ridge_market,SSI,exploratory,2025,sideways,120,-0.1007527527940014,-0.095843444565821,37.5,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,SSI,exploratory,2023,falling,46,0.0488353206527817,0.0500474153780649,10.869565217391305,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,SSI,exploratory,2023,rising,64,0.074497388282809,0.077342529804575,7.8125,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,SSI,exploratory,2023,sideways,138,0.1092272672258934,0.1154158189966988,6.521739130434782,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,SSI,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,SSI,exploratory,2024,rising,68,-0.010381911693364,-0.0103282056659223,8.823529411764707,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,SSI,exploratory,2024,sideways,182,0.0760747058913759,0.0790431820290515,22.52747252747253,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,SSI,exploratory,2025,falling,2,-0.004595361673733,-0.0045848191543555,100.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,SSI,exploratory,2025,rising,127,0.1218866495529795,0.1296260509053078,14.960629921259844,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,SSI,exploratory,2025,sideways,120,-0.1007527527940019,-0.0958434445658214,38.333333333333336,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,SSI,exploratory,2023,falling,46,0.0488353206527817,0.0500474153780649,10.869565217391305,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,SSI,exploratory,2023,rising,64,0.074497388282809,0.077342529804575,7.8125,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,SSI,exploratory,2023,sideways,138,0.1092272672258934,0.1154158189966988,6.521739130434782,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,SSI,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,SSI,exploratory,2024,rising,68,-0.0103819116933642,-0.0103282056659225,8.823529411764707,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,SSI,exploratory,2024,sideways,182,0.0701550268710761,0.0726744617303978,20.32967032967033,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,SSI,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,SSI,exploratory,2025,rising,127,0.0364884190571744,0.0371622926309864,12.598425196850393,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,SSI,exploratory,2025,sideways,120,0.0279016788159191,0.0282945763106451,12.5,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,SSI,exploratory,2023,falling,46,0.0488353206527817,0.0500474153780649,10.869565217391305,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,SSI,exploratory,2023,rising,64,0.074497388282809,0.077342529804575,7.8125,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,SSI,exploratory,2023,sideways,138,0.1092272672258934,0.1154158189966988,6.521739130434782,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,SSI,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,SSI,exploratory,2024,rising,68,-0.0103819116933642,-0.0103282056659225,8.823529411764707,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,SSI,exploratory,2024,sideways,182,0.0701550268710761,0.0726744617303978,20.32967032967033,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,SSI,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,SSI,exploratory,2025,rising,127,0.0364884190571744,0.0371622926309864,12.598425196850393,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,SSI,exploratory,2025,sideways,120,0.0279016788159191,0.0282945763106451,12.5,training_universe,extra_trees_market_alpha,,,
+mechanical_3,VCB,exploratory,2023,falling,46,0.0077072361105145,0.0077370133055449,8.695652173913043,training_universe,,,,
+mechanical_3,VCB,exploratory,2023,rising,64,0.0146864726137413,0.0147948487571129,7.8125,training_universe,,,,
+mechanical_3,VCB,exploratory,2023,sideways,138,0.0218607802572976,0.0221014778599599,6.521739130434782,training_universe,,,,
+mechanical_3,VCB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,VCB,exploratory,2024,rising,68,0.0034845093386823,0.0034905872988673,8.823529411764707,training_universe,,,,
+mechanical_3,VCB,exploratory,2024,sideways,182,0.0425564082081316,0.0434749152638006,6.593406593406594,training_universe,,,,
+mechanical_3,VCB,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,VCB,exploratory,2025,rising,127,-0.0360233422632803,-0.0353822231417827,4.724409448818897,training_universe,,,,
+mechanical_3,VCB,exploratory,2025,sideways,120,-0.0223714983368923,-0.0221231120735875,7.5,training_universe,,,,
+mechanical_10,VCB,exploratory,2023,falling,46,-0.0114916621528399,-0.011425885206574,32.608695652173914,training_universe,,,,
+mechanical_10,VCB,exploratory,2023,rising,64,-0.0074786386563432,-0.0074507432215432,37.5,training_universe,,,,
+mechanical_10,VCB,exploratory,2023,sideways,138,0.133369551050614,0.1426721960248371,15.217391304347828,training_universe,,,,
+mechanical_10,VCB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,VCB,exploratory,2024,rising,68,-0.0229136368082176,-0.0226531130748047,19.11764705882353,training_universe,,,,
+mechanical_10,VCB,exploratory,2024,sideways,182,0.1122045187997339,0.1187416409469302,25.82417582417583,training_universe,,,,
+mechanical_10,VCB,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,VCB,exploratory,2025,rising,127,-0.0789070434349252,-0.0758741759851422,18.11023622047244,training_universe,,,,
+mechanical_10,VCB,exploratory,2025,sideways,120,-0.0481571924291714,-0.0470160265627178,22.5,training_universe,,,,
+mechanical_20,VCB,exploratory,2023,falling,46,0.0400797396317848,0.0408937713693181,52.17391304347826,training_universe,,,,
+mechanical_20,VCB,exploratory,2023,rising,64,0.012379926212543,0.0124568747101019,56.25,training_universe,,,,
+mechanical_20,VCB,exploratory,2023,sideways,138,0.1071554735776726,0.1131072998012229,43.47826086956522,training_universe,,,,
+mechanical_20,VCB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,VCB,exploratory,2024,rising,68,-0.0455090273482428,-0.0444890231973168,47.05882352941176,training_universe,,,,
+mechanical_20,VCB,exploratory,2024,sideways,182,0.1167088257742758,0.1237921627341387,48.35164835164835,training_universe,,,,
+mechanical_20,VCB,exploratory,2025,falling,2,0.0054005531800003,0.0054151624548737,100.0,training_universe,,,,
+mechanical_20,VCB,exploratory,2025,rising,127,0.0442996839862634,0.0452955662960092,33.85826771653544,training_universe,,,,
+mechanical_20,VCB,exploratory,2025,sideways,120,-0.1274843540979542,-0.1196928110734772,45.83333333333333,training_universe,,,,
+supervised:ridge_market,VCB,exploratory,2023,falling,46,-0.0008731597458381,-0.0008727786527936,28.26086956521739,training_universe,ridge_market,,,
+supervised:ridge_market,VCB,exploratory,2023,rising,64,0.0204229486111923,0.0206329240291501,10.9375,training_universe,ridge_market,,,
+supervised:ridge_market,VCB,exploratory,2023,sideways,138,-0.0466194278069627,-0.0455494341748962,31.88405797101449,training_universe,ridge_market,,,
+supervised:ridge_market,VCB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,VCB,exploratory,2024,rising,68,-0.0398804503352225,-0.0390956919261707,54.41176470588235,training_universe,ridge_market,,,
+supervised:ridge_market,VCB,exploratory,2024,sideways,182,0.0960738889941428,0.100840400978928,19.230769230769237,training_universe,ridge_market,,,
+supervised:ridge_market,VCB,exploratory,2025,falling,2,0.0054005531800002,0.0054151624548736,100.0,training_universe,ridge_market,,,
+supervised:ridge_market,VCB,exploratory,2025,rising,127,-0.0042021603946667,-0.0041933436727587,25.984251968503933,training_universe,ridge_market,,,
+supervised:ridge_market,VCB,exploratory,2025,sideways,120,-0.1341775859288856,-0.1255652364956296,47.5,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,VCB,exploratory,2023,falling,46,-0.0008731597458381,-0.0008727786527936,28.26086956521739,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VCB,exploratory,2023,rising,64,0.0204229486111923,0.0206329240291501,10.9375,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VCB,exploratory,2023,sideways,138,-0.0466194278069627,-0.0455494341748962,31.88405797101449,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VCB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VCB,exploratory,2024,rising,68,-0.0398804503352225,-0.0390956919261707,54.41176470588235,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VCB,exploratory,2024,sideways,182,0.0960738889941428,0.100840400978928,19.230769230769237,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VCB,exploratory,2025,falling,2,0.0054005531800002,0.0054151624548736,100.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VCB,exploratory,2025,rising,127,-0.0042021603946672,-0.0041933436727593,25.984251968503933,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VCB,exploratory,2025,sideways,120,-0.1288809633767152,-0.1209213981339495,48.333333333333336,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,VCB,exploratory,2023,falling,46,-0.0008731597458381,-0.0008727786527936,28.26086956521739,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VCB,exploratory,2023,rising,64,0.0170525376012867,0.0171987621044223,20.3125,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VCB,exploratory,2023,sideways,138,-0.0466194278069628,-0.0455494341748963,31.88405797101449,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VCB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VCB,exploratory,2024,rising,68,0.0034845093386825,0.0034905872988675,8.823529411764707,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VCB,exploratory,2024,sideways,182,0.096073888994143,0.1008404009789282,19.230769230769237,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VCB,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VCB,exploratory,2025,rising,127,-0.0090253208700962,-0.008984714914109,14.960629921259844,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VCB,exploratory,2025,sideways,120,0.0211517377150418,0.021377021295268,31.666666666666664,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,VCB,exploratory,2023,falling,46,-0.0008731597458381,-0.0008727786527936,28.26086956521739,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VCB,exploratory,2023,rising,64,-0.0079017567602222,-0.0078706199460918,21.875,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VCB,exploratory,2023,sideways,138,-0.0352615359625538,-0.0346470912630835,50.72463768115942,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VCB,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VCB,exploratory,2024,rising,68,-0.0455432711307068,-0.0445217429471212,60.29411764705882,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VCB,exploratory,2024,sideways,182,0.0981323173988967,0.1031087359310168,18.68131868131868,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VCB,exploratory,2025,falling,2,0.0054005531800001,0.0054151624548735,100.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VCB,exploratory,2025,rising,127,0.054947574301903,0.0564852262481032,17.322834645669293,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VCB,exploratory,2025,sideways,120,-0.0978478758664684,-0.0932131625759241,60.83333333333333,training_universe,extra_trees_market_alpha,,,
+mechanical_3,VIC,exploratory,2023,falling,46,0.0035650661644963,0.0035714285714287,8.695652173913043,training_universe,,,,
+mechanical_3,VIC,exploratory,2023,rising,64,-0.0031580357965689,-0.0031530544466628,7.8125,training_universe,,,,
+mechanical_3,VIC,exploratory,2023,sideways,138,0.1007425699818946,0.1059918896009545,6.521739130434782,training_universe,,,,
+mechanical_3,VIC,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,VIC,exploratory,2024,rising,68,-0.0196238163882377,-0.0194325226514065,8.823529411764707,training_universe,,,,
+mechanical_3,VIC,exploratory,2024,sideways,182,-0.014430836860642,-0.0143272114006265,6.593406593406594,training_universe,,,,
+mechanical_3,VIC,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,VIC,exploratory,2025,rising,127,-0.0117172427499861,-0.0116488631950129,4.724409448818897,training_universe,,,,
+mechanical_3,VIC,exploratory,2025,sideways,120,-0.0701918435186102,-0.067785036648409,7.5,training_universe,,,,
+mechanical_10,VIC,exploratory,2023,falling,46,-0.0002156566754098,-0.0002156334231805,32.608695652173914,training_universe,,,,
+mechanical_10,VIC,exploratory,2023,rising,64,-0.1758566594057469,-0.1612618000470884,37.5,training_universe,,,,
+mechanical_10,VIC,exploratory,2023,sideways,138,0.0428906324492327,0.0438237281630789,15.217391304347828,training_universe,,,,
+mechanical_10,VIC,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,VIC,exploratory,2024,rising,68,-0.0765319486601175,-0.0736766809728183,19.11764705882353,training_universe,,,,
+mechanical_10,VIC,exploratory,2024,sideways,182,0.0643220203590321,0.0664357574998009,25.82417582417583,training_universe,,,,
+mechanical_10,VIC,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,VIC,exploratory,2025,rising,127,0.0403487579467683,0.041173828526332,18.11023622047244,training_universe,,,,
+mechanical_10,VIC,exploratory,2025,sideways,120,0.0670150550872851,0.0693115766325392,22.5,training_universe,,,,
+mechanical_20,VIC,exploratory,2023,falling,46,0.0057570835950032,0.0057736874487286,52.17391304347826,training_universe,,,,
+mechanical_20,VIC,exploratory,2023,rising,64,-0.1449323173134386,-0.1349191578751706,56.25,training_universe,,,,
+mechanical_20,VIC,exploratory,2023,sideways,138,0.1437495606033576,0.1545949162596625,43.47826086956522,training_universe,,,,
+mechanical_20,VIC,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,VIC,exploratory,2024,rising,68,-0.0876856887859283,-0.0839512441242592,47.05882352941176,training_universe,,,,
+mechanical_20,VIC,exploratory,2024,sideways,182,0.0065790654909882,0.0066007550820126,48.35164835164835,training_universe,,,,
+mechanical_20,VIC,exploratory,2025,falling,2,0.1000834585569823,0.1052631578947366,100.0,training_universe,,,,
+mechanical_20,VIC,exploratory,2025,rising,127,0.3761053670215619,0.4566006033528083,33.85826771653544,training_universe,,,,
+mechanical_20,VIC,exploratory,2025,sideways,120,0.0469168832240235,0.0480348961777529,45.83333333333333,training_universe,,,,
+supervised:ridge_market,VIC,exploratory,2023,falling,46,0.0035650661644963,0.0035714285714287,8.695652173913043,training_universe,ridge_market,,,
+supervised:ridge_market,VIC,exploratory,2023,rising,64,-0.2757264704383017,-0.2409794830812153,21.875,training_universe,ridge_market,,,
+supervised:ridge_market,VIC,exploratory,2023,sideways,138,-0.0046179456759323,-0.0046072993591415,25.36231884057971,training_universe,ridge_market,,,
+supervised:ridge_market,VIC,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,VIC,exploratory,2024,rising,68,-0.0196238163882379,-0.0194325226514067,8.823529411764707,training_universe,ridge_market,,,
+supervised:ridge_market,VIC,exploratory,2024,sideways,182,0.0740412032332704,0.0768511743322774,40.65934065934066,training_universe,ridge_market,,,
+supervised:ridge_market,VIC,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,VIC,exploratory,2025,rising,127,0.0510664021744543,0.052392772131574,23.62204724409449,training_universe,ridge_market,,,
+supervised:ridge_market,VIC,exploratory,2025,sideways,120,0.0354231836523676,0.0360580588752082,42.5,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,VIC,exploratory,2023,falling,46,0.0035650661644963,0.0035714285714287,8.695652173913043,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VIC,exploratory,2023,rising,64,-0.2757264704383017,-0.2409794830812153,21.875,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VIC,exploratory,2023,sideways,138,-0.0046179456759323,-0.0046072993591415,25.36231884057971,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VIC,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VIC,exploratory,2024,rising,68,-0.0196238163882378,-0.0194325226514066,8.823529411764707,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VIC,exploratory,2024,sideways,182,0.032560602112552,0.0330964990772417,39.56043956043956,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VIC,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VIC,exploratory,2025,rising,127,0.0510664021744543,0.052392772131574,23.62204724409449,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VIC,exploratory,2025,sideways,120,0.0469476695043221,0.0480671617704955,43.333333333333336,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,VIC,exploratory,2023,falling,46,0.0222571991766487,0.0225067385444744,19.565217391304348,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VIC,exploratory,2023,rising,64,-0.2757264704383017,-0.2409794830812153,21.875,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VIC,exploratory,2023,sideways,138,-0.002840167429933,-0.0028361379701009,28.26086956521739,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VIC,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VIC,exploratory,2024,rising,68,-0.0196238163882375,-0.0194325226514064,8.823529411764707,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VIC,exploratory,2024,sideways,182,0.056208726937715,0.0578184559022196,36.81318681318682,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VIC,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VIC,exploratory,2025,rising,127,-0.0117172427499859,-0.0116488631950127,4.724409448818897,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VIC,exploratory,2025,sideways,120,-0.0271770906753908,-0.0268111164133818,26.666666666666668,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,VIC,exploratory,2023,falling,46,0.0222571991766486,0.0225067385444743,19.565217391304348,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VIC,exploratory,2023,rising,64,-0.2757264704383013,-0.2409794830812151,21.875,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VIC,exploratory,2023,sideways,138,0.0234540731027538,0.0237312828655089,28.98550724637681,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VIC,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VIC,exploratory,2024,rising,68,-0.019623816388238,-0.0194325226514068,8.823529411764707,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VIC,exploratory,2024,sideways,182,0.1006359529429298,0.1058739783063544,33.51648351648351,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VIC,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VIC,exploratory,2025,rising,127,-0.0285952805373378,-0.0281903048151801,12.598425196850393,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VIC,exploratory,2025,sideways,120,0.0866920456598573,0.0905607850738726,35.833333333333336,training_universe,extra_trees_market_alpha,,,
+mechanical_3,VNM,exploratory,2023,falling,46,0.0251697433950489,0.0254891757659276,8.695652173913043,training_universe,,,,
+mechanical_3,VNM,exploratory,2023,rising,64,0.001863152195205,0.0018648889416964,7.8125,training_universe,,,,
+mechanical_3,VNM,exploratory,2023,sideways,138,-0.0397560305500092,-0.0389761289807058,6.521739130434782,training_universe,,,,
+mechanical_3,VNM,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,VNM,exploratory,2024,rising,68,-0.0195774094860533,-0.0193870164965083,8.823529411764707,training_universe,,,,
+mechanical_3,VNM,exploratory,2024,sideways,182,-0.0441002916888237,-0.0431420122429119,6.593406593406594,training_universe,,,,
+mechanical_3,VNM,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_3,VNM,exploratory,2025,rising,127,-0.0520471347708808,-0.0507158785012006,4.724409448818897,training_universe,,,,
+mechanical_3,VNM,exploratory,2025,sideways,120,-0.0250645363377228,-0.024753028870525,7.5,training_universe,,,,
+mechanical_10,VNM,exploratory,2023,falling,46,0.002766189081771,0.0027700185129518,32.608695652173914,training_universe,,,,
+mechanical_10,VNM,exploratory,2023,rising,64,-0.0401632171490925,-0.0393673653638722,37.5,training_universe,,,,
+mechanical_10,VNM,exploratory,2023,sideways,138,-0.031733155109623,-0.0312349424031762,15.217391304347828,training_universe,,,,
+mechanical_10,VNM,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,VNM,exploratory,2024,rising,68,-0.0241845330689483,-0.0238944306188432,19.11764705882353,training_universe,,,,
+mechanical_10,VNM,exploratory,2024,sideways,182,-0.056184614368387,-0.0546354081078006,25.82417582417583,training_universe,,,,
+mechanical_10,VNM,exploratory,2025,falling,2,0.0,0.0,0.0,training_universe,,,,
+mechanical_10,VNM,exploratory,2025,rising,127,-0.0284439936633681,-0.028043271642488,18.11023622047244,training_universe,,,,
+mechanical_10,VNM,exploratory,2025,sideways,120,-0.0218141040380921,-0.0215778971355958,22.5,training_universe,,,,
+mechanical_20,VNM,exploratory,2023,falling,46,-0.0102896382696445,-0.0102368810477477,52.17391304347826,training_universe,,,,
+mechanical_20,VNM,exploratory,2023,rising,64,-0.0739820214968161,-0.0713116098816217,56.25,training_universe,,,,
+mechanical_20,VNM,exploratory,2023,sideways,138,-0.0951475476930551,-0.0907612315121922,43.47826086956522,training_universe,,,,
+mechanical_20,VNM,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,,,,
+mechanical_20,VNM,exploratory,2024,rising,68,-0.0194840068740267,-0.0192954204048714,47.05882352941176,training_universe,,,,
+mechanical_20,VNM,exploratory,2024,sideways,182,-0.0127451288018862,-0.0126642536006959,48.35164835164835,training_universe,,,,
+mechanical_20,VNM,exploratory,2025,falling,2,0.0198884176791303,0.0200875099443117,100.0,training_universe,,,,
+mechanical_20,VNM,exploratory,2025,rising,127,-0.0005144775158423,-0.0005143451949781,33.85826771653544,training_universe,,,,
+mechanical_20,VNM,exploratory,2025,sideways,120,-0.1339015754982493,-0.125323850068938,45.83333333333333,training_universe,,,,
+supervised:ridge_market,VNM,exploratory,2023,falling,46,0.0302919897517179,0.0307554600485724,10.869565217391305,training_universe,ridge_market,,,
+supervised:ridge_market,VNM,exploratory,2023,rising,64,-0.0688941839275219,-0.0665745537327402,37.5,training_universe,ridge_market,,,
+supervised:ridge_market,VNM,exploratory,2023,sideways,138,-0.0479798696481753,-0.0468470258109044,41.30434782608695,training_universe,ridge_market,,,
+supervised:ridge_market,VNM,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market,,,
+supervised:ridge_market,VNM,exploratory,2024,rising,68,0.0261509978959734,0.0264959354982758,35.294117647058826,training_universe,ridge_market,,,
+supervised:ridge_market,VNM,exploratory,2024,sideways,182,-0.1248841808023909,-0.1174008814130813,46.7032967032967,training_universe,ridge_market,,,
+supervised:ridge_market,VNM,exploratory,2025,falling,2,0.0198884176791304,0.0200875099443118,100.0,training_universe,ridge_market,,,
+supervised:ridge_market,VNM,exploratory,2025,rising,127,-0.0633658040571271,-0.0613999328293771,35.43307086614173,training_universe,ridge_market,,,
+supervised:ridge_market,VNM,exploratory,2025,sideways,120,-0.0675259619134468,-0.0652965463891411,39.16666666666666,training_universe,ridge_market,,,
+supervised:ridge_market_alpha,VNM,exploratory,2023,falling,46,0.0302919897517179,0.0307554600485724,10.869565217391305,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VNM,exploratory,2023,rising,64,-0.068894183927521,-0.0665745537327393,37.5,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VNM,exploratory,2023,sideways,138,-0.0694238499626846,-0.0670688265766602,40.57971014492754,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VNM,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VNM,exploratory,2024,rising,68,0.0261509978959736,0.026495935498276,35.294117647058826,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VNM,exploratory,2024,sideways,182,-0.1172679977570834,-0.110653181729696,47.8021978021978,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VNM,exploratory,2025,falling,2,0.0198884176791305,0.0200875099443119,100.0,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VNM,exploratory,2025,rising,127,-0.0633658040571279,-0.0613999328293778,35.43307086614173,training_universe,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VNM,exploratory,2025,sideways,120,-0.0659562397807139,-0.0638281695201411,40.833333333333336,training_universe,ridge_market_alpha,,,
+supervised:extra_trees_market,VNM,exploratory,2023,falling,46,0.0251697433950489,0.0254891757659276,8.695652173913043,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VNM,exploratory,2023,rising,64,-0.0688941839275217,-0.06657455373274,37.5,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VNM,exploratory,2023,sideways,138,-0.0840812699138575,-0.0806434629676091,64.4927536231884,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VNM,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VNM,exploratory,2024,rising,68,-0.0284953999052783,-0.028093235000967,45.588235294117645,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VNM,exploratory,2024,sideways,182,-0.1025265946483797,-0.0974458536764195,46.7032967032967,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VNM,exploratory,2025,falling,2,0.0198884176791304,0.0200875099443118,100.0,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VNM,exploratory,2025,rising,127,-0.0139075256153063,-0.0138112627570421,15.748031496062993,training_universe,extra_trees_market,,,
+supervised:extra_trees_market,VNM,exploratory,2025,sideways,120,-0.0690981519481815,-0.066764923258141,41.66666666666667,training_universe,extra_trees_market,,,
+supervised:extra_trees_market_alpha,VNM,exploratory,2023,falling,46,0.0251697433950489,0.0254891757659276,8.695652173913043,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VNM,exploratory,2023,rising,64,-0.0604695543589111,-0.0586775722530791,43.75,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VNM,exploratory,2023,sideways,138,-0.092505899482468,-0.0883561672782109,65.94202898550725,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VNM,exploratory,2023,warmup,1,0.0,0.0,0.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VNM,exploratory,2024,rising,68,-0.0284953999052782,-0.0280932350009669,45.588235294117645,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VNM,exploratory,2024,sideways,182,-0.0935948285290361,-0.089348342425577,47.8021978021978,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VNM,exploratory,2025,falling,2,0.0198884176791305,0.0200875099443119,100.0,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VNM,exploratory,2025,rising,127,-0.0306451317634175,-0.0301803297859855,16.535433070866144,training_universe,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VNM,exploratory,2025,sideways,120,-0.0690981519481805,-0.0667649232581401,41.66666666666667,training_universe,extra_trees_market_alpha,,,
+mechanical_3,DGC,exploratory,2023,falling,46,0.0289769171734991,0.029400832720066,8.695652173913043,unseen_ticker,,,,
+mechanical_3,DGC,exploratory,2023,rising,64,-0.0317977580436011,-0.0312975254466866,7.8125,unseen_ticker,,,,
+mechanical_3,DGC,exploratory,2023,sideways,138,0.0464964551405829,0.0475943654871999,6.521739130434782,unseen_ticker,,,,
+mechanical_3,DGC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_3,DGC,exploratory,2024,rising,68,-0.0406560135403085,-0.0398406450346704,8.823529411764707,unseen_ticker,,,,
+mechanical_3,DGC,exploratory,2024,sideways,182,0.0121503640378128,0.0122244795837088,6.593406593406594,unseen_ticker,,,,
+mechanical_3,DGC,exploratory,2025,falling,2,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_3,DGC,exploratory,2025,rising,127,-0.0292113849555393,-0.0287888566578837,4.724409448818897,unseen_ticker,,,,
+mechanical_3,DGC,exploratory,2025,sideways,120,-0.0636069045066408,-0.0616262024495359,7.5,unseen_ticker,,,,
+mechanical_10,DGC,exploratory,2023,falling,46,-0.0123768301210804,-0.0123005521765184,32.608695652173914,unseen_ticker,,,,
+mechanical_10,DGC,exploratory,2023,rising,64,0.0602873240625939,0.0621416815699419,37.5,unseen_ticker,,,,
+mechanical_10,DGC,exploratory,2023,sideways,138,0.0933347889067205,0.0978292147932018,15.217391304347828,unseen_ticker,,,,
+mechanical_10,DGC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_10,DGC,exploratory,2024,rising,68,-0.0317968836512605,-0.0312966784202922,19.11764705882353,unseen_ticker,,,,
+mechanical_10,DGC,exploratory,2024,sideways,182,-0.1540563938670284,-0.1427763225097507,25.82417582417583,unseen_ticker,,,,
+mechanical_10,DGC,exploratory,2025,falling,2,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_10,DGC,exploratory,2025,rising,127,-0.1108786510620085,-0.1049526446147132,18.11023622047244,unseen_ticker,,,,
+mechanical_10,DGC,exploratory,2025,sideways,120,-0.0539716186018482,-0.0525410036687816,22.5,unseen_ticker,,,,
+mechanical_20,DGC,exploratory,2023,falling,46,-0.0717738165355793,-0.0692586096827383,52.17391304347826,unseen_ticker,,,,
+mechanical_20,DGC,exploratory,2023,rising,64,0.1456079344202522,0.1567425801842722,56.25,unseen_ticker,,,,
+mechanical_20,DGC,exploratory,2023,sideways,138,0.2159422348429344,0.241030688597438,43.47826086956522,unseen_ticker,,,,
+mechanical_20,DGC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_20,DGC,exploratory,2024,rising,68,-0.0722932653914527,-0.0697419566851606,47.05882352941176,unseen_ticker,,,,
+mechanical_20,DGC,exploratory,2024,sideways,182,-0.1489103846646433,-0.1383536718361825,48.35164835164835,unseen_ticker,,,,
+mechanical_20,DGC,exploratory,2025,falling,2,-0.0051920505373724,-0.0051785951400874,100.0,unseen_ticker,,,,
+mechanical_20,DGC,exploratory,2025,rising,127,-0.043543084600277,-0.0426086956192983,33.85826771653544,unseen_ticker,,,,
+mechanical_20,DGC,exploratory,2025,sideways,120,-0.1088162329662851,-0.1031047778705337,45.83333333333333,unseen_ticker,,,,
+supervised:ridge_market,DGC,exploratory,2023,falling,46,0.0167503795371564,0.0168914537258196,17.391304347826086,unseen_ticker,ridge_market,,,
+supervised:ridge_market,DGC,exploratory,2023,rising,64,-0.0078524286853984,-0.007821678906724,26.5625,unseen_ticker,ridge_market,,,
+supervised:ridge_market,DGC,exploratory,2023,sideways,138,0.1381398995199379,0.1481361627371038,16.666666666666664,unseen_ticker,ridge_market,,,
+supervised:ridge_market,DGC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,ridge_market,,,
+supervised:ridge_market,DGC,exploratory,2024,rising,68,-0.046287390778815,-0.0452324686262684,33.82352941176471,unseen_ticker,ridge_market,,,
+supervised:ridge_market,DGC,exploratory,2024,sideways,182,-0.0784408952498537,-0.0754432959903385,34.61538461538461,unseen_ticker,ridge_market,,,
+supervised:ridge_market,DGC,exploratory,2025,falling,2,-0.0051920505373725,-0.0051785951400875,100.0,unseen_ticker,ridge_market,,,
+supervised:ridge_market,DGC,exploratory,2025,rising,127,-0.0591058428393128,-0.0573930043237399,33.07086614173229,unseen_ticker,ridge_market,,,
+supervised:ridge_market,DGC,exploratory,2025,sideways,120,-0.1320453178633447,-0.1236987179222241,41.66666666666667,unseen_ticker,ridge_market,,,
+supervised:ridge_market_alpha,DGC,exploratory,2023,falling,46,0.0167503795371564,0.0168914537258196,17.391304347826086,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,DGC,exploratory,2023,rising,64,-0.0138265336933272,-0.0137313862011444,29.6875,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,DGC,exploratory,2023,sideways,138,0.1537448975888285,0.1661933500933892,18.115942028985508,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,DGC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,DGC,exploratory,2024,rising,68,-0.0462873907788146,-0.045232468626268,33.82352941176471,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,DGC,exploratory,2024,sideways,182,-0.0784408952498543,-0.075443295990339,34.61538461538461,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,DGC,exploratory,2025,falling,2,-0.0051920505373725,-0.0051785951400875,100.0,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,DGC,exploratory,2025,rising,127,-0.059105842839313,-0.05739300432374,33.07086614173229,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,DGC,exploratory,2025,sideways,120,-0.1320453178633458,-0.123698717922225,41.66666666666667,unseen_ticker,ridge_market_alpha,,,
+supervised:extra_trees_market,DGC,exploratory,2023,falling,46,0.0167503795371564,0.0168914537258196,17.391304347826086,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,DGC,exploratory,2023,rising,64,0.0155979935468717,0.0157202772142174,21.875,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,DGC,exploratory,2023,sideways,138,0.0741447532114197,0.0769626880213699,11.594202898550725,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,DGC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,DGC,exploratory,2024,rising,68,-0.0199644408557278,-0.0197664710474903,10.294117647058822,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,DGC,exploratory,2024,sideways,182,-0.0260536954524837,-0.0257172263501808,36.26373626373626,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,DGC,exploratory,2025,falling,2,-0.0051920505373726,-0.0051785951400877,100.0,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,DGC,exploratory,2025,rising,127,-0.0017575351494558,-0.0017559915889747,18.11023622047244,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,DGC,exploratory,2025,sideways,120,-0.1320453178633453,-0.1236987179222246,41.66666666666667,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market_alpha,DGC,exploratory,2023,falling,46,0.0167503795371564,0.0168914537258196,17.391304347826086,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,DGC,exploratory,2023,rising,64,0.0155979935468717,0.0157202772142174,21.875,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,DGC,exploratory,2023,sideways,138,0.0741447532114197,0.0769626880213699,11.594202898550725,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,DGC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,DGC,exploratory,2024,rising,68,-0.0199644408557275,-0.0197664710474901,10.294117647058822,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,DGC,exploratory,2024,sideways,182,0.1194230676852309,0.1268465498189868,42.30769230769231,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,DGC,exploratory,2025,falling,2,-0.0051920505373724,-0.0051785951400874,100.0,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,DGC,exploratory,2025,rising,127,-0.0591058428393128,-0.0573930043237399,33.07086614173229,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,DGC,exploratory,2025,sideways,120,-0.1248311581266745,-0.1173540824055356,44.16666666666666,unseen_ticker,extra_trees_market_alpha,,,
+mechanical_3,MBB,exploratory,2023,falling,46,0.0028241591858527,0.0028281508802485,8.695652173913043,unseen_ticker,,,,
+mechanical_3,MBB,exploratory,2023,rising,64,0.0151316245826091,0.0152466872429684,7.8125,unseen_ticker,,,,
+mechanical_3,MBB,exploratory,2023,sideways,138,0.0352872983165272,0.0359172833428096,6.521739130434782,unseen_ticker,,,,
+mechanical_3,MBB,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_3,MBB,exploratory,2024,rising,68,0.0740265982199959,0.0768354470214306,8.823529411764707,unseen_ticker,,,,
+mechanical_3,MBB,exploratory,2024,sideways,182,0.0320213034271641,0.0325395017008868,6.593406593406594,unseen_ticker,,,,
+mechanical_3,MBB,exploratory,2025,falling,2,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_3,MBB,exploratory,2025,rising,127,-0.0039266715457166,-0.0039189722518321,4.724409448818897,unseen_ticker,,,,
+mechanical_3,MBB,exploratory,2025,sideways,120,-0.0241193775262574,-0.0238308298587981,7.5,unseen_ticker,,,,
+mechanical_10,MBB,exploratory,2023,falling,46,0.0091003304150884,0.0091418643170597,32.608695652173914,unseen_ticker,,,,
+mechanical_10,MBB,exploratory,2023,rising,64,-0.0103537529722324,-0.010300337381488,37.5,unseen_ticker,,,,
+mechanical_10,MBB,exploratory,2023,sideways,138,0.0906664264095224,0.0949037133730926,15.217391304347828,unseen_ticker,,,,
+mechanical_10,MBB,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_10,MBB,exploratory,2024,rising,68,0.0366199929167018,0.037298765054689,19.11764705882353,unseen_ticker,,,,
+mechanical_10,MBB,exploratory,2024,sideways,182,0.2222242142421628,0.2488513567360098,25.82417582417583,unseen_ticker,,,,
+mechanical_10,MBB,exploratory,2025,falling,2,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_10,MBB,exploratory,2025,rising,127,-0.0095400011585208,-0.0094946397114929,18.11023622047244,unseen_ticker,,,,
+mechanical_10,MBB,exploratory,2025,sideways,120,0.015831833034643,0.0159578204959773,22.5,unseen_ticker,,,,
+mechanical_20,MBB,exploratory,2023,falling,46,0.0181850631997198,0.0183514183243366,52.17391304347826,unseen_ticker,,,,
+mechanical_20,MBB,exploratory,2023,rising,64,0.0531296165973343,0.0545663255599202,56.25,unseen_ticker,,,,
+mechanical_20,MBB,exploratory,2023,sideways,138,0.0971075191407972,0.1019788510708435,43.47826086956522,unseen_ticker,,,,
+mechanical_20,MBB,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_20,MBB,exploratory,2024,rising,68,0.0442413298023484,0.0452345707059792,47.05882352941176,unseen_ticker,,,,
+mechanical_20,MBB,exploratory,2024,sideways,182,0.1663361010235039,0.1809699602396273,48.35164835164835,unseen_ticker,,,,
+mechanical_20,MBB,exploratory,2025,falling,2,0.0533625350781305,0.0548119821542382,100.0,unseen_ticker,,,,
+mechanical_20,MBB,exploratory,2025,rising,127,0.3793011555904548,0.4612630370184075,33.85826771653544,unseen_ticker,,,,
+mechanical_20,MBB,exploratory,2025,sideways,120,-0.0308049215602304,-0.0303352846935979,45.83333333333333,unseen_ticker,,,,
+supervised:ridge_market,MBB,exploratory,2023,falling,46,0.0091003304150889,0.0091418643170602,10.869565217391305,unseen_ticker,ridge_market,,,
+supervised:ridge_market,MBB,exploratory,2023,rising,64,-0.030998147144892,-0.0305226306245422,21.875,unseen_ticker,ridge_market,,,
+supervised:ridge_market,MBB,exploratory,2023,sideways,138,-0.0148772003760447,-0.0147670815932764,25.36231884057971,unseen_ticker,ridge_market,,,
+supervised:ridge_market,MBB,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,ridge_market,,,
+supervised:ridge_market,MBB,exploratory,2024,rising,68,0.0740265982199959,0.0768354470214306,8.823529411764707,unseen_ticker,ridge_market,,,
+supervised:ridge_market,MBB,exploratory,2024,sideways,182,0.0448666952101188,0.0458884286782739,10.989010989010987,unseen_ticker,ridge_market,,,
+supervised:ridge_market,MBB,exploratory,2025,falling,2,0.0533625350781307,0.0548119821542383,100.0,unseen_ticker,ridge_market,,,
+supervised:ridge_market,MBB,exploratory,2025,rising,127,-0.0107974318035098,-0.0107393487738818,13.385826771653544,unseen_ticker,ridge_market,,,
+supervised:ridge_market,MBB,exploratory,2025,sideways,120,-0.0040128769345452,-0.0040048361031174,49.16666666666666,unseen_ticker,ridge_market,,,
+supervised:ridge_market_alpha,MBB,exploratory,2023,falling,46,0.0091003304150889,0.0091418643170602,10.869565217391305,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MBB,exploratory,2023,rising,64,-0.030998147144892,-0.0305226306245422,21.875,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MBB,exploratory,2023,sideways,138,-0.0148772003760447,-0.0147670815932764,25.36231884057971,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MBB,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MBB,exploratory,2024,rising,68,0.0740265982199959,0.0768354470214306,8.823529411764707,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MBB,exploratory,2024,sideways,182,0.0448666952101188,0.0458884286782739,10.989010989010987,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MBB,exploratory,2025,falling,2,0.0533625350781307,0.0548119821542383,100.0,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MBB,exploratory,2025,rising,127,0.0187250074628118,0.0189014198021814,14.960629921259844,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,MBB,exploratory,2025,sideways,120,-0.0040128769345452,-0.0040048361031174,49.16666666666666,unseen_ticker,ridge_market_alpha,,,
+supervised:extra_trees_market,MBB,exploratory,2023,falling,46,0.0091003304150889,0.0091418643170602,10.869565217391305,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,MBB,exploratory,2023,rising,64,0.0305853684844492,0.0310579061426539,10.9375,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,MBB,exploratory,2023,sideways,138,0.0352872983165269,0.0359172833428093,6.521739130434782,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,MBB,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,MBB,exploratory,2024,rising,68,0.0740265982199961,0.0768354470214309,8.823529411764707,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,MBB,exploratory,2024,sideways,182,0.0423107832755748,0.0432186432827967,9.34065934065934,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,MBB,exploratory,2025,falling,2,0.0,0.0,0.0,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,MBB,exploratory,2025,rising,127,0.0187250074628122,0.0189014198021818,14.960629921259844,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,MBB,exploratory,2025,sideways,120,0.0125450110654525,0.0126240298013478,26.666666666666668,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market_alpha,MBB,exploratory,2023,falling,46,0.0091003304150889,0.0091418643170602,10.869565217391305,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MBB,exploratory,2023,rising,64,0.0305853684844492,0.0310579061426539,10.9375,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MBB,exploratory,2023,sideways,138,0.0352872983165269,0.0359172833428093,6.521739130434782,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MBB,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MBB,exploratory,2024,rising,68,0.0740265982199961,0.0768354470214309,8.823529411764707,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MBB,exploratory,2024,sideways,182,0.044866695210119,0.0458884286782741,10.989010989010987,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MBB,exploratory,2025,falling,2,0.0,0.0,0.0,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MBB,exploratory,2025,rising,127,0.0317577733844982,0.0322674323727447,17.322834645669293,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,MBB,exploratory,2025,sideways,120,0.0695912034189935,0.0720698331803198,35.833333333333336,unseen_ticker,extra_trees_market_alpha,,,
+mechanical_3,VHC,exploratory,2023,falling,46,-0.0031364954260093,-0.0031315817628005,8.695652173913043,unseen_ticker,,,,
+mechanical_3,VHC,exploratory,2023,rising,64,-0.0588846179531955,-0.0571844531309616,7.8125,unseen_ticker,,,,
+mechanical_3,VHC,exploratory,2023,sideways,138,-0.0605606644582815,-0.0587633323261471,6.521739130434782,unseen_ticker,,,,
+mechanical_3,VHC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_3,VHC,exploratory,2024,rising,68,-0.0419279160184336,-0.0410610977846764,8.823529411764707,unseen_ticker,,,,
+mechanical_3,VHC,exploratory,2024,sideways,182,-0.0253081108760478,-0.0249905452736222,6.593406593406594,unseen_ticker,,,,
+mechanical_3,VHC,exploratory,2025,falling,2,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_3,VHC,exploratory,2025,rising,127,-0.0489548404192232,-0.0477758692299065,4.724409448818897,unseen_ticker,,,,
+mechanical_3,VHC,exploratory,2025,sideways,120,-0.0806338796179373,-0.0774686128338733,7.5,unseen_ticker,,,,
+mechanical_10,VHC,exploratory,2023,falling,46,0.0078063678186835,0.0078369169487866,32.608695652173914,unseen_ticker,,,,
+mechanical_10,VHC,exploratory,2023,rising,64,-0.0091934368936724,-0.0091513064593944,37.5,unseen_ticker,,,,
+mechanical_10,VHC,exploratory,2023,sideways,138,-0.0671128499594179,-0.0649103294490577,15.217391304347828,unseen_ticker,,,,
+mechanical_10,VHC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_10,VHC,exploratory,2024,rising,68,-0.0917265683815837,-0.0876454179678934,19.11764705882353,unseen_ticker,,,,
+mechanical_10,VHC,exploratory,2024,sideways,182,-0.0407940199903669,-0.0399731440756681,25.82417582417583,unseen_ticker,,,,
+mechanical_10,VHC,exploratory,2025,falling,2,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_10,VHC,exploratory,2025,rising,127,-0.1816223239830187,-0.1660837688906777,18.11023622047244,unseen_ticker,,,,
+mechanical_10,VHC,exploratory,2025,sideways,120,0.0234066199657014,0.0236827047572392,22.5,unseen_ticker,,,,
+mechanical_20,VHC,exploratory,2023,falling,46,-0.0491921824053339,-0.048001845178475,52.17391304347826,unseen_ticker,,,,
+mechanical_20,VHC,exploratory,2023,rising,64,-0.0146010010234175,-0.0144949233157856,56.25,unseen_ticker,,,,
+mechanical_20,VHC,exploratory,2023,sideways,138,0.0868507042896605,0.0907338256805793,43.47826086956522,unseen_ticker,,,,
+mechanical_20,VHC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,,,,
+mechanical_20,VHC,exploratory,2024,rising,68,-0.0722824339665452,-0.0697318806104508,47.05882352941176,unseen_ticker,,,,
+mechanical_20,VHC,exploratory,2024,sideways,182,-0.031518912268949,-0.0310273691905476,48.35164835164835,unseen_ticker,,,,
+mechanical_20,VHC,exploratory,2025,falling,2,-0.0040899852515253,-0.0040816326530614,100.0,unseen_ticker,,,,
+mechanical_20,VHC,exploratory,2025,rising,127,-0.1219519365195902,-0.1148090871636974,33.85826771653544,unseen_ticker,,,,
+mechanical_20,VHC,exploratory,2025,sideways,120,-0.2242625984125368,-0.2008947369588921,45.83333333333333,unseen_ticker,,,,
+supervised:ridge_market,VHC,exploratory,2023,falling,46,0.0132175091246092,0.0133052465288346,19.565217391304348,unseen_ticker,ridge_market,,,
+supervised:ridge_market,VHC,exploratory,2023,rising,64,0.0659395568935247,0.0681621521760619,42.1875,unseen_ticker,ridge_market,,,
+supervised:ridge_market,VHC,exploratory,2023,sideways,138,-0.0045066837210033,-0.0044965438600237,18.84057971014493,unseen_ticker,ridge_market,,,
+supervised:ridge_market,VHC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,ridge_market,,,
+supervised:ridge_market,VHC,exploratory,2024,rising,68,0.0097684956197798,0.0098163631106121,11.76470588235294,unseen_ticker,ridge_market,,,
+supervised:ridge_market,VHC,exploratory,2024,sideways,182,0.0239369288842377,0.0242257167946606,39.56043956043956,unseen_ticker,ridge_market,,,
+supervised:ridge_market,VHC,exploratory,2025,falling,2,-0.0040899852515252,-0.0040816326530613,100.0,unseen_ticker,ridge_market,,,
+supervised:ridge_market,VHC,exploratory,2025,rising,127,-0.0883121749266343,-0.084524956243916,32.28346456692913,unseen_ticker,ridge_market,,,
+supervised:ridge_market,VHC,exploratory,2025,sideways,120,-0.1313642077261906,-0.1231016569267334,37.5,unseen_ticker,ridge_market,,,
+supervised:ridge_market_alpha,VHC,exploratory,2023,falling,46,0.0132175091246092,0.0133052465288346,19.565217391304348,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VHC,exploratory,2023,rising,64,0.0659395568935247,0.0681621521760619,42.1875,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VHC,exploratory,2023,sideways,138,-0.0045066837210033,-0.0044965438600237,18.84057971014493,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VHC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VHC,exploratory,2024,rising,68,0.0097684956197798,0.0098163631106121,11.76470588235294,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VHC,exploratory,2024,sideways,182,0.0239369288842377,0.0242257167946606,39.56043956043956,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VHC,exploratory,2025,falling,2,-0.004089985251525,-0.0040816326530611,100.0,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VHC,exploratory,2025,rising,127,-0.0883121749266345,-0.0845249562439161,32.28346456692913,unseen_ticker,ridge_market_alpha,,,
+supervised:ridge_market_alpha,VHC,exploratory,2025,sideways,120,-0.1166256593870327,-0.1100817366331306,38.333333333333336,unseen_ticker,ridge_market_alpha,,,
+supervised:extra_trees_market,VHC,exploratory,2023,falling,46,0.0132175091246092,0.0133052465288346,19.565217391304348,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,VHC,exploratory,2023,rising,64,-0.0008106766838351,-0.0008103481742699,25.0,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,VHC,exploratory,2023,sideways,138,-0.0038734948040206,-0.0038660024999443,15.942028985507244,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,VHC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,VHC,exploratory,2024,rising,68,-0.0419279160184334,-0.0410610977846762,8.823529411764707,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,VHC,exploratory,2024,sideways,182,-0.008057489795203,-0.0080251152352189,33.51648351648351,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,VHC,exploratory,2025,falling,2,-0.0040899852515252,-0.0040816326530613,100.0,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,VHC,exploratory,2025,rising,127,-0.0448939322255375,-0.0439011122637561,29.133858267716533,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market,VHC,exploratory,2025,sideways,120,-0.1166256593870325,-0.1100817366331304,38.333333333333336,unseen_ticker,extra_trees_market,,,
+supervised:extra_trees_market_alpha,VHC,exploratory,2023,falling,46,0.0132175091246092,0.0133052465288346,19.565217391304348,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VHC,exploratory,2023,rising,64,0.0140205657301279,0.0141193148281796,28.125,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VHC,exploratory,2023,sideways,138,-0.0021430163276261,-0.0021407217075646,15.942028985507244,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VHC,exploratory,2023,warmup,1,0.0,0.0,0.0,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VHC,exploratory,2024,rising,68,-0.0419279160184334,-0.0410610977846762,8.823529411764707,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VHC,exploratory,2024,sideways,182,0.1520609503551601,0.1642311945744262,53.2967032967033,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VHC,exploratory,2025,falling,2,-0.0040899852515251,-0.0040816326530612,100.0,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VHC,exploratory,2025,rising,127,-0.0746920828894346,-0.0719708015922295,35.43307086614173,unseen_ticker,extra_trees_market_alpha,,,
+supervised:extra_trees_market_alpha,VHC,exploratory,2025,sideways,120,-0.1166256593870327,-0.1100817366331306,38.333333333333336,unseen_ticker,extra_trees_market_alpha,,,
+frozen_PPO_full_policy,ACB,exploratory,2023,falling,46,,0.0280668182404866,97.10144927536231,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2023,rising,64,,-0.0179757835076098,90.10416666666669,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2023,sideways,138,,0.2685276004456329,94.92753623188406,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2024,rising,68,,0.0376924222859557,94.11764705882354,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2024,sideways,182,,0.2457485065229304,91.20879120879124,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2025,falling,2,,0.0518638573743921,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2025,rising,127,,0.0213862722422129,88.71391076115485,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2025,sideways,120,,-0.0093254299607956,97.5,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2023,falling,46,,-0.1017535225793146,99.27536231884058,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2023,rising,64,,0.0628182841388488,91.66666666666669,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2023,sideways,138,,0.2501890543135472,88.16425120772946,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2024,rising,68,,-0.1075168254503255,91.66666666666669,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2024,sideways,182,,-0.0966917106612234,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2025,falling,2,,-0.0062893081761005,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2025,rising,67,,-0.0868425951055785,95.52238805970148,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2025,sideways,120,,-0.5234010659560293,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2023,falling,46,,-0.1446641886362513,99.27536231884058,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2023,rising,64,,0.4411818848271669,75.0,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2023,sideways,138,,0.2261681351402459,94.20289855072464,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2024,rising,68,,0.0045894882196103,95.09803921568626,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2024,sideways,182,,0.2434650630558879,92.4908424908425,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2025,falling,2,,-0.0051785951400876,100.0,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2025,rising,127,,-0.315304833472134,99.73753280839895,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2025,sideways,120,,-0.0967712735951323,100.0,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2023,falling,46,,-0.0330464928964857,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2023,rising,64,,0.1924350190909313,73.4375,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2023,sideways,138,,0.1928158592285491,93.4782608695652,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2024,rising,68,,0.1249559569255965,76.96078431372548,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2024,sideways,182,,0.5364056121396308,90.29304029304028,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2025,falling,2,,0.0713648528099909,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2025,rising,127,,-0.1247674116982387,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2025,sideways,120,,-0.1895852216414136,99.16666666666669,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2023,falling,46,,-0.0289541910460514,99.27536231884058,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2023,rising,64,,0.0621072665969755,94.27083333333331,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2023,sideways,138,,-0.1145909201337084,98.55072463768116,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2024,rising,68,,0.0045482309561712,94.11764705882354,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2024,sideways,182,,0.0426370730133071,94.87179487179488,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2025,falling,2,,-0.0054485308425764,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2025,rising,127,,0.0998088103383657,96.3254593175853,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2025,sideways,120,,-0.0102751448416472,98.8888888888889,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2023,falling,46,,0.0183084891613411,99.27536231884058,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2023,rising,64,,0.0072167385359966,86.45833333333333,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2023,sideways,138,,0.3741921246811734,92.02898550724638,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2024,rising,68,,0.0171894492163827,94.60784313725492,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2024,sideways,182,,0.0668451506582339,95.7875457875458,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2025,falling,2,,-0.0062893081761004,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2025,rising,127,,0.057246403628007,90.5511811023622,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2025,sideways,120,,0.1044253126725304,98.33333333333331,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2023,falling,46,,-0.0209052978817881,99.27536231884058,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2023,rising,64,,0.0878105905404215,90.625,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2023,sideways,138,,0.1551838540063891,93.23671497584542,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2024,rising,68,,0.0330422193162706,100.0,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2024,sideways,182,,0.3286620400018623,87.54578754578755,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2025,falling,2,,0.0548119821542385,100.0,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2025,rising,127,,0.2034702862759362,87.40157480314961,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2025,sideways,120,,0.1596656357004352,92.2222222222222,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2023,falling,46,,-0.1690229775626432,97.10144927536231,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2023,rising,64,,0.2191420434278696,84.89583333333333,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2023,sideways,138,,-0.0440636129568038,93.4782608695652,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2024,rising,68,,0.1443356586979287,87.25490196078431,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2024,sideways,182,,0.2774854310386219,97.25274725274726,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2025,falling,2,,0.0061919504643961,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2025,rising,127,,0.3296535586746295,89.501312335958,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2025,sideways,120,,0.133812567764775,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2023,falling,46,,0.1064211095023427,93.47826086956525,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2023,rising,64,,0.0215255559001,92.1875,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2023,sideways,138,,0.4368643866027756,94.68599033816425,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2024,rising,68,,-0.0734313551967238,97.54901960784314,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2024,sideways,182,,-0.0722455292865024,97.06959706959708,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2025,falling,2,,-0.0051428571428571,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2025,rising,127,,0.3302383263190971,93.7007874015748,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2025,sideways,120,,-0.0994333458396128,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2023,falling,46,,-0.0684191491858885,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2023,rising,64,,0.0529780698082432,94.27083333333331,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2023,sideways,138,,-0.022884593949498,96.8599033816425,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2024,rising,68,,0.2390574052174068,80.88235294117646,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2024,sideways,182,,0.11382847876979,95.970695970696,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2025,falling,2,,0.0654955126981095,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2025,rising,127,,-0.1104232582168445,98.9501312335958,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2025,sideways,120,,0.1038495882250527,93.05555555555556,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2023,falling,46,,0.0725500181164808,97.10144927536231,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2023,rising,64,,0.0886582054946514,80.72916666666667,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2023,sideways,138,,0.5272070658538863,91.30434782608695,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2024,rising,68,,-0.1101185114644608,99.01960784313724,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2024,sideways,182,,0.1453038260856956,96.88644688644688,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2025,falling,2,,-0.0045848191543555,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2025,rising,127,,0.1344894858538173,87.40157480314961,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2025,sideways,120,,0.0555819805327887,99.72222222222224,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2023,falling,46,,0.0584568058408264,94.92753623188406,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2023,rising,64,,0.0430702566794223,95.83333333333331,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2023,sideways,138,,0.0686085034496524,94.20289855072464,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2024,rising,68,,-0.07838898867688,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2024,sideways,182,,0.2708662931314693,96.7032967032967,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2025,falling,2,,0.0054151624548736,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2025,rising,127,,0.0260096959173752,94.2257217847769,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2025,sideways,120,,-0.0434326867822767,96.38888888888889,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2023,falling,46,,-0.21971198612411,100.0,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2023,rising,64,,0.1657696757966381,82.8125,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2023,sideways,138,,0.1588823122995952,97.10144927536231,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2024,rising,68,,-0.1113984750929239,96.5686274509804,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2024,sideways,182,,0.3525489961331544,94.32234432234434,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2025,falling,2,,-0.0040816326530612,100.0,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2025,rising,127,,-0.0620882812829595,99.73753280839895,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2025,sideways,120,,-0.1233724999940028,100.0,unseen_ticker,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2023,falling,46,,-0.0236995341614906,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2023,rising,64,,-0.2532243129536762,85.41666666666667,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2023,sideways,138,,0.0562540776029261,97.10144927536231,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2024,rising,68,,-0.0340847971416323,99.50980392156862,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2024,sideways,182,,-0.0025317630597152,97.06959706959708,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2025,falling,2,,0.1476916860288916,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2025,rising,127,,2.1882205728048,73.22834645669292,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2025,sideways,120,,0.6527387520472985,80.27777777777779,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2023,falling,46,,-0.0063657799880151,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2023,rising,64,,0.0302932392103703,92.70833333333331,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2023,sideways,138,,-0.1201555690236584,98.55072463768114,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2024,rising,68,,-0.0257036831633325,99.50980392156862,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2024,sideways,182,,0.033551306468909,93.77289377289378,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2025,falling,2,,0.0200875099443118,100.0,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2025,rising,127,,0.0704214213352548,91.86351706036744,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2025,sideways,120,,-0.0417152217107371,99.72222222222224,training_universe,,market_only,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2023,falling,46,,0.0255851759852452,97.8260869565217,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2023,rising,64,,-0.0091815594646096,96.35416666666669,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2023,sideways,138,,0.2311493245995005,99.27536231884058,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2024,rising,68,,0.0350122169244095,99.50980392156862,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2024,sideways,182,,0.2508950030026551,96.33699633699634,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2025,falling,2,,0.0518638573743921,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2025,rising,127,,0.0975808770820364,92.91338582677164,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,ACB,exploratory,2025,sideways,120,,0.0041085703702959,99.44444444444444,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2023,falling,46,,-0.1063364127702363,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2023,rising,64,,0.0940035613072642,95.3125,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2023,sideways,138,,0.2920679163739004,94.68599033816425,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2024,rising,68,,-0.1220965580426664,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2024,sideways,182,,-0.0893922497372744,99.81684981684982,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2025,falling,2,,-0.0062893081761006,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2025,rising,67,,-0.1600559147300376,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,BCG,exploratory,2025,sideways,120,,-0.5234010659560292,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2023,falling,46,,-0.145631945541434,100.0,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2023,rising,64,,0.3646386511010737,87.5,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2023,sideways,138,,0.2714494226656421,97.34299516908212,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2024,rising,68,,-0.0218898051871483,99.50980392156862,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2024,sideways,182,,0.3321310029565619,95.97069597069596,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2025,falling,2,,-0.0051785951400875,100.0,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2025,rising,127,,-0.3153048334721337,99.73753280839895,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,DGC,exploratory,2025,sideways,120,,-0.0967712735951327,100.0,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2023,falling,46,,-0.031826907150301,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2023,rising,64,,0.1278398066554012,80.72916666666667,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2023,sideways,138,,0.1827158298829337,98.55072463768114,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2024,rising,68,,0.1316614806795647,89.70588235294117,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2024,sideways,182,,0.6165135540315009,94.68864468864469,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2025,falling,2,,0.0713648528099908,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2025,rising,127,,-0.1247674116982381,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,FPT,exploratory,2025,sideways,120,,-0.1933033850721175,99.44444444444446,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2023,falling,46,,-0.0247476842250785,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2023,rising,64,,0.0652270832258974,97.39583333333331,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2023,sideways,138,,-0.1298018802293723,99.51690821256038,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2024,rising,68,,0.0001002363392768,99.01960784313724,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2024,sideways,182,,0.0181133451443637,98.9010989010989,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2025,falling,2,,-0.0054485308425764,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2025,rising,127,,0.1599821056025981,97.9002624671916,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,GAS,exploratory,2025,sideways,120,,-0.0202601403232202,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2023,falling,46,,0.0239797616876109,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2023,rising,64,,0.0001624680275973,95.83333333333331,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2023,sideways,138,,0.3950474672504381,96.6183574879227,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2024,rising,68,,0.0164231478206724,99.01960784313724,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2024,sideways,182,,0.0396077883806106,98.35164835164836,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2025,falling,2,,-0.0062893081761005,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2025,rising,127,,0.0517910269804669,92.6509186351706,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,HPG,exploratory,2025,sideways,120,,0.1102847529605844,99.44444444444446,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2023,falling,46,,-0.0202686953446502,100.0,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2023,rising,64,,0.0883852395221815,94.27083333333331,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2023,sideways,138,,0.151198633762075,97.58454106280192,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2024,rising,68,,0.0333395906717853,99.50980392156862,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2024,sideways,182,,0.3800685331827305,93.5897435897436,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2025,falling,2,,0.0548119821542384,100.0,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2025,rising,127,,0.0631495063942847,90.5511811023622,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MBB,exploratory,2025,sideways,120,,0.1829877289468046,98.05555555555556,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2023,falling,46,,-0.1658527029892224,97.1014492753623,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2023,rising,64,,0.2232640319403553,93.75,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2023,sideways,138,,-0.0306666278676006,97.10144927536231,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2024,rising,68,,0.1350020932900012,94.11764705882352,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2024,sideways,182,,0.2466121138478928,99.26739926739928,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2025,falling,2,,0.0061919504643962,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2025,rising,127,,0.2758824294873451,95.53805774278214,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,MWG,exploratory,2025,sideways,120,,0.1338125677647754,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2023,falling,46,,0.0963915485578838,97.82608695652176,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2023,rising,64,,0.0212368382874996,97.91666666666669,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2023,sideways,138,,0.4078084193905555,98.06763285024154,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2024,rising,68,,-0.0757725493748751,98.5294117647059,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2024,sideways,182,,-0.0687710679363195,98.35164835164836,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2025,falling,2,,-0.005142857142857,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2025,rising,127,,0.3761102988962604,97.9002624671916,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,PVD,exploratory,2025,sideways,120,,-0.0994333458396131,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2023,falling,46,,-0.0684191491858885,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2023,rising,64,,0.0068320083548751,98.4375,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2023,sideways,138,,-0.0211877649670305,99.51690821256038,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2024,rising,68,,0.2540196153431147,88.72549019607844,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2024,sideways,182,,0.0894484600103846,99.63369963369964,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2025,falling,2,,0.0654955126981097,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2025,rising,127,,-0.1125922905854757,99.4750656167979,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,REE,exploratory,2025,sideways,120,,0.1118839910846003,97.7777777777778,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2023,falling,46,,0.0674176713371612,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2023,rising,64,,0.0206534017205022,89.0625,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2023,sideways,138,,0.5596153589319326,97.58454106280192,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2024,rising,68,,-0.1062620603133357,99.50980392156862,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2024,sideways,182,,0.1790081153684901,98.35164835164836,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2025,falling,2,,-0.0045848191543554,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2025,rising,127,,0.1677464837088681,90.28871391076116,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,SSI,exploratory,2025,sideways,120,,0.0555819805327884,99.72222222222224,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2023,falling,46,,0.0525760590522687,96.37681159420288,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2023,rising,64,,0.0454301945412629,98.4375,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2023,sideways,138,,0.0740264924664027,96.8599033816425,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2024,rising,68,,-0.0783889886768801,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2024,sideways,182,,0.2346780085292424,99.63369963369964,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2025,falling,2,,0.0054151624548736,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2025,rising,127,,-0.0053181143542842,98.68766404199476,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VCB,exploratory,2025,sideways,120,,-0.020235303189157,97.5,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2023,falling,46,,-0.219328245784096,100.0,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2023,rising,64,,0.1493615583690369,92.70833333333331,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2023,sideways,138,,0.1840672129761077,99.27536231884058,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2024,rising,68,,-0.1310190979132052,99.50980392156862,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2024,sideways,182,,0.4313049324581266,96.52014652014653,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2025,falling,2,,-0.0040816326530612,100.0,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2025,rising,127,,-0.04405321359921,99.21259842519686,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VHC,exploratory,2025,sideways,120,,-0.1233724999940024,100.0,unseen_ticker,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2023,falling,46,,-0.0236995341614905,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2023,rising,64,,-0.2803637159908617,85.9375,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2023,sideways,138,,0.0062658936442519,99.51690821256038,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2024,rising,68,,-0.0332851984637697,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2024,sideways,182,,-0.0320468747193903,99.0842490842491,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2025,falling,2,,0.1264774219618142,83.33333333333333,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2025,rising,127,,3.2411973615793834,81.88976377952756,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VIC,exploratory,2025,sideways,120,,0.8583009050869675,85.83333333333333,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2023,falling,46,,-0.006365779988015,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2023,rising,64,,0.0328808143787733,98.95833333333331,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2023,sideways,138,,-0.1287446751106141,99.75845410628018,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2024,rising,68,,-0.0257036831633322,99.50980392156862,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2024,sideways,182,,0.0471093092514975,98.35164835164836,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2025,falling,2,,0.0200875099443118,100.0,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2025,rising,127,,0.0693417852301139,97.9002624671916,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only
+frozen_PPO_full_policy,VNM,exploratory,2025,sideways,120,,-0.0417152217107372,99.72222222222224,training_universe,,market_plus_s1_c16,RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv,different PPO-selected entries; descriptive only

@@ -1,0 +1,2957 @@
+{
+  "branch": "exp/stock-rl-trade-episode",
+  "checkpoint_hashes_before_and_after": {
+    "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_only_seed1208.zip": "06ed9d1540ca7a77eb3975af870570eda7fc1742c891021103666c5b13389662",
+    "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_only_seed1209.zip": "f771d9dcc7a2bed6701a66f51ba3745677cda7eb805c6d09b45b5dfe088176fd",
+    "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_only_seed1210.zip": "188712ad77f9af64aec1adea5d9568b496fe64c3bc33560a2d2943172a060e6a",
+    "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_plus_s1_c16_seed1208.zip": "75b893a9647f9f09e4bc689ddbc56b173c468c42fee6d7644d5ffa10f4379a7f",
+    "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_plus_s1_c16_seed1209.zip": "51ffaaf8769de3e5fa56f66a720702c91b215f76e331e7489758f0684c0e2c88",
+    "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_plus_s1_c16_seed1210.zip": "750a741b3b48d7f378b7faf83f14e63bb3cfdb4ae8d81080c54a3378faf4ab25"
+  },
+  "checkpoint_integrity_check": "manifest hashes matched before and after evaluation",
+  "config": {
+    "data_root_env": "STOCKS_DATA_ROOT",
+    "date_cutoff": "2025-12-31",
+    "experiment_id": "rl-trade-episode-phase4d-supervised-exit-20261025",
+    "feature_contract": {
+      "agent_state": [
+        "position_in",
+        "holding_intervals_normalized",
+        "entry_relative_unrealized_log_return_scaled",
+        "waiting_steps_normalized",
+        "episode_steps_normalized"
+      ],
+      "alpha_feature_names": [
+        "alpha_s1_xs_proba",
+        "alpha_s1_available",
+        "alpha_c16_order_volume_ratio_rank",
+        "alpha_c16_available"
+      ],
+      "entry_time_feature": "log(daily_volatility_scale at entry decision)",
+      "episode_step_normalizer": 756,
+      "holding_age_normalizer": 756,
+      "market_feature_names_source": "CAUSAL_MARKET_FEATURE_NAMES from Phase 4A",
+      "missing_alpha_policy": "Phase 4A 0.5 sentinel plus explicit availability bit",
+      "scaler_fit_partition": "train only",
+      "synthetic_trade_state": "immediate entry; waiting=0; episode_steps=holding_age+1",
+      "ticker_identity_in_features": false
+    },
+    "isolated_model_dir": "RL-trading-agent/artifacts/trade_episode/phase4d-20261025-run2",
+    "market_regimes": {
+      "available_through_decision_close": true,
+      "falling_threshold": -0.1,
+      "index": "VNINDEX",
+      "lookback_sessions": 126,
+      "rising_threshold": 0.1
+    },
+    "models": {
+      "age_only_ridge": {
+        "alpha": 25.0,
+        "estimator": "StandardScaler + Ridge",
+        "features": "holding age only"
+      },
+      "constant_mean": {
+        "estimator": "training target mean",
+        "features": "constant"
+      },
+      "extra_trees_market": {
+        "estimator": "ExtraTreesRegressor",
+        "features": "market + agent state + entry volatility",
+        "max_depth": 5,
+        "max_features": 0.8,
+        "min_samples_leaf": 50,
+        "n_estimators": 64,
+        "n_jobs": 1,
+        "random_state": 6404
+      },
+      "extra_trees_market_alpha": {
+        "estimator": "ExtraTreesRegressor",
+        "features": "market + S1/C16 + agent state + entry volatility",
+        "max_depth": 5,
+        "max_features": 0.8,
+        "min_samples_leaf": 50,
+        "n_estimators": 64,
+        "n_jobs": 1,
+        "random_state": 6404
+      },
+      "ridge_market": {
+        "alpha": 25.0,
+        "estimator": "StandardScaler + Ridge",
+        "features": "market + agent state + entry volatility"
+      },
+      "ridge_market_alpha": {
+        "alpha": 25.0,
+        "estimator": "StandardScaler + Ridge",
+        "features": "market + S1/C16 + agent state + entry volatility"
+      }
+    },
+    "outputs": [
+      "phase4d_config_snapshot.json",
+      "phase4d_metrics.json",
+      "phase4d_prediction_metrics.csv",
+      "phase4d_policy_metrics.csv",
+      "phase4d_trades.csv",
+      "phase4d_year_regime_metrics.csv",
+      "phase4d_random_controls.csv",
+      "phase4d_ppo_entry_diagnostic.csv",
+      "phase4d_bootstrap_comparisons.csv"
+    ],
+    "partition_bounds": {
+      "exploratory": [
+        "2023-01-01",
+        "2025-12-31"
+      ],
+      "train": [
+        "2015-01-01",
+        "2019-12-31"
+      ],
+      "validation": [
+        "2020-01-01",
+        "2022-12-31"
+      ]
+    },
+    "policy": {
+      "after_model_last_age": "force SELL at first legal next open",
+      "common_entry_coverage_minimum": 0.9,
+      "entry_anchor": "first row in each ticker/split",
+      "entry_execution": "next open if scheduled buy is legal; otherwise skip without shifting schedule",
+      "entry_schedule_stride_trading_rows": 42,
+      "fees": 0.0,
+      "initial_capital_per_ticker": 1.0,
+      "maximum_holding_intervals": 40,
+      "minimum_holding_intervals": 3,
+      "model_last_decision_holding_age": 36,
+      "slippage": 0.0,
+      "threshold_grid_delta_reward": [
+        -0.1,
+        -0.05,
+        0.0
+      ],
+      "threshold_selection_metric": "equal-ticker mean chronological CAGR on validation training tickers"
+    },
+    "ppo_reference": {
+      "checkpoint_manifest": "RL-trading-agent/research/trade_episode/phase4b/checkpoint_manifest.json",
+      "entry_conditioned_diagnostic": {
+        "comparison": "per-entry counterfactual, identical PPO entry fill, no cross-entry compounding",
+        "maximum_holding_intervals": 40,
+        "phase4a_trade_log": "/tmp/stock-rl-trade-episode-phase4a-20261025/phase4a_trades.csv",
+        "policies": [
+          "market_only",
+          "market_plus_s1_c16"
+        ],
+        "seed": 1208,
+        "ticker_scope": "all available training and unseen tickers"
+      },
+      "phase4b_metrics": "RL-trading-agent/research/trade_episode/phase4b/results/phase4b_stock_period_metrics.csv",
+      "phase4b_regime_metrics": "RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv",
+      "retrain": false,
+      "use_existing_phase4b_full_policy_evaluation": true
+    },
+    "price_basis": "user-confirmed dividend-adjusted assumption",
+    "protocol_base_commit": "c548ed5377d7c82cbfd89226baf584247598600b",
+    "protocol_path": "RL-trading-agent/research/trade_episode/phase4d/protocol.md",
+    "randomized_exit_control": {
+      "duration_match_tolerance_sessions": 2,
+      "duration_source": "each supervised policy's validation training-ticker holding-duration distribution",
+      "exposure_match_tolerance_percentage_points": 5.0,
+      "feature_blind": true,
+      "replicates": 100,
+      "seed_start": 54000,
+      "seed_stop_exclusive": 54100
+    },
+    "results_dir": "RL-trading-agent/research/trade_episode/phase4d/results",
+    "run_attempt": 2,
+    "supersedes_attempt": 1,
+    "target": {
+      "decision": "observe close t; submit action; execute at next open",
+      "eligible_current_holding_ages": [
+        2,
+        3,
+        5,
+        10,
+        20,
+        30,
+        36
+      ],
+      "entry_fill_index": "t - current_holding_age",
+      "hold_additional_intervals": 3,
+      "hold_duration_intervals": "current_holding_age + 4",
+      "hold_then_sell_fill_index": "t + 4",
+      "label": "R_hold_3_more - R_sell_now",
+      "label_partition_containment": true,
+      "minimum_sell_duration_intervals": 3,
+      "reward": "(252/T) * ln(P_sell/P_entry) - ln(1.07)",
+      "sell_duration_intervals": "current_holding_age + 1",
+      "sell_now_fill_index": "t + 1"
+    },
+    "threshold_selection_tickers": [
+      "ACB",
+      "BCG",
+      "FPT",
+      "GAS",
+      "HPG",
+      "MWG",
+      "PVD",
+      "REE",
+      "SSI",
+      "VCB",
+      "VIC",
+      "VNM"
+    ],
+    "training_examples": {
+      "equal_weight_strata": [
+        "ticker",
+        "calendar_year",
+        "holding_age"
+      ],
+      "sample_stride_trading_rows": 5,
+      "train_tickers_only": true,
+      "training_partition_only": true
+    },
+    "training_tickers": [
+      "ACB",
+      "BCG",
+      "FPT",
+      "GAS",
+      "HPG",
+      "MWG",
+      "PVD",
+      "REE",
+      "SSI",
+      "VCB",
+      "VIC",
+      "VNM"
+    ],
+    "uncertainty": {
+      "method": "paired hierarchical bootstrap: ticker then ticker-year blocks",
+      "replicates": 2000,
+      "seed": 64045
+    },
+    "unseen_tickers": [
+      "DGC",
+      "MBB",
+      "VHC"
+    ]
+  },
+  "config_sha256": "043147d25095b040ae9730fc27e4c48d8ea988f66e57f00f30d5776ba6cea325",
+  "date_cutoff": "2025-12-31; prepared stock and VNINDEX rows are cutoff-filtered",
+  "execution_date_utc": "2026-10-25T14:37:31.470879+00:00",
+  "experiment_id": "rl-trade-episode-phase4d-supervised-exit-20261025",
+  "failed_attempts": [
+    {
+      "attempt": 1,
+      "cause": "constant prediction baseline requested an absent feature matrix",
+      "result_files_written": false,
+      "run_code_commit_sha": "0e60618b4e769da7883aea407e1cdb6c803d8a23"
+    },
+    {
+      "attempt": 2,
+      "cause": "NaN from reused PPO reference blocked final JSON serialization after CSV files were saved",
+      "models_and_csvs_saved": true,
+      "refit_or_reevaluation_during_finalization": false,
+      "run_code_commit_sha": "501f6c2cf41434a08083c8567cd6bb9d2f9b33a6"
+    }
+  ],
+  "finalization_code_commit_sha": "e3b84c6302027802fab269f37839ad5b76f060fd",
+  "h6": {
+    "adequate_coverage_and_matching": false,
+    "contradicted_under_preregistered_rule": false,
+    "model_checks": {
+      "extra_trees_market": {
+        "beats_each_control_by_two_cagr_points_with_positive_95pct_lower_bound": false,
+        "comparisons": {
+          "training_universe:matched_random": {
+            "ci_high": 0.0534892749671924,
+            "ci_low": -0.0435363215430613,
+            "equal_ticker_mean_cagr_difference": 0.0090307308398206,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_10": {
+            "ci_high": 0.0372554042254283,
+            "ci_low": -0.0430768676484793,
+            "equal_ticker_mean_cagr_difference": -0.0030412040560773,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_20": {
+            "ci_high": -0.0016082028218534,
+            "ci_low": -0.1377384957795321,
+            "equal_ticker_mean_cagr_difference": -0.0531740795439787,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_3": {
+            "ci_high": 0.062092546317006,
+            "ci_low": -0.0138092158946946,
+            "equal_ticker_mean_cagr_difference": 0.02525244797852,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "unseen_ticker:matched_random": {
+            "ci_high": 0.0727183412496932,
+            "ci_low": -0.069002217343223,
+            "equal_ticker_mean_cagr_difference": 0.0090540230922038,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_10": {
+            "ci_high": 0.0654872403032333,
+            "ci_low": -0.0627101674993077,
+            "equal_ticker_mean_cagr_difference": 0.0132233491526518,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_20": {
+            "ci_high": 0.0770016133517002,
+            "ci_low": -0.2297621259173505,
+            "equal_ticker_mean_cagr_difference": -0.0507000870694879,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_3": {
+            "ci_high": 0.0620589157718739,
+            "ci_low": -0.0115576507559574,
+            "equal_ticker_mean_cagr_difference": 0.0223676231127271,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          }
+        },
+        "excludes_two_point_advantage_over_at_least_one_control_in_both_groups": false
+      },
+      "extra_trees_market_alpha": {
+        "beats_each_control_by_two_cagr_points_with_positive_95pct_lower_bound": false,
+        "comparisons": {
+          "training_universe:matched_random": {
+            "ci_high": 0.0644987400865448,
+            "ci_low": -0.0517202378647064,
+            "equal_ticker_mean_cagr_difference": 0.00858248980016,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_10": {
+            "ci_high": 0.0536080619885781,
+            "ci_low": -0.0425531603653974,
+            "equal_ticker_mean_cagr_difference": 0.0027407134883134,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_20": {
+            "ci_high": 0.0071373658895851,
+            "ci_low": -0.1271401241447549,
+            "equal_ticker_mean_cagr_difference": -0.0473921619995879,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_3": {
+            "ci_high": 0.0789646607928035,
+            "ci_low": -0.0138637402649716,
+            "equal_ticker_mean_cagr_difference": 0.0310343655229108,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "unseen_ticker:matched_random": {
+            "ci_high": 0.1249983498655164,
+            "ci_low": -0.0598645190635232,
+            "equal_ticker_mean_cagr_difference": 0.0328962762201502,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_10": {
+            "ci_high": 0.1458243880241537,
+            "ci_low": -0.0475865453803097,
+            "equal_ticker_mean_cagr_difference": 0.0485379855473083,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_20": {
+            "ci_high": 0.1434367461144115,
+            "ci_low": -0.2033160200923237,
+            "equal_ticker_mean_cagr_difference": -0.0153854506748314,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_3": {
+            "ci_high": 0.1213089717136196,
+            "ci_low": -0.0019293055675337,
+            "equal_ticker_mean_cagr_difference": 0.0576822595073836,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          }
+        },
+        "excludes_two_point_advantage_over_at_least_one_control_in_both_groups": false
+      },
+      "ridge_market": {
+        "beats_each_control_by_two_cagr_points_with_positive_95pct_lower_bound": false,
+        "comparisons": {
+          "training_universe:matched_random": {
+            "ci_high": 0.0357232676939056,
+            "ci_low": -0.0758665050818073,
+            "equal_ticker_mean_cagr_difference": -0.0149455559516525,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_10": {
+            "ci_high": 0.0135991919333283,
+            "ci_low": -0.0798659386492308,
+            "equal_ticker_mean_cagr_difference": -0.028861982358707,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_20": {
+            "ci_high": -0.0230529300618588,
+            "ci_low": -0.1771819427354959,
+            "equal_ticker_mean_cagr_difference": -0.0789948578466084,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_3": {
+            "ci_high": 0.0448795574660896,
+            "ci_low": -0.0505228151398662,
+            "equal_ticker_mean_cagr_difference": -0.0005683303241096,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "unseen_ticker:matched_random": {
+            "ci_high": 0.0988016848129621,
+            "ci_low": -0.0870957850622825,
+            "equal_ticker_mean_cagr_difference": -0.0008336927628487,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_10": {
+            "ci_high": 0.1025410751553259,
+            "ci_low": -0.0928952354661821,
+            "equal_ticker_mean_cagr_difference": 0.0005478385695375,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_20": {
+            "ci_high": 0.0949483279598429,
+            "ci_low": -0.2521892268996471,
+            "equal_ticker_mean_cagr_difference": -0.0633755976526022,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_3": {
+            "ci_high": 0.0977511711412058,
+            "ci_low": -0.056026422452625,
+            "equal_ticker_mean_cagr_difference": 0.0096921125296128,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          }
+        },
+        "excludes_two_point_advantage_over_at_least_one_control_in_both_groups": false
+      },
+      "ridge_market_alpha": {
+        "beats_each_control_by_two_cagr_points_with_positive_95pct_lower_bound": false,
+        "comparisons": {
+          "training_universe:matched_random": {
+            "ci_high": 0.033367248093325,
+            "ci_low": -0.0784684513171533,
+            "equal_ticker_mean_cagr_difference": -0.0165842299963202,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_10": {
+            "ci_high": 0.0185722857537772,
+            "ci_low": -0.0763253422578711,
+            "equal_ticker_mean_cagr_difference": -0.0253479137325655,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_20": {
+            "ci_high": -0.0225475656898564,
+            "ci_low": -0.1734130485389551,
+            "equal_ticker_mean_cagr_difference": -0.0754807892204669,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "training_universe:mechanical_3": {
+            "ci_high": 0.0490498062792548,
+            "ci_low": -0.0475150725969299,
+            "equal_ticker_mean_cagr_difference": 0.0029457383020318,
+            "paired_ticker_years": 36,
+            "paired_tickers": 12
+          },
+          "unseen_ticker:matched_random": {
+            "ci_high": 0.1037144230383785,
+            "ci_low": -0.0920843548059402,
+            "equal_ticker_mean_cagr_difference": 2.230337096613584e-05,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_10": {
+            "ci_high": 0.1038447081494776,
+            "ci_low": -0.0878639082023122,
+            "equal_ticker_mean_cagr_difference": 0.0066437677944972,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_20": {
+            "ci_high": 0.0989424959016287,
+            "ci_low": -0.2416512389428768,
+            "equal_ticker_mean_cagr_difference": -0.0572796684276425,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          },
+          "unseen_ticker:mechanical_3": {
+            "ci_high": 0.1037105900051952,
+            "ci_low": -0.0548234814647852,
+            "equal_ticker_mean_cagr_difference": 0.0157880417545725,
+            "paired_ticker_years": 9,
+            "paired_tickers": 3
+          }
+        },
+        "excludes_two_point_advantage_over_at_least_one_control_in_both_groups": false
+      }
+    },
+    "supported": false,
+    "verdict": "inconclusive"
+  },
+  "in_run_input_file_immutability_assertion": "passed before CSV outputs were written",
+  "input_data_root": "/home/manh/stocks-ecosystem/data",
+  "input_file_metadata_fingerprints_recaptured": {
+    "/home/manh/stocks-ecosystem/data/features/execution/tradability_daily.parquet": {
+      "device": 2080,
+      "inode": 1000209,
+      "mtime_ns": 1778346005028383461,
+      "path": "/home/manh/stocks-ecosystem/data/features/execution/tradability_daily.parquet",
+      "size_bytes": 658763
+    },
+    "/home/manh/stocks-ecosystem/data/features/xs_barrier_vol_1d_hose_full.parquet": {
+      "device": 2080,
+      "inode": 1000156,
+      "mtime_ns": 1779142618840621765,
+      "path": "/home/manh/stocks-ecosystem/data/features/xs_barrier_vol_1d_hose_full.parquet",
+      "size_bytes": 2512558
+    },
+    "/home/manh/stocks-ecosystem/data/features/xs_order_pressure_daily.parquet": {
+      "device": 2080,
+      "inode": 1000186,
+      "mtime_ns": 1778346047465610969,
+      "path": "/home/manh/stocks-ecosystem/data/features/xs_order_pressure_daily.parquet",
+      "size_bytes": 14163330
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_ACB_1D.parquet": {
+      "device": 2080,
+      "inode": 1016652,
+      "mtime_ns": 1778345998703759299,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_ACB_1D.parquet",
+      "size_bytes": 123412
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_BCG_1D.parquet": {
+      "device": 2080,
+      "inode": 1016998,
+      "mtime_ns": 1778345999575988920,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_BCG_1D.parquet",
+      "size_bytes": 69345
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_DGC_1D.parquet": {
+      "device": 2080,
+      "inode": 1017166,
+      "mtime_ns": 1778345999657123813,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_DGC_1D.parquet",
+      "size_bytes": 88166
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_FPT_1D.parquet": {
+      "device": 2080,
+      "inode": 1017277,
+      "mtime_ns": 1778345999677407537,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_FPT_1D.parquet",
+      "size_bytes": 140116
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_GAS_1D.parquet": {
+      "device": 2080,
+      "inode": 1017291,
+      "mtime_ns": 1778345998744333908,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_GAS_1D.parquet",
+      "size_bytes": 106475
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_HPG_1D.parquet": {
+      "device": 2080,
+      "inode": 1017387,
+      "mtime_ns": 1778345998815339473,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_HPG_1D.parquet",
+      "size_bytes": 128113
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_MBB_1D.parquet": {
+      "device": 2080,
+      "inode": 1017522,
+      "mtime_ns": 1778345998582035471,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_MBB_1D.parquet",
+      "size_bytes": 96848
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_MWG_1D.parquet": {
+      "device": 2080,
+      "inode": 1017552,
+      "mtime_ns": 1778345999575988920,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_MWG_1D.parquet",
+      "size_bytes": 92892
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_PVD_1D.parquet": {
+      "device": 2080,
+      "inode": 1017699,
+      "mtime_ns": 1778345998815339473,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_PVD_1D.parquet",
+      "size_bytes": 132202
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_REE_1D.parquet": {
+      "device": 2080,
+      "inode": 1017717,
+      "mtime_ns": 1778346004044622880,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_REE_1D.parquet",
+      "size_bytes": 169933
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_SSI_1D.parquet": {
+      "device": 2080,
+      "inode": 1017822,
+      "mtime_ns": 1778345998815339473,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_SSI_1D.parquet",
+      "size_bytes": 131196
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_VCB_1D.parquet": {
+      "device": 2080,
+      "inode": 1018005,
+      "mtime_ns": 1778345998571891819,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_VCB_1D.parquet",
+      "size_bytes": 118230
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_VHC_1D.parquet": {
+      "device": 2080,
+      "inode": 1018032,
+      "mtime_ns": 1778345998622610080,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_VHC_1D.parquet",
+      "size_bytes": 129705
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_VIC_1D.parquet": {
+      "device": 2080,
+      "inode": 1018041,
+      "mtime_ns": 1778345999728116845,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_VIC_1D.parquet",
+      "size_bytes": 128976
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_VNINDEX_1D.parquet": {
+      "device": 2080,
+      "inode": 1018069,
+      "mtime_ns": 1778345998825483127,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_VNINDEX_1D.parquet",
+      "size_bytes": 223069
+    },
+    "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_VNM_1D.parquet": {
+      "device": 2080,
+      "inode": 1018073,
+      "mtime_ns": 1778345999768684291,
+      "path": "/home/manh/stocks-ecosystem/data/stock/gia_lich_su_VNM_1D.parquet",
+      "size_bytes": 142583
+    }
+  },
+  "models": {
+    "age_only_ridge": {
+      "path": "RL-trading-agent/artifacts/trade_episode/phase4d-20261025-run2/age_only_ridge.joblib",
+      "sha256": "f72aca85731faebf51d6a2ae23266a0a76b867a855a1cb4ecc9e3fb7f284e5ae"
+    },
+    "constant_mean": {
+      "path": "RL-trading-agent/artifacts/trade_episode/phase4d-20261025-run2/constant_mean.joblib",
+      "sha256": "ee59d98d26ebbb8bb62932ab857a569620d161411bb7dfca146b3a421276f6dc"
+    },
+    "extra_trees_market": {
+      "path": "RL-trading-agent/artifacts/trade_episode/phase4d-20261025-run2/extra_trees_market.joblib",
+      "sha256": "ef60757e0c7840fe42b6c1ef161edf9a15feddbcb3601b8c2d07e71d2dc17587"
+    },
+    "extra_trees_market_alpha": {
+      "path": "RL-trading-agent/artifacts/trade_episode/phase4d-20261025-run2/extra_trees_market_alpha.joblib",
+      "sha256": "c928fce50d8b057d4c870837c6efa5b08d94a9ac7e07afac29bf90824329b2fa"
+    },
+    "ridge_market": {
+      "path": "RL-trading-agent/artifacts/trade_episode/phase4d-20261025-run2/ridge_market.joblib",
+      "sha256": "630ea75047e322977be8de052cd62af0a514b9908314fee0098bb5c733da7655"
+    },
+    "ridge_market_alpha": {
+      "path": "RL-trading-agent/artifacts/trade_episode/phase4d-20261025-run2/ridge_market_alpha.joblib",
+      "sha256": "a11cad911e80030c64035ed4841405df4fc30d9af51dde91cd31bad9ae5fa1b9"
+    }
+  },
+  "package_versions": {
+    "joblib": "1.4.2",
+    "numpy": "1.26.4",
+    "pandas": "2.3.3",
+    "pyarrow": "24.0.0",
+    "scikit-learn": "1.7.2"
+  },
+  "paired_uncertainty": [
+    {
+      "bootstrap_ci_95_high": 0.0448795574660896,
+      "bootstrap_ci_95_low": -0.0505228151398662,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market",
+      "comparator": "mechanical_3",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0014086341151,
+      "equal_ticker_mean_cagr_difference": -0.0005683303241096,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0135991919333283,
+      "bootstrap_ci_95_low": -0.0798659386492308,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market",
+      "comparator": "mechanical_10",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0285359492032603,
+      "equal_ticker_mean_cagr_difference": -0.028861982358707,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": -0.0230529300618588,
+      "bootstrap_ci_95_low": -0.1771819427354959,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market",
+      "comparator": "mechanical_20",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0888215877495943,
+      "equal_ticker_mean_cagr_difference": -0.0789948578466084,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0357232676939056,
+      "bootstrap_ci_95_low": -0.0758665050818073,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market",
+      "comparator": "matched_random_mean:ridge_market",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0165801843764156,
+      "equal_ticker_mean_cagr_difference": -0.0149455559516525,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0977511711412058,
+      "bootstrap_ci_95_low": -0.056026422452625,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market",
+      "comparator": "mechanical_3",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0157413577644499,
+      "equal_ticker_mean_cagr_difference": 0.0096921125296128,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.1025410751553259,
+      "bootstrap_ci_95_low": -0.0928952354661821,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market",
+      "comparator": "mechanical_10",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0016365940402631,
+      "equal_ticker_mean_cagr_difference": 0.0005478385695375,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0949483279598429,
+      "bootstrap_ci_95_low": -0.2521892268996471,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market",
+      "comparator": "mechanical_20",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0713388454480439,
+      "equal_ticker_mean_cagr_difference": -0.0633755976526022,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0988016848129621,
+      "bootstrap_ci_95_low": -0.0870957850622825,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market",
+      "comparator": "matched_random_mean:ridge_market",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0019957557300351,
+      "equal_ticker_mean_cagr_difference": -0.0008336927628487,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0490498062792548,
+      "bootstrap_ci_95_low": -0.0475150725969299,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market_alpha",
+      "comparator": "mechanical_3",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0044521570875564,
+      "equal_ticker_mean_cagr_difference": 0.0029457383020318,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0185722857537772,
+      "bootstrap_ci_95_low": -0.0763253422578711,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market_alpha",
+      "comparator": "mechanical_10",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0254924262308039,
+      "equal_ticker_mean_cagr_difference": -0.0253479137325655,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": -0.0225475656898564,
+      "bootstrap_ci_95_low": -0.1734130485389551,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market_alpha",
+      "comparator": "mechanical_20",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0857780647771379,
+      "equal_ticker_mean_cagr_difference": -0.0754807892204669,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.033367248093325,
+      "bootstrap_ci_95_low": -0.0784684513171533,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market_alpha",
+      "comparator": "matched_random_mean:ridge_market_alpha",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0194606611633645,
+      "equal_ticker_mean_cagr_difference": -0.0165842299963202,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.1037105900051952,
+      "bootstrap_ci_95_low": -0.0548234814647852,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market_alpha",
+      "comparator": "mechanical_3",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0218454952856819,
+      "equal_ticker_mean_cagr_difference": 0.0157880417545725,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.1038447081494776,
+      "bootstrap_ci_95_low": -0.0878639082023122,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market_alpha",
+      "comparator": "mechanical_10",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0077407315614951,
+      "equal_ticker_mean_cagr_difference": 0.0066437677944972,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0989424959016287,
+      "bootstrap_ci_95_low": -0.2416512389428768,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market_alpha",
+      "comparator": "mechanical_20",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0652347079268118,
+      "equal_ticker_mean_cagr_difference": -0.0572796684276425,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.1037144230383785,
+      "bootstrap_ci_95_low": -0.0920843548059402,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:ridge_market_alpha",
+      "comparator": "matched_random_mean:ridge_market_alpha",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0023432040234733,
+      "equal_ticker_mean_cagr_difference": 2.230337096613584e-05,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.062092546317006,
+      "bootstrap_ci_95_low": -0.0138092158946946,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market",
+      "comparator": "mechanical_3",
+      "equal_ticker_mean_annualized_cagr_difference": 0.025623501916415,
+      "equal_ticker_mean_cagr_difference": 0.02525244797852,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0372554042254283,
+      "bootstrap_ci_95_low": -0.0430768676484793,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market",
+      "comparator": "mechanical_10",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0043210814019452,
+      "equal_ticker_mean_cagr_difference": -0.0030412040560773,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": -0.0016082028218534,
+      "bootstrap_ci_95_low": -0.1377384957795321,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market",
+      "comparator": "mechanical_20",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0646067199482793,
+      "equal_ticker_mean_cagr_difference": -0.0531740795439787,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0534892749671924,
+      "bootstrap_ci_95_low": -0.0435363215430613,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market",
+      "comparator": "matched_random_mean:extra_trees_market",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0059900180255396,
+      "equal_ticker_mean_cagr_difference": 0.0090307308398206,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0620589157718739,
+      "bootstrap_ci_95_low": -0.0115576507559574,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market",
+      "comparator": "mechanical_3",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0240510101020629,
+      "equal_ticker_mean_cagr_difference": 0.0223676231127271,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0654872403032333,
+      "bootstrap_ci_95_low": -0.0627101674993077,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market",
+      "comparator": "mechanical_10",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0099462463778761,
+      "equal_ticker_mean_cagr_difference": 0.0132233491526518,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0770016133517002,
+      "bootstrap_ci_95_low": -0.2297621259173505,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market",
+      "comparator": "mechanical_20",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0630291931104308,
+      "equal_ticker_mean_cagr_difference": -0.0507000870694879,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0727183412496932,
+      "bootstrap_ci_95_low": -0.069002217343223,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market",
+      "comparator": "matched_random_mean:extra_trees_market",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0066757823686114,
+      "equal_ticker_mean_cagr_difference": 0.0090540230922038,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0789646607928035,
+      "bootstrap_ci_95_low": -0.0138637402649716,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market_alpha",
+      "comparator": "mechanical_3",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0322035606512183,
+      "equal_ticker_mean_cagr_difference": 0.0310343655229108,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0536080619885781,
+      "bootstrap_ci_95_low": -0.0425531603653974,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market_alpha",
+      "comparator": "mechanical_10",
+      "equal_ticker_mean_annualized_cagr_difference": 0.002258977332858,
+      "equal_ticker_mean_cagr_difference": 0.0027407134883134,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0071373658895851,
+      "bootstrap_ci_95_low": -0.1271401241447549,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market_alpha",
+      "comparator": "mechanical_20",
+      "equal_ticker_mean_annualized_cagr_difference": -0.058026661213476,
+      "equal_ticker_mean_cagr_difference": -0.0473921619995879,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.0644987400865448,
+      "bootstrap_ci_95_low": -0.0517202378647064,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market_alpha",
+      "comparator": "matched_random_mean:extra_trees_market_alpha",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0052865691404372,
+      "equal_ticker_mean_cagr_difference": 0.00858248980016,
+      "paired_ticker_years": 36,
+      "paired_tickers": 12,
+      "ticker_group": "training_universe"
+    },
+    {
+      "bootstrap_ci_95_high": 0.1213089717136196,
+      "bootstrap_ci_95_low": -0.0019293055675337,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market_alpha",
+      "comparator": "mechanical_3",
+      "equal_ticker_mean_annualized_cagr_difference": 0.062396003293539,
+      "equal_ticker_mean_cagr_difference": 0.0576822595073836,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.1458243880241537,
+      "bootstrap_ci_95_low": -0.0475865453803097,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market_alpha",
+      "comparator": "mechanical_10",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0482912395693522,
+      "equal_ticker_mean_cagr_difference": 0.0485379855473083,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.1434367461144115,
+      "bootstrap_ci_95_low": -0.2033160200923237,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market_alpha",
+      "comparator": "mechanical_20",
+      "equal_ticker_mean_annualized_cagr_difference": -0.0246841999189547,
+      "equal_ticker_mean_cagr_difference": -0.0153854506748314,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "bootstrap_ci_95_high": 0.1249983498655164,
+      "bootstrap_ci_95_low": -0.0598645190635232,
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 64045,
+      "candidate": "supervised:extra_trees_market_alpha",
+      "comparator": "matched_random_mean:extra_trees_market_alpha",
+      "equal_ticker_mean_annualized_cagr_difference": 0.0327387976801402,
+      "equal_ticker_mean_cagr_difference": 0.0328962762201502,
+      "paired_ticker_years": 9,
+      "paired_tickers": 3,
+      "ticker_group": "unseen_ticker"
+    }
+  ],
+  "phase4a_entry_diagnostic": {
+    "interpretation": "overlapping per-entry counterfactuals; not a portfolio",
+    "rows": 865,
+    "sha256": "22a8c3c1d520274b979399e77ab8dc4469615de88a2d825011c9ce9ab7c89267",
+    "source": "/tmp/stock-rl-trade-episode-phase4a-20261025/phase4a_trades.csv",
+    "summary": [
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_10",
+        "mean_holding_duration": 10.0,
+        "mean_raw_trade_return": 0.06267033302501443,
+        "mean_terminal_reward": 1.3683176477449175,
+        "median_terminal_reward": 0.7647105985735206,
+        "ppo_variant": "market_only",
+        "records": 15,
+        "ticker_group": "training_universe"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_10",
+        "mean_holding_duration": 10.0,
+        "mean_raw_trade_return": 0.06393810484803825,
+        "mean_terminal_reward": 1.4447522507912223,
+        "median_terminal_reward": 1.2152266202270132,
+        "ppo_variant": "market_only",
+        "records": 4,
+        "ticker_group": "unseen_ticker"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_10",
+        "mean_holding_duration": 10.008403361344538,
+        "mean_raw_trade_return": 0.02847561561360171,
+        "mean_terminal_reward": 0.5772499820485948,
+        "median_terminal_reward": 0.4559080360706254,
+        "ppo_variant": "market_plus_s1_c16",
+        "records": 119,
+        "ticker_group": "training_universe"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_10",
+        "mean_holding_duration": 10.028571428571428,
+        "mean_raw_trade_return": 0.03337428083610087,
+        "mean_terminal_reward": 0.7149014232782639,
+        "median_terminal_reward": 0.5288189024909868,
+        "ppo_variant": "market_plus_s1_c16",
+        "records": 35,
+        "ticker_group": "unseen_ticker"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_20",
+        "mean_holding_duration": 20.0,
+        "mean_raw_trade_return": 0.02554075757032132,
+        "mean_terminal_reward": 0.17349483646225827,
+        "median_terminal_reward": 0.039028120304496,
+        "ppo_variant": "market_only",
+        "records": 15,
+        "ticker_group": "training_universe"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_20",
+        "mean_holding_duration": 20.0,
+        "mean_raw_trade_return": 0.013132314512220326,
+        "mean_terminal_reward": 0.07282465871266745,
+        "median_terminal_reward": 0.0772821485938637,
+        "ppo_variant": "market_only",
+        "records": 4,
+        "ticker_group": "unseen_ticker"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_20",
+        "mean_holding_duration": 20.016806722689076,
+        "mean_raw_trade_return": 0.048059788273407074,
+        "mean_terminal_reward": 0.45329909235362015,
+        "median_terminal_reward": 0.2322826461472652,
+        "ppo_variant": "market_plus_s1_c16",
+        "records": 119,
+        "ticker_group": "training_universe"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_20",
+        "mean_holding_duration": 20.0,
+        "mean_raw_trade_return": 0.036557784511926913,
+        "mean_terminal_reward": 0.3226909119455897,
+        "median_terminal_reward": 0.2120702972766067,
+        "ppo_variant": "market_plus_s1_c16",
+        "records": 35,
+        "ticker_group": "unseen_ticker"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_3",
+        "mean_holding_duration": 3.0,
+        "mean_raw_trade_return": 0.01759978353589546,
+        "mean_terminal_reward": 1.29406742406897,
+        "median_terminal_reward": 1.124513860088923,
+        "ppo_variant": "market_only",
+        "records": 15,
+        "ticker_group": "training_universe"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_3",
+        "mean_holding_duration": 3.0,
+        "mean_raw_trade_return": 0.020270955252701277,
+        "mean_terminal_reward": 1.562767967474628,
+        "median_terminal_reward": 1.2053793320798762,
+        "ppo_variant": "market_only",
+        "records": 4,
+        "ticker_group": "unseen_ticker"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_3",
+        "mean_holding_duration": 3.0,
+        "mean_raw_trade_return": 0.009951602494021534,
+        "mean_terminal_reward": 0.6720971986633851,
+        "median_terminal_reward": 0.1261130637510828,
+        "ppo_variant": "market_plus_s1_c16",
+        "records": 119,
+        "ticker_group": "training_universe"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_mechanical_3",
+        "mean_holding_duration": 3.0,
+        "mean_raw_trade_return": 0.011850159597063767,
+        "mean_terminal_reward": 0.8590308975670293,
+        "median_terminal_reward": 0.3949058031287205,
+        "ppo_variant": "market_plus_s1_c16",
+        "records": 35,
+        "ticker_group": "unseen_ticker"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_supervised:extra_trees_market",
+        "mean_holding_duration": 6.533333333333333,
+        "mean_raw_trade_return": 0.005254461808049926,
+        "mean_terminal_reward": 2.172013665678024,
+        "median_terminal_reward": 1.6257812847692032,
+        "ppo_variant": "market_only",
+        "records": 15,
+        "ticker_group": "training_universe"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_supervised:extra_trees_market",
+        "mean_holding_duration": 4.75,
+        "mean_raw_trade_return": 0.023168151514383527,
+        "mean_terminal_reward": 2.0299281553971817,
+        "median_terminal_reward": 1.2053793320798762,
+        "ppo_variant": "market_only",
+        "records": 4,
+        "ticker_group": "unseen_ticker"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_supervised:extra_trees_market_alpha",
+        "mean_holding_duration": 6.470588235294118,
+        "mean_raw_trade_return": 0.015111123535290562,
+        "mean_terminal_reward": 1.5140039129689247,
+        "median_terminal_reward": 0.7155008582404729,
+        "ppo_variant": "market_plus_s1_c16",
+        "records": 119,
+        "ticker_group": "training_universe"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_supervised:extra_trees_market_alpha",
+        "mean_holding_duration": 4.571428571428571,
+        "mean_raw_trade_return": 0.020033341096392446,
+        "mean_terminal_reward": 1.5726258835269196,
+        "median_terminal_reward": 0.8291536483041129,
+        "ppo_variant": "market_plus_s1_c16",
+        "records": 35,
+        "ticker_group": "unseen_ticker"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_supervised:ridge_market",
+        "mean_holding_duration": 10.333333333333334,
+        "mean_raw_trade_return": 0.006770573240686791,
+        "mean_terminal_reward": 2.091828514357636,
+        "median_terminal_reward": 2.144801513414696,
+        "ppo_variant": "market_only",
+        "records": 15,
+        "ticker_group": "training_universe"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_supervised:ridge_market",
+        "mean_holding_duration": 5.5,
+        "mean_raw_trade_return": 0.0468934326310955,
+        "mean_terminal_reward": 2.889395439939995,
+        "median_terminal_reward": 2.924313901165503,
+        "ppo_variant": "market_only",
+        "records": 4,
+        "ticker_group": "unseen_ticker"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_supervised:ridge_market_alpha",
+        "mean_holding_duration": 10.974789915966387,
+        "mean_raw_trade_return": 0.020540260940055302,
+        "mean_terminal_reward": 1.8557203055136917,
+        "median_terminal_reward": 1.1583478396424436,
+        "ppo_variant": "market_plus_s1_c16",
+        "records": 119,
+        "ticker_group": "training_universe"
+      },
+      {
+        "exit_controller": "ppo_entry_diag_supervised:ridge_market_alpha",
+        "mean_holding_duration": 11.514285714285714,
+        "mean_raw_trade_return": 0.0224218001114625,
+        "mean_terminal_reward": 1.8341972864396525,
+        "median_terminal_reward": 1.2866345813700075,
+        "ppo_variant": "market_plus_s1_c16",
+        "records": 35,
+        "ticker_group": "unseen_ticker"
+      }
+    ]
+  },
+  "policy_group_summaries": [
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.16553036731576495,
+      "exposure_percentage": 94.11287550608688,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.35838924699660635,
+      "mean_holding_duration": null,
+      "mean_terminal_rl_reward": 1.6263005416717897,
+      "mean_waiting_duration": null,
+      "number_of_trades": 13.638888888888886,
+      "policy": "frozen_PPO_full_policy",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": 0.7366216151180528,
+      "variant": "market_only",
+      "win_rate": 0.8753705955189863
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.1403208039763814,
+      "exposure_percentage": 93.92453951277481,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.3693042358496499,
+      "mean_holding_duration": null,
+      "mean_terminal_rl_reward": 1.5514843720112246,
+      "mean_waiting_duration": null,
+      "number_of_trades": 13.222222222222223,
+      "policy": "frozen_PPO_full_policy",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": 0.5641366429302296,
+      "variant": "market_only",
+      "win_rate": 0.8726873186550606
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.17811080549952552,
+      "exposure_percentage": 97.23688233221408,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.3619402972643317,
+      "mean_holding_duration": null,
+      "mean_terminal_rl_reward": 1.6657103924733698,
+      "mean_waiting_duration": null,
+      "number_of_trades": 12.249999999999998,
+      "policy": "frozen_PPO_full_policy",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": 0.8464761275726289,
+      "variant": "market_plus_s1_c16",
+      "win_rate": 0.9101152727826677
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.14061777401150496,
+      "exposure_percentage": 96.91027926322045,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.3753573767674217,
+      "mean_holding_duration": null,
+      "mean_terminal_rl_reward": 1.9997143086862705,
+      "mean_waiting_duration": null,
+      "number_of_trades": 13.111111111111109,
+      "policy": "frozen_PPO_full_policy",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": 0.5381439413418128,
+      "variant": "market_plus_s1_c16",
+      "win_rate": 0.9232894736842105
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.01174011080318745,
+      "exposure_percentage": 22.680727763065857,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.1794261424637235,
+      "mean_holding_duration": 10.0,
+      "mean_terminal_rl_reward": -0.02346678820029549,
+      "mean_waiting_duration": 29.389542483660133,
+      "number_of_trades": 16.833333333333332,
+      "policy": "mechanical_10",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": 0.044831346208948276,
+      "variant": null,
+      "win_rate": 0.45980392156862754
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.018433637522525664,
+      "exposure_percentage": 22.75769745649264,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.22921635658724884,
+      "mean_holding_duration": 10.0,
+      "mean_terminal_rl_reward": -0.17347168589203787,
+      "mean_waiting_duration": 29.176470588235293,
+      "number_of_trades": 17.0,
+      "policy": "mechanical_10",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": -0.02174315095630397,
+      "variant": null,
+      "win_rate": 0.4313725490196078
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.061872986291088845,
+      "exposure_percentage": 45.36145552613169,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.30679573543745287,
+      "mean_holding_duration": 20.0,
+      "mean_terminal_rl_reward": 0.05728348236446159,
+      "mean_waiting_duration": 19.984313725490207,
+      "number_of_trades": 16.833333333333332,
+      "policy": "mechanical_20",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": 0.21691428933278067,
+      "variant": null,
+      "win_rate": 0.55359477124183
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.04548979869961414,
+      "exposure_percentage": 45.51539491298527,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.3401725642077313,
+      "mean_holding_duration": 20.0,
+      "mean_terminal_rl_reward": -0.003217952644292014,
+      "mean_waiting_duration": 19.764705882352946,
+      "number_of_trades": 17.0,
+      "policy": "mechanical_20",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": 0.24934607604250378,
+      "variant": null,
+      "win_rate": 0.6078431372549019
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.01655354123140985,
+      "exposure_percentage": 6.804218328919756,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.14984598769277704,
+      "mean_holding_duration": 3.0,
+      "mean_terminal_rl_reward": -0.32922996856159326,
+      "mean_waiting_duration": 35.97320261437908,
+      "number_of_trades": 16.833333333333332,
+      "policy": "mechanical_3",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": -0.042331990429818785,
+      "variant": null,
+      "win_rate": 0.4457516339869281
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.02757791148260097,
+      "exposure_percentage": 6.827309236947792,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.15830969450181231,
+      "mean_holding_duration": 3.0,
+      "mean_terminal_rl_reward": -0.5054632140319401,
+      "mean_waiting_duration": 35.76470588235294,
+      "number_of_trades": 17.0,
+      "policy": "mechanical_3",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": -0.06929435984253007,
+      "variant": null,
+      "win_rate": 0.37254901960784315
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.0003318240927105085,
+      "exposure_percentage": 19.865283063354827,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.216149121206529,
+      "mean_holding_duration": 8.759022875816994,
+      "mean_terminal_rl_reward": -0.18234098396925516,
+      "mean_waiting_duration": 30.522526143790852,
+      "number_of_trades": 16.833333333333332,
+      "policy": "random_mean:extra_trees_market",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": 0.013557771724714354,
+      "variant": null,
+      "win_rate": 0.46959477124183
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.014264311462077704,
+      "exposure_percentage": 19.916555109326193,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.22947178690234984,
+      "mean_holding_duration": 8.75156862745098,
+      "mean_terminal_rl_reward": -0.2940146220387645,
+      "mean_waiting_duration": 30.316666666666674,
+      "number_of_trades": 17.0,
+      "policy": "random_mean:extra_trees_market",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": -0.016364408043748474,
+      "variant": null,
+      "win_rate": 0.45078431372549027
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.005898334491340882,
+      "exposure_percentage": 23.122884551305656,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.22388631819517404,
+      "mean_holding_duration": 10.195411764705883,
+      "mean_terminal_rl_reward": -0.17171755739478559,
+      "mean_waiting_duration": 29.152006535947706,
+      "number_of_trades": 16.833333333333332,
+      "policy": "random_mean:extra_trees_market_alpha",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": 0.0355266419067991,
+      "variant": null,
+      "win_rate": 0.47202287581699337
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.0027919281953675316,
+      "exposure_percentage": 23.178937974118696,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.2299944671088344,
+      "mean_holding_duration": 10.185098039215683,
+      "mean_terminal_rl_reward": -0.2622018366778442,
+      "mean_waiting_duration": 28.947843137254903,
+      "number_of_trades": 17.0,
+      "policy": "random_mean:extra_trees_market_alpha",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": 0.01684614654655951,
+      "variant": null,
+      "win_rate": 0.4611764705882353
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.0021763156038670252,
+      "exposure_percentage": 20.437708621969687,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.21771458154711312,
+      "mean_holding_duration": 9.011617647058822,
+      "mean_terminal_rl_reward": -0.18947819593913676,
+      "mean_waiting_duration": 30.273516339869275,
+      "number_of_trades": 16.833333333333332,
+      "policy": "random_mean:ridge_market",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": 0.010309467302036428,
+      "variant": null,
+      "win_rate": 0.46537254901960773
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.017052106190139336,
+      "exposure_percentage": 20.478357875948237,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.2270694285221063,
+      "mean_holding_duration": 8.998431372549017,
+      "mean_terminal_rl_reward": -0.31999085766046526,
+      "mean_waiting_duration": 30.072745098039217,
+      "number_of_trades": 17.0,
+      "policy": "random_mean:ridge_market",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": -0.026162347501642164,
+      "variant": null,
+      "win_rate": 0.44823529411764707
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.0029764270669421834,
+      "exposure_percentage": 22.78341653854623,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.22324596227774773,
+      "mean_holding_duration": 10.045781045751633,
+      "mean_terminal_rl_reward": -0.1671443456726244,
+      "mean_waiting_duration": 29.306022875817003,
+      "number_of_trades": 16.833333333333332,
+      "policy": "random_mean:ridge_market_alpha",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": 0.027615652489470493,
+      "variant": null,
+      "win_rate": 0.4697385620915033
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.011812173098994532,
+      "exposure_percentage": 22.834002677376173,
+      "incomplete_open_positions": null,
+      "maximum_drawdown": -0.2327552719523522,
+      "mean_holding_duration": 10.033529411764706,
+      "mean_terminal_rl_reward": -0.2829563682819921,
+      "mean_waiting_duration": 29.10352941176471,
+      "number_of_trades": 17.0,
+      "policy": "random_mean:ridge_market_alpha",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": -0.007721917698239507,
+      "variant": null,
+      "win_rate": 0.4572549019607843
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.008698906747110158,
+      "exposure_percentage": 20.79833160882248,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.20041399237725102,
+      "mean_holding_duration": 9.173529411764706,
+      "mean_terminal_rl_reward": 0.6400134417087048,
+      "mean_waiting_duration": 30.39542483660131,
+      "number_of_trades": 16.833333333333332,
+      "policy": "supervised:extra_trees_market",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": 0.03779152576144124,
+      "variant": null,
+      "win_rate": 0.6578431372549021
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.005210288369873833,
+      "exposure_percentage": 21.419009370816596,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.27855323402717586,
+      "mean_holding_duration": 9.411764705882353,
+      "mean_terminal_rl_reward": 0.7506603957946351,
+      "mean_waiting_duration": 30.43137254901961,
+      "number_of_trades": 17.0,
+      "policy": "supervised:extra_trees_market",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": -0.004416853842812374,
+      "variant": null,
+      "win_rate": 0.5686274509803921
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.014480824291500938,
+      "exposure_percentage": 25.803894861347384,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.25093424841574336,
+      "mean_holding_duration": 11.374836601307189,
+      "mean_terminal_rl_reward": 0.699854345185935,
+      "mean_waiting_duration": 28.43431372549019,
+      "number_of_trades": 16.833333333333332,
+      "policy": "supervised:extra_trees_market_alpha",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": 0.05499683057347728,
+      "variant": null,
+      "win_rate": 0.6872549019607844
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": 0.030104348024782665,
+      "exposure_percentage": 25.702811244979916,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.2720505164176337,
+      "mean_holding_duration": 11.294117647058824,
+      "mean_terminal_rl_reward": 0.8383399343656603,
+      "mean_waiting_duration": 29.039215686274513,
+      "number_of_trades": 17.0,
+      "policy": "supervised:extra_trees_market_alpha",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": 0.1006586321706172,
+      "variant": null,
+      "win_rate": 0.6470588235294117
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.017121871555519516,
+      "exposure_percentage": 26.00143416947752,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.29027300550485063,
+      "mean_holding_duration": 11.468627450980392,
+      "mean_terminal_rl_reward": 0.6931219689751381,
+      "mean_waiting_duration": 28.50816993464052,
+      "number_of_trades": 16.833333333333332,
+      "policy": "supervised:ridge_market",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": -0.028474755757190263,
+      "variant": null,
+      "win_rate": 0.676797385620915
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.017885798952988134,
+      "exposure_percentage": 27.48772869254797,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.31467105762332265,
+      "mean_holding_duration": 12.07843137254902,
+      "mean_terminal_rl_reward": 0.800973533059138,
+      "mean_waiting_duration": 28.215686274509807,
+      "number_of_trades": 17.0,
+      "policy": "supervised:ridge_market",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": -0.04682600725660677,
+      "variant": null,
+      "win_rate": 0.6078431372549019
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.013607802929378014,
+      "exposure_percentage": 27.839743252485928,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.2986538668259442,
+      "mean_holding_duration": 12.27843137254902,
+      "mean_terminal_rl_reward": 0.7028344423735332,
+      "mean_waiting_duration": 27.70392156862745,
+      "number_of_trades": 16.833333333333332,
+      "policy": "supervised:ridge_market_alpha",
+      "ticker_count": 12,
+      "ticker_group": "training_universe",
+      "total_calendar_return": -0.0156436331477835,
+      "variant": null,
+      "win_rate": 0.6712418300653593
+    },
+    {
+      "aggregation": "equal-weight mean of separate stock paths; not a portfolio",
+      "chronological_portfolio_cagr": -0.011789869728028401,
+      "exposure_percentage": 27.800089245872375,
+      "incomplete_open_positions": 0.0,
+      "maximum_drawdown": -0.3115598507321068,
+      "mean_holding_duration": 12.215686274509801,
+      "mean_terminal_rl_reward": 0.8321910515194303,
+      "mean_waiting_duration": 28.117647058823533,
+      "number_of_trades": 17.0,
+      "policy": "supervised:ridge_market_alpha",
+      "ticker_count": 3,
+      "ticker_group": "unseen_ticker",
+      "total_calendar_return": -0.028437250830269965,
+      "variant": null,
+      "win_rate": 0.6470588235294117
+    }
+  ],
+  "postprocessing_note": "Training and all evaluations completed and saved CSVs; only final JSON serialization failed on NaN in a reused PPO metric. This step sanitized null metrics and rebuilt provenance from saved results; no model fit or backtest was rerun.",
+  "ppo_full_policy_reference": {
+    "interpretation": "separate PPO-selected entries; descriptive only",
+    "reference_file_sha256": "e2660ecb5c64bd4717642f03bd2e8134fa1aae8b2b30ed583936931cca0cb310",
+    "regime_file_sha256": "0d183df909a60171b71ff73ead31e33bf34c1617562a0020ca7d0e3b9d3d1755",
+    "regime_source": "RL-trading-agent/research/trade_episode/phase4b/results/phase4b_regime_metrics.csv",
+    "source": "RL-trading-agent/research/trade_episode/phase4b/results/phase4b_stock_period_metrics.csv",
+    "ticker_rows": 30
+  },
+  "ppo_retrained": false,
+  "prediction_overview": [
+    {
+      "balanced_accuracy": 0.6557498131197818,
+      "directional_accuracy": 0.6542981867024849,
+      "mae": 0.8149070682215294,
+      "mae_delta_vs_age_only": -0.047703550933099,
+      "mae_delta_vs_constant": -0.0479208440818873,
+      "majority_class_accuracy": 0.5188045668233714,
+      "model_id": "ridge_market",
+      "positive_label_prevalence": 0.5188045668233714,
+      "rmse": 1.334372374380799,
+      "rows": 11912,
+      "spearman_rho": 0.4425133134304259,
+      "split": "validation",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    },
+    {
+      "balanced_accuracy": 0.6560875525353604,
+      "directional_accuracy": 0.654130288784419,
+      "mae": 0.8151760546500673,
+      "mae_delta_vs_age_only": -0.0474345645045611,
+      "mae_delta_vs_constant": -0.0476518576533494,
+      "majority_class_accuracy": 0.5188045668233714,
+      "model_id": "ridge_market_alpha",
+      "positive_label_prevalence": 0.5188045668233714,
+      "rmse": 1.3336370274819858,
+      "rows": 11912,
+      "spearman_rho": 0.4457984521526449,
+      "split": "validation",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    },
+    {
+      "balanced_accuracy": 0.6441536415106697,
+      "directional_accuracy": 0.642377434519812,
+      "mae": 0.7599107159434143,
+      "mae_delta_vs_age_only": -0.1026999032112141,
+      "mae_delta_vs_constant": -0.1029171963600024,
+      "majority_class_accuracy": 0.5188045668233714,
+      "model_id": "extra_trees_market",
+      "positive_label_prevalence": 0.5188045668233714,
+      "rmse": 1.321118330534659,
+      "rows": 11912,
+      "spearman_rho": 0.4410961067454095,
+      "split": "validation",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    },
+    {
+      "balanced_accuracy": 0.6479285090007385,
+      "directional_accuracy": 0.6460711887172599,
+      "mae": 0.7578247224632628,
+      "mae_delta_vs_age_only": -0.1047858966913656,
+      "mae_delta_vs_constant": -0.1050031898401538,
+      "majority_class_accuracy": 0.5188045668233714,
+      "model_id": "extra_trees_market_alpha",
+      "positive_label_prevalence": 0.5188045668233714,
+      "rmse": 1.3175722354979424,
+      "rows": 11912,
+      "spearman_rho": 0.4463220352054418,
+      "split": "validation",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    },
+    {
+      "balanced_accuracy": 0.5043749167225613,
+      "directional_accuracy": 0.4959704499664204,
+      "mae": 0.8626106191546284,
+      "mae_delta_vs_age_only": null,
+      "mae_delta_vs_constant": null,
+      "majority_class_accuracy": 0.5188045668233714,
+      "model_id": "age_only_ridge",
+      "positive_label_prevalence": 0.5188045668233714,
+      "rmse": 1.4886575682281602,
+      "rows": 11912,
+      "spearman_rho": 0.0061680991552657,
+      "split": "validation",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    },
+    {
+      "balanced_accuracy": 0.5,
+      "directional_accuracy": 0.4811954331766286,
+      "mae": 0.8628279123034167,
+      "mae_delta_vs_age_only": null,
+      "mae_delta_vs_constant": null,
+      "majority_class_accuracy": 0.5188045668233714,
+      "model_id": "constant_mean",
+      "positive_label_prevalence": 0.5188045668233714,
+      "rmse": 1.488696219189819,
+      "rows": 11912,
+      "spearman_rho": null,
+      "split": "validation",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    },
+    {
+      "balanced_accuracy": 0.6603660472510914,
+      "directional_accuracy": 0.6603469140782574,
+      "mae": 0.5906162845833998,
+      "mae_delta_vs_age_only": -0.0238652207069892,
+      "mae_delta_vs_constant": -0.0237982298564187,
+      "majority_class_accuracy": 0.5100847115772489,
+      "model_id": "ridge_market",
+      "positive_label_prevalence": 0.4899152884227511,
+      "rmse": 0.9314588995731048,
+      "rows": 14874,
+      "spearman_rho": 0.4543864034041618,
+      "split": "exploratory",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    },
+    {
+      "balanced_accuracy": 0.6584673096051766,
+      "directional_accuracy": 0.6585316659943525,
+      "mae": 0.5908009358863706,
+      "mae_delta_vs_age_only": -0.0236805694040184,
+      "mae_delta_vs_constant": -0.0236135785534479,
+      "majority_class_accuracy": 0.5100847115772489,
+      "model_id": "ridge_market_alpha",
+      "positive_label_prevalence": 0.4899152884227511,
+      "rmse": 0.9305737295840304,
+      "rows": 14874,
+      "spearman_rho": 0.4580275656773638,
+      "split": "exploratory",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    },
+    {
+      "balanced_accuracy": 0.6537200720849075,
+      "directional_accuracy": 0.6539599300793331,
+      "mae": 0.5310956623109041,
+      "mae_delta_vs_age_only": -0.0833858429794849,
+      "mae_delta_vs_constant": -0.0833188521289144,
+      "majority_class_accuracy": 0.5100847115772489,
+      "model_id": "extra_trees_market",
+      "positive_label_prevalence": 0.4899152884227511,
+      "rmse": 0.910570479239674,
+      "rows": 14874,
+      "spearman_rho": 0.4641916917848205,
+      "split": "exploratory",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    },
+    {
+      "balanced_accuracy": 0.6557432615202826,
+      "directional_accuracy": 0.6559768723947829,
+      "mae": 0.5289685953795628,
+      "mae_delta_vs_age_only": -0.0855129099108262,
+      "mae_delta_vs_constant": -0.0854459190602557,
+      "majority_class_accuracy": 0.5100847115772489,
+      "model_id": "extra_trees_market_alpha",
+      "positive_label_prevalence": 0.4899152884227511,
+      "rmse": 0.9065269932187342,
+      "rows": 14874,
+      "spearman_rho": 0.4686044704444516,
+      "split": "exploratory",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    },
+    {
+      "balanced_accuracy": 0.4987720865298885,
+      "directional_accuracy": 0.5032271077047197,
+      "mae": 0.614481505290389,
+      "mae_delta_vs_age_only": null,
+      "mae_delta_vs_constant": null,
+      "majority_class_accuracy": 0.5100847115772489,
+      "model_id": "age_only_ridge",
+      "positive_label_prevalence": 0.4899152884227511,
+      "rmse": 1.0471366488525635,
+      "rows": 14874,
+      "spearman_rho": -0.0094575614344892,
+      "split": "exploratory",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    },
+    {
+      "balanced_accuracy": 0.5,
+      "directional_accuracy": 0.5100847115772489,
+      "mae": 0.6144145144398185,
+      "mae_delta_vs_age_only": null,
+      "mae_delta_vs_constant": null,
+      "majority_class_accuracy": 0.5100847115772489,
+      "model_id": "constant_mean",
+      "positive_label_prevalence": 0.4899152884227511,
+      "rmse": 1.0469391793610212,
+      "rows": 14874,
+      "spearman_rho": null,
+      "split": "exploratory",
+      "ticker": null,
+      "ticker_group": null,
+      "year": null
+    }
+  ],
+  "prepared_stock_sha256": {
+    "ACB": "15f42f5dac885a96ac58f67443a48058377c325e82b2b18ae87f0447b952b2b6",
+    "BCG": "abb71d51457bbac55051e73c9775169923d0e852ac82cd133848139c3935a02b",
+    "DGC": "fcc25ba10ae07109fb7c07f458d688df084c807fcddacf8cb870bb2a5f5c29de",
+    "FPT": "8b934e3f078b1d3348396d67e61ceb911cda6666c857fe45094fbf512e299ba7",
+    "GAS": "654078b8f082f50f79c55d3db7f486f2d41d552a8279c7b6b7e1aa11ccd62a25",
+    "HPG": "20121747c43597cefac6e7fb20710e12bdae9e7596b970aeacd8c3c8970f5daf",
+    "MBB": "f7bceb7491b9bf9e8adc349fd10f179bbba80243c67fa758fbe95232a9ae9c8e",
+    "MWG": "131a29a857370528fb53539b376d2f95d1085f8f18fc17df0be2540b8a0f1c88",
+    "PVD": "86b57e8dfce595facec562cc0c99c1f9c9b42f7aa251b5acecaef3c748861042",
+    "REE": "d3e8d713eb86bc2d0202e3f7a4bd1597449c9009e512533b3ca55848aa6f2539",
+    "SSI": "5a37e87cf39f9583163e9517124f4ec79f0258f6ff3f3ac2b59b891498445452",
+    "VCB": "c5b5073bbb7f61032c50fd0a3b5a71789d4b10963407fc4d6ef22bef76dba79e",
+    "VHC": "834b54fe98096fde46f30848cd719fe1b6935a7e4f305296932050a3b24d7300",
+    "VIC": "549553d23e963c0a1b5215c3d23002ef2297ba1c69ef91dda57cbf876426d603",
+    "VNM": "67a8c448993efd03ba41c6cd05d4970cc1cf4177e1010604d1bf7b7d0090e3d5"
+  },
+  "protocol_sha256": "25e00b83ef0a0d82dfd1272c6ade0fa08ad83bcc208b1c39ddf32e840ced9316",
+  "python_version": "3.10.20 | packaged by conda-forge | (main, Mar  5 2026, 16:42:22) [GCC 14.3.0]",
+  "random_control_matching": {
+    "extra_trees_market": {
+      "training_universe": {
+        "adequate_mean_match": true,
+        "exposure_match_tolerance_percentage_points": 5.0,
+        "holding_match_tolerance_intervals": 2.0,
+        "mean_common_entry_overlap_percentage": 100.0,
+        "mean_random_minus_supervised_exposure_percentage_points": -0.9330485454676549,
+        "mean_random_minus_supervised_holding_intervals": -0.41450653594771314,
+        "minimum_pairwise_entry_overlap_percentage": 100.0,
+        "minimum_required_overlap_percentage": 90.0
+      },
+      "unseen_ticker": {
+        "adequate_mean_match": true,
+        "exposure_match_tolerance_percentage_points": 5.0,
+        "holding_match_tolerance_intervals": 2.0,
+        "mean_common_entry_overlap_percentage": 100.0,
+        "mean_random_minus_supervised_exposure_percentage_points": -1.5024542614904046,
+        "mean_random_minus_supervised_holding_intervals": -0.6601960784313725,
+        "minimum_pairwise_entry_overlap_percentage": 100.0,
+        "minimum_required_overlap_percentage": 90.0
+      }
+    },
+    "extra_trees_market_alpha": {
+      "training_universe": {
+        "adequate_mean_match": true,
+        "exposure_match_tolerance_percentage_points": 5.0,
+        "holding_match_tolerance_intervals": 2.0,
+        "mean_common_entry_overlap_percentage": 100.0,
+        "mean_random_minus_supervised_exposure_percentage_points": -2.6810103100417213,
+        "mean_random_minus_supervised_holding_intervals": -1.179424836601309,
+        "minimum_pairwise_entry_overlap_percentage": 100.0,
+        "minimum_required_overlap_percentage": 90.0
+      },
+      "unseen_ticker": {
+        "adequate_mean_match": true,
+        "exposure_match_tolerance_percentage_points": 5.0,
+        "holding_match_tolerance_intervals": 2.0,
+        "mean_common_entry_overlap_percentage": 100.0,
+        "mean_random_minus_supervised_exposure_percentage_points": -2.523873270861225,
+        "mean_random_minus_supervised_holding_intervals": -1.1090196078431387,
+        "minimum_pairwise_entry_overlap_percentage": 100.0,
+        "minimum_required_overlap_percentage": 90.0
+      }
+    },
+    "ridge_market": {
+      "training_universe": {
+        "adequate_mean_match": false,
+        "exposure_match_tolerance_percentage_points": 5.0,
+        "holding_match_tolerance_intervals": 2.0,
+        "mean_common_entry_overlap_percentage": 100.0,
+        "mean_random_minus_supervised_exposure_percentage_points": -5.563725547507839,
+        "mean_random_minus_supervised_holding_intervals": -2.457009803921569,
+        "minimum_pairwise_entry_overlap_percentage": 100.0,
+        "minimum_required_overlap_percentage": 90.0
+      },
+      "unseen_ticker": {
+        "adequate_mean_match": false,
+        "exposure_match_tolerance_percentage_points": 5.0,
+        "holding_match_tolerance_intervals": 2.0,
+        "mean_common_entry_overlap_percentage": 100.0,
+        "mean_random_minus_supervised_exposure_percentage_points": -7.009370816599733,
+        "mean_random_minus_supervised_holding_intervals": -3.0800000000000005,
+        "minimum_pairwise_entry_overlap_percentage": 100.0,
+        "minimum_required_overlap_percentage": 90.0
+      }
+    },
+    "ridge_market_alpha": {
+      "training_universe": {
+        "adequate_mean_match": false,
+        "exposure_match_tolerance_percentage_points": 5.0,
+        "holding_match_tolerance_intervals": 2.0,
+        "mean_common_entry_overlap_percentage": 100.0,
+        "mean_random_minus_supervised_exposure_percentage_points": -5.056326713939696,
+        "mean_random_minus_supervised_holding_intervals": -2.2326503267973865,
+        "minimum_pairwise_entry_overlap_percentage": 100.0,
+        "minimum_required_overlap_percentage": 90.0
+      },
+      "unseen_ticker": {
+        "adequate_mean_match": false,
+        "exposure_match_tolerance_percentage_points": 5.0,
+        "holding_match_tolerance_intervals": 2.0,
+        "mean_common_entry_overlap_percentage": 100.0,
+        "mean_random_minus_supervised_exposure_percentage_points": -4.9660865684962054,
+        "mean_random_minus_supervised_holding_intervals": -2.182156862745098,
+        "minimum_pairwise_entry_overlap_percentage": 100.0,
+        "minimum_required_overlap_percentage": 90.0
+      }
+    }
+  },
+  "random_control_percentiles": [
+    {
+      "candidate_equal_ticker_mean_cagr": -0.017121871555519516,
+      "candidate_percentile_in_random_null": 23.0,
+      "model_id": "ridge_market",
+      "random_control_cagr_median": 0.001512126374870928,
+      "random_control_cagr_p10": -0.04282263481919084,
+      "random_control_cagr_p90": 0.03239945641161386,
+      "random_control_mean_cagr": -0.0021763156038670296,
+      "random_replicates": 100,
+      "ticker_group": "training_universe"
+    },
+    {
+      "candidate_equal_ticker_mean_cagr": -0.017885798952988134,
+      "candidate_percentile_in_random_null": 44.0,
+      "model_id": "ridge_market",
+      "random_control_cagr_median": -0.015351139950414702,
+      "random_control_cagr_p10": -0.07309989083632173,
+      "random_control_cagr_p90": 0.034456518221789786,
+      "random_control_mean_cagr": -0.01705210619013934,
+      "random_replicates": 100,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "candidate_equal_ticker_mean_cagr": -0.013607802929378014,
+      "candidate_percentile_in_random_null": 26.0,
+      "model_id": "ridge_market_alpha",
+      "random_control_cagr_median": 0.001767508450504125,
+      "random_control_cagr_p10": -0.03363953844030277,
+      "random_control_cagr_p90": 0.04496148392775167,
+      "random_control_mean_cagr": 0.0029764270669421712,
+      "random_replicates": 100,
+      "ticker_group": "training_universe"
+    },
+    {
+      "candidate_equal_ticker_mean_cagr": -0.011789869728028401,
+      "candidate_percentile_in_random_null": 51.0,
+      "model_id": "ridge_market_alpha",
+      "random_control_cagr_median": -0.011927648824379602,
+      "random_control_cagr_p10": -0.06641833569545054,
+      "random_control_cagr_p90": 0.04528966669727498,
+      "random_control_mean_cagr": -0.011812173098994563,
+      "random_replicates": 100,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "candidate_equal_ticker_mean_cagr": 0.008698906747110158,
+      "candidate_percentile_in_random_null": 65.0,
+      "model_id": "extra_trees_market",
+      "random_control_cagr_median": -0.00011290567408660907,
+      "random_control_cagr_p10": -0.037910688725617606,
+      "random_control_cagr_p90": 0.03090648067566139,
+      "random_control_mean_cagr": -0.0003318240927105019,
+      "random_replicates": 100,
+      "ticker_group": "training_universe"
+    },
+    {
+      "candidate_equal_ticker_mean_cagr": -0.005210288369873833,
+      "candidate_percentile_in_random_null": 66.0,
+      "model_id": "extra_trees_market",
+      "random_control_cagr_median": -0.021463339107808985,
+      "random_control_cagr_p10": -0.0690432955699495,
+      "random_control_cagr_p90": 0.043297718038161494,
+      "random_control_mean_cagr": -0.014264311462077718,
+      "random_replicates": 100,
+      "ticker_group": "unseen_ticker"
+    },
+    {
+      "candidate_equal_ticker_mean_cagr": 0.014480824291500938,
+      "candidate_percentile_in_random_null": 62.0,
+      "model_id": "extra_trees_market_alpha",
+      "random_control_cagr_median": 0.005141843253645717,
+      "random_control_cagr_p10": -0.0297941000329688,
+      "random_control_cagr_p90": 0.045052782249053416,
+      "random_control_mean_cagr": 0.005898334491340889,
+      "random_replicates": 100,
+      "ticker_group": "training_universe"
+    },
+    {
+      "candidate_equal_ticker_mean_cagr": 0.030104348024782665,
+      "candidate_percentile_in_random_null": 73.0,
+      "model_id": "extra_trees_market_alpha",
+      "random_control_cagr_median": -0.011488931183628585,
+      "random_control_cagr_p10": -0.06398524695418503,
+      "random_control_cagr_p90": 0.06600467391404,
+      "random_control_mean_cagr": -0.0027919281953675363,
+      "random_replicates": 100,
+      "ticker_group": "unseen_ticker"
+    }
+  ],
+  "reference_file_hashes": {
+    "phase4a_trade_log": "22a8c3c1d520274b979399e77ab8dc4469615de88a2d825011c9ce9ab7c89267",
+    "phase4b_regime_metrics": "0d183df909a60171b71ff73ead31e33bf34c1617562a0020ca7d0e3b9d3d1755",
+    "phase4b_stock_period_metrics": "e2660ecb5c64bd4717642f03bd2e8134fa1aae8b2b30ed583936931cca0cb310"
+  },
+  "run_attempt": 2,
+  "run_code_commit_sha": "501f6c2cf41434a08083c8567cd6bb9d2f9b33a6",
+  "shared_data_modified": false,
+  "stock_coverage": {
+    "ACB": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.86631274223328
+        },
+        "train": {
+          "c16": 99.91993308067322,
+          "s1": 99.91993308067322
+        },
+        "validation": {
+          "c16": 97.58713245391846,
+          "s1": 100.0
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2743,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 746,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "ACB",
+      "tradable_buy_days": {
+        "test": 746,
+        "train": 1249,
+        "validation": 746
+      },
+      "tradable_sell_days": {
+        "test": 747,
+        "train": 1248,
+        "validation": 744
+      },
+      "training_mean_std_fit": false
+    },
+    "BCG": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.25581312179565,
+          "s1": 98.25581312179565
+        },
+        "train": {
+          "c16": 99.15094375610352,
+          "s1": 99.245285987854
+        },
+        "validation": {
+          "c16": 96.13848328590393,
+          "s1": 99.60052967071533
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-10-08",
+      "date_start": "2015-10-12",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2499,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-10-08",
+          "rows": 688,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1060,
+          "start": "2015-10-12"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "BCG",
+      "tradable_buy_days": {
+        "test": 677,
+        "train": 1049,
+        "validation": 732
+      },
+      "tradable_sell_days": {
+        "test": 676,
+        "train": 1054,
+        "validation": 721
+      },
+      "training_mean_std_fit": false
+    },
+    "DGC": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.59893226623535
+        },
+        "train": {
+          "c16": 99.91993308067322,
+          "s1": 94.47557926177979
+        },
+        "validation": {
+          "c16": 96.91275358200073,
+          "s1": 99.59731698036194
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2742,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 745,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "DGC",
+      "tradable_buy_days": {
+        "test": 739,
+        "train": 1222,
+        "validation": 720
+      },
+      "tradable_sell_days": {
+        "test": 739,
+        "train": 1225,
+        "validation": 727
+      },
+      "training_mean_std_fit": false
+    },
+    "FPT": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.86631274223328
+        },
+        "train": {
+          "c16": 99.19936060905457,
+          "s1": 99.83987212181091
+        },
+        "validation": {
+          "c16": 96.00532650947571,
+          "s1": 100.0
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "FPT",
+      "tradable_buy_days": {
+        "test": 746,
+        "train": 1247,
+        "validation": 747
+      },
+      "tradable_sell_days": {
+        "test": 745,
+        "train": 1246,
+        "validation": 747
+      },
+      "training_mean_std_fit": false
+    },
+    "GAS": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.86631274223328
+        },
+        "train": {
+          "c16": 99.19936060905457,
+          "s1": 99.75980520248413
+        },
+        "validation": {
+          "c16": 96.00532650947571,
+          "s1": 99.86684322357178
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "GAS",
+      "tradable_buy_days": {
+        "test": 746,
+        "train": 1237,
+        "validation": 746
+      },
+      "tradable_sell_days": {
+        "test": 746,
+        "train": 1230,
+        "validation": 741
+      },
+      "training_mean_std_fit": false
+    },
+    "HPG": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.86631274223328
+        },
+        "train": {
+          "c16": 99.03923273086548,
+          "s1": 99.83987212181091
+        },
+        "validation": {
+          "c16": 96.13848328590393,
+          "s1": 100.0
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "HPG",
+      "tradable_buy_days": {
+        "test": 747,
+        "train": 1247,
+        "validation": 749
+      },
+      "tradable_sell_days": {
+        "test": 744,
+        "train": 1245,
+        "validation": 746
+      },
+      "training_mean_std_fit": false
+    },
+    "MBB": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.73261952400208
+        },
+        "train": {
+          "c16": 98.87910485267639,
+          "s1": 99.83987212181091
+        },
+        "validation": {
+          "c16": 96.13848328590393,
+          "s1": 100.0
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "MBB",
+      "tradable_buy_days": {
+        "test": 747,
+        "train": 1244,
+        "validation": 748
+      },
+      "tradable_sell_days": {
+        "test": 747,
+        "train": 1247,
+        "validation": 747
+      },
+      "training_mean_std_fit": false
+    },
+    "MWG": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.86631274223328
+        },
+        "train": {
+          "c16": 98.87910485267639,
+          "s1": 99.75980520248413
+        },
+        "validation": {
+          "c16": 96.27164006233215,
+          "s1": 99.73368644714355
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "MWG",
+      "tradable_buy_days": {
+        "test": 743,
+        "train": 1244,
+        "validation": 747
+      },
+      "tradable_sell_days": {
+        "test": 745,
+        "train": 1246,
+        "validation": 731
+      },
+      "training_mean_std_fit": false
+    },
+    "PVD": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.86631274223328
+        },
+        "train": {
+          "c16": 98.79903793334961,
+          "s1": 99.67974424362183
+        },
+        "validation": {
+          "c16": 96.27164006233215,
+          "s1": 99.46737885475159
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "PVD",
+      "tradable_buy_days": {
+        "test": 742,
+        "train": 1237,
+        "validation": 737
+      },
+      "tradable_sell_days": {
+        "test": 746,
+        "train": 1239,
+        "validation": 728
+      },
+      "training_mean_std_fit": false
+    },
+    "REE": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.86631274223328
+        },
+        "train": {
+          "c16": 98.87910485267639,
+          "s1": 99.83987212181091
+        },
+        "validation": {
+          "c16": 96.27164006233215,
+          "s1": 100.0
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "REE",
+      "tradable_buy_days": {
+        "test": 746,
+        "train": 1244,
+        "validation": 744
+      },
+      "tradable_sell_days": {
+        "test": 746,
+        "train": 1246,
+        "validation": 742
+      },
+      "training_mean_std_fit": false
+    },
+    "SSI": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.86631274223328
+        },
+        "train": {
+          "c16": 98.79903793334961,
+          "s1": 99.83987212181091
+        },
+        "validation": {
+          "c16": 96.13848328590393,
+          "s1": 100.0
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "SSI",
+      "tradable_buy_days": {
+        "test": 746,
+        "train": 1243,
+        "validation": 739
+      },
+      "tradable_sell_days": {
+        "test": 743,
+        "train": 1242,
+        "validation": 738
+      },
+      "training_mean_std_fit": false
+    },
+    "VCB": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.86631274223328
+        },
+        "train": {
+          "c16": 98.79903793334961,
+          "s1": 99.83987212181091
+        },
+        "validation": {
+          "c16": 96.13848328590393,
+          "s1": 100.0
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "VCB",
+      "tradable_buy_days": {
+        "test": 746,
+        "train": 1246,
+        "validation": 750
+      },
+      "tradable_sell_days": {
+        "test": 746,
+        "train": 1246,
+        "validation": 748
+      },
+      "training_mean_std_fit": false
+    },
+    "VHC": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.33155179023743
+        },
+        "train": {
+          "c16": 98.79903793334961,
+          "s1": 99.83987212181091
+        },
+        "validation": {
+          "c16": 96.13848328590393,
+          "s1": 100.0
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "VHC",
+      "tradable_buy_days": {
+        "test": 742,
+        "train": 1241,
+        "validation": 737
+      },
+      "tradable_sell_days": {
+        "test": 743,
+        "train": 1240,
+        "validation": 731
+      },
+      "training_mean_std_fit": false
+    },
+    "VIC": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.86631274223328
+        },
+        "train": {
+          "c16": 98.79903793334961,
+          "s1": 99.83987212181091
+        },
+        "validation": {
+          "c16": 96.13848328590393,
+          "s1": 100.0
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "VIC",
+      "tradable_buy_days": {
+        "test": 728,
+        "train": 1245,
+        "validation": 743
+      },
+      "tradable_sell_days": {
+        "test": 739,
+        "train": 1241,
+        "validation": 746
+      },
+      "training_mean_std_fit": false
+    },
+    "VNM": {
+      "alpha_coverage_pct": {
+        "test": {
+          "c16": 98.39572310447693,
+          "s1": 99.86631274223328
+        },
+        "train": {
+          "c16": 98.87910485267639,
+          "s1": 99.83987212181091
+        },
+        "validation": {
+          "c16": 96.27164006233215,
+          "s1": 100.0
+        }
+      },
+      "causal_volatility_window": 60,
+      "date_end": "2025-12-31",
+      "date_start": "2015-01-05",
+      "future_rows_after_cutoff_used": false,
+      "rows": 2748,
+      "sentinel_policy": "missing bounded S1/C16 values become 0.5 with availability=0",
+      "split_dates": {
+        "test": {
+          "end": "2025-12-31",
+          "rows": 748,
+          "start": "2023-01-03"
+        },
+        "train": {
+          "end": "2019-12-31",
+          "rows": 1249,
+          "start": "2015-01-05"
+        },
+        "validation": {
+          "end": "2022-12-30",
+          "rows": 751,
+          "start": "2020-01-02"
+        }
+      },
+      "ticker": "VNM",
+      "tradable_buy_days": {
+        "test": 747,
+        "train": 1245,
+        "validation": 749
+      },
+      "tradable_sell_days": {
+        "test": 748,
+        "train": 1247,
+        "validation": 746
+      },
+      "training_mean_std_fit": false
+    }
+  },
+  "thresholds_selected_on_validation_training_tickers": {
+    "extra_trees_market": -0.05,
+    "extra_trees_market_alpha": -0.1,
+    "ridge_market": -0.05,
+    "ridge_market_alpha": -0.1
+  },
+  "training_sample_count": 20129,
+  "training_ticker_count": 12,
+  "training_ticker_year_age_strata": 420,
+  "vnindex_regime_coverage": {
+    "falling": 1097,
+    "rising": 1916,
+    "sideways": 2337,
+    "warmup": 126
+  }
+}
