@@ -1,0 +1,51 @@
+{
+  "experiment_id": "rl-trade-episode-phase4b-20261025",
+  "phase4a_artifact_root": "/tmp/stock-rl-trade-episode-phase4a-20261025",
+  "phase4a_generating_git_sha": null,
+  "phase4a_sha_note": "Phase 4A checkpoints were produced before the first code commit on this experiment branch. The baseline snapshot commit is a later capture and is not claimed as their generating SHA.",
+  "baseline_snapshot_commit_sha": "a6d0ca89",
+  "files": {
+    "phase4a_config.json": "1e9ee19b695c62a2c6aef9e2f48621f9945fa5fadb5c7838f66b47152144afbe",
+    "phase4a_metrics.json": "7d0cbef49d3432bee5b32f40c923eb58597da10accd14ea0ec2b22ce931cd902",
+    "phase4a_comparison.csv": "a5299ef773cf75e2c474fcfab6f7f5ee1d685137d05ab54d2e20b15430551c4c",
+    "phase4a_trades.csv": "22a8c3c1d520274b979399e77ab8dc4469615de88a2d825011c9ce9ab7c89267"
+  },
+  "checkpoints": [
+    {
+      "variant": "market_only",
+      "seed": 1208,
+      "path": "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_only_seed1208.zip",
+      "sha256": "06ed9d1540ca7a77eb3975af870570eda7fc1742c891021103666c5b13389662"
+    },
+    {
+      "variant": "market_only",
+      "seed": 1209,
+      "path": "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_only_seed1209.zip",
+      "sha256": "f771d9dcc7a2bed6701a66f51ba3745677cda7eb805c6d09b45b5dfe088176fd"
+    },
+    {
+      "variant": "market_only",
+      "seed": 1210,
+      "path": "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_only_seed1210.zip",
+      "sha256": "188712ad77f9af64aec1adea5d9568b496fe64c3bc33560a2d2943172a060e6a"
+    },
+    {
+      "variant": "market_plus_s1_c16",
+      "seed": 1208,
+      "path": "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_plus_s1_c16_seed1208.zip",
+      "sha256": "75b893a9647f9f09e4bc689ddbc56b173c468c42fee6d7644d5ffa10f4379a7f"
+    },
+    {
+      "variant": "market_plus_s1_c16",
+      "seed": 1209,
+      "path": "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_plus_s1_c16_seed1209.zip",
+      "sha256": "51ffaaf8769de3e5fa56f66a720702c91b215f76e331e7489758f0684c0e2c88"
+    },
+    {
+      "variant": "market_plus_s1_c16",
+      "seed": 1210,
+      "path": "/tmp/stock-rl-trade-episode-phase4a-20261025/models/market_plus_s1_c16_seed1210.zip",
+      "sha256": "750a741b3b48d7f378b7faf83f14e63bb3cfdb4ae8d81080c54a3378faf4ab25"
+    }
+  ]
+}

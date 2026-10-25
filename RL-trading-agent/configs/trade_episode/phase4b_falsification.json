@@ -1,0 +1,63 @@
+{
+  "experiment_id": "rl-trade-episode-phase4b-20261025",
+  "protocol": "RL-trading-agent/research/trade_episode/phase4b/protocol.md",
+  "checkpoint_manifest": "RL-trading-agent/research/trade_episode/phase4b/checkpoint_manifest.json",
+  "data_root": "/home/manh/stocks-ecosystem/data",
+  "date_cutoff": "2025-12-31",
+  "historical_lookback_start": "2014-09-01",
+  "partitions": {
+    "training_insample": ["2015-01-01", "2019-12-31"],
+    "validation_previously_examined": ["2020-01-01", "2022-12-31"],
+    "exploratory_alpha_selection_contaminated": ["2023-01-01", "2025-12-31"]
+  },
+  "train_tickers": ["ACB", "BCG", "FPT", "GAS", "HPG", "MWG", "PVD", "REE", "SSI", "VCB", "VIC", "VNM"],
+  "unseen_tickers": ["DGC", "MBB", "VHC"],
+  "frozen_policy_variants": ["market_only", "market_plus_s1_c16"],
+  "policy_seeds": [1208, 1209, 1210],
+  "retrain": false,
+  "environment": {
+    "action_semantics": "two target-position actions OUT/IN",
+    "execution": "observe close t; execute at next tradable open",
+    "minimum_holding_intervals": 3,
+    "fees": 0.0,
+    "slippage": 0.0,
+    "initial_capital": 1.0,
+    "reward": "252/T * ln(Psell/Pbuy) - ln(1.07)",
+    "gamma": 1.0,
+    "price_adjustment": "user-confirmed dividend-adjusted; assumption"
+  },
+  "controls": {
+    "method": "empirical validation wait/hold pair resampling; feature blind",
+    "calibration_partition": "validation",
+    "replicates_per_ticker_variant_partition": 50,
+    "master_seed_start": 42000,
+    "master_seed_stop_exclusive": 42050,
+    "match_thresholds": {
+      "mean_absolute_exposure_error_percentage_points": 5.0,
+      "relative_mean_holding_duration_error": 0.20,
+      "mean_waiting_duration_error_days": 2.0
+    }
+  },
+  "market_regimes": {
+    "index": "VNINDEX",
+    "lookback_sessions": 126,
+    "label_available_through": "decision close t",
+    "rising_minimum_simple_return": 0.10,
+    "falling_maximum_simple_return": -0.10,
+    "otherwise": "sideways"
+  },
+  "uncertainty": {
+    "method": "hierarchical paired bootstrap; ticker cluster then calendar year/regime blocks",
+    "replicates": 5000,
+    "seed": 95041,
+    "trade_level_independence_assumption": false
+  },
+  "outputs": {
+    "root": "RL-trading-agent/research/trade_episode/phase4b/results",
+    "summary": "phase4b_metrics.json",
+    "stock_periods": "phase4b_stock_period_metrics.csv",
+    "regimes": "phase4b_regime_metrics.csv",
+    "randomized_paths": "phase4b_control_simulations.csv",
+    "trades": "phase4b_trades.csv"
+  }
+}
