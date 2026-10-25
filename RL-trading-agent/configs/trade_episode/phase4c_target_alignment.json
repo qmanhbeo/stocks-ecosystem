@@ -1,0 +1,34 @@
+{
+  "experiment_id": "rl-trade-episode-phase4c-target-alignment-20261025",
+  "purpose": "Read-only fixed-horizon feature-to-reward association audit; no model fitting or PPO training",
+  "data_root_env": "STOCKS_DATA_ROOT",
+  "date_cutoff": "2025-12-31",
+  "training_tickers": ["ACB", "BCG", "FPT", "GAS", "HPG", "MWG", "PVD", "REE", "SSI", "VCB", "VIC", "VNM"],
+  "unseen_tickers": ["DGC", "MBB", "VHC"],
+  "partitions": {
+    "train": ["2015-01-01", "2019-12-31"],
+    "validation": ["2020-01-01", "2022-12-31"],
+    "exploratory": ["2023-01-01", "2025-12-31"]
+  },
+  "entry_horizons_intervals": [3, 10, 20],
+  "exit_entry_ages_intervals": [3, 10, 20],
+  "exit_continue_horizons_intervals": [3, 10, 20],
+  "min_holding_intervals": 3,
+  "max_episode_steps": 756,
+  "max_holding_intervals": 756,
+  "annualization_intervals": 252,
+  "annual_benchmark": 0.07,
+  "execution": "Observe close t; fill target-position action at next tradable open",
+  "price_basis": "User-confirmed dividend-adjusted assumption",
+  "statistics": {
+    "correlation": "within-ticker-year Spearman",
+    "minimum_rows_per_ticker_year": 40,
+    "bootstrap": "hierarchical ticker then calendar-year blocks",
+    "bootstrap_replicates": 2000,
+    "bootstrap_seed": 94331
+  },
+  "outputs": [
+    "RL-trading-agent/research/trade_episode/phase4c/results/phase4c_metrics.json",
+    "RL-trading-agent/research/trade_episode/phase4c/results/phase4c_feature_associations.csv"
+  ]
+}
