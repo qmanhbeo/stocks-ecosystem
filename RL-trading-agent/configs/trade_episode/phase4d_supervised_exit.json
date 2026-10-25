@@ -89,9 +89,17 @@
     "use_existing_phase4b_full_policy_evaluation": true,
     "retrain": false,
     "phase4b_metrics": "RL-trading-agent/research/trade_episode/phase4b/results/phase4b_stock_period_metrics.csv",
-    "checkpoint_manifest": "RL-trading-agent/research/trade_episode/phase4b/checkpoint_manifest.json"
+    "checkpoint_manifest": "RL-trading-agent/research/trade_episode/phase4b/checkpoint_manifest.json",
+    "entry_conditioned_diagnostic": {
+      "phase4a_trade_log": "/tmp/stock-rl-trade-episode-phase4a-20261025/phase4a_trades.csv",
+      "seed": 1208,
+      "policies": ["market_only", "market_plus_s1_c16"],
+      "ticker_scope": "all available training and unseen tickers",
+      "comparison": "per-entry counterfactual, identical PPO entry fill, no cross-entry compounding",
+      "maximum_holding_intervals": 40
+    }
   },
   "isolated_model_dir": "RL-trading-agent/artifacts/trade_episode/phase4d-20261025",
   "results_dir": "RL-trading-agent/research/trade_episode/phase4d/results",
-  "outputs": ["phase4d_metrics.json", "phase4d_prediction_metrics.csv", "phase4d_policy_metrics.csv", "phase4d_trades.csv", "phase4d_year_regime_metrics.csv"]
+  "outputs": ["phase4d_metrics.json", "phase4d_prediction_metrics.csv", "phase4d_policy_metrics.csv", "phase4d_trades.csv", "phase4d_year_regime_metrics.csv", "phase4d_random_controls.csv", "phase4d_ppo_entry_diagnostic.csv"]
 }

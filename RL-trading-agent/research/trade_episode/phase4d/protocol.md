@@ -8,6 +8,8 @@
 - **H6:** A supervised SELL-versus-HOLD model can turn the Phase 4A observation into a useful executable exit policy.
 - If it beats fixed-entry mechanical and randomized controls while frozen PPO does not, that is evidence consistent with a PPO learning/credit-assignment limitation. It is not implied by beating PPO alone.
 - No PPO is retrained. Full-policy PPO numbers are reused from the saved Phase 4B evaluation, whose manifest records the six Phase 4A checkpoint hashes. This comparison has different entries and is descriptive only.
+- Also run an isolated entry-conditioned diagnostic on the frozen Phase 4A seed-1208 PPO entry dates from the saved trade log. Compare supervised and mechanical exits from each same entry, only when the 40-interval window fits in the split. Report per-trade results only; overlapping counterfactuals are not a chronological portfolio.
+- The diagnostic uses the historical Phase 4A trade log at `/tmp/stock-rl-trade-episode-phase4a-20261025/phase4a_trades.csv`, policies `market_only` and `market_plus_s1_c16`, seed `1208`, and exploratory dates only. It is secondary and does not alter the primary fixed-entry result or H6 rule.
 
 ## Data and chronology
 
