@@ -1,5 +1,7 @@
 {
   "experiment_id": "rl-trade-episode-phase4d-supervised-exit-20261025",
+  "run_attempt": 2,
+  "supersedes_attempt": 1,
   "protocol_path": "RL-trading-agent/research/trade_episode/phase4d/protocol.md",
   "protocol_base_commit": "c548ed5377d7c82cbfd89226baf584247598600b",
   "data_root_env": "STOCKS_DATA_ROOT",
@@ -100,7 +102,7 @@
       "maximum_holding_intervals": 40
     }
   },
-  "isolated_model_dir": "RL-trading-agent/artifacts/trade_episode/phase4d-20261025",
+  "isolated_model_dir": "RL-trading-agent/artifacts/trade_episode/phase4d-20261025-run2",
   "results_dir": "RL-trading-agent/research/trade_episode/phase4d/results",
   "outputs": [
     "phase4d_config_snapshot.json",

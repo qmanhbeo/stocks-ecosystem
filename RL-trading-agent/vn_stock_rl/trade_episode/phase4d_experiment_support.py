@@ -156,7 +156,11 @@ def _prediction_rows(examples, models) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     predictions: dict[str, np.ndarray] = {}
     for model_id, model in models.items():
-        features = examples.matrix(model.feature_set)
+        features = (
+            np.empty((len(examples.target), 0), dtype=np.float64)
+            if model.feature_set == "constant"
+            else examples.matrix(model.feature_set)
+        )
         predictions[model_id] = model.predict(features)
 
     grouping_columns = ("ticker_group", "ticker", "year")
