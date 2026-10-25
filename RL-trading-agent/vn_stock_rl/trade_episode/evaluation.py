@@ -97,6 +97,7 @@ def evaluate_chronological_policy(
     wealth = 1.0
     equity_curve = [1.0]
     exposure = [False]
+    daily_path: list[dict[str, Any]] = []
     trades: list[dict[str, Any]] = []
     episodes: list[dict[str, Any]] = []
     action_counts = {"WAIT": 0, "BUY": 0, "HOLD": 0, "SELL": 0}
@@ -143,9 +144,22 @@ def evaluate_chronological_policy(
                 episode_bought = True
             observation, reward, terminated, truncated, info = env.step(action)
             total_steps += 1
-            equity_curve.append(wealth * info["mark_to_market_portfolio_value"])
+            marked_equity = wealth * info["mark_to_market_portfolio_value"]
+            previous_equity = equity_curve[-1]
+            equity_curve.append(marked_equity)
             exposure.append(bool(info["position"]))
             current_index = int(info["decision_index"])
+            daily_path.append(
+                {
+                    "decision_date": action_date,
+                    "execution_date": info["date"],
+                    "interval_return": float(marked_equity / previous_equity - 1.0),
+                    "portfolio_value": float(marked_equity),
+                    "exposure": bool(info["position"]),
+                    "cash": float(wealth * info["cash"]),
+                    "position_value": float(wealth * info["position_value"]),
+                }
+            )
             episode_actions.append(
                 {
                     "decision_date": action_date,
@@ -240,6 +254,7 @@ def evaluate_chronological_policy(
             "trades": trades,
             "episodes": episodes,
             "action_counts": action_counts,
+            "daily_path": daily_path,
             "open_position_at_end": open_position_at_end,
             "open_position_when_stopped": open_position_when_stopped,
             "incomplete_horizon": incomplete_horizon,

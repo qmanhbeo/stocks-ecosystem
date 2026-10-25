@@ -40,6 +40,8 @@ Primary H1 comparison is 2023–2025 PPO versus behavior-matched randomized cont
 
 For H5, compare falling and sideways daily attribution separately against randomized controls, mechanical trading, and buy-and-hold. Use the same ticker-clustered bootstrap over year/regime blocks. **H5 is contradicted** only if PPO's excess over randomized controls has a positive 95% interval in both regimes and both ticker groups, with positive point estimates against both mechanical trading and buy-and-hold in each regime. **H5 is consistent with evidence** if there is adequate regime coverage but PPO has no positive interval in at least one unfavorable regime and does not exceed both market references there. Otherwise classify it as inconclusive.
 
+Apply H1 and H5 criteria separately to market-only and market-plus-Alpha. Report the combined hypothesis as contradicted/consistent only if both variants receive that classification; otherwise the combined result is inconclusive. For regime bootstraps, use only stock-year-regime blocks with at least 30 classified intervals and report how many blocks remain.
+
 ## Provenance and outputs
 
 Record the run-code commit SHA before loading the frozen checkpoints, Python/dependency versions, input file metadata, per-ticker prepared-input SHA-256 fingerprints, checkpoint paths/hashes, date cutoff, RNG seeds, and execution date. Re-hash checkpoints and record shared-input metadata after evaluation; abort if either changes unexpectedly. Version the protocol/config, focused tests, compact JSON/CSV metrics, trade records, final report, and checkpoint manifest; never commit checkpoints or datasets.
