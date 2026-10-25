@@ -22,8 +22,11 @@ for _name in (
 ):
     os.environ[_name] = "1"
 
+ACTIVE_JOB: Any | None = None
+
 
 def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
+    global ACTIVE_JOB
     import importlib.metadata
 
     import numpy as np
@@ -54,6 +57,7 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
         SPLITS,
         TRADE_FIELDS,
         VARIANTS,
+        Phase4BJobMonitor,
         _file_stats,
         _group_mean,
         _h1_summary,
@@ -125,6 +129,10 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
     if run_branch != "exp/stock-rl-trade-episode":
         raise RuntimeError(f"Unexpected experiment branch: {run_branch}")
 
+    monitor = Phase4BJobMonitor(worktree_root, run_commit_sha)
+    ACTIVE_JOB = monitor
+    monitor.phase("preflight", total=1)
+
     verify_checkpoint_manifest(checkpoint_manifest["checkpoints"])
     for expected_file in checkpoint_manifest["files"]:
         source_path = phase4a_dir / expected_file
@@ -160,7 +168,9 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
             "Shared input metadata differs from the Phase 4A run; refusing comparison"
         )
 
-    stocks = {ticker: prepare_stock(ticker, data_root=data_root) for ticker in expected_tickers}
+    stocks = {}
+    for ticker in expected_tickers:
+        stocks[ticker] = prepare_stock(ticker, data_root=data_root)
     if any(stock.dates.max() > DATA_CUTOFF for stock in stocks.values()):
         raise RuntimeError("Post-cutoff rows entered prepared Phase 4B observations")
     fingerprints = {ticker: prepared_stock_fingerprint(stock) for ticker, stock in stocks.items()}
@@ -203,6 +213,17 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
             record["path"], device="cpu"
         )
     torch.set_num_threads(1)
+    monitor.record(
+        "preflight_verified",
+        {
+            "ticker_count": len(stocks),
+            "max_observation_date": max(stock.dates.max() for stock in stocks.values()).strftime(
+                "%Y-%m-%d"
+            ),
+            "checkpoint_count": len(models),
+            "post_cutoff_observations_used": False,
+        },
+    )
 
     run_started = time.perf_counter()
     stock_period_rows: list[dict[str, Any]] = []
@@ -250,6 +271,10 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
                 )
 
     # Reproduce all Phase 4A train/validation/test paths from the frozen models.
+    monitor.phase(
+        "frozen_policy_replay",
+        total=len(stocks) * len(SPLITS) * len(VARIANTS) * len(POLICY_SEEDS),
+    )
     for ticker, stock in stocks.items():
         ticker_group = "training_universe" if ticker in training_groups else "unseen_ticker"
         for split in SPLITS:
@@ -278,6 +303,7 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
                     )
                     stock_period_rows.append(row)
                     ppo_periods.append(row)
+                    monitor.record("ppo_path", row, details={"trades": result["trades"]})
                     key = (variant, ticker, split)
                     for trade in result["trades"]:
                         ppo_durations[key]["holding"].append(int(trade["holding_duration"]))
@@ -344,6 +370,7 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
                     env.close()
 
     # Baselines use the same ticker/date slices, initial capital, and next-open fills.
+    monitor.phase("benchmark_replay", total=len(stocks) * len(SPLITS) * 2)
     for ticker, stock in stocks.items():
         ticker_group = "training_universe" if ticker in training_groups else "unseen_ticker"
         for split in SPLITS:
@@ -365,6 +392,7 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
                     ticker_group=ticker_group,
                 )
                 stock_period_rows.append(row)
+                monitor.record("benchmark_path", row)
                 for block in summarize_regime_year_blocks(result["daily_path"], regime_frame):
                     regime_rows.append(
                         {
@@ -386,6 +414,10 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
     # Validation schedules are sampled independently for each Monte Carlo path.
     random_seed_start = int(config["controls"]["master_seed_start"])
     random_replicates = int(config["controls"]["replicates_per_ticker_variant_partition"])
+    monitor.phase(
+        "randomized_control_replay",
+        total=len(stocks) * len(VARIANTS) * len(SPLITS) * random_replicates,
+    )
     env_horizons = {
         "max_wait_steps": int(env_cfg["max_wait_steps"]),
         "max_holding_intervals": int(env_cfg["max_holding_intervals"]),
@@ -435,6 +467,7 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
                         regime_blocks, separators=(",", ":"), allow_nan=False
                     )
                     control_simulation_rows.append(row)
+                    monitor.record("randomized_control_path", row)
                     control_rows_by_key[key].append(row)
                     for trade in result["trades"]:
                         control_durations[key]["holding"].append(int(trade["holding_duration"]))
@@ -624,6 +657,8 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
         "config_sha256": sha256_file(config_path),
         "protocol_sha256": sha256_file(protocol_dir / "protocol.md"),
         "checkpoint_manifest_sha256": sha256_file(manifest_path),
+        "job_status_path": str(monitor.status_path),
+        "incremental_progress_trace_path": str(monitor.trace_path),
         "python": __import__("sys").version,
         "dependencies": {
             name: importlib.metadata.version(name)
@@ -702,6 +737,7 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
         ],
     }
 
+    monitor.phase("finalize_outputs", total=1)
     output_root.mkdir(parents=True, exist_ok=False)
     _write_csv(output_root / "phase4b_stock_period_metrics.csv", stock_period_rows)
     _write_csv(output_root / "phase4b_regime_metrics.csv", regime_rows)
@@ -715,6 +751,18 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
         json.dumps(metrics_payload, indent=2, default=_json_default, allow_nan=False) + "\n",
         encoding="utf-8",
     )
+    final_outputs = [
+        str(output_root / name)
+        for name in (
+            "phase4b_stock_period_metrics.csv",
+            "phase4b_regime_metrics.csv",
+            "phase4b_control_simulations.csv",
+            "phase4b_trades.csv",
+            "phase4b_metrics.json",
+        )
+    ]
+    monitor.record("final_outputs_written", {"paths": final_outputs})
+    monitor.complete(final_outputs)
     return metrics_payload
 
 
@@ -722,7 +770,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=None)
     args = parser.parse_args()
-    result = run_experiment(args.config)
+    try:
+        result = run_experiment(args.config)
+    except BaseException as error:
+        if ACTIVE_JOB is not None:
+            ACTIVE_JOB.fail(error)
+        raise
     print(
         json.dumps(
             {

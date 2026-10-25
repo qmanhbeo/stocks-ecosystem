@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import csv
 import json
+import os
+import time
 from collections import defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -497,6 +500,117 @@ def ticker_group_for(ticker: str) -> str:
     from vn_stock_rl.trade_episode.phase4a_data import UNSEEN_TICKERS
 
     return "unseen_ticker" if ticker in UNSEEN_TICKERS else "training_universe"
+
+
+class Phase4BJobMonitor:
+    """Keep a compact heartbeat and append-safe partial metric trace."""
+
+    def __init__(self, worktree_root: Path, commit_sha: str) -> None:
+        self.job = "stock_rl_phase4b"
+        self.commit_sha = commit_sha
+        self.started = datetime.now(timezone.utc)
+        stamp = self.started.strftime("%Y%m%dT%H%M%SZ")
+        artifact_root = worktree_root / "RL-trading-agent" / "artifacts"
+        status_root = artifact_root / "job_status"
+        trace_root = artifact_root / "job_progress"
+        status_root.mkdir(parents=True, exist_ok=True)
+        trace_root.mkdir(parents=True, exist_ok=True)
+        self.status_path = status_root / f"{self.job}.json"
+        self.trace_path = trace_root / f"{self.job}-{commit_sha[:8]}-{stamp}.jsonl"
+        self._trace = self.trace_path.open("x", encoding="utf-8")
+        self.phase_name = "starting"
+        self.phase_total = 0
+        self.phase_completed = 0
+        self.last_heartbeat = time.monotonic()
+        self.phase_started = self.last_heartbeat
+        self.state: dict[str, Any] = {
+            "job": self.job,
+            "experiment_id": EXPERIMENT_ID,
+            "run_code_commit_sha": commit_sha,
+            "status": "running",
+            "started_at": self.started.isoformat(),
+            "updated_at": self.started.isoformat(),
+            "last_heartbeat": self.started.isoformat(),
+            "phase": self.phase_name,
+            "progress": {"unit": "paths", "completed": 0, "total": 0},
+            "throughput": {"paths_per_minute": None},
+            "artifacts": {
+                "partial_metrics_jsonl": str(self.trace_path),
+            },
+            "error": None,
+        }
+        self._write_status()
+
+    def _write_status(self) -> None:
+        now = datetime.now(timezone.utc)
+        elapsed = max(time.monotonic() - self.phase_started, 1e-9)
+        self.state["updated_at"] = now.isoformat()
+        self.state["last_heartbeat"] = now.isoformat()
+        self.state["phase"] = self.phase_name
+        self.state["progress"] = {
+            "unit": "paths",
+            "completed": self.phase_completed,
+            "total": self.phase_total,
+        }
+        self.state["throughput"] = {
+            "paths_per_minute": round(self.phase_completed * 60.0 / elapsed, 2)
+            if self.phase_completed
+            else None
+        }
+        temporary = self.status_path.with_suffix(f".json.tmp.{os.getpid()}")
+        temporary.write_text(json.dumps(self.state, indent=2) + "\n", encoding="utf-8")
+        os.replace(temporary, self.status_path)
+        self.last_heartbeat = time.monotonic()
+
+    def phase(self, name: str, *, total: int) -> None:
+        self.phase_name = name
+        self.phase_total = int(total)
+        self.phase_completed = 0
+        self.phase_started = time.monotonic()
+        self._write_status()
+        print(f"phase={name} total={total}", flush=True)
+
+    def record(self, kind: str, payload: dict[str, Any], *, details=None) -> None:
+        self.phase_completed += 1
+        event = {
+            "experiment_id": EXPERIMENT_ID,
+            "run_code_commit_sha": self.commit_sha,
+            "phase": self.phase_name,
+            "index": self.phase_completed,
+            "kind": kind,
+            "recorded_at": datetime.now(timezone.utc).isoformat(),
+            "payload": payload,
+        }
+        if details is not None:
+            event["details"] = details
+        self._trace.write(json.dumps(event, default=_json_default, allow_nan=False) + "\n")
+        self._trace.flush()
+        now = time.monotonic()
+        if (
+            self.phase_completed % 50 == 0
+            or self.phase_completed == self.phase_total
+            or now - self.last_heartbeat >= 30.0
+        ):
+            self._write_status()
+            print(
+                f"phase={self.phase_name} progress={self.phase_completed}/{self.phase_total}",
+                flush=True,
+            )
+
+    def complete(self, outputs: list[str]) -> None:
+        self.state["status"] = "completed"
+        self.state["artifacts"]["final_outputs"] = outputs
+        self._write_status()
+        self._trace.close()
+
+    def fail(self, error: BaseException) -> None:
+        if self.state.get("status") == "completed":
+            return
+        self.state["status"] = "failed"
+        self.state["error"] = {"type": type(error).__name__, "message": str(error)}
+        self._write_status()
+        if not self._trace.closed:
+            self._trace.close()
 
 
 def summarize_h5_regimes(

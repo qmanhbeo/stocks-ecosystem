@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 
 import numpy as np
 import pandas as pd
@@ -13,7 +14,10 @@ from vn_stock_rl.trade_episode.phase4b_controls import (
     derive_control_seed,
     summarize_duration_matching,
 )
-from vn_stock_rl.trade_episode.phase4b_experiment_support import summarize_h5_regimes
+from vn_stock_rl.trade_episode.phase4b_experiment_support import (
+    Phase4BJobMonitor,
+    summarize_h5_regimes,
+)
 from vn_stock_rl.trade_episode.phase4b_provenance import verify_checkpoint_manifest
 from vn_stock_rl.trade_episode.phase4b_regimes import (
     build_causal_vnindex_regimes,
@@ -160,6 +164,24 @@ def test_h5_rule_requires_positive_results_in_both_unfavorable_regimes_and_group
     )
     assert combined == "contradicted by the evidence"
     assert all(row["classification"] == "contradicted by the evidence" for row in details.values())
+
+
+def test_job_monitor_persists_heartbeat_and_incremental_result_records(tmp_path):
+    monitor = Phase4BJobMonitor(tmp_path, "abcdef012345")
+    monitor.phase("control_replay", total=2)
+    monitor.record("control_path", {"ticker": "FPT", "return": 0.1})
+    monitor.record("control_path", {"ticker": "DGC", "return": -0.1})
+
+    status = json.loads(monitor.status_path.read_text())
+    events = [json.loads(line) for line in monitor.trace_path.read_text().splitlines()]
+    assert status["job"] == "stock_rl_phase4b"
+    assert status["phase"] == "control_replay"
+    assert status["progress"] == {"unit": "paths", "completed": 2, "total": 2}
+    assert events[0]["payload"]["ticker"] == "FPT"
+    assert len(events) == 2
+
+    monitor.complete(["metrics.json"])
+    assert json.loads(monitor.status_path.read_text())["status"] == "completed"
 
 
 def _index_bars() -> pd.DataFrame:
