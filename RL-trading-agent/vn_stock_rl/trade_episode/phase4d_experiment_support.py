@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import math
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -68,6 +69,26 @@ def _json_default(value):
     if isinstance(value, Path):
         return str(value)
     raise TypeError(f"Cannot serialize {type(value).__name__}")
+
+
+def _json_safe(value):
+    """Recursively map non-finite metrics and nullable pandas values to JSON null."""
+
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(item) for item in value]
+    if isinstance(value, np.ndarray):
+        return _json_safe(value.tolist())
+    if isinstance(value, np.generic):
+        return _json_safe(value.item())
+    if value is pd.NA or value is pd.NaT:
+        return None
+    if isinstance(value, float) and not math.isfinite(value):
+        return None
+    if isinstance(value, (pd.Timestamp, Path)):
+        return str(value)
+    return value
 
 
 def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:

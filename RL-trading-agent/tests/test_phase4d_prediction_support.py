@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from vn_stock_rl.trade_episode.phase4d_experiment_support import _prediction_rows
+from vn_stock_rl.trade_episode.phase4d_experiment_support import _json_safe, _prediction_rows
 from vn_stock_rl.trade_episode.phase4d_supervised import ExitExamples, FittedExitModel
 
 
@@ -34,3 +34,8 @@ def test_constant_and_age_baseline_predictions_do_not_require_market_matrix():
     assert len(rows) == 8
     overall = [row for row in rows if "ticker" not in row]
     assert all(row["rows"] == 3 for row in overall)
+
+
+def test_json_sanitizer_maps_nonfinite_metrics_to_null():
+    safe = _json_safe({"nan": np.nan, "infinity": float("inf"), "finite": np.float64(2.5)})
+    assert safe == {"nan": None, "infinity": None, "finite": 2.5}

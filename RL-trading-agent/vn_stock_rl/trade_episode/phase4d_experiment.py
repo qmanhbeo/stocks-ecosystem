@@ -42,6 +42,7 @@ def run_experiment(
         _file_stat,
         _git,
         _json_default,
+        _json_safe,
         _mean,
         _prediction_rows,
         _prepared_fingerprint,
@@ -396,7 +397,14 @@ def run_experiment(
     _write_csv(output_dir / "phase4d_ppo_entry_diagnostic.csv", ppo_entry_diagnostic_rows)
     _write_csv(output_dir / "phase4d_bootstrap_comparisons.csv", bootstrap_rows)
     (output_dir / "phase4d_metrics.json").write_text(
-        json.dumps(summary, indent=2, sort_keys=True, default=_json_default, allow_nan=False) + "\n"
+        json.dumps(
+            _json_safe(summary),
+            indent=2,
+            sort_keys=True,
+            default=_json_default,
+            allow_nan=False,
+        )
+        + "\n"
     )
     return summary
 
