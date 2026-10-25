@@ -692,8 +692,11 @@ def run_experiment(config_path: Path | None = None) -> dict[str, Any]:
         "ticker_observation_encoding": False,
         "price_adjustment_basis": "user-confirmed dividend-adjusted assumption",
         "phase4a_reproduction": {
-            "reference_path_count": len(reproduction_diffs) // len(REPRODUCTION_METRICS),
+            "reference_path_count": len(reference_metrics),
             "metric_comparisons": len(reproduction_diffs),
+            "metric_comparisons_skipped_as_null": (
+                len(reference_metrics) * len(REPRODUCTION_METRICS) - len(reproduction_diffs)
+            ),
             "max_absolute_metric_difference": max(
                 (row["absolute_difference"] for row in reproduction_diffs), default=0.0
             ),

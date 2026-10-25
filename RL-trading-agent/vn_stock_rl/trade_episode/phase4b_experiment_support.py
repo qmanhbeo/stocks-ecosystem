@@ -107,7 +107,12 @@ def _write_csv(
         raise ValueError(f"Refusing to write an empty research CSV without a schema: {path}")
     fields = list(fieldnames or dict.fromkeys(key for row in rows for key in row))
     with path.open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=fields, extrasaction="ignore")
+        writer = csv.DictWriter(
+            stream,
+            fieldnames=fields,
+            extrasaction="ignore",
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(rows)
 
