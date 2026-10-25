@@ -2,18 +2,55 @@
   "experiment_id": "rl-trade-episode-phase4b-20261025",
   "protocol": "RL-trading-agent/research/trade_episode/phase4b/protocol.md",
   "checkpoint_manifest": "RL-trading-agent/research/trade_episode/phase4b/checkpoint_manifest.json",
+  "phase4a_reference_metrics": "RL-trading-agent/research/trade_episode/phase4b/phase4a_reference_metrics.csv",
+  "phase4a_effective_config": "RL-trading-agent/research/trade_episode/phase4b/phase4a_effective_config.json",
+  "validation_duration_pairs": "RL-trading-agent/research/trade_episode/phase4b/phase4a_validation_duration_pairs.csv",
+  "validation_duration_pairs_sha256": "477560f8fa0056fa70caad019aec952c4e5e6b75ab2bd56c9796b0bf582adedc",
   "data_root": "/home/manh/stocks-ecosystem/data",
   "date_cutoff": "2025-12-31",
   "historical_lookback_start": "2014-09-01",
   "partitions": {
-    "training_insample": ["2015-01-01", "2019-12-31"],
-    "validation_previously_examined": ["2020-01-01", "2022-12-31"],
-    "exploratory_alpha_selection_contaminated": ["2023-01-01", "2025-12-31"]
+    "training_insample": [
+      "2015-01-01",
+      "2019-12-31"
+    ],
+    "validation_previously_examined": [
+      "2020-01-01",
+      "2022-12-31"
+    ],
+    "exploratory_alpha_selection_contaminated": [
+      "2023-01-01",
+      "2025-12-31"
+    ]
   },
-  "train_tickers": ["ACB", "BCG", "FPT", "GAS", "HPG", "MWG", "PVD", "REE", "SSI", "VCB", "VIC", "VNM"],
-  "unseen_tickers": ["DGC", "MBB", "VHC"],
-  "frozen_policy_variants": ["market_only", "market_plus_s1_c16"],
-  "policy_seeds": [1208, 1209, 1210],
+  "train_tickers": [
+    "ACB",
+    "BCG",
+    "FPT",
+    "GAS",
+    "HPG",
+    "MWG",
+    "PVD",
+    "REE",
+    "SSI",
+    "VCB",
+    "VIC",
+    "VNM"
+  ],
+  "unseen_tickers": [
+    "DGC",
+    "MBB",
+    "VHC"
+  ],
+  "frozen_policy_variants": [
+    "market_only",
+    "market_plus_s1_c16"
+  ],
+  "policy_seeds": [
+    1208,
+    1209,
+    1210
+  ],
   "retrain": false,
   "environment": {
     "action_semantics": "two target-position actions OUT/IN",
@@ -34,7 +71,7 @@
     "master_seed_stop_exclusive": 42050,
     "match_thresholds": {
       "mean_absolute_exposure_error_percentage_points": 5.0,
-      "relative_mean_holding_duration_error": 0.20,
+      "relative_mean_holding_duration_error": 0.2,
       "mean_waiting_duration_error_days": 2.0
     }
   },
@@ -42,8 +79,8 @@
     "index": "VNINDEX",
     "lookback_sessions": 126,
     "label_available_through": "decision close t",
-    "rising_minimum_simple_return": 0.10,
-    "falling_maximum_simple_return": -0.10,
+    "rising_minimum_simple_return": 0.1,
+    "falling_maximum_simple_return": -0.1,
     "otherwise": "sideways"
   },
   "uncertainty": {

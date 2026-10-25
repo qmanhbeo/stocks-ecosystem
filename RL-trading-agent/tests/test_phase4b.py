@@ -10,8 +10,10 @@ from vn_stock_rl.trade_episode.environment import TradeEpisodeEnv
 from vn_stock_rl.trade_episode.evaluation import evaluate_chronological_policy
 from vn_stock_rl.trade_episode.phase4b_controls import (
     ValidationScheduleRandomPolicy,
+    derive_control_seed,
     summarize_duration_matching,
 )
+from vn_stock_rl.trade_episode.phase4b_experiment_support import summarize_h5_regimes
 from vn_stock_rl.trade_episode.phase4b_provenance import verify_checkpoint_manifest
 from vn_stock_rl.trade_episode.phase4b_regimes import (
     build_causal_vnindex_regimes,
@@ -19,6 +21,7 @@ from vn_stock_rl.trade_episode.phase4b_regimes import (
     regime_asof,
     summarize_regime_year_blocks,
 )
+from vn_stock_rl.trade_episode.phase4b_statistics import bootstrap_paired_blocks
 
 
 def _state_observation(market_value: float, *, episode_steps: float = 0.0) -> np.ndarray:
@@ -103,6 +106,60 @@ def test_duration_match_metrics_report_signed_exposure_and_duration_errors():
     assert result["exposure_error_percentage_points"] == -3.0
     assert result["holding_duration_relative_error"] == pytest.approx(0.2)
     assert result["waiting_duration_error_days"] == 1.5
+
+
+def test_control_seed_derivation_is_stable_and_keyed_by_path():
+    first = derive_control_seed(42000, "FPT", "market_only", "test")
+    assert first == derive_control_seed(42000, "FPT", "market_only", "test")
+    assert first != derive_control_seed(42000, "FPT", "market_plus_s1_c16", "test")
+    assert first != derive_control_seed(42000, "FPT", "market_only", "validation")
+
+
+def test_paired_bootstrap_weights_tickers_equally_not_trades_or_blocks():
+    ppo = {
+        ("A", 2023): [0.1],
+        ("A", 2024): [0.1],
+        ("A", 2025): [0.1],
+        ("B", 2023): [0.0],
+    }
+    control = {key: [0.0] for key in ppo}
+    result = bootstrap_paired_blocks(ppo, control, replicates=200, seed=91)
+    assert result["mean_paired_excess_return"] == pytest.approx(0.05)
+    assert result["ticker_count"] == 2
+    assert result["paired_block_count"] == 4
+
+
+def test_h5_rule_requires_positive_results_in_both_unfavorable_regimes_and_groups():
+    variants = ("market_only", "market_plus_s1_c16")
+    tickers = {"training_universe": "FPT", "unseen_ticker": "DGC"}
+    ppo, controls, benchmarks = {}, {}, {}
+    matches = []
+    for variant in variants:
+        for group, ticker in tickers.items():
+            for split in ("validation", "test"):
+                matches.append(
+                    {
+                        "variant": variant,
+                        "ticker_group": group,
+                        "split": split,
+                        "adequate_match": True,
+                    }
+                )
+            for regime in ("falling", "sideways"):
+                ppo[(variant, ticker, 2022, regime)] = [0.10]
+                controls[(variant, ticker, 2022, regime)] = [0.0]
+                benchmarks[("mechanical_immediate_entry_3day_exit", ticker, 2022, regime)] = [0.0]
+                benchmarks[("buy_and_hold", ticker, 2022, regime)] = [0.0]
+
+    details, combined = summarize_h5_regimes(
+        ppo_regime_values=ppo,
+        control_regime_values=controls,
+        benchmark_regime_values=benchmarks,
+        match_group_rows=matches,
+        config={"uncertainty": {"seed": 7, "replicates": 100}},
+    )
+    assert combined == "contradicted by the evidence"
+    assert all(row["classification"] == "contradicted by the evidence" for row in details.values())
 
 
 def _index_bars() -> pd.DataFrame:

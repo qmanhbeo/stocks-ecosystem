@@ -2,10 +2,20 @@
 
 from __future__ import annotations
 
+import hashlib
 from collections.abc import Sequence
 from typing import Any
 
 import numpy as np
+
+
+def derive_control_seed(master_seed: int, ticker: str, variant: str, split: str) -> int:
+    """Derive stable per-path seeds while pairing Monte Carlo replicate numbers."""
+
+    path_key = f"{ticker.upper()}|{variant}|{split}".encode("utf-8")
+    path_words = np.frombuffer(hashlib.sha256(path_key).digest()[:8], dtype="<u4")
+    sequence = np.random.SeedSequence([int(master_seed), *map(int, path_words)])
+    return int(sequence.generate_state(1, dtype=np.uint32)[0])
 
 
 class ValidationScheduleRandomPolicy:

@@ -10,6 +10,21 @@
     "phase4a_comparison.csv": "a5299ef773cf75e2c474fcfab6f7f5ee1d685137d05ab54d2e20b15430551c4c",
     "phase4a_trades.csv": "22a8c3c1d520274b979399e77ab8dc4469615de88a2d825011c9ce9ab7c89267"
   },
+  "validation_duration_pairs": {
+    "path": "RL-trading-agent/research/trade_episode/phase4b/phase4a_validation_duration_pairs.csv",
+    "sha256": "477560f8fa0056fa70caad019aec952c4e5e6b75ab2bd56c9796b0bf582adedc",
+    "source": "Phase 4A phase4a_trades.csv; PPO completed trades on validation split only"
+  },
+  "phase4a_reference_artifacts": {
+    "effective_config": {
+      "path": "RL-trading-agent/research/trade_episode/phase4b/phase4a_effective_config.json",
+      "sha256": "1e9ee19b695c62a2c6aef9e2f48621f9945fa5fadb5c7838f66b47152144afbe"
+    },
+    "reference_metrics": {
+      "path": "RL-trading-agent/research/trade_episode/phase4b/phase4a_reference_metrics.csv",
+      "sha256": "d4b032b02cad105892017fb7c2903fca39617b9e5bc1246a1b68fb2e520d171d"
+    }
+  },
   "checkpoints": [
     {
       "variant": "market_only",
