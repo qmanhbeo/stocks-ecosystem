@@ -341,7 +341,7 @@
   },
   "target_aligned_extension": {
     "experiment_id": "rl-trade-episode-phase4c-target-alignment-20261025",
-    "protocol_commit_sha": "3413408837f8d2b20e2581e152e02d64c5c784e9",
+    "protocol_commit_sha": "34134088bd9689055d792318033ff9c74a794f1f",
     "run_code_git_sha": "797a0c32d65f06666ac20c48027da590a37a0bfb",
     "training_performed": false,
     "prediction_model_fit": false,
