@@ -1,0 +1,307 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-10-25",
+  "experiment_id": "rl-trade-episode-phase4c-h2-evidence-audit",
+  "source_workspace": "/home/manh/stocks-ecosystem",
+  "source_workspace_git_sha": "3b7201f8d4fedcf690178368cef8e9a2b0d993bb",
+  "source_workspace_read_only": true,
+  "alpha_run_git_sha_policy": "Historical Alpha Lab run artifacts generally do not record the generating Git SHA. The source workspace SHA above identifies the reviewed checkout only and is not claimed as the run SHA.",
+  "rl_observation_as_implemented": {
+    "worktree_branch": "exp/stock-rl-trade-episode",
+    "run_code_sha_phase4a": null,
+    "run_code_sha_note": "The Phase 4A checkpoints predate the first committed source snapshot; Phase 4B provenance records this as unavailable.",
+    "market_feature_count": 9,
+    "market_features": [
+      "market_log_return_1d_scaled",
+      "market_log_return_5d_scaled",
+      "market_log_return_20d_scaled",
+      "market_intraday_log_return_scaled",
+      "market_overnight_gap_log_return_scaled",
+      "market_high_low_range_log_scaled",
+      "market_log_realized_volatility_20d",
+      "market_log_lagged_volatility_60d",
+      "market_volume_zscore_20d"
+    ],
+    "alpha_features": [
+      "alpha_s1_xs_proba",
+      "alpha_s1_available",
+      "alpha_c16_order_volume_ratio_rank",
+      "alpha_c16_available"
+    ],
+    "agent_state_features": [
+      "position_in",
+      "holding_intervals_normalized",
+      "entry_relative_unrealized_log_return_scaled",
+      "waiting_steps_normalized",
+      "episode_steps_normalized"
+    ],
+    "dimensions": {
+      "market_only": 14,
+      "market_plus_alpha": 18
+    },
+    "normalization": "Ticker-local causal rolling features; 60-session volatility through t-1 scales returns; volume uses prior-20-session log-volume z-score; no fitted full-period mean/std.",
+    "decision_timing": "Observe features through close t; BUY/SELL executes at next tradable open.",
+    "implementation_paths": [
+      "RL-trading-agent/vn_stock_rl/trade_episode/causal_features.py",
+      "RL-trading-agent/vn_stock_rl/trade_episode/market_features.py",
+      "RL-trading-agent/vn_stock_rl/trade_episode/signals.py",
+      "RL-trading-agent/vn_stock_rl/trade_episode/environment.py",
+      "RL-trading-agent/research/trade_episode/phase4b/phase4a_effective_config.json"
+    ],
+    "audit_note": "The request describes eight market features; the committed Phase 4A effective config and code use nine normalized market features. Causal normalization retains realized volatility and adds a separate lagged 60-day volatility feature."
+  },
+  "evidence": [
+    {
+      "id": "H93/F056 S1 walk-forward",
+      "date": "2026-03-24",
+      "source_files": [
+        "alpha-research-lab/notes/session_00028_log.md",
+        "alpha-research-lab/notes/findings-00031-00060.md#F056",
+        "alpha-research-lab/notes/signal_library.md#S1",
+        "alpha-research-lab/cross_sectional_wf.py",
+        "alpha-research-lab/src/feature_engineering.py",
+        "alpha-research-lab/artifacts/run_summaries/20260324_211805_h40_rank_portfolio_xs_barrier_vol_1d_hose_full_portfolio.json"
+      ],
+      "run_git_sha": null,
+      "hypothesis": "Cross-sectional XGBoost can rank stocks by next-session relative direction using causal OHLCV-derived features.",
+      "features": "E8-style relative lag returns and technical indicators; H93 adds volume features (vol_ratio, OBV ROC, VWAP deviation, volume trend). S1 is the resulting per-ticker probability, not a raw market feature.",
+      "target_and_horizon": "future_rel_barrier_1d, close-to-next-close relative to VNINDEX. With one step, the ±1% barriers reduce to a binary sign label at timeout; this is not next-open PnL or the RL annualized trade reward.",
+      "universe": "Signal library reports 394 tickers; cross-sectional all-stock model and per-year predictions.",
+      "dates_and_validation": "2015-2025 prediction years; expanding annual walk-forward, fitting on prior years and scoring the next year. H93 probability output is data/features/xs_barrier_vol_1d_hose_full.parquet.",
+      "key_findings": {
+        "mean_ic": 0.1491,
+        "positive_years": "11/11",
+        "ic_by_year": [0.187, 0.166, 0.163, 0.158, 0.159, 0.154, 0.142, 0.101, 0.139, 0.142, 0.129],
+        "top5_rank_portfolio_average_edge": 0.2415,
+        "top5_rank_portfolio_sharpe": 15.0839,
+        "top5_q5_q1_spread": 0.2085
+      },
+      "limitations": "Repeated research selection over the same historical span; chronological year folds are not leave-ticker-out. Static top-N results do not establish feasible execution, entry timing under next-open fills, exit timing, or RL reward optimization. The lab itself keeps H93 below final execution promotion.",
+      "relevance_to_h2": "Strong evidence that S1 contains reproducible short-horizon cross-sectional predictive information; not evidence of a profitable dynamic single-stock policy."
+    },
+    {
+      "id": "H54/H90/H91/H93 horizon and feature comparison",
+      "date": "2026-03-24",
+      "source_files": [
+        "alpha-research-lab/notes/findings-00031-00060.md#F056",
+        "alpha-research-lab/notes/session_00028_log.md"
+      ],
+      "run_git_sha": null,
+      "hypothesis": "Compare 5-day versus 1-day relative targets and the addition of volume features.",
+      "features": "Cross-sectional OHLCV technical model; H90/H93 include volume features.",
+      "target_and_horizon": "5-day relative direction/barrier for H54/H90; 1-day relative label for H91/H93.",
+      "universe": "All-stock cross-sectional universe; see H93 record.",
+      "dates_and_validation": "Annual walk-forward historical folds; 2015-2025 signal years in promoted summary.",
+      "key_findings": {
+        "H54_5d_no_volume": {"ic": 0.1515, "average_edge": 0.2552, "sharpe": 9.17},
+        "H90_5d_volume": {"ic": 0.1599, "average_edge": 0.2582, "sharpe": 9.48},
+        "H91_1d_no_volume": {"ic": 0.1395, "average_edge": 0.239, "edge_std": 0.0206, "sharpe": 11.63},
+        "H93_1d_volume": {"ic": 0.1491, "average_edge": 0.2415, "edge_std": 0.016, "sharpe": 15.08}
+      },
+      "limitations": "Tests 1- and 5-day ranking targets, not the RL's minimum-three-interval reward. Feature-group ablations do not isolate every one of the RL market features.",
+      "relevance_to_h2": "Shows the S1 research edge spans 1-5-day relative ranking; does not establish 3/10/20-day fixed-hold or exit value."
+    },
+    {
+      "id": "H107/C4 open-close asymmetry",
+      "date": "2026-03-25",
+      "source_files": [
+        "alpha-research-lab/notes/signal_library.md#C4",
+        "alpha-research-lab/notes/findings-00061-00090.md",
+        "alpha-research-lab/data_tools/build_open_close_asymmetry_features.py"
+      ],
+      "run_git_sha": null,
+      "hypothesis": "Overnight-versus-intraday return contrast carries short-horizon continuation information.",
+      "features": "oc_asym_5d = overnight_mom_5d - intraday_mom_5d; related components tested separately.",
+      "target_and_horizon": "One-day relative barrier/direction IC.",
+      "universe": "Broad cross-sectional ticker panel, 11 annual folds.",
+      "dates_and_validation": "2015-2025 yearly walk-forward summary; 11/11 positive years.",
+      "key_findings": {"standalone_ic": 0.0225, "correlation_with_s1": 0.147, "overnight_component_ic_approx": 0.0, "intraday_component_ic": -0.034},
+      "limitations": "C4 is a multi-day contrast not identical to the RL's single-day normalized gap and intraday fields. The contrast's success does not show either component alone is predictive.",
+      "relevance_to_h2": "Suggests market-feature interactions can matter; the RL MLP could represent a contrast, but that has not been ablated in the RL policy."
+    },
+    {
+      "id": "H356 C16 standalone gate",
+      "date": "2026-04-28",
+      "source_files": [
+        "alpha-research-lab/analysis/h356_order_pressure_standalone_gate.py",
+        "alpha-research-lab/notes/signal_library.md#C16",
+        "alpha-research-lab/artifacts/run_summaries/20260428_172528_h356_order_pressure_standalone_gate_research_branch_order_pressure_standalone_gate.json",
+        "alpha-research-lab/artifacts/run_summaries/20260428_172528_h356_order_pressure_standalone_gate_details.json"
+      ],
+      "run_git_sha": null,
+      "hypothesis": "Same-day CafeF posted order-volume imbalance rank predicts the next-session S1 relative target.",
+      "features": "C16 order_volume_ratio_rank, a cross-sectional rank of (buy order volume - sell order volume)/(buy + sell). This is daily posted-order summary data, not order-book depth.",
+      "target_and_horizon": "S1's one-day relative barrier label; a five-day IC is a secondary diagnostic.",
+      "universe": "394 tickers; 810,201 active ticker-day rows.",
+      "dates_and_validation": "2015-2022 development, 2023-2024 validation, 2025 confirmation; strictly chronological.",
+      "key_findings": {
+        "mean_1d_ic": 0.0737654,
+        "positive_years": "11/11",
+        "dev_pooled_ic": 0.0798887,
+        "validation_pooled_ic": 0.0593085,
+        "confirmation_pooled_ic": 0.0712583,
+        "5d_diagnostic_ic": 0.0797,
+        "correlation_with_s1": 0.0341926
+      },
+      "limitations": "Cross-sectional association and a same-label test, not a within-stock time-series policy test. The upstream target is close-to-close and does not encode RL action choices.",
+      "relevance_to_h2": "Strong independent C16 predictive information with low S1 overlap, but horizon and action relevance remain indirect."
+    },
+    {
+      "id": "H357 C16 residual integration",
+      "date": "2026-04-28",
+      "source_files": [
+        "alpha-research-lab/analysis/h357_order_pressure_integration_audit.py",
+        "alpha-research-lab/artifacts/run_summaries/20260428_173427_h357_order_pressure_integration_audit_research_branch_order_pressure_integration_audit.json"
+      ],
+      "run_git_sha": null,
+      "hypothesis": "C16 adds signal beyond the frozen existing signal library, including S1.",
+      "features": "Full library of 13 signal columns plus C16; residualized C16 rank and frozen equal-weight/top-5 selector.",
+      "target_and_horizon": "One-day S1 relative label and associated top-5 edge.",
+      "universe": "394 tickers, 810,201 ticker-day rows.",
+      "dates_and_validation": "2015-2022 development, 2023-2024 validation, 2025 confirmation.",
+      "key_findings": {
+        "residual_c16_mean_ic": 0.0686739,
+        "max_abs_correlation_with_existing_library": 0.1877095,
+        "top5_edge_delta_validation": 0.0152305,
+        "top5_edge_delta_confirmation": 0.0554217
+      },
+      "limitations": "Static cross-sectional selector integration; it does not prove an S1×C16 policy interaction or RL benefit. It is not a completely independent new ticker test.",
+      "relevance_to_h2": "Supports complementarity at the signal-library/selector level, not at the Phase 4A agent level."
+    },
+    {
+      "id": "H358/H359 C16 executable portfolio audits",
+      "date": "2026-04-28",
+      "source_files": [
+        "alpha-research-lab/analysis/h358_order_pressure_portfolio_tradability_audit.py",
+        "alpha-research-lab/analysis/h359_order_pressure_sizing_scope_audit.py",
+        "alpha-research-lab/notes/signal_library.md#C16",
+        "alpha-research-lab/artifacts/run_summaries/20260428_212451_h358_order_pressure_portfolio_tradability_audit_research_branch_order_pressure_portfolio_tradability_audit.json",
+        "alpha-research-lab/artifacts/run_summaries/20260428_213148_h359_order_pressure_sizing_scope_audit_research_branch_order_pressure_sizing_scope_audit.json"
+      ],
+      "run_git_sha": null,
+      "hypothesis": "A small C16 addition to a realistic long-only selector improves execution-aware results.",
+      "features": "Full signal-library score plus C16; H359 restricts a 5% C16-rank blend to dates buyable next open.",
+      "target_and_horizon": "Daily portfolio returns with next-open fills, shared tradability, fees, legal sell delay; not single-trade annualized reward.",
+      "universe": "394-ticker cross-sectional panel.",
+      "dates_and_validation": "2015-2022 development; 2023-2024 validation; 2025 confirmation.",
+      "key_findings": {
+        "H358_verdict": "mixed; validation cash drag delta +0.0214 exceeded the 0.02 health limit",
+        "H359_winner": "order_w0050_buyable",
+        "H359_relative_return_delta_validation": 0.3219873,
+        "H359_relative_return_delta_confirmation": 0.0581928,
+        "H359_information_ratio_delta_validation": 0.3735081,
+        "H359_information_ratio_delta_confirmation": 0.2738372,
+        "H359_cash_delta_validation": 0.0036054,
+        "H359_cash_delta_confirmation": -0.0066973
+      },
+      "limitations": "Evidence of translated signal value in one static portfolio contract, not entry/exit timing under the RL objective. H359 conditions C16 on buyability and uses only a 5% blend; Phase 4A feeds the raw rank and availability bit instead.",
+      "relevance_to_h2": "Best evidence that C16 can influence a profitable tradable selector; only indirect evidence for the RL observation contract."
+    },
+    {
+      "id": "H412 volume plus C16 additive counterevidence",
+      "date": "2026-05-05",
+      "source_files": [
+        "alpha-research-lab/analysis/h412_volume_c16_additive.py",
+        "alpha-research-lab/notes/session_00293_log.md",
+        "alpha-research-lab/notes/findings-00361-00390.md#F376"
+      ],
+      "run_git_sha": null,
+      "hypothesis": "Linear volume/C16 score blends improve predictive IC.",
+      "features": "Daily cross-sectional ranks of order_volume_ratio and volume; weighted additive combinations.",
+      "target_and_horizon": "S1 one-day target label; annualized IC over 2018-2025.",
+      "universe": "Shared Alpha Lab cross-sectional panel.",
+      "dates_and_validation": "2018-2025 yearly diagnostics; not a locked RL test.",
+      "key_findings": {
+        "volume_alone_ic": 0.07492,
+        "c16_alone_ic": -0.00079,
+        "volume_075_c16_025_ic": 0.07266,
+        "volume_025_c16_075_ic": 0.05909,
+        "c16_positive_years": "4/8"
+      },
+      "limitations": "Different feature construction, active-row filter, and period from H356's published rank study; not a clean refutation of H356. It does refute the blanket claim that simple linear blending always helps.",
+      "relevance_to_h2": "Combination value depends on representation and scope; motivates testing the exact RL signal contract rather than adding scores blindly."
+    },
+    {
+      "id": "H526/H545/H626 signal-state exit timing screens",
+      "date": "2026-05-17 to 2026-05-18",
+      "source_files": [
+        "alpha-research-lab/notes/session_00339_log.md",
+        "alpha-research-lab/notes/session_00353_log.md",
+        "alpha-research-lab/notes/session_00412_log.md",
+        "alpha-research-lab/notes/deadends_compact.md#Selector-Entry-and-Intraday-Dead-Ends",
+        "alpha-research-lab/artifacts/run_summaries/20260517_142504_exit_timing_discovery_research_branch.json",
+        "alpha-research-lab/artifacts/run_summaries/20260517_151919_breadth_adaptive_exit_rules_research_branch.json",
+        "alpha-research-lab/artifacts/run_summaries/20260518_182643_h626_signal_decay_exit_zone_research_branch.json"
+      ],
+      "run_git_sha": null,
+      "hypothesis": "Signal freshness, persistence, or decay reveals an actionable exit state.",
+      "features": "C23/C24-style signal-state age and breadth context; these are not Phase 4A market/S1/C16 observations.",
+      "target_and_horizon": "Cross-sectional one-day IC by signal-state bucket; not exit-versus-hold RL reward.",
+      "universe": "Broad Alpha Lab signal panel, 2015-2025.",
+      "dates_and_validation": "Annual/state diagnostics; H545 sustained low-breadth exit subsets were too sparse; H626 age-31+ bucket had zero rows.",
+      "key_findings": {
+        "H526_fresh_entry_ic": 0.1693,
+        "H526_sustained_ic": 0.1712,
+        "H526_first_day_out_ic": 0.1386,
+        "H545_exit_test": "data-gated; sustained combinations too sparse",
+        "H626_age_1_7_ic": 0.28,
+        "H626_age_8_20_ic": 0.2375,
+        "H626_age_21_30_ic": 0.1455,
+        "H626_age_31_plus_rows": 0
+      },
+      "limitations": "Signal-state cohort comparisons are not causal sell-now-versus-hold comparisons and use different signal inputs. General continuation/exit policy branches are recorded as parked/dead ends.",
+      "relevance_to_h2": "Existing exit evidence is weakly transferable; the current RL exit action has not been predicted using its own state/reward target."
+    },
+    {
+      "id": "Phase 4A/4B frozen RL policy evaluation",
+      "date": "2026-10-25",
+      "source_files": [
+        "RL-trading-agent/research/trade_episode/phase4b/protocol.md",
+        "RL-trading-agent/research/trade_episode/phase4b/results/phase4b_metrics.json",
+        "RL-trading-agent/research/trade_episode/phase4b/results/phase4b_stock_period_metrics.csv",
+        "report-stock-rl-trade-episode-phase4b.md"
+      ],
+      "run_git_sha": "37a145ca60a255bc161e22029b1805bb322e4dfb",
+      "results_commit_sha": "0fea0b0c275cd41876955e17366464ea1f635f45",
+      "hypothesis": "Frozen PPO agents using market features, optionally plus S1/C16, outperform simple strategies.",
+      "features": "Phase 4A market-only or market plus S1/C16; 12 training tickers and 3 entirely unseen tickers.",
+      "target_and_horizon": "Trade-episode 252/T annualized excess log-return reward; next-open fills; 3-interval minimum hold.",
+      "universe": "12 training-universe tickers; DGC, MBB, VHC held unseen.",
+      "dates_and_validation": "2015-2019 training, 2020-2022 previously examined validation, 2023-2025 exploratory.",
+      "key_findings": {
+        "training_stocks_test_mean_per_stock_cagr_market_ppo": 0.1655,
+        "training_stocks_test_mean_per_stock_cagr_alpha_ppo": 0.1781,
+        "training_stocks_test_mean_per_stock_cagr_mechanical": 0.1867,
+        "training_stocks_test_mean_per_stock_cagr_buy_and_hold": 0.1795,
+        "unseen_stocks_test_mean_per_stock_cagr_market_ppo": 0.1403,
+        "unseen_stocks_test_mean_per_stock_cagr_alpha_ppo": 0.1406,
+        "unseen_stocks_test_mean_per_stock_cagr_mechanical": 0.2281,
+        "unseen_stocks_test_mean_per_stock_cagr_buy_and_hold": 0.1567,
+        "mean_exposure_range": "94-97%",
+        "control_duration_match": "failed on exploratory test; mean holding-duration errors 40-63%"
+      },
+      "limitations": "Only three unseen tickers; Phase 4B randomized controls failed the preregistered duration-matching threshold. Per-stock CAGR averages are not a portfolio. The experiment evaluates learned policy, not whether input features contain predictive information before PPO can exploit them.",
+      "relevance_to_h2": "Direct evidence that feature-bearing PPO did not consistently beat simple policies; cannot distinguish absent predictive signal from credit assignment, exploration, or reward-optimization failure."
+    }
+  ],
+  "evidence_synthesis": {
+    "established": [
+      "S1 is a strong, repeated short-horizon cross-sectional rank/probability for one-day relative direction.",
+      "C16 rank has distinct one-day cross-sectional information and residual signal beyond the frozen library; a bounded C16 blend improved one static execution-aware selector under its own contract.",
+      "A broad OHLCV-derived supervised model and related market transforms contain predictive structure, but no study isolates every current RL market input.",
+      "The Phase 4A/4B policy did not show a reliable advantage over simple strategies, which is not itself proof that the features are uninformative."
+    ],
+    "not_established": [
+      "Exact within-ticker association of the current observations with the 3-, 10-, or 20-interval next-open terminal reward.",
+      "Whether current state features predict the counterfactual reward difference between SELL now and HOLD longer.",
+      "A clean leave-ticker-out result for S1/C16 or a robust rising/falling/sideways regime generalization claim.",
+      "That Alpha Lab's cross-sectional rank IC translates into a realizable single-stock policy using the Phase 4A reward."
+    ],
+    "provenance_alerts": [
+      "The request says eight market features; the committed Phase 4A observation uses nine market features because lagged 60-day volatility is a separate input.",
+      "Do not treat S1 parquet column actual as observable state; it is a future label. Phase 4A loader correctly reads xs_proba only.",
+      "H434 session prose refers to S1×C16 while its saved run protocol names C18; exclude it as direct C16-complementarity evidence pending reconciliation.",
+      "Historical Alpha Lab run artifacts do not persist generating Git SHAs; record that as unavailable rather than attributing current source commit to old results."
+    ]
+  }
+}
