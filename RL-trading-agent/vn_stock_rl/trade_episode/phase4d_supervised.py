@@ -153,9 +153,9 @@ def exit_feature_vector(
     entry_vol = float(stock.daily_volatility_scale[entry_decision_index])
     if not np.isfinite(entry_vol) or entry_vol <= 0:
         raise ValueError("Entry-time volatility must be finite and positive")
-    unrealized = (
-        np.log(float(stock.closes[t])) - np.log(float(stock.opens[entry_fill_index]))
-    ) / (entry_vol * np.sqrt(max(1, age)))
+    unrealized = (np.log(float(stock.closes[t])) - np.log(float(stock.opens[entry_fill_index]))) / (
+        entry_vol * np.sqrt(max(1, age))
+    )
     state = np.asarray(
         [
             1.0,
@@ -327,15 +327,11 @@ def fit_exit_models(
         names["age_only"],
     )
     constant = float(np.average(train.target, weights=train.sample_weight))
-    models["constant_mean"] = FittedExitModel(
-        "constant_mean", "constant", (), constant=constant
-    )
+    models["constant_mean"] = FittedExitModel("constant_mean", "constant", (), constant=constant)
     return models
 
 
-def prediction_quality(
-    target: np.ndarray, prediction: np.ndarray
-) -> dict[str, float | int | None]:
+def prediction_quality(target: np.ndarray, prediction: np.ndarray) -> dict[str, float | int | None]:
     """Compute rank, error, sign, and class-imbalance metrics."""
 
     y = np.asarray(target, dtype=np.float64)

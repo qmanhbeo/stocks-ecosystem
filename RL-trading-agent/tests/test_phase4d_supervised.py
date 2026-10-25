@@ -52,22 +52,26 @@ def test_sell_now_and_hold_labels_use_next_open_and_exact_durations():
     entry_fill = t - age
     expected = annualized_log_excess_reward(
         stock.opens[entry_fill], stock.opens[t + 4], age + 4
-    ) - annualized_log_excess_reward(
-        stock.opens[entry_fill], stock.opens[t + 1], age + 1
-    )
+    ) - annualized_log_excess_reward(stock.opens[entry_fill], stock.opens[t + 1], age + 1)
     assert observed == pytest.approx(expected)
 
 
 def test_minimum_holding_age_and_partition_boundary_are_enforced():
     stock = _stock()
     partition = np.ones(len(stock.opens), dtype=bool)
-    assert counterfactual_exit_target(
-        stock, decision_index=6, current_holding_age=1, partition_mask=partition
-    ) is None
+    assert (
+        counterfactual_exit_target(
+            stock, decision_index=6, current_holding_age=1, partition_mask=partition
+        )
+        is None
+    )
     partition[10] = False  # HOLD's next-open fill is t+4.
-    assert counterfactual_exit_target(
-        stock, decision_index=6, current_holding_age=2, partition_mask=partition
-    ) is None
+    assert (
+        counterfactual_exit_target(
+            stock, decision_index=6, current_holding_age=2, partition_mask=partition
+        )
+        is None
+    )
 
 
 def test_predictive_inputs_do_not_change_when_future_rows_change():

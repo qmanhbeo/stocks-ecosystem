@@ -64,6 +64,24 @@ def test_minimum_hold_and_fixed_entry_schedule_are_shared_across_exit_rules():
     assert short["trades"][0]["entry_date"] == str(stock.dates[first + 1].date())
 
 
+def test_randomized_exit_is_feature_blind_and_respects_minimum_hold():
+    stock = _stock()
+    result = simulate_fixed_entry_policy(
+        stock,
+        split="exploratory",
+        entry_decision_indices=[0],
+        policy_id="random_test",
+        policy_kind="random",
+        phase4a_state_config={"max_holding_intervals": 756, "max_episode_steps": 756},
+        maximum_holding_intervals=40,
+        model_last_decision_age=36,
+        regime_by_date={str(date.date()): "sideways" for date in stock.dates},
+        duration_pool=(3,),
+        random_seed=7,
+    )
+    assert result["trades"][0]["holding_duration"] == 3
+
+
 def test_chronological_compounding_and_exposure_use_fills_and_marked_equity():
     stock = _stock(15)
     result = _simulate(stock, [0, 5], policy="fixed_3", duration=3)
@@ -82,4 +100,3 @@ def test_end_of_period_open_position_is_marked_not_fabricated_as_sold():
     assert trade["exit_date"] is None
     assert trade["terminal_rl_reward"] is None
     assert trade["mark_to_market_value"] == stock.closes[9] / stock.opens[9]
-

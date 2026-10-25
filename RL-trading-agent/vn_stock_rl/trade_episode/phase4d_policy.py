@@ -147,9 +147,7 @@ def simulate_fixed_entry_policy(
         date_key = _date_label(stock.dates[decision_index])
 
         # Record value at today's close, after any order submitted yesterday filled.
-        equity[local_index] = (
-            shares * float(stock.closes[decision_index]) if in_position else cash
-        )
+        equity[local_index] = shares * float(stock.closes[decision_index]) if in_position else cash
         exposure[local_index] = in_position
 
         if in_position:
@@ -180,9 +178,7 @@ def simulate_fixed_entry_policy(
                 duration = exit_fill_index - int(entry_fill_index)
                 if duration < 3:
                     raise RuntimeError("SELL violated the three-interval minimum")
-                reward = annualized_log_excess_reward(
-                    float(entry_price), exit_price, duration
-                )
+                reward = annualized_log_excess_reward(float(entry_price), exit_price, duration)
                 raw_return = exit_price / float(entry_price) - 1.0
                 trade = {
                     "policy": policy_id,
