@@ -71,7 +71,19 @@
       "key_findings": {
         "mean_ic": 0.1491,
         "positive_years": "11/11",
-        "ic_by_year": [0.187, 0.166, 0.163, 0.158, 0.159, 0.154, 0.142, 0.101, 0.139, 0.142, 0.129],
+        "ic_by_year": [
+          0.187,
+          0.166,
+          0.163,
+          0.158,
+          0.159,
+          0.154,
+          0.142,
+          0.101,
+          0.139,
+          0.142,
+          0.129
+        ],
         "top5_rank_portfolio_average_edge": 0.2415,
         "top5_rank_portfolio_sharpe": 15.0839,
         "top5_q5_q1_spread": 0.2085
@@ -93,10 +105,28 @@
       "universe": "All-stock cross-sectional universe; see H93 record.",
       "dates_and_validation": "Annual walk-forward historical folds; 2015-2025 signal years in promoted summary.",
       "key_findings": {
-        "H54_5d_no_volume": {"ic": 0.1515, "average_edge": 0.2552, "sharpe": 9.17},
-        "H90_5d_volume": {"ic": 0.1599, "average_edge": 0.2582, "sharpe": 9.48},
-        "H91_1d_no_volume": {"ic": 0.1395, "average_edge": 0.239, "edge_std": 0.0206, "sharpe": 11.63},
-        "H93_1d_volume": {"ic": 0.1491, "average_edge": 0.2415, "edge_std": 0.016, "sharpe": 15.08}
+        "H54_5d_no_volume": {
+          "ic": 0.1515,
+          "average_edge": 0.2552,
+          "sharpe": 9.17
+        },
+        "H90_5d_volume": {
+          "ic": 0.1599,
+          "average_edge": 0.2582,
+          "sharpe": 9.48
+        },
+        "H91_1d_no_volume": {
+          "ic": 0.1395,
+          "average_edge": 0.239,
+          "edge_std": 0.0206,
+          "sharpe": 11.63
+        },
+        "H93_1d_volume": {
+          "ic": 0.1491,
+          "average_edge": 0.2415,
+          "edge_std": 0.016,
+          "sharpe": 15.08
+        }
       },
       "limitations": "Tests 1- and 5-day ranking targets, not the RL's minimum-three-interval reward. Feature-group ablations do not isolate every one of the RL market features.",
       "relevance_to_h2": "Shows the S1 research edge spans 1-5-day relative ranking; does not establish 3/10/20-day fixed-hold or exit value."
@@ -115,7 +145,12 @@
       "target_and_horizon": "One-day relative barrier/direction IC.",
       "universe": "Broad cross-sectional ticker panel, 11 annual folds.",
       "dates_and_validation": "2015-2025 yearly walk-forward summary; 11/11 positive years.",
-      "key_findings": {"standalone_ic": 0.0225, "correlation_with_s1": 0.147, "overnight_component_ic_approx": 0.0, "intraday_component_ic": -0.034},
+      "key_findings": {
+        "standalone_ic": 0.0225,
+        "correlation_with_s1": 0.147,
+        "overnight_component_ic_approx": 0.0,
+        "intraday_component_ic": -0.034
+      },
       "limitations": "C4 is a multi-day contrast not identical to the RL's single-day normalized gap and intraday fields. The contrast's success does not show either component alone is predictive.",
       "relevance_to_h2": "Suggests market-feature interactions can matter; the RL MLP could represent a contrast, but that has not been ablated in the RL policy."
     },
@@ -303,5 +338,163 @@
       "H434 session prose refers to S1×C16 while its saved run protocol names C18; exclude it as direct C16-complementarity evidence pending reconciliation.",
       "Historical Alpha Lab run artifacts do not persist generating Git SHAs; record that as unavailable rather than attributing current source commit to old results."
     ]
+  },
+  "target_aligned_extension": {
+    "experiment_id": "rl-trade-episode-phase4c-target-alignment-20261025",
+    "protocol_commit_sha": "3413408837f8d2b20e2581e152e02d64c5c784e9",
+    "run_code_git_sha": "797a0c32d65f06666ac20c48027da590a37a0bfb",
+    "training_performed": false,
+    "prediction_model_fit": false,
+    "date_cutoff": "2025-12-31",
+    "max_prepared_observation_date": "2025-12-31",
+    "post_cutoff_rows_used": false,
+    "shared_data_metadata_unchanged": true,
+    "method": "Within-ticker-calendar-year Spearman; equal-ticker mean; hierarchical ticker/year bootstrap; 2000 draws with fixed seed.",
+    "targets": "Exact Phase 4A annualized log excess reward for next-open entry held 3/10/20 intervals; and reward(HOLD h more)-reward(SELL now) at entry ages 3/10/20.",
+    "result_files": [
+      "RL-trading-agent/research/trade_episode/phase4c/results/phase4c_metrics.json",
+      "RL-trading-agent/research/trade_episode/phase4c/results/phase4c_feature_associations.csv"
+    ],
+    "limitations": [
+      "Associations are descriptive, not model-fit or policy-performance estimates.",
+      "S1/C16 were previously selected or examined on historical periods; 2023-2025 is exploratory.",
+      "Only three unseen tickers; intervals are descriptive and no multiple-comparison correction was applied.",
+      "Synthetic exit states assume immediate entry after reset (zero waiting); results do not test all path-dependent waiting/episode states.",
+      "No net trading backtest was run in this extension."
+    ],
+    "key_results": {
+      "validation_entry_h3_s1_training": {
+        "ticker_count": 12,
+        "ticker_year_count": 36,
+        "sample_row_count": 8755,
+        "equal_ticker_mean_rho": 0.0297582749626345,
+        "median_ticker_year_rho": 0.0264842692306471,
+        "positive_ticker_year_fraction": 0.6111111111111112,
+        "bootstrap_95ci_low": -0.0031481074932038,
+        "bootstrap_95ci_high": 0.0675273012007717
+      },
+      "validation_entry_h3_market_1d_return_training": {
+        "ticker_count": 12,
+        "ticker_year_count": 36,
+        "sample_row_count": 8755,
+        "equal_ticker_mean_rho": -0.0525388921167284,
+        "median_ticker_year_rho": -0.047448526681852,
+        "positive_ticker_year_fraction": 0.1944444444444444,
+        "bootstrap_95ci_low": -0.0886780466654379,
+        "bootstrap_95ci_high": -0.0242857991470697
+      },
+      "validation_exit_age3_h3_s1_training": {
+        "ticker_count": 12,
+        "ticker_year_count": 36,
+        "sample_row_count": 8591,
+        "equal_ticker_mean_rho": 0.1846945180373192,
+        "median_ticker_year_rho": 0.1949649223304055,
+        "positive_ticker_year_fraction": 0.9722222222222222,
+        "bootstrap_95ci_low": 0.1422977557635518,
+        "bootstrap_95ci_high": 0.2227385949060354
+      },
+      "validation_exit_age3_h3_s1_unseen": {
+        "ticker_count": 3,
+        "ticker_year_count": 9,
+        "sample_row_count": 2105,
+        "equal_ticker_mean_rho": 0.1659060996599417,
+        "median_ticker_year_rho": 0.1714198357183792,
+        "positive_ticker_year_fraction": 1.0,
+        "bootstrap_95ci_low": 0.1163774388687809,
+        "bootstrap_95ci_high": 0.217073891190272
+      },
+      "validation_exit_age3_h3_c16_training": {
+        "ticker_count": 12,
+        "ticker_year_count": 36,
+        "sample_row_count": 8591,
+        "equal_ticker_mean_rho": 0.0973557724571716,
+        "median_ticker_year_rho": 0.0995633432547111,
+        "positive_ticker_year_fraction": 0.8333333333333334,
+        "bootstrap_95ci_low": 0.0338584485935207,
+        "bootstrap_95ci_high": 0.1576047435189606
+      },
+      "validation_exit_age3_h3_c16_unseen": {
+        "ticker_count": 3,
+        "ticker_year_count": 9,
+        "sample_row_count": 2105,
+        "equal_ticker_mean_rho": 0.0751159819071845,
+        "median_ticker_year_rho": 0.1078053844499082,
+        "positive_ticker_year_fraction": 0.7777777777777778,
+        "bootstrap_95ci_low": -0.0091286026330145,
+        "bootstrap_95ci_high": 0.131271847351466
+      },
+      "exploratory_entry_h3_s1_training": {
+        "ticker_count": 12,
+        "ticker_year_count": 36,
+        "sample_row_count": 8769,
+        "equal_ticker_mean_rho": 0.0593398042567178,
+        "median_ticker_year_rho": 0.0641629432890247,
+        "positive_ticker_year_fraction": 0.8055555555555556,
+        "bootstrap_95ci_low": 0.0286179546362264,
+        "bootstrap_95ci_high": 0.0910327334656986
+      },
+      "exploratory_entry_h3_s1_unseen": {
+        "ticker_count": 3,
+        "ticker_year_count": 9,
+        "sample_row_count": 2202,
+        "equal_ticker_mean_rho": 0.0808076841269613,
+        "median_ticker_year_rho": 0.0505665672892595,
+        "positive_ticker_year_fraction": 1.0,
+        "bootstrap_95ci_low": 0.0193318225774743,
+        "bootstrap_95ci_high": 0.1566658295473641
+      },
+      "exploratory_exit_age3_h3_s1_training": {
+        "ticker_count": 12,
+        "ticker_year_count": 36,
+        "sample_row_count": 8683,
+        "equal_ticker_mean_rho": 0.2645667456190948,
+        "median_ticker_year_rho": 0.2732084809510154,
+        "positive_ticker_year_fraction": 0.9722222222222222,
+        "bootstrap_95ci_low": 0.2181768915913841,
+        "bootstrap_95ci_high": 0.2991470928634522
+      },
+      "exploratory_exit_age3_h3_s1_unseen": {
+        "ticker_count": 3,
+        "ticker_year_count": 9,
+        "sample_row_count": 2176,
+        "equal_ticker_mean_rho": 0.2610230223216652,
+        "median_ticker_year_rho": 0.2421023869467841,
+        "positive_ticker_year_fraction": 1.0,
+        "bootstrap_95ci_low": 0.1824796989281094,
+        "bootstrap_95ci_high": 0.3463095386319675
+      }
+    },
+    "detail_note": "Full split, horizon, feature, and ticker-group summaries are in phase4c_feature_associations.csv."
+  },
+  "ranked_h2_gaps": [
+    {
+      "rank": 1,
+      "gap": "Predictive information does not establish that the PPO policy can learn and monetize entry/exit decisions under terminal-only reward.",
+      "status": "unresolved",
+      "next_test": "A small decision-level supervised/teacher benchmark using the same observation and action masks, then compare with PPO on chronological validation."
+    },
+    {
+      "rank": 2,
+      "gap": "S1/C16 and selected market features have historical selection and repeated-evaluation exposure; current exploratory 2023-2025 associations are not pristine.",
+      "status": "unresolved",
+      "next_test": "Preserve the 2026 period as an untouched evaluation once its data is authorized for research use."
+    },
+    {
+      "rank": 3,
+      "gap": "Unseen-ticker evidence covers only DGC, MBB, and VHC; estimate precision is limited.",
+      "status": "partially_tested",
+      "next_test": "Expand held-out tickers and sectors under a prespecified universe."
+    },
+    {
+      "rank": 4,
+      "gap": "The entry audit fixes OUT at episode reset and exit audit assumes zero waiting, so it does not span all trajectory-duration states.",
+      "status": "partially_tested",
+      "next_test": "If duration-state interactions matter, stratify targets by prespecified waiting/episode-age states."
+    }
+  ],
+  "h2_verdict": {
+    "classification": "contradicted_for_absence_of_decision_relevant_information",
+    "scope": "The evidence supports predictive association in the current observation space for the specified entry and SELL-versus-HOLD targets. It does not establish that PPO can exploit that information profitably.",
+    "rationale": "S1 and recent-return features associate with exact next-open trade rewards; S1 and C16 also associate with counterfactual HOLD-minus-SELL reward in prior validation and exploratory periods, with positive signs on the small unseen-ticker set."
   }
 }
