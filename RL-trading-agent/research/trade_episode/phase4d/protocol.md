@@ -43,8 +43,9 @@ Report predictive Spearman, MAE versus constant/age baselines, sign accuracy, an
 Use 2,000 paired hierarchical bootstrap replicates (ticker clusters, then ticker-year blocks; seed `64045`) for strategy-minus-control annualized log-wealth differences. Randomized-control percentiles are reported separately. A duration match is adequate only when mean holding differs by ≤2 sessions and exposure by ≤5 percentage points from its supervised policy in both stock groups.
 
 - **H6 supported:** at least one preregistered supervised policy beats each fixed mechanical and matched-random control by ≥2 percentage points annualized CAGR, with positive paired 95% intervals, in both training and unseen groups on exploratory dates, with adequate coverage/matching.
-- **H6 contradicted under this protocol:** associations/model forecasts may exist but no supervised policy achieves that executable advantage, with adequate coverage and controls. This is not proof of no skill.
+- **H6 contradicted under this protocol:** coverage, entry overlap, and duration/exposure matching are adequate, and for every supervised model the upper 95% interval excludes a 2 percentage-point annualized advantage over at least one required control in both training-universe and unseen groups. This is not proof of no skill.
 - **H6 inconclusive:** coverage/matching or uncertainty prevents the comparison.
+- Failure to reach statistical significance, by itself, is not evidence against H6; if uncertainty still permits the preregistered meaningful advantage, classify the result as inconclusive.
 
 ## Provenance and artifacts
 
