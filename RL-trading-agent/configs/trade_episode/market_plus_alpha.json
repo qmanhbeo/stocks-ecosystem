@@ -1,0 +1,81 @@
+{
+  "name": "trade_episode_market_plus_alpha",
+  "ticker": "FPT",
+  "include_alpha_signals": true,
+  "data": {
+    "load_start_date": "2014-12-01",
+    "feature_start_date": "2015-01-01",
+    "data_cutoff": "2025-12-31",
+    "price_basis": "user_assumed_dividend_adjusted",
+    "shared_data_read_only": true
+  },
+  "environment": {
+    "min_holding_intervals": 3,
+    "annualization_intervals": 252,
+    "annual_benchmark": 0.07,
+    "max_episode_steps": 756,
+    "max_wait_steps": 252,
+    "max_holding_intervals": 756
+  },
+  "splits": {
+    "train": {"start": "2015-01-01", "end": "2019-12-31"},
+    "validation": {"start": "2020-01-01", "end": "2022-12-31"},
+    "test": {"start": "2023-01-01", "end": "2025-12-31"}
+  },
+  "reserved_final_holdout": {
+    "start": "2026-01-01",
+    "status": "reserved_not_loaded",
+    "requires_user_unlock": true,
+    "requires_alpha_signal_coverage": true
+  },
+  "training": {
+    "algorithm": "MaskablePPO",
+    "gamma": 1.0,
+    "seed": 1208,
+    "total_timesteps": 100000,
+    "learning_rate": 0.0003,
+    "n_steps": 256,
+    "batch_size": 64,
+    "n_epochs": 5,
+    "gae_lambda": 0.95,
+    "ent_coef": 0.01,
+    "net_arch": [64, 64],
+    "eval_freq": 5000,
+    "n_eval_episodes": 3,
+    "checkpoint_freq": 10000
+  },
+  "smoke": {
+    "load_start_date": "2017-12-01",
+    "data_cutoff": "2020-12-31",
+    "splits": {
+      "train": {"start": "2018-01-01", "end": "2019-12-31"},
+      "validation": {"start": "2020-01-01", "end": "2020-06-30"},
+      "test": {"start": "2020-07-01", "end": "2020-12-31"}
+    },
+    "environment": {
+      "max_episode_steps": 32,
+      "max_wait_steps": 16,
+      "max_holding_intervals": 32
+    },
+    "training": {
+      "total_timesteps": 64,
+      "learning_rate": 0.0003,
+      "n_steps": 16,
+      "batch_size": 16,
+      "n_epochs": 1,
+      "gae_lambda": 0.95,
+      "ent_coef": 0.01,
+      "net_arch": [16, 16],
+      "eval_freq": 32,
+      "n_eval_episodes": 1,
+      "checkpoint_freq": 32
+    }
+  },
+  "alpha_features": [
+    "alpha_s1_xs_proba",
+    "alpha_s1_available",
+    "alpha_c16_order_volume_ratio_rank",
+    "alpha_c16_available"
+  ],
+  "leakage_note": "Alpha signal-family selection used the 2015-2025 research panel. The historical validation and test periods are development only; do not claim untouched OOS performance. No 2026 data is loaded."
+}
